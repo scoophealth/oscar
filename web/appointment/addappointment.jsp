@@ -94,7 +94,9 @@
  */
 
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache">
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -593,19 +595,40 @@ function pasteAppt() {
 					key="Appointment.formLocation" />:</font></div>
 				</td>
 				<% 
+			// multisites start ==================
+			boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user")); 
+			// multisites end ==================
+
             OscarProperties props = OscarProperties.getInstance();
-            boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
+            boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 			String tempLoc = "";
             if(bFirstDisp && bMoreAddr) {
             	//System.out.println(dateString2 + curProvider_no);
             	tempLoc = (new JdbcApptImpl()).getLocationFromSchedule(dateString2, curProvider_no);
             }
-            String loc = bFirstDisp?tempLoc:request.getParameter("location").equals("")?"":request.getParameter("location");
-            String colo = bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
+            String loc = bFirstDisp?tempLoc:request.getParameter("location");
+            String colo = bMultisites
+            				? ApptUtil.getColorFromLocation(sites, loc)
+            				: bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
             %>
-				<td width="20%"><input type="TEXT" name="location"
+				<td width="20%">
+<% // multisites start ==================
+if (bMultisites) { %>
+				<select tabindex="4" name="location" style="background-color: <%=colo%>" onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>
+				<% for (Site s:sites) { %>
+					<option value="<%=s.getName()%>" style="background-color: <%=s.getBgColor()%>" <%=s.getName().equals(loc)?"selected":"" %>><%=s.getName()%></option>
+				<% } %>
+				</select>
+<% } else { 
+	// multisites end ==================
+%>				
+				<input type="TEXT" name="location"
 					style="background-color: <%=colo%>" tabindex="4" value="<%=loc%>"
-					width="25" height="20" border="0" hspace="2"></TD>
+					width="25" height="20" border="0" hspace="2">
+<% } %>					
+				</td>
 				<td width="5%"></td>
 				<td width="20%">
 				<div align="right"><font face="arial"><bean:message

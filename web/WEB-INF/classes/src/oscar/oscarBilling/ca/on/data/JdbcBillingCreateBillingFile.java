@@ -384,6 +384,8 @@ public class JdbcBillingCreateBillingFile {
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 				ch1Obj.setAsstProvider_no(rs.getString("asstProvider_no"));
 				ch1Obj.setCreator(rs.getString("creator"));
+				
+				ch1Obj.setClinic(rs.getString("clinic"));
 
 				// invNo = rs.getString("id");
 				// ohipVer = rs.getString("organization_spec_code");

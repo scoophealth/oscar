@@ -23,6 +23,23 @@
  * Ontario, Canada 
  */
 -->
+<%!
+//multisite starts =====================
+private	List<Site> sites; 
+private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
+
+private String getSiteHTML(String reason, List<Site> sites) {
+	 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, reason)+"'>"+ApptUtil.getShortNameFromLocation(sites, reason)+"</span>";	
+}
+%>
+<%
+if (bMultisites) {
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+	sites = siteDao.getAllSites();
+}
+//multisite ends =====================
+%>
+
 
 <!--oscarMessenger Code block -->
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage"%>
@@ -32,6 +49,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
@@ -150,7 +169,11 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);   
 %>
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="oscar.appt.JdbcApptImpl"%>
+<%@page import="oscar.appt.ApptUtil"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
@@ -448,10 +471,31 @@ function refreshTabAlerts(id) {
 					ALT="<%=arrayMonthOfYear[month%12]%>" vspace="2">&nbsp;&nbsp;</a></td>
 				<TD ALIGN="center" width="33%"><B> <%= arrayMonthOfYear[(month+11)%12] %>
 				</b></TD>
-				<td ALIGN="RIGHT"><select name="provider_no"
-					onChange="selectprovider(this)">
+				<td ALIGN="RIGHT">
+
+
+<% boolean isTeamOnly=false; %>
+				<select name="provider_no" onChange="selectprovider(this)">
 					<option value="all" <%=providerview.equals("all")?"selected":""%>><bean:message
 						key="provider.appointmentprovideradminmonth.formAllProviders" /></option>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_team_schedule_only" rights="r" reverse="false">
+<%
+	isTeamOnly=true;
+	String provider_no = curUser_no;
+	resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
+	for (Map provider : resultList) {
+		providerNameBean.setDef(String.valueOf(provider.get("provider_no")), provider.get("last_name")+","+provider.get("first_name"));		
+%>
+					<option value="<%=provider.get("provider_no")%>"
+						<%=providerview.equals(provider.get("provider_no"))?"selected":""%>><%=providerNameBean.getShortDef(String.valueOf(provider.get("provider_no")), "", NameMaxLen)%></option>
+<%
+	}
+%>
+
+</security:oscarSec>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_team_schedule_only" rights="r" reverse="true">				
 <%
 	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
 	for (Map group : resultList) {
@@ -471,7 +515,12 @@ function refreshTabAlerts(id) {
 <%
 	}
 %>
-				</select> <a href="../logout.jsp"><bean:message
+</security:oscarSec>
+				</select>
+				
+				
+				
+				 <a href="../logout.jsp"><bean:message
 					key="provider.appointmentprovideradminmonth.btnlogOut" /> <img
 					src="../images/next.gif" border="0" width="10" height="9"
 					align="absmiddle"> &nbsp;</a></td>
@@ -506,6 +555,17 @@ function refreshTabAlerts(id) {
     boolean bFistEntry = true;
    	GregorianCalendar cal = new GregorianCalendar(year,(month-1),1);
    	cal.add(cal.MONTH,1);
+
+   		
+
+   	if (isTeamOnly && (providerview.equals("all") || providerview.startsWith("_grp_"))) {
+   		// only display providers that has the same team field value.
+   	   	
+   	   	param[0] = year+"-"+month+"-"+"1";
+        param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
+        resultList = oscarSuperManager.find("providerDao", "search_scheduledate_teamp", new String[]{param[0], param[1], curUser_no, curUser_no });   		
+   		
+   	} else
     if(providerview.equals("all") || providerview.startsWith("_grp_",0)) {
       param[0] = year+"-"+month+"-"+"1";
       param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
@@ -542,7 +602,8 @@ function refreshTabAlerts(id) {
 						size="-2" color="blue"><%=strHolidayName.toString()%></font> <%
   while (bFistEntry?it.hasNext():true) { 
     date = bFistEntry?it.next():date;
-    if(!String.valueOf(date.get("sdate")).equals(year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j])) ) {
+    String _scheduleDate = year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j]);
+    if(!String.valueOf(date.get("sdate")).equals(_scheduleDate) ) {
       bFistEntry = false;
       break;
     } else {    //System.out.println("ok "+rsgroup.getString("sdate")+" "+dateGrid[i][j]);
@@ -551,9 +612,13 @@ function refreshTabAlerts(id) {
     }
     if(!providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
 %> <br>
+<% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
 					<span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span
-						class='datephour'><%=date.get("hour") %></span><span
-						class='datepreason'><%=date.get("reason") %></span> <%  }  } %>
+						class='datephour'><%=date.get("hour") %></span>
+<% if (!bMultisites) { %>						
+						<span class='datepreason'><%=date.get("reason") %></span>
+<% } %>
+<%  }  } %>
 					</a></font></td>
 					<%
                   }

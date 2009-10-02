@@ -252,6 +252,12 @@ public class BillingReviewPrep {
 		List ret = dbObj.getCurProviderStr();
 		return ret;
 	}
+	
+	public List getTeamProviderBillingStr(String provider_no) {
+		JdbcBillingPageUtil dbObj = new JdbcBillingPageUtil();
+		List ret = dbObj.getCurTeamProviderStr(provider_no);
+		return ret;
+	}
 
 	// default value to 1 if it is empty
 	private String defaultParamValue(String val) {

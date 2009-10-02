@@ -16,6 +16,8 @@
  * Yi Li
  */
 -->
+<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+
 <%// start
 			if (session.getAttribute("user") == null)
 				response.sendRedirect("../../../logout.htm");
@@ -63,6 +65,16 @@
 
 			%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	boolean isTeamBillingOnly=false; 
+%>
+<security:oscarSec objectName="_team_billing_only" roleName="<%= roleName$ %>" rights="r" reverse="false">
+<% isTeamBillingOnly=true; %>
+</security:oscarSec>
+
 <%@ page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
@@ -78,7 +90,11 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.common.model.Provider"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.billingCorrection.title" /></title>
@@ -500,11 +516,65 @@ if(bFlag) {
 				%>
 		</select></td>
 		<td width="46%"><b><bean:message
-			key="billing.billingCorrection.formBillingPhysician" />: </b> <select
+			key="billing.billingCorrection.formBillingPhysician" />: </b><br />
+
+<% // multisite start ==========================================
+String curSite = request.getParameter("site")==null?ch1Obj.getClinic():request.getParameter("site");
+if (bMultisites) 
+{ 
+        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+          	// now get all providers eligible         	
+			List pList = isTeamBillingOnly
+					? (Vector) (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
+					: (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
+          	HashSet<String> pros=new HashSet<String>();
+          	for (Object s:pList) {
+          		pros.add(((String)s).substring(0, ((String)s).indexOf("|")));
+          	}
+      %> 
+      <script>
+var _providers = [];
+<%	for (int i=0; i<sites.size(); i++) { %>
+	_providers["<%= sites.get(i).getName() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+	while (iter.hasNext()) {
+		Provider p=iter.next();
+		if (pros.contains(p.getProviderNo())) {
+	%><option value='<%= p.getProviderNo() %>'><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
+<% } %>
+function changeSite(sel) {
+	sel.form.provider_no.innerHTML=sel.value=="none"?"":_providers[sel.value];
+	sel.style.backgroundColor=sel.options[sel.selectedIndex].style.backgroundColor;
+}
+      </script>
+      	<select id="site" name="site" style="font-size: 80%;" onchange="changeSite(this)">
+      		<option value="none" style="background-color:white">---select clinic---</option>
+      	<%
+      	for (int i=0; i<sites.size(); i++) {
+      	%>
+      		<option value="<%= sites.get(i).getName() %>" style="background-color:<%= sites.get(i).getBgColor() %>"
+      			 <%=sites.get(i).getName().toString().equals(curSite)?"selected":"" %>><%= sites.get(i).getName() %></option>
+      	<% } %>
+      	</select>
+      	<select id="provider_no" name="provider_no" style="font-size: 80%;width:140px"></select>
+      	<script>
+     	changeSite(document.getElementById("site"));
+      	document.getElementById("provider_no").value='<%=Provider%>';     	
+      	</script>
+<%  // multisite end ==========================================
+} else {
+%>	 
+		<select
 			id="provider_no" style="font-size: 80%;" name="provider_no">
 			<option value=""><bean:message
 				key="billing.billingCorrection.msgSelectProvider" /></option>
-			<%List pList = (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
+			<%
+			
+			List pList = isTeamBillingOnly
+					? (Vector) (new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
+					: (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
+										
+					
 				for (int i = 0; i < pList.size(); i++) {
 					String temp[] = ((String) pList.get(i)).split("\\|");
 
@@ -515,7 +585,11 @@ if(bFlag) {
 			<%}
 
 				%>
-		</select> <input type="hidden" name="xml_provider_no" value="<%=Provider%>"></td>
+		</select>
+<% } %>
+
+		
+		 <input type="hidden" name="xml_provider_no" value="<%=Provider%>"></td>
 	</tr>
 	<tr>
 		<td width="54%"><b> <bean:message

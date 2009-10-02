@@ -125,6 +125,15 @@ while ((!isOk) && retry < 3) {
 	
 	retry ++;
 }
+
+if (isOk && org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+	String[] sites = request.getParameterValues("sites");
+	if (sites!=null)
+		for (int i=0; i<sites.length; i++) {
+			dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[]{param[0], String.valueOf(sites[i])});
+		}	
+}
+
 if (isOk) {
 	String proId = param[0];
 	String ip = request.getRemoteAddr();

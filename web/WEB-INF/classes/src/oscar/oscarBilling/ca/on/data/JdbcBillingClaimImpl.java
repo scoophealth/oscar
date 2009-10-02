@@ -69,7 +69,8 @@ public class JdbcBillingClaimImpl {
 				+ "'," + "'" + val.billing_date + "'," + "'" + val.billing_time + "'," + "'" + val.total + "'," + "'"
 				+ val.paid + "'," + "'" + val.status + "'," + "'" + StringEscapeUtils.escapeSql(val.comment) + "',"
 				+ "'" + val.visittype + "'," + "'" + val.provider_ohip_no + "'," + "'" + val.provider_rma_no + "',"
-				+ "'" + val.apptProvider_no + "'," + "'" + val.asstProvider_no + "'," + "'" + val.creator + "', \\N )";
+				+ "'" + val.apptProvider_no + "'," + "'" + val.asstProvider_no + "'," + "'" + val.creator + "', \\N, "
+				+ (val.clinic==null?"null":"'"+val.clinic+"'")+" )";
 
 		_logger.info("addOneClaimHeaderRecord(sql = " + sql + ")");
 		retval = dbObj.saveBillingRecord(sql);

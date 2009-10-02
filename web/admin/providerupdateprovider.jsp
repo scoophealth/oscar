@@ -36,7 +36,11 @@
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
@@ -100,6 +104,31 @@ function setfocus() {
 		<td><input type="text" index="4" name="first_name"
 			value="<%= apptMainBean.getString(rs,"first_name") %>" maxlength="30"></td>
 	</tr>
+	
+	
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
+	<tr>
+		<td>
+		<div align="right"><bean:message key="admin.provider.sitesAssigned" /><font color="red">:</font></div>
+		</td>
+		<td>
+<% 
+ProviderDao pDao = (ProviderDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerDao");
+Set<Site> psites = pDao.getProvider(provider_no).getSites();
+SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+List<Site> sites = siteDao.getAllActiveSites(); 
+for (int i=0; i<sites.size(); i++) {
+%>		
+	<input type="checkbox" name="sites" value="<%= sites.get(i).getSiteId() %>" <%= psites.contains(sites.get(i))?"checked='checked'":"" %>><%= sites.get(i).getName() %><br />
+<%
+}
+%>
+		</td>
+	</tr>
+<% } %>	
+	
+	
+	
 	<tr>
 		<td align="right"><bean:message key="admin.provider.formType" />:
 		</td>

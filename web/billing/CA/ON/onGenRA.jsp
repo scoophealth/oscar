@@ -16,6 +16,16 @@
  * Yi Li
  */
 -->
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean isTeamBillingOnly=false;
+%>
+<security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
+<% isTeamBillingOnly=true; %>
+</security:oscarSec>
+
 
 <% 
     if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
@@ -121,8 +131,10 @@ function checkReconcile(url){
 		<th>Status</th>
 	</tr>
 
-	<% //
-List aL = dbObj.getAllRahd("D");
+	<% 
+List aL = isTeamBillingOnly? dbObj.getTeamRahd("D", (String) session.getAttribute("user")) : dbObj.getAllRahd("D");
+
+
 for(int i = 0; i < aL.size(); i++) {
 	Properties pro = (Properties) aL.get(i);
 	raNo = pro.getProperty("raheader_no");

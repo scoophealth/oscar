@@ -502,8 +502,15 @@ var beginD = "1900-01-01"
         <option value="D" <%=ticklerview.equals("D")?"selected":""%>><bean:message key="tickler.ticklerMain.formDeleted"/></option>
         </select>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.formSelectProvider"/> </b></font>
+
+<% boolean isTeamOnly=false; %>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_team_schedule_only" rights="r" reverse="false">
+<% isTeamOnly=true; %>
+</security:oscarSec>
+
         <select id="providerview" name="providerview">
-        <option value="%" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
+        <option value="all" <%=providerview.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
         <%  String proFirst="";
             String proLast="";
             String proOHIP="";
@@ -512,7 +519,7 @@ var beginD = "1900-01-01"
             int Count = 0;
             ResultSet rslocal;
             rslocal = null;
-            rslocal = apptMainBean.queryResults("%", "search_provider_all_dt");
+            rslocal = isTeamOnly?apptMainBean.queryResults(new String[]{user_no, user_no}, "search_provider_team_dt"):apptMainBean.queryResults("%", "search_provider_all_dt");
             while(rslocal.next()){
                 proFirst = rslocal.getString("first_name");
                 proLast = rslocal.getString("last_name");
@@ -532,6 +539,41 @@ var beginD = "1900-01-01"
 
           <!-- -->
           &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.msgAssignedTo"/></b></font>
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
+{ // multisite start ==========================================
+        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no); 
+      %> 
+      <script>
+var _providers = [];
+<%	for (int i=0; i<sites.size(); i++) { %>
+	_providers["<%= sites.get(i).getSiteId() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+	while (iter.hasNext()) {
+		Provider p=iter.next();
+		if ("1".equals(p.getStatus())) {
+	%><option value='<%= p.getProviderNo() %>'><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
+<% } %>
+function changeSite(sel) {
+	sel.form.assignedTo.innerHTML=sel.value=="none"?"":_providers[sel.value];
+}
+      </script>
+      	<select id="site" name="site" onchange="changeSite(this)">
+      		<option value="none">---select clinic---</option>
+      	<%
+      	for (int i=0; i<sites.size(); i++) {
+      	%>
+      		<option value="<%= sites.get(i).getSiteId() %>" <%=sites.get(i).getSiteId().toString().equals(request.getParameter("site"))?"selected":"" %>><%= sites.get(i).getName() %></option>
+      	<% } %>
+      	</select>
+      	<select id="assignedTo" name="assignedTo" style="width:140px"></select>
+<% if (request.getParameter("assignedTo")!=null) { %>
+      	<script>
+     	changeSite(document.getElementById("site"));
+      	document.getElementById("assignedTo").value='<%=request.getParameter("assignedTo")%>';     	
+      	</script>
+<% } // multisite end ==========================================
+} else {
+%>
         <select id="assignedTo" name="assignedTo">
         <option value="%" <%=assignedTo.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
         <%
@@ -545,7 +587,7 @@ var beginD = "1900-01-01"
         <option value="<%=proOHIP%>" <%=assignedTo.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
         <%}%>
           </select>
-
+<% } %>
 
 
       <!--/td>
@@ -641,7 +683,11 @@ var beginD = "1900-01-01"
                             
                             param[1] = dateBegin;
                             param[2] = dateEnd;
-                            param[3] = providerview.equals("all") ? "%" : providerview; //request.getParameter("providerview")==null?"%": request.getParameter("providerview");
+                            param[3] = providerview.equals("all") ? 
+                            		(isTeamOnly? 
+                            				"(p.provider_no='"+user_no+"' or p.team=(select pp.team from provider pp where pp.provider_no='"+user_no+"'))" 
+                            				: "d.provider_no like '%'") 
+                            		: "d.provider_no like '"+providerview+"'"; 
                             param[4] = assignedTo.equals("all") ? "%" : assignedTo; //request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo");
                             //System.out.println(request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo"));
                             
@@ -663,7 +709,7 @@ var beginD = "1900-01-01"
                             
                             System.out.println("SORT ORDER " + order);
                             param[5] = order;
-                            String sql = "select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.update_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status='" + param[0] + "' and TO_DAYS(t.service_date) >=TO_DAYS('" + param[1] + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + param[2] + "') and d.provider_no like '" + param[3] + "' and t.task_assigned_to like '" + param[4] + "' order by " + param[5];
+                            String sql = "select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.update_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status='" + param[0] + "' and TO_DAYS(t.service_date) >=TO_DAYS('" + param[1] + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + param[2] + "') and " + param[3] + " and t.task_assigned_to like '" + param[4] + "' order by " + param[5];
                             oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
                             java.sql.PreparedStatement ps =  db.GetConnection().prepareStatement(sql);
                               
@@ -795,7 +841,7 @@ var beginD = "1900-01-01"
                             <%}
                             
                             apptMainBean.closePstmtConn();
-                            
+              
                             if (nItems == 0) {
                             %>
                             <tr><td colspan="8" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>

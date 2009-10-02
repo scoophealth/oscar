@@ -72,6 +72,7 @@ public class ProviderDao extends OscarSuperDao {
 			{"search_encounterformname", "select form_name from encounterform order by form_name"},
 			{"search_provider_slp", "select comments from provider where provider_no=?"},
 
+			{"searchloginteam", "select provider_no, last_name, first_name from provider where (provider_no=? || team=(select team from provider where provider_no=?)) and status='1' order by last_name"},
 			{"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
 			{"searchallprovider", "select * from provider where status='1' order by last_name"},
 			{"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" },
@@ -79,6 +80,7 @@ public class ProviderDao extends OscarSuperDao {
 			{"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? and status = 'A' order by sdate" },
 			{"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=? and status = 'A'" },
             {"search_signed_confidentiality", "select signed_confidentiality from provider where provider_no = ?"},
+			{"search_scheduledate_teamp", "select * from scheduledate where sdate between ? and ? and status = 'A' and provider_no in (select distinct provider_no from provider where team=(select team from provider where provider_no=?) || provider_no=?) order by sdate" },
 
 			{"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"},
 			{"search_timecode", "select * from scheduletemplatecode order by code"},

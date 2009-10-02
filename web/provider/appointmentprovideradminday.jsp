@@ -1,7 +1,28 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
+<%!
+//multisite starts =====================
+private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();	
+private JdbcApptImpl jdbc = new JdbcApptImpl();
+private List<Site> sites;
+private String [] curScheduleMultisite;
+private String getSiteHTML(String scDate, String provider_no, List<Site> sites) {
+	 if (!bMultisites) return "";
+	 String _loc = jdbc.getLocationFromSchedule(scDate, provider_no);
+	 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, _loc)+"'>"+ApptUtil.getShortNameFromLocation(sites, _loc)+"</span>";	
+}
+%>
+<% if (bMultisites) {
+SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+sites = siteDao.getAllSites(); 
+}
+//multisite ends =======================
+%>
+
 <!-- add by caisi -->
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
@@ -54,6 +75,7 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 <%@ page import="org.apache.commons.lang.*" %>
 
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
@@ -204,7 +226,11 @@ String strDay=day>9?(""+day):("0"+day);
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="oscar.util.*"%>
 <%@page import="oscar.oscarDB.*"%>
-<html:html locale="true">
+
+<%@page import="oscar.appt.JdbcApptImpl"%>
+<%@page import="oscar.appt.ApptUtil"%>
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
@@ -218,8 +244,11 @@ String strDay=day>9?(""+day):("0"+day);
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../phr/phr.js"></script>
 <script language="JavaScript">
-
-
+function storeApptNo(apptNo) {
+	var url = "storeApptInSession.jsp?appointment_no="+apptNo;
+	new Ajax.Request(url, {method:'get'});	
+}
+    
 function showPersonal()  {
     var url = "<%=request.getContextPath()%>/Provider/showPersonal.do";
 
@@ -360,6 +389,16 @@ popup.opener = self;
 }
 popup.focus();
 }
+}
+
+function popupWithApptNo(vheight,vwidth,varpage,name,apptNo) {
+	if (apptNo) storeApptNo(apptNo);
+	if (name=='master')
+		popup(vheight,vwidth,varpage,name);
+	else if (name=='encounter')
+		popupPage(vheight, vwidth, varpage);
+	else
+		popupOscarRx(vheight,vwidth,varpage);
 }
 
 function review(key) {
@@ -536,12 +575,18 @@ if(providerBean.isEmpty()) {
    }
  }
 
+
+String _scheduleDate = strYear+"-"+strMonth+"-"+strDay;
+
 if(providerBean.get(mygroupno) != null) { //single appointed provider view
-numProvider=1;
-curProvider_no = new String [numProvider];
-curProviderName = new String [numProvider];
-curProvider_no[0]=mygroupno;
-curProviderName[0]=providerBean.getProperty(mygroupno);
+     numProvider=1;
+     curProvider_no = new String [numProvider];
+     curProviderName = new String [numProvider];
+     curProvider_no[0]=mygroupno;
+     curProviderName[0]=providerBean.getProperty(mygroupno);
+// multisite start =============
+	 curScheduleMultisite = new String[]{ bMultisites?getSiteHTML(_scheduleDate, curProvider_no[0], sites):"" };
+// multisite end =============
 } else {
 if(view==0) { //multiple views
            resultList = oscarSuperManager.find("providerDao", "searchmygroupcount", new Object[] {mygroupno});
@@ -554,39 +599,48 @@ param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
        resultList = oscarSuperManager.find("providerDao", "search_numgrpscheduledate", param3);
        for (Map count : resultList) {
          numAvailProvider = ((Long)(count.get(count.keySet().toArray()[0]))).intValue();
+	   }
+  	 
+     if(numProvider==0) {
+       numProvider=1; //the login user
+       curProvider_no = new String []{curUser_no};  //[numProvider];
+       curProviderName = new String []{(userlastname+", "+userfirstname)}; //[numProvider];
+// multisite start =============	 
+  	 curScheduleMultisite = new String[]{ bMultisites?getSiteHTML(_scheduleDate, curProvider_no[0], sites):"" };
+// multisite end =============       
+     } else {
+       if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) {
+         if(numProvider >= 5) {lenLimitedL = 2; lenLimitedS = 3; }
+       } else {
+         if(numAvailProvider >= 5) {lenLimitedL = 2; lenLimitedS = 3; }
+         if(numAvailProvider == 2) {lenLimitedL = 20; lenLimitedS = 10; len = 20;}
+         if(numAvailProvider == 1) {lenLimitedL = 30; lenLimitedS = 30; len = 30; }
        }
-
- 
-if(numProvider==0) {
-numProvider=1; //the login user
-curProvider_no = new String []{curUser_no};  //[numProvider];
-curProviderName = new String []{(userlastname+", "+userfirstname)}; //[numProvider];
-} else {
-if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) {
- if(numProvider >= 5) {lenLimitedL = 2; lenLimitedS = 3; }
-} else {
- if(numAvailProvider >= 5) {lenLimitedL = 2; lenLimitedS = 3; }
- if(numAvailProvider == 2) {lenLimitedL = 20; lenLimitedS = 10; len = 20;}
- if(numAvailProvider == 1) {lenLimitedL = 30; lenLimitedS = 30; len = 30; }
-}
-curProvider_no = new String [numProvider];
-curProviderName = new String [numProvider];
-
+     curProvider_no = new String [numProvider];
+     curProviderName = new String [numProvider];
+curScheduleMultisite = new String [numProvider];
+     
      int iTemp = 0;
      resultList = oscarSuperManager.find("providerDao", "searchmygroupprovider", new Object[] {mygroupno});
      for (Map provider : resultList) {
        curProvider_no[iTemp] = String.valueOf(provider.get("provider_no"));
        curProviderName[iTemp] = provider.get("first_name")+" "+provider.get("last_name");
+ // multisite start =============  	 
+  	 curScheduleMultisite[iTemp] = bMultisites?getSiteHTML(_scheduleDate, curProvider_no[iTemp], sites):"";
+ // multisite end =============       
        iTemp++;
      }
+    }
+   } else { //single view
+     numProvider=1;
+     curProvider_no = new String [numProvider];
+     curProviderName = new String [numProvider];
+     curProvider_no[0]=request.getParameter("curProvider");
+     curProviderName[0]=request.getParameter("curProviderName");
+// multisite start =============
+	 curScheduleMultisite = new String[]{ bMultisites?getSiteHTML(_scheduleDate, curProvider_no[0], sites):"" };
+// multisite end =============
    }
-} else { //single view
-numProvider=1;
-curProvider_no = new String [numProvider];
-curProviderName = new String [numProvider];
-curProvider_no[0]=request.getParameter("curProvider");
-curProviderName[0]=request.getParameter("curProviderName");
-}
 }
 //set timecode bean
 String bgcolordef = "#486ebd" ;
@@ -716,6 +770,21 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
   </li>
 </security:oscarSec>
 	</caisi:isModuleLoad>
+<!-- plugins menu extension point add -->
+<%int pluginMenuTagNumber=0; %> 
+<plugin:pageContextExtension serviceName="oscarMenuExtension" stemFromPrefix="Oscar"/>
+<%System.out.println("enter plugin---"); %>
+<logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
+<%if (oscar.util.plugin.IsPropertiesOn.propertiesOn(pt.getName().toLowerCase())) {
+	pluginMenuTagNumber++;
+%>
+
+       <li><a href='<html:rewrite page="<%= pt.getLink() %>"/>'>
+       <%= pt.getName() %></a></li>
+<%} %>      
+</logic:iterate>
+
+<!-- plugin menu extension point add end-->
 	
 <%int menuTagNumber=0; %> 
 <caisi:isModuleLoad moduleName="caisi">
@@ -809,25 +878,49 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 //session.setAttribute("case_program_id", null);
 %>
   <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
+
   <select name="mygroup_no" onChange="changeGroup(this)">
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
+
+
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_team_schedule_only" rights="r" reverse="false">
+<%
+	String provider_no = curUser_no;
+	resultList = oscarSuperManager.find("providerDao", "searchloginteam", new Object[]{provider_no, provider_no});
+	for (Map provider : resultList) {
+%>
+<option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
+		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+<%
+	}
+%>
+
+</security:oscarSec>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_team_schedule_only" rights="r" reverse="true">
 <%
 	request.getSession().setAttribute("archiveView","false");
-        resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
-        for (Map group : resultList) {
+	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
+	for (Map group : resultList) {
 %>
-<option value="<%="_grp_"+group.get("mygroup_no")%>" <%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
+  <option value="<%="_grp_"+group.get("mygroup_no")%>"
+		<%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
 <%
- 	 }
+	}
 
-        resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
-        for (Map provider : resultList) {
+	resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
+	for (Map provider : resultList) {
 %>
-<option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>><%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+  <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
+		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
 <%
- 	 }
+	}
 %>
+</security:oscarSec>
 </select>
+
+
 <% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
          <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a> &nbsp;|&nbsp;
 <% } else {  %>
@@ -985,6 +1078,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
+          <%= curScheduleMultisite[nProvider] %>
       <% } %>
 
           <% if (!userAvail) {%>
@@ -1193,7 +1287,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- doctor code block -->
 <% if(bShowEncounterLink && !isWeekView) { %>
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+appointment.get("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status + "&apptProvider_no=" + curProvider_no[nProvider] + "&providerview=" + curProvider_no[nProvider];%>
-<a href=# onClick="popUpEncounter(710, 1024,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
+<a href=# onClick="popupWithApptNo(710, 1024,'<%=eURL%>','encounter',<%=appointment.get("appointment_no")%>);return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <% } %>
 <!-- billing code block -->
@@ -1218,10 +1312,10 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- billing code block -->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_masterLink" rights="r">
     <% if (vLocale.getCountry().equals("BR")) {%>
-    <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
+    <a href="javascript: function myFunction() {return false; }" onClick="popupWithApptNo(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr','master',<%=appointment.get("appointment_no")%>)"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}else{%>
-    <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail','master')"
+    <a href="javascript: function myFunction() {return false; }" onClick="popupWithApptNo(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail','master',<%=appointment.get("appointment_no")%>)"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
 </security:oscarSec>
@@ -1231,7 +1325,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
           <!-- doctor code block -->
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
-      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/>
+      <a href=# onClick="popupWithApptNo(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>','rx',<%=appointment.get("appointment_no")%>)" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/>
       </a>
        <%
 	  if("bc".equalsIgnoreCase(prov)){
@@ -1285,6 +1379,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
+          <%= curScheduleMultisite[nProvider] %>
       <% } %>
 
           <% if(!userAvail) { %>

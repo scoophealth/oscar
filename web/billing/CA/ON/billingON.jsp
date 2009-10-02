@@ -358,7 +358,12 @@
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.apache.commons.lang.StringUtils"%><html>
 <head>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
@@ -967,6 +972,54 @@ function changeCodeDesc() {
 				<tr>
 				    <td nowrap width="30%" align="center"><b>Billing Physician</b></td>
 				    <td width="20%">
+
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
+{ // multisite start ==========================================
+        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+          	
+      %> 
+      <script>
+var _providers = [];
+<%	for (int i=0; i<sites.size(); i++) { %>
+	_providers["<%= sites.get(i).getName() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+	while (iter.hasNext()) {
+		Provider p=iter.next();
+		if ("1".equals(p.getStatus()) && StringUtils.isNotBlank(p.getOhipNo())) {
+	%><option value='<%= p.getProviderNo() %>|<%= p.getOhipNo() %>' ><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
+<% } %>
+function changeSite(sel) {
+	sel.form.xml_provider.innerHTML=sel.value=="none"?"":_providers[sel.value];
+	sel.style.backgroundColor=sel.options[sel.selectedIndex].style.backgroundColor;
+}
+      </script>
+      	<select id="site" name="site" onchange="changeSite(this)" style="width:140px">
+      		<option value="none" style="background-color:white">---select clinic---</option>
+      	<%
+      	String selectedSite = request.getParameter("site");
+      	String xmlp = null;
+      	if (selectedSite==null) {
+      		rs = dbObj.searchDBRecord("select a.location loc, a.provider_no pno, p.ohip_no ohip from appointment a left join provider p  on a.provider_no=p.provider_no where a.appointment_no="+appt_no);
+      		if (rs.next()) {
+      			selectedSite = rs.getString("loc");
+      			xmlp = rs.getString("pno")+"|"+rs.getString("ohip");
+      		}
+      	}
+      	for (int i=0; i<sites.size(); i++) {
+      	%>
+      		<option value="<%= sites.get(i).getName() %>" style="background-color:<%= sites.get(i).getBgColor() %>"
+      			 <%=sites.get(i).getName().toString().equals(selectedSite)?"selected":"" %>><%= sites.get(i).getName() %></option>
+      	<% } %>
+      	</select>
+      	<select id="xml_provider" name="xml_provider" style="width:140px"></select>
+      	<script>
+     	changeSite(document.getElementById("site"));
+      	document.getElementById("xml_provider").value='<%=request.getParameter("xml_provider")==null?xmlp:request.getParameter("xml_provider")%>';     	
+      	</script>
+<% // multisite end ==========================================
+} else {
+%>				    
+				    
 					<select name="xml_provider">
 <%	    if (vecProvider.size() == 1) {
 		propT = (Properties) vecProvider.get(0); %>
@@ -990,6 +1043,8 @@ function changeCodeDesc() {
 	    }
 %>
 					</select>
+<% } %>				
+					
 				    </td>
 				    <td nowrap width="30%" align="center"><b>Assig. Phys.</b></td>
 				    <td width="20%">
@@ -1078,7 +1133,9 @@ function changeCodeDesc() {
 					    Billing form</a>:
 					    <%=currentFormName.length() < 30 ? currentFormName : currentFormName.substring(0, 30)%>
 				    </td>
-<% 
+				</tr>
+<% if (!org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
+{ 
     OscarProperties props = OscarProperties.getInstance();
     boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
     if(bMoreAddr) {
@@ -1100,8 +1157,10 @@ function changeCodeDesc() {
 					</select>							
 				    </td>
 				</tr>
-<%  } %>
-			    </tr>
+<%  }
+} 
+%>
+			   
 			</table>
 		    </td>
 		</tr>

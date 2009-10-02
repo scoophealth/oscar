@@ -17,6 +17,16 @@
  * Yi Li
  */
  -->
+ 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean isTeamBillingOnly=false;
+%>
+<security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
+<% isTeamBillingOnly=true; %>
+</security:oscarSec>
 
 <% 
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
@@ -190,7 +200,11 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 			<option value="all">Select Providers</option>
 			<%
 		BillingReviewPrep prep = new BillingReviewPrep();
-		List providerStr = prep.getProviderBillingStr();
+			
+			
+		List providerStr = isTeamBillingOnly? prep.getTeamProviderBillingStr(user_no) : prep.getProviderBillingStr();
+		
+		
 		for (int i = 0; i < providerStr.size(); i++) {
 			String temp[] = ((String) providerStr.get(i)).split("\\|");
 			%>

@@ -16,7 +16,7 @@
  * Yi Li
  */
  -->
-
+<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 
@@ -32,6 +32,16 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 <%--
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean isTeamBillingOnly=false;
+%>
+<security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
+<% isTeamBillingOnly=true; %>
+</security:oscarSec>
 
 <%//
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -81,7 +91,10 @@ if ( serviceCode != null && serviceCode.equals("")) {
 	serviceCode = null;
 }
 
-List pList = (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
+List pList = isTeamBillingOnly
+		? (Vector)(new JdbcBillingPageUtil()).getCurTeamProviderStr((String) session.getAttribute("user"))
+		: (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
+
 BillingStatusPrep sObj = new BillingStatusPrep();
 System.out.println(" statusType "+strBillType);
 List bList = null;
@@ -120,7 +133,11 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
-<html>
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.common.model.Provider"%><html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Cache-Control" content="no-cache">
@@ -165,7 +182,7 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
            }  
         }	
         
-        function changeProvider() {
+        function changeProvider(shouldSubmit) {
         
         	var index = document.serviceform.providerview.selectedIndex;
         	var provider_no = document.serviceform.providerview[index].value;
@@ -178,11 +195,12 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 			if(provider_no==temp_provider_no) {				
 				var provider_ohipNo="<%=temp[3]%>";
 				document.serviceform.provider_ohipNo.value=provider_ohipNo;	
-				document.serviceform.submit();				
+				if (shouldSubmit) document.serviceform.submit();
+				else return;				
         	} 
         	<%} %>
         	document.serviceform.provider_ohipNo.value="";
-        	document.serviceform.submit();
+        	if (shouldSubmit) document.serviceform.submit();
         }	
         </script>
 <script type="text/javascript">
@@ -365,8 +383,58 @@ function handleStateChange() {
         <input type="checkbox" name="billTypeAll" value="ALL" checked onclick="changeStatus();"><span class="smallFont">ALL</span></input>
     </td>
     <td align="center" class="myYellow">
-	 
-    <select name="providerview" onchange="changeProvider();">
+
+
+<% // multisite start ==========================================
+String curSite = request.getParameter("site");
+if (bMultisites) 
+{ 
+        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+          	// now get all providers eligible         	
+          	HashSet<String> pros=new HashSet<String>();
+          	for (Object s:pList) {
+          		pros.add(((String)s).substring(0, ((String)s).indexOf("|")));
+          	}
+      %> 
+      <script>
+var _providers = [];
+<%	for (int i=0; i<sites.size(); i++) { %>
+	_providers["<%= sites.get(i).getName() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+	while (iter.hasNext()) {
+		Provider p=iter.next();
+		if (pros.contains(p.getProviderNo())) {
+	%><option value='<%= p.getProviderNo() %>'><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
+<% } %>
+function changeSite(sel) {
+	sel.form.providerview.innerHTML=sel.value=="none"?"":_providers[sel.value];
+	sel.style.backgroundColor=sel.options[sel.selectedIndex].style.backgroundColor;
+	if (sel.value!="none") {
+		if (document.serviceform.provider_ohipNo.value!='')
+			sel.form.providerview.value='<%=request.getParameter("providerview")%>';
+	}
+	changeProvider(false);
+	
+}
+      </script>
+      	<select id="site" name="site" onchange="changeSite(this)">
+      		<option value="none" style="background-color:white">---select clinic---</option>
+      	<%
+      	for (int i=0; i<sites.size(); i++) {
+      	%>
+      		<option value="<%= sites.get(i).getName() %>" style="background-color:<%= sites.get(i).getBgColor() %>"
+      			 <%=sites.get(i).getName().toString().equals(curSite)?"selected":"" %>><%= sites.get(i).getName() %></option>
+      	<% } %>
+      	</select>
+      	<select id="providerview" name="providerview" onchange="changeProvider(true);" style="width:140px"></select>
+<% if (request.getParameter("providerview")!=null) { %>
+      	<script>
+     	window.onload=function(){changeSite(document.getElementById("site"));}
+      	</script>
+<% } // multisite end ==========================================
+} else {
+%>	 
+    <select name="providerview" onchange="changeProvider(true);">
 			<%
 			if(pList.size() == 1) {
 				String temp[] = ((String) pList.get(0)).split("\\|");
@@ -384,6 +452,9 @@ function handleStateChange() {
     <% } 
     } %>
     </select>
+<% } %>
+    
+    
     <font size="1">OHIP No.: <input type="text" size="7" name="provider_ohipNo" readonly value="<%=ohipNo%>"></font>
           <font size="1"><a href="javascript: function myFunction() {return false; }" id="hlSDate">From:</a></font> 
           <input type="text" name="xml_vdate" id="xml_vdate" value="<%=startDate%>" size=10  style="width:70px"/>          
@@ -519,6 +590,10 @@ if(statusType.equals("_")) { %>
        for (int i = 0 ; i < bList.size(); i++) { 
     	   BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) bList.get(i);
     	   
+    	   if (bMultisites && ch1Obj.getClinic()!=null && curSite!=null 
+    			   && !ch1Obj.getClinic().equals(curSite))
+				continue; // multisite: skip if the line doesn't belong to the selected clinic    		   
+    		   
     	   // ra code
     	   if(raCode.trim().length() == 2) {
     		   if(!raData.isErrorCode(ch1Obj.getId(), raCode)) {

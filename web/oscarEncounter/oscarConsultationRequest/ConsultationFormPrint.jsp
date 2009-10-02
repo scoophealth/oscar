@@ -21,7 +21,8 @@
  * Ontario, Canada
  */
 --%>
-
+<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@ page language="java" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -36,7 +37,10 @@
 <!-- end -->
 <%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*" %>
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
 
 <%
     oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm;
@@ -78,13 +82,51 @@
     while (st.hasMoreTokens()) {
          vecFaxes.add(st.nextToken());
     }
-
+    
     // for satellite clinics
     Vector vecAddressName = null;
     Vector vecAddress = null;
     Vector vecAddressPhone = null;
     Vector vecAddressFax = null;
     Vector vecAddressBillingNo = null;
+    String defaultAddrName = null;
+    if (bMultisites) {
+    	String appt_no=(String)session.getAttribute("cur_appointment_no");
+    	String location = null;
+    	if (appt_no!=null) {
+    		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search", new Object[] {appt_no});
+    		if (resultList!=null) location = (String) resultList.get(0).get("location");
+    	}
+
+    	vecAddressName = new Vector();
+        vecAddress = new Vector();
+        vecAddressPhone = new Vector();
+        vecAddressFax = new Vector();
+        vecAddressBillingNo = new Vector();
+        
+    		SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+      		List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+ 			Site defaultSite = null;
+      		for (Site s:sites) {
+                vecAddressName.add(s.getName());
+                vecAddress.add(s.getAddress() + ", " + s.getCity() + ", " + s.getProvince() + "  " + s.getPostal());
+                vecAddressPhone.add(s.getPhone());
+                vecAddressFax.add(s.getFax());      			
+                if (s.getName().equals(location))
+                	defaultSite = s;
+      		}
+            // default address
+            // 
+        if (defaultSite!=null) {
+            clinic.setClinic_address(defaultSite.getAddress());
+            clinic.setClinic_city(defaultSite.getCity());
+            clinic.setClinic_province(defaultSite.getProvince());
+            clinic.setClinic_postal(defaultSite.getPostal());
+            clinic.setClinic_phone(defaultSite.getPhone());
+            clinic.setClinic_fax(defaultSite.getFax()); 
+   			defaultAddrName=defaultSite.getName();
+        }
+    } else
     if(props.getProperty("clinicSatelliteName") != null) {
         vecAddressName = new Vector();
         vecAddress = new Vector();
@@ -293,7 +335,7 @@
             <%  for (int i =0; i < vecAddressName.size();i++){
                  String te = (String) vecAddressName.get(i);
             %>
-                    <option value="<%=i%>"><%=te%></option>
+                    <option value="<%=i%>" <%=te.equals(defaultAddrName)?"selected":"" %>><%=te%></option>
             <%  }%>
                 </select>
             </td>
@@ -460,9 +502,7 @@
                                     </tr>
 <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
 <special:SpecialEncounterTag moduleName="eyeform">
-<script type="text/javascript" src="js/prototype.js">
-</script>
-<%
+<% 
 String requestId=(String)request.getAttribute("reqId");
 String aburl="/EyeForm.do?method=showCC";
 if (requestId!=null) aburl+="&requestId="+requestId; %>

@@ -114,7 +114,7 @@ public class JdbcBillingReviewImpl {
 		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType;
 		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
 		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp1,total,paid" + " from billing_on_cheader1 where " + temp
+				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp1,total,paid,clinic" + " from billing_on_cheader1 where " + temp
 				+ " order by billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
@@ -136,6 +136,9 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setTotal(rs.getString("total"));
 				ch1Obj.setPay_program(rs.getString("pay_program"));
 				ch1Obj.setPaid(rs.getString("paid"));
+				
+				ch1Obj.setClinic(rs.getString("clinic"));
+				
 				retval.add(ch1Obj);
 			}
 			rs.close();
@@ -154,7 +157,7 @@ public class JdbcBillingReviewImpl {
 		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
 
 		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid" + " from billing_on_cheader1 where " + temp
+				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid,clinic" + " from billing_on_cheader1 where " + temp
 				+ " order by billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
@@ -179,6 +182,9 @@ public class JdbcBillingReviewImpl {
 					ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
 					ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 					ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
+					
+					ch1Obj.setClinic(rs.getString("clinic"));
+					
 					// ch1Obj.setTotal(rs.getString("total"));
 					ch1Obj.setPay_program(rs.getString("pay_program"));
 					if (!bSameBillCh1) 
@@ -189,6 +195,9 @@ public class JdbcBillingReviewImpl {
 					ch1Obj.setTotal(rs1.getString("fee"));
 					ch1Obj.setRec_id(rs1.getString("dx"));
 					ch1Obj.setTransc_id(rs1.getString("service_code"));
+					
+
+					
 					retval.add(ch1Obj);
                                         bSameBillCh1 = true; 
 				}
@@ -237,6 +246,8 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setProviderNo(rs.getString("provider_no"));
 				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
 				ch1Obj.setUpdate_datetime(rs.getString("timestamp1"));
+				
+				ch1Obj.setClinic(rs.getString("clinic"));
 
 				ch1Obj.setPay_program(rs.getString("pay_program"));
 				ch1Obj.setVisittype(rs.getString("visittype"));

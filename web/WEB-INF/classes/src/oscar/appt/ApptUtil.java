@@ -1,6 +1,10 @@
 package oscar.appt;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.oscarehr.common.model.Site;
 
 /**
  * This class contains Appointment related presentation layer helper methods.
@@ -42,12 +46,36 @@ public class ApptUtil {
 		String ret = "white";
 		String[] s = site.split("\\|");
 		String[] c = colo.split("\\|");
-		for (int i = 0; i < site.length(); i++) {
+		for (int i = 0; i < s.length; i++) {
 			if (s[i].startsWith(loca)) {
 				ret = c[i];
 				break;
 			}
 		}
 		return ret;
+	}
+	
+	public static String getColorFromLocation(List<Site> sites, String siteName) {
+		for (Site s:sites) {
+			if (s.getName().equals(siteName))
+				return s.getBgColor();
+		}
+		return "white";
+	}
+	
+	public static String getShortNameFromLocation(List<Site> sites, String siteName) {
+		for (Site s:sites) {
+			if (s.getName().equals(siteName))
+				return s.getShortName();
+		}
+		return "";
+	}
+	
+	public static Site getSiteFromName(List<Site> sites, String siteName) {
+		for (Site s:sites) {
+			if (s.getName().equals(siteName))
+				return s;
+		}
+		return null;
 	}
 }

@@ -52,6 +52,7 @@ public class BillingStatusData {
 				h.put("billing_date", rs.getString("billing_date"));
 				h.put("billing_time", rs.getString("billing_time"));
 				h.put("total", rs.getString("total"));
+				h.put("clinic", rs.getString("clinic"));
 				list.add(h);
 			}
 		} catch (Exception e) {

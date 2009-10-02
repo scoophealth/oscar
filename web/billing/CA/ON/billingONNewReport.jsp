@@ -17,6 +17,17 @@
  * Yi Li
  */
 -->
+<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	boolean isTeamBillingOnly=false; 
+%>
+<security:oscarSec objectName="_team_billing_only" roleName="<%= roleName$ %>" rights="r" reverse="false">
+<% isTeamBillingOnly=true; %>
+</security:oscarSec>
 
 <%    
 if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
@@ -74,7 +85,14 @@ if("unbilled".equals(action)) {
     System.out.println(sql);
     rs = dbObj.searchDBRecord(sql);
     while (rs.next()) {
-        prop = new Properties();
+    	if (bMultisites) {
+    		// skip record if location does not match the selected site, blank location always gets displayed for backward-compatibility
+    		String location = rs.getString("location");
+    		if (StringUtils.isNotBlank(location) && !location.equals(request.getParameter("site"))) 
+    			continue; 
+    	}
+
+    	prop = new Properties();
         prop.setProperty("SERVICE DATE", rs.getString("appointment_date"));
         prop.setProperty("TIME", rs.getString("start_time").substring(0,5));
         prop.setProperty("PATIENT", rs.getString("name"));
@@ -103,6 +121,13 @@ if("billed".equals(action)) {
     System.out.println(sql);
     rs = dbObj.searchDBRecord(sql);
     while (rs.next()) {
+    	if (bMultisites) {
+    		// skip record if clinic is not match the selected site, blank clinic always gets displayed for backward compatible
+    		String clinic = rs.getString("clinic");
+    		if (StringUtils.isNotBlank(clinic) && !clinic.equals(request.getParameter("site"))) 
+    			continue; 
+    	}
+    	
         prop = new Properties();
         prop.setProperty("SERVICE DATE", rs.getString("billing_date"));
         prop.setProperty("TIME", rs.getString("billing_time").substring(0,5));
@@ -312,7 +337,12 @@ if("unpaid".equals(action)) {
 
 %>
 
-<html>
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.apache.commons.lang.StringUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ON Billing Report</title>
@@ -388,7 +418,53 @@ function calToday(field) {
 			<%="billed".equals(action)? "checked" : "" %>>Billed <!--  input type="radio" name="reportAction" value="paid" <%="paid".equals(action)? "checked" : "" %>>Paid 
 	<input type="radio" name="reportAction" value="unpaid" <%="unpaid".equals(action)? "checked" : "" %>>Unpaid -->
 		</font></td>
-		<td width="20%" align="right" nowrap><b>Provider </b></font> <select
+		<td width="20%" align="right" nowrap><b>Provider </b></font> 
+<% if (bMultisites) 
+{ // multisite start ==========================================
+        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no); 
+          	// now get all report providers
+          	ResultSet rslocal = isTeamBillingOnly
+				?apptMainBean.queryResults(new String[]{"billingreport", user_no, user_no }, "search_reportteam")
+				:apptMainBean.queryResults("billingreport", "search_reportprovider");
+          	HashSet<String> reporters=new HashSet<String>();
+          	while (rslocal.next()) {
+          		reporters.add(rslocal.getString("provider_no"));
+          	}
+      %> 
+      <script>
+var _providers = [];
+<%	for (int i=0; i<sites.size(); i++) { %>
+	_providers["<%= sites.get(i).getName() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+	while (iter.hasNext()) {
+		Provider p=iter.next();
+		if (reporters.contains(p.getProviderNo())) {
+	%><option value='<%= p.getProviderNo() %>'><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
+<% } %>
+function changeSite(sel) {
+	sel.form.providerview.innerHTML=sel.value=="none"?"":_providers[sel.value];
+	sel.style.backgroundColor=sel.options[sel.selectedIndex].style.backgroundColor;
+}
+      </script>
+      	<select id="site" name="site" onchange="changeSite(this)">
+      		<option value="none" style="background-color:white">---select clinic---</option>
+      	<%
+      	for (int i=0; i<sites.size(); i++) {
+      	%>
+      		<option value="<%= sites.get(i).getName() %>" style="background-color:<%= sites.get(i).getBgColor() %>"
+      				<%=sites.get(i).getName().toString().equals(request.getParameter("site"))?"selected":"" %>><%= sites.get(i).getName() %></option>
+      	<% } %>
+      	</select>
+      	<select id="providerview" name="providerview" style="width:140px"></select>
+<% if (request.getParameter("providerview")!=null) { %>
+      	<script>
+     	changeSite(document.getElementById("site"));
+      	document.getElementById("providerview").value='<%=request.getParameter("providerview")%>';     	
+      	</script>
+<% } // multisite end ==========================================
+} else {
+%>
+		<select
 			name="providerview">
 			<% 
 String proFirst="";
@@ -398,7 +474,9 @@ String specialty_code;
 String billinggroup_no;
 int Count = 0;
 
-ResultSet rslocal = apptMainBean.queryResults("billingreport", "search_reportprovider");
+ResultSet rslocal = isTeamBillingOnly
+?apptMainBean.queryResults(new String[]{"billingreport", user_no, user_no }, "search_reportteam")
+:apptMainBean.queryResults("billingreport", "search_reportprovider");
 while(rslocal.next()){
 	proFirst = rslocal.getString("first_name");
 	proLast = rslocal.getString("last_name");
@@ -410,7 +488,11 @@ while(rslocal.next()){
 			<%
 }      
 %>
-		</select></td>
+		</select>
+<% } %>
+		
+		
+		</td>
 		<td align="center" nowrap><font size="1"> From:</font> <input
 			type="text" name="xml_vdate" id="xml_vdate" size="10"
 			value="<%=xml_vdate%>"> <font size="1"> <img

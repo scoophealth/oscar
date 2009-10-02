@@ -79,6 +79,17 @@
   
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
+	  if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+		String[] sites = request.getParameterValues("sites");
+		DBPreparedHandler dbObj = new DBPreparedHandler();
+		String provider_no = request.getParameter("provider_no");
+		dbObj.queryExecuteUpdate("delete from providersite where provider_no = ?", new String[]{provider_no});
+		if (sites!=null) {
+			for (int i=0; i<sites.length; i++) {
+				dbObj.queryExecuteUpdate("insert into providersite (provider_no, site_id) values (?,?)", new String[] {provider_no, String.valueOf(sites[i])});
+			}
+		}
+	  }
 %>
 <p>
 <h2><bean:message key="admin.providerupdate.msgUpdateSuccess" /><a

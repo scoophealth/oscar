@@ -273,6 +273,10 @@
 	<bean name="/admin/ManageClinic" class="org.oscarehr.common.web.ClinicManageAction" singleton="false">
 		<property name="clinicDAO" ref="clinicDAO" />
 	</bean>
+	<bean name="/admin/ManageSites" class="org.oscarehr.common.web.SitesManageAction" singleton="false">
+		<property name="siteDao" ref="siteDao" />
+	</bean>
+
 	<!--
     <bean name="/PMmodule/Reports/CustomReport" class="org.oscarehr.PMmodule.web.reports.CustomReportAction" singleton="false" autowire="byName">
     </bean>

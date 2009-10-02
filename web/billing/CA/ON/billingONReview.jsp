@@ -16,6 +16,8 @@
  * Yi Li
  */
 -->
+<%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -75,7 +77,7 @@ boolean dupServiceCode = false;
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
 
         //Check whether there are duplicated service code existing
-        //User double click a service code, and then check off that g
+        //User double click a service code, and then check off that 
         //service code in billingON page will cause duplicated service
         //code in billing review page.
         TreeMap mapServiceParam = new TreeMap();
@@ -228,7 +230,10 @@ boolean dupServiceCode = false;
 
 			%>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
@@ -441,10 +446,16 @@ window.onload=function(){
 					</tr>
 					<tr>
 						<td><b>Visit Location</b></td>
-						<td colspan="3"><%=request.getParameter("xml_location").substring(
+						<td><%=request.getParameter("xml_location").substring(
 							request.getParameter("xml_location").indexOf("|") + 1)%> &nbsp;
 							<% if(request.getParameter("m_review")!=null) { out.println("<b>Manual: Y</b>"); } %>
 							</td>
+					
+					<% if (bMultisites) { %>
+						<td width="30%"><b>Billing Clinic</b></td>
+						<td width="20%" nowrap="nowrap"><%=request.getParameter("site")%>
+						</td>
+					<% } %>
 					</tr>
 					<tr>
 						<td><b>Admission Date</b></td>
@@ -727,14 +738,18 @@ function onCheckMaster() {
 			<td >
 			Billing Notes:<br>
 			<%
+			String tempLoc = "";
+		if (!bMultisites) {
             OscarProperties props = OscarProperties.getInstance();
             boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
-			String tempLoc = "";
             if(bMoreAddr) {
             	//String pNo = request.getParameter("xml_provider")!=null?request.getParameter("xml_provider").substring(0,request.getParameter("xml_provider").indexOf("|")):"";
-            	//System.out.println(";;; " + request.getParameter("service_date"));
+            	//System.out.println(";;; " + request.getParameter("service_date"));           	
             	tempLoc = request.getParameter("siteId").trim();
             }
+		} else {
+			tempLoc = request.getParameter("site");			
+		}
 			%>
 			<textarea name="comment" cols=60 rows=4><%=tempLoc %></textarea>
 			</td>
@@ -771,26 +786,40 @@ if (codeValid) { %>
 // for satellite clinics
 String clinicAddress = null;
 // get Site ID from billingON.jsp
-String siteID = request.getParameter("siteId");
-OscarProperties props2 = OscarProperties.getInstance();
-if(props2.getProperty("clinicSatelliteCity") != null) {
-    //compare the site id with clinicSatelliteCity to get the current address index
-    //in properties file  clinicSatelliteCity and scheduleSiteID must have same value
-    String[] clinicCity = props2.getProperty("clinicSatelliteCity", "").split("\\|");
-    //current address index
-    int siteFlag = 0;
-    for(int i = 0; i < clinicCity.length; i++){
-    	if (siteID.equals(clinicCity[i]))	siteFlag = i;
-    }
-    String[] temp0 = props2.getProperty("clinicSatelliteName", "").split("\\|");
-    String[] temp1 = props2.getProperty("clinicSatelliteAddress", "").split("\\|");
-    String[] temp3 = props2.getProperty("clinicSatelliteProvince", "").split("\\|");
-    String[] temp4 = props2.getProperty("clinicSatellitePostal", "").split("\\|");
-    String[] temp5 = props2.getProperty("clinicSatellitePhone", "").split("\\|");
-    String[] temp6 = props2.getProperty("clinicSatelliteFax", "").split("\\|");
-    clinicAddress = temp0[siteFlag]+"\n"+temp1[siteFlag] + "\n" + clinicCity[siteFlag] + ", " + temp3[siteFlag] + " " + temp4[siteFlag] + "\nTel: " + temp5[siteFlag] + "\nFax: " + temp6[siteFlag];
-}else{
-	clinicAddress = strClinicAddr;
+if (bMultisites) {
+	String siteName = request.getParameter("site");
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+  	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+  	Site s = ApptUtil.getSiteFromName(sites, siteName);
+
+  	if (s==null)
+  		clinicAddress = strClinicAddr;
+  	else {
+  		clinicAddress = s.getName()+"\n"+s.getAddress()+"\n"+s.getCity()+", "+s.getProvince()+" "+s.getPostal()+"\nTel: "+s.getPhone()+"\nFax: "+s.getFax();
+  	}
+	
+} else {
+	String siteID = request.getParameter("siteId");
+	OscarProperties props2 = OscarProperties.getInstance();
+	if(props2.getProperty("clinicSatelliteCity") != null) {
+	    //compare the site id with clinicSatelliteCity to get the current address index
+	    //in properties file  clinicSatelliteCity and scheduleSiteID must have same value
+	    String[] clinicCity = props2.getProperty("clinicSatelliteCity", "").split("\\|");
+	    //current address index
+	    int siteFlag = 0;
+	    for(int i = 0; i < clinicCity.length; i++){
+	    	if (siteID.equals(clinicCity[i]))	siteFlag = i;
+	    }
+	    String[] temp0 = props2.getProperty("clinicSatelliteName", "").split("\\|");
+	    String[] temp1 = props2.getProperty("clinicSatelliteAddress", "").split("\\|");
+	    String[] temp3 = props2.getProperty("clinicSatelliteProvince", "").split("\\|");
+	    String[] temp4 = props2.getProperty("clinicSatellitePostal", "").split("\\|");
+	    String[] temp5 = props2.getProperty("clinicSatellitePhone", "").split("\\|");
+	    String[] temp6 = props2.getProperty("clinicSatelliteFax", "").split("\\|");
+	    clinicAddress = temp0[siteFlag]+"\n"+temp1[siteFlag] + "\n" + clinicCity[siteFlag] + ", " + temp3[siteFlag] + " " + temp4[siteFlag] + "\nTel: " + temp5[siteFlag] + "\nFax: " + temp6[siteFlag];
+	}else{
+		clinicAddress = strClinicAddr;
+	}
 }
 %>
 <tr><td>

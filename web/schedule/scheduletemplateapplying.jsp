@@ -1,4 +1,5 @@
-
+<%!  boolean bMultisites=org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
+<%!  String [] bgColors; %>
 <%
   
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
@@ -6,8 +7,27 @@
   boolean bOrigAlt = false;
 
   OscarProperties props = OscarProperties.getInstance();
-  boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
-  String [] addr = props.getProperty("scheduleSiteID", "").split("\\|");
+  
+  boolean bMoreAddr = bMultisites
+  						? true
+  						: (props.getProperty("scheduleSiteID", "").equals("") ? false : true);
+  String [] addr;
+  if (bMultisites) {
+	//multisite starts =====================	  
+	  SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+      List<Site> sites = siteDao.getActiveSitesByProviderNo((String)request.getParameter("provider_no")); 
+	  addr = new String[sites.size()+1];
+	  bgColors = new String[sites.size()+1];
+      for (int i=0; i<sites.size(); i++) {
+		  addr[i]=sites.get(i).getName();
+		  bgColors[i]=sites.get(i).getBgColor();
+      }
+	  addr[sites.size()]="NONE";
+	  bgColors[sites.size()]="white";
+	//multisite ends =====================	 
+  } else {
+  	  addr = props.getProperty("scheduleSiteID", "").split("\\|");
+  }
   
 %>
 <%@ page
@@ -45,7 +65,10 @@
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
 <%  if(!scheduleMainBean.getBDoConfigure()) { %>
 <%@ include file="scheduleMainBeanConn.jsp"%>
 <% } %>
@@ -830,14 +853,17 @@ function tranbuttonb7_click() {
 %>
 </body>
 <%! String getSelectAddr(String s, String [] site, String sel) {
-		String ret = "";
-		ret += "<select name='" + s + "'>";
+		String ret = "<select name='" + s + "' onchange='this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor'>";
+		int ind=0;
 		for(int i=0; i<site.length; i++) {
-			String t = "";
-			t = site[i].equals(sel) ? " selected" : "";
-			ret += "<option value='" + site[i] + "'" + t + ">" + site[i] + "</option>";
+			String t = site[i].equals(sel) ? " selected" : "";
+			if (site[i].equals(sel))
+				ind=i;
+			ret += "<option value='" + site[i] + "'" + t + (bMultisites? " style='background-color:"+bgColors[i]+"'" : "") +">" + site[i] + "</option>";
 		}
 		ret += "</select>";
+		if (bMultisites)
+			ret += "<script>document.schedule."+s+".style.backgroundColor='"+bgColors[ind]+"'</script>";
 		return ret;
 }
 %>

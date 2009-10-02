@@ -97,7 +97,7 @@ function checkInput() {
 function changeGroup(s) {
 	var newGroupNo = s.options[s.selectedIndex].value;
 	newGroupNo = s.options[s.selectedIndex].value;
-	self.location.href = "scheduleedittemplate.jsp?providerid=<%=request.getParameter("providerid")%>&providername=<%=StringEscapeUtils.escapeJavaScript(request.getParameter("providername"))%>&step=" + newGroupNo);
+	self.location.href = "scheduleedittemplate.jsp?providerid=<%=request.getParameter("providerid")%>&providername=<%=StringEscapeUtils.escapeJavaScript(request.getParameter("providername"))%>&step=" + newGroupNo;
 	history.back();
 	document.location.reload();
 }

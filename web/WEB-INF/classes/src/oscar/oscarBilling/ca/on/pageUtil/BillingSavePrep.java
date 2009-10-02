@@ -183,6 +183,8 @@ public class BillingSavePrep {
 		claim1Header.setAsstProvider_no("");
 		claim1Header.setCreator((String) val.getSession().getAttribute("user"));
 
+		claim1Header.setClinic(val.getParameter("site"));
+
 		return claim1Header;
 	}
 

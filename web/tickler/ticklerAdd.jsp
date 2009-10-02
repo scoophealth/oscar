@@ -78,7 +78,11 @@ GregorianCalendar now=new GregorianCalendar();
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.common.model.Provider"%><html:html locale="true">
 <head>
 <title><bean:message key="tickler.ticklerAdd.title"/></title>
 <link rel="stylesheet" href="../billing/billing.css" >
@@ -143,6 +147,12 @@ alert("<bean:message key="tickler.ticklerAdd.msgInvalidDemographic"/>");
 alert("<bean:message key="tickler.ticklerAdd.msgMissingDate"/>");
 	return false;
  }
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
+ else if (document.serviceform.sites.value=="none"){
+alert("Must assign task to a provider.");
+	return false;
+ } 
+<% } %>
  else{
  return true;
 }
@@ -306,7 +316,38 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 
     <tr> 
       <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.taskAssignedTo"/></strong></font></td>
-      <td valign="top"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><select name="task_assigned_to">           
+      <td valign="top"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
+{ // multisite start ==========================================
+        	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no); 
+      %> 
+      <script>
+var _providers = [];
+<%	for (int i=0; i<sites.size(); i++) { %>
+	_providers["<%= sites.get(i).getSiteId() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+	while (iter.hasNext()) {
+		Provider p=iter.next();
+		if ("1".equals(p.getStatus())) {
+	%><option value='<%= p.getProviderNo() %>'><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
+<% } %>
+function changeSite(sel) {
+	sel.form.task_assigned_to.innerHTML=sel.value=="none"?"":_providers[sel.value];
+}
+      </script>
+      	<select name="site" onchange="changeSite(this)">
+      		<option value="none">---select clinic---</option>
+      	<%
+      	for (int i=0; i<sites.size(); i++) {
+      	%>
+      		<option value="<%= sites.get(i).getSiteId() %>"><%= sites.get(i).getName() %></option>
+      	<% } %>
+      	</select>
+      	<select name="task_assigned_to" style="width:140px"></select>
+<% // multisite end ==========================================
+} else {
+%>
+      <select name="task_assigned_to">           
             <%  String proFirst="";
                 String proLast="";
                 String proOHIP="";
@@ -323,7 +364,8 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
                 }      
                 apptMainBean.closePstmtConn();
             %>
-          </select>
+      </select>
+<% } %>
           
            <input type="hidden" name="docType" value="<%=request.getParameter("docType")%>"/>
            <input type="hidden" name="docId" value="<%=request.getParameter("docId")%>"/>

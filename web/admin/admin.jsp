@@ -60,7 +60,8 @@ String userlastname = (String) session.getAttribute("userlastname");
  * Ontario, Canada
  */
 --%>
-<html:html locale="true">
+
+<%@page import="oscar.OscarProperties"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
@@ -653,6 +654,10 @@ div.logoutBox {
 		<ul>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'><bean:message key="admin.admin.clinicAdmin"/></a></li>
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %> 
+			<li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageSites.do"/>&quot;);return false;'><bean:message key="admin.admin.sitesAdmin"/></a></li>
+<% } %>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/demographic/demographicExport.jsp"/>&quot;);return false;'><bean:message key="admin.admin.DemoExport"/></a></li>
                         <li><a href="#"

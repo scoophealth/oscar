@@ -46,4 +46,8 @@ public class IsPropertiesOn {
 		return propertiesOn("ticklerplus");
 	}
 	
+	public static boolean isMultisitesEnable() {
+		return propertiesOn("multisites");
+	}
+	
 }

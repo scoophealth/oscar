@@ -42,7 +42,10 @@
  */
 -->
 <%@page import="oscar.OscarProperties"%>
-<html:html locale="true">
+
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
@@ -116,6 +119,25 @@ function upCaseCtrl(ctrl) {
 		<td><input type="text" name="first_name" maxlength="30">
 		</td>
 	</tr>
+	
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
+	<tr>
+		<td>
+		<div align="right"><bean:message key="admin.provider.sitesAssigned" /><font color="red">:</font></div>
+		</td>
+		<td>
+<% SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+List<Site> sites = siteDao.getAllActiveSites(); 
+for (int i=0; i<sites.size(); i++) {
+%>		
+	<input type="checkbox" name="sites" value="<%= sites.get(i).getSiteId() %>"><%= sites.get(i).getName() %><br />
+<%
+}
+%>
+		</td>
+	</tr>
+<% } %>	
+	
 	<tr>
 		<td align="right"><bean:message key="admin.provider.formType" /><font
 			color="red">:</font></td>

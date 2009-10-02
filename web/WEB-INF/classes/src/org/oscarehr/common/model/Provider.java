@@ -23,6 +23,7 @@ package org.oscarehr.common.model;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.Date;
 
 /**
@@ -51,7 +52,17 @@ public class Provider implements Serializable, Comparable<Provider>{
 	private String firstName;
 	private String rmaNo;
     private Date SignedConfidentiality;
-	
+
+	private Set<Site> sites;
+
+	public Set<Site> getSites() {
+		return sites;
+	}
+
+	public void setSites(Set<Site> sites) {
+		this.sites = sites;
+	}
+
 	// constructors
 	public Provider() {
 	}

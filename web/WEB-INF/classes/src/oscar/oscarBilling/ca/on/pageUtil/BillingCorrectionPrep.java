@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import oscar.appt.ApptUtil;
 import oscar.oscarBilling.ca.on.data.BillingClaimHeader1Data;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
 import oscar.oscarBilling.ca.on.data.BillingItemData;
@@ -19,6 +20,7 @@ import oscar.oscarBilling.ca.on.data.JdbcBillingCodeImpl;
 import oscar.oscarBilling.ca.on.data.JdbcBillingCorrection;
 import oscar.oscarBilling.ca.on.data.JdbcBillingPageUtil;
 import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
+import oscar.util.StringUtils;
 
 public class BillingCorrectionPrep {
 	private static final Logger _logger = Logger
@@ -86,6 +88,8 @@ public class BillingCorrectionPrep {
 			ch1Obj.setProvider_rma_no(otemp.getRmaNo());
 			ch1Obj.setCreator((String) requestData.getSession().getAttribute(
 					"user"));
+			
+			ch1Obj.setClinic((String)requestData.getParameter("site"));
 
 			ret = dbObj.updateBillingClaimHeader(ch1Obj);
 		}
@@ -253,7 +257,8 @@ public class BillingCorrectionPrep {
 				|| !existObj.getComment().equals(
 						request.getParameter("comment"))
 				|| !existObj.getProviderNo().equals(
-						request.getParameter("provider_no"))) {
+						request.getParameter("provider_no"))
+				|| !StringUtils.nullSafeEquals(existObj.getClinic(), request.getParameter("site"))) {
 			ret = true;
 		}
 		return ret;

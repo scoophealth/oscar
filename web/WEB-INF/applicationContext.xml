@@ -88,6 +88,7 @@
 	<bean id="EncounterWindowDAO" class="org.oscarehr.casemgmt.dao.EncounterWindowDAO" autowire="byName" />
 	<bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
 	<bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
+	<bean id="siteDao" class="org.oscarehr.common.dao.SiteDao" autowire="byName" />
 	<bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
 	<bean id="flowSheetCustomizerDAO" class="org.oscarehr.common.dao.FlowSheetCustomizerDAO" autowire="byName"/>
 	<bean id="flowSheetDrugDAO" class="org.oscarehr.common.dao.FlowSheetDrugDAO" autowire="byName"/>

@@ -16,6 +16,17 @@
  * Yi Li
  */
  -->
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean isTeamBillingOnly=false;
+%>
+<security:oscarSec objectName="_team_billing_only" roleName="<%=roleName$ %>" rights="r" reverse="false">
+<% isTeamBillingOnly=true; %>
+</security:oscarSec>
+
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.*,java.sql.*,oscar.*,oscar.util.*,java.net.*"
@@ -164,7 +175,9 @@ obj.visibility=v; }
 		<td width="220">Select Provider</td>
 		<td width="254"><select name="provider">
 			<%
-			List providerStr = prep.getProviderBillingStr();
+			List providerStr = isTeamBillingOnly ? prep.getTeamProviderBillingStr(user_no) : prep.getProviderBillingStr();
+			
+			
 			if(providerStr.size() == 1) {
 				String temp[] = ((String) providerStr.get(0)).split("\\|");
 			%>

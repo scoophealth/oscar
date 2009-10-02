@@ -61,5 +61,10 @@
 			type="string" />
         <property column="signed_confidentiality" name="SignedConfidentiality" not-null="true"
             type="date" />
+
+	<set name="sites" table="providersite" cascade="all" lazy="false" fetch="join" >
+           <key column="provider_no"/>
+           <many-to-many column="site_id" class="Site"/>
+     	</set>
 	</class>
 </hibernate-mapping>
