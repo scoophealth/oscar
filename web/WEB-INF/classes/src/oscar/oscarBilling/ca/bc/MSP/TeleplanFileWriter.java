@@ -369,9 +369,8 @@ public class TeleplanFileWriter {
     //This needs to handle having multiple billingmaster line per billing but from now 
     private Claims createMSPICBCLines(String billing_no,String dataCenterId,String demoName){
         log.debug("createMSPICBCLines Start");
-        BillingmasterDAO masDAO = new BillingmasterDAO();
         
-        List billMasterList = masDAO.getBillingMasterWithStatus(billing_no,"O");
+        List billMasterList = billingmasterDAO.getBillingMasterWithStatus(billing_no,"O");
         Claims claims = new Claims();
         for (int i= 0; i < billMasterList.size(); i++){
             Billingmaster bm = (Billingmaster) billMasterList.get(i);
