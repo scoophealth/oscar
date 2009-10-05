@@ -245,7 +245,20 @@ public class Prevention {
    }
    
    
-   
+   public boolean isInelligible(String preventionType) {
+       boolean isInelligible = false;
+       Vector vec = getPreventionData(preventionType);
+       PreventionItem p;
+       for( int idx = 0; idx < vec.size(); ++idx ) {
+           p = (PreventionItem)vec.get(idx);
+           if( p.isInelligible() ) {
+               isInelligible = true;
+               break;
+           }
+       }
+
+       return isInelligible;
+   }
    
    
    
