@@ -377,7 +377,7 @@ public class PreventionData {
 			rs = db.GetSQL(sql);
 			while (rs.next()) {
 				PreventionItem pi = new PreventionItem(oscar.Misc.getString(rs, "prevention_type"), rs.getDate("prevention_date"), oscar.Misc.getString(rs, "never"), rs
-						.getDate("next_date"));
+						.getDate("next_date"), rs.getString("refused"));
 				p.addPreventionItem(pi);
 			}
 			db.CloseConn();
