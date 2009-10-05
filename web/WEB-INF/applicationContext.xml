@@ -128,6 +128,9 @@
 		</property>
 	</bean>
 
+    <!--Container for holding preventions -->
+    <bean id="preventionMgr" class="org.oscarehr.provider.model.PreventionManager"></bean>
+
 	<!-- OcanDataProcessor is used to create the OCAN xml submission file based on intake data -->
 	<bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
 		<property name="serviceOrganizationNumber" value="1001" />
@@ -151,19 +154,21 @@
 	<bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
 		<property name="flowSheets">
 			<list>
-				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml</value>
+				<!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml</value-->
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
+                                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
                                 <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
                                  
-                      
-                    <!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
+                                 
+                    <!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
 		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
+                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdHypertensionFlowsheet.xml</value-->
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdDiabetesFlowsheet.xml</value>
-	            <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdHypertensionFlowsheet.xml</value -->
+	            
 			</list>
 		</property>
 	</bean>
