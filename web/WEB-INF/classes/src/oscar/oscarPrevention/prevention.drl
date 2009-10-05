@@ -306,7 +306,7 @@
     </rule>
 
 
-    <rule name="MMR 1">
+     <rule name="MMR 1">
         <parameter identifier="prev">
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>
@@ -530,7 +530,8 @@
         <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt;= 22</java:condition>        
         <java:condition>prev.getHowManyMonthsSinceLast("PAP") &lt;= 24</java:condition>        
         <java:condition>!prev.isPreventionNever("PAP")</java:condition>
-        <java:condition>!prev.isNextDateSet("PAP")</java:condition>        
+        <java:condition>!prev.isNextDateSet("PAP")</java:condition>
+        <java:condition>!prev.isInelligible("PAP")</java:condition>
         <java:consequence>              
               System.out.println("PAP 1");
               prev.addReminder("PAP is coming due for this patient");
@@ -546,7 +547,8 @@
         <java:condition>prev.isFemale()</java:condition>
         <java:condition>prev.getHowManyMonthsSinceLast("PAP") &gt; 24</java:condition>        
         <java:condition>!prev.isPreventionNever("PAP")</java:condition>
-        <java:condition>!prev.isNextDateSet("PAP")</java:condition>        
+        <java:condition>!prev.isNextDateSet("PAP")</java:condition>
+        <java:condition>!prev.isInelligible("PAP")</java:condition>
         <java:consequence>              
               System.out.println("PAP 2");
               prev.addWarning("PAP", "PAP is overdue for this patient");
@@ -560,7 +562,8 @@
         <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") == -1</java:condition>                
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") == -1</java:condition>
+        <java:condition>!prev.isInelligible("PAP")</java:condition>
         <java:consequence>              
               System.out.println("PAP 3");
               prev.addWarning("PAP", "No PAP records can be found for this patient");
@@ -574,9 +577,10 @@
         </parameter>        
         <java:condition>prev.isFemale()</java:condition>                
         <java:condition>prev.isNextDateSet("PAP")</java:condition>        
-        <java:condition>prev.isPassedNextDate("PAP")</java:condition>        
+        <java:condition>prev.isPassedNextDate("PAP")</java:condition>
+        <java:condition>!prev.isInelligible("PAP")</java:condition>
         <java:consequence>              
-              System.out.println("PAP 3");
+              System.out.println("PAP 4");
               prev.addWarning("PAP", "PAP is overdue for this patient");
         </java:consequence>
     </rule>
@@ -589,7 +593,8 @@
         <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>             
-        <java:condition>prev.getHowManyMonthsSinceLast("PAP") != -1</java:condition>             
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") != -1</java:condition>
+        <java:condition>!prev.isInelligible("PAP")</java:condition>
         <java:consequence>              
               System.out.println("PAP debug");
               prev.addReminder("Last PAP was done "+prev.getHowManyMonthsSinceLast("PAP")+" month(s) ago");
@@ -608,7 +613,8 @@
         <java:condition>prev.getHowManyMonthsSinceLast("MAM") &gt;= 22</java:condition>        
         <java:condition>prev.getHowManyMonthsSinceLast("MAM") &lt;= 24</java:condition>        
         <java:condition>!prev.isPreventionNever("MAM")</java:condition>
-        <java:condition>!prev.isNextDateSet("MAM")</java:condition>        
+        <java:condition>!prev.isNextDateSet("MAM")</java:condition>
+        <java:condition>!prev.isInelligible("MAM")</java:condition>
         <java:consequence>              
               System.out.println("MAM 1");
               prev.addReminder("Mammogram is coming due for this patient");
@@ -624,7 +630,8 @@
         <java:condition>prev.isFemale()</java:condition>
         <java:condition>prev.getHowManyMonthsSinceLast("MAM") &gt; 24</java:condition>        
         <java:condition>!prev.isPreventionNever("MAM")</java:condition>
-        <java:condition>!prev.isNextDateSet("MAM")</java:condition>        
+        <java:condition>!prev.isNextDateSet("MAM")</java:condition>
+        <java:condition>!prev.isInelligible("MAM")</java:condition>
         <java:consequence>              
               System.out.println("MAM 2");
               prev.addWarning("MAM", "Mammogram is overdue for this patient");
@@ -638,7 +645,8 @@
         <java:condition>prev.getAgeInYears() &gt;= 50</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>
-        <java:condition>prev.getHowManyMonthsSinceLast("MAM") == -1</java:condition>                
+        <java:condition>prev.getHowManyMonthsSinceLast("MAM") == -1</java:condition>
+        <java:condition>!prev.isInelligible("MAM")</java:condition>
         <java:consequence>              
               System.out.println("MAM 3");
               prev.addWarning("MAM", "No Mammogram records can be found for this patient");
@@ -652,9 +660,10 @@
         </parameter>        
         <java:condition>prev.isFemale()</java:condition>                
         <java:condition>prev.isNextDateSet("MAM")</java:condition>        
-        <java:condition>prev.isPassedNextDate("MAM")</java:condition>        
+        <java:condition>prev.isPassedNextDate("MAM")</java:condition>
+        <java:condition>!prev.isInelligible("MAM")</java:condition>
         <java:consequence>              
-              System.out.println("MAM 3");
+              System.out.println("MAM 4");
               prev.addWarning("MAM", "MAM is overdue for this patient");
         </java:consequence>
     </rule>
@@ -667,16 +676,71 @@
         <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>             
-        <java:condition>prev.getHowManyMonthsSinceLast("MAM") != -1</java:condition>             
+        <java:condition>prev.getHowManyMonthsSinceLast("MAM") != -1</java:condition>
+        <java:condition>!prev.isInelligible("MAM")</java:condition>
         <java:consequence>              
               System.out.println("MAM debug");
               prev.addReminder("Last Mammogram was done "+prev.getHowManyMonthsSinceLast("MAM")+" month(s) ago");
         </java:consequence>
     </rule>
-   
+
+    
 <!-- Mammogram Rules End -->
 
+<!-- FOBT Rules -->
+    <rule name="FOBT 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 50</java:condition>
+        <java:condition>prev.getAgeInYears() &lt;= 74</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("COLONOSCOPY") == -1</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("FOBT") &gt;= 24</java:condition>
+        <java:consequence>
+              System.out.println("FOBT 1 debug");
+              prev.addWarning("FOBT", "FOBT is overdue for this patient");
+        </java:consequence>
+    </rule>
 
+    <rule name="FOBT 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 50</java:condition>
+        <java:condition>prev.getAgeInYears() &lt;= 74</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("COLONOSCOPY") == -1</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("FOBT") == -1</java:condition>
+        <java:consequence>
+              System.out.println("FOBT 2 debug");
+              prev.addWarning("FOBT", "FOBT is overdue for this patient");
+        </java:consequence>
+    </rule>
+
+    <rule name="FOBT 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 50</java:condition>
+        <java:condition>prev.getAgeInYears() &lt;= 74</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("COLONOSCOPY") &gt;= 60</java:condition>
+        <java:consequence>
+              System.out.println("FOBT 3 debug");
+              prev.addWarning("FOBT", "Colonoscopy is over 5 years old");
+        </java:consequence>
+    </rule>
+
+    <rule name="FOBT Inelligible">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getHowManyMonthsSinceLast("COLONOSCOPY") != -1</java:condition>
+        <java:consequence>
+              System.out.println("FOBT Inelligible debug");
+              prev.addReminder("Colonoscopy makes FOBT Inelligible");
+        </java:consequence>
+    </rule>
+
+<!-- FOBT Rules End-->
 
   </rule-set>
 
