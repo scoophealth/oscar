@@ -51,6 +51,14 @@ public class PreventionItem {
 		this.nextDate = dNext;
 	}
 
+        public PreventionItem(String name, Date dPreformed, String never, Date dNext, String result) {
+		this.name = name;
+		this.datePreformed = dPreformed;
+		this.never = never;
+		this.nextDate = dNext;
+                this.inelligible = result.equalsIgnoreCase("2");
+	}
+
 	public boolean getNeverVal() {
 		boolean ret = false;
 		if (never != null && never.equals("1")) {
@@ -104,6 +112,7 @@ public class PreventionItem {
 	String never = null;
 	// boolean deleted = null; ???
 	boolean refused;
+        private boolean inelligible = false;
 	private boolean remoteEntry=false;
 	
 	public boolean isRemoteEntry() {
@@ -113,4 +122,12 @@ public class PreventionItem {
 	public void setRemoteEntry(boolean remoteEntry) {
 		this.remoteEntry = remoteEntry;
 	}
+
+        public boolean isInelligible() {
+            return this.inelligible;
+        }
+
+        public void setInelligible(boolean inelligible) {
+            this.inelligible = inelligible;
+        }
 }
