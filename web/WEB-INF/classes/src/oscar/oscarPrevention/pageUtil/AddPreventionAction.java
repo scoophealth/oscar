@@ -31,14 +31,19 @@ import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import oscar.oscarPrevention.PreventionData;
 
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import oscar.oscarPrevention.PreventionData;
+import org.oscarehr.provider.model.PreventionManager;
 /**
  *
  * @author Jay Gallagher
@@ -121,7 +126,11 @@ public class AddPreventionAction  extends Action {
             addHashtoArray(extraData,id,"previousId"); 
             pd.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
          }
-         
+
+         ServletContext servletCtx = request.getSession().getServletContext();
+         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(servletCtx);
+         PreventionManager prvMgr = (PreventionManager)ctx.getBean("preventionMgr");
+         prvMgr.removePrevention(demographic_no);
          System.out.println("Given "+given+" prevDate "+prevDate+" providerName "+providerName+" provider "+providerNo);
 
       return mapping.findForward("success");                                
