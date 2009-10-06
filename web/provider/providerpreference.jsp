@@ -267,7 +267,7 @@ function showHideBillPref() {
 
 <table width="100%" BGCOLOR="eeeeee">
 
-<caisi:isModuleLoad moduleName="caisi">
+<caisi:isModuleLoad moduleName="NEW_CME_SWITCH">
   <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no">
 	<tr> 
     <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp; 
