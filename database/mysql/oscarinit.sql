@@ -70,7 +70,8 @@ CREATE TABLE appointment (
   remarks varchar(50) default NULL,
   PRIMARY KEY  (appointment_no),
   KEY appointment_date (appointment_date,start_time,demographic_no),
-  KEY demographic_no (demographic_no)
+  KEY demographic_no (demographic_no),
+  KEY location (location)
 ) ;
 
 --

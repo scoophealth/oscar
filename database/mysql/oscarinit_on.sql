@@ -1428,7 +1428,8 @@ CREATE TABLE billing_on_cheader1 (
   asstProvider_no varchar(6) default NULL,
   creator varchar(6) default NULL,
   timestamp1 timestamp,
-  clinic varchar(50) NULL,
+  clinic varchar(30) default NULL,
+
   PRIMARY KEY  (id),
   KEY appointment_no (appointment_no,demographic_no),
   KEY demographic_no (demographic_no),
@@ -1437,6 +1438,7 @@ CREATE TABLE billing_on_cheader1 (
   KEY provider_ohip_no (provider_ohip_no),
   KEY apptProvider_no (apptProvider_no),
   KEY creator (creator),
+  KEY clinic (clinic),
   KEY status (status)
 ) ;
 

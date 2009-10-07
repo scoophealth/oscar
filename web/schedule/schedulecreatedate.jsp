@@ -1,4 +1,22 @@
+<%!
+//multisite starts =====================
+private	List<Site> sites; 
+private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
+private String getSiteHTML(String reason, List<Site> sites) {
+	 if (reason==null||reason.trim().length()==0) 
+		 return "";
+	 else 
+		 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, reason)+"'>"+ApptUtil.getShortNameFromLocation(sites, reason)+"</span>";	
+}
+%>
+<%
+if (bMultisites) {
+	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
+	sites = siteDao.getAllSites();
+}
+//multisite ends =====================
+%>
 <%
   
   String user_no = (String) session.getAttribute("user");
@@ -33,7 +51,8 @@
   int delta = 0; //add or minus month
   now = new GregorianCalendar(year,month-1,1);
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
-
+  String reasontag[] = {"A7","A1","A2","A3","A4","A5","A6"};
+  
   if(request.getParameter("bFirstDisp")!=null && request.getParameter("bFirstDisp").compareTo("0")==0) {
     year = Integer.parseInt(request.getParameter("year"));
     month = Integer.parseInt(request.getParameter("month"));
@@ -225,7 +244,11 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="oscar.appt.ApptUtil"%>
+<%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="schedule.schedulecreatedate.title" /></title>
@@ -367,7 +390,8 @@ function refresh() {
                    if(scheduleRscheduleBean.getDateAvail(now) ) {
                       bgcolor = new StringBuffer("white"); //color for attendance
                       strHour = new StringBuffer(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), weekdaytag[now.get(now.DAY_OF_WEEK)-1]));
-                      //strHour = new StringBuffer(SxmlMisc.getXmlContent(scheduleRscheduleBean.avail_hour, weekdaytag[now.get(now.DAY_OF_WEEK)-1]));
+                      if (bMultisites)
+                    	  strReason.append(SxmlMisc.getXmlContent(scheduleRscheduleBean.getAvailHour(now), reasontag[now.get(now.DAY_OF_WEEK)-1])); 
                     }
                     aHScheduleHoliday = (HScheduleHoliday) scheduleHolidayBean.get(year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j]));
                     if (aHScheduleHoliday!=null) {
@@ -388,7 +412,7 @@ function refresh() {
 			<font color="red"><%= dateGrid[i][j] %></font> <font size="-3"
 				color="blue"><%=strHolidayName.toString()%></font> <br>
 			<font size="-2">&nbsp;<%=strHour.toString()%> <br>
-			&nbsp;<%=strReason.toString()%></font></a></td>
+			&nbsp;<%=bMultisites?getSiteHTML(strReason.toString(), sites):strReason.toString()%></font></a></td>
 			<%    
                   }
                 }

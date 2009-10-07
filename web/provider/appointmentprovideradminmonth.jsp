@@ -29,7 +29,10 @@ private	List<Site> sites;
 private boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
 
 private String getSiteHTML(String reason, List<Site> sites) {
-	 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, reason)+"'>"+ApptUtil.getShortNameFromLocation(sites, reason)+"</span>";	
+	 if (reason==null||reason.trim().length()==0) 
+		 return "";
+	 else 
+		 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, reason)+"'>"+ApptUtil.getShortNameFromLocation(sites, reason)+"</span>";	
 }
 %>
 <%

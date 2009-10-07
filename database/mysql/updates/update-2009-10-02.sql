@@ -24,7 +24,7 @@ CREATE TABLE `providersite` (
 ) TYPE=MyISAM;
 
 -- add a clinic column to store the site when billing was made
-ALTER TABLE `billing_on_cheader1` ADD `clinic` VARCHAR(50) NULL AFTER `timestamp1` ;
+ALTER TABLE `billing_on_cheader1` ADD `clinic` VARCHAR(30) NULL AFTER `timestamp1` ;
 
 -- enlarge the column size to fix a bug that results from cutoff due to lengthy content --
 ALTER TABLE `rschedule` CHANGE `avail_hour` `avail_hour` TEXT NULL  ;
@@ -33,3 +33,6 @@ ALTER TABLE `rschedule` CHANGE `avail_hour` `avail_hour` TEXT NULL  ;
 INSERT INTO `secObjectName` (`objectName`, `description`, `orgapplicable`) VALUES ('_team_schedule_only', 'Restrict schedule to only login provider and his team', '0');
 INSERT INTO `secObjectName` (`objectName`, `description`, `orgapplicable`) VALUES ('_team_billing_only', 'Restrict billing access to only login provider and his team', '0');
 
+-- add index to improve performance
+ALTER TABLE `appointment` ADD INDEX `location` (`location`) ;
+ALTER TABLE `billing_on_cheader1` ADD INDEX `clinic` (`clinic`) ;
