@@ -94,19 +94,38 @@ public class MyDateFormat {
 	public static String getStandardDate(int year,int month, int day) {
 		return (year+ getDigitalXX(month) +getDigitalXX(day));
 	}
-	//from 2001-02-02 to 2	
+
+	// from 2001-02-02 to 2
 	public static int getDayFromStandardDate(String aDate) {
-		aDate = getMyStandardDate(aDate);
-		return Integer.parseInt(aDate.trim().substring(aDate.trim().lastIndexOf('-')+1));
+		try {
+			aDate = getMyStandardDate(aDate);
+			return Integer.parseInt(aDate.trim().substring(aDate.trim().lastIndexOf('-') + 1));
+		} catch (Exception e) {
+			// bad string doesn't parse properly
+			return (0);
+		}
 	}
+
 	public static int getMonthFromStandardDate(String aDate) {
-		aDate = getMyStandardDate(aDate);
-		return Integer.parseInt(aDate.trim().substring(aDate.trim().indexOf('-')+1, aDate.trim().lastIndexOf('-')));
+		try {
+			aDate = getMyStandardDate(aDate);
+			return Integer.parseInt(aDate.trim().substring(aDate.trim().indexOf('-') + 1, aDate.trim().lastIndexOf('-')));
+		} catch (Exception e) {
+			// bad string doesn't parse properly
+			return (0);
+		}
 	}
+
 	public static int getYearFromStandardDate(String aDate) {
-		aDate = getMyStandardDate(aDate);
-		return Integer.parseInt(aDate.trim().substring(0,aDate.trim().indexOf('-'))); 
+		try {
+			aDate = getMyStandardDate(aDate);
+			return Integer.parseInt(aDate.trim().substring(0, aDate.trim().indexOf('-')));
+		} catch (Exception e) {
+			// bad string doesn't parse properly
+			return (0);
+		}
 	}
+
 	public static int getHourFromStandardTime(String aTime) {
 		int i = aTime.indexOf(' '); 
 		if(i>=0) aTime = aTime.substring(i+1);
