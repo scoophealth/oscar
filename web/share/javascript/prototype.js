@@ -1337,7 +1337,6 @@ Element.Methods = {
   },
 
   hide: function(element) {
-      console.log("$(element).id="+$(element).id) ;
     $(element).style.display = 'none';
     return element;
   },
