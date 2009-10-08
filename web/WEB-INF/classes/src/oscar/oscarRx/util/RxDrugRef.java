@@ -140,8 +140,17 @@ public class RxDrugRef {
          Hashtable returnVal = (Hashtable) vec.get(0);         
          return returnVal;		         
      }
-     
-     
+
+     public Hashtable getDrug2(String pKey, Boolean boolVal)throws Exception{
+         Vector params = new Vector();
+         System.out.println("Adding to params for get_drug_2 :"+pKey+" - "+boolVal);
+         params.addElement(pKey);
+         params.addElement(boolVal);
+         Vector vec = (Vector) callWebserviceLite("get_drug_2",params);
+         Hashtable returnVal = (Hashtable) vec.get(0);
+         return returnVal;
+     }
+
      public Hashtable getDrugForm(String pKey) throws Exception {
 	 Vector params = new Vector();
 	 params.addElement(pKey);
@@ -379,9 +388,11 @@ public class RxDrugRef {
                                    exception.toString());
                 
          } catch (Exception exception) {
+                System.out.println("Drugref URL is "+server_url);
                 System.err.println("JavaClient: " + exception.toString());
+
                 exception.printStackTrace();
-                throw new Exception("JavaClient: " + exception.toString());
+                throw new Exception("JavaClient: " + exception.toString(),exception);
          }
          return object;
      }
