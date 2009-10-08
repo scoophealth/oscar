@@ -44,7 +44,7 @@ public final class RxSearchDrugAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-
+   //     System.out.println("***IN RxSearchDrugAction.java");
             // Setup variables
             RxSearchDrugForm reqForm = (RxSearchDrugForm) form;
             String genericSearch = reqForm.getGenericSearch();
@@ -68,7 +68,7 @@ public final class RxSearchDrugAction extends Action {
             }catch(Exception connEx){                
                 System.out.print(connEx.getMessage());
                 connEx.printStackTrace();
-            }            
+            }
             request.setAttribute("drugSearch", drugSearch);
             request.setAttribute("demoNo", reqForm.getDemographicNo());
 

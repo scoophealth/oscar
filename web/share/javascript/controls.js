@@ -43,9 +43,12 @@ var Autocompleter = {}
 Autocompleter.Base = function() {};
 Autocompleter.Base.prototype = {
   baseInitialize: function(element, update, options) {
+   // alert("base init="+update);\
+   console.log("$(update).id="+$(update).id);
     element          = $(element)
     this.element     = element; 
-    this.update      = $(update);  
+    this.update      = $(update);
+     console.log("this.update.id="+this.update.id);
     this.hasFocus    = false; 
     this.changed     = false; 
     this.active      = false; 
@@ -81,7 +84,7 @@ Autocompleter.Base.prototype = {
     this.observer = null;
     
     this.element.setAttribute('autocomplete','off');
-
+    console.log("this.update "+this.update);
     Element.hide(this.update);
 
     Event.observe(this.element, 'blur', this.onBlur.bindAsEventListener(this));
@@ -118,6 +121,7 @@ Autocompleter.Base.prototype = {
   hide: function() {
     this.stopIndicator();
     if(Element.getStyle(this.update, 'display')!='none') this.options.onHide(this.element, this.update);
+   // alert("in hide:");
     if(this.iefix) Element.hide(this.iefix);
   },
 
@@ -126,6 +130,7 @@ Autocompleter.Base.prototype = {
   },
 
   stopIndicator: function() {
+    //  alert("in stopindicator:");
     if(this.options.indicator) Element.hide(this.options.indicator);
   },
 
@@ -336,6 +341,7 @@ Autocompleter.Base.prototype = {
 Ajax.Autocompleter = Class.create();
 Object.extend(Object.extend(Ajax.Autocompleter.prototype, Autocompleter.Base.prototype), {
   initialize: function(element, update, url, options) {
+  //   alert(element+" "+update+" "+url+" "+options);
     this.baseInitialize(element, update, options);
     this.options.asynchronous  = true;
     this.options.onComplete    = this.onComplete.bind(this);
@@ -562,6 +568,7 @@ Ajax.InPlaceEditor.prototype = {
     if (this.editing) return;
     this.editing = true;
     this.onEnterEditMode();
+    alert("in entereditmode");
     if (this.options.externalControl) {
       Element.hide(this.options.externalControl);
     }

@@ -43,6 +43,7 @@ public final class RxClearPendingAction extends Action{
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException{
+      //  System.out.println("***IN RxClearPendingAction.java") ;
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);

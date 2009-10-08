@@ -44,13 +44,15 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 	}
 
 	public List<PrescriptDrug> getUniquePrescriptions(String demographic_no) {
-
+             //   System.out.println("===========IN getUniquePrescriptions======");
+            //    System.out.println("demographic_no="+demographic_no);
 		List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), false);
     	List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
         for (Drug drug : rs)
         {
         	PrescriptDrug prescriptDrug = new PrescriptDrug();
         	prescriptDrug.setLocalDrugId(drug.getId());
+              //  System.out.println("drug.getId()="+drug.getId());
             prescriptDrug.setDate_prescribed(drug.getRxDate());
             prescriptDrug.setDrug_special(drug.getSpecial());
             prescriptDrug.setBN(drug.getBrandName());
@@ -62,19 +64,26 @@ public class PrescriptionDAO extends HibernateDaoSupport {
             prescriptDrug.setDrug_achived(false);
             prescriptDrug.setCreateDate(drug.getCreateDate());
 
+            prescriptDrug.setLongTerm(drug.getLongTerm());
+
             boolean b = true;
             for (int i = 0; i < rt.size(); i++) {
                 PrescriptDrug p2 = (PrescriptDrug)rt.get(i);
                 if (p2.getGCN_SEQNO().intValue() == prescriptDrug.getGCN_SEQNO().intValue()) {
+                //    System.out.println("p2.getGCN_SEQNO().intValue() == prescriptDrug.getGCN_SEQNO().intValue()="+p2.getGCN_SEQNO());
                     if (p2.getGCN_SEQNO().intValue() != 0) // not custom - safe GCN
                     {
+                 //       System.out.println("p2.getGCN_SEQNO().intValue() != 0" );
                         b = false;
                     }
                     else // custom
                     {
+                 //       System.out.println("p2.getGCN_SEQNO().intValue() = 0");
                         if (p2.getCustomName() != null && prescriptDrug.getCustomName() != null) {
+                  //          System.out.println("p2.getCustomName() != null && prescriptDrug.getCustomName() != null");
                             if (p2.getCustomName().equals(prescriptDrug.getCustomName())) // same custom
                             {
+                     //           System.out.println("p2.getCustomName().equals(prescriptDrug.getCustomName())");
                                 b = false;
                             }
                         }
@@ -83,8 +92,8 @@ public class PrescriptionDAO extends HibernateDaoSupport {
             }
             if (b) rt.add(prescriptDrug);
         }
+      //  System.out.println("===========END getUniquePrescriptions======");
         return rt;
-
     }
 
 	public List<PrescriptDrug> getPrescriptions(String demographic_no) {

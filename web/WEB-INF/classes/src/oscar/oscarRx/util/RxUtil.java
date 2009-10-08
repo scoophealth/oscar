@@ -37,7 +37,7 @@ public class RxUtil {
     public static Date StringToDate(String Expression, String pattern) {
         try {
             SimpleDateFormat df = new SimpleDateFormat(pattern, locale);
-            
+          
             return df.parse(Expression);
         }
         catch (Exception e) {

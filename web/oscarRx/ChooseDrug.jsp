@@ -53,13 +53,19 @@
 
 
 <%
+//System.out.println("***###IN ChooseDrug.jsp");
 RxSessionBean bean = (RxSessionBean)pageContext.findAttribute("bean");
-RxDrugData.DrugSearch drugSearch = (RxDrugData.DrugSearch) request.getAttribute("drugSearch");
-String demoNo = (String) request.getAttribute("demoNo");
+RxDrugData.DrugSearch drugSearch = (RxDrugData.DrugSearch) request.getAttribute("drugSearch");//set from searchdrugaction
+//Enumeration emnn=request.getAttributeNames();
+//while(emnn.hasMoreElements())
+//    System.out.println("request attr in chooseDrug.jsp="+emnn.nextElement());
+//System.out.println("drugSearch="+drugSearch);
+String demoNo = (String) request.getAttribute("demoNo");//set from searchdrugaction
 ArrayList brand = drugSearch.getBrand();
 ArrayList gen = drugSearch.getGen();
 ArrayList afhcClass = drugSearch.getAfhcClass();
 int i;
+//System.out.println("bean.getStashIndex() ChooseDrug.jsp="+bean.getStashIndex());
 
 String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
 if (drugref_route==null) drugref_route = "";
@@ -250,11 +256,13 @@ for (int j=0; j<selRoute.length; j++) {
                               <td>
                                 <div class="ChooseDrugBox">
                                 <table width="100%" border=0>
-                                  <%                                  
+                                  <%
+                                    //System.out.println("brand.size() in choosedrug.jsp="+brand.size());
                                   for(i=0; i<brand.size(); i++){
                                       bgColor=getColor(grey);                                        
                                       RxDrugData.MinDrug t = (RxDrugData.MinDrug) brand.get(i);
                                        String brandName =  t.name;
+                                       //System.out.println("t.pKey in choosedrug.jsp="+t.pKey);
                                     %>
                                     <tr>                                    
                                       <td bgcolor="<%=bgColor%>">                                        

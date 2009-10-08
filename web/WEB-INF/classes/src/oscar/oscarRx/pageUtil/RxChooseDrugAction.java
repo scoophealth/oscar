@@ -38,14 +38,17 @@ import org.apache.struts.util.MessageResources;
 
 
 public final class RxChooseDrugAction extends Action {
-
+        public void p(String s){
+         //   System.out.println(s);
+        }
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-            System.out.println("RxChooseDrugAction Jackson");
+        //    System.out.println("***IN RxChooseDrugAction.java");
             // Extract attributes we will need
             Locale locale = getLocale(request);
             MessageResources messages = getResources(request);
-
+       //     p("locale="+locale.toString());
+        //    p("message="+messages.toString());
             // Setup variables           
             oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
             if(bean==null){
@@ -68,6 +71,7 @@ public final class RxChooseDrugAction extends Action {
                 
                 System.out.println("drugID "+drugId);
                 System.out.println("BRAND = "+BN);
+             //   p("GN="+GN);
                     rx.setBrandName(BN);
                 try{
                     rx.setGCN_SEQNO(Integer.parseInt(drugId));
@@ -76,7 +80,8 @@ public final class RxChooseDrugAction extends Action {
                     genName = f.name;
                     rx.setAtcCode(f.atc);
                     rx.setBrandName(f.product);
-                    
+              //      p("f.name: "+f.name+"f.atc: "+f.atc+"f.product: "+f.product+ "f.regionalIdentifier: "+f.regionalIdentifier);
+              //      p("f.components: "+f.components.toString());
                     rx.setRegionalIdentifier(f.regionalIdentifier);
                
                     request.setAttribute("components", f.components);
@@ -90,12 +95,13 @@ public final class RxChooseDrugAction extends Action {
                         }
                     }          
                     rx.setDosage(dosage);
-                    
+                 //   p("rx set dosage to: "+dosage);
                     StringBuffer compString = null;
                     if (f.components != null){
                         compString = new StringBuffer();
                         for (int c = 0; c < f.components.size();c++){
-                            RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) f.components.get(c); 
+                            RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) f.components.get(c);
+                  //          p("dc.name: "+dc.name+"dc.strength: "+dc.strength+"dc.unit: "+dc.unit);
                             compString.append(dc.name+" "+dc.strength+ " "+dc.unit+" ");              
                         }          
                     }
@@ -120,9 +126,13 @@ public final class RxChooseDrugAction extends Action {
                 rx.setFrequencyCode("OID");
                 rx.setDuration("30");
                 rx.setDurationUnit("D");
-
+          //      p("String.valueOf(bean.getStashIndex()): "+String.valueOf(bean.getStashIndex()));
                 bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+                
+             //   System.out.println("***###addStathItem called11");
+             //   System.out.println("index="+bean.addStashItem(rx));
                 bean.setStashIndex(bean.addStashItem(rx));
+            //    p("bean.getStashIndex: "+bean.getStashIndex());
             }
             catch (Exception e){
                 e.printStackTrace(System.out);

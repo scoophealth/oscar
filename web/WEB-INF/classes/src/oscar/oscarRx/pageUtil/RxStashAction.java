@@ -30,22 +30,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 
 
-public final class RxStashAction extends Action {
+public final class RxStashAction extends DispatchAction {
     
     
-    public ActionForward execute(ActionMapping mapping,
+    public ActionForward Take(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-                
+                System.out.println("===========start in rxstatshaction.java===========");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -54,6 +54,7 @@ public final class RxStashAction extends Action {
         
         RxStashForm frm = (RxStashForm)form;
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+       // bean.setStashIndex(11);
         if(bean==null) {
             response.sendRedirect("error.html");
             return null;
@@ -61,8 +62,11 @@ public final class RxStashAction extends Action {
         
         if(frm.getStashId()>=0 && frm.getStashId() < bean.getStashSize()) {
             if(frm.getAction().equals("edit")) {
+
                 request.setAttribute("BoxNoFillFirstLoad", "true");
+
                 bean.setStashIndex(frm.getStashId());
+                //bean.setStashIndex(11);
             }
             if(frm.getAction().equals("delete")) {
                 bean.removeStashItem(frm.getStashId());
@@ -71,7 +75,53 @@ public final class RxStashAction extends Action {
                     bean.setStashIndex(bean.getStashSize() - 1);
                 }
             }
-        }        
+        }
+        System.out.println("bean.getStashIndex()="+bean.getStashIndex());
+         System.out.println("bean.getStashSize()="+bean.getStashSize());
+        System.out.println("===========end in rxstatshaction.java===========");
         return mapping.findForward("success");
-    }        
+    }
+
+    public ActionForward setStashIndex(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException, ServletException {
+                System.out.println("===========start in setStashIndex rxstatshaction.java===========");
+        // Extract attributes we will need
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources(request);
+        String wp=null;
+        try{
+        wp=request.getParameter("whichPrescribe");
+        
+        int stashId;
+        
+            
+        if(wp!=null && !wp.equals("null")){
+            System.out.println("in if wp="+wp);
+            stashId=Integer.parseInt(wp);
+            System.out.println("in setStashIndex stashId="+""+stashId);
+        }else{
+            System.out.println("in else wp="+wp);
+            stashId=-1;
+        }
+
+        
+        // Setup variables
+        RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        if(bean==null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        System.out.println("bean.getStashSize()="+bean.getStashSize());
+        System.out.println("bean.getStashIndex() before setting="+bean.getStashIndex());
+        if(stashId >=0 && stashId  < bean.getStashSize()) {
+            bean.setStashIndex(stashId);
+        }
+        System.out.println("bean.getStashIndex()="+bean.getStashIndex());
+         System.out.println("bean.getStashSize()="+bean.getStashSize());}catch(Exception e){e.printStackTrace();}
+        System.out.println("===========end in setStashIndex rxstatshaction.java===========");
+        return mapping.findForward("success");
+    }
 }

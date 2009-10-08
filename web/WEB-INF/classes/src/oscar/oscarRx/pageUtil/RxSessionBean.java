@@ -111,8 +111,7 @@ public class RxSessionBean {
     }
     
     public int addStashItem(RxPrescriptionData.Prescription item) {
-        //this.clearDDI();
-        //this.clearDAM();
+       System.out.println("=====in addStashItem(a,b)========");
         int ret = -1;
         
         int i;
@@ -144,14 +143,19 @@ public class RxSessionBean {
         }
         
         if(ret>-1) {
+            System.out.println("if="+ret);
+            System.out.println("=====end IF  addStashItem(a,b)========");
             return ret;
         }
         else {
             stash.add(item);
             preloadInteractions();
             preloadAllergyWarnings(item.getAtcCode());
+            System.out.println("else, this.getStashSize()-1="+(this.getStashSize()-1));
+            System.out.println("=====end Else addStashItem(a,b)========");
             return this.getStashSize()-1;
         }
+
     }
     
     public void removeStashItem(int index) {

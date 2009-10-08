@@ -64,7 +64,16 @@
 </logic:equal>
 
 <%
+System.out.println("***###IN writescript.jsp");
+
 RxSessionBean bean = (RxSessionBean)pageContext.findAttribute("bean");
+System.out.println("bean.getStashIndex() writescript.jsp="+bean.getStashIndex());
+int n=pageContext.getAttributesScope("bean");
+//System.out.println("scope of attr="+Integer.toString(n));
+Enumeration emn=pageContext.getAttributeNamesInScope(n);
+//while(emn.hasMoreElements())
+  //  System.out.println("attr name in scope n="+emn.nextElement().toString());
+
 int specialStringLen = 0;
 String quan = "";
 boolean isCustom = true;
@@ -79,6 +88,7 @@ String annotation_attrib = "";// = "anno"+now;
 <script language=javascript>
 
     var frm = document.forms.RxWriteScriptForm;
+    oscarLog("frm="+frm+"$(frm)"+$(frm));
     var freqMin;
     var freqMax;
     var orig = null;
@@ -134,14 +144,17 @@ String annotation_attrib = "";// = "anno"+now;
     }
 
     function submitForm(action){
+        oscarLog(frm);
+        oscarLog("submitForm called");
         if(frm.repeat.value.length < 1 || isNaN(parseInt(frm.repeat.value))){
+            oscarLog("first");
             frm.repeat.value = 0;
         }
 
         if( frm.quantity.value.length < 1 || frm.quantity.value.match(/\D/)){
-            alert('<bean:message key="WriteScript.msgQuantity"/>');
+            oscarLog('<bean:message key="WriteScript.msgQuantity"/>');
         }else{
-            
+            oscarLog("else");
             frm.action.value = action;
 
             frm.submit();
@@ -523,7 +536,7 @@ String annotation_attrib = "";// = "anno"+now;
     }
     
     function writeScriptDisplay(){  
-  //      alert ("f"+first);
+       //alert ("f"+first);
   
     var disabled = frm.customInstr.checked;
     
@@ -800,6 +813,7 @@ RxWriteScriptForm thisForm = (RxWriteScriptForm)request.getAttribute("RxWriteScr
 
 
 if(bean.getStashIndex() > -1){ //new way
+    System.out.println("bean.getStashIndex() writescript.jsp="+bean.getStashIndex());
     RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
     annotation_attrib = rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex());
     RxDrugData drugData = new RxDrugData();
@@ -1361,7 +1375,7 @@ int i;
                         <div style="background-color:red;margin-right:100px;margin-left:20px;margin-top:1px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
                         </div>--> <script language=javascript>
-                            function submitPending(stashId, action){
+                            function submitPending(stashId, action){ //calls stash action
                                 var frm = document.getElementsByName("RxStashForm");                                                               
                                 frm[0].elements["stashId"].value = stashId;
                                 frm[0].elements["action"].value = action;
@@ -1426,7 +1440,7 @@ int i;
 										<td><a href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');"><bean:message key="WriteScript.msgInfo"/></a></td>
 										<td><a href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');"><bean:message key="WriteScript.msgAddtoFavorites"/></a></td>
 									</tr>
-									<% i++; %>
+									<% i++; System.out.println("i in writescript.jsp="+i);%>
 								</logic:iterate>
 							</table>
 							</td>

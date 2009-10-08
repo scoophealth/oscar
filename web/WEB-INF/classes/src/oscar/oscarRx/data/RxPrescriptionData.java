@@ -1054,7 +1054,7 @@ public class RxPrescriptionData {
 			}
 		}
 
-		// ////////////////////////////
+		//////////////////////////////
 
 		public int getDrugId() {
 			return this.drugId;
@@ -1108,24 +1108,31 @@ public class RxPrescriptionData {
 
 			return b;
 		}
-
+                public void p(String s){
+            //        System.out.println(s);
+                }
+                public void p(String s,String s1){
+             //       System.out.println(s+"="+s1);
+                }
 		public void calcEndDate() {
 			GregorianCalendar cal = new GregorianCalendar(Locale.CANADA);
 			int days = 0;
-
+                //        p("in calcEndDate");
+              //          p("this.getRxDate()",this.getRxDate().toString());
 			cal.setTime(this.getRxDate());
 
 			if (this.getDuration().length() > 0) {
 				if (Integer.parseInt(this.getDuration()) > 0) {
 					int i = Integer.parseInt(this.getDuration());
-
-					if (this.getDurationUnit().equals("D")) {
+                                  //      p("i",Integer.toString(i));
+                                  //      p("this.getDurationUnit()",this.getDurationUnit());
+					if (this.getDurationUnit().equalsIgnoreCase("D")) {
 						days = i;
 					}
-					if (this.getDurationUnit().equals("W")) {
+					if (this.getDurationUnit().equalsIgnoreCase("W")) {
 						days = i * 7;
 					}
-					if (this.getDurationUnit().equals("M")) {
+					if (this.getDurationUnit().equalsIgnoreCase("M")) {
 						days = i * 30;
 					}
 
@@ -1136,7 +1143,7 @@ public class RxPrescriptionData {
 
 						days = days * r;
 					}
-
+                                    //    p("days",Integer.toString(days));
 					if (days > 0) {
 						cal.add(GregorianCalendar.DATE, days);
 					}
@@ -1144,6 +1151,7 @@ public class RxPrescriptionData {
 			}
 
 			this.endDate = cal.getTime();
+                   //     p("endDate",RxUtil.DateToString(this.endDate));
 		}
 
 		public String getBrandName() {
@@ -1491,10 +1499,12 @@ public class RxPrescriptionData {
 					ret += "Month";
 				}
 
-				if (Integer.parseInt(this.getDuration()) > 1) {
-					ret += "s";
+                                if(this.getDuration().equals("")){
+                                }else{
+                                    if (Integer.parseInt(this.getDuration()) > 1) {
+                                            ret += "s";
 				}
-
+                                }
 				ret += "  ";
 				ret += this.getQuantity();
 				ret += " Qty  Repeats: ";
@@ -1625,7 +1635,8 @@ public class RxPrescriptionData {
 
 		public boolean Save(String scriptId) {
 			boolean b = false;
-
+                   //     p("inside Save now");
+                //        p(RxUtil.DateToString(this.getEndDate()));
 			// calculate end date
 			this.calcEndDate();
 
@@ -1645,6 +1656,7 @@ public class RxPrescriptionData {
 
 				// if drugid = 0 this is an add, else update
 				if (this.getDrugId() == 0) {
+                               //     System.out.println("drugid=0 1");
 					// check to see if there is an identitical prescription in
 					// the database. If there is we'll return that drugid instead
 					// of adding a new prescription.
@@ -1668,6 +1680,7 @@ public class RxPrescriptionData {
 
 					// if it doesn't already exist add it.
 					if (this.getDrugId() == 0) {
+                                        //    System.out.println("drugid=0 2");
 						sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, "
 						        + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, "
 						        + "dosage, unitName, long_term, past_med, patient_compliance) " + "VALUES ('"
@@ -1730,7 +1743,7 @@ public class RxPrescriptionData {
 						        + this.getOutsideProviderOhip()
 						        + "', "
 						        + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", " + this.getPastMed() + ", " + this.getPatientCompliance() + ")";
-
+                                              //  System.out.println("sql="+sql);
 						db.RunSQL(sql);
 
 						// it's added, so get the top (most recent) drugid
@@ -1748,6 +1761,7 @@ public class RxPrescriptionData {
 					}
 
 				} else { // update the database
+                                        System.out.println("drugid not equal 0");
 					sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '"
 					        + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = "
 					        + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '"

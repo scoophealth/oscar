@@ -41,17 +41,23 @@ import oscar.oscarRx.data.RxPatientData;
 
 public final class RxChoosePatientAction extends Action {
     
-    
+    public void p(String s){
+        System.out.println(s);
+    }
+    public void p(String s,String s2){
+        System.out.println(s+"="+s2);
+    }
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-        
+     //   System.out.println("***IN RxChoosePatientAction.java");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
-        
+     //   p("locale",locale.toString());
+   //     p("messages",messages.toString());
         // Setup variables       
         
         if(request.getSession().getAttribute("user") == null  ){
@@ -60,9 +66,9 @@ public final class RxChoosePatientAction extends Action {
         
         String user_no;
         user_no = (String) request.getSession().getAttribute("user");
-          
+      //    p("user_no",user_no);
         RxChoosePatientForm frm = (RxChoosePatientForm)form;
-        
+   //     p("frm",frm.toString());
         // Setup bean
         RxSessionBean bean;
         

@@ -47,7 +47,7 @@ public final class RxUseFavoriteAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-        
+     //   System.out.println("***###IN RxUseFavoriteAction.java");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -74,6 +74,7 @@ public final class RxUseFavoriteAction extends Action {
             rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo(), fav);
 
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+          //   System.out.println("***###addStathItem called22");
             bean.setStashIndex(bean.addStashItem(rx));
             request.setAttribute("BoxNoFillFirstLoad", "true");
         }

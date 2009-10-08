@@ -36,7 +36,14 @@ public class PrescriptDrug {
 	private String regionalIdentifier = null;
 	private String remoteFacilityName = null;
 	private Date createDate=null;
-	
+	private boolean longTerm=false;
+
+        public boolean isLongTerm(){
+            return this.longTerm;
+        }
+        public void setLongTerm(boolean longTerm){
+            this.longTerm=longTerm;
+        }
 	public Integer getLocalDrugId() {
     	return localDrugId;
     }

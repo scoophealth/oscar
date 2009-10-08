@@ -9,9 +9,10 @@
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
 <%@ page import="org.oscarehr.common.model.OscarAnnotation" %>
-
+<%@page import="java.util.Enumeration"%>
 
 <%
+  //      System.out.println("*** in SearchDrug.jsp");
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
@@ -43,6 +44,8 @@ reverse="<%=true%>">
 %>
 
 <%
+System.out.println("bean.getStashIndex() searchDrug.jsp="+bean.getStashIndex());
+
 	RxPharmacyData pharmacyData = new RxPharmacyData();
 	RxPharmacyData.Pharmacy pharmacy;
 	pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
@@ -103,8 +106,7 @@ reverse="<%=true%>">
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
-<script type="text/javascript"
-	src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
+
 <script type="text/javascript">
 
 function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
@@ -191,7 +193,7 @@ function hidepic(picture){
   
 function isEmpty(){  
     if (document.RxSearchDrugForm.searchString.value.length == 0){
-	alert("Search Field is Empty");
+//	alert("Search Field is Empty in searchdrug.jsp");
 	document.RxSearchDrugForm.searchString.focus();
 	return false;
     }
@@ -491,12 +493,13 @@ function load() {
                                         for(i=0; i<checks.length; i++){
                                             if(checks[i].checked==true){
                                                 s += checks[i].getAttribute("drugId") + ',';
+                                              //  alert("checks="+checks+" drugId="+checks[i].getAttribute("drugId"));
                                             }
                                         }
 
                                         if(s.length>1){
                                             s = s.substring(0, s.length - 1);                                                                                        
-                                                                                            
+                                          //  alert(document.forms[0].name +","+ s);
                                             document.forms[0].drugList.value = s;
                                             document.forms[0].method.value = "represcribe";
                                             document.forms[0].submit();
@@ -505,6 +508,7 @@ function load() {
                                 }
 
                                 function Delete(){
+                                    alert("delete called");
                                     if(document.getElementsByName('chkDelete')!=null){
                                         var checks = document.getElementsByName('chkDelete');
                                         var s='';
@@ -515,11 +519,10 @@ function load() {
                                                 s += checks[i].getAttribute("drugId") + ',';
                                             }
                                         }
-
+                                        alert(s);
                                         if(s.length>1){
                                             if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
-                                                s = s.substring(0, s.length - 1);
-
+                                                s = s.substring(0, s.length - 1);                                               
                                                 document.forms[1].drugList.value = s;
                                                 document.forms[1].submit();
                                             }
@@ -619,7 +622,7 @@ function load() {
 								<td><a href="javascript:ShowDrugInfo('<%=((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName()%>');"><bean:message key="SearchDrug.msgInfo"/></a></td>
 							</tr>
 							<%
-								i++;
+								i++;System.out.println("i in searchdrug.jsp="+i);
 							%>
 						</logic:iterate>
 					</table></element>
@@ -651,11 +654,6 @@ function load() {
 	</tr>
 
 </table>
-
-
-
-
-
 
 <%
 	if (pharmacy != null)

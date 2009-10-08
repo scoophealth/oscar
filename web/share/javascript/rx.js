@@ -82,7 +82,7 @@ function hidepic(picture){
 
 function isEmpty(){
     if (document.RxSearchDrugForm.searchString.value.length == 0){
-        alert("Search Field is Empty");
+        alert("Search Field is Empty in rx.js");
         document.RxSearchDrugForm.searchString.focus();
         return false;
     }

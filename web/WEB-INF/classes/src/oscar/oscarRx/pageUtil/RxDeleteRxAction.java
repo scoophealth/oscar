@@ -49,7 +49,7 @@ public final class RxDeleteRxAction extends Action {
     HttpServletResponse response)
     throws IOException, ServletException {
         
-        System.out.println("RxDeleteRxAction");
+        System.out.println("===========================RxDeleteRxAction========================");
         
         // Extract attributes we will need
         Locale locale = getLocale(request);
@@ -72,14 +72,16 @@ public final class RxDeleteRxAction extends Action {
             new oscar.oscarRx.data.RxPrescriptionData();
             
             String drugList = ((RxDrugListForm)form).getDrugList();
+            System.out.println("drugList="+drugList);
             String[] drugArr = drugList.split(",");
-            
+            System.out.println("drugArr="+drugArr.toString());
             int drugId;
             int i;
             
             for(i=0;i<drugArr.length;i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
+                    System.out.println("drugId="+drugId);
                 } catch (Exception e) { break; }
                 
                 // get original drug
@@ -95,7 +97,7 @@ public final class RxDeleteRxAction extends Action {
             e.printStackTrace(System.out);
         }
         
-                
+              System.out.println("===========================END RxDeleteRxAction========================");
          return (mapping.findForward("success"));
     }
 }
