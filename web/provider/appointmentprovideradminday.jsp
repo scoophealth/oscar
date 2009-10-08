@@ -1336,7 +1336,6 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
       <a href=# onClick="popupWithApptNo(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>','rx',<%=appointment.get("appointment_no")%>)" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/>
       </a>
-      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient2.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/>2</a>
        <%
 	  if("bc".equalsIgnoreCase(prov)){
 	  if(patientHasOutstandingPrivateBills(String.valueOf(demographic_no))){
