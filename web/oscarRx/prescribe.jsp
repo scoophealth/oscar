@@ -32,34 +32,32 @@ System.out.println("rand="+rand);
 
 String drugName = "";
 
-if(id != null && id.startsWith("b_")){
-    String sId= id.replaceAll("b_", "");
-    drugName= drugData.getGenericName(sId);
+//RxDrugData.DrugMonograph dmono = drugData.getDrug2(id);
 
-}else if(id != null && id.startsWith("g_")){
-    String sId= id.replaceAll("g_", "");
-    drugName = text;
+String defInstr = "1 OD";
+String defQuantity = "30";
+String defRepeat ="0";
 
-}else if (id !=null){
-    drugName=text;
-}
-System.out.println("drugName="+drugName);
-System.out.println("id="+id);
+drugName = text;
+
 %>
 
-<fieldset style="margin-top:2px;width:600px;">
+<fieldset style="margin-top:2px;width:600px;" id="set_<%=rand%>"">
+          <a href="javascript:void();" style="float:left;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();">X</a>
    
+
     <a href="javascript:void();" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
+
     <input type="hidden" id="whichPrescribe_<%=rand%>" value="<%=countPrescribe%>"/>
 
-    <label style="float:left;width:80px;">Name:</label> <input type="text"  size="30" name="drugName_<%=rand%>" id="drugName_<%=rand%>"  <% if(notRePrescribe!=null && notRePrescribe.equals("true")){%> 
+    <label style="float:left;width:80px;">Name:</label> <input type="text"  size="30" name="drugName_<%=rand%>" id="drugName_<%=rand%>" value="<%=drugName%>"  <% if(notRePrescribe!=null && notRePrescribe.equals("true")){%>
                                                                onblur="createNewRx(this);" value="<%=drugName%>" <%}else {%> value="<%=drugName%>"<%}%>/><br>
-        <label style="float:left;width:80px;">Instructions:</label> <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="" onblur="parseIntr(this);" size="60"/> <br>
-        <label style="float:left;width:80px;">Quantity:</label> <input type="text" id="quantity_<%=rand%>" value="" name="quantity_<%=rand%>"/>
-        <label style="">Repeats:</label> <input type="text" id="repeats_<%=rand%>" name="repeats_<%=rand%>" />
+        <label style="float:left;width:80px;">Instructions:</label> <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="<%=defInstr%>" onblur="parseIntr(this);" size="60"/> <br>
+        <label style="float:left;width:80px;">Quantity:</label> <input type="text" id="quantity_<%=rand%>" value="<%=defQuantity%>" name="quantity_<%=rand%>"/>
+        <label style="">Repeats:</label> <input type="text" id="repeats_<%=rand%>" name="repeats_<%=rand%>" value="<%=defRepeat%>" />
         <input type="hidden" id="calQuantity_<%=rand%>" name="calQuantity_<%=rand%>" value="" />
         <input type="checkbox" id="longTerm_<%=rand%>" name="longTerm_<%=rand%>">Long Term Med </input>
-        <input type="button" id="update_<%=rand%>" name="update_<%=rand%>" onclick="updateDrug(this,$(whichPrescribe_<%=rand%>).value);return false;" value="Update"</input>
+        <input type="button" id="update_<%=rand%>" name="update_<%=rand%>" onclick="updateDrug(this,$('whichPrescribe_<%=rand%>').value);return false;" value="Update"</input>
         <div id="rxString_<%=rand%>"> </div>
         <div id="quantityWarning_<%=rand%>"> </div>
         
@@ -86,6 +84,7 @@ System.out.println("id="+id);
         </div><br/>
 
         <bean:message key="WriteScript.msgPastMedication"/><input  type="checkbox" name="pastMed_<%=rand%>" id="pastMed_<%=rand%>"  />
+
 	<bean:message key="WriteScript.msgPatientCompliance"/>:
         <bean:message key="WriteScript.msgYes"/><input type="checkbox"  name="patientComplianceY_<%=rand%>" id="patientComplianceY_<%=rand%>" />
         
