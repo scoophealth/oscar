@@ -58,11 +58,11 @@ public class PreventionManager {
         pf = PreventionDS.getInstance();
     }
 
-    public String getWarnings(String demo) {
+    public synchronized String getWarnings(String demo) {
         String ret = (String)mShell.get(PREVS).get(demo);
         //System.out.println("Fetching Demo " + demo + " '" + ret + "'");
         if( ret == null ) {
-            synchronized(this) {
+            //synchronized(this) {
                 try {
                     PreventionData prevData = new PreventionData();
                     Prevention prev = prevData.getPrevention(demo);
@@ -81,13 +81,14 @@ public class PreventionManager {
                     ret = "";
                     e.printStackTrace();
                 }
-            }
+            //}
         }
         return ret;
     }
 
-     public void removePrevention(String demo) {
-         mShell.get(PREVS).remove(demo);
+     public synchronized void removePrevention(String demo) {
+            mShell.get(PREVS).remove(demo);
+         
      }
 
 }
