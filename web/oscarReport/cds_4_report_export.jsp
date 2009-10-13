@@ -25,6 +25,7 @@
 * Toronto, Ontario, Canada 
 */
 --%>
+<%@page contentType="application/octet-stream"%>
 <%
 	int startYear = Integer.parseInt(request.getParameter("startYear"));
 	int startMonth = Integer.parseInt(request.getParameter("startMonth"));
@@ -50,7 +51,6 @@
 	
 	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
 	
-	response.setContentType("application/x-download");
 	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode));
 	PrintWriter responseWriter=response.getWriter();
 	

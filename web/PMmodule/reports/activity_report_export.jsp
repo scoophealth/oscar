@@ -31,6 +31,8 @@
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="java.text.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+
+<%@page contentType="text/csv"%>
 <%
 	String agencyName = SqlUtils.getCurrentDatabaseName();
 	String startDateString = request.getParameter("startDate");
@@ -107,7 +109,6 @@
 		// for debugging
 		// System.err.println(sb.toString());
 		
-		response.setContentType("application/x-download");
 		response.setHeader("Content-Disposition", "attachment; filename=activity_report_" + agencyName+"_"+dateFormatter.format(startCalendar.getTime())+"_"+dateFormatter.format(endCalendar.getTime())+".csv");
 
 		out.write(sb.toString());
