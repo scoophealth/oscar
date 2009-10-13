@@ -53,7 +53,7 @@
                         <one-to-many class="org.oscarehr.casemgmt.model.CaseManagementNoteExt"/>
                 </set>
 		<property name="roleName" type="string"
-			formula="(select r.name from caisi_role r where r.role_id = reporter_caisi_role)" />
+			formula="(select r.role_name from secRole r where r.role_no = reporter_caisi_role)" />
 		<property name="programName" type="string"
 			formula="(select p.name from program p where p.id = program_no)" />
 		<property name="revision" type="string"

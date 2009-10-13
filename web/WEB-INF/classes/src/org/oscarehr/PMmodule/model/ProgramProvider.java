@@ -21,8 +21,11 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.common.model.Provider;
 import java.io.Serializable;
+
+import org.oscarehr.common.model.Provider;
+
+import com.quatro.model.security.Secrole;
 
 /**
  * This is the object class that relates to the program_provider table.
@@ -35,7 +38,7 @@ public class ProgramProvider implements Serializable {
     private Long _programId;
     private String _providerNo;
     private Long _roleId;// many to one
-    private org.caisi.model.Role _role;
+    private Secrole _role;
     private Provider _provider;// collections
     private java.util.Set _teams;
     private String programName;
@@ -146,7 +149,7 @@ public class ProgramProvider implements Serializable {
      * @hibernate.property
 *  column=role_id
      */
-    public org.caisi.model.Role getRole () {
+    public Secrole getRole () {
         return this._role;
     }
 
@@ -154,7 +157,7 @@ public class ProgramProvider implements Serializable {
 	 * Set the value related to the column: role_id
      * @param _role the role_id value
      */
-    public void setRole (org.caisi.model.Role _role) {
+    public void setRole (Secrole _role) {
         this._role = _role;
     }
 

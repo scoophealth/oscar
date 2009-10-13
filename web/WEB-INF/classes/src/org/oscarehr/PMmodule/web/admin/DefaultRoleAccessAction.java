@@ -34,9 +34,11 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 
+import com.quatro.service.security.RolesManager;
+
 public class DefaultRoleAccessAction extends  BaseAction {
     private ProgramManager programManager;
-    private RoleManager roleManager;
+    private RolesManager roleManager;
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping,form,request,response);
@@ -103,7 +105,7 @@ public class DefaultRoleAccessAction extends  BaseAction {
     	this.programManager = mgr;
     }
 
-    public void setRoleManager(RoleManager mgr) {
+    public void setRolesManager(RolesManager mgr) {
     	this.roleManager = mgr;
     }
 }

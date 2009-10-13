@@ -60,6 +60,11 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         return results;
     }
 
+	@SuppressWarnings("unchecked")
+	public List<ProgramProvider> getAllProgramProviders() {
+		return getHibernateTemplate().find("FROM ProgramProvider");
+	}
+	
     @SuppressWarnings("unchecked")
     public List<ProgramProvider> getProgramProviderByProviderNo(String providerNo) {
         String q = "select pp from ProgramProvider pp where pp.ProviderNo=?";

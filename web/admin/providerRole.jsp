@@ -215,7 +215,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                     dbObj.updateDBRecord(sql,curUser_no);
                 }
                 else {
-                    sql = "SELECT cr.name AS name from caisi_role cr, program_provider pp WHERE pp.provider_no = '" + provNo + "' AND cr.role_id = pp.role_id";
+                    sql = "SELECT cr.role_name AS name from secRole cr, program_provider pp WHERE pp.provider_no = '" + provNo + "' AND cr.role_no = pp.role_id";
                     ResultSet rs1 = dbObj.searchDBRecord(sql);
                     rs1.next();
                     String caisiRole = rs1.getString("name");                    

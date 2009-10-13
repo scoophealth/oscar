@@ -125,5 +125,8 @@ public class ProviderManager
 		return secUserRoleDao.getUserRoles(providerNo);
 	}
 
+	public void saveUserRole(SecUserRole sur) {
+		secUserRoleDao.save(sur);
+	}
 	
 }

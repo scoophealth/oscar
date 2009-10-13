@@ -46,6 +46,14 @@ public class RolesManager {
 		return secroleDao.getRoles();
 	}
 
+	public Secrole getRole(String id) {
+		return secroleDao.getRole(Integer.parseInt(id));
+	}
+	
+	public Secrole getRole(int id) {
+		return secroleDao.getRole(id);
+	}
+	
 	public Secrole getRoleByRolename(String roleName) {
 		return secroleDao.getRoleByName(roleName);
 	}

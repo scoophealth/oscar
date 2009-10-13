@@ -22,17 +22,10 @@
 
 package org.caisi.core.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.caisi.service.CaisiRoleManager;
 
 public class RoleAssignerAction extends DispatchAction {
-	
+/*	
 	protected CaisiRoleManager roleManager;
 	
 	public void setCaisiRoleManager(CaisiRoleManager roleManager) {
@@ -73,4 +66,5 @@ public class RoleAssignerAction extends DispatchAction {
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return list(mapping,form,request,response);
 	}
+	*/
 }

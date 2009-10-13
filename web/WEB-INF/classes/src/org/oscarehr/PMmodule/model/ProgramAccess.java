@@ -23,7 +23,7 @@ package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
 
-import org.caisi.model.Role;
+import com.quatro.model.security.Secrole;
 
 /**
  * This is the object class that relates to the program_access table. Any customizations belong here.
@@ -137,7 +137,7 @@ public class ProgramAccess implements Serializable {
     /**
 	 * Return the value associated with the column: roles
      */
-    public java.util.Set<Role> getRoles () {
+    public java.util.Set<Secrole> getRoles () {
         return this._roles;
     }
 

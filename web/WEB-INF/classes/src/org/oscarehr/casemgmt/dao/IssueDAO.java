@@ -27,10 +27,11 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.caisi.model.Role;
 import org.jboss.logging.Logger;
 import org.oscarehr.casemgmt.model.Issue;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import com.quatro.model.security.Secrole;
 
 public class IssueDAO extends HibernateDaoSupport {
 	private Logger log = Logger.getLogger(this.getClass());
@@ -77,7 +78,7 @@ public class IssueDAO extends HibernateDaoSupport {
             if (x != 0) {
                 buf.append(",");
             }
-            buf.append("\'" + StringEscapeUtils.escapeSql(((Role)roles.get(x)).getName()) + "\'");
+            buf.append("\'" + StringEscapeUtils.escapeSql(((Secrole)roles.get(x)).getName()) + "\'");
         }
         String roleList = buf.toString();
 

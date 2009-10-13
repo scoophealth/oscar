@@ -40,7 +40,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
-import org.caisi.model.Role;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
@@ -99,6 +98,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
 
+import com.quatro.model.security.Secrole;
+import com.quatro.service.security.RolesManager;
+
 /*
  * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
  * Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061
@@ -127,7 +129,7 @@ public class CaseManagementManager {
 	private ProviderSignitureDao providerSignitureDao;
 	private RoleProgramAccessDAO roleProgramAccessDAO;
 	private ClientImageDAO clientImageDAO;
-	private RoleManager roleManager;
+	private RolesManager roleManager;
 	private CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
 	private AdmissionManager admissionManager;
 	private HashAuditDAO hashAuditDAO;
@@ -820,7 +822,7 @@ public class CaseManagementManager {
 		Set roleset = pa.getRoles();
 		Iterator itr = roleset.iterator();
 		while (itr.hasNext()) {
-			Role rl = (Role) itr.next();
+			Secrole rl = (Secrole) itr.next();
 			if (roleId.compareTo(rl.getId()) == 0) return true;
 		}
 		return rt;
@@ -856,7 +858,7 @@ public class CaseManagementManager {
 			Long pid = new Long(program_id);
 			ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pid);
 		}
-		if (ppList != null && ppList.size() > 0) rt = ((ProgramProvider) ppList.get(0)).getRole().getName();
+		if (ppList != null && ppList.size() > 0) rt = ((ProgramProvider) ppList.get(0)).getRole().getRoleName();
 		return rt;
 	}
 
@@ -988,7 +990,7 @@ public class CaseManagementManager {
 		}
 
 		ProgramProvider pp = (ProgramProvider) ppList.get(0);
-		Role role = pp.getRole();
+		Secrole role = pp.getRole();
 
 		// Load up access list from program
 		@SuppressWarnings("unchecked")
@@ -1040,11 +1042,11 @@ public class CaseManagementManager {
 		return filteredNotes;
 	}
 	
-	public boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
+	public boolean isRoleIncludedInAccess(ProgramAccess pa, Secrole role) {
 		boolean result = false;
 
 		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
-			Role accessRole = (Role) iter.next();
+			Secrole accessRole = (Secrole) iter.next();
 			if (role.getId() == accessRole.getId()) {
 				return true;
 			}
@@ -1075,7 +1077,7 @@ public class CaseManagementManager {
 			return new ArrayList();
 		}
 		ProgramProvider pp = (ProgramProvider) ppList.get(0);
-		Role role = pp.getRole();
+		Secrole role = pp.getRole();
 
 		// get program accesses... program allows either all roles or not all roles (does this mean no roles?)
 		List paList = programAccessDAO.getAccessListByProgramId(new Long(programId));
@@ -1086,7 +1088,7 @@ public class CaseManagementManager {
 
 		List allowableSearchRoles = new ArrayList();
 		for (Iterator iter = allRoles.iterator(); iter.hasNext();) {
-			Role r = (Role) iter.next();
+			Secrole r = (Secrole) iter.next();
 			String key = "write " + r.getName().toLowerCase() + " issues";
 			ProgramAccess pa = (ProgramAccess) paMap.get(key);
 			if (pa != null) {
@@ -1130,7 +1132,7 @@ public class CaseManagementManager {
 		}
 
 		ProgramProvider pp = (ProgramProvider) ppList.get(0);
-		Role role = pp.getRole();
+		Secrole role = pp.getRole();
 
 		// Load up access list from program
 		List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
@@ -1150,7 +1152,7 @@ public class CaseManagementManager {
 					add = true;
 				}
 			} else {
-				if (issueRole.equalsIgnoreCase(role.getName())) {
+				if (issueRole.equalsIgnoreCase(role.getRoleName())) {
 					// default
 					add = true;
 				}
@@ -1164,7 +1166,7 @@ public class CaseManagementManager {
 					add = true;
 				}
 			} else {
-				if (issueRole.equalsIgnoreCase(role.getName())) {
+				if (issueRole.equalsIgnoreCase(role.getRoleName())) {
 					// default
 					add = true;
 				}
@@ -1172,7 +1174,7 @@ public class CaseManagementManager {
 
 			// apply defaults
 			if (!add) {
-				if (issueRole.equalsIgnoreCase(role.getName())) {
+				if (issueRole.equalsIgnoreCase(role.getRoleName())) {
 					add = true;
 				}
 			}
@@ -1349,7 +1351,7 @@ public class CaseManagementManager {
 		this.clientImageDAO = dao;
 	}
 
-	public void setRoleManager(RoleManager mgr) {
+	public void setRolesManager(RolesManager mgr) {
 		this.roleManager = mgr;
 	}
 

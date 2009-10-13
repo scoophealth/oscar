@@ -38,21 +38,22 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.IssueAdmin;
-import org.caisi.service.CaisiRoleManager;
 import org.caisi.service.IssueAdminManager;
 
 // use your IDE to handle imports
 public class IssueAdminAction extends DispatchAction {
     private static Log log = LogFactory.getLog(IssueAdminAction.class);
     private IssueAdminManager mgr = null;
-    private CaisiRoleManager caisiRoleMgr = null;
+   // private CaisiRoleManager caisiRoleMgr = null;
 
     public void setIssueAdminManager(IssueAdminManager issueAdminManager) {
         this.mgr = issueAdminManager;
     }
+    /*
     public void setCaisiRoleManager(CaisiRoleManager caisiRoleManager) {
         this.caisiRoleMgr = caisiRoleManager;
     }
+    */
     public ActionForward cancel(ActionMapping mapping, ActionForm form,
                                 HttpServletRequest request,
                                 HttpServletResponse response)
@@ -99,7 +100,7 @@ public class IssueAdminAction extends DispatchAction {
             request.setAttribute("issueRole", issueAdmin.getRole());
             issueAdminForm.set("issueAdmin", issueAdmin);
         }
-        request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
+        //request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
         return mapping.findForward("edit");
     }
     public ActionForward list(ActionMapping mapping, ActionForm form,
@@ -124,7 +125,7 @@ public class IssueAdminAction extends DispatchAction {
         ActionMessages errors = form.validate(mapping, request);
         if (!errors.isEmpty()) {
             saveErrors(request, errors);
-            request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
+           // request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
             return mapping.findForward("edit");
         }
         
@@ -142,7 +143,7 @@ public class IssueAdminAction extends DispatchAction {
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("issueAdmin.code.exist"));
 		saveErrors(request,messages);
-                request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
+                //request.setAttribute("caisiRoles", caisiRoleMgr.getRoles());
                 return mapping.findForward("edit");
 	    }
 	}

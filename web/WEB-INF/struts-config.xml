@@ -1992,7 +1992,14 @@
 
         <action path="/Provider/showPersonal" type="org.oscarehr.provider.web.DisplayPersonalInfoAppointmentAction" parameter="method" validate="false" scope="request" >
         </action>
-
+<!--
+        <action path="/PMmodule/CaseLoad" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method">            
+        </action>
+-->		
+ 		<action parameter="method" path="/PMmodule/Admin/MigrateCaisiRoles" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="success" path="/PMmodule/Admin/migrateCaisiRoles.jsp" redirect="true"/>
+        </action>    
+                
     </action-mappings>
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="10M"/>
     <message-resources parameter="oscarResources" />

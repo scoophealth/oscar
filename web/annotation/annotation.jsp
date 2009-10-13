@@ -176,7 +176,7 @@
 	    cmNote.setSigned(true);
 	    cmNote.setHistory("");
 	    cmNote.setProgram_no(program_no);
-	    cmNote.setReporter_caisi_role("1");  //caisi_role for "doctor"
+	    cmNote.setReporter_caisi_role("2");  //secRole for "doctor"
 	    cmNote.setReporter_program_team("0");
 	    cmNote.setNote(note);
 	

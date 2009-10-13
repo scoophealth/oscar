@@ -26,7 +26,6 @@
 
 	<!-- DAO -->
 	<bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO" autowire="byName" />
-	<bean id="caisiRoleDAO" class="org.caisi.dao.CaisiRoleDAO" autowire="byName" />
 	<bean id="accessTypeDAO" class="org.caisi.dao.AccessTypeDAO" autowire="byName" />
 	<bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.BedCheckTimeDAO" autowire="byName" />
 	<bean id="ratePageDao" class="org.oscarehr.PMmodule.dao.RatePageDao" autowire="byName" />
@@ -45,7 +44,6 @@
 
 	<!-- managers  -->
 	<bean id="issueAdminManager" class="org.caisi.service.IssueAdminManager" autowire="byName" />
-	<bean id="caisiRoleManager" class="org.caisi.service.CaisiRoleManager" autowire="byName" />
 
 	<bean id="bedCheckTimeManager" class="org.oscarehr.PMmodule.service.impl.BedCheckTimeManagerImpl" autowire="byName" />
 	<bean id="ratePageManager" class="org.oscarehr.PMmodule.service.impl.RatePageManagerImpl" autowire="byName" />

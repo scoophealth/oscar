@@ -215,7 +215,7 @@
 		<property name="hashAuditDAO" ref="HashAuditDAO" />
 		<property name="ectWindowDAO" ref="EncounterWindowDAO" />
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />
-		<property name="roleManager" ref="roleManager" />
+		<property name="rolesManager" ref="rolesManager" />
 		<property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO" />
 		<property name="admissionManager" ref="admissionManager" />
 		<property name="enabled" value="${casemgmt.note.password.enabled}" />
@@ -224,9 +224,11 @@
 		<property name="programProviderDao" ref="programProviderDAO" />
 		<property name="programAccessDAO" ref="programAccessDAO" />
 	</bean>
+	<!-- 
 	<bean id="roleManager" class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">
 		<property name="roleDAO" ref="roleDAO" />
 	</bean>
+	-->
 	<bean id="ticklerManager" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName">
 
 	</bean>

@@ -32,9 +32,16 @@
 			type="boolean" />
 		<many-to-one name="AccessType" class="org.oscarehr.PMmodule.model.AccessType"
 			column="access_type_id" update="false" insert="false" lazy="false" />
+<!-- 			
 		<set name="roles" table="program_access_roles" lazy="false">
 			<key column="id" />
 			<many-to-many column="role_id" class="org.caisi.model.Role" />
 		</set>
+-->		
+		<set name="roles" table="program_access_roles" lazy="false">
+			<key column="id" />
+			<many-to-many column="role_id" class="com.quatro.model.security.Secrole" />
+		</set>
+				
 	</class>
 </hibernate-mapping>

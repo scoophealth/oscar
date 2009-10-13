@@ -17,7 +17,7 @@ public class Secrole implements java.io.Serializable {
 
 	// Fields
 
-	
+	private Long id;
 	private String roleName;
 	private String description;
 	private boolean active;   
@@ -28,6 +28,12 @@ public class Secrole implements java.io.Serializable {
 
 	// Constructors
 
+    public void setId(Long id) {
+    	this.id = id;
+    }
+    public Long getId() {
+    	return id;
+    }
 	public boolean isActive() {
 		return active;
 	}
@@ -90,4 +96,11 @@ public class Secrole implements java.io.Serializable {
 		this.description = description;
 	}
 
+	public String getName() {
+		return roleName;
+	}
+	
+	public void setName(String name) {
+		this.roleName = name;
+	}
 }

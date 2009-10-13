@@ -32,7 +32,7 @@ public class DefaultRoleAccess  implements Serializable {
     private Long _id;// fields
     private long _roleId;
     private long _accessTypeId;// many to one
-    private org.caisi.model.Role _caisi_role;
+    private com.quatro.model.security.Secrole _caisi_role;
     private AccessType _access_type;
 
 
@@ -105,7 +105,7 @@ public class DefaultRoleAccess  implements Serializable {
      * @hibernate.property
      *  column=role_id
      */
-    public org.caisi.model.Role getCaisi_role () {
+    public com.quatro.model.security.Secrole getCaisi_role () {
         return this._caisi_role;
     }
 
@@ -113,7 +113,7 @@ public class DefaultRoleAccess  implements Serializable {
      * Set the value related to the column: role_id
      * @param _caisi_role the role_id value
      */
-    public void setCaisi_role (org.caisi.model.Role _caisi_role) {
+    public void setCaisi_role (com.quatro.model.security.Secrole _caisi_role) {
         this._caisi_role = _caisi_role;
     }
 

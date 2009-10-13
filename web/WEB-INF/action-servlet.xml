@@ -285,4 +285,9 @@
     <bean name="/PMmodule/Reports/CustomReport" class="org.oscarehr.PMmodule.web.reports.CustomReportAction" singleton="false" autowire="byName">
     </bean>
 -->
+
+<!--
+	<bean name="/PMmodule/CaseLoad" class="org.oscarehr.PMmodule.web.CaseLoadService" singleton="false" autowire="byName"/>
+-->	
+	<bean name="/PMmodule/Admin/MigrateCaisiRoles" class="org.oscarehr.PMmodule.web.admin.MigrateCaisiRolesAction" singleton="false" autowire="byName"/>
 </beans>

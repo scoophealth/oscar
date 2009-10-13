@@ -41,6 +41,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.TimeClearedHashMap;
 
+import com.quatro.model.security.Secrole;
+
 public class CaseManagementIssue extends BaseObject {
 
 	private static ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
@@ -243,7 +245,7 @@ public class CaseManagementIssue extends BaseObject {
 	    }
 
 	    ProgramProvider pp = ppList.get(0);
-	    Role role = pp.getRole();
+	    Secrole role = pp.getRole();
 
 	    List<ProgramAccess> programAccessList = programAccessDao.getAccessListByProgramId(new Long(programId));
 	    Map<String, ProgramAccess> programAccessMap = convertProgramAccessListToMap(programAccessList);
@@ -258,7 +260,7 @@ public class CaseManagementIssue extends BaseObject {
 	    		return(true);
 	    	}
 	    } else {
-	    	if (issueRole.equalsIgnoreCase(role.getName())) {
+	    	if (issueRole.equalsIgnoreCase(role.getRoleName())) {
 	    		return(true);
 	    	}
 	    }
@@ -266,14 +268,15 @@ public class CaseManagementIssue extends BaseObject {
 	    return(false);
     }
 	
-	private static boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
+	private static boolean isRoleIncludedInAccess(ProgramAccess pa, Secrole role) {
 		boolean result = false;
 
-		for (Role accessRole : pa.getRoles()) {
+		for (Secrole accessRole : pa.getRoles()) {
 			if (role.getId().longValue() == accessRole.getId().longValue()) {
 				return true;
 			}
 		}
+
 		return result;
 	}
 

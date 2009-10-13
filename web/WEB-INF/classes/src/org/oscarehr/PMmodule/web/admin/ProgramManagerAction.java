@@ -67,9 +67,9 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.common.dao.FacilityDao;
-import org.oscarehr.common.model.Facility;
-import org.oscarehr.util.SessionConstants;
 import org.springframework.beans.factory.annotation.Required;
+
+import com.quatro.service.security.RolesManager;
 
 public class ProgramManagerAction extends BaseAction {
 
@@ -83,8 +83,9 @@ public class ProgramManagerAction extends BaseAction {
 	private ProgramManager programManager;
 	private ProviderManager providerManager;
 	private ProgramQueueManager programQueueManager;
-	private RoleManager roleManager;
-
+	//private RoleManager roleManager;
+	private RolesManager roleManager;
+	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
 	}
@@ -781,6 +782,7 @@ public class ProgramManagerAction extends BaseAction {
 			}
 			for (String role : roles) {
 				access.getRoles().add(roleManager.getRole(role));
+				//access.getRoles().add()
 			}
 		}
 
@@ -1171,7 +1173,7 @@ public class ProgramManagerAction extends BaseAction {
 		this.providerManager = mgr;
 	}
 
-	public void setRoleManager(RoleManager mgr) {
+	public void setRolesManager(RolesManager mgr) {
 		this.roleManager = mgr;
 	}
 

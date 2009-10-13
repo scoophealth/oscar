@@ -30,7 +30,6 @@ import java.util.Map;
 import org.caisi.dao.CustomFilterDAO;
 import org.caisi.dao.TicklerDAO;
 import org.caisi.model.CustomFilter;
-import org.caisi.model.Role;
 import org.caisi.model.Tickler;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
@@ -41,6 +40,8 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
+
+import com.quatro.model.security.Secrole;
 
 /*
  * Updated by Eugene Petruhin on 16 dec 2008 while fixing #2422864 & #2317933 & #2379840
@@ -145,7 +146,7 @@ public class TicklerManager {
 	        	continue;
 	        }
 	        ProgramProvider pp = (ProgramProvider)ppList.get(0);
-		    Role role = pp.getRole();		   
+		    Secrole role = pp.getRole();		   
 		    
 		    //Load up access list from program
 		    List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
@@ -170,7 +171,7 @@ public class TicklerManager {
 	        }
 	        
 	        ProgramProvider pp2 = (ProgramProvider)ppList2.get(0);
-	        String ticklerRole = pp2.getRole().getName().toLowerCase();
+	        String ticklerRole = pp2.getRole().getRoleName().toLowerCase();
 	        
 	        ProgramAccess pa = null;        
 	
@@ -182,7 +183,7 @@ public class TicklerManager {
 	            }
 	        }
 	        else {
-	            if (ticklerRole.equals(role.getName())) {                               
+	            if (ticklerRole.equals(role.getRoleName())) {                               
 	                add = true;
 	            }
 	        }
@@ -199,7 +200,7 @@ public class TicklerManager {
 	
 	        //apply defaults
 	        if (!add) {
-	            if (ticklerRole.equals(role.getName())) {                
+	            if (ticklerRole.equals(role.getRoleName())) {                
 	                add = true;
 	            }
 	        }

@@ -29,13 +29,14 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.model.Role;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.model.Provider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.quatro.model.security.Secrole;
 
 public class GetProviderRoles {
 	
@@ -94,9 +95,9 @@ public class GetProviderRoles {
 	    	Set roles = new HashSet();
 	    	for(Iterator iter=ppList.iterator();iter.hasNext();) {
 	    		ProgramProvider pp = (ProgramProvider)iter.next();
-	    		Role role = pp.getRole();
+	    		Secrole role = pp.getRole();
 	    		if(role != null) {
-	    			roles.add(role.getName());
+	    			roles.add(role.getRoleName());
 	    			//roles.add(String.valueOf(role.getId()));
 	    		} else {
 	    			//log.error("ROLE IS NULL" + pp.getId());

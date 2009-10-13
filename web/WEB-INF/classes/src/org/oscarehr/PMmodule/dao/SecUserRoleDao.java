@@ -74,4 +74,7 @@ public class SecUserRoleDao extends HibernateDaoSupport {
         return result;
     }
 
+    public void save(SecUserRole sur) {
+    	this.getHibernateTemplate().save(sur);
+    }
 }
