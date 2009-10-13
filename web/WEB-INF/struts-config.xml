@@ -46,6 +46,10 @@
         <form-bean name="siteForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="site" type="org.oscarehr.common.model.Site" />
         </form-bean>
+        <form-bean name="billingreferralForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="search" type="java.lang.String" />
+            <form-property name="referral" type="org.oscarehr.common.model.Billingreferral" />
+        </form-bean>
         <form-bean name="annotationForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="oAnnotation" type="org.oscarehr.common.model.OscarAnnotation" />
         </form-bean>
@@ -1884,7 +1888,11 @@
             <forward name="list" path="/admin/sitesAdmin.jsp" />
             <forward name="details" path="/admin/sitesAdminDetail.jsp" />
         </action>
-      
+
+        <action path="/admin/ManageBillingReferral" name="billingreferralForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="list" path="/admin/billingreferralAdmin.jsp" />
+            <forward name="detail" path="/admin/billingreferralAdminDetail.jsp" />
+        </action>
         
         <action path="/OscarAnnotation" name="annotationForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="success" path="/close.jsp" />

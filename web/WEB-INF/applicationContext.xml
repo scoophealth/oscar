@@ -97,7 +97,7 @@
 	<bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
 	<bean id="BillingmasterDAO" class="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" autowire="byName" />
         <bean id="BillingDxCodeDAO" class="oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO" autowire="byName" />
-
+        <bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />

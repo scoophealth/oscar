@@ -654,7 +654,9 @@ div.logoutBox {
 		<ul>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'><bean:message key="admin.admin.clinicAdmin"/></a></li>
-<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %> 
+<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
+                        <li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageBillingReferral.do"/>&quot;);return false;'><bean:message key="admin.admin.billingreferralAdmin"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageSites.do"/>&quot;);return false;'><bean:message key="admin.admin.sitesAdmin"/></a></li>
 <% } %>

@@ -277,6 +277,10 @@
 		<property name="siteDao" ref="siteDao" />
 	</bean>
 
+
+        <bean name="/admin/ManageBillingReferral" class="org.oscarehr.common.web.BillingreferralEditAction" singleton="false">
+            <property name="bDao" ref="BillingreferralDAO" />
+        </bean>
 	<!--
     <bean name="/PMmodule/Reports/CustomReport" class="org.oscarehr.PMmodule.web.reports.CustomReportAction" singleton="false" autowire="byName">
     </bean>
