@@ -238,7 +238,7 @@
                                                 <div id="rxText"></div>
                                                 <div id="autocomplete_choices" class="autocomplete"></div>
                                                 <div><label for="drugName">DrugName:</label><input id="searchString" type="text" size="30" name="durgName" id="drugName" value=""  AUTOCOMPLETE=OFF /></div>
-                                                <div class="buttonrow"><input id="saveButton" type="button" onclick="popForm();return false;" value="Prescribe" />
+                                                <div class="buttonrow"><input id="saveButton" type="button" onclick="updateAllDrugs();return false;" value="Prescribe" />
                                                 </div>
                                             </td>
                                             <td width="100">
@@ -637,7 +637,7 @@
     }
     function RePrescribeLongTerm(){
         var longTermDrugs=$(longTermDrugList).value;
-    //    alert(longTermDrugs);
+       // alert(longTermDrugs);
         var ar=longTermDrugs.split("[");
         var s=ar[1];
         var ar2=s.split("]");
@@ -664,10 +664,119 @@
 
     function createNewRx(element){
        oscarLog("createNewRx called");
-        var data="drugName="+element.value;
+       oscarLog("countPrescribe in createNewRx="+countPrescribe);
+       //countPrescribe=increaseCountPrescribe();
+       var ar=(element.id).split("_");
+       var randomId=ar[1];
+        var data="drugName="+element.value+"&countPrescribe="+countPrescribe+"&randomId="+randomId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
         new Ajax.Request(url, {method: 'get',parameters:data})
         return false;
+    }
+
+    function updateAllDrugs(){
+
+      /*  var data="";
+        var url= "<--c:out value="${ctx}"/-->" + "/oscarRx/WriteScript.do?method=getAllRandomId";
+        new Ajax.Request(url, {method: 'post',postBody:data,asynchronous:false, onSuccess:function(transport){
+            
+            var json=transport.responseText.evalJSON();
+            var arRand=json.arRand;
+            for(var i=0;i<arRand.length;i++){
+                oscarLog(arRand[i]);
+                updateDrug2(arRand[i]);
+            }
+            popForm();
+        }});
+
+       */
+        var data=Form.serialize($('drugForm'))
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateAllDrugs";
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data "+url);
+                popForm();
+            }});
+
+      //pass a list of randomIds to the server
+      //server has a action to find all rx relates to each randomId and update one by one
+      //only call server action class once.
+
+        return false;
+    }
+
+     function updateDrug2(randomId){//save drug to session.
+
+
+        //make a call to stashaction to set the bean stash index.
+        var data1="randomId="+randomId;
+        var url1= "<c:out value="${ctx}"/>" + "/oscarRx/stash.do?method=setStashIndex";
+        new Ajax.Request(url1,
+        {method: 'post',postBody:data1,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data to stashAction "+url1);
+
+        var rand=randomId;
+        var drugName="drugName_"+rand;
+        var instructions="instructions_"+rand;
+        var quantity="quantity_"+rand;
+        var repeats="repeats_"+rand;
+        var startDate="rxDate_"+rand;
+        var writtenDate="writtenDate_"+rand;
+        var lastRefillDate="lastRefillDate_"+rand;
+        var longTerm="longTerm_"+rand;
+        var ocheck="ocheck_"+rand;
+        var outsideProviderName="outsideProviderName_"+rand;
+        var outsideProviderOhip="outsideProviderOhip_"+rand;
+        var pastMed="pastMed_"+rand;
+        var patientComplianceY="patientComplianceY_"+rand;
+        var patientComplianceN="patientComplianceN_"+rand;
+
+        var data=drugName+"="+$(drugName).value+"&"+instructions+"="+$(instructions).value+"&"+quantity+"="+$(quantity).value+"&"+repeats+"="+$(repeats).value;
+
+        if($(writtenDate).value!=null){
+            data=data+"&"+writtenDate+"="+$(writtenDate).value;
+        }
+        if($(startDate).value!=null){
+            data=data+"&"+startDate+"="+$(startDate).value;
+        }
+        if($(lastRefillDate).value!=null){
+            data=data+"&"+lastRefillDate+"="+$(lastRefillDate).value;
+        }
+        if($(longTerm).checked){
+            data=data+"&"+longTerm+"=on";
+        }else{
+            data=data+"&"+longTerm+"=off";
+        }if($(pastMed).checked){
+            data=data+"&"+pastMed+"=on";
+        }else{
+            data=data+"&"+pastMed+"=off";
+        }if($(ocheck).checked){
+            data=data+"&"+ocheck+"=on"+"&"+outsideProviderName+"="+$(outsideProviderName).value+"&"+outsideProviderOhip+"="+$(outsideProviderOhip).value;
+        }else{
+            data=data+"&"+ocheck+"=off"+"&"+outsideProviderName+"=''&"+outsideProviderOhip+"=''";
+        }if($(patientComplianceY).checked){
+            data=data+"&"+patientComplianceY+"=on";
+        }else{
+            data=data+"&"+patientComplianceY+"=off";
+        }if($(patientComplianceN).checked){
+            data=data+"&"+patientComplianceN+"=on";
+        }else{
+            data=data+"&"+patientComplianceN+"=off";
+        }
+        //oscarLog(data);
+        //make call to server, send data to server.
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateDrug";
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data "+url);
+            }});
+
+}});
+        return false;
+
     }
 
     function updateDrug(element,whichPrescribe){//save drug to session.
@@ -775,13 +884,16 @@
     function getSelectionId(text, li) {
        var ran_number=Math.round(Math.random()*1000000);
         oscarLog('In selection id');
-        var url = "prescribe.jsp";
+        var url1=  "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
+        //var url = "prescribe.jsp";
+        var data1="randomId="+ran_number+"&drugId="+li.id+"&text="+text;
+       // countPrescribe=increaseCountPrescribe();
         //   alert(li.id+"||"+ text+"||"+ ran_number);
-        //var ran_number=Math.round(Math.random()*1000000);
-        var params = "demographicNo=<%=bean.getDemographicNo()%>&id="+li.id+"&text="+text+"&rand="+ran_number+"&notRePrescribe=true";  //hack to get around ie caching the page
-        new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
-        //  chooseDrug();
+        new Ajax.Updater('rxText',url1, {method:'get',parameters:data1,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
 
+                //var params = "demographicNo=<%--=bean.getDemographicNo()--%>&id="+li.id+"&text="+text+"&rand="+ran_number+"&notRePrescribe=true"+"&countPrescribe="+countPrescribe; //hack to get around ie caching the page
+                  //  new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})}})
+        //  chooseDrug();
     }
     //show original drug for represcription.
     function showOldRxDrug(element){
@@ -830,6 +942,7 @@
         oscarLog("data set in showOldRxDrug="+data);
 
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
+        oscarLog("url in searchdrug2 "+url);
         new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){

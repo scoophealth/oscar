@@ -73,7 +73,7 @@ int n=pageContext.getAttributesScope("bean");
 Enumeration emn=pageContext.getAttributeNamesInScope(n);
 //while(emn.hasMoreElements())
   //  System.out.println("attr name in scope n="+emn.nextElement().toString());
-
+ System.out.println("request.getContextPath() in writeScript.jsp="+request.getContextPath());
 int specialStringLen = 0;
 String quan = "";
 boolean isCustom = true;
@@ -810,7 +810,7 @@ String annotation_attrib = "";// = "anno"+now;
 
 // define current form
 RxWriteScriptForm thisForm = (RxWriteScriptForm)request.getAttribute("RxWriteScriptForm");
-
+System.out.println("RxWriteScriptForm thisForm="+thisForm);
 
 if(bean.getStashIndex() > -1){ //new way
     System.out.println("bean.getStashIndex() writescript.jsp="+bean.getStashIndex());
@@ -1206,8 +1206,12 @@ int i;
 							)&nbsp;<html:text property="unitName" size="5"
 								onchange="javascript:writeScriptDisplay();" /> <input
 								type=hidden name="sugQtyMin" /> <input type=hidden
-								name="sugQtyMax" /> <script language="javascript">
+								name="sugQtyMax" />
+                                                        <script language="javascript">
                                         function setQuantity(){
+                                            var path="<c:out value="${ctx}"/>";
+                                            oscarLog("here1");
+                                oscarLog("path in setQuantity"+path);
                                             var sugQtyLbl = document.getElementById('lblSugQty');
                                             while (sugQtyLbl.hasChildNodes()){
                                                 sugQtyLbl.removeChild(sugQtyLbl.firstChild);
@@ -1376,12 +1380,14 @@ int i;
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
                         </div>--> <script language=javascript>
                             function submitPending(stashId, action){ //calls stash action
-                                var frm = document.getElementsByName("RxStashForm");                                                               
+                                var path="<c:out value="${ctx}"/>";
+                                oscarLog("path in submitPending:"+path);
+                                var frm = document.getElementsByName("RxStashForm");                                                              
                                 frm[0].elements["stashId"].value = stashId;
                                 frm[0].elements["action"].value = action;
                                 frm[0].submit();
                             }
-                        </script> <!--6a--> <html:form action="/oscarRx/stash">
+                        </script> <html:form action="/oscarRx/stash">
 						<input type="hidden" name="action" value="">
 						<input type="hidden" name="stashId" />
 					</html:form></td>

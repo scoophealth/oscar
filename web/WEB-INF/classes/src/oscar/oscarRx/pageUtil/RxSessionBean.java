@@ -38,7 +38,8 @@ public class RxSessionBean {
     private String providerNo = null;
     private int demographicNo = 0;
     
-    private ArrayList stash = new ArrayList();
+    private ArrayList<RxPrescriptionData.Prescription> stash = new ArrayList();
+   // private ArrayList stash=new ArrayList();
     private int stashIndex = -1;
     private Hashtable allergyWarnings = new Hashtable();
     private Hashtable workingAllergyWarnings = new Hashtable();
@@ -91,7 +92,18 @@ public class RxSessionBean {
     public int getStashSize() {
         return this.stash.size();
     }
-    
+
+    public int getIndexFromRx(int randomId){
+        int ret=-1;
+        for(int i=0;i<stash.size();i++){
+            if( ((RxPrescriptionData.Prescription)stash.get(i)).getRandomId()==randomId) {
+                ret=i;
+                break;
+            };
+        }
+        System.out.println("in getIndexFromRx="+ret);
+        return ret;
+    }
     public RxPrescriptionData.Prescription[] getStash() {
         RxPrescriptionData.Prescription[] arr = {};
         
@@ -103,7 +115,17 @@ public class RxSessionBean {
     public RxPrescriptionData.Prescription getStashItem(int index) {
         return (RxPrescriptionData.Prescription)stash.get(index);
     }
-    
+
+    public RxPrescriptionData.Prescription getStashItem2(int randomId) {;
+        RxPrescriptionData.Prescription psp=null;
+        for (RxPrescriptionData.Prescription rx:stash){
+            if(rx.getRandomId()==randomId){
+                psp=rx;
+            }
+        }
+        return psp;
+    }
+
     public void setStashItem(int index, RxPrescriptionData.Prescription item) {
         //this.clearDAM();
         //this.clearDDI();

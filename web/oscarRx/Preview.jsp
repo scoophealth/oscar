@@ -71,35 +71,43 @@
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
 <%
+System.out.println("==========================IN Preview.jsp2=======================");
+
 Date rxDate = oscar.oscarRx.util.RxUtil.Today();
 String rePrint = request.getParameter("rePrint");
+System.out.println("rePrint"+rePrint);
 oscar.oscarRx.pageUtil.RxSessionBean bean;
 oscar.oscarRx.data.RxProviderData.Provider provider;
 String signingProvider;
-if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
-    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");    
+if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");
     signingProvider = bean.getStashItem(0).getProviderNo();
+    System.out.println("in if, signingProvider="+signingProvider);
     rxDate = bean.getStashItem(0).getRxDate();
     System.out.println("RX DATE " + rxDate);
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(signingProvider);
+    System.out.println("in if, provider no="+provider.getProviderNo());
     session.setAttribute("tmpBeanRX", null);
-    String ip = request.getRemoteAddr();
+    String ip = request.getRemoteAddr();System.out.println("in if, ip="+ip);
     //LogAction.addLog((String) session.getAttribute("user"), LogConst.UPDATE, LogConst.CON_PRESCRIPTION, String.valueOf(bean.getDemographicNo()), ip);
 }
 else {
     bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
-    
+
     //set Date to latest in stash
     Date tmp;
+    System.out.println("bean.getStashSize()="+bean.getStashSize());
+    System.out.println(bean.getStashItem(0).getBrandName());
     for( int idx = 0; idx < bean.getStashSize(); ++idx ) {
-        tmp = bean.getStashItem(idx).getRxDate();
+        tmp = bean.getStashItem(idx).getRxDate();System.out.println("in else, tmp="+tmp);
         if( tmp.after(rxDate) ) {
             rxDate = tmp;
         }
     }
-    rePrint = "";    
-    signingProvider = bean.getProviderNo();
+    rePrint = "";
+    signingProvider = bean.getProviderNo();System.out.println("in else , signingProvider="+signingProvider);
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
+    System.out.println("in else, provider no="+provider.getProviderNo());
 }
 
 
@@ -111,19 +119,26 @@ ProSignatureData sig = new ProSignatureData();
 boolean hasSig = sig.hasSignature(signingProvider);
 String doctorName = "";
 if (hasSig){
-   doctorName = sig.getSignature(signingProvider);
+   doctorName = sig.getSignature(signingProvider);System.out.println("in if doctorName="+doctorName);
 }else{
-   doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
+   doctorName = (provider.getFirstName() + ' ' + provider.getSurname());System.out.println("in else doctorName="+doctorName);
 }
 
 
 
-OscarProperties props = OscarProperties.getInstance();
+//<<<<<<< Preview.jsp
+doctorName = doctorName.replaceAll("\\d{6}","");
+doctorName = doctorName.replaceAll("\\-","");System.out.println("doctorName="+doctorName);
+//=======
+//>>>>>>> 1.27
+//OscarProperties props = OscarProperties.getInstance();
 
 String pracNo = provider.getPractitionerNo();
+System.out.println("pracNo="+pracNo);
+String strUser = (String)session.getAttribute("user");System.out.println("strUser="+strUser);
+ProviderData user = new ProviderData(strUser);System.out.println("user="+user);
 
-String strUser = (String)session.getAttribute("user");
-ProviderData user = new ProviderData(strUser);
+System.out.println("==========================done first java part Preview.jsp2=======================");
 %>
 <html:form action="/form/formname">
 

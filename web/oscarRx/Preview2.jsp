@@ -71,7 +71,7 @@
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
 <%
-System.out.println("==========================IN Preview.jsp2=======================");
+System.out.println("==========================IN Preview2.jsp=======================");
 
 Date rxDate = oscar.oscarRx.util.RxUtil.Today();
 String rePrint = request.getParameter("rePrint");
@@ -136,7 +136,7 @@ System.out.println("pracNo="+pracNo);
 String strUser = (String)session.getAttribute("user");System.out.println("strUser="+strUser);
 ProviderData user = new ProviderData(strUser);System.out.println("user="+user);
 
-System.out.println("==========================done first java part Preview.jsp2=======================");
+System.out.println("==========================done first java part Preview2.jsp=======================");
 %>
 <html:form action="/form/formname">
 

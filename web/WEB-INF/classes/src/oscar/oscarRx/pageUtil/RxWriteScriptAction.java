@@ -23,8 +23,8 @@
  */
 package oscar.oscarRx.pageUtil;
 
-import com.crystaldecisions.reports.reportdefinition.ha;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -42,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
+import org.apache.commons.collections.iterators.UniqueFilterIterator;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -232,7 +234,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     }
                     rx = null;
                 }
-                System.out.println("bean.getStashIndex() after update,print,save="+bean.getStashIndex());
+                System.out.println("bean.getStashIndex() after update,print,save=" + bean.getStashIndex());
                 fwd = "viewScript";
                 String ip = request.getRemoteAddr();
                 //    p("ip", ip);
@@ -293,10 +295,10 @@ public final class RxWriteScriptAction extends DispatchAction {
         for (int i = 0; i < bean.getStashSize(); i++) {
             try {
                 rx = bean.getStashItem(i);
-                p("before saving rx",rx.getGenericName());
+                p("before saving rx", rx.getGenericName());
                 p(rx.getSpecial());
                 p(rx.getQuantity());
-                p(""+rx.getRepeat());
+                p("" + rx.getRepeat());
                 p(rx.getAtcCode());
                 p(rx.getRegionalIdentifier());
                 // System.out.println("*** before rx.Save(" + scriptId.toString() + ")");
@@ -699,6 +701,27 @@ public final class RxWriteScriptAction extends DispatchAction {
         return null;
     }
 
+    public ActionForward getAllRandomId(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        p("=============Start getAllRandomId RxWriteScriptAction.java===============");
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        int[] arRand = new int[bean.getStashSize()];
+        RxPrescriptionData.Prescription[] preAr = bean.getStash();
+        int i = 0;
+        for (RxPrescriptionData.Prescription p : preAr) {
+            arRand[i] = (p.getRandomId());
+            p("randId", "" + arRand[i]);
+            i++;
+        }
+        HashMap hm = new HashMap();
+        hm.put("arRand", arRand);
+        JSONObject jsonObject = JSONObject.fromObject(hm);
+        p("jsonObject", jsonObject.toString());
+        response.getOutputStream().write(jsonObject.toString().getBytes());
+        p("=============End getAllRandomId RxWriteScriptAction.java===============");
+        return null;
+    }
+
     public ActionForward createNewRx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start createNewRx RxWriteScriptAction.java===============");
         //    System.out.println("***IN RxChooseDrugAction.java");
@@ -707,6 +730,8 @@ public final class RxWriteScriptAction extends DispatchAction {
         MessageResources messages = getResources(request);
         p("locale=" + locale.toString());
         p("message=" + messages.toString());
+        //get randomId
+
         // Setup variables
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         if (bean == null) {
@@ -723,8 +748,27 @@ public final class RxWriteScriptAction extends DispatchAction {
             RxPrescriptionData.Prescription rx =
                     rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
 
+            String ra = request.getParameter("randomId");
+            int randomId = Integer.parseInt(ra);
+            rx.setRandomId(randomId);
+            String drugId = request.getParameter("drugId");
+            String text = request.getParameter("text");
+            String drugName = "";
+            p("drugId", drugId);
+            p("text", text);
 
-            String genericName = request.getParameter("drugName");
+            if (drugId != null && drugId.startsWith("b_")) {
+                String sId = drugId.replaceAll("b_", "");
+                drugName = drugData.getGenericName(sId);
+            } else if (drugId != null && drugId.startsWith("g_")) {
+                String sId = drugId.replaceAll("g_", "");
+                drugName = text;
+            } else if (drugId != null) {
+                drugName = text;
+            }
+            String genericName = drugName;
+            //String genericName = request.getParameter("drugName");
+            String countPrescribe = request.getParameter("countPrescribe");
             String brandName = genericName;
             p("BRAND = " + brandName);
             rx.setGenericName(genericName);
@@ -732,20 +776,59 @@ public final class RxWriteScriptAction extends DispatchAction {
 
             //add fake regional identifier
             Long rand = Math.round(Math.random() * 1000000);
-            rx.setRegionalIdentifier(Long.toString(rand));
+            String regionalIdentifier = Long.toString(rand);
+            rx.setRegionalIdentifier(regionalIdentifier);
             p("set regional identifier to ", rx.getRegionalIdentifier());
             //need to add fake atc code.
             Long ran_number = Math.round(Math.random() * 1000000);
-            rx.setAtcCode(Long.toString(ran_number));
+            String atcCode = Long.toString(ran_number);
+            rx.setAtcCode(atcCode);
             p("set atc code to ", rx.getAtcCode());
 
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             bean.setStashIndex(bean.addStashItem(rx));
+            p("brandName of rx", rx.getBrandName());
+            p("stash index it's set to", "" + bean.getStashIndex());
+            p("countPrescribe", countPrescribe);
+
+            String today = null;
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                today = dateFormat.format(calendar.getTime());
+                p("today's date", today);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
+            rx.setRxDate(tod);
+            rx.setWrittenDate(tod);
+
+            /*
+            HashMap hm = new HashMap();
+            hm.put("genericName", rx.getGenericName());
+            hm.put("brandName", rx.getBrandName());//should be like 1-2 , min-max
+            hm.put("atcCode", rx.getAtcCode());
+            hm.put("randomId", rx.getRandomId());
+            hm.put("regionalIdentifier",regionalIdentifier);
+            JSONObject jsonObject = JSONObject.fromObject(hm);
+            p("jsonObject", jsonObject.toString());
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+             */
+            request.setAttribute("genericName", rx.getGenericName());
+            request.setAttribute("brandName", rx.getBrandName());
+            request.setAttribute("atcCode", rx.getAtcCode());
+            request.setAttribute("randomId", "" + rx.getRandomId());
+            request.setAttribute("regionalIdentifier", rx.getRegionalIdentifier());
+            request.setAttribute("startDate", RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd"));
+            request.setAttribute("writtenDate", RxUtil.DateToString(rx.getWrittenDate(), "yyyy-MM-dd"));
+            //request.setAttribute("drugSearch", drugSearch);
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
         p("=============END createNewRx RxWriteScriptAction.java===============");
-        return (mapping.findForward("success"));
+        //return (mapping.findForward("success"));
+        return (mapping.findForward("newRx"));
     }
 
     public ActionForward updateDrug(ActionMapping mapping, ActionForm aform, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -754,7 +837,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.sendRedirect("error.html");
             return null;
         }
-        p("start bean.getStashIndex()",""+bean.getStashIndex());
+        p("start bean.getStashIndex()", "" + bean.getStashIndex());
         RxDrugData drugData = new RxDrugData();
         RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
         RxPrescriptionData prescription = new RxPrescriptionData();
@@ -779,19 +862,20 @@ public final class RxWriteScriptAction extends DispatchAction {
                 strArray[i] = str;
                 i++;
             }
-            String amount = "";
+            String amount = "0";
             String route = "";
             String frequency = "";
             String form = "";
-            String duration = "";
+            String duration = "0";
             String method = "";
             char durationUnit = ' ';
             boolean prn = false;
 
-            p(Integer.toString(strArray.length));
+            p("array size", Integer.toString(strArray.length));
             for (int j = 0; j < strArray.length; j++) {
                 //      p(Integer.toString(j));
                 String sa = strArray[j];
+                p("sa", sa);
 
                 if (sa.equalsIgnoreCase("take") || sa.equalsIgnoreCase("apply") || sa.equalsIgnoreCase("rub well in")) {
                     method = sa;
@@ -835,7 +919,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     duration = sa.substring(0, n);
                 }
             }
-
+            p("here");
             int calQuantity = 0;
             if ((durationUnit == 'd') || (durationUnit == 'D')) {
                 calQuantity = Integer.parseInt(duration) * Integer.parseInt(amount);
@@ -844,7 +928,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             } else if (durationUnit == 'm' || durationUnit == 'M') {
                 calQuantity = Integer.parseInt(duration) * 30 * Integer.parseInt(amount);
             } //assume each month is 30 days, more complicated implementation if exact number needed.
-
+            p("here2");
             rx.setMethod(method);
             rx.setTakeMin(Integer.parseInt(amount));
             rx.setDuration(duration);
@@ -875,7 +959,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             p("===================END parseInstruction RxWriteScriptAction.java======================");
             return null;
         } else {
-            System.out.println("============IN updateDrug RxWriteScriptAction.java=============");
+            System.out.println("                                                                   ============IN updateDrug RxWriteScriptAction.java=============");
 
 
             // Extract attributes we will need
@@ -911,7 +995,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                         }
 
                     } else if (elem.startsWith("instructions_")) {
-                        p("instruction in updateDrugs set to",val);
+                        p("instruction in updateDrugs set to", val);
                         rx.setSpecial(val);
                     } else if (elem.startsWith("quantity_")) {
                         if (val.equals("") || val == null) {
@@ -958,9 +1042,11 @@ public final class RxWriteScriptAction extends DispatchAction {
                     } else if (elem.startsWith("rxFreq_")) {
                         rx.setFrequencyCode(val);
                     } else if (elem.startsWith("rxDuration_")) {
-                        if (val.equals("") || val == null) {
+                        if (val.equals("") || val == null || val.equals("null")) {
+                            p("duration if case");
                             rx.setDuration("0");
                         } else {
+                            p("druation else case");
                             rx.setDuration(val);
                         }
                     } else if (elem.startsWith("rxDurationUnit_")) {
@@ -1020,9 +1106,10 @@ public final class RxWriteScriptAction extends DispatchAction {
                 }
                 String newline = System.getProperty("line.separator");
                 rx.setPatientCompliance(patientComplianceY, patientComplianceN);
-                String special = newline + rx.getGenericName() + newline + rx.getSpecial();
+                //add generic name to special
+                //  String special = newline + rx.getGenericName() + newline + rx.getSpecial();
                 //     p("here222");
-                rx.setSpecial(special);
+                //  rx.setSpecial(special);
                 //         p("rx.getDuration()", rx.getDuration());
                 int duration;
                 if (rx.getDuration() == null || rx.getDuration().equals("")) {
@@ -1055,17 +1142,241 @@ public final class RxWriteScriptAction extends DispatchAction {
                 p("SET writtenDate to TODAY DATE");
                 rx.setWrittenDate(tod);
             }
-            p("the rxDate is", RxUtil.DateToString(rx.getRxDate()));
-
+            p("the rxDate is in updateDrug", RxUtil.DateToString(rx.getRxDate()));
+            p("duration after updated", rx.getDuration());
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             p("before bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             // bean.setStashIndex(bean.addStashItem(rx));
             bean.setStashItem(bean.getStashIndex(), rx);
-            p("after bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
+            p("brand name of updated rx", rx.getBrandName());
+            p("stash index of updated rx", Integer.toString(bean.getStashIndex()));
+
             System.out.println("==========END updateDrug RxWriteScriptAction.java==========");
             return (mapping.findForward("success"));
         }
     }
-}
+
+    public ActionForward updateAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException, Exception {
+        System.out.println("==========***### IN updateAllDrugs RxWriteScriptAction.java");
+        // Enumeration emm = request.getSession().getAttributeNames();
+        //  while (emm.hasMoreElements()) {
+        //      p("session attribute=" + emm.nextElement().toString());
+        //  }
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+
+        p("**## print out fields in bean==========");
+        p(bean.getProviderNo());
+        p(Integer.toString(bean.getDemographicNo()));
+        //p(bean.getStash());
+        p(Integer.toString(bean.getStashIndex()));
+        // p(bean.getAllergyWarnings(fwd));
+        p(Integer.toString(bean.getAttributeNames().size()));
+        ArrayList attributeNames = new ArrayList();
+        attributeNames = bean.getAttributeNames();
+        for (int i = 0; i < attributeNames.size(); i++) {
+            p(attributeNames.get(i).toString());
+        }
+        p("done print out fields in bean=========");
+
+        //     p("bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
+        List<String> paramList = new ArrayList();
+        Enumeration em = request.getParameterNames();
+        List<String> randNum = new ArrayList();
+        while (em.hasMoreElements()) {
+            //paramList.add(em.nextElement().toString());
+            String[] temp = null;
+            temp = em.nextElement().toString().split("_");
+            if (temp.length > 1) {
+                randNum.add(temp[1]);
+            }
+        }
+        p("here2");
+        p("bean.getStashSize()", Integer.toString(bean.getStashSize()));
+
+            Iterator uniqueIterator = new UniqueFilterIterator(randNum.iterator());
+            while (uniqueIterator.hasNext()) {
+                String num = uniqueIterator.next().toString();
+                        p("num", num);
+
+                int stashIndex=bean.getIndexFromRx(Integer.parseInt(num));
+                p("stashIndex", Integer.toString(stashIndex));
+                RxPrescriptionData.Prescription rx = bean.getStashItem(stashIndex);
+
+                boolean patientComplianceY = false;
+                boolean patientComplianceN = false;
+                boolean isOutsideProvider = false;
+                try {
+                    em = request.getParameterNames();
+                    while (em.hasMoreElements()) {
+                        String elem = (String) em.nextElement();
+                        String val = request.getParameter(elem);
+                        System.out.println("paramName=" + elem + ", value=" + val);
+                        if (elem.startsWith("drugName_" + num)) {
+                            rx.setGenericName(val);
+                        } else if (elem.equals("repeats_" + num)) {
+
+                            if (val.equals("") || val == null) {
+                                rx.setRepeat(0);
+                            } else {
+                                rx.setRepeat(Integer.parseInt(val));
+                            }
+
+                        } else if (elem.startsWith("instructions_" + num)) {
+                            rx.setSpecial(val);
+                        } else if (elem.equals("quantity_" + num)) {
+                            if (val.equals("") || val == null) {
+                                rx.setQuantity("0");
+                            } else {
+                                rx.setQuantity(val);
+                            }
+                        } else if (elem.equals("longTerm_" + num)) {
+                            if (val.equals("on")) {
+                                rx.setLongTerm(true);
+                            } else {
+                                rx.setLongTerm(false);
+                            }
+                        } else if (elem.equals("lastRefillDate_" + num)) {
+                            rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+                        } else if (elem.equals("outsideProviderName_" + num)) {
+                            rx.setOutsideProviderName(val);
+                        } else if (elem.equals("rxDate_" + num)) {
+                            //     p("paramName is rxDate!!");
+                            if ((val == null) || (val.equals(""))) {
+                                //p("rxDate is null");
+                                Date d = RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd");
+                                //p(RxUtil.DateToString(d));
+                                rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+                            } else {
+                                rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+                            }
+                        } else if (elem.equals("writtenDate_" + num)) {
+                            if (val == null || (val.equals(""))) {
+                                p("writtenDate is null");
+                                rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+                            } else {
+                                rx.setWrittenDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
+                            }
+
+                        } else if (elem.equals("outsideProviderName_" + num)) {
+                            rx.setOutsideProviderName(val);
+                        } else if (elem.equals("outsideProviderOhip_" + num)) {
+                            if (val.equals("") || val == null) {
+                                rx.setOutsideProviderOhip("0");
+                            } else {
+                                rx.setOutsideProviderOhip(val);
+                            }
+                        } else if (elem.equals("rxFreq_" + num)) {
+                            rx.setFrequencyCode(val);
+                        } else if (elem.equals("rxDuration_" + num)) {
+                            if (val.equals("") || val == null) {
+                                rx.setDuration("0");
+                            } else {
+                                rx.setDuration(val);
+                            }
+                        } else if (elem.equals("rxDurationUnit_" + num)) {
+                            rx.setDurationUnit(val);
+                        } else if (elem.equals("rxPRN_" + num)) {
+                            if (val.equals("on")) {
+                                rx.setPrn(true);
+                            } else {
+                                rx.setPrn(false);
+                            }
+                        } else if (elem.equals("otext_" + num)) {
+                            if (val.equals("on")) {
+                                isOutsideProvider = true;
+                            } else {
+                                isOutsideProvider = false;
+                            }
+                        } else if (elem.equals("pastMed_" + num)) {
+                            if (val.equals("on")) {
+                                rx.setPastMed(true);
+                            } else {
+                                rx.setPastMed(false);
+                            }
+                        } else if (elem.equals("patientComplianceY_" + num)) {
+                            if (val.equals("on")) {
+                                patientComplianceY = true;
+                            } else {
+                                patientComplianceY = false;
+                            }
+                        } else if (elem.equals("patientComplianceN_" + num)) {
+                            if (val.equals("on")) {
+                                patientComplianceN = true;
+                            } else {
+                                patientComplianceN = false;
+                            }
+                        } else if (elem.equals("rxRoute_" + num)) {
+                            rx.setRoute(val);
+                        } else if (elem.equals("rxMethod_" + num)) {
+                            rx.setMethod(val);
+                        } else if (elem.equals("rxAmount_" + num)) {
+                            p("amount here", val);
+                            if (val.equals("") || val == null) {
+                                rx.setTakeMin(0f);
+                            } else {
+                                rx.setTakeMin(Float.parseFloat(val));
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                  p("here1");
+
+                try {
+                    if (!isOutsideProvider) {
+                        rx.setOutsideProviderName("");
+                        rx.setOutsideProviderOhip("");
+                    }
+                    String newline = System.getProperty("line.separator");
+                    rx.setPatientCompliance(patientComplianceY, patientComplianceN);
+                    String special = newline + rx.getGenericName() + newline + rx.getSpecial();
+                    //     p("here222");
+                    rx.setSpecial(special);
+                    //         p("rx.getDuration()", rx.getDuration());
+                    int duration;
+                    if (rx.getDuration() == null || rx.getDuration().equals("")) {
+                        duration = 0;
+                    } else {
+                        duration = Integer.parseInt(rx.getDuration());
+                    }
+
+                    //       p("here1111");
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(rx.getRxDate());
+                    DateFormat ft = new SimpleDateFormat("yyyy/MM/dd");
+                    //       p("cal", ft.format(cal.getTime()));
+                    cal.add(Calendar.DATE, duration);
+                    String end = ft.format(cal.getTime());
+                    //       p("after addition", end);
+                    Date endDate = (Date) ft.parse(end);
+                    //       p("freqcode as", rx.getFrequencyCode());
+                    //       p("here2");
+                    //       p("here5");
+                    //       p(rx.getGenericName());
+                    rx.setBrandName(rx.getGenericName());
+                    Long rand = Math.round(Math.random() * 1000000);
+                    rx.setRegionalIdentifier(Long.toString(rand));
+                    rx.setAtcCode(Long.toString(rand + 1));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            p("the rxDate is in updateDrug", RxUtil.DateToString(rx.getRxDate()));
+            p("duration after updated", rx.getDuration());
+
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(stashIndex));
+            p("before bean.getStashIndex()", Integer.toString(stashIndex));
+            bean.setStashItem(stashIndex, rx);
+            p("brand name of updated rx", rx.getBrandName());
+            p("stash index of updated rx", Integer.toString(bean.getStashIndex()));
+
+            }
+        System.out.println("***===========End of updateAllDrugs RxWriteScriptAction.java");
+        return mapping.findForward("viewScript");
+        }
+    }
 
   

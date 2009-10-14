@@ -203,12 +203,46 @@ public final class RxRePrescribeAction extends DispatchAction {
            //     System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
                 //allocate space for annotation
                 beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
-p("beanRX.getStashIndex() in represcribe2",""+beanRX.getStashIndex());
+                p("brandName saved",rx.getBrandName());
+                p("stashIndex becomes",""+beanRX.getStashIndex());
+
                 request.setAttribute("BoxNoFillFirstLoad", "true");
+
+                //remove brand name from special
+                String special=rx.getSpecial();
+                if(special.indexOf("Take")!=-1){
+                    special=special.substring(special.indexOf("Take"));
+                }
+                else if(special.indexOf("take")!=-1){
+                    special=special.substring(special.indexOf("take"));
+                }
+                else if(special.indexOf("TAKE")!=-1){
+                    special=special.substring(special.indexOf("TAKE"));
+                }
+                else if(special.indexOf("Apply")!=-1){
+                    special=special.substring(special.indexOf("Apply"));
+                }
+                else if(special.indexOf("apply")!=-1){
+                    special=special.substring(special.indexOf("apply"));
+                }
+                else if(special.indexOf("APPLY")!=-1){
+                    special=special.substring(special.indexOf("APPLY"));
+                }
+                else if(special.indexOf("Rub well in")!=-1){
+                    special=special.substring(special.indexOf("Rub well in"));
+                }else if(special.indexOf("rub well in")!=-1){
+                    special=special.substring(special.indexOf("rub well in"));
+                }
+                else if(special.indexOf("RUB WELL IN")!=-1){
+                    special=special.substring(special.indexOf("RUB WELL IN"));
+                }else if(special.indexOf("Rub Well In")!=-1){
+                    special=special.substring(special.indexOf("Rub Well In"));
+                }
+
 
             Hashtable ha=new Hashtable();
             ha.put("drugName", rx.getGenericName());
-            ha.put("instructions", rx.getSpecial());
+            ha.put("instructions", special);
             ha.put("duration", rx.getDuration());
             ha.put("frequency", rx.getFrequencyCode());
             ha.put("route", rx.getRoute());            
@@ -242,7 +276,7 @@ p("beanRX.getStashIndex() in represcribe2",""+beanRX.getStashIndex());
          p("jsonObject", jsonObject.toString());
          response.getOutputStream().write(jsonObject.toString().getBytes());
          request.setAttribute("represcribe2", "active");
-            System.out.println("bean.getStashSize()="+beanRX.getStashSize());
+         System.out.println("bean.getStashSize()="+beanRX.getStashSize());
          System.out.println("================END represcribe2 of RxRePrescribeAction.java=================");
          return null;
     }

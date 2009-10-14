@@ -39,7 +39,7 @@ import org.apache.struts.util.MessageResources;
 
 public final class RxStashAction extends DispatchAction {
     
-    
+//public final class RxStashAction extends Action {
     public ActionForward Take(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -93,34 +93,38 @@ public final class RxStashAction extends DispatchAction {
         MessageResources messages = getResources(request);
         String wp=null;
         try{
-        wp=request.getParameter("whichPrescribe");
+        wp=request.getParameter("randomId");
         
-        int stashId;
+        int randomId;
         
             
         if(wp!=null && !wp.equals("null")){
             System.out.println("in if wp="+wp);
-            stashId=Integer.parseInt(wp);
-            System.out.println("in setStashIndex stashId="+""+stashId);
+            randomId=Integer.parseInt(wp);
+            System.out.println("in setStashIndex randomId="+""+randomId);
         }else{
             System.out.println("in else wp="+wp);
-            stashId=-1;
+            randomId=-1;
         }
 
         
         // Setup variables
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+
         if(bean==null) {
             response.sendRedirect("error.html");
             return null;
         }
         System.out.println("bean.getStashSize()="+bean.getStashSize());
         System.out.println("bean.getStashIndex() before setting="+bean.getStashIndex());
+        //find the stashIndex corresponding to the random number
+        int stashId=bean.getIndexFromRx(randomId);
         if(stashId >=0 && stashId  < bean.getStashSize()) {
             bean.setStashIndex(stashId);
         }
-        System.out.println("bean.getStashIndex()="+bean.getStashIndex());
-         System.out.println("bean.getStashSize()="+bean.getStashSize());}catch(Exception e){e.printStackTrace();}
+        System.out.println("set the stash index to="+bean.getStashIndex());
+         System.out.println("the stash size becomes="+bean.getStashSize());
+        }catch(Exception e){e.printStackTrace();}
         System.out.println("===========end in setStashIndex rxstatshaction.java===========");
         return mapping.findForward("success");
     }

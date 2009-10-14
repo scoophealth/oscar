@@ -6,31 +6,44 @@
 System.out.println("***### IN prescribe.jsp");
 RxDrugData drugData = new RxDrugData();
 RxDrugData.DrugSearch drugSearch = null;
-Enumeration em=request.getParameterNames();
+Enumeration em=request.getAttributeNames();
 System.out.println("size of em");
 while(em.hasMoreElements()){
     System.out.println("in prescribe.jsp attr="+em.nextElement());
 }
-String id = request.getParameter("id");
-String text = request.getParameter("text");
-String rand = request.getParameter("rand");
-String notRePrescribe=request.getParameter("notRePrescribe");
-String countPrescribe=request.getParameter("countPrescribe");
-System.out.println("notRePrescribe in prescribe.jsp="+notRePrescribe);
-System.out.println("countPrescribe in prescribe.jsp="+countPrescribe);
-String today=null;
-Calendar calendar = Calendar.getInstance();
-SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+String startDate=(String)request.getAttribute("startDate");
+String writtenDate=(String)request.getAttribute("writtenDate");
+String rand=(String)request.getAttribute("randomId");
+String drugName=(String)request.getAttribute("genericName");
 
-        try {
-            today = dateFormat.format(calendar.getTime()) ;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-System.out.println("id "+id+ " text "+text);
+//String id = request.getParameter("id");
+//String text = request.getParameter("text");
+//String rand = request.getParameter("rand");
+//String notRePrescribe=request.getParameter("notRePrescribe");
+//String countPrescribe=request.getParameter("countPrescribe");
+//System.out.println("notRePrescribe in prescribe.jsp="+notRePrescribe);
+//System.out.println("countPrescribe in prescribe.jsp="+countPrescribe);
+//System.out.println("id "+id+ " text "+text);
 System.out.println("rand="+rand);
 
-String drugName = "";
+//<<<<<<< prescribe.jsp
+//String drugName = "";
+/*
+if(id != null && id.startsWith("b_")){
+    String sId= id.replaceAll("b_", "");
+    drugName= drugData.getGenericName(sId);
+
+}else if(id != null && id.startsWith("g_")){
+    String sId= id.replaceAll("g_", "");
+    drugName = text;
+
+}else if (id !=null){
+    drugName=text;
+}*/
+System.out.println("drugName="+drugName);
+
+//=======
+//String drugName = "";
 
 //RxDrugData.DrugMonograph dmono = drugData.getDrug2(id);
 
@@ -38,8 +51,9 @@ String defInstr = "1 OD";
 String defQuantity = "30";
 String defRepeat ="0";
 
-drugName = text;
+//drugName = text;
 
+//>>>>>>> 1.3
 %>
 
 <fieldset style="margin-top:2px;width:600px;" id="set_<%=rand%>"">
@@ -48,16 +62,26 @@ drugName = text;
 
     <a href="javascript:void();" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
 
-    <input type="hidden" id="whichPrescribe_<%=rand%>" value="<%=countPrescribe%>"/>
+   <%-- <input type="hidden" id="whichPrescribe_<%=rand%>" value="<%=countPrescribe%>"/>--%>
 
-    <label style="float:left;width:80px;">Name:</label> <input type="text"  size="30" name="drugName_<%=rand%>" id="drugName_<%=rand%>" value="<%=drugName%>"  <% if(notRePrescribe!=null && notRePrescribe.equals("true")){%>
-                                                               onblur="createNewRx(this);" value="<%=drugName%>" <%}else {%> value="<%=drugName%>"<%}%>/><br>
+
+
+
+    <label style="float:left;width:80px;">Name:</label> <input type="text"  size="30" name="drugName_<%=rand%>" id="drugName_<%=rand%>"  value="<%=drugName%>"/><br>
+    <%--    <label style="float:left;width:80px;">Instructions:</label> <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="" onblur="parseIntr(this);" size="60"/> <br>
+        <label style="float:left;width:80px;">Quantity:</label> <input type="text" id="quantity_<%=rand%>" value="" name="quantity_<%=rand%>"/>
+        <label style="">Repeats:</label> <input type="text" id="repeats_<%=rand%>" name="repeats_<%=rand%>" /> --%>
+
+   
         <label style="float:left;width:80px;">Instructions:</label> <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="<%=defInstr%>" onblur="parseIntr(this);" size="60"/> <br>
         <label style="float:left;width:80px;">Quantity:</label> <input type="text" id="quantity_<%=rand%>" value="<%=defQuantity%>" name="quantity_<%=rand%>"/>
         <label style="">Repeats:</label> <input type="text" id="repeats_<%=rand%>" name="repeats_<%=rand%>" value="<%=defRepeat%>" />
+
         <input type="hidden" id="calQuantity_<%=rand%>" name="calQuantity_<%=rand%>" value="" />
         <input type="checkbox" id="longTerm_<%=rand%>" name="longTerm_<%=rand%>">Long Term Med </input>
-        <input type="button" id="update_<%=rand%>" name="update_<%=rand%>" onclick="updateDrug(this,$('whichPrescribe_<%=rand%>').value);return false;" value="Update"</input>
+
+     <%--   <input type="button" id="update_<%=rand%>" name="update_<%=rand%>" onclick="updateDrug(this,$('whichPrescribe_<%=rand%>').value);return false;" value="Update"</input>--%>
+
         <div id="rxString_<%=rand%>"> </div>
         <div id="quantityWarning_<%=rand%>"> </div>
         
@@ -92,12 +116,12 @@ drugName = text;
 
 
 
-        <label style="float:left;width:80px;">Start Date:</label><input type="text" id="rxDate_<%=rand%>" name="rxDate_<%=rand%>"
-                <%if(id.startsWith("b_") ||id.startsWith("g_")){%>value="<%=today%>"<%} else {}%>/> 
+        <label style="float:left;width:80px;">Start Date:</label><input type="text" id="rxDate_<%=rand%>" name="rxDate_<%=rand%>" value="<%=startDate%>"/>
+             <%--   <%if(id.startsWith("b_") ||id.startsWith("g_")){%>value="<%=today%>"<%} else {}%>/> --%>
 	<label style="">Last Refill Date:</label><input type="text" id="lastRefillDate_<%=rand%>"  name="lastRefillDate_<%=rand%>" onfocus="javascript:lastRefillDate.value='';" />
 	<br/>
-        <label style="float:left;width:80px;">Written Date:</label><input type="text" id="writtenDate_<%=rand%>"  name="writtenDate_<%=rand%>"
-                 <%if(id.startsWith("b_") ||id.startsWith("g_")){%>value="<%=today%>"<%} else {}%> />
+        <label style="float:left;width:80px;">Written Date:</label><input type="text" id="writtenDate_<%=rand%>"  name="writtenDate_<%=rand%>" value="<%=writtenDate%>" />
+                 <%--if(id.startsWith("b_") ||id.startsWith("g_")){%>value="<%=today%>"<%} else {}%> />--%>
     </div>
 
 </fieldset>
