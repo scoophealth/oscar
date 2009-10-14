@@ -268,7 +268,7 @@ public class WCBTeleplanSubmission {
       + Misc.space(5 + 5 + 15)
       + Misc.backwardSpace(bm.getServiceLocation(),1)// wcb.getW_servicelocation(), 1)
       + Misc.zero(1 + 5 + 1 + 5 + 4 + 4 + 4 + 8)
-      + Misc.forwardZero(""+bm.getBillingNo(), 7)
+      + Misc.forwardZero(""+bm.getBillingmasterNo(), 7)
       + Misc.forwardZero(correspondenceCode, 1) //correspondence code//+ Misc.zero(1)
       + Misc.space(20)
       + "N"
