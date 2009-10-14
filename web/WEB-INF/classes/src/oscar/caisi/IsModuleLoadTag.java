@@ -16,18 +16,18 @@ public class IsModuleLoadTag extends TagSupport {
 	}
 
 	public int doStartTag() throws JspException {
-		try { System.out.println("=======in doStartTage");
+		try { 
 			HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-                        //System.out.println("here1");
-                        System.out.println("request.getContextPath()="+request.getContextPath());
+         
+                        
 			String propFile = request.getContextPath().substring(1) + ".properties";
-                        System.out.println("propFile="+propFile);
+                     
 			String sep = System.getProperty("file.separator");
-                        //System.out.println("here3");
+          
 			String propFileName = System.getProperty("user.home") + sep + propFile;
-                        //System.out.println("here4");
+             
 			OscarProperties proper = OscarProperties.getInstance();
-                        //System.out.println("here5");
+
 //			proper.loader(propFileName);
 			if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on"))
 				if (reverse)
