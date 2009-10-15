@@ -300,13 +300,6 @@ body {
                                                             <div style="margin-top: 10px; margin-left: 20px; width: 100%">
                                                                 <table width="100%" cellspacing="0" cellpadding="0">
                                                                     <tr>
-                                                                        <td align="right">
-                                                                            <span style="width: 350px; align: right">
-                                                                          <%--      <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 100px" />--%>
-                                                                                <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribeLongTermMed"/>" class="ControlPushButton" onclick="javascript:RePrescribeLongTerm();" style="width: 100px" />
-                                                                              <%--  <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" />--%>
-                                                                            </span>
-                                                                        </td>
                                                                         <td align="left">
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');"><bean:message key="SearchDrug.msgShowAll"/></a>
