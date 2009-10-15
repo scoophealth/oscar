@@ -150,7 +150,7 @@ styleColor = "style=\"text-decoration: line-through;\"";
 if (prescriptDrug.getRemoteFacilityName() == null) {
                 %>
                 <%--  <input type="checkbox" name="chkRePrescribe" align="center" onclick="showOldRxDrug(this)" value="<%=prescriptDrug.getLocalDrugId()%>" />--%>
-                <a name="rePrescribe" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void(0)" onclick="showOldRxDrug(this)"> <%="Represcribe"%></a>
+                <a name="rePrescribe" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
                 <%
 } else {
                 %>

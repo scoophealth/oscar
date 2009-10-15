@@ -204,8 +204,8 @@ body {
                                             <td style="width:350px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
                                                 <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off" />
                                                 <div id="autocomplete_choices"></div>
-                                                <span id="indicator1" style="display: none"><img src="/images/spinner.gif" alt="Working..." ></span>
-                                                
+                                                <span id="indicator1" style="display: none"><img src="/images/spinner.gif" alt="Working..." ></span>                                                
+
 
                                             </td>
                                             <td >
@@ -300,6 +300,13 @@ body {
                                                             <div style="margin-top: 10px; margin-left: 20px; width: 100%">
                                                                 <table width="100%" cellspacing="0" cellpadding="0">
                                                                     <tr>
+                                                                        <td align="right">
+                                                                            <span style="width: 350px; align: right">
+                                                                          <%--      <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 100px" />--%>
+                                                                                <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribeLongTermMed"/>" class="ControlPushButton" onclick="javascript:RePrescribeLongTerm();" style="width: 100px" />
+                                                                              <%--  <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" />--%>
+                                                                            </span>
+                                                                        </td>
                                                                         <td align="left">
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');"><bean:message key="SearchDrug.msgShowAll"/></a>
@@ -322,7 +329,7 @@ body {
                                                             <html:form action="/oscarRx/deleteRx">
                                                                 <html:hidden property="drugList" />
                                                             </html:form></td>
-                                                   
+
                                                     </tr>
                                                 </table>
                                             </td>
@@ -488,38 +495,7 @@ body {
 %>
 <script type="text/javascript">
 
-        var countPrescribe=-1;
-    function setCounter(n){
-        countPrescribe=n;
-    }
-    function increaseCountPrescribe(){
-        countPrescribe++;
-        return countPrescribe;
-    }
-    function getCounter(){
-        return countPrescribe;
-    }
-    function initalizeCountPrescribe()
-    {
-    countPrescribe=-1;
-    }
-    function RePrescribeLongTerm(){
-        var longTermDrugs=$(longTermDrugList).value;
-    //    alert(longTermDrugs);
-        var ar=longTermDrugs.split("[");
-        var s=ar[1];
-        var ar2=s.split("]");
-        var s2=ar2[0];
-        var ar3=s2.split(",");
 
-        //ar3 is an array of drugIds which are longterm med.
-        for(var i=0;i<ar3.length;i++){
-            var s=ar3[i];
-            if(showOldRxDrug(s.replace(" ",""))){ //"trim" s
-                oscarLog("--"+s+" done one round");
-            }
-        }
-    }
     function Delete(element){
         oscarLog(document.forms[2].action);
 
@@ -529,15 +505,29 @@ body {
             document.forms[2].submit();
         }
     }
+//represcribe long term meds
+    function RePrescribeLongTerm(){
+        //var longTermDrugs=$(longTermDrugList).value;
+       // var data="drugIdList="+longTermDrugs;
+       var demoNo=<%=patient.getDemographicNo()%>;
+       var showall=<%=showall%>;
+       oscarLog("demoNo="+demoNo);
+        var data="demoNo="+demoNo+"&showall="+showall;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=repcbAllLongTerm";
 
-    function createNewRx(element){
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
+        return false;
+    }
+
+     function createNewRx(element){
        oscarLog("createNewRx called");
         var data="drugName="+element.value;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
         new Ajax.Request(url, {method: 'get',parameters:data})
         return false;
     }
-
+    
+    //not used
     function updateDrug(element,whichPrescribe){//save drug to session.
         //get the rand number
         oscarLog("whichPrescribe="+whichPrescribe);
@@ -696,6 +686,7 @@ function upElement(li){
     
 YAHOO.example.BasicRemote = function() {
     var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
+    //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8084/drugref2/test4.jsp");
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
     // Define the schema of the delimited results
     oDS.responseSchema = {
@@ -759,11 +750,34 @@ function setSearchedDrug(drugId,name){
     new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
 
     $('searchString').value = "";
-
 }
 
 
-    //show original drug for represcription.
+    function updateAllDrugs(){
+
+        var data=Form.serialize($('drugForm'))
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateAllDrugs";
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data "+url);
+                popForm();
+            }});
+
+        return false;
+    }
+
+    //represcribe a drug
+    function represcribe(element){
+        var drugId=element.id;
+        var data="drugId="+drugId;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom});
+        
+    }
+
+    //not used
+//show original drug for represcription.
     function showOldRxDrug(element){
       var  ran_number=Math.round(Math.random()*1000000);
         oscarLog("randome number="+ran_number);
@@ -810,6 +824,7 @@ function setSearchedDrug(drugId,name){
         oscarLog("data set in showOldRxDrug="+data);
 
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
+        oscarLog("url in searchdrug2 "+url);
         new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){
@@ -818,7 +833,7 @@ function setSearchedDrug(drugId,name){
                 var drugName=json.drugName;
                 var url = "prescribe.jsp";
                 var warning=" WARNING: ";
-                var params = "demographicNo=<%=bean.getDemographicNo()%>&id="+drugId+"&text="+drugName+"&rand="+ran_number+"&countPrescribe="+counter;  //hack to get around ie caching the page
+                var params = "demographicNo=<%=bean.getDemographicNo()%>&id="+drugId+"&text="+drugName+"&randomId="+ran_number;  //hack to get around ie caching the page
                 oscarLog('drugname '+drugName+' ran '+ran_number);
                 new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom, onComplete:function(transport){
 
@@ -912,6 +927,7 @@ function setSearchedDrug(drugId,name){
             }});
         return true;
     }
+    
 
     function checkQuantity(element){
         var elemId=element.id;

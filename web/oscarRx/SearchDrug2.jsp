@@ -661,7 +661,7 @@
             document.forms[2].submit();
         }
     }
-
+    //not used
     function createNewRx(element){
        oscarLog("createNewRx called");
        oscarLog("countPrescribe in createNewRx="+countPrescribe);
@@ -676,20 +676,6 @@
 
     function updateAllDrugs(){
 
-      /*  var data="";
-        var url= "<--c:out value="${ctx}"/-->" + "/oscarRx/WriteScript.do?method=getAllRandomId";
-        new Ajax.Request(url, {method: 'post',postBody:data,asynchronous:false, onSuccess:function(transport){
-            
-            var json=transport.responseText.evalJSON();
-            var arRand=json.arRand;
-            for(var i=0;i<arRand.length;i++){
-                oscarLog(arRand[i]);
-                updateDrug2(arRand[i]);
-            }
-            popForm();
-        }});
-
-       */
         var data=Form.serialize($('drugForm'))
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateAllDrugs";
         new Ajax.Request(url,
@@ -698,10 +684,6 @@
                 oscarLog("successfully sent data "+url);
                 popForm();
             }});
-
-      //pass a list of randomIds to the server
-      //server has a action to find all rx relates to each randomId and update one by one
-      //only call server action class once.
 
         return false;
     }
@@ -890,11 +872,161 @@
        // countPrescribe=increaseCountPrescribe();
         //   alert(li.id+"||"+ text+"||"+ ran_number);
         new Ajax.Updater('rxText',url1, {method:'get',parameters:data1,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
-
-                //var params = "demographicNo=<%--=bean.getDemographicNo()--%>&id="+li.id+"&text="+text+"&rand="+ran_number+"&notRePrescribe=true"+"&countPrescribe="+countPrescribe; //hack to get around ie caching the page
-                  //  new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})}})
-        //  chooseDrug();
     }
+
+
+    //show original drug for represcription.
+    function showOldRxDrug(element){
+      var  ran_number=Math.round(Math.random()*1000000);
+        oscarLog("randome number="+ran_number);
+        var rxMethod="rxMethod_"+ran_number;
+        var rxRoute="rxRoute_"+ran_number;
+        var rxFreq="rxFreq_"+ran_number;
+        var rxDrugForm="rxDrugForm_"+ran_number;
+        var rxDuration="rxDuration_"+ran_number;
+        var rxDurationUnit="rxDurationUnit_"+ran_number;
+        var rxAmount="rxAmount_"+ran_number;
+        var rxPRN="rxPRN_"+ran_number;
+        var drugName="drugName_"+ran_number;
+        var instructions="instructions_"+ran_number;
+        var quantity="quantity_"+ran_number;
+        var repeats="repeats_"+ran_number;
+        var rxDate="rxDate_"+ran_number;
+        var intrParseDiv="intr_parse_"+ran_number;
+        var outsideProviderName="outsideProviderName_"+ran_number;
+        var outsideProviderOhip="outsideProviderOhip_"+ran_number;
+        var lastRefillDate ="lastRefillDate_"+ran_number;
+        var  writtenDate="writtenDate_"+ran_number;
+        var rxMoreDiv="rx_more_"+ran_number;
+        var longTerm="longTerm_"+ran_number;
+
+        var pastMed="pastMed_"+ran_number;
+        var patientComplianceY="patientComplianceY_"+ran_number;
+        var patientComplianceN="patientComplianceN_"+ran_number;
+
+        var data;
+        var drugId;
+        var counter=increaseCountPrescribe();
+        oscarLog(element.id);
+        if(element.id==undefined){
+            data="drugId="+element;
+            drugId=element;
+        }
+        else{
+            data="drugId="+element.id;
+            drugId=element.id;
+        }
+        var rxString="rxString_"+ran_number;
+
+        data=data+"&countPrescribe="+counter;
+        oscarLog("data set in showOldRxDrug="+data);
+
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
+        oscarLog("url in searchdrug2 "+url);
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,
+            onSuccess:function(transport){
+
+                var json=transport.responseText.evalJSON();
+                var drugName=json.drugName;
+                var url = "prescribe.jsp";
+                var warning=" WARNING: ";
+                var params = "demographicNo=<%=bean.getDemographicNo()%>&id="+drugId+"&text="+drugName+"&rand="+ran_number+"&countPrescribe="+counter;  //hack to get around ie caching the page
+                oscarLog('drugname '+drugName+' ran '+ran_number);
+                new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom, onComplete:function(transport){
+
+                        str="Method: "+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Amount:"+json.amount+"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit;
+
+                        var instr ;
+
+                        //parse the quantity and repeats.
+                        var qty=0;
+
+                        var inAr=(json.instructions).split(" ");
+                     //   alert(inAr);
+                        for(var i=0;i<inAr.length;i++){
+                            var elem=inAr[i];
+                            if(elem.include("Qty")){
+                                var eAr=elem.split(":");
+                                qty=eAr[1];
+                                break;
+                            }
+
+                        }
+                    //    alert(inAr+"!!!");
+                        oscarLog("qty="+qty);
+
+                        //remove Qty:num Repeats:num
+                        var re=new RegExp("Qty:[0-9]+");
+
+                        instr=(json.instructions).replace(re,"");
+                       // alert("first replace paseed"+instr);
+                        re=new RegExp("Repeats:[0-9]+");
+                        var instr2=instr.replace(re,"");
+                       oscarLog("second replace paseed"+instr2);
+                        $(instructions).value=instr2;
+                      oscarLog(instructions);
+
+                        oscarLog($(instructions).value);
+                        if(qty==json.quantity){
+                            $(quantity).value=json.quantity;
+                        }
+                        else{
+                            $(quantity).value=qty;
+                            $("quantityWarning_"+ran_number).innerHTML=warning+" Qty:"+qty+" setQuantity:"+json.quantity;
+                        }
+
+                        $(repeats).value=json.repeats;
+                        //alert($(repeats).value);
+                        $(rxString).innerHTML=str;
+
+                        //     document.getElementById(intrParseDiv).style.display="table";
+                        //    document.getElementById(rxMoreDiv).style.display="table";
+                        //   $(rxMethod).value=json.method;
+                        //  $(rxRoute).value=json.route;
+                        //  $(rxFreq).value=json.frequency;
+                        //   $(rxDrugForm).value=json.drugForm;
+                        //   $(rxDuration).value=json.duration;
+                        //   $(rxDurationUnit).value=json.durationUnit;
+                        //   $(rxAmount).value=json.amount;
+
+                        //  if(json.prn){
+                        //        $(rxPRN).checked=true;
+                        //    } else{
+                        //        $(rxPRN).checked=false;
+                        //    }
+                        if(json.longTerm){
+                            $(longTerm).checked=true;
+                        } else{
+                            $(longTerm).checked=false;
+                        }
+
+                        if(json.pastMed){
+                            $(pastMed).checked=true;
+                        } else{
+                            $(pastMed).checked=false;
+                        }
+                        if(json.patientCompliance==1){
+                            $(patientComplianceY).checked=true;
+                        } else if(json.patientCompliance==-1){
+                            $(patientComplianceN).checked=true;
+                        } else{
+                            $(patientComplianceY).checked=false;
+                            $(patientComplianceN).checked=false;
+                        }
+
+                        $(rxDate).value=json.startDate;
+                        $(writtenDate).value=json.writtenDate;
+                        $(outsideProviderName).value=json.outsideProvName;
+                        $(outsideProviderOhip).value=json.outsideProvOhip;
+                        $(lastRefillDate).value=json.lastRefillDate;
+
+                    }    });
+            }});
+        return true;
+    }
+
+
     //show original drug for represcription.
     function showOldRxDrug(element){
       var  ran_number=Math.round(Math.random()*1000000);
