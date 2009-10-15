@@ -941,7 +941,7 @@ public class RxPrescriptionData {
 		int drugId;
 		String providerNo;
 		int demographicNo;
-                int randomId=0;
+                long randomId=0;
 		java.util.Date rxCreatedDate = null;
 		java.util.Date rxDate = null;
 		java.util.Date endDate = null;
@@ -995,10 +995,10 @@ public class RxPrescriptionData {
 			this.providerNo = providerNo;
 			this.demographicNo = demographicNo;
 		}
-                public int getRandomId(){
+                public long getRandomId(){
                     return this.randomId;
                 }
-                public void setRandomId(int randomId){
+                public void setRandomId(long randomId){
                     this.randomId=randomId;
                 }
 		public int getNumPrints() {

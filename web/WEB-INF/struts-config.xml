@@ -576,6 +576,10 @@
         <action name="RxChoosePatientForm" path="/oscarRx/choosePatient2" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
         </action>
+        <action name="RxChoosePatientForm" path="/oscarRx/choosePatient3" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
+            <forward name="success" path="/oscarRx/SearchDrug3.jsp" />
+        </action>
+
         <action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
         </action>
@@ -639,6 +643,11 @@
         </action>
         <action input="/oscarRx/SearchDrug2.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe2" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
+        </action>
+        
+        <action input="/oscarRx/SearchDrug3.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe2" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
+            <forward name="repcbLongTerm" path="/oscarRx/prescribe.jsp" />
+            <forward name="represcribe" path="/oscarRx/prescribe.jsp" />
         </action>
 
         <action input="/oscarRx/SearchDrug.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">

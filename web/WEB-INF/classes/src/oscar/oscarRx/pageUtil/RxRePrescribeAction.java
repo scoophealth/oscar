@@ -26,258 +26,374 @@ package oscar.oscarRx.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.casemgmt.web.PrescriptDrug;
 import org.oscarehr.util.MiscUtils;
 
+import org.oscarehr.util.SpringUtils;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
-
 public final class RxRePrescribeAction extends DispatchAction {
-    
-	private static final Logger logger=MiscUtils.getLogger();
-	
+
+    private static final Logger logger = MiscUtils.getLogger();
+
     public ActionForward reprint(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException, ServletException {
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
         System.out.println("==========================in reprint of RxRePrescribeAction.java====================");
         oscar.oscarRx.pageUtil.RxSessionBean sessionBeanRX =
-        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-        if(sessionBeanRX==null) {
+                (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (sessionBeanRX == null) {
             response.sendRedirect("error.html");
             return null;
         }
-        
+
         oscar.oscarRx.pageUtil.RxSessionBean beanRX =
-        new oscar.oscarRx.pageUtil.RxSessionBean();
+                new oscar.oscarRx.pageUtil.RxSessionBean();
         beanRX.setDemographicNo(sessionBeanRX.getDemographicNo());
-        beanRX.setProviderNo(sessionBeanRX.getProviderNo());        
-        
-        RxDrugListForm frm = (RxDrugListForm)form;
+        beanRX.setProviderNo(sessionBeanRX.getProviderNo());
+
+        RxDrugListForm frm = (RxDrugListForm) form;
         String script_no = frm.getDrugList();
-        
-        
-        String ip = request.getRemoteAddr();                
-        
+
+
+        String ip = request.getRemoteAddr();
+
         RxPrescriptionData rxData = new RxPrescriptionData();
         ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
         RxPrescriptionData.Prescription p = null;
         StringBuffer auditStr = new StringBuffer();
-        for( int idx = 0; idx < list.size(); ++idx ) {
+        for (int idx = 0; idx < list.size(); ++idx) {
             p = list.get(idx);
-           p("before beanRX.getStashIndex() in reprint",""+beanRX.getStashIndex());
+            p("before beanRX.getStashIndex() in reprint", "" + beanRX.getStashIndex());
             beanRX.setStashIndex(beanRX.addStashItem(p));
-            p("after beanRX.getStashIndex() in reprint",""+beanRX.getStashIndex());
+            p("after beanRX.getStashIndex() in reprint", "" + beanRX.getStashIndex());
             auditStr.append(p.getAuditString() + "\n");
         }
-        
+
         //save print date/time
-        if( p!= null )
+        if (p != null) {
             p.Print();
-        
-        String comment = rxData.getScriptComment( script_no);
-       
-        
+        }
+
+        String comment = rxData.getScriptComment(script_no);
+
+
         request.getSession().setAttribute("tmpBeanRX", beanRX);
         request.setAttribute("rePrint", "true");
-        request.setAttribute("comment",comment);
+        request.setAttribute("comment", comment);
 
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRINT, LogConst.CON_PRESCRIPTION, script_no, ip,""+beanRX.getDemographicNo(), auditStr.toString());
-               System.out.println("==========================END reprint of RxRePrescribeAction.java====================");
-        return mapping.findForward("reprint");        
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRINT, LogConst.CON_PRESCRIPTION, script_no, ip, "" + beanRX.getDemographicNo(), auditStr.toString());
+        System.out.println("==========================END reprint of RxRePrescribeAction.java====================");
+        return mapping.findForward("reprint");
     }
-    
-    
+
     public ActionForward represcribe(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException, ServletException {
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
         System.out.println("================in represcribe of RxRePrescribeAction.java=================");
         oscar.oscarRx.pageUtil.RxSessionBean beanRX =
-        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-        if(beanRX==null) {
+                (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (beanRX == null) {
             response.sendRedirect("error.html");
             return null;
         }
-        RxDrugListForm frm = (RxDrugListForm)form;                                    
+        RxDrugListForm frm = (RxDrugListForm) form;
         StringBuffer auditStr = new StringBuffer();
         try {
             RxPrescriptionData rxData = new RxPrescriptionData();
-            
+
             String drugList = frm.getDrugList();
-       //     System.out.println("drugList="+drugList);
+            //     System.out.println("drugList="+drugList);
             String[] drugArr = drugList.split(",");
-            
+
             int drugId;
             int i;
             int stashIdx;
-            for(i=0;i<drugArr.length;i++) {
+            for (i = 0; i < drugArr.length; i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
-                } catch (Exception e) { 
-                	logger.error("Unexpected error.", e);
-                    break; 
+                } catch (Exception e) {
+                    logger.error("Unexpected error.", e);
+                    break;
                 }
 
                 // get original drug
                 RxPrescriptionData.Prescription oldRx =
-                rxData.getPrescription(drugId);
-            //    System.out.println("oldRx.getDrugId()="+oldRx.getDrugId());
+                        rxData.getPrescription(drugId);
+                //    System.out.println("oldRx.getDrugId()="+oldRx.getDrugId());
                 // create copy of Prescription                
-                    RxPrescriptionData.Prescription rx =
+                RxPrescriptionData.Prescription rx =
                         rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
-         //           System.out.println("***###addStathItem called44");
-                    System.out.println("String.valueOf(beanRX.getStashIndex()) in represcribe before ="+String.valueOf(beanRX.getStashIndex()));
+                //           System.out.println("***###addStathItem called44");
+                System.out.println("String.valueOf(beanRX.getStashIndex()) in represcribe before =" + String.valueOf(beanRX.getStashIndex()));
                 beanRX.setStashIndex(beanRX.addStashItem(rx));
                 auditStr.append(rx.getAuditString() + "\n");
-        //        System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
+                //        System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
                 //allocate space for annotation
                 beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
-                p("beanRX.getStashIndex() in represcribe after",""+beanRX.getStashIndex());
-                request.setAttribute("BoxNoFillFirstLoad", "true");                
-            }                        
-        }
-        catch (Exception e) {
+                p("beanRX.getStashIndex() in represcribe after", "" + beanRX.getStashIndex());
+                request.setAttribute("BoxNoFillFirstLoad", "true");
+            }
+        } catch (Exception e) {
             logger.error("Unexpected error occurred.", e);
-        }             
-        
+        }
+
         String script_no = beanRX.getStashItem(beanRX.getStashIndex()).getScript_no();
-     //   System.out.println("script_no ="+script_no);
-         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(),""+beanRX.getDemographicNo(), auditStr.toString());
+        //   System.out.println("script_no ="+script_no);
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(), "" + beanRX.getDemographicNo(), auditStr.toString());
         System.out.println("================END represcribe of RxRePrescribeAction.java=================");
-         return (mapping.findForward("success"));
+        return (mapping.findForward("success"));
     }
-
-
 
     public void p(String s) {
         System.out.println(s);
     }
-    public void p(String s,String s1){
-        System.out.println(s+"="+s1);
+
+    public void p(String s, String s1) {
+        System.out.println(s + "=" + s1);
     }
 
     public ActionForward represcribe2(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException, ServletException {
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
         System.out.println("================in represcribe2 of RxRePrescribeAction.java=================");
         oscar.oscarRx.pageUtil.RxSessionBean beanRX =
-        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-        if(beanRX==null) {
+                (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (beanRX == null) {
             response.sendRedirect("error.html");
             return null;
         }
         StringBuffer auditStr = new StringBuffer();
-      //  try {
-            RxPrescriptionData rxData = new RxPrescriptionData();
-            int i;
-                String s=request.getParameter("drugId");
-                p("!!!!!!!!!s",s);
-                int drugId=Integer.parseInt(s);
-                // get original drug
-                RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
-             //   System.out.println("oldRx.getDrugId()="+oldRx.getDrugId());
-                // create copy of Prescription
-                    RxPrescriptionData.Prescription rx =
-                        rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
-            // System.out.println("***###addStathItem called44");
-                beanRX.setStashIndex(beanRX.addStashItem(rx));
-                auditStr.append(rx.getAuditString() + "\n");
-           //     System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
-                //allocate space for annotation
-                beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
-                p("brandName saved",rx.getBrandName());
-                p("stashIndex becomes",""+beanRX.getStashIndex());
 
-                request.setAttribute("BoxNoFillFirstLoad", "true");
-
-                //remove brand name from special
-                String special=rx.getSpecial();
-                if(special.indexOf("Take")!=-1){
-                    special=special.substring(special.indexOf("Take"));
-                }
-                else if(special.indexOf("take")!=-1){
-                    special=special.substring(special.indexOf("take"));
-                }
-                else if(special.indexOf("TAKE")!=-1){
-                    special=special.substring(special.indexOf("TAKE"));
-                }
-                else if(special.indexOf("Apply")!=-1){
-                    special=special.substring(special.indexOf("Apply"));
-                }
-                else if(special.indexOf("apply")!=-1){
-                    special=special.substring(special.indexOf("apply"));
-                }
-                else if(special.indexOf("APPLY")!=-1){
-                    special=special.substring(special.indexOf("APPLY"));
-                }
-                else if(special.indexOf("Rub well in")!=-1){
-                    special=special.substring(special.indexOf("Rub well in"));
-                }else if(special.indexOf("rub well in")!=-1){
-                    special=special.substring(special.indexOf("rub well in"));
-                }
-                else if(special.indexOf("RUB WELL IN")!=-1){
-                    special=special.substring(special.indexOf("RUB WELL IN"));
-                }else if(special.indexOf("Rub Well In")!=-1){
-                    special=special.substring(special.indexOf("Rub Well In"));
-                }
+        RxPrescriptionData rxData = new RxPrescriptionData();
+        int i;
+        String strId = request.getParameter("drugId");
+        p("!!!!!!!!!s", strId);
 
 
-            Hashtable ha=new Hashtable();
-            ha.put("drugName", rx.getGenericName());
-            ha.put("instructions", special);
-            ha.put("duration", rx.getDuration());
-            ha.put("frequency", rx.getFrequencyCode());
-            ha.put("route", rx.getRoute());            
-            ha.put("durationUnit",rx.getDurationUnit());
-            ha.put("quantity", rx.getQuantity());
-            ha.put("repeats",Integer.toString(rx.getRepeat()) );
-            ha.put("longTerm", rx.getLongTerm());            
-            ha.put("method", rx.getMethod());
-            ha.put("drugForm",rx.getDrugForm() );
-            ha.put("amount", rx.getTakeMinString());
-            ha.put("prn", rx.getPrn());            
-            ha.put("startDate",  RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd"));
-            ha.put("outsideProvName", rx.getOutsideProviderName());
-            ha.put("outsideProvOhip", rx.getOutsideProviderOhip());
-            ha.put("lastRefillDate",RxUtil.DateToString(rx.getLastRefillDate(),"yyyy-MM-dd") );
-            ha.put("writtenDate",RxUtil.DateToString(rx.getWrittenDate(),"yyyy-MM-dd"));
-            ha.put("pastMed",rx.getPastMed());
-            ha.put("patientCompliance", rx.getPatientCompliance());
-            p("RxUtil.DateToString(rx.getRxDate(),",RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd"));
-            JSONObject jsonObject = JSONObject.fromObject( ha );
-      //      p("jsonObject",jsonObject.toString());
-            
-        //}
-        //catch (Exception e) {
-        //    logger.error("Unexpected error occurred.", e);
-        //}
+        int drugId = Integer.parseInt(strId);
+        // get original drug
+        RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
+        //   System.out.println("oldRx.getDrugId()="+oldRx.getDrugId());
+        // create copy of Prescription
+        RxPrescriptionData.Prescription rx =
+                rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
+        // System.out.println("***###addStathItem called44");
+        
+        //     System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
+        //allocate space for annotation
+        
+        Long rand = Math.round(Math.random() * 1000000);
+        rx.setRandomId(rand);
 
+        request.setAttribute("BoxNoFillFirstLoad", "true");
+
+        //remove drug name from special
+        String special = rx.getSpecial();
+        if (special.indexOf("Take") != -1) {
+            special = special.substring(special.indexOf("Take"));
+        } else if (special.indexOf("take") != -1) {
+            special = special.substring(special.indexOf("take"));
+        } else if (special.indexOf("TAKE") != -1) {
+            special = special.substring(special.indexOf("TAKE"));
+        } else if (special.indexOf("Apply") != -1) {
+            special = special.substring(special.indexOf("Apply"));
+        } else if (special.indexOf("apply") != -1) {
+            special = special.substring(special.indexOf("apply"));
+        } else if (special.indexOf("APPLY") != -1) {
+            special = special.substring(special.indexOf("APPLY"));
+        } else if (special.indexOf("Rub well in") != -1) {
+            special = special.substring(special.indexOf("Rub well in"));
+        } else if (special.indexOf("rub well in") != -1) {
+            special = special.substring(special.indexOf("rub well in"));
+        } else if (special.indexOf("RUB WELL IN") != -1) {
+            special = special.substring(special.indexOf("RUB WELL IN"));
+        } else if (special.indexOf("Rub Well In") != -1) {
+            special = special.substring(special.indexOf("Rub Well In"));
+        }
+
+        //remove drug name from special
+        rx.setSpecial(special);
+        List<RxPrescriptionData.Prescription> listReRx=new ArrayList();
+
+        //add rx to rx list
+        listReRx.add(rx);
+        
+        //save rx to stash
+         p("stashIndex is", "" + beanRX.getStashIndex());
+        beanRX.setStashIndex(beanRX.addStashItem(rx));
+        auditStr.append(rx.getAuditString() + "\n");
+        beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
         String script_no = beanRX.getStashItem(beanRX.getStashIndex()).getScript_no();
-     //   System.out.println("script_no ="+script_no);
-         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(),""+beanRX.getDemographicNo(), auditStr.toString());
-         p("jsonObject", jsonObject.toString());
-         response.getOutputStream().write(jsonObject.toString().getBytes());
-         request.setAttribute("represcribe2", "active");
-         System.out.println("bean.getStashSize()="+beanRX.getStashSize());
-         System.out.println("================END represcribe2 of RxRePrescribeAction.java=================");
-         return null;
+        p("brandName saved in stash", rx.getBrandName());
+        p("stashIndex becomes", "" + beanRX.getStashIndex());
+        
+        //   System.out.println("script_no ="+script_no);
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(), "" + beanRX.getDemographicNo(), auditStr.toString());
+
+        RxDrugData drugData = new RxDrugData();
+        p("drugs in present stash,stash size",""+beanRX.getStashSize());
+        for (int j = 0; j < beanRX.getStashSize(); j++) {
+            try {
+                RxPrescriptionData.Prescription rxTemp = beanRX.getStashItem(j);
+                p("generic name", rxTemp.getGenericName());
+                p("special",rxTemp.getSpecial());
+                p("quantity",rxTemp.getQuantity());
+                p("repeat=" + rxTemp.getRepeat());
+                p("atccode",rxTemp.getAtcCode());
+                p("regional identifier",rxTemp.getRegionalIdentifier());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        request.setAttribute("listRxDrugs", listReRx);
+        System.out.println("================END represcribe2 of RxRePrescribeAction.java=================");
+        return (mapping.findForward("represcribe"));
+    }
+
+    public ActionForward repcbAllLongTerm(ActionMapping mapping,
+            ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        System.out.println("================in repcbAllLongTerm of RxRePrescribeAction.java=================");
+        oscar.oscarRx.pageUtil.RxSessionBean beanRX =
+                (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (beanRX == null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        StringBuffer auditStr = new StringBuffer();
+        //String idList = request.getParameter("drugIdList");
+
+        String demoNo = request.getParameter("demoNo");
+        String strShow=request.getParameter("showall");
+        p("demoNo",demoNo);
+        p("showall",strShow);
+
+        boolean showall=false;
+        if(strShow.equalsIgnoreCase("true")){
+            showall=true;
+        }
+        p("here");
+        //get a list of long term meds
+         CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager"); 
+                        List<PrescriptDrug> prescriptDrugs = caseManagementManager.getPrescriptions(demoNo, showall); 
+                        List<Integer> listLongTermMed = new ArrayList();
+                        p("size of prescriptDrugs",""+prescriptDrugs.size());
+                        for (PrescriptDrug prescriptDrug : prescriptDrugs) {
+                            p("id of drug returned",""+prescriptDrug.getLocalDrugId());
+                                //add all long term med drugIds to an array.
+                                if (prescriptDrug.isLongTerm()) {
+                                    System.out.println("long term med's prescriptDrug.getLocalDrugId()=" + prescriptDrug.getLocalDrugId());
+                                    listLongTermMed.add(prescriptDrug.getLocalDrugId());
+                                }
+                        }
+        
+                                
+         p("here2");
+        List<RxPrescriptionData.Prescription> listLongTerm = new ArrayList();
+        for (int i = 0; i < listLongTermMed.size(); i++) {
+            Long rand = Math.round(Math.random() * 1000000);
+
+            //loop this
+            int drugId =  listLongTermMed.get(i);
+            // get original drug
+            RxPrescriptionData rxData = new RxPrescriptionData();
+            RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
+            //   System.out.println("oldRx.getDrugId()="+oldRx.getDrugId());
+            // create copy of Prescription
+            RxPrescriptionData.Prescription rx =
+                    rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
+
+            request.setAttribute("BoxNoFillFirstLoad", "true");
+
+            //give rx a random id.
+            rx.setRandomId(rand);
+            //remove brand name from special
+            String special = rx.getSpecial();
+
+            if (special.indexOf("Take") != -1) {
+                special = special.substring(special.indexOf("Take"));
+            } else if (special.indexOf("take") != -1) {
+                special = special.substring(special.indexOf("take"));
+            } else if (special.indexOf("TAKE") != -1) {
+                special = special.substring(special.indexOf("TAKE"));
+            } else if (special.indexOf("Apply") != -1) {
+                special = special.substring(special.indexOf("Apply"));
+            } else if (special.indexOf("apply") != -1) {
+                special = special.substring(special.indexOf("apply"));
+            } else if (special.indexOf("APPLY") != -1) {
+                special = special.substring(special.indexOf("APPLY"));
+            } else if (special.indexOf("Rub well in") != -1) {
+                special = special.substring(special.indexOf("Rub well in"));
+            } else if (special.indexOf("rub well in") != -1) {
+                special = special.substring(special.indexOf("rub well in"));
+            } else if (special.indexOf("RUB WELL IN") != -1) {
+                special = special.substring(special.indexOf("RUB WELL IN"));
+            } else if (special.indexOf("Rub Well In") != -1) {
+                special = special.substring(special.indexOf("Rub Well In"));
+            }
+
+            //remove the drug name from rx special.
+            rx.setSpecial(special);
+
+            p("RxUtil.DateToString(rx.getRxDate(),", RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd"));
+            p("stashIndex is", "" + beanRX.getStashIndex());
+            // System.out.println("***###addStathItem called44");
+            beanRX.setStashIndex(beanRX.addStashItem(rx));
+            auditStr.append(rx.getAuditString() + "\n");
+            // System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
+            //allocate space for annotation
+            beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
+            p("brandName saved", rx.getBrandName());
+            p("stashIndex becomes", "" + beanRX.getStashIndex());
+
+            //add rx to list
+            listLongTerm.add(rx);
+        }
+
+        RxDrugData drugData = new RxDrugData();
+        p("drugs in present stash, stash size",""+beanRX.getStashSize());
+        for (int j = 0; j < beanRX.getStashSize(); j++) {
+            try {
+                RxPrescriptionData.Prescription rxTemp = beanRX.getStashItem(j);
+                p("generic name", rxTemp.getGenericName());
+                p("special",rxTemp.getSpecial());
+                p("quantity",rxTemp.getQuantity());
+                p("repeat=" + rxTemp.getRepeat());
+                p("atccode",rxTemp.getAtcCode());
+                p("regional identifier",rxTemp.getRegionalIdentifier());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        request.setAttribute("listRxDrugs", listLongTerm);
+        
+        System.out.println("================END repcbAllLongTerm of RxRePrescribeAction.java=================");
+        return (mapping.findForward("repcbLongTerm"));
     }
 }
