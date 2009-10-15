@@ -107,13 +107,13 @@
 <html:html locale="true">
     <head>
         <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
-        <title><bean:message key="SearchDrug.title" /> Jays merge</title>
+        <title><bean:message key="SearchDrug.title" /></title>
         <link rel="stylesheet" type="text/css" href="styles.css">
 
         <html:base />
 
 
-        <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+        <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  ></link>
         <link rel="stylesheet" type="text/css" href="modaldbox.css"  />
         <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
@@ -173,34 +173,7 @@ body {
 	padding:0;
 }
 </style>
-<%--
-        <style type="text/css">
 
-            div.autocomplete {
-  position:absolute;
-  width:450px;
-  background-color:white;
-  border:1px solid #888;
-  margin:0;
-  padding:0;
-}
-div.autocomplete ul {
-  list-style-type:none;
-  margin:0;
-  padding:0;
-}
-div.autocomplete ul li.selected { background-color: #ffb;}
-div.autocomplete ul li {
-  list-style-type:none;
-  display:block;
-  margin:0;
-  padding:2px;
-  height:32px;
-  cursor:pointer;
-}
-
-        </style>
---%>
     </head>
 
     <%
@@ -222,11 +195,12 @@ div.autocomplete ul li {
                         <tr>
                             <td>
                                 <%-- div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title" /></div --%>
-                                <div id="rxText" style="float:left;"></div><div id="interactionsRxMyD" style="float:right;"></div><br style="clear:left;">
-                                <html:form action="/oscarRx/searchDrug"  onsubmit="return processData();">
+                                <html:form action="/oscarRx/searchDrug"  onsubmit="return processData();" styleId="drugForm">
+                                    <div id="rxText" style="float:left;"></div><div id="interactionsRxMyD" style="float:right;"></div><br style="clear:left;">
+                                
                                     <html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
                                     <table border="0">
-                                        <tr valign="middle">
+                                        <tr valign="top">
                                             <td style="width:350px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
                                                 <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off" />
                                                 <div id="autocomplete_choices"></div>
@@ -241,7 +215,7 @@ div.autocomplete ul li {
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
-                                                <div class="buttonrow"><input id="saveButton" type="button" onclick="popForm();return false;" value="Prescribe" />
+                                                <div class="buttonrow"><input id="saveButton" type="button"  onclick="updateAllDrugs();return false;" value="Prescribe" />
                                                 </div>
                                             </td>
                                             <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
@@ -265,21 +239,30 @@ div.autocomplete ul li {
 <div id="previewForm" style="display:none;"></div>
                             </td>
                         </tr>
-
-
-
-
-
-
-
                         <tr>
                             <td>
                                 <div>
                                     <table width="100%">
                                         <tr>
                                             <td>
-                                                <div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title" /> (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')"><bean:message key="SearchDrug.Print"/></a>) &nbsp;&nbsp;(<a href="#"
-                                                                                                                                                                                                                                                                                    onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>)</div>
+                                                <div class="DivContentSectionHead">
+                                                    <bean:message key="SearchDrug.section2Title" /> (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">
+                                                    <bean:message key="SearchDrug.Print"/></a>) &nbsp;&nbsp;(<a href="#" onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>)
+                                                    &nbsp;&nbsp;
+                                                    (<a href="javascript:void(0);" name="cmdAllergies"   onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 200px" ><bean:message key="SearchDrug.msgViewEditAllergies"/></a>)
+                                                    &nbsp;&nbsp;
+                                                    (<a href="javascript:void(0);"name="cmdRePrescribe"  onclick="javascript:RePrescribeLongTerm();" style="width: 200px" ><bean:message key="SearchDrug.msgReprescribeLongTermMed"/></a>)
+
+                                                    &nbsp;&nbsp;
+                                                    (<a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>)
+                                                                            
+                                                    <%--
+                                                                                <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 200px" />
+                                                                                <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribeLongTermMed"/>" class="ControlPushButton" onclick="javascript:RePrescribeLongTerm();" style="width: 200px" />
+                                                                                <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" />
+                                                --%>
+                                                </div>
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -311,148 +294,26 @@ div.autocomplete ul li {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <table>
+                                                <table border="0">
                                                     <tr>
-                                                        <td width="100%">
+                                                        <td width="80%">
                                                             <div style="margin-top: 10px; margin-left: 20px; width: 100%">
                                                                 <table width="100%" cellspacing="0" cellpadding="0">
                                                                     <tr>
                                                                         <td align="left">
-                                                                            <%
-                        String show = "&show=all";
-                        if (showall) {
-                                                                            %> <a href="SearchDrug.jsp"><bean:message key="SearchDrug.msgShowCurrent"/></a> <%                                                                                } else {
-                            show = "";
-                                                                            %> <a href="SearchDrug.jsp?show=all"><bean:message key="SearchDrug.msgShowAll"/></a> <%
-                        }
-                                                                            %> &nbsp;&nbsp;&nbsp; <a href="SearchDrug.jsp?status=active<%=show%>"><bean:message key="SearchDrug.msgActive"/></a> - <a
-                                                                                href="SearchDrug.jsp?status=inactive<%=show%>"><bean:message key="SearchDrug.msgInactive"/></a> - <a href="SearchDrug.jsp?status=all<%=show%>"><bean:message key="SearchDrug.msgAll"/></a></td>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');"><bean:message key="SearchDrug.msgShowAll"/></a>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
+                                                                        </td>
                                                                         <td align="right">
-                                                                            <span style="width: 350px; align: right">
-                                                                                <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 100px" />
-                                                                                <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribeLongTermMed"/>" class="ControlPushButton" onclick="javascript:RePrescribeLongTerm();" style="width: 100px" />
-                                                                                <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" />
-                                                                            </span>
+
                                                                         </td>
                                                                     </tr>
                                                                 </table>
                                                             </div>
-                                                            <div class="Step1Text" style="width: 100%">
-                                                                <table width="100%" cellpadding="3">
-                                                                    <tr>
-                                                                        <th align="left"><b>Rx Date</b></th>
-                                                                        <th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
-                                                                        <th align="center" width="100px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
-                                                                        <th align="center" width="100px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
-                                                                        <th align="center" width="20px">&nbsp;</th>
-                                                                        <%
-                        boolean integratorEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
-
-                        if (integratorEnabled) {%>
-                                                                        <td align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></td>
-                                                                        <%}%>
-                                                                    </tr>
-
-                                                                    <%
-                        CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-                        List<PrescriptDrug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
-
-                        long now = System.currentTimeMillis();
-                        long month = 1000L * 60L * 60L * 24L * 30L;
-                        List listLongTermMed = new ArrayList();
-                        for (PrescriptDrug prescriptDrug : prescriptDrugs) {
-                            String styleColor = "";
-
-                            if (request.getParameter("status") != null) { //TODO: Redo this in a better way
-                                String stat = request.getParameter("status");
-                                if (stat != null && stat.equals("active") && prescriptDrug.isExpired()) {
-                                    continue;
-                                } else if (stat != null && stat.equals("inactive") && !prescriptDrug.isExpired()) {
-                                    continue;
-                                }
-                            }
-                //add all long term med drugIds to an array.
-                if (prescriptDrug.isLongTerm()) {
-                    System.out.println("long term med's prescriptDrug.getLocalDrugId()=" + prescriptDrug.getLocalDrugId());
-                    // listLongTermMed[counter]=""+prescriptDrug.getLocalDrugId();
-                    // counter++;
-                    listLongTermMed.add(prescriptDrug.getLocalDrugId());
-                }
-
-                            if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-                                styleColor = "style=\"color:red;text-decoration: line-through;\"";
-                            } else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - now <= month)) {
-                                styleColor = "style=\"color:orange;font-weight:bold;\"";
-                            } else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived()) {
-                                styleColor = "style=\"color:red;\"";
-                            } else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-                                styleColor = "style=\"text-decoration: line-through;\"";
-                            }
-                                                                    %>
-                                                                    <tr>
-                                                                        <td valign="top"><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
-                                                                        <td><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getDrug_special()).replaceAll(";", " ")%>
-                                                                            </a></td>
-                                                                        <td width="100px" align="center">
-                                                                            <%
-                            if (prescriptDrug.getRemoteFacilityName() == null) {
-                                                                            %>
-                                                                            <%--  <input type="checkbox" name="chkRePrescribe" align="center" onclick="showOldRxDrug(this)" value="<%=prescriptDrug.getLocalDrugId()%>" />--%>
-                                                                            <a name="rePrescribe" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void(0)" onclick="showOldRxDrug(this)"> <%="Represcribe"%></a>
-                                                                            <%
-                                                                                } else {
-                                                                            %>
-                                                                            <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
-                                                                                <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
-                                                                                <%
-                                                                                    String searchString = prescriptDrug.getBN();
-                                                                                    if (searchString == null) {
-                                                                                        searchString = prescriptDrug.getCustomName();
-                                                                                    }
-                                                                                    if (searchString == null) {
-                                                                                        searchString = prescriptDrug.getRegionalIdentifier();
-                                                                                    }
-                                                                                    if (searchString == null) {
-                                                                                        searchString = prescriptDrug.getDrug_special();
-                                                                                    }
-                                                                                %>
-                                                                                <input type="hidden" name="searchString" value="<%=searchString%>" />
-                                                                                <input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />
-                                                                            </form>
-                                                                            <%
-                            }
-                                                                            %>
-                                                                        </td>
-                                                                        <td width="100px" align="center">
-                                                                            <%
-                            if (prescriptDrug.getRemoteFacilityName() == null) {
-                                                                            %>
-                                                                           <a name="delete" id="<%=prescriptDrug.getLocalDrugId()%><%
-                                System.out.println("drugId in SearchDrug2.jsp=" + prescriptDrug.getLocalDrugId());%>" <%=styleColor%> href="javascript:void()" onclick="Delete(this);"> <%="Delete"%>
-                                                                            </a>
-                                                                        <!--input type="checkbox" name="chkDelete" align="center" drugId="<%--=prescriptDrug.getLocalDrugId()--%>" /-->
-                                                                            <%
-                            }
-                                                                            %>
-                                                                        </td>
-                                                                        <td width="20px" align="center"><a href="#" title="Annotation"
-                                                                                                           onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getLocalDrugId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
-                                                                        </td>
-                                                                        <%
-                            if (integratorEnabled) {
-                                                                        %>
-                                                                        <td align="center"><%=prescriptDrug.getRemoteFacilityName() == null ? "local" : prescriptDrug.getRemoteFacilityName()%></td>
-                                                                        <%
-                            }
-                                                                        %>
-                                                                    </tr>
-                                                                    <%
-                        }
-                                                                    %>
-                                                                </table>
-
-                                                            </div>
-                                                            
+                                                            <div id="drugProfile"></div>
 
                                                             <html:form action="/oscarRx/rePrescribe">
                                                                 <html:hidden property="drugList" />
@@ -461,7 +322,7 @@ div.autocomplete ul li {
                                                             <html:form action="/oscarRx/deleteRx">
                                                                 <html:hidden property="drugList" />
                                                             </html:form></td>
-                                                    <input type="hidden" id="longTermDrugList" value="<%=listLongTermMed%>"/>
+                                                   
                                                     </tr>
                                                 </table>
                                             </td>
@@ -764,6 +625,7 @@ div.autocomplete ul li {
                 }});
         }
         catch(er){alert(er);}
+        oscarLog("bottom of popForm");
     }
 
 
@@ -787,6 +649,7 @@ div.autocomplete ul li {
           <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
           callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
           </oscar:oscarPropertiesCheck>
+          callReplacementWebService("ListDrugs.jsp",'drugProfile');
 
     <%--
     new Ajax.Autocompleter("searchString", "autocomplete_choices", "search2.jsp", {paramName: "searchString",
@@ -814,6 +677,22 @@ function upElement(li){
 
 --%>
 
+
+ //used in autocomplete
+    function getSelectionId(text, li) {
+       var ran_number=Math.round(Math.random()*1000000);
+        oscarLog('In selection id');
+        var url1=  "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
+        //var url = "prescribe.jsp";
+        var data1="randomId="+ran_number+"&drugId="+li.id+"&text="+text;
+       // countPrescribe=increaseCountPrescribe();
+        //   alert(li.id+"||"+ text+"||"+ ran_number);
+        new Ajax.Updater('rxText',url1, {method:'get',parameters:data1,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
+
+                //var params = "demographicNo=<%--=bean.getDemographicNo()--%>&id="+li.id+"&text="+text+"&rand="+ran_number+"&notRePrescribe=true"+"&countPrescribe="+countPrescribe; //hack to get around ie caching the page
+                  //  new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})}})
+        //  chooseDrug();
+    }
     
 YAHOO.example.BasicRemote = function() {
     var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
@@ -837,9 +716,9 @@ YAHOO.example.BasicRemote = function() {
                 oscarLog(args[2]);
                 arr = args[2];
                 oscarLog('In selection id----'+arr[1]);
-                var url = "prescribe.jsp";
+                var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx"; //"prescribe.jsp";
                 var ran_number=Math.round(Math.random()*1000000);
-                var params = "demographicNo=<%=bean.getDemographicNo()%>&id="+arr[1]+"&text="+arr[0]+"&rand="+ran_number;  //hack to get around ie caching the page
+                var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr[1]+"&text="+arr[0]+"&randomId="+ran_number;  //hack to get around ie caching the page
                 new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
                 $('searchString').value = "";
     });
@@ -1124,7 +1003,24 @@ function setSearchedDrug(drugId,name){
     }
 
 
+//Called onclick for prescribe button. serilaizes the form and passes to WriteScruipt/updateAllDrugs Action
+    function updateAllDrugs(){
 
+        var data=Form.serialize($('drugForm'))
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateAllDrugs";
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data "+url);
+                popForm();
+            }});
+
+      //pass a list of randomIds to the server
+      //server has a action to find all rx relates to each randomId and update one by one
+      //only call server action class once.
+
+        return false;
+    }
 
 
 $("searchString").focus();
