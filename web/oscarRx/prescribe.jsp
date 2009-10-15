@@ -20,7 +20,7 @@ List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("li
 System.out.println("listRxDrugs="+listRxDrugs);
 
 for(RxPrescriptionData.Prescription rx : listRxDrugs ){
-                 System.out.println("display prescribe");
+                 System.out.println("display prescribe"+rx);
             String rand="";
             String drugForm="";
             String startDate="";
@@ -73,31 +73,10 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
              System.out.println("startDate="+startDate);
              System.out.println("writtenDate="+writtenDate);
 
-
-//String id = request.getParameter("id");
-//String text = request.getParameter("text");
-//String rand = request.getParameter("rand");
-//String notRePrescribe=request.getParameter("notRePrescribe");
-//String countPrescribe=request.getParameter("countPrescribe");
-//System.out.println("notRePrescribe in prescribe.jsp="+notRePrescribe);
-//System.out.println("countPrescribe in prescribe.jsp="+countPrescribe);
-//System.out.println("id "+id+ " text "+text);
-
-//String drugName = "";
-
-//RxDrugData.DrugMonograph dmono = drugData.getDrug2(id);
-
-//String defInstr = "1 OD";
-//String defQuantity = "30";
-//String defRepeat ="0";
-
-//drugName = text;
-
-
 %>
 
 <fieldset style="margin-top:2px;width:600px;" id="set_<%=rand%>"">
-          <a href="javascript:void();" style="float:left;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();">X</a>   
+          <a href="javascript:void();" style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();">X</a>
 
     <a href="javascript:void();" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
 
