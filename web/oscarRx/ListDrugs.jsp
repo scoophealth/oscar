@@ -59,42 +59,25 @@
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
-//System.out.println("patient "+patient.)
-oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
-boolean showall = false;
-if (request.getParameter("show") != null) if (request.getParameter("show").equals("all")) showall = true;
 
-boolean integratorEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
-String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
+            oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
+            boolean showall = false;
+            if (request.getParameter("show") != null) {
+                if (request.getParameter("show").equals("all")) {
+                    showall = true;
+                }
+            }
 
-oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
-                        prescribedDrugs = patient.getPrescribedDrugScripts(); //this function only returns drugs which have an entry in prescription and drugs table
-                        String script_no = "";
+            boolean integratorEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
+            String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 
-System.out.println("prescribed drugs "+prescribedDrugs+ " BEAN "+bean);
-                        %>
-                        <%--
-<div style="margin-top: 10px; margin-left: 20px; width: 100%">
-    <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-            <td align="left">
-                <a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >OOO</a>
-                <%String show = "&show=all";
-                    if (showall) {%>
-                    <a href="SearchDrug.jsp"><bean:message key="SearchDrug.msgShowCurrent"/></a>
-                    <%} else {
-                       show = "";%>
-                    <a href="SearchDrug.jsp?show=all"><bean:message key="SearchDrug.msgShowAll"/></a>
-                    <%}%>
-                    &nbsp;&nbsp;&nbsp; <a href="SearchDrug.jsp?status=active<%=show%>"><bean:message key="SearchDrug.msgActive"/></a> -
-                    <a href="SearchDrug.jsp?status=inactive<%=show%>"><bean:message key="SearchDrug.msgInactive"/></a> - <a href="SearchDrug.jsp?status=all<%=show%>"><bean:message key="SearchDrug.msgAll"/></a></td>
-            <td align="right">
+            oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
+            prescribedDrugs = patient.getPrescribedDrugScripts(); //this function only returns drugs which have an entry in prescription and drugs table
+            String script_no = "";
 
-            </td>
-        </tr>
-    </table>
-</div>
-                        --%>
+            System.out.println("prescribed drugs " + prescribedDrugs + " BEAN " + bean);
+%>
+
 <div class="drugProfileText" style="width: 100%;">
     <table width="100%" cellpadding="3">
         <tr>
@@ -111,34 +94,34 @@ System.out.println("prescribed drugs "+prescribedDrugs+ " BEAN "+bean);
         </tr>
 
         <%
-CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-List<PrescriptDrug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
+            CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
+            List<PrescriptDrug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
 
-long now = System.currentTimeMillis();
-long month = 1000L * 60L * 60L * 24L * 30L;
+            long now = System.currentTimeMillis();
+            long month = 1000L * 60L * 60L * 24L * 30L;
 //List listLongTermMed = new ArrayList();
-for (PrescriptDrug prescriptDrug : prescriptDrugs) {
-String styleColor = "";
+            for (PrescriptDrug prescriptDrug : prescriptDrugs) {
+                String styleColor = "";
 
-if (request.getParameter("status") != null) { //TODO: Redo this in a better way
-String stat = request.getParameter("status");
-if (stat != null && stat.equals("active") && prescriptDrug.isExpired()) {
-continue;
-} else if (stat != null && stat.equals("inactive") && !prescriptDrug.isExpired()) {
-continue;
-}
-}
+                if (request.getParameter("status") != null) { //TODO: Redo this in a better way
+                    String stat = request.getParameter("status");
+                    if (stat != null && stat.equals("active") && prescriptDrug.isExpired()) {
+                        continue;
+                    } else if (stat != null && stat.equals("inactive") && !prescriptDrug.isExpired()) {
+                        continue;
+                    }
+                }
 //add all long term med drugIds to an array.
 
-if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-styleColor = "style=\"color:red;text-decoration: line-through;\"";
-} else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - now <= month)) {
-styleColor = "style=\"color:orange;font-weight:bold;\"";
-} else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived()) {
-styleColor = "style=\"color:red;\"";
-} else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-styleColor = "style=\"text-decoration: line-through;\"";
-}
+                if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
+                    styleColor = "style=\"color:red;text-decoration: line-through;\"";
+                } else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - now <= month)) {
+                    styleColor = "style=\"color:orange;font-weight:bold;\"";
+                } else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived()) {
+                    styleColor = "style=\"color:red;\"";
+                } else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
+                    styleColor = "style=\"text-decoration: line-through;\"";
+                }
         %>
         <tr>
             <td valign="top"><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
@@ -146,45 +129,33 @@ styleColor = "style=\"text-decoration: line-through;\"";
             <td><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getDrug_special()).replaceAll(";", " ")%>
                 </a></td>
             <td width="75px" align="center">
-                <%
-if (prescriptDrug.getRemoteFacilityName() == null) {
-                %>
-                <%--  <input type="checkbox" name="chkRePrescribe" align="center" onclick="showOldRxDrug(this)" value="<%=prescriptDrug.getLocalDrugId()%>" />--%>
+                <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
                 <a name="rePrescribe" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
-                <%
-} else {
-                %>
+                <%} else {%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
                     <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
                     <%
-String searchString = prescriptDrug.getBN();
-if (searchString == null) {
-searchString = prescriptDrug.getCustomName();
-}
-if (searchString == null) {
-searchString = prescriptDrug.getRegionalIdentifier();
-}
-if (searchString == null) {
-searchString = prescriptDrug.getDrug_special();
-}
+                    String searchString = prescriptDrug.getBN();
+                    if (searchString == null) {
+                        searchString = prescriptDrug.getCustomName();
+                    }
+                    if (searchString == null) {
+                        searchString = prescriptDrug.getRegionalIdentifier();
+                    }
+                    if (searchString == null) {
+                        searchString = prescriptDrug.getDrug_special();
+                    }
                     %>
                     <input type="hidden" name="searchString" value="<%=searchString%>" />
                     <input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />
                 </form>
-                <%
-}
-                %>
+                <%}%>
             </td>
             <td width="75px" align="center">
-                <%
-if (prescriptDrug.getRemoteFacilityName() == null) {
-                %>
-                <%System.out.println("drugId in SearchDrug2.jsp=" + prescriptDrug.getLocalDrugId());%>
-                <a name="delete" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void()" onclick="Delete(this);"><%="Delete"%></a>
-             <!--input type="checkbox" name="chkDelete" align="center" drugId="<%--=prescriptDrug.getLocalDrugId()--%>" /-->
-                <%
-}
-                %>
+                <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
+                   <%System.out.println("drugId in SearchDrug2.jsp=" + prescriptDrug.getLocalDrugId());%>
+                   <a name="delete" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void()" onclick="Delete(this);"><%="Delete"%></a>
+                <%}%>
             </td>
             <td width="75px" align="center">
                 <a href="javascript:void(0);"  <%=styleColor%> >Discontinue</a>
@@ -193,17 +164,11 @@ if (prescriptDrug.getRemoteFacilityName() == null) {
             <td width="20px" align="center">
                 <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getLocalDrugId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
             </td>
-            <%
-if (integratorEnabled) {
-            %>
+            <%if (integratorEnabled) {%>
             <td align="center"><%=prescriptDrug.getRemoteFacilityName() == null ? "local" : prescriptDrug.getRemoteFacilityName()%></td>
-            <%
-}
-            %>
+            <%}%>
         </tr>
-        <%
-}
-        %>
+        <%}%>
     </table>
 
 </div>
