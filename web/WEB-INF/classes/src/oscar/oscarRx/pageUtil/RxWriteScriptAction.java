@@ -705,7 +705,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             throws IOException, ServletException {
         p("=============Start getAllRandomId RxWriteScriptAction.java===============");
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-        int[] arRand = new int[bean.getStashSize()];
+        long[] arRand = new long[bean.getStashSize()];
         RxPrescriptionData.Prescription[] preAr = bean.getStash();
         int i = 0;
         for (RxPrescriptionData.Prescription p : preAr) {
@@ -1333,7 +1333,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     //       p("here5");
                     //       p(rx.getGenericName());
                     rx.setBrandName(rx.getGenericName());
-                    Long rand = Math.round(Math.random() * 1000000);
+                    Long rand = Math.round(Math.random() * 1000000);                    
                     rx.setRegionalIdentifier(Long.toString(rand));
                     rx.setAtcCode(Long.toString(rand + 1));
                     System.out.println("----"+rx.toString());
