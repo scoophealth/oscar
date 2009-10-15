@@ -37,10 +37,14 @@
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 	<input type="hidden" name="signature_status" id="signature_status" value="NOT_FOUND"/>
 	<div style="font-weight:bold">Client consent</div>
-	<table style="background-color:#ccccff">
+	<table style="background-color:#ddddff">
 		<tr>
 			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /></td>
-			<td>
+			<%
+				String tempColour="black";
+				if (manageConsent.disableEdit() && !manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)) tempColour="grey";
+			%>
+			<td style="color:<%=tempColour%>">
 				I understand the purpose of CAISI, and the benefits and risks associated with consenting to integrate my personal information, including personal health information, among the participating CAISI integrating agencies. I consent to the integration of my information for the purposes described above.
 				<%-- removed until further notice
 					<br /><br />
@@ -76,19 +80,35 @@
 		</tr>
 		<tr>
 			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /></td>
-			<td>I do not consent to the integration of my information for the integration purposes described above.</td>
+			<%
+				tempColour="black";
+				if (manageConsent.disableEdit() && !manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REVOKED)) tempColour="grey";
+			%>
+			<td style="color:<%=tempColour%>">I do not consent to the integration of my information for the integration purposes described above.</td>
 		</tr>
 		<tr>
 			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED_CONSIDER_LATER%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED_CONSIDER_LATER)?"checked=\"on\"":""%> /></td>
-			<td>Deferred : client wishes to consider consent at a future date.</td>
+			<%
+				tempColour="black";
+				if (manageConsent.disableEdit() && !manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED_CONSIDER_LATER)) tempColour="grey";
+			%>
+			<td style="color:<%=tempColour%>">Deferred : client wishes to consider consent at a future date.</td>
 		</tr>
 		<tr>
 			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED_NOT_APPROPRIATE%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED_NOT_APPROPRIATE)?"checked=\"on\"":""%> /></td>
-			<td>Deferred : staff decided that collection of consent not appropriate at this time.</td>
+			<%
+				tempColour="black";
+				if (manageConsent.disableEdit() && !manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED_NOT_APPROPRIATE)) tempColour="grey";
+			%>
+			<td style="color:<%=tempColour%>">Deferred : staff decided that collection of consent not appropriate at this time.</td>
 		</tr>
 		<tr>
 			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /></td>
-			<td>Refused to sign : client is not interested in integration.</td>
+			<%
+				tempColour="black";
+				if (manageConsent.disableEdit() && !manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)) tempColour="grey";
+			%>
+			<td style="color:<%=tempColour%>">Refused to sign : client is not interested in integration.</td>
 		</tr>
 	</table>
 	<%--
