@@ -730,9 +730,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         MessageResources messages = getResources(request);
         p("locale=" + locale.toString());
         p("message=" + messages.toString());
-        //get randomId
 
-        // Setup variables
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         if (bean == null) {
             response.sendRedirect("error.html");
@@ -740,49 +738,39 @@ public final class RxWriteScriptAction extends DispatchAction {
         }
 
         try {
-
             RxPrescriptionData rxData = new RxPrescriptionData();
             RxDrugData drugData = new RxDrugData();
 
             // create Prescription
-            RxPrescriptionData.Prescription rx =
-                    rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
+            RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
 
             String ra = request.getParameter("randomId");
             int randomId = Integer.parseInt(ra);
             rx.setRandomId(randomId);
             String drugId = request.getParameter("drugId");
             String text = request.getParameter("text");
-            String drugName = "";
+    
             p("drugId", drugId);
             p("text", text);
 
-            if (drugId != null && drugId.startsWith("b_")) {
-                String sId = drugId.replaceAll("b_", "");
-                drugName = drugData.getGenericName(sId);
-            } else if (drugId != null && drugId.startsWith("g_")) {
-                String sId = drugId.replaceAll("g_", "");
-                drugName = text;
-            } else if (drugId != null) {
-                drugName = text;
-            }
-            String genericName = drugName;
+            //TODO: Is this to slow to do here?  It's possible to do this in ajax,  as in when this comes back launch an ajax request to fill in.
+            RxDrugData.DrugMonograph dmono = drugData.getDrug2(drugId);
+
+            String brandName = text;
             //String genericName = request.getParameter("drugName");
             String countPrescribe = request.getParameter("countPrescribe");
-            String brandName = genericName;
+
             p("BRAND = " + brandName);
-            rx.setGenericName(genericName);
+            rx.setGenericName(dmono.name); //TODO: how was this done before?
             rx.setBrandName(brandName);
 
-            //add fake regional identifier
-            Long rand = Math.round(Math.random() * 1000000);
-            String regionalIdentifier = Long.toString(rand);
-            rx.setRegionalIdentifier(regionalIdentifier);
+            rx.setRegionalIdentifier(dmono.regionalIdentifier);
             p("set regional identifier to ", rx.getRegionalIdentifier());
-            //need to add fake atc code.
-            Long ran_number = Math.round(Math.random() * 1000000);
-            String atcCode = Long.toString(ran_number);
+            String atcCode = dmono.atc;
             rx.setAtcCode(atcCode);
+            rx.setSpecial("1 OD");
+            rx.setRepeat(0);
+            rx.setQuantity("30");
             p("set atc code to ", rx.getAtcCode());
 
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
@@ -804,30 +792,13 @@ public final class RxWriteScriptAction extends DispatchAction {
             rx.setRxDate(tod);
             rx.setWrittenDate(tod);
 
-            /*
-            HashMap hm = new HashMap();
-            hm.put("genericName", rx.getGenericName());
-            hm.put("brandName", rx.getBrandName());//should be like 1-2 , min-max
-            hm.put("atcCode", rx.getAtcCode());
-            hm.put("randomId", rx.getRandomId());
-            hm.put("regionalIdentifier",regionalIdentifier);
-            JSONObject jsonObject = JSONObject.fromObject(hm);
-            p("jsonObject", jsonObject.toString());
-            response.getOutputStream().write(jsonObject.toString().getBytes());
-             */
-            request.setAttribute("genericName", rx.getGenericName());
-            request.setAttribute("brandName", rx.getBrandName());
-            request.setAttribute("atcCode", rx.getAtcCode());
-            request.setAttribute("randomId", "" + rx.getRandomId());
-            request.setAttribute("regionalIdentifier", rx.getRegionalIdentifier());
-            request.setAttribute("startDate", RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd"));
-            request.setAttribute("writtenDate", RxUtil.DateToString(rx.getWrittenDate(), "yyyy-MM-dd"));
-            //request.setAttribute("drugSearch", drugSearch);
+            List<RxPrescriptionData.Prescription> listRxDrugs=new ArrayList();
+            listRxDrugs.add(rx);
+            request.setAttribute("listRxDrugs",listRxDrugs);
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
         p("=============END createNewRx RxWriteScriptAction.java===============");
-        //return (mapping.findForward("success"));
         return (mapping.findForward("newRx"));
     }
 
@@ -1184,20 +1155,25 @@ public final class RxWriteScriptAction extends DispatchAction {
         Enumeration em = request.getParameterNames();
         List<String> randNum = new ArrayList();
         while (em.hasMoreElements()) {
-            //paramList.add(em.nextElement().toString());
-            String[] temp = null;
-            temp = em.nextElement().toString().split("_");
-            if (temp.length > 1) {
-                randNum.add(temp[1]);
+            String ele = em.nextElement().toString();
+            System.out.println("ele>"+ele);
+            paramList.add(ele);
+            if ( ele.startsWith("drugName_")){
+                String rNum = ele.substring(9);
+                System.out.println("rNum:"+rNum);
+                if(!randNum.contains(rNum)){
+                   randNum.add(rNum);
+                }
+               
             }
         }
-        p("here2");
+        p("here2 ran num size "+randNum.size());
         p("bean.getStashSize()", Integer.toString(bean.getStashSize()));
 
-            Iterator uniqueIterator = new UniqueFilterIterator(randNum.iterator());
-            while (uniqueIterator.hasNext()) {
-                String num = uniqueIterator.next().toString();
-                        p("num", num);
+            //Iterator uniqueIterator = new UniqueFilterIterator(randNum.iterator());
+            for(String num:randNum){
+           
+                p("num", num);
 
                 int stashIndex=bean.getIndexFromRx(Integer.parseInt(num));
                 p("stashIndex", Integer.toString(stashIndex));
@@ -1322,7 +1298,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                  p("here1");
+                  p("outside of the try {");
 
                 try {
                     if (!isOutsideProvider) {
@@ -1334,6 +1310,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     String special = newline + rx.getGenericName() + newline + rx.getSpecial();
                     //     p("here222");
                     rx.setSpecial(special);
+                    System.out.println("SETTING SPECIAL TOO >"+special+"<");
                     //         p("rx.getDuration()", rx.getDuration());
                     int duration;
                     if (rx.getDuration() == null || rx.getDuration().equals("")) {
@@ -1359,6 +1336,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     Long rand = Math.round(Math.random() * 1000000);
                     rx.setRegionalIdentifier(Long.toString(rand));
                     rx.setAtcCode(Long.toString(rand + 1));
+                    System.out.println("----"+rx.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
