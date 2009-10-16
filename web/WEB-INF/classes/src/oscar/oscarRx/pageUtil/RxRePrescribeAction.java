@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -213,8 +215,34 @@ public final class RxRePrescribeAction extends DispatchAction {
 
         request.setAttribute("BoxNoFillFirstLoad", "true");
 
-        //remove drug name from special
-        String special = rx.getSpecial();
+        //remove drug name from special by locating method
+       //String special = rx.getSpecial();
+         
+
+
+       String special = rx.getSpecial();
+        //remove Qty:num
+       String regex1="Qty:[0-9]*";
+        Pattern p=Pattern.compile(regex1);
+        Matcher m=p.matcher(special);
+        special=m.replaceAll("");
+        //remove Repeats:num from special
+        String regex2="Repeats:[0-9]*";
+        p=Pattern.compile(regex2);
+        m=p.matcher(special);
+        special=m.replaceAll("");
+        //remove brand name
+        String regex3=rx.getBrandName();
+        p=Pattern.compile(regex3);
+        m=p.matcher(special);
+        special=m.replaceAll(""); 
+        //remove generic name
+        String regex4=rx.getGenericName();
+        p=Pattern.compile(regex4);
+        m=p.matcher(special);
+        special=m.replaceAll("");
+
+        //assume drug name is before method and drug name is the first part of the instruction.
         if (special.indexOf("Take") != -1) {
             special = special.substring(special.indexOf("Take"));
         } else if (special.indexOf("take") != -1) {
@@ -237,8 +265,8 @@ public final class RxRePrescribeAction extends DispatchAction {
             special = special.substring(special.indexOf("Rub Well In"));
         }
 
-        //remove drug name from special
         rx.setSpecial(special);
+
         List<RxPrescriptionData.Prescription> listReRx=new ArrayList();
 
         //add rx to rx list
@@ -256,17 +284,19 @@ public final class RxRePrescribeAction extends DispatchAction {
         //   System.out.println("script_no ="+script_no);
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(), "" + beanRX.getDemographicNo(), auditStr.toString());
 
-        RxDrugData drugData = new RxDrugData();
-        p("drugs in present stash,stash size",""+beanRX.getStashSize());
+      //  RxDrugData drugData = new RxDrugData();
+        p("***drugs in present stash,stash size",""+beanRX.getStashSize());
         for (int j = 0; j < beanRX.getStashSize(); j++) {
             try {
                 RxPrescriptionData.Prescription rxTemp = beanRX.getStashItem(j);
+                p("stash index",""+j);
                 p("generic name", rxTemp.getGenericName());
                 p("special",rxTemp.getSpecial());
                 p("quantity",rxTemp.getQuantity());
                 p("repeat=" + rxTemp.getRepeat());
                 p("atccode",rxTemp.getAtcCode());
                 p("regional identifier",rxTemp.getRegionalIdentifier());
+                p("---");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -333,32 +363,52 @@ public final class RxRePrescribeAction extends DispatchAction {
 
             //give rx a random id.
             rx.setRandomId(rand);
-            //remove brand name from special
+
             String special = rx.getSpecial();
+            //remove Qty:num
+            String regex1="Qty:[0-9]*";
+            Pattern p=Pattern.compile(regex1);
+            Matcher m=p.matcher(special);
+            special=m.replaceAll("");
+            //remove Repeats:num from special
+            String regex2="Repeats:[0-9]*";
+            p=Pattern.compile(regex2);
+            m=p.matcher(special);
+            special=m.replaceAll("");
+            //remove brand name
+            String regex3=rx.getBrandName();
+            p=Pattern.compile(regex3);
+            m=p.matcher(special);
+            special=m.replaceAll("");
+            //remove generic name
+            String regex4=rx.getGenericName();
+            p=Pattern.compile(regex4);
+            m=p.matcher(special);
+            special=m.replaceAll("");
 
-            if (special.indexOf("Take") != -1) {
-                special = special.substring(special.indexOf("Take"));
-            } else if (special.indexOf("take") != -1) {
-                special = special.substring(special.indexOf("take"));
-            } else if (special.indexOf("TAKE") != -1) {
-                special = special.substring(special.indexOf("TAKE"));
-            } else if (special.indexOf("Apply") != -1) {
-                special = special.substring(special.indexOf("Apply"));
-            } else if (special.indexOf("apply") != -1) {
-                special = special.substring(special.indexOf("apply"));
-            } else if (special.indexOf("APPLY") != -1) {
-                special = special.substring(special.indexOf("APPLY"));
-            } else if (special.indexOf("Rub well in") != -1) {
-                special = special.substring(special.indexOf("Rub well in"));
-            } else if (special.indexOf("rub well in") != -1) {
-                special = special.substring(special.indexOf("rub well in"));
-            } else if (special.indexOf("RUB WELL IN") != -1) {
-                special = special.substring(special.indexOf("RUB WELL IN"));
-            } else if (special.indexOf("Rub Well In") != -1) {
-                special = special.substring(special.indexOf("Rub Well In"));
-            }
-
-            //remove the drug name from rx special.
+            //assume drug name is before method and drug name is the first part of the instruction.
+        if (special.indexOf("Take") != -1) {
+            special = special.substring(special.indexOf("Take"));
+        } else if (special.indexOf("take") != -1) {
+            special = special.substring(special.indexOf("take"));
+        } else if (special.indexOf("TAKE") != -1) {
+            special = special.substring(special.indexOf("TAKE"));
+        } else if (special.indexOf("Apply") != -1) {
+            special = special.substring(special.indexOf("Apply"));
+        } else if (special.indexOf("apply") != -1) {
+            special = special.substring(special.indexOf("apply"));
+        } else if (special.indexOf("APPLY") != -1) {
+            special = special.substring(special.indexOf("APPLY"));
+        } else if (special.indexOf("Rub well in") != -1) {
+            special = special.substring(special.indexOf("Rub well in"));
+        } else if (special.indexOf("rub well in") != -1) {
+            special = special.substring(special.indexOf("rub well in"));
+        } else if (special.indexOf("RUB WELL IN") != -1) {
+            special = special.substring(special.indexOf("RUB WELL IN"));
+        } else if (special.indexOf("Rub Well In") != -1) {
+            special = special.substring(special.indexOf("Rub Well In"));
+        }
+            
             rx.setSpecial(special);
 
             p("RxUtil.DateToString(rx.getRxDate(),", RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd"));
@@ -376,17 +426,19 @@ public final class RxRePrescribeAction extends DispatchAction {
             listLongTerm.add(rx);
         }
 
-        RxDrugData drugData = new RxDrugData();
+       // RxDrugData drugData = new RxDrugData();
         p("drugs in present stash, stash size",""+beanRX.getStashSize());
         for (int j = 0; j < beanRX.getStashSize(); j++) {
             try {
                 RxPrescriptionData.Prescription rxTemp = beanRX.getStashItem(j);
+                p("stash index",""+j);
                 p("generic name", rxTemp.getGenericName());
                 p("special",rxTemp.getSpecial());
                 p("quantity",rxTemp.getQuantity());
                 p("repeat=" + rxTemp.getRepeat());
                 p("atccode",rxTemp.getAtcCode());
                 p("regional identifier",rxTemp.getRegionalIdentifier());
+                p("---");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -816,7 +816,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         p("IN updateDrug, atc=" + rx.getAtcCode() + "; regionalIdentifier=" + rx.getRegionalIdentifier());
         String action = request.getParameter("action");
 
-        if (action != null && action.equals("parseInstructions")) {
+      //  if (action != null && action.equals("parseInstructions")) {
             System.out.println("==========***### IN parseInstruction RxWriteScriptAction.java");
             String s = request.getParameter("instruction");
             p("instruction", s);
@@ -914,6 +914,23 @@ public final class RxWriteScriptAction extends DispatchAction {
             bean.setStashItem(bean.getStashIndex(), rx);
             //   p("after bean.getStashIndex()",Integer.toString(bean.getStashIndex()));
 
+          //  RxDrugData drugData = new RxDrugData();
+        p("***drugs in present stash,stash size",""+bean.getStashSize());
+        for (int j = 0; j < bean.getStashSize(); j++) {
+            try {
+                RxPrescriptionData.Prescription rxTemp = bean.getStashItem(j);
+                p("stash index",""+j);
+                p("generic name", rxTemp.getGenericName());
+                p("special",rxTemp.getSpecial());
+                p("quantity",rxTemp.getQuantity());
+                p("repeat=" + rxTemp.getRepeat());
+                p("atccode",rxTemp.getAtcCode());
+                p("regional identifier",rxTemp.getRegionalIdentifier());
+                p("---");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
             HashMap hm = new HashMap();
 
             hm.put("method", method);
@@ -929,7 +946,9 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.getOutputStream().write(jsonObject.toString().getBytes());
             p("===================END parseInstruction RxWriteScriptAction.java======================");
             return null;
-        } else {
+        }
+
+        /*else {
             System.out.println("                                                                   ============IN updateDrug RxWriteScriptAction.java=============");
 
 
@@ -1124,8 +1143,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 
             System.out.println("==========END updateDrug RxWriteScriptAction.java==========");
             return (mapping.findForward("success"));
-        }
-    }
+        }*/
+    
 
     public ActionForward updateAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
@@ -1170,14 +1189,29 @@ public final class RxWriteScriptAction extends DispatchAction {
         p("here2 ran num size "+randNum.size());
         p("bean.getStashSize()", Integer.toString(bean.getStashSize()));
 
+        List<Integer> allIndex=new ArrayList();
+        for(int i=0;i<bean.getStashSize();i++){
+            allIndex.add(i);
+        }
+        List<Integer> existingIndex=new ArrayList();
+
             //Iterator uniqueIterator = new UniqueFilterIterator(randNum.iterator());
             for(String num:randNum){
            
                 p("num", num);
 
                 int stashIndex=bean.getIndexFromRx(Integer.parseInt(num));
+                existingIndex.add(stashIndex);
                 p("stashIndex", Integer.toString(stashIndex));
                 RxPrescriptionData.Prescription rx = bean.getStashItem(stashIndex);
+                p("***item being updated, stash index",""+stashIndex);
+                p("generic name", rx.getGenericName());
+                p("special",rx.getSpecial());
+                p("quantity",rx.getQuantity());
+                p("repeat=" + rx.getRepeat());
+                p("atccode",rx.getAtcCode());
+                p("regional identifier",rx.getRegionalIdentifier());
+                p("---");
 
                 boolean patientComplianceY = false;
                 boolean patientComplianceN = false;
@@ -1307,7 +1341,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     }
                     String newline = System.getProperty("line.separator");
                     rx.setPatientCompliance(patientComplianceY, patientComplianceN);
-                    String special = newline + rx.getGenericName() + newline + rx.getSpecial();
+                    String special =  rx.getGenericName() + newline + rx.getSpecial()+ newline + "Qty:" + rx.getQuantity() + " Repeats:" + ""+rx.getRepeat() ;
                     //     p("here222");
                     rx.setSpecial(special);
                     System.out.println("SETTING SPECIAL TOO >"+special+"<");
@@ -1352,6 +1386,22 @@ public final class RxWriteScriptAction extends DispatchAction {
             p("stash index of updated rx", Integer.toString(bean.getStashIndex()));
 
             }
+            for(Integer n:existingIndex){
+                if(allIndex.contains(n))
+                    allIndex.remove(n);
+            }
+            List<Integer> deletedIndex=allIndex;
+            //remove closed Rx from stash
+            for(Integer n: deletedIndex){
+                p("stash index of closed rx",""+n);
+                bean.removeStashItem(n);
+                p("bean.getStashIndex()",""+bean.getStashIndex());
+                p("bean.getStashSize()",""+bean.getStashSize());
+                if(bean.getStashIndex() >= bean.getStashSize()) {
+                       bean.setStashIndex(bean.getStashSize() - 1);
+                }
+            }
+
         System.out.println("***===========End of updateAllDrugs RxWriteScriptAction.java");
         return mapping.findForward("viewScript");
         }
