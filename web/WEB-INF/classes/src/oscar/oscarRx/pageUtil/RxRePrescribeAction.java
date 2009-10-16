@@ -227,7 +227,28 @@ public final class RxRePrescribeAction extends DispatchAction {
         return special;
 
     }
+    //check to see if a represcription of a med is clicked twice.
+    public boolean isUnique(oscar.oscarRx.pageUtil.RxSessionBean beanRx,RxPrescriptionData.Prescription rx){
+        boolean unique=true;
 
+        for (int j = 0; j < beanRx.getStashSize(); j++) {
+            try {
+                RxPrescriptionData.Prescription rxTemp = beanRx.getStashItem(j);
+                p("BN rx  ",rx.getBrandName());
+                p("BN in stash",rxTemp.getBrandName());
+                p("GCN  ",""+rx.getGCN_SEQNO());
+                p("GCN in stash",""+rxTemp.getGCN_SEQNO());
+                if(rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO()==rxTemp.getGCN_SEQNO()) {
+                    p("unique turning false");
+                    unique=false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(unique) p("unique is true");
+        return unique;
+    }
     public ActionForward represcribe2(ActionMapping mapping,
             ActionForm form,
             HttpServletRequest request,
@@ -273,8 +294,9 @@ public final class RxRePrescribeAction extends DispatchAction {
         List<RxPrescriptionData.Prescription> listReRx=new ArrayList();
 
         //add rx to rx list
-        listReRx.add(rx);
-        
+        if(isUnique(beanRX,rx)){
+            listReRx.add(rx);
+        }
         //save rx to stash
          p("stashIndex is", "" + beanRX.getStashIndex());
         beanRX.setStashIndex(beanRX.addStashItem(rx));
@@ -370,8 +392,14 @@ public final class RxRePrescribeAction extends DispatchAction {
 
             String spec=trimSpecial(rx);
             rx.setSpecial(spec);
-            
+
+
             p("RxUtil.DateToString(rx.getRxDate(),", RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd"));
+
+            if(isUnique(beanRX,rx)){
+                //add rx to list
+                listLongTerm.add(rx);
+            }
             p("stashIndex is", "" + beanRX.getStashIndex());
             // System.out.println("***###addStathItem called44");
             beanRX.setStashIndex(beanRX.addStashItem(rx));
@@ -382,8 +410,8 @@ public final class RxRePrescribeAction extends DispatchAction {
             p("brandName saved", rx.getBrandName());
             p("stashIndex becomes", "" + beanRX.getStashIndex());
 
-            //add rx to list
-            listLongTerm.add(rx);
+
+            
         }
 
        // RxDrugData drugData = new RxDrugData();
