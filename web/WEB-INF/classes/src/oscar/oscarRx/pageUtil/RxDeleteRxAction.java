@@ -34,39 +34,34 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
 
-public final class RxDeleteRxAction extends Action {
+public final class RxDeleteRxAction extends DispatchAction {
     
     
-    public ActionForward execute(ActionMapping mapping,
+    public ActionForward Take(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
         
-        System.out.println("===========================RxDeleteRxAction========================");
-        
+        System.out.println("===========================RxDeleteRxAction========================");        
         // Extract attributes we will need
         Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
-        
+        MessageResources messages = getResources(request);        
         // Setup variables        
         oscar.oscarRx.pageUtil.RxSessionBean bean =
-        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-                
+        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");                
         if(bean==null) {
             response.sendRedirect("error.html");
             return null;
-        }
-        
-        String ip = request.getRemoteAddr();
-        
-        
+        }        
+        String ip = request.getRemoteAddr();       
         try {
             oscar.oscarRx.data.RxPrescriptionData rxData =
             new oscar.oscarRx.data.RxPrescriptionData();
@@ -74,7 +69,6 @@ public final class RxDeleteRxAction extends Action {
             String drugList = ((RxDrugListForm)form).getDrugList();
             System.out.println("drugList="+drugList);
             String[] drugArr = drugList.split(",");
-            System.out.println("drugArr="+drugArr.toString());
             int drugId;
             int i;
             
@@ -82,22 +76,56 @@ public final class RxDeleteRxAction extends Action {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
                     System.out.println("drugId="+drugId);
-                } catch (Exception e) { break; }
-                
+                } catch (Exception e) { break; }                
                 // get original drug
-                oscar.oscarRx.data.RxPrescriptionData.Prescription rx =
-                rxData.getPrescription(drugId);
-                
+                oscar.oscarRx.data.RxPrescriptionData.Prescription rx = rxData.getPrescription(drugId);                
                 rx.Delete();
-                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugArr[i], ip,""+bean.getDemographicNo(), rx.getAuditString());
-       
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugArr[i], ip,""+bean.getDemographicNo(), rx.getAuditString());       
             }
         }
         catch (Exception e) {
             e.printStackTrace(System.out);
-        }
-        
+        }        
               System.out.println("===========================END RxDeleteRxAction========================");
          return (mapping.findForward("success"));
+    }
+
+    public ActionForward Delete2(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException, ServletException {
+
+        System.out.println("===========================Delete2 RxDeleteRxAction========================");
+        // Extract attributes we will need
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources(request);
+        // Setup variables
+        oscar.oscarRx.pageUtil.RxSessionBean bean =
+        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        if(bean==null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        String ip = request.getRemoteAddr();
+        try{
+        String deleteRxId=(request.getParameter("deleteRxId").split("_"))[1];
+
+            oscar.oscarRx.data.RxPrescriptionData rxData =
+            new oscar.oscarRx.data.RxPrescriptionData();
+
+                    System.out.println("drugId="+ deleteRxId);
+
+                // get original drug
+                oscar.oscarRx.data.RxPrescriptionData.Prescription rx = rxData.getPrescription(Integer.parseInt(deleteRxId) );
+                rx.Delete();
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, deleteRxId, ip,""+bean.getDemographicNo(), rx.getAuditString());
+
+        }
+        catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+              System.out.println("===========================END Delete2 RxDeleteRxAction========================");
+         return null;
     }
 }

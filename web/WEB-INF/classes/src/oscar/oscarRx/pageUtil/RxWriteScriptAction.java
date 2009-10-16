@@ -842,13 +842,16 @@ public final class RxWriteScriptAction extends DispatchAction {
             char durationUnit = ' ';
             boolean prn = false;
 
+            if(s.indexOf("Rub well in")!=-1){
+                method="Rub well in";
+            }
             p("array size", Integer.toString(strArray.length));
             for (int j = 0; j < strArray.length; j++) {
                 //      p(Integer.toString(j));
                 String sa = strArray[j];
                 p("sa", sa);
 
-                if (sa.equalsIgnoreCase("take") || sa.equalsIgnoreCase("apply") || sa.equalsIgnoreCase("rub well in")) {
+                if (sa.equalsIgnoreCase("take") || sa.equalsIgnoreCase("apply") ) {
                     method = sa;
                     //get number after take, use regular expression.
                     try {
@@ -920,6 +923,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             try {
                 RxPrescriptionData.Prescription rxTemp = bean.getStashItem(j);
                 p("stash index",""+j);
+                p("randomId",""+rxTemp.getRandomId());
                 p("generic name", rxTemp.getGenericName());
                 p("special",rxTemp.getSpecial());
                 p("quantity",rxTemp.getQuantity());
@@ -946,205 +950,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.getOutputStream().write(jsonObject.toString().getBytes());
             p("===================END parseInstruction RxWriteScriptAction.java======================");
             return null;
-        }
-
-        /*else {
-            System.out.println("                                                                   ============IN updateDrug RxWriteScriptAction.java=============");
-
-
-            // Extract attributes we will need
-            Enumeration em = request.getParameterNames();
-            p("attr in request");
-            while (em.hasMoreElements()) {
-                System.out.println(em.nextElement());
-            }
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
-            p("locale=" + locale.toString());
-            p("message=" + messages.toString());
-            // Setup variables            
-
-            boolean patientComplianceY = false;
-            boolean patientComplianceN = false;
-            boolean isOutsideProvider = false;
-
-
-            try {
-                em = request.getParameterNames();
-                while (em.hasMoreElements()) {
-                    String elem = (String) em.nextElement();
-                    String val = request.getParameter(elem);
-                    if (elem.startsWith("drugName_")) {
-                        rx.setGenericName(val);
-                    } else if (elem.startsWith("repeats_")) {
-
-                        if (val.equals("") || val == null) {
-                            rx.setRepeat(0);
-                        } else {
-                            rx.setRepeat(Integer.parseInt(val));
-                        }
-
-                    } else if (elem.startsWith("instructions_")) {
-                        p("instruction in updateDrugs set to", val);
-                        rx.setSpecial(val);
-                    } else if (elem.startsWith("quantity_")) {
-                        if (val.equals("") || val == null) {
-                            rx.setQuantity("0");
-                        } else {
-                            rx.setQuantity(val);
-                        }
-                    } else if (elem.startsWith("longTerm_")) {
-                        if (val.equals("on")) {
-                            rx.setLongTerm(true);
-                        } else {
-                            rx.setLongTerm(false);
-                        }
-                    } else if (elem.startsWith("lastRefillDate_")) {
-                        rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-                    } else if (elem.startsWith("outsideProviderName_")) {
-                        rx.setOutsideProviderName(val);
-                    } else if (elem.startsWith("rxDate_")) {
-                        //     p("paramName is rxDate!!");
-                        if ((val == null) || (val.equals(""))) {
-                            //p("rxDate is null");
-                            Date d = RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd");
-                            //p(RxUtil.DateToString(d));
-                            rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                        } else {
-                            rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-                        }
-                    } else if (elem.startsWith("writtenDate_")) {
-                        if (val == null || (val.equals(""))) {
-                            p("writtenDate is null");
-                            rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-                        } else {
-                            rx.setWrittenDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-                        }
-
-                    } else if (elem.startsWith("outsideProviderName_")) {
-                        rx.setOutsideProviderName(val);
-                    } else if (elem.startsWith("outsideProviderOhip_")) {
-                        if (val.equals("") || val == null) {
-                            rx.setOutsideProviderOhip("0");
-                        } else {
-                            rx.setOutsideProviderOhip(val);
-                        }
-                    } else if (elem.startsWith("rxFreq_")) {
-                        rx.setFrequencyCode(val);
-                    } else if (elem.startsWith("rxDuration_")) {
-                        if (val.equals("") || val == null || val.equals("null")) {
-                            p("duration if case");
-                            rx.setDuration("0");
-                        } else {
-                            p("druation else case");
-                            rx.setDuration(val);
-                        }
-                    } else if (elem.startsWith("rxDurationUnit_")) {
-                        rx.setDurationUnit(val);
-                    } else if (elem.startsWith("rxPRN_")) {
-                        if (val.equals("on")) {
-                            rx.setPrn(true);
-                        } else {
-                            rx.setPrn(false);
-                        }
-                    } else if (elem.startsWith("otext_")) {
-                        if (val.equals("on")) {
-                            isOutsideProvider = true;
-                        } else {
-                            isOutsideProvider = false;
-                        }
-                    } else if (elem.startsWith("pastMed_")) {
-                        if (val.equals("on")) {
-                            rx.setPastMed(true);
-                        } else {
-                            rx.setPastMed(false);
-                        }
-                    } else if (elem.startsWith("patientComplianceY_")) {
-                        if (val.equals("on")) {
-                            patientComplianceY = true;
-                        } else {
-                            patientComplianceY = false;
-                        }
-                    } else if (elem.startsWith("patientComplianceN_")) {
-                        if (val.equals("on")) {
-                            patientComplianceN = true;
-                        } else {
-                            patientComplianceN = false;
-                        }
-                    } else if (elem.startsWith("rxRoute_")) {
-                        rx.setRoute(val);
-                    } else if (elem.startsWith("rxMethod_")) {
-                        rx.setMethod(val);
-                    } else if (elem.startsWith("rxAmount_")) {
-                        p("amount here", val);
-                        if (val.equals("") || val == null) {
-                            rx.setTakeMin(0f);
-                        } else {
-                            rx.setTakeMin(Float.parseFloat(val));
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            p("here1");
-
-            try {
-                if (!isOutsideProvider) {
-                    rx.setOutsideProviderName("");
-                    rx.setOutsideProviderOhip("");
-                }
-                String newline = System.getProperty("line.separator");
-                rx.setPatientCompliance(patientComplianceY, patientComplianceN);
-                //add generic name to special
-                //  String special = newline + rx.getGenericName() + newline + rx.getSpecial();
-                //     p("here222");
-                //  rx.setSpecial(special);
-                //         p("rx.getDuration()", rx.getDuration());
-                int duration;
-                if (rx.getDuration() == null || rx.getDuration().equals("")) {
-                    duration = 0;
-                } else {
-                    duration = Integer.parseInt(rx.getDuration());
-                }
-
-                rx.setBrandName(rx.getGenericName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            String today = null;
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-
-            try {
-                today = dateFormat.format(calendar.getTime());
-                p("today's date", today);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
-            if (rx.getRxDate() == null) {
-                p("SET startdate to TODAY DATE");
-                rx.setRxDate(tod);
-            }
-            if (rx.getWrittenDate() == null) {
-                p("SET writtenDate to TODAY DATE");
-                rx.setWrittenDate(tod);
-            }
-            p("the rxDate is in updateDrug", RxUtil.DateToString(rx.getRxDate()));
-            p("duration after updated", rx.getDuration());
-            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
-            p("before bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
-            // bean.setStashIndex(bean.addStashItem(rx));
-            bean.setStashItem(bean.getStashIndex(), rx);
-            p("brand name of updated rx", rx.getBrandName());
-            p("stash index of updated rx", Integer.toString(bean.getStashIndex()));
-
-            System.out.println("==========END updateDrug RxWriteScriptAction.java==========");
-            return (mapping.findForward("success"));
-        }*/
-    
+        }         
 
     public ActionForward updateAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
@@ -1205,6 +1011,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 p("stashIndex", Integer.toString(stashIndex));
                 RxPrescriptionData.Prescription rx = bean.getStashItem(stashIndex);
                 p("***item being updated, stash index",""+stashIndex);
+                p("randomId",""+rx.getRandomId());
                 p("generic name", rx.getGenericName());
                 p("special",rx.getSpecial());
                 p("quantity",rx.getQuantity());

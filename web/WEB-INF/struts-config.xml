@@ -650,10 +650,12 @@
             <forward name="represcribe" path="/oscarRx/prescribe.jsp" />
         </action>
 
-        <action input="/oscarRx/SearchDrug.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
+        <action input="/oscarRx/SearchDrug.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
         </action>
-         <action input="/oscarRx/SearchDrug2.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
+        <action input="/oscarRx/SearchDrug3.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
+        </action>
+         <action input="/oscarRx/SearchDrug2.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
         </action>
         <action input="/oscarRx/ViewScript.jsp" name="RxClearPendingForm" path="/oscarRx/clearPending" scope="request" type="oscar.oscarRx.pageUtil.RxClearPendingAction">

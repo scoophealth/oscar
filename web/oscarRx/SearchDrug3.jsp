@@ -498,6 +498,36 @@ body {
             document.forms[2].submit();
         }
     }
+
+   function Delete2(element){
+        oscarLog(element.id);
+
+        if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
+             var id_str=(element.id).split("_");
+             var id=id_str[1];
+             //var id=element.id;
+             var rxDate="rxDate_"+ id;
+             var reRx="reRx_"+ id;
+             var del="del_"+ id;
+             var discont="discont_"+ id;
+             var prescrip="prescrip_"+id;
+
+           //  oscarLog(document.getElementsByName(caonima)[0]);
+           //  oscarLog(document.getElementById(id));
+             var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?method=Delete2"  ;
+             var data="deleteRxId="+element.id;
+            new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){  
+                  oscarLog("here");
+                  $(rxDate).style.textDecoration='line-through';
+                  $(reRx).style.textDecoration='line-through';
+                  $(del).style.textDecoration='line-through';
+                  $(discont).style.textDecoration='line-through';
+                  $(prescrip).style.textDecoration='line-through';
+                  oscarLog("here2");
+            }});
+        }
+        return false;
+    }
 //represcribe long term meds
     function RePrescribeLongTerm(){
         //var longTermDrugs=$(longTermDrugList).value;
@@ -678,8 +708,8 @@ function upElement(li){
     }
     
 YAHOO.example.BasicRemote = function() {
-    var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
-    //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8084/drugref2/test4.jsp");
+    //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
+    var oDS = new YAHOO.util.XHRDataSource("http://localhost:8084/drugref2/test4.jsp");
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
     // Define the schema of the delimited results
     oDS.responseSchema = {

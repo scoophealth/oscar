@@ -126,13 +126,13 @@
                 styleColor = getStyleColour( prescriptDrug, now, month);
         %>
         <tr>
-            <td valign="top"><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
+            <td valign="top"><a id="rxDate_<%=prescriptDrug.getLocalDrugId()%>"   <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
             <td><%=prescriptDrug.isLongTerm()%> </td>
-            <td><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getDrug_special()).replaceAll(";", " ")%>
+            <td><a id="prescrip_<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getDrug_special()).replaceAll(";", " ")%>
                 </a></td>
             <td width="75px" align="center">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                <a name="rePrescribe" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
+                <a name="rePrescribe" id="reRx_<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
                 <%} else {%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
                     <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
@@ -143,12 +143,11 @@
             </td>
             <td width="75px" align="center">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                   <%System.out.println("drugId in SearchDrug2.jsp=" + prescriptDrug.getLocalDrugId());%>
-                   <a name="delete" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void()" onclick="Delete(this);"><%="Delete"%></a>
+                   <a id="del_<%=prescriptDrug.getLocalDrugId()%>" name="delete" <%=styleColor%> href="javascript:void()" onclick="Delete2(this);"><%="Delete"%></a>
                 <%}%>
             </td>
             <td width="75px" align="center">
-                <a href="javascript:void(0);" <%=styleColor%> >Discontinue</a>
+                <a id="discont_<%=prescriptDrug.getLocalDrugId()%>" href="javascript:void(0);" <%=styleColor%> >Discontinue</a>
             </td>
 
             <td width="20px" align="center">
