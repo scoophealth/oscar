@@ -99,7 +99,7 @@
 
             long now = System.currentTimeMillis();
             long month = 1000L * 60L * 60L * 24L * 30L;
-//List listLongTermMed = new ArrayList();
+            
             for (PrescriptDrug prescriptDrug : prescriptDrugs) {
                 String styleColor = "";
 
@@ -111,17 +111,19 @@
                         continue;
                     }
                 }
-//add all long term med drugIds to an array.
-
-                if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-                    styleColor = "style=\"color:red;text-decoration: line-through;\"";
-                } else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - now <= month)) {
-                    styleColor = "style=\"color:orange;font-weight:bold;\"";
-                } else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived()) {
-                    styleColor = "style=\"color:red;\"";
-                } else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-                    styleColor = "style=\"text-decoration: line-through;\"";
+                if (request.getParameter("longTermOnly") != null && request.getParameter("longTermOnly").equals("true")){
+                    if (!prescriptDrug.isLongTerm()){
+                      continue;
+                    }
                 }
+
+                if (request.getParameter("longTermOnly") != null && request.getParameter("longTermOnly").equals("acute")){
+                    if (prescriptDrug.isLongTerm()){
+                      continue;
+                    }
+                }
+//add all long term med drugIds to an array.
+                styleColor = getStyleColour( prescriptDrug, now, month);
         %>
         <tr>
             <td valign="top"><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
@@ -134,19 +136,7 @@
                 <%} else {%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
                     <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
-                    <%
-                    String searchString = prescriptDrug.getBN();
-                    if (searchString == null) {
-                        searchString = prescriptDrug.getCustomName();
-                    }
-                    if (searchString == null) {
-                        searchString = prescriptDrug.getRegionalIdentifier();
-                    }
-                    if (searchString == null) {
-                        searchString = prescriptDrug.getDrug_special();
-                    }
-                    %>
-                    <input type="hidden" name="searchString" value="<%=searchString%>" />
+                    <input type="hidden" name="searchString" value="<%=getName(prescriptDrug)%>" />
                     <input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />
                 </form>
                 <%}%>
@@ -158,7 +148,7 @@
                 <%}%>
             </td>
             <td width="75px" align="center">
-                <a href="javascript:void(0);"  <%=styleColor%> >Discontinue</a>
+                <a href="javascript:void(0);" <%=styleColor%> >Discontinue</a>
             </td>
 
             <td width="20px" align="center">
@@ -172,3 +162,37 @@
     </table>
 
 </div>
+        <br>
+<%!
+
+String getName(PrescriptDrug prescriptDrug){
+    String searchString = prescriptDrug.getBN();
+    if (searchString == null) {
+        searchString = prescriptDrug.getCustomName();
+    }
+    if (searchString == null) {
+        searchString = prescriptDrug.getRegionalIdentifier();
+    }
+    if (searchString == null) {
+        searchString = prescriptDrug.getDrug_special();
+    }
+    return searchString;
+}
+
+
+    String getStyleColour(PrescriptDrug prescriptDrug, long referenceTime, long durationToSoon){
+        String styleColor = "";
+        
+
+        if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
+                    styleColor = "style=\"color:red;text-decoration: line-through;\"";
+        } else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - referenceTime <= durationToSoon)) {  // ref = now and duration will be a month
+            styleColor = "style=\"color:orange;font-weight:bold;\"";
+        } else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived()) {
+            styleColor = "style=\"color:red;\"";
+        } else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
+            styleColor = "style=\"text-decoration: line-through;\"";
+        }
+        return styleColor;
+    }
+%>
