@@ -313,17 +313,19 @@ if (pId==null) pId="";
 		</tr>
 
 		<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" type="org.oscarehr.casemgmt.web.CheckBoxBean">
-			<tr bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>"
-				align="center">
-				<%String submitString = "this.form.method.value='issueChange';";
-						submitString = submitString + "this.form.lineId.value=" + "'"
-					+ ind.intValue() + "';" + "this.form.submit();";
+			<%String submitString = "this.form.method.value='issueChange';";
+					submitString = submitString + "this.form.lineId.value=" + "'"
+				+ ind.intValue() + "';" + "this.form.submit();";
 
-				org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
-				boolean writeAccess = cbb.getIssueDisplay().isWriteAccess();
-				boolean disabled = !"local".equals(cbb.getIssueDisplay().location) ? true : !writeAccess;
-				boolean checkBoxDisabled=!"local".equals(cbb.getIssueDisplay().location)? false : disabled;
-				%>
+			org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
+			boolean writeAccess = cbb.getIssueDisplay().isWriteAccess();
+			boolean disabled = !"local".equals(cbb.getIssueDisplay().location) ? true : !writeAccess;
+			boolean checkBoxDisabled=!"local".equals(cbb.getIssueDisplay().location)? false : disabled;
+			boolean resolved="resolved".equals(cbb.getIssueDisplay().resolved);
+			%>
+
+			<tr <%=resolved?"name=\"resolvedRow\"":""%> bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>"
+				align="center">
 				<td>
 					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=checkBoxDisabled%>"></nested:checkbox>
 				</td>
@@ -387,6 +389,37 @@ else{%>
 
 	</table>
 	<br>
+	<br>
+	<input id="showResolved" type="button" value="Show Resolved Issues" onclick="showResolvedIssues()" />
+	<input id="hideResolved" type="button" value="Hide Resolved Issues" onclick="hideResolvedIssues()" />
+	<script type="text/javascript">
+		function showResolvedIssues()
+		{
+			var resolvedRows=document.getElementsByName("resolvedRow");
+			for (var i=0; i<resolvedRows.length; i++)
+			{
+				resolvedRows[i].style.display="";
+			}
+			
+			document.getElementById("showResolved").style.display="none";
+			document.getElementById("hideResolved").style.display="inline";
+		}
+		
+		function hideResolvedIssues()
+		{
+			var resolvedRows=document.getElementsByName("resolvedRow");
+			for (var i=0; i<resolvedRows.length; i++)
+			{
+				resolvedRows[i].style.display="none";
+			}
+			
+			document.getElementById("showResolved").style.display="inline";
+			document.getElementById("hideResolved").style.display="none";
+		}
+
+		// default
+		hideResolvedIssues();
+	</script>	
 	<br>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="w">
 		<nested:submit value="add new issue" onclick="this.form.method.value='addNewIssue';" />
