@@ -45,8 +45,8 @@ import com.quatro.model.security.Secrole;
 
 public class CaseManagementIssue extends BaseObject {
 
-	private static ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
-	private static ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
+	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
+	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
 	private static TimeClearedHashMap<String, Boolean> writeAccessCache=new TimeClearedHashMap<String, Boolean>(DateUtils.MILLIS_PER_MINUTE, DateUtils.MILLIS_PER_MINUTE);
 	
 	protected Long id;
