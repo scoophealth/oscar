@@ -124,14 +124,10 @@ if (hasSig){
    doctorName = (provider.getFirstName() + ' ' + provider.getSurname());System.out.println("in else doctorName="+doctorName);
 }
 
-
-
-//<<<<<<< Preview.jsp
 doctorName = doctorName.replaceAll("\\d{6}","");
 doctorName = doctorName.replaceAll("\\-","");System.out.println("doctorName="+doctorName);
-//=======
-//>>>>>>> 1.27
-//OscarProperties props = OscarProperties.getInstance();
+
+OscarProperties props = OscarProperties.getInstance();
 
 String pracNo = provider.getPractitionerNo();
 System.out.println("pracNo="+pracNo);
