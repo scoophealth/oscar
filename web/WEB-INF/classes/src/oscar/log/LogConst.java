@@ -14,6 +14,7 @@ public class LogConst {
     public static final String ADD = "add";
     public static final String UPDATE = "update";
     public static final String DELETE = "delete";
+    public static final String DISCONTINUE = "discontinue";
     public static final String ARCHIVE = "archive";
     public static final String REPRINT = "reprint";
     public static final String REVIEWED = "reviewed";
