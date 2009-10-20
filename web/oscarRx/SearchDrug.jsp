@@ -508,7 +508,7 @@ function load() {
                                 }
 
                                 function Delete(){
-                                    alert("delete called");
+                                    
                                     if(document.getElementsByName('chkDelete')!=null){
                                         var checks = document.getElementsByName('chkDelete');
                                         var s='';
@@ -519,7 +519,7 @@ function load() {
                                                 s += checks[i].getAttribute("drugId") + ',';
                                             }
                                         }
-                                        alert(s);
+                                    
                                         if(s.length>1){
                                             if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
                                                 s = s.substring(0, s.length - 1);                                               
