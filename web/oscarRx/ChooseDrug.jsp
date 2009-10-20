@@ -16,7 +16,7 @@
         <logic:redirect href="error.html" />
     </logic:equal>
 </logic:present>
-
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 
 <!--  
@@ -49,7 +49,7 @@
 <head>
 <title><bean:message key="ChooseDrug.title.DrugSearchResults"/></title>
 <html:base/>
-
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
 
 
 <%
@@ -97,6 +97,11 @@ for (int j=0; j<selRoute.length; j++) {
     
 </script>
 <script type="text/javascript">
+
+    function setDrugRx2(drugId,drugName){
+        window.opener.setSearchedDrug(drugId,drugName);
+        window.close();
+    }
 
     function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
       var page = varpage;
@@ -265,10 +270,14 @@ for (int j=0; j<selRoute.length; j++) {
                                        //System.out.println("t.pKey in choosedrug.jsp="+t.pKey);
                                     %>
                                     <tr>                                    
-                                      <td bgcolor="<%=bgColor%>">                                        
-                                        <a href="chooseDrug.do?BN=<%=java.net.URLEncoder.encode(brandName )%>&drugId=<%= response.encodeURL(t.pKey) %>&demographicNo=<%= response.encodeURL(demoNo) %>" title="<%=brandName %>" >
-                                        <%=brandName%> 
-                                        </a>                                             
+                                      <td bgcolor="<%=bgColor%>">
+                                          <%if(request.getParameter("rx2") != null && request.getParameter("rx2").equals("true")){%>
+                                            <a href="javascript: void(0);" onclick="setDrugRx2('<%=t.pKey%>','<%=brandName %>')" >
+                                          <%}else{%>
+                                            <a href="chooseDrug.do?BN=<%=java.net.URLEncoder.encode(brandName )%>&drugId=<%= response.encodeURL(t.pKey) %>&demographicNo=<%= response.encodeURL(demoNo) %>" title="<%=brandName %>" >
+                                          <%}%>
+                                            <%=brandName%>
+                                            </a>
                                         <span>&nbsp;&nbsp;(<a href="javascript:ShowDrugInfoBN('<%=response.encodeURL(t.pKey) %>');"><bean:message key="ChooseDrug.msgInfo"/></a>)</span>
                                       </td>
                                     </tr>
