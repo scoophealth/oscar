@@ -755,7 +755,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
             //TODO: Is this to slow to do here?  It's possible to do this in ajax,  as in when this comes back launch an ajax request to fill in.
             RxDrugData.DrugMonograph dmono = drugData.getDrug2(drugId);
-
+            
             String brandName = text;
             //String genericName = request.getParameter("drugName");
             String countPrescribe = request.getParameter("countPrescribe");
@@ -763,7 +763,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             p("BRAND = " + brandName);
             rx.setGenericName(dmono.name); //TODO: how was this done before?
             rx.setBrandName(brandName);
-
+            rx.setGCN_SEQNO(Integer.parseInt(drugId));
             rx.setRegionalIdentifier(dmono.regionalIdentifier);
             p("set regional identifier to ", rx.getRegionalIdentifier());
             String atcCode = dmono.atc;
@@ -988,8 +988,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 System.out.println("rNum:"+rNum);
                 if(!randNum.contains(rNum)){
                    randNum.add(rNum);
-                }
-               
+                } 
             }
         }
         p("here2 ran num size "+randNum.size());
