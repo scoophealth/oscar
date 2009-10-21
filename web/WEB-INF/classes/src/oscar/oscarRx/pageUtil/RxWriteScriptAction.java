@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -338,189 +339,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         System.out.println("***===========End of saveDrug RxWriteScriptAction.java");
         return mapping.findForward("viewScript");
-
-        /*   while (uniqueIterator.hasNext()) {
-        String num = uniqueIterator.next().toString();
-        //        p("num", num);
-        //get the val of params and save them.
-        //        p("bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
-        RxDrugData drugData = new RxDrugData();
-
-        RxPrescriptionData rxData = new RxPrescriptionData();
-        RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
-
-        RxPrescriptionData prescription = new RxPrescriptionData();
-        boolean patientComplianceY = false;
-        boolean patientComplianceN = false;
-        boolean isOutsideProvider = false;
-        try {
-        em = request.getParameterNames();
-        while (em.hasMoreElements()) {
-        String elem = (String) em.nextElement();
-        String val = request.getParameter(elem);
-        //     System.out.println("paramName=" + elem + ", value=" + val);
-        if (elem.startsWith("drugName_" + num)) {
-        rx.setGenericName(val);
-        } else if (elem.equals("repeats_" + num)) {
-
-        if (val.equals("")|| val==null) {
-        rx.setRepeat(0);
-        } else {
-        rx.setRepeat(Integer.parseInt(val));
-        }
-
-        } else if (elem.startsWith("instructions_" + num)) {
-        rx.setSpecial(val);
-        } else if (elem.equals("quantity_" + num)) {
-        if(val.equals("")||val==null){
-        rx.setQuantity("0");
-        }
-        else {rx.setQuantity(val);}
-        } else if (elem.equals("longTerm_" + num)) {
-        if (val.equals("on")) {
-        rx.setLongTerm(true);
-        } else {
-        rx.setLongTerm(false);
-        }
-        } else if (elem.equals("lastRefillDate_" + num)) {
-        rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-        } else if (elem.equals("outsideProviderName_" + num)) {
-        rx.setOutsideProviderName(val);
-        } else if (elem.equals("rxDate_" + num)) {
-        //     p("paramName is rxDate!!");
-        if ((val == null) || (val.equals(""))) {
-        //p("rxDate is null");
-        Date d = RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd");
-        //p(RxUtil.DateToString(d));
-        rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-        } else {
-        rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-        }
-        } else if (elem.equals("writtenDate_" + num)) {
-        if (val == null || (val.equals(""))) {
-        p("writtenDate is null");
-        rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
-        } else {
-        rx.setWrittenDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-        }
-
-        } else if (elem.equals("outsideProviderName_" + num)) {
-        rx.setOutsideProviderName(val);
-        } else if (elem.equals("outsideProviderOhip_" + num)) {
-        if(val.equals("")||val==null){
-        rx.setOutsideProviderOhip("0");
-        }
-        else {rx.setOutsideProviderOhip(val);}
-        } else if (elem.equals("rxFreq_" + num)) {
-        rx.setFrequencyCode(val);
-        } else if (elem.equals("rxDuration_" + num)) {
-        if(val.equals("")||val==null){
-        rx.setDuration("0");
-        }
-        else {rx.setDuration(val);}
-        } else if (elem.equals("rxDurationUnit_" + num)) {
-        rx.setDurationUnit(val);
-        } else if (elem.equals("rxPRN_" + num)) {
-        if (val.equals("on")) {
-        rx.setPrn(true);
-        } else {
-        rx.setPrn(false);
-        }
-        } else if (elem.equals("otext_" + num)) {
-        if (val.equals("on")) {
-        isOutsideProvider = true;
-        } else {
-        isOutsideProvider = false;
-        }
-        } else if (elem.equals("pastMed_" + num)) {
-        if (val.equals("on")) {
-        rx.setPastMed(true);
-        } else {
-        rx.setPastMed(false);
-        }
-        } else if (elem.equals("patientComplianceY_" + num)) {
-        if (val.equals("on")) {
-        patientComplianceY = true;
-        } else {
-        patientComplianceY = false;
-        }
-        } else if (elem.equals("patientComplianceN_" + num)) {
-        if (val.equals("on")) {
-        patientComplianceN = true;
-        } else {
-        patientComplianceN = false;
-        }
-        } else if (elem.equals("rxRoute_" + num)) {
-        rx.setRoute(val);
-        } else if (elem.equals("rxMethod_" + num)) {
-        rx.setMethod(val);
-        } else if (elem.equals("rxAmount_" + num)) {
-        p("amount here", val);
-        if (val.equals("") || val == null) {
-        rx.setTakeMin(0f);
-        } else {
-        rx.setTakeMin(Float.parseFloat(val));
-        }
-        }
-        }
-        } catch (Exception e) {
-        e.printStackTrace();
-        }
-        //  p("here1");
-
-        try {
-        if (!isOutsideProvider) {
-        rx.setOutsideProviderName("");
-        rx.setOutsideProviderOhip("");
-        }
-        String newline = System.getProperty("line.separator");
-        rx.setPatientCompliance(patientComplianceY, patientComplianceN);
-        String special = newline+rx.getGenericName() + newline + rx.getSpecial();
-        //     p("here222");
-        rx.setSpecial(special);
-        //         p("rx.getDuration()", rx.getDuration());
-        int duration;
-        if (rx.getDuration() == null || rx.getDuration().equals("")) {
-        duration = 0;
-        } else {
-        duration = Integer.parseInt(rx.getDuration());
-        }
-
-        //       p("here1111");
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(rx.getRxDate());
-        DateFormat ft = new SimpleDateFormat("yyyy/MM/dd");
-        //       p("cal", ft.format(cal.getTime()));
-        cal.add(Calendar.DATE, duration);
-        String end = ft.format(cal.getTime());
-        //       p("after addition", end);
-        Date endDate = (Date) ft.parse(end);
-        //       p("freqcode as", rx.getFrequencyCode());
-        //       p("here2");
-        //       p("here5");
-        //       p(rx.getGenericName());
-        rx.setBrandName(rx.getGenericName());
-        Long rand=Math.round(Math.random()*1000000);
-        rx.setRegionalIdentifier(Long.toString(rand));
-        rx.setAtcCode(Long.toString(rand+1));
-        } catch (Exception e) {
-        e.printStackTrace();
-        }
-        String scriptId = prescription.saveScript(bean);
-        //      System.out.println("*** before rx.Save(" + scriptId.toString() + ")");
-
-        try {
-        rx.Save(scriptId);
-        } catch (NullPointerException e) {
-        e.printStackTrace();
-        }
-        }*/
-
-
-
-        //     System.out.println("==========***### end of saveDrug RxWriteScriptAction.java");
-
-    }
+   }
 
     public ActionForward parseInstruction(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
@@ -758,11 +577,45 @@ public final class RxWriteScriptAction extends DispatchAction {
             
             String brandName = text;
             //String genericName = request.getParameter("drugName");
-            String countPrescribe = request.getParameter("countPrescribe");
 
             p("BRAND = " + brandName);
             rx.setGenericName(dmono.name); //TODO: how was this done before?
             rx.setBrandName(brandName);
+
+            rx.setDrugForm(dmono.drugForm);
+
+            //TO DO: cache the most used route from the drugs table.
+            //for now, check to see if ORAL present, if yes use that, if not use the first one.
+            boolean oral=false;
+            for(int i=0;i<dmono.route.size();i++){
+                if(((String)dmono.route.get(i)).equalsIgnoreCase("ORAL"))
+                    oral=true;
+            }
+            if(oral)
+                rx.setRoute("ORAL");
+            else
+                rx.setRoute((String)dmono.route.get(0));
+
+            //if user specified route in instructions, it'll be changed to the one specified.
+            String dosage="";
+            String unit="";
+            Vector comps=(Vector)dmono.components;
+            for (int i=0;i<comps.size();i++){
+                RxDrugData.DrugMonograph.DrugComponent drugComp=(RxDrugData.DrugMonograph.DrugComponent)comps.get(i);
+                String strength=drugComp.strength;
+                unit=drugComp.unit;
+                dosage=dosage+" "+strength+" "+unit;//get drug dosage from strength and unit.
+            }
+
+            rx.setDosage(dosage);
+            rx.setUnit(unit);
+            
+            p("set drug form to ",rx.getDrugForm());
+            p("set dosage to ",rx.getDosage());
+            p("set unit to ",rx.getUnit());
+            p("set route to ",rx.getRoute());
+
+
             rx.setGCN_SEQNO(Integer.parseInt(drugId));
             rx.setRegionalIdentifier(dmono.regionalIdentifier);
             p("set regional identifier to ", rx.getRegionalIdentifier());
@@ -777,7 +630,6 @@ public final class RxWriteScriptAction extends DispatchAction {
             bean.setStashIndex(bean.addStashItem(rx));
             p("brandName of rx", rx.getBrandName());
             p("stash index it's set to", "" + bean.getStashIndex());
-            p("countPrescribe", countPrescribe);
 
             String today = null;
             Calendar calendar = Calendar.getInstance();
@@ -818,98 +670,17 @@ public final class RxWriteScriptAction extends DispatchAction {
 
       //  if (action != null && action.equals("parseInstructions")) {
             System.out.println("==========***### IN parseInstruction RxWriteScriptAction.java");
-            String s = request.getParameter("instruction");
-            p("instruction", s);
+            String instructions = request.getParameter("instruction");
+            p("instruction", instructions);
             Enumeration emm = request.getParameterNames();
             while (emm.hasMoreElements()) {
                 p("request attribute=" + emm.nextElement().toString());
             }
-            StringTokenizer st = new StringTokenizer(s);
-            String[] strArray = new String[st.countTokens()];
-            //    p(Integer.toString(st.countTokens()));
-            int i = 0;
-            while (st.hasMoreTokens()) {
-                String str = st.nextToken();
-                strArray[i] = str;
-                i++;
-            }
-            String amount = "0";
-            String route = "";
-            String frequency = "";
-            String form = "";
-            String duration = "0";
-            String method = "";
-            char durationUnit = ' ';
-            boolean prn = false;
 
-            if(s.indexOf("Rub well in")!=-1){
-                method="Rub well in";
-            }
-            p("array size", Integer.toString(strArray.length));
-            for (int j = 0; j < strArray.length; j++) {
-                //      p(Integer.toString(j));
-                String sa = strArray[j];
-                p("sa", sa);
+            HashMap retHm=RxUtil.instrucParser(instructions, rx);
 
-                if (sa.equalsIgnoreCase("take") || sa.equalsIgnoreCase("apply") ) {
-                    method = sa;
-                    //get number after take, use regular expression.
-                    try {
-                        int n = Integer.parseInt(strArray[j + 1]);
-                        amount = Integer.toString(n);
-                    } catch (NumberFormatException e) {
-                        //get the number from the string.
-                    }
-                } else if (sa.equalsIgnoreCase("PO") || sa.equalsIgnoreCase("SL") || sa.equalsIgnoreCase("IM") ||
-                        sa.equalsIgnoreCase("TOP.") || sa.equalsIgnoreCase("PATCH") || sa.equalsIgnoreCase("SC") ||
-                        sa.equalsIgnoreCase("INH") || sa.equalsIgnoreCase("SUPP") || sa.equalsIgnoreCase("O.D.") ||
-                        sa.equalsIgnoreCase("O.S.") || sa.equalsIgnoreCase("O.U.")) //PO|SL|IM|SC|PATCH|TOP.|INH|SUPP|O.D.|O.S.|O.U.
-                {
-                    route = sa;
-                } else if (sa.equalsIgnoreCase("OD") || sa.equalsIgnoreCase("BID") || sa.equalsIgnoreCase("TID") || sa.equalsIgnoreCase("QID") ||
-                        sa.equalsIgnoreCase("Q1H") || sa.equalsIgnoreCase("Q2H") || sa.equalsIgnoreCase("Q1-2H") || sa.equalsIgnoreCase("Q3-4H") ||
-                        sa.equalsIgnoreCase("Q4H") || sa.equalsIgnoreCase("Q4-6H") || sa.equalsIgnoreCase("Q6H") || sa.equalsIgnoreCase("Q8H") ||
-                        sa.equalsIgnoreCase("Q12H") || sa.equalsIgnoreCase("QAM") || sa.equalsIgnoreCase("QPM") || sa.equalsIgnoreCase("QHS") ||
-                        sa.equalsIgnoreCase("Q1Week") || sa.equalsIgnoreCase("Q2Week") || sa.equalsIgnoreCase("Q1Month") || sa.equalsIgnoreCase("Q3Month")) //(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)
-                {
-                    frequency = sa;
-                } else if (sa.equalsIgnoreCase("PRN")) {
-                    prn = true;
-                } else if (sa.equalsIgnoreCase("days") || sa.equalsIgnoreCase("weeks") || sa.equalsIgnoreCase("months")) {
-                    char[] cArray = sa.toCharArray();
-                    durationUnit = Character.toUpperCase(cArray[0]);
-                    duration = strArray[j - 1];
-                } else if (sa.indexOf("Days") != -1) {
-                    int n = sa.indexOf("Days");
-                    durationUnit = 'D';
-                    duration = sa.substring(0, n);
-                } else if (sa.indexOf("Weeks") != -1) {
-                    int n = sa.indexOf("Weeks");
-                    durationUnit = 'W';
-                    duration = sa.substring(0, n);
-                } else if (sa.indexOf("Months") != -1) {
-                    int n = sa.indexOf("Months");
-                    durationUnit = 'M';
-                    duration = sa.substring(0, n);
-                }
-            }
-            p("here");
-            int calQuantity = 0;
-            if ((durationUnit == 'd') || (durationUnit == 'D')) {
-                calQuantity = Integer.parseInt(duration) * Integer.parseInt(amount);
-            } else if (durationUnit == 'w' || durationUnit == 'W') {
-                calQuantity = Integer.parseInt(duration) * 7 * Integer.parseInt(amount);
-            } else if (durationUnit == 'm' || durationUnit == 'M') {
-                calQuantity = Integer.parseInt(duration) * 30 * Integer.parseInt(amount);
-            } //assume each month is 30 days, more complicated implementation if exact number needed.
             p("here2");
-            rx.setMethod(method);
-            rx.setTakeMin(Integer.parseInt(amount));
-            rx.setDuration(duration);
-            rx.setFrequencyCode(frequency);
-            rx.setRoute(route);
-            rx.setDurationUnit(String.valueOf(durationUnit));
-            rx.setPrn(prn);
+
             p("before updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
@@ -937,14 +708,15 @@ public final class RxWriteScriptAction extends DispatchAction {
         }
             HashMap hm = new HashMap();
 
-            hm.put("method", method);
-            hm.put("amount", amount);//should be like 1-2 , min-max
-            hm.put("duration", duration);
-            hm.put("frequency", frequency);
-            hm.put("route", route);
-            hm.put("durationUnit", durationUnit);
-            hm.put("prn", prn);
-            hm.put("calQuantity", calQuantity);
+            hm.put("method", rx.getMethod());
+            hm.put("takeMin", rx.getTakeMin());//should be like 1-2 , min-max
+            hm.put("takeMax", rx.getTakeMax());
+            hm.put("duration", rx.getDuration());
+            hm.put("frequency", rx.getFrequencyCode());
+            hm.put("route", rx.getRoute());
+            hm.put("durationUnit", rx.getDurationUnit());
+            hm.put("prn", rx.getPrn());
+            hm.put("calQuantity", rx.getQuantity());
             JSONObject jsonObject = JSONObject.fromObject(hm);
             p("jsonObject", jsonObject.toString());
             response.getOutputStream().write(jsonObject.toString().getBytes());
