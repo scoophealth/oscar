@@ -44,7 +44,7 @@ import oscar.log.LogConst;
 public final class RxDeleteRxAction extends DispatchAction {
     
     
-    public ActionForward Take(ActionMapping mapping,
+    public ActionForward method(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
