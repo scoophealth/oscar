@@ -80,10 +80,12 @@ public class RxDrugData {
               regionalIdentifier = (String) hash.get("regional_identifier");
               drugForm = (String)hash.get("drugForm");
               Vector drugRoute=(Vector)hash.get("drugRoute");
-              for (int i=0;i<drugRoute.size();i++){
-                  String r=(String)drugRoute.get(i);
-                  //System.out.println(r);
-                  route.add(r);
+              if(drugRoute!=null){
+                  for (int i=0;i<drugRoute.size();i++){
+                      String r=(String)drugRoute.get(i);
+                      //System.out.println(r);
+                      route.add(r);
+                  }
               }
               Vector comps    = (Vector) hash.get("components");
               for (int i = 0; i < comps.size(); i++){
@@ -91,10 +93,7 @@ public class RxDrugData {
                 DrugComponent comp = new DrugComponent(h);
                 components.add(comp);
               }
-
                //{name=WARFARIN SODIUM, regional_identifier=02007959, product=COUMADIN TAB 4MG, atc=808774}
-
-
       }
           
           
