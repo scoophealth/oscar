@@ -453,8 +453,8 @@ var maxYear=3100;
 								style="border-right: 0px; width: 50px;"><font
 								class="subHeading">Province:</font><br />
 							<input type="hidden" name="province" size="12"
-								value="<%=props.getProperty("province", "")%>" />
-							<center><%=props.getProperty("province", "")%>&nbsp;</center>
+								value="<%=props.getProperty("hcType", "")%>" />
+							<center><%=props.getProperty("hcType", "")%>&nbsp;</center>
 							</td>
 						</tr>
 					</table>

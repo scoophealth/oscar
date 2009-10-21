@@ -17,50 +17,49 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.SpringUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmLabReq07Record extends FrmRecord {
-    public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
+	private DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
+	
+	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String demoProvider = "000000";
-            String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS patientName, "
-                    + "sex, address, city, province, postal, hin, ver, "
-                    + "phone, year_of_birth, month_of_birth, date_of_birth, provider_no  "
-                    + "FROM demographic WHERE demographic_no = " + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
-
-            if (rs.next()) {
-                java.util.Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), db.getString(rs,"date_of_birth"));
-
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                props.setProperty("patientName", db.getString(rs,"patientName"));
-                props.setProperty("healthNumber", db.getString(rs,"hin"));
-                props.setProperty("version", db.getString(rs,"ver"));
+        	Demographic demographic=demographicDao.getDemographicById(demographicNo);
+        	
+            if (demographic!=null) {
+                props.setProperty("demographic_no", String.valueOf(demographic.getDemographicNo()));
+                props.setProperty("patientName", demographic.getLastName()+", "+ demographic.getFirstName());
+                props.setProperty("healthNumber", demographic.getHin());
+                props.setProperty("version", demographic.getVer());
+                props.setProperty("hcType", demographic.getHcType());
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
+
                 //props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                java.util.Date dob = UtilDateUtilities.calcDate(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth());
                 props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("phoneNumber", db.getString(rs,"phone"));
-                props.setProperty("patientAddress", db.getString(rs,"address"));
-                props.setProperty("patientCity", db.getString(rs,"city"));
-                props.setProperty("patientPC", db.getString(rs,"postal"));
-                props.setProperty("province", db.getString(rs,"province"));
-                props.setProperty("sex", db.getString(rs,"sex"));
-                props.setProperty("demoProvider", db.getString(rs,"provider_no"));
 
-                demoProvider = db.getString(rs,"provider_no");
+                props.setProperty("phoneNumber", demographic.getPhone());
+                props.setProperty("patientAddress", demographic.getAddress());
+                props.setProperty("patientCity", demographic.getCity());
+                props.setProperty("patientPC", demographic.getPostal());
+                props.setProperty("province", demographic.getProvince());
+                props.setProperty("sex", demographic.getSex());
+                props.setProperty("demoProvider", demographic.getProviderNo());
             }
-            rs.close();
 
             //get local clinic information
-            sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_province, clinic_postal, clinic_phone, clinic_fax FROM clinic";
-            rs = db.GetSQL(sql);
+        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_province, clinic_postal, clinic_phone, clinic_fax FROM clinic";
+            ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
             	props.setProperty("clinicName",db.getString(rs,"clinic_name"));
             	props.setProperty("clinicProvince",db.getString(rs,"clinic_province"));
