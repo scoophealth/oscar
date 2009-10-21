@@ -193,7 +193,7 @@ function hidepic(picture){
   
 function isEmpty(){  
     if (document.RxSearchDrugForm.searchString.value.length == 0){
-//	alert("Search Field is Empty in searchdrug.jsp");
+
 	document.RxSearchDrugForm.searchString.focus();
 	return false;
     }
@@ -493,13 +493,13 @@ function load() {
                                         for(i=0; i<checks.length; i++){
                                             if(checks[i].checked==true){
                                                 s += checks[i].getAttribute("drugId") + ',';
-                                              //  alert("checks="+checks+" drugId="+checks[i].getAttribute("drugId"));
+
                                             }
                                         }
 
                                         if(s.length>1){
                                             s = s.substring(0, s.length - 1);                                                                                        
-                                          //  alert(document.forms[0].name +","+ s);
+
                                             document.forms[0].drugList.value = s;
                                             document.forms[0].method.value = "represcribe";
                                             document.forms[0].submit();
@@ -508,8 +508,8 @@ function load() {
                                 }
 
                                 function Delete(){
-                                    
-                                    if(document.getElementsByName('chkDelete')!=null){
+
+                                     if(document.getElementsByName('chkDelete')!=null){
                                         var checks = document.getElementsByName('chkDelete');
                                         var s='';
                                         var i;
@@ -519,7 +519,7 @@ function load() {
                                                 s += checks[i].getAttribute("drugId") + ',';
                                             }
                                         }
-                                    
+
                                         if(s.length>1){
                                             if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
                                                 s = s.substring(0, s.length - 1);                                               
