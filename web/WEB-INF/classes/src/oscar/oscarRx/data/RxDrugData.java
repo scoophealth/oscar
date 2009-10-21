@@ -59,8 +59,10 @@ public class RxDrugData {
           public String[] common_adverse_effects; //: array of strings
           public String[] rare_adverse_effects;   //: array of strings
           public Vector dosage; //array of Dosage
-          
-          
+          public String drugForm;//drug form
+          public Vector route;//route for taking drug
+
+
           public PregnancyUse pregnancyUse;
           public LactationUse lactationUse;
           public RenalImpairment renalImpairment;
@@ -76,17 +78,22 @@ public class RxDrugData {
               atc     = (String) hash.get("atc");
               product = (String) hash.get("product");
               regionalIdentifier = (String) hash.get("regional_identifier");
+              drugForm = (String)hash.get("drugForm");
+              Vector drugRoute=(Vector)hash.get("drugRoute");
+              for (int i=0;i<drugRoute.size();i++){
+                route.add((String)drugRoute.get(i));
+              }
               Vector comps    = (Vector) hash.get("components");
               for (int i = 0; i < comps.size(); i++){
                 Hashtable h = (Hashtable) comps.get(i);
                 DrugComponent comp = new DrugComponent(h);
                 components.add(comp);
               }
-              
-              //{name=WARFARIN SODIUM, regional_identifier=02007959, product=COUMADIN TAB 4MG, atc=808774}
-              
-                
-          }
+
+               //{name=WARFARIN SODIUM, regional_identifier=02007959, product=COUMADIN TAB 4MG, atc=808774}
+
+
+      }
           
           
           class Contraindications{              
