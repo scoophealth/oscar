@@ -451,7 +451,7 @@ var maxYear=3100;
 							</td>
 							<td class="borderGrayBottomRight"
 								style="border-right: 0px; width: 50px;"><font
-								class="subHeading">Province:</font><br />
+								class="subHeading">HC Type:</font><br />
 							<input type="hidden" name="province" size="12"
 								value="<%=props.getProperty("hcType", "")%>" />
 							<center><%=props.getProperty("hcType", "")%>&nbsp;</center>
