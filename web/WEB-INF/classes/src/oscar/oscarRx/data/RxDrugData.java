@@ -60,7 +60,7 @@ public class RxDrugData {
           public String[] rare_adverse_effects;   //: array of strings
           public Vector dosage; //array of Dosage
           public String drugForm;//drug form
-          public Vector route;//route for taking drug
+          public Vector route = new Vector();//route for taking drug
 
 
           public PregnancyUse pregnancyUse;
@@ -81,7 +81,9 @@ public class RxDrugData {
               drugForm = (String)hash.get("drugForm");
               Vector drugRoute=(Vector)hash.get("drugRoute");
               for (int i=0;i<drugRoute.size();i++){
-                route.add((String)drugRoute.get(i));
+                  String r=(String)drugRoute.get(i);
+                  //System.out.println(r);
+                  route.add(r);
               }
               Vector comps    = (Vector) hash.get("components");
               for (int i = 0; i < comps.size(); i++){
