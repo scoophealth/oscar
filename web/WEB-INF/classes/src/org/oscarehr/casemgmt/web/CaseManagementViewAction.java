@@ -83,6 +83,7 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
@@ -179,6 +180,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 * Session variables : case_program_id casemgmt_DemoNo casemgmt_VlCountry casemgmt_msgBeans readonly
 	 */
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                //response.setCharacterEncoding("UTF-8");
 		long start = System.currentTimeMillis();
 		long beginning = start;
 		long current = 0;
@@ -361,7 +363,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		/* get prescriptions */
 		if (tab.equals("Prescriptions")) {
-			List<PrescriptDrug> prescriptions = null;
+			List<Drug> prescriptions = null;
 			boolean viewAll=caseForm.getPrescipt_view().equals("all");
 			String demographicId=getDemographicNo(request);
 			request.setAttribute("isIntegratorEnabled", LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled());			
@@ -1129,7 +1131,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				"&noteId=";
 		request.setAttribute("addUrl", addUrl);
                 request.setAttribute("cppIssue", cppIssues.toString());
-
+                
 		// set issueIds for retrieving history
 		request.setAttribute("issueIds", StringUtils.join(issueIds, ","));
 

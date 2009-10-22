@@ -52,8 +52,8 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.casemgmt.web.PrescriptDrug;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -164,7 +164,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		//List<PrescriptDrug> prescriptions = this.caseManagementManager.getPrescriptions(clientId,false);
 		//request.setAttribute("prescriptions",prescriptions);
 		
-		List<PrescriptDrug> prescriptions = null;
+		List<Drug> prescriptions = null;
 		boolean viewAll=true;
 
 		request.setAttribute("isIntegratorEnabled", LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled());			

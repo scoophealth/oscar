@@ -55,8 +55,8 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.casemgmt.model.Allergy;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.casemgmt.web.PrescriptDrug;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
@@ -642,10 +642,10 @@ public class SurveyExecuteAction extends DispatchAction {
         log.debug("CaisObject=" + caisiObject);
 
         if (caisiObject.equals("Current Medications")) {
-            List<PrescriptDrug> meds = cmeManager.getPrescriptions(demographic_no, true);
+            List<Drug> meds = cmeManager.getPrescriptions(demographic_no, true);
             StringBuffer str = new StringBuffer();
-            for (PrescriptDrug med : meds) {
-                str.append(med.getDrug_special().replaceAll("\r\n", " ")).append("\r\n");
+            for (Drug med : meds) {
+                str.append(med.getSpecial().replaceAll("\r\n", " ")).append("\r\n");
             }
             data.getValues().put(key, str.toString());
         } else if (caisiObject.equals("Current Issues")) {
