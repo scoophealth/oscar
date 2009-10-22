@@ -586,7 +586,7 @@
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
         </action>
         
-        <action input="/oscarRx/SearchDrug2.jsp" path="/oscarRx/WriteScript" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
+        <action input="/oscarRx/SearchDrug2.jsp" path="/oscarRx/WriteScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
             <forward name="newRx" path="/oscarRx/prescribe.jsp" />
         </action>
@@ -602,27 +602,30 @@
         <action input="/oscarRx/SearchDrug.jsp" path="/oscarRx/viewScript" scope="request" type="oscar.oscarRx.pageUtil.RxViewScriptAction">
             <forward name="viewScript" path="/oscarRx/ViewScript.jsp" />
         </action>
-        <action input="/oscarRx/WriteScript.jsp" name="RxWriteScriptForm" path="/oscarRx/writeScript" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
+        <action input="/oscarRx/WriteScript.jsp" name="RxWriteScriptForm" path="/oscarRx/writeScript" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
             <forward name="refresh" path="/oscarRx/WriteScript.jsp" />
             <forward name="addAnother" path="/oscarRx/SearchDrug.jsp" />
             <forward name="viewScript" path="/oscarRx/ViewScript.jsp" />
         </action>
-        <action input="/oscarRx/prescribe.jsp" name="RxPrescribeForm" path="/oscarRx/prescribe" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
+        <action input="/oscarRx/prescribe.jsp" name="RxPrescribeForm" path="/oscarRx/prescribe" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
             <forward name="refresh" path="/oscarRx/SearchDrug2.jsp" />
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
         </action>
-        <action input="/oscarRx/WriteScript.jsp" name="RxStashForm" path="/oscarRx/stash" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxStashAction">
+        <action input="/oscarRx/WriteScript.jsp" name="RxStashForm" path="/oscarRx/stash" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxStashAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
+        </action>
+        <action input="/oscarRx/SearchDrug3.jsp"  path="/oscarRx/rxStashDelete" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxStashAction">
         </action>
         <!--action input="/oscarRx/WriteScript.jsp" name="RxStashForm" path="/oscarRx/stash" scope="request" type="oscar.oscarRx.pageUtil.RxStashAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
         </action-->
-        <action input="/oscarRx/SearchDrug2.jsp"  path="/oscarRx/stash2" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxStashAction">
+        <action input="/oscarRx/SearchDrug2.jsp"  path="/oscarRx/stash2" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxStashAction">
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
         </action>
 
-        <action name="RxUseFavoriteForm" path="/oscarRx/useFavorite" scope="request" type="oscar.oscarRx.pageUtil.RxUseFavoriteAction">
+        <action name="RxUseFavoriteForm" path="/oscarRx/useFavorite" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxUseFavoriteAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
+            <forward name="useFav2" path="/oscarRx/prescribe.jsp" />
         </action>
         <action input="/oscarRx/StaticScript.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavoriteStaticScript" scope="request" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
             <forward name="success" path="/oscarRx/StaticScript.jsp" />
@@ -630,8 +633,10 @@
         <action input="/oscarRx/ViewScript.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavoriteViewScript" scope="request" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
             <forward name="success" path="/oscarRx/ViewScript.jsp" />
         </action>
-        <action input="/oscarRx/WriteScript.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavoriteWriteScript" scope="request" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
+        <action input="/oscarRx/WriteScript.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavoriteWriteScript" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
+        </action>
+        <action input="/oscarRx/SearchDrug3.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavorite2" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
         </action>
         <action input="/oscarRx/EditFavorites.jsp" name="RxUpdateFavoriteForm" path="/oscarRx/updateFavorite" scope="request" type="oscar.oscarRx.pageUtil.RxUpdateFavoriteAction">
             <forward name="success" path="/oscarRx/EditFavorites.jsp" />
@@ -649,7 +654,7 @@
             <forward name="represcribe" path="/oscarRx/prescribe.jsp" />
         </action>
 
-        <action input="/oscarRx/SearchDrug.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
+        <action input="/oscarRx/SearchDrug.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
         </action>
         <action input="/oscarRx/ViewScript.jsp" name="RxClearPendingForm" path="/oscarRx/clearPending" scope="request" type="oscar.oscarRx.pageUtil.RxClearPendingAction">
