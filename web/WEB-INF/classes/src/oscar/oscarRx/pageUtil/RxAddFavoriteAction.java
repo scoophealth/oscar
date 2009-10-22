@@ -31,19 +31,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 
 import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.oscarRx.util.RxUtil;
 
 
-public final class RxAddFavoriteAction extends Action {
+public final class RxAddFavoriteAction extends DispatchAction {
     
     
-    public ActionForward execute(ActionMapping mapping,
+    public ActionForward unspecified(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -87,5 +88,46 @@ public final class RxAddFavoriteAction extends Action {
         fwd = new ActionForward(s, true);
         
         return fwd;
+    }
+
+    //used with rx3
+    public ActionForward addFav2(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException, ServletException {
+        System.out.println("================Start addFav2 of RxAddFavoriteAction.java=================");
+
+        // Extract attributes we will need
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources(request);
+
+        RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        if(bean==null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        String randomId=request.getParameter("randomId");
+        String favoriteName=request.getParameter("favoriteName");
+        String drugIdStr=request.getParameter("drugId");
+        String providerNo = bean.getProviderNo();
+
+        if(drugIdStr!=null){
+            int drugId=Integer.parseInt(drugIdStr);
+            RxPrescriptionData p = new RxPrescriptionData();
+            p.getPrescription(drugId).AddToFavorites(providerNo, favoriteName);
+        }
+        else{
+            int stashId=bean.getIndexFromRx(Integer.parseInt(randomId));
+            bean.getStashItem(stashId).AddToFavorites(providerNo, favoriteName);
+        }
+       
+        /*
+        request.setAttribute("BoxNoFillFirstLoad", "true");
+        System.out.println("fill box no");
+        */
+        RxUtil.printStashContent(bean);
+        System.out.println("================END addFav2 of RxAddFavoriteAction.java=================");
+        return null;
     }
 }
