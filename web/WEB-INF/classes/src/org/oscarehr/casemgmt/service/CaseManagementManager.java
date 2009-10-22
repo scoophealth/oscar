@@ -1001,7 +1001,7 @@ public class CaseManagementManager {
 		// iterate through the issue list
 		for (CaseManagementNote cmNote : notes) {
 			String noteRole = cmNote.getReporter_caisi_role();
-			String noteRoleName = getCaisiRoleById(noteRole).toLowerCase();
+			String noteRoleName = roleManager.getRole(noteRole).getName().toLowerCase();
 			ProgramAccess pa = null;
 			boolean add = false;
 
