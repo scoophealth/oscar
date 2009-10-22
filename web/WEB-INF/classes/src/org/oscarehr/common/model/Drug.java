@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import oscar.util.UtilDateUtilities;
 
 @Entity
 @Table(name = "drugs")
@@ -48,6 +51,7 @@ public class Drug implements Serializable {
 	@Column(name = "durunit")
 	private String durUnit = null;
 	private String quantity = null;
+        @Column(name = "`repeat`")
 	private Integer repeat = 0;
 	@Column(name = "last_refill_date")
 	@Temporal(TemporalType.DATE)
@@ -57,6 +61,11 @@ public class Drug implements Serializable {
 	private boolean prn;
 	private String special = null;
 	private boolean archived;
+        @Column(name = "archived_reason")
+        private String archivedReason;
+        @Column(name ="archived_date")
+        @Temporal(TemporalType.TIMESTAMP)
+        private Date archivedDate;
 	@Column(name = "GN")
 	private String genericName = null;
 	@Column(name = "ATC")
@@ -87,6 +96,28 @@ public class Drug implements Serializable {
 	private String outsideProviderName = null;
 	@Column(name = "outside_provider_ohip")
 	private String outsideProviderOhip = null;
+        @Column(name = "hide_from_drug_profile")
+        private boolean hideFromDrugProfile ;
+
+        /////
+        @Transient
+        private String remoteFacilityName = null;
+
+        public static final String DELETED = "deleted";
+        public static final String DOSE_CHANGE  = "doseChange";
+        public static final String ADVERSE_REACTION = "adverseReaction";
+        public static final String ALLERGY = "allergy";
+        public static final String INEFFECTIVE_TREATMENT = "ineffectiveTreatment";
+        public static final String PRESCRIBING_ERROR = "prescribingError";
+        public static final String NO_LONGER_NECESSARY = "noLongerNecessary";
+        public static final String SIMPLIFYING_TREATMENT =  "simplifyingTreatment";
+        public static final String PATIENT_REQUEST = "patientRequest";
+        public static final String NEW_SCIENTIFIC_EVIDENCE = "newScientificEvidence";
+        public static final String INCREASED_RISK_BENEFIT_RATIO = "increasedRiskBenefitRatio";
+        public static final String DISCONTINUED_BY_ANOTHER_PHYSICIAN = "discontinuedByAnotherPhysician";
+        public static final String COST = "cost";
+        public static final String DRUG_INTERACTION = "drugInteraction";
+        public static final String OTHER = "other";
 
 	public String getProviderNo() {
     	return providerNo;
@@ -342,6 +373,10 @@ public class Drug implements Serializable {
     	return longTerm;
     }
 
+        public Boolean isLongTerm() {
+    	return longTerm;
+    }
+
 	public void setLongTerm(Boolean longTerm) {
     	this.longTerm = longTerm;
     }
@@ -390,6 +425,13 @@ public class Drug implements Serializable {
     	this.outsideProviderOhip = outsideProviderOhip;
     }
 
+
+    public boolean isExpired() {
+        if (endDate == null) return (false);
+
+        return ((new Date()).after(endDate));
+    }
+
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -404,4 +446,96 @@ public class Drug implements Serializable {
 	public int hashCode() {
 		return (id != null ? id.hashCode() : 0);
 	}
+
+   
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    /**
+     * @return the archivedReason
+     */
+    public String getArchivedReason() {
+        return archivedReason;
+    }
+
+    /**
+     * @param archivedReason the archivedReason to set
+     */
+    public void setArchivedReason(String archivedReason) {
+        this.archivedReason = archivedReason;
+    }
+
+    /**
+     * @return the archivedDate
+     */
+    public Date getArchivedDate() {
+        return archivedDate;
+    }
+
+    /**
+     * @param archivedDate the archivedDate to set
+     */
+    public void setArchivedDate(Date archivedDate) {
+        this.archivedDate = archivedDate;
+    }
+
+    
+
+    //EXTRA METHODS
+
+    public String getAuditString() {
+        return getFullOutLine();
+    }
+
+    public String getFullOutLine() {
+        return (getFullOutLine(getSpecial()));
+    }
+
+    public static String getFullOutLine(String special) {
+        String ret = "";
+        if (special != null) {
+            if (special.length() > 0) {
+                int i;
+                String[] arr = special.split("\n");
+                for (i = 0; i < arr.length; i++) {
+                    ret += arr[i].trim();
+                    if (i < arr.length - 1) {
+                            ret += "; ";
+                    }
+                }
+            }
+        }
+        //else {
+        //        logger.error("Drugs special field was null, this means nothing will print.", new IllegalStateException("Drugs special field was null."));
+        //}
+
+        return ret;
+    }
+
+    /**
+     * @return the remoteFacilityName
+     */
+    public String getRemoteFacilityName() {
+        return remoteFacilityName;
+    }
+
+    /**
+     * @param remoteFacilityName the remoteFacilityName to set
+     */
+    public void setRemoteFacilityName(String remoteFacilityName) {
+        this.remoteFacilityName = remoteFacilityName;
+    }
+
+
+
+    public long daysToExpire(){
+       long days =  UtilDateUtilities.getNumDays(new Date(), getEndDate());
+       if(days < 0){
+           days =0;
+       }
+       return days;
+    }
+
 }
