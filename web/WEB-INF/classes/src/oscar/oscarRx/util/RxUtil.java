@@ -561,7 +561,76 @@ System.out.println("durationUnitSpec2="+durationUnitSpec);
         System.out.println(hm);
         return hm;
     }
+    public static String trimSpecial(RxPrescriptionData.Prescription rx){
+        String special = rx.getSpecial();
+        //remove Qty:num
+       String regex1="Qty:[0-9]*";
+        Pattern p=Pattern.compile(regex1);
+        Matcher m=p.matcher(special);
+        special=m.replaceAll("");
+        //remove Repeats:num from special
+        String regex2="Repeats:[0-9]*";
+        p=Pattern.compile(regex2);
+        m=p.matcher(special);
+        special=m.replaceAll("");
+        //remove brand name
+        String regex3=rx.getBrandName();
+        p=Pattern.compile(regex3);
+        m=p.matcher(special);
+        special=m.replaceAll("");
+        //remove generic name
+        String regex4=rx.getGenericName();
+        p=Pattern.compile(regex4);
+        m=p.matcher(special);
+        special=m.replaceAll("");
 
+        //assume drug name is before method and drug name is the first part of the instruction.
+        if (special.indexOf("Take") != -1) {
+            special = special.substring(special.indexOf("Take"));
+        } else if (special.indexOf("take") != -1) {
+            special = special.substring(special.indexOf("take"));
+        } else if (special.indexOf("TAKE") != -1) {
+            special = special.substring(special.indexOf("TAKE"));
+        } else if (special.indexOf("Apply") != -1) {
+            special = special.substring(special.indexOf("Apply"));
+        } else if (special.indexOf("apply") != -1) {
+            special = special.substring(special.indexOf("apply"));
+        } else if (special.indexOf("APPLY") != -1) {
+            special = special.substring(special.indexOf("APPLY"));
+        } else if (special.indexOf("Rub well in") != -1) {
+            special = special.substring(special.indexOf("Rub well in"));
+        } else if (special.indexOf("rub well in") != -1) {
+            special = special.substring(special.indexOf("rub well in"));
+        } else if (special.indexOf("RUB WELL IN") != -1) {
+            special = special.substring(special.indexOf("RUB WELL IN"));
+        } else if (special.indexOf("Rub Well In") != -1) {
+            special = special.substring(special.indexOf("Rub Well In"));
+        }
+
+        return special;
+
+    }
+    public static void printStashContent(oscar.oscarRx.pageUtil.RxSessionBean bean){
+            p("***drugs in present stash,stash size",""+bean.getStashSize());
+        for (int j = 0; j < bean.getStashSize(); j++) {
+            try {
+                RxPrescriptionData.Prescription rxTemp = bean.getStashItem(j);
+                p("stash index",""+j);
+                p("randomId",""+rxTemp.getRandomId());
+                p("generic name", rxTemp.getGenericName());
+                p("special",rxTemp.getSpecial());
+                p("quantity",rxTemp.getQuantity());
+                p("repeat=" + rxTemp.getRepeat());
+                p("atccode",rxTemp.getAtcCode());
+                p("regional identifier",rxTemp.getRegionalIdentifier());
+                p("---");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+            p("***done***");
+
+    }
    public static void p(String str, String s) {
         System.out.println(str + "=" + s);
     }
