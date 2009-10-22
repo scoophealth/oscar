@@ -582,7 +582,7 @@
         </action>
 
 
-        <action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
+        <action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
         </action>
         
@@ -658,6 +658,9 @@
         </action>
         <action input="/oscarRx/ChooseAllergy.jsp" name="RxSearchAllergyForm" path="/oscarRx/searchAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxSearchAllergyAction">
             <forward name="success" path="/oscarRx/ChooseAllergy.jsp" />
+        </action>
+         <action input="/oscarRx/ChooseAllergy.jsp" name="RxSearchAllergyForm" path="/oscarRx/searchAllergy2" scope="request" type="oscar.oscarRx.pageUtil.RxSearchAllergyAction">
+            <forward name="success" path="/oscarRx/ChooseAllergy2.jsp" />
         </action>
         <action input="/oscarRx/ChooseAllergy.jsp" name="RxAddAllergyForm" path="/oscarRx/addAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxAddAllergyAction">
             <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
