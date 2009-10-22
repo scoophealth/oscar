@@ -45,7 +45,7 @@
 <%@page import="org.oscarehr.casemgmt.web.PrescriptDrug"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.ArrayList,oscar.util.*,java.util.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
@@ -59,48 +59,44 @@
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
-
-            oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
-            boolean showall = false;
-            if (request.getParameter("show") != null) {
-                if (request.getParameter("show").equals("all")) {
-                    showall = true;
-                }
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) pageContext.findAttribute("bean");
+        boolean showall = false;
+        if (request.getParameter("show") != null) {
+            if (request.getParameter("show").equals("all")) {
+                showall = true;
             }
+        }
 
-            boolean integratorEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
-            String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
-
-            oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
-            prescribedDrugs = patient.getPrescribedDrugScripts(); //this function only returns drugs which have an entry in prescription and drugs table
-            String script_no = "";
-
-            System.out.println("prescribed drugs " + prescribedDrugs + " BEAN " + bean);
+        boolean integratorEnabled = LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
+        String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
 <div class="drugProfileText" style="width: 100%;">
     <table width="100%" cellpadding="3">
         <tr>
             <th align="left"><b>Rx Date</b></th>
+            <th align="left"><b>Days to Exp</b></th>
             <th align="left"><b>Long Term Med</b></th>
             <th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
             <th align="center" width="75px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
             <th align="center" width="75px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
             <th align="center" width="75px"><b>Discontinue</b></th>
             <th align="center" width="20px">&nbsp;</th>
-            <%if (integratorEnabled) {%>
-            <td align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></td>
-            <%}%>
+            <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
         </tr>
 
         <%
             CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-            List<PrescriptDrug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
+            List<Drug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
+            //DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+            //List<Drug> prescriptDrugs = drugDao.getPrescriptions(""+patient.getDemographicNo(), showall);
+
+
 
             long now = System.currentTimeMillis();
             long month = 1000L * 60L * 60L * 24L * 30L;
             
-            for (PrescriptDrug prescriptDrug : prescriptDrugs) {
+            for (Drug prescriptDrug : prescriptDrugs) {
                 String styleColor = "";
 
                 if (request.getParameter("status") != null) { //TODO: Redo this in a better way
@@ -123,16 +119,17 @@
                     }
                 }
 //add all long term med drugIds to an array.
-                styleColor = getStyleColour( prescriptDrug, now, month);
+                styleColor = getClassColour( prescriptDrug, now, month);
         %>
         <tr>
-            <td valign="top"><a id="rxDate_<%=prescriptDrug.getLocalDrugId()%>"   <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
+            <td valign="top"><a id="rxDate_<%=prescriptDrug.getId()%>"   <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a></td>
+            <td><%=prescriptDrug.daysToExpire()%></td>
             <td><%=prescriptDrug.isLongTerm()%> </td>
-            <td><a id="prescrip_<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getDrug_special()).replaceAll(";", " ")%>
-                </a></td>
+            
+            <td><a id="prescrip_<%=prescriptDrug.getId()%>" <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
             <td width="75px" align="center">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                <a name="rePrescribe" id="reRx_<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
+                <a name="rePrescribe" id="reRx_<%=prescriptDrug.getId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
                 <%} else {%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
                     <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
@@ -143,19 +140,30 @@
             </td>
             <td width="75px" align="center">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                   <a id="del_<%=prescriptDrug.getLocalDrugId()%>" name="delete" <%=styleColor%> href="javascript:void()" onclick="Delete2(this);"><%="Delete"%></a>
+                   <a id="del_<%=prescriptDrug.getId()%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);"><%="Delete"%></a>
                 <%}%>
             </td>
             <td width="75px" align="center">
-                <a id="discont_<%=prescriptDrug.getLocalDrugId()%>" href="javascript:void(0);" <%=styleColor%> >Discontinue</a>
+                <a id="discont_<%=prescriptDrug.getId()%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discontinue</a>
             </td>
 
             <td width="20px" align="center">
-                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getLocalDrugId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
+                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
             </td>
-            <%if (integratorEnabled) {%>
-            <td align="center"><%=prescriptDrug.getRemoteFacilityName() == null ? "local" : prescriptDrug.getRemoteFacilityName()%></td>
-            <%}%>
+            
+            <td align="center">
+                <%
+                if (prescriptDrug.getRemoteFacilityName() != null){ %>
+                    <%=prescriptDrug.getRemoteFacilityName()%>
+                <%}else if(  prescriptDrug.getOutsideProviderName() !=null && !prescriptDrug.getOutsideProviderName().equals("")  ){%>
+                    <%=prescriptDrug.getOutsideProviderName()%>
+                <%}else{%>
+                    local
+                <%}%>
+
+
+            </td>
+            
         </tr>
         <%}%>
     </table>
@@ -164,8 +172,8 @@
         <br>
 <%!
 
-String getName(PrescriptDrug prescriptDrug){
-    String searchString = prescriptDrug.getBN();
+String getName(Drug prescriptDrug){
+    String searchString = prescriptDrug.getBrandName();
     if (searchString == null) {
         searchString = prescriptDrug.getCustomName();
     }
@@ -173,25 +181,50 @@ String getName(PrescriptDrug prescriptDrug){
         searchString = prescriptDrug.getRegionalIdentifier();
     }
     if (searchString == null) {
-        searchString = prescriptDrug.getDrug_special();
+        searchString = prescriptDrug.getSpecial();
     }
     return searchString;
 }
 
+    String getClassColour(Drug prescriptDrug, long referenceTime, long durationToSoon){
+        StringBuffer sb = new StringBuffer("class=\"");
 
-    String getStyleColour(PrescriptDrug prescriptDrug, long referenceTime, long durationToSoon){
-        String styleColor = "";
+        if (!prescriptDrug.isExpired() && (prescriptDrug.getEndDate().getTime() - referenceTime <= durationToSoon)) {  // ref = now and duration will be a month
+            sb.append("expireInReference ");
+        }
+        
+        if (!prescriptDrug.isExpired() && !prescriptDrug.isArchived()) {
+            sb.append("currentDrug ");
+        }
+
+        if (prescriptDrug.isArchived()) {
+            sb.append("archivedDrug ");
+        }
+
+        if(prescriptDrug.isExpired()) {
+            sb.append("expiredDrug ");
+        }
+
+        if(prescriptDrug.isLongTerm()){
+            sb.append("longTermMed ");
+        }
+
+        //if(prescriptDrug.isDiscontinued()){
+       //     sb.append("discontinued ");
+        //}
+
+        String retval = sb.toString();
+
+        if(retval.equals("class=\"")){
+            return "";
+        }
+
+
+
         
 
-        if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-                    styleColor = "style=\"color:red;text-decoration: line-through;\"";
-        } else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - referenceTime <= durationToSoon)) {  // ref = now and duration will be a month
-            styleColor = "style=\"color:orange;font-weight:bold;\"";
-        } else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived()) {
-            styleColor = "style=\"color:red;\"";
-        } else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived()) {
-            styleColor = "style=\"text-decoration: line-through;\"";
-        }
-        return styleColor;
+        return retval.substring(0,retval.length())+"\"";
+
     }
+
 %>
