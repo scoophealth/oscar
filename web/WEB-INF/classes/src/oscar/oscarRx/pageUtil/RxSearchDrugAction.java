@@ -25,21 +25,27 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 
+import java.util.Hashtable;
+import java.util.Vector;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.apache.struts.actions.DispatchAction;
 import oscar.oscarRx.data.RxDrugData;
+import oscar.oscarRx.util.RxDrugRef;
 
-public final class RxSearchDrugAction extends Action {
+public final class RxSearchDrugAction extends DispatchAction {
 
 
-    public ActionForward execute(ActionMapping mapping,
+    @Override
+    public ActionForward unspecified(ActionMapping mapping,
 				 ActionForm form,
 				 HttpServletRequest request,
 				 HttpServletResponse response)
@@ -74,4 +80,24 @@ public final class RxSearchDrugAction extends Action {
 
             return (mapping.findForward("success"));
     }
+
+    public ActionForward jsonSearch(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws Exception, ServletException {
+
+        String searchStr = request.getParameter("query");
+        if (searchStr == null){
+            searchStr = request.getParameter("name");
+        }
+
+        RxDrugRef drugref = new RxDrugRef();
+        Vector<Hashtable> vec = drugref.list_drug_element3(searchStr);
+        
+        Hashtable d = new Hashtable();
+        d.put("results",vec);
+        response.setContentType("text/x-json");
+        JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d );
+        jsonArray.write(response.getWriter());
+        return null;
+    }
+
+
 }
