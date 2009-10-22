@@ -35,12 +35,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
+import oscar.oscarRx.util.RxUtil;
 
 
 public final class RxStashAction extends DispatchAction {
     
 //public final class RxStashAction extends Action {
-    public ActionForward Take(ActionMapping mapping,
+    public ActionForward unspecified(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -126,6 +127,34 @@ public final class RxStashAction extends DispatchAction {
          System.out.println("the stash size becomes="+bean.getStashSize());
         }catch(Exception e){e.printStackTrace();}
         System.out.println("===========end in setStashIndex rxstatshaction.java===========");
+        return mapping.findForward("success");
+    }
+
+    public ActionForward deletePrescribe(ActionMapping mapping,
+    ActionForm form,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException, ServletException {
+                System.out.println("===========start in deletePrescribe ===========");
+        // Extract attributes we will need
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources(request);
+
+        RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+     
+        if(bean==null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+
+        int randomId=Integer.parseInt(request.getParameter("randomId"));
+        System.out.println("randomId="+randomId);
+                bean.removeStashItem(bean.getIndexFromRx(randomId));
+                if(bean.getStashIndex() >= bean.getStashSize()) {
+                    bean.setStashIndex(bean.getStashSize() - 1);
+                }
+        RxUtil.printStashContent(bean);
+        System.out.println("===========end in deletePrescribe===========");
         return mapping.findForward("success");
     }
 }
