@@ -40,9 +40,9 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
 
 %>
 
-<fieldset style="margin-top:2px;width:600px;" id="set_<%=rand%>"">
-    <a href="javascript:void();" style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();">X</a>
-    <a href="javascript:void();" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
+<fieldset style="margin-top:2px;width:600px;" id="set_<%=rand%>">
+    <a href="javascript:void(0);" style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');">X</a>
+    <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
 
     <label style="float:left;width:80px;">Name:</label>
        <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     value="<%=drugName%>"     size="30"/><br>
@@ -85,6 +85,7 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
 	<br/>
         <label style="float:left;width:80px;">Written Date:</label>
            <input type="text" id="writtenDate_<%=rand%>"  name="writtenDate_<%=rand%>" value="<%=writtenDate%>" />
+           <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="addFav('<%=rand%>','<%=drugName%>')">Add to Favorite</a>
 
     </div>
 
