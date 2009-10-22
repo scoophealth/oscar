@@ -26,8 +26,6 @@ package oscar.oscarRx.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,21 +33,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.casemgmt.web.PrescriptDrug;
+import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
 
 import org.oscarehr.util.SpringUtils;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
@@ -356,16 +351,16 @@ public final class RxRePrescribeAction extends DispatchAction {
         }
         p("here");
         //get a list of long term meds
-         CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager"); 
-                        List<PrescriptDrug> prescriptDrugs = caseManagementManager.getPrescriptions(demoNo, showall); 
+        DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+                        List<Drug> prescriptDrugs = drugDao.getPrescriptions(demoNo, showall);
                         List<Integer> listLongTermMed = new ArrayList();
                         p("size of prescriptDrugs",""+prescriptDrugs.size());
-                        for (PrescriptDrug prescriptDrug : prescriptDrugs) {
-                            p("id of drug returned",""+prescriptDrug.getLocalDrugId());
+                        for (Drug prescriptDrug : prescriptDrugs) {
+                            p("id of drug returned",""+prescriptDrug.getId());
                                 //add all long term med drugIds to an array.
                                 if (prescriptDrug.isLongTerm()) {
-                                    System.out.println("long term med's prescriptDrug.getLocalDrugId()=" + prescriptDrug.getLocalDrugId());
-                                    listLongTermMed.add(prescriptDrug.getLocalDrugId());
+                                    System.out.println("long term med's prescriptDrug.getLocalDrugId()=" + prescriptDrug.getId());
+                                    listLongTermMed.add(prescriptDrug.getId());
                                 }
                         }
         
