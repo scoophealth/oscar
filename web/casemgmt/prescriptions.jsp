@@ -44,28 +44,28 @@ Prescriptions
 			<c:if test="${prescription.expired}">
 			*
 			</c:if>
-			<fmt:formatDate pattern="MM/dd/yy" value="${prescription.date_prescribed}"/>
+			<fmt:formatDate pattern="MM/dd/yy" value="${prescription.rxDate}"/>
 		</td>
 		
 		<%String styleColor=""; %>
-		<c:if test="${!prescription.expired && prescription.drug_achived}">
+		<c:if test="${!prescription.expired && prescription.archived}">
 		<%styleColor="style=\"color:red;text-decoration: line-through;\"";%>
 		</c:if>
-		<c:if test="${prescription.expired && prescription.drug_achived}">
+		<c:if test="${prescription.expired && prescription.archived}">
 		<%styleColor="style=\"text-decoration: line-through;\"";%>
 		</c:if>
-		<c:if test="${!prescription.expired && !prescription.drug_achived}">
+		<c:if test="${!prescription.expired && !prescription.archived}">
 		<%styleColor="style=\"color:red;\"";%>
 		</c:if>
 		<td bgcolor="white">
 			<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>'>
 				<a <%= styleColor%> target="_blank" href="../oscarRx/StaticScript.jsp?regionalIdentifier=<c:out value="${prescription.regionalIdentifier}"/>&cn=<c:out value="${prescription.customName}"/>" >
-					<c:out value="${prescription.drug_special}"/>
+					<c:out value="${prescription.special}"/>
 				</a>
 			</caisirole:SecurityAccess>
 			
 			<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>' reverse="true">
-				<span <%= styleColor%> ><c:out value="${prescription.drug_special}"/></span>
+				<span <%= styleColor%> ><c:out value="${prescription.special}"/></span>
 			</caisirole:SecurityAccess>
 		</td>
 		

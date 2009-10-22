@@ -128,21 +128,21 @@
 			<c:if test="${prescription.expired}">
 			*
 			</c:if>
-			<fmt:formatDate pattern="MM/dd/yy" value="${prescription.date_prescribed}"/>
+			<fmt:formatDate pattern="MM/dd/yy" value="${prescription.rxDate}"/>
 		</td>
 		
 		<%String styleColor=""; %>
-		<c:if test="${!prescription.expired && prescription.drug_achived}">
+		<c:if test="${!prescription.expired && prescription.archived}">
 		<%styleColor="style=\"color:red;text-decoration: line-through;\"";%>
 		</c:if>
-		<c:if test="${prescription.expired && prescription.drug_achived}">
+		<c:if test="${prescription.expired && prescription.archived}">
 		<%styleColor="style=\"text-decoration: line-through;\"";%>
 		</c:if>
-		<c:if test="${!prescription.expired && !prescription.drug_achived}">
+		<c:if test="${!prescription.expired && !prescription.archived}">
 		<%styleColor="style=\"color:red;\"";%>
 		</c:if>
 		<td bgcolor="white">
-			<span <%= styleColor%> ><c:out value="${prescription.drug_special}"/></span>			
+			<span <%= styleColor%> ><c:out value="${prescription.special}"/></span>			
 		</td>
 		
 		<td bgcolor="white">

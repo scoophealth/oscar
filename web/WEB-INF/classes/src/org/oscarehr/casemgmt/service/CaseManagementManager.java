@@ -86,9 +86,9 @@ import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
-import org.oscarehr.casemgmt.web.PrescriptDrug;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.dao.DxResearchDAO;
@@ -433,7 +433,7 @@ public class CaseManagementManager {
 		return this.allergyDAO.getAllergies(demographic_no);
 	}
 
-	public List<PrescriptDrug> getPrescriptions(String demographic_no, boolean all) {
+	public List<Drug> getPrescriptions(String demographic_no, boolean all) {
 		if (all) {
 			return this.prescriptionDAO.getPrescriptions(demographic_no);
 		}
@@ -445,8 +445,8 @@ public class CaseManagementManager {
 	 * This method will also check to ensure the integrator is enabled for this facility before attemping to add remote drugs.
 	 * If it's not enabled it will return only local drugs.
 	 */
-	public List<PrescriptDrug> getPrescriptions(int demographicId, boolean all) {
-		List<PrescriptDrug> results = null;
+	public List<Drug> getPrescriptions(int demographicId, boolean all) {
+		List<Drug> results = null;
 
 		results = getPrescriptions(String.valueOf(demographicId), all);
 
@@ -457,7 +457,7 @@ public class CaseManagementManager {
 		return (results);
 	}
 
-	private void addIntegratorDrugs(List<PrescriptDrug> prescriptions, boolean viewAll, int demographicId) {
+	private void addIntegratorDrugs(List<Drug> prescriptions, boolean viewAll, int demographicId) {
 
 		if (prescriptions == null) {
 			logger.warn("prescriptions passed in is null, it should never be null, empty list should be used if no entries for drugs.");
@@ -473,12 +473,12 @@ public class CaseManagementManager {
 					prescriptions.add(getPrescriptDrug(cachedDrug));
 				} else {
 					// if it's not view all, we need to only add the drug if it's not already there, or if it's a newer prescription
-					PrescriptDrug pd = containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
+					Drug pd = containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
 					if (pd == null) {
 						prescriptions.add(getPrescriptDrug(cachedDrug));
 					} else {
-						if (pd.getDate_prescribed().before(cachedDrug.getRxDate()) ||
-							(pd.getDate_prescribed().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(cachedDrug.getCreateDate()))
+						if (pd.getRxDate().before(cachedDrug.getRxDate()) ||
+							(pd.getRxDate().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(cachedDrug.getCreateDate()))
 							) {
 							prescriptions.remove(pd);
 							prescriptions.add(getPrescriptDrug(cachedDrug));
@@ -491,15 +491,15 @@ public class CaseManagementManager {
 		}
 	}
 
-	private PrescriptDrug getPrescriptDrug(CachedDemographicDrug cachedDrug) throws MalformedURLException {
-		PrescriptDrug pd = new PrescriptDrug();
+	private Drug getPrescriptDrug(CachedDemographicDrug cachedDrug) throws MalformedURLException {
+                Drug pd = new Drug();
 
-		pd.setBN(cachedDrug.getBrandName());
+		pd.setBrandName(cachedDrug.getBrandName());
 		pd.setCustomName(cachedDrug.getCustomName());
-		pd.setDate_prescribed(cachedDrug.getRxDate());
-		pd.setDrug_achived(cachedDrug.isArchived());
-		pd.setDrug_special(cachedDrug.getSpecial());
-		pd.setEnd_date(cachedDrug.getEndDate());
+		pd.setRxDate(cachedDrug.getRxDate());
+		pd.setArchived(cachedDrug.isArchived());
+		pd.setSpecial(cachedDrug.getSpecial());
+		pd.setEndDate(cachedDrug.getEndDate());
 		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
 		pd.setCreateDate(cachedDrug.getCreateDate());
 
@@ -510,8 +510,8 @@ public class CaseManagementManager {
 		return (pd);
 	}
 
-	private static PrescriptDrug containsPrescriptDrug(List<PrescriptDrug> prescriptions, String regionalIdentifier) {
-		for (PrescriptDrug prescriptDrug : prescriptions) {
+	private static Drug containsPrescriptDrug(List<Drug> prescriptions, String regionalIdentifier) {
+		for (Drug prescriptDrug : prescriptions) {
 			if (regionalIdentifier.equals(prescriptDrug.getRegionalIdentifier())) return (prescriptDrug);
 		}
 
@@ -906,7 +906,7 @@ public class CaseManagementManager {
 	public String getCaisiRoleById(String id) {
 		// return providerCaisiRoleDAO.getCaisiRoleById(id);
 		return roleManager.getRole(id).getName();
-	}
+                }
 
 	public List search(CaseManagementSearchBean searchBean) {
 		return this.caseManagementNoteDAO.search(searchBean);
@@ -1001,7 +1001,7 @@ public class CaseManagementManager {
 		// iterate through the issue list
 		for (CaseManagementNote cmNote : notes) {
 			String noteRole = cmNote.getReporter_caisi_role();
-			String noteRoleName = roleManager.getRole(noteRole).getName().toLowerCase();
+			String noteRoleName = getCaisiRoleById(noteRole).toLowerCase();
 			ProgramAccess pa = null;
 			boolean add = false;
 

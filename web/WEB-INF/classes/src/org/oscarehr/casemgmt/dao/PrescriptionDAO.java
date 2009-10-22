@@ -22,11 +22,9 @@
 
 package org.oscarehr.casemgmt.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.casemgmt.model.Prescription;
-import org.oscarehr.casemgmt.web.PrescriptDrug;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -43,79 +41,16 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 		return (Prescription) this.getHibernateTemplate().get(Prescription.class, id);
 	}
 
-	public List<PrescriptDrug> getUniquePrescriptions(String demographic_no) {
+	public List<Drug> getUniquePrescriptions(String demographic_no) {
              //   System.out.println("===========IN getUniquePrescriptions======");
             //    System.out.println("demographic_no="+demographic_no);
 		List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), false);
-    	List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
-        for (Drug drug : rs)
-        {
-        	PrescriptDrug prescriptDrug = new PrescriptDrug();
-        	prescriptDrug.setLocalDrugId(drug.getId());
-              //  System.out.println("drug.getId()="+drug.getId());
-            prescriptDrug.setDate_prescribed(drug.getRxDate());
-            prescriptDrug.setDrug_special(drug.getSpecial());
-            prescriptDrug.setBN(drug.getBrandName());
-            prescriptDrug.setGCN_SEQNO(drug.getGcnSeqNo());
-            prescriptDrug.setCustomName(drug.getCustomName());
-            prescriptDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
-
-            prescriptDrug.setEnd_date(drug.getEndDate());
-            prescriptDrug.setDrug_achived(false);
-            prescriptDrug.setCreateDate(drug.getCreateDate());
-
-            prescriptDrug.setLongTerm(drug.getLongTerm());
-
-            boolean b = true;
-            for (int i = 0; i < rt.size(); i++) {
-                PrescriptDrug p2 = (PrescriptDrug)rt.get(i);
-                if (p2.getGCN_SEQNO().intValue() == prescriptDrug.getGCN_SEQNO().intValue()) {
-                //    System.out.println("p2.getGCN_SEQNO().intValue() == prescriptDrug.getGCN_SEQNO().intValue()="+p2.getGCN_SEQNO());
-                    if (p2.getGCN_SEQNO().intValue() != 0) // not custom - safe GCN
-                    {
-                 //       System.out.println("p2.getGCN_SEQNO().intValue() != 0" );
-                        b = false;
-                    }
-                    else // custom
-                    {
-                 //       System.out.println("p2.getGCN_SEQNO().intValue() = 0");
-                        if (p2.getCustomName() != null && prescriptDrug.getCustomName() != null) {
-                  //          System.out.println("p2.getCustomName() != null && prescriptDrug.getCustomName() != null");
-                            if (p2.getCustomName().equals(prescriptDrug.getCustomName())) // same custom
-                            {
-                     //           System.out.println("p2.getCustomName().equals(prescriptDrug.getCustomName())");
-                                b = false;
-                            }
-                        }
-                    }
-                }
-            }
-            if (b) rt.add(prescriptDrug);
-        }
-      //  System.out.println("===========END getUniquePrescriptions======");
-        return rt;
+        return rs;
     }
 
-	public List<PrescriptDrug> getPrescriptions(String demographic_no) {
+	public List<Drug> getPrescriptions(String demographic_no) {
 
     	List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), null);
-		List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
-        for (Drug drug : rs)
-        {
-			PrescriptDrug prescriptDrug = new PrescriptDrug();
-			prescriptDrug.setLocalDrugId(drug.getId());
-			prescriptDrug.setDate_prescribed(drug.getRxDate());
-			prescriptDrug.setDrug_special(drug.getSpecial());
-			prescriptDrug.setEnd_date(drug.getEndDate());
-			prescriptDrug.setDrug_achived(drug.isArchived());
-			prescriptDrug.setBN(drug.getBrandName());
-			prescriptDrug.setGCN_SEQNO(drug.getGcnSeqNo());
-			prescriptDrug.setCustomName(drug.getCustomName());
-            prescriptDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
-            prescriptDrug.setCreateDate(drug.getCreateDate());
-			rt.add(prescriptDrug);
-		}
-		return rt;
-
+	return rs;
 	}
 }

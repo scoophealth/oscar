@@ -8,7 +8,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
-<%@ page import="org.oscarehr.common.model.OscarAnnotation" %>
+<%@ page import="org.oscarehr.common.model.OscarAnnotation,org.oscarehr.common.model.*" %>
 <%@page import="java.util.Enumeration"%>
 
 <%
@@ -350,12 +350,12 @@ function load() {
 
 							<%
 								CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-								List<PrescriptDrug> prescriptDrugs=caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
+								List<Drug> prescriptDrugs=caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
 
 								long now = System.currentTimeMillis();
 								long month = 1000L * 60L * 60L * 24L * 30L;
 
-								for (PrescriptDrug prescriptDrug : prescriptDrugs)
+								for (Drug prescriptDrug : prescriptDrugs)
 								{
 									String styleColor = "";
 
@@ -372,33 +372,33 @@ function load() {
 										}
 									}
 
-									if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived())
+									if (!prescriptDrug.isExpired() && prescriptDrug.isArchived())
 									{
 										styleColor = "style=\"color:red;text-decoration: line-through;\"";
 									}
-									else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - now <= month))
+									else if (!prescriptDrug.isExpired() && (prescriptDrug.getEndDate().getTime() - now <= month))
 									{
 										styleColor = "style=\"color:orange;font-weight:bold;\"";
 									}
-									else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived())
+									else if (!prescriptDrug.isExpired() && !prescriptDrug.isArchived())
 									{
 										styleColor = "style=\"color:red;\"";
 									}
-									else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived())
+									else if (prescriptDrug.isExpired() && prescriptDrug.isArchived())
 									{
 										styleColor = "style=\"text-decoration: line-through;\"";
 									}
 							%>
 							<tr>
-								<td valign="top"><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
-								<td><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getDrug_special()).replaceAll(";", " ")%>
+								<td valign="top"><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getRxDate()%> </a></td>
+								<td><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%>
 								</a></td>
 								<td width="100px" align="center">
 								<%
 									if (prescriptDrug.getRemoteFacilityName()==null)
 									{
 										%>
-											<input type="checkbox" name="chkRePrescribe" align="center" drugId="<%=prescriptDrug.getLocalDrugId()%>" />
+											<input type="checkbox" name="chkRePrescribe" align="center" drugId="<%=prescriptDrug.getId()%>" />
 										<%
 									}
 									else
@@ -407,10 +407,10 @@ function load() {
 											<form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
 												<input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
 												<%
-													String searchString=prescriptDrug.getBN();
+													String searchString=prescriptDrug.getBrandName();
 													if (searchString==null) searchString=prescriptDrug.getCustomName();
 													if (searchString==null) searchString=prescriptDrug.getRegionalIdentifier();
-													if (searchString==null) searchString=prescriptDrug.getDrug_special();
+													if (searchString==null) searchString=prescriptDrug.getSpecial();
 												%>
 												<input type="hidden" name="searchString" value="<%=searchString%>" />
 												<input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />										
@@ -424,13 +424,13 @@ function load() {
 									if (prescriptDrug.getRemoteFacilityName()==null)
 									{
 										%>
-											<input type="checkbox" name="chkDelete" align="center" drugId="<%=prescriptDrug.getLocalDrugId()%>" />
+											<input type="checkbox" name="chkDelete" align="center" drugId="<%=prescriptDrug.getId()%>" />
 										<%
 									}
 								%>
 								</td>
 								<td width="20px" align="center"><a href="#" title="Annotation"
-									onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=prescriptDrug.getLocalDrugId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
+									onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=prescriptDrug.getId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
 									</td>
 								<%
 									if (integratorEnabled)
