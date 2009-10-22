@@ -24,27 +24,33 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 
+import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.util.SpringUtils;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 
 public final class RxDeleteRxAction extends DispatchAction {
+    private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
     
-    
-    public ActionForward method(ActionMapping mapping,
+
+    @Override
+    public ActionForward unspecified(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
@@ -55,16 +61,14 @@ public final class RxDeleteRxAction extends DispatchAction {
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);        
         // Setup variables        
-        oscar.oscarRx.pageUtil.RxSessionBean bean =
-        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");                
+        RxSessionBean bean =(RxSessionBean)request.getSession().getAttribute("RxSessionBean");                
         if(bean==null) {
             response.sendRedirect("error.html");
             return null;
         }        
         String ip = request.getRemoteAddr();       
         try {
-            oscar.oscarRx.data.RxPrescriptionData rxData =
-            new oscar.oscarRx.data.RxPrescriptionData();
+
             
             String drugList = ((RxDrugListForm)form).getDrugList();
             System.out.println("drugList="+drugList);
@@ -78,9 +82,10 @@ public final class RxDeleteRxAction extends DispatchAction {
                     System.out.println("drugId="+drugId);
                 } catch (Exception e) { break; }                
                 // get original drug
-                oscar.oscarRx.data.RxPrescriptionData.Prescription rx = rxData.getPrescription(drugId);                
-                rx.Delete();
-                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugArr[i], ip,""+bean.getDemographicNo(), rx.getAuditString());       
+                Drug drug = drugDao.find(drugId);
+                setDrugDelete(drug);
+                drugDao.merge(drug);
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugArr[i], ip,""+bean.getDemographicNo(), drug.getAuditString());
             }
         }
         catch (Exception e) {
@@ -90,10 +95,13 @@ public final class RxDeleteRxAction extends DispatchAction {
          return (mapping.findForward("success"));
     }
 
-    public ActionForward Delete2(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
+    private void setDrugDelete(Drug drug){
+        drug.setArchived(true);
+        drug.setArchivedDate(new Date());
+        drug.setArchivedReason(Drug.DELETED);
+    }
+
+    public ActionForward Delete2(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException, ServletException {
 
         System.out.println("===========================Delete2 RxDeleteRxAction========================");
@@ -101,26 +109,19 @@ public final class RxDeleteRxAction extends DispatchAction {
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
         // Setup variables
-        oscar.oscarRx.pageUtil.RxSessionBean bean =
-        (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
             response.sendRedirect("error.html");
             return null;
         }
         String ip = request.getRemoteAddr();
         try{
-        String deleteRxId=(request.getParameter("deleteRxId").split("_"))[1];
-
-            oscar.oscarRx.data.RxPrescriptionData rxData =
-            new oscar.oscarRx.data.RxPrescriptionData();
-
-                    System.out.println("drugId="+ deleteRxId);
-
-                // get original drug
-                oscar.oscarRx.data.RxPrescriptionData.Prescription rx = rxData.getPrescription(Integer.parseInt(deleteRxId) );
-                rx.Delete();
-                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, deleteRxId, ip,""+bean.getDemographicNo(), rx.getAuditString());
-
+            String deleteRxId=(request.getParameter("deleteRxId").split("_"))[1];
+            System.out.println("drugId="+ deleteRxId);
+            Drug drug = drugDao.find(Integer.parseInt(deleteRxId));
+            setDrugDelete(drug);
+            drugDao.merge(drug);
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, deleteRxId, ip,""+bean.getDemographicNo(), drug.getAuditString());
         }
         catch (Exception e) {
             e.printStackTrace(System.out);
@@ -128,4 +129,47 @@ public final class RxDeleteRxAction extends DispatchAction {
               System.out.println("===========================END Delete2 RxDeleteRxAction========================");
          return null;
     }
+
+
+    /**
+     * The action to discontinue a drug.
+     *
+     * first set discontinued boolean field to true.
+     * Grab the end_date and log that this provider is changing (discontinuing) the drug and the old end date is this and the new end date is this.
+     * set end_date = today
+     * set reason
+     * set annotation if needed.
+     *
+     * @param mapping
+     * @param form
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     * @throws ServletException
+     */
+    //STILL NEED TO SAVE REASON AND COMMENT "would like to create a summary note in the echart"
+    public ActionForward Discontinue(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+        String idStr = request.getParameter("drugId");
+        int id = Integer.parseInt(idStr);
+
+        String reason = request.getParameter("reason");
+        String comment = request.getParameter("comment"); //TODO: PUT this in a note
+
+        String ip = request.getRemoteAddr();
+
+        Drug drug = drugDao.find(id);
+
+        Date date = new Date();
+        String logStatement = drug+" Changing end date to :"+date;
+        drug.setArchivedDate(date);
+        drug.setArchived(true);
+        drug.setArchivedReason(reason);
+
+        drugDao.merge(drug);
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);
+        response.getWriter().write(id);
+        return null;
+    }
+
 }
