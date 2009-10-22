@@ -240,7 +240,7 @@ body {
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
             <%@ include file="TopLinks2.jsp" %><!-- Row One included here-->
             <tr>
-                <%@ include file="SideLinksEditFavorites.jsp"%><%-- <td></td>Side Bar File --%>
+                <%@ include file="SideLinksEditFavorites2.jsp"%><%-- <td></td>Side Bar File --%>
                 <td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
                     <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
 
@@ -575,6 +575,12 @@ body {
                         }
 %>
 <script type="text/javascript">
+
+    function deletePrescribe(randomId){
+        var data="randomId="+randomId;
+        var url="<c:out value="${ctx}"/>" + "/oscarRx/rxStashDelete.do?parameterValue=deletePrescribe";
+        new Ajax.Request(url, {method: 'get',parameters:data});
+
     function ThemeViewer(){
        
        var xy = Position.page($('drugProfile'));
@@ -589,6 +595,14 @@ body {
 
     }
 
+
+    }
+    function useFav2(favoriteId){
+        var randomId=Math.round(Math.random()*1000000);
+        var data="favoriteId="+favoriteId+"&randomId="+randomId;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/useFavorite.do?parameterValue=useFav2";
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
+    }
 //not used
     function Delete(element){
         oscarLog(document.forms[2].action);
@@ -615,7 +629,7 @@ body {
 
            //  oscarLog(document.getElementsByName(caonima)[0]);
            //  oscarLog(document.getElementById(id));
-             var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?method=Delete2"  ;
+             var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=Delete2"  ;
              var data="deleteRxId="+element.id;
             new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){  
                   oscarLog("here");
@@ -685,7 +699,7 @@ body {
      function createNewRx(element){
        oscarLog("createNewRx called");
         var data="drugName="+element.value;
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
         new Ajax.Request(url, {method: 'get',parameters:data})
         return false;
     }
@@ -696,7 +710,7 @@ body {
         oscarLog("whichPrescribe="+whichPrescribe);
         //make a call to stashaction to set the bean stash index.
         var data1="whichPrescribe="+whichPrescribe;
-        var url1= "<c:out value="${ctx}"/>" + "/oscarRx/stash.do?method=setStashIndex";
+        var url1= "<c:out value="${ctx}"/>" + "/oscarRx/stash.do?parameterValue=setStashIndex";
         new Ajax.Request(url1,
         {method: 'post',postBody:data1,
             onSuccess:function(transport){
@@ -755,7 +769,7 @@ body {
         }
         //oscarLog(data);
         //make call to server, send data to server.
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateDrug";
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateDrug";
         new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){
@@ -841,7 +855,7 @@ function upElement(li){
     function getSelectionId(text, li) {
        var ran_number=Math.round(Math.random()*1000000);
         oscarLog('In selection id');
-        var url1=  "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
+        var url1=  "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
         //var url = "prescribe.jsp";
         var data1="randomId="+ran_number+"&drugId="+li.id+"&text="+text;
        // countPrescribe=increaseCountPrescribe();
@@ -877,7 +891,7 @@ YAHOO.example.BasicRemote = function() {
                 oscarLog(args[2]);
                 arr = args[2];
                 oscarLog('In selection id----'+arr[1]);
-                var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx"; //"prescribe.jsp";
+                var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                 var ran_number=Math.round(Math.random()*1000000);
                 var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr[1]+"&text="+arr[0]+"&randomId="+ran_number;  //hack to get around ie caching the page
                 new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
@@ -912,6 +926,28 @@ YAHOO.example.BasicRemote = function() {
     };
 }();
 
+function addFav(randomId,brandName){
+    var favoriteName = window.prompt('Please enter a name for the Favorite:',  brandName);
+
+   if (favoriteName.length > 0){
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/addFavorite2.do?parameterValue=addFav2";
+        var data="randomId="+randomId+"&favoriteName="+favoriteName;
+        new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
+            /*    var json=transport.responseText.evalJSON();
+                str="Method: "+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
+                    +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                oscarLog("json.duration="+json.duration);
+                $(calQuantity).value = json.calQuantity;
+                oscarLog($(calQuantity).value);
+                if(json.prn){
+                    str=str+" prn";
+                } else{ }
+                oscarLog("str="+str);
+                $(rxString).innerHTML=str;//display parsed string below instruction.*/
+            }});
+   }
+}
+
 function setSearchedDrug(drugId,name){
 
     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
@@ -927,7 +963,7 @@ function setSearchedDrug(drugId,name){
     function updateAllDrugs(){
 
         var data=Form.serialize($('drugForm'))
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateAllDrugs";
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateAllDrugs";
         new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){
@@ -983,7 +1019,7 @@ function setSearchedDrug(drugId,name){
         var ar=elemId.split("_");
         var rand=ar[1];
 
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateDrug";
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateDrug";
         var rxMethod="rxMethod_"+rand;
         var rxRoute="rxRoute_"+rand;
         var rxFreq="rxFreq_"+rand;
@@ -1017,7 +1053,7 @@ function setSearchedDrug(drugId,name){
         var data=Form.serialize($('drugForm'))
         //   alert(data);
 
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=saveDrug";
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=saveDrug";
         new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){
@@ -1032,7 +1068,7 @@ function setSearchedDrug(drugId,name){
     function updateAllDrugs(){
 
         var data=Form.serialize($('drugForm'))
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=updateAllDrugs";
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateAllDrugs";
         new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){
