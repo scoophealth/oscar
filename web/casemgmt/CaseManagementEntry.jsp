@@ -31,6 +31,16 @@
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+
+    boolean showResolved=false;
+    try
+    {
+    	showResolved=Boolean.parseBoolean(request.getParameter("showResolved"));
+    }
+    catch (NullPointerException e)
+    {
+    	// do nothing it's okay to not have this parameter
+    }
 %>
 <html>
 <head>
@@ -322,104 +332,96 @@ if (pId==null) pId="";
 			boolean disabled = !"local".equals(cbb.getIssueDisplay().location) ? true : !writeAccess;
 			boolean checkBoxDisabled=!"local".equals(cbb.getIssueDisplay().location)? false : disabled;
 			boolean resolved="resolved".equals(cbb.getIssueDisplay().resolved);
+			int counter=0;
+			
+			if (!resolved || showResolved)
+			{
+				counter++;
 			%>
 
-			<tr <%=resolved?"name=\"resolvedRow\"":""%> bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>"
-				align="center">
-				<td>
-					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=checkBoxDisabled%>"></nested:checkbox>
-				</td>
-					<td <%="allergy".equals(cbb.getIssueDisplay().priority)?"bgcolor=\"yellow\"":""%>>
-						<nested:write name="issueCheckList"	property="issueDisplay.description" />
+				<tr bgcolor="<%= (counter%2==0)?"#EEEEFF":"white" %>"
+					align="center">
+					<td>
+						<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=checkBoxDisabled%>"></nested:checkbox>
 					</td>
-				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issueDisplay.acute" disabled="<%=disabled%>">
-						<html:option value="acute">acute</html:option>
-						<html:option value="chronic">chronic</html:option>
-					</nested:select>	
-				</td>
-				<td>
-					<nested:select indexed="true" name="issueCheckList" property="issueDisplay.certain"  disabled="<%=disabled%>">
-						<html:option value="certain">certain</html:option>
-						<html:option value="uncertain">uncertain</html:option>
-					</nested:select>
-				</td>
-				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issueDisplay.major" disabled="<%=disabled%>">
-						<html:option value="major">major</html:option>
-						<html:option value="not major">not major</html:option>
-					</nested:select>
-				</td>				
-				<td>
-					<!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
-					 <nested:select indexed="true" name="issueCheckList" property="issueDisplay.resolved"  disabled="<%=disabled%>">										 	
-						<html:option value="resolved">resolved</html:option>
-						<html:option value="unresolved">unresolved</html:option>
-					</nested:select>
-				</td>
-				<td>
-					<nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" disabled="<%=disabled%>"/>
-				</td>
-				<td>
-<% if (cbb.getIssueDisplay().location!=null && cbb.getIssueDisplay().location.equals("local")){ %>
-			<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="u">
-				<nested:equal name="issueCheckList" property="used"
-					value="false">
-					<%submitString = "this.form.method.value='issueDelete';";
-			submitString = submitString + "this.form.deleteId.value=" + "'"
-					+ ind.intValue() + "';";
+						<td <%="allergy".equals(cbb.getIssueDisplay().priority)?"bgcolor=\"yellow\"":""%>>
+							<nested:write name="issueCheckList"	property="issueDisplay.description" />
+						</td>
+					<td>
+						<nested:select indexed="true" name="issueCheckList"	property="issueDisplay.acute" disabled="<%=disabled%>">
+							<html:option value="acute">acute</html:option>
+							<html:option value="chronic">chronic</html:option>
+						</nested:select>	
+					</td>
+					<td>
+						<nested:select indexed="true" name="issueCheckList" property="issueDisplay.certain"  disabled="<%=disabled%>">
+							<html:option value="certain">certain</html:option>
+							<html:option value="uncertain">uncertain</html:option>
+						</nested:select>
+					</td>
+					<td>
+						<nested:select indexed="true" name="issueCheckList"	property="issueDisplay.major" disabled="<%=disabled%>">
+							<html:option value="major">major</html:option>
+							<html:option value="not major">not major</html:option>
+						</nested:select>
+					</td>				
+					<td>
+						<!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
+						 <nested:select indexed="true" name="issueCheckList" property="issueDisplay.resolved"  disabled="<%=disabled%>">										 	
+							<html:option value="resolved">resolved</html:option>
+							<html:option value="unresolved">unresolved</html:option>
+						</nested:select>
+					</td>
+					<td>
+						<nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" disabled="<%=disabled%>"/>
+					</td>
+					<td>
+	<% if (cbb.getIssueDisplay().location!=null && cbb.getIssueDisplay().location.equals("local")){ %>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="u">
+					<nested:equal name="issueCheckList" property="used"
+						value="false">
+						<%submitString = "this.form.method.value='issueDelete';";
+				submitString = submitString + "this.form.deleteId.value=" + "'"
+						+ ind.intValue() + "';";
+				%>
+						<input type="submit" value="delete" onclick="<%=submitString%>">
+					</nested:equal>
+					
+						<!--  change diagnosis button -->
+						<%submitString = "this.form.method.value='changeDiagnosis';";
+				submitString = submitString + "this.form.deleteId.value=" + "'"
+						+ ind.intValue() + "';";
+				%>					
+						<input type="submit" value="Change Issue" onclick="<%=submitString%>">
+				</security:oscarSec>
+	<%}
+	else{%>
+						Active Community Issue
+	<%}%>
+					</td>
+				</tr>
+			<%
+			}
 			%>
-					<input type="submit" value="delete" onclick="<%=submitString%>">
-				</nested:equal>
-				
-					<!--  change diagnosis button -->
-					<%submitString = "this.form.method.value='changeDiagnosis';";
-			submitString = submitString + "this.form.deleteId.value=" + "'"
-					+ ind.intValue() + "';";
-			%>					
-					<input type="submit" value="Change Issue" onclick="<%=submitString%>">
-			</security:oscarSec>
-<%}
-else{%>
-					Active Community Issue
-<%}%>
-				</td>
-			</tr>
 		</nested:iterate>
 
 	</table>
 	<br>
 	<br>
-	<input id="showResolved" type="button" value="Show Resolved Issues" onclick="showResolvedIssues()" />
-	<input id="hideResolved" type="button" value="Hide Resolved Issues" onclick="hideResolvedIssues()" />
-	<script type="text/javascript">
-		function showResolvedIssues()
+	<%
+		if (showResolved)
 		{
-			var resolvedRows=document.getElementsByName("resolvedRow");
-			for (var i=0; i<resolvedRows.length; i++)
-			{
-				resolvedRows[i].style.display="";
-			}
-			
-			document.getElementById("showResolved").style.display="none";
-			document.getElementById("hideResolved").style.display="inline";
+			%>
+				<input id="hideResolved" type="button" value="Hide Resolved Issues" onclick="document.location=document.location.href.replace('&amp;showResolved=true','')" />
+			<%
 		}
-		
-		function hideResolvedIssues()
+		else
 		{
-			var resolvedRows=document.getElementsByName("resolvedRow");
-			for (var i=0; i<resolvedRows.length; i++)
-			{
-				resolvedRows[i].style.display="none";
-			}
-			
-			document.getElementById("showResolved").style.display="inline";
-			document.getElementById("hideResolved").style.display="none";
+			%>
+				<input id="showResolved" type="button" value="Show Resolved Issues" onclick="document.location=document.location.href+'&amp;showResolved=true'" />
+			<%
 		}
-
-		// default
-		hideResolvedIssues();
-	</script>	
+	%>
 	<br>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="w">
 		<nested:submit value="add new issue" onclick="this.form.method.value='addNewIssue';" />
