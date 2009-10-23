@@ -236,6 +236,14 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
             Phone 2
             </td>
         </tr>
+        <tr>
+            <td>
+            <html:multibox property="select" value="email"/>
+            </td>
+            <td>
+                <bean:message key="oscarReport.oscarReportscpbDemo.msgEmail"/>
+            </td>
+        </tr>
        <tr>
             <td>
             <html:multibox property="select" value="year_of_birth"/>
@@ -371,6 +379,15 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
             </td>
             <td>
             Family Doctor
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <html:multibox property="select" value="newsletter"/>
+
+            </td>
+            <td>
+                <bean:message key="oscarReport.oscarReportDemoReport.frmNewsletter" />
             </td>
         </tr>
     </table>
@@ -620,7 +637,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
         <table border=1>
         <tr>
             <%for (int i = 0; i < selectArray.length;i++){%>
-                <th>
+                <th>                    
                     <%=dcn.getColumnTitle(selectArray[i])%>
                 </th>
             <%}%>
