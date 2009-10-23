@@ -297,15 +297,16 @@ body {
                                         <tr>
                                             <td>
                                                 <div class="DivContentSectionHead">
-                                                    <bean:message key="SearchDrug.section2Title" /> (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">
-                                                    <bean:message key="SearchDrug.Print"/></a>) &nbsp;&nbsp;(<a href="#" onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>)
+                                                    <bean:message key="SearchDrug.section2Title" />
                                                     &nbsp;&nbsp;
-                                                    (<a href="javascript:void(0);" name="cmdAllergies"   onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 200px" ><bean:message key="SearchDrug.msgViewEditAllergies"/></a>)
+                                                    <a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')"><bean:message key="SearchDrug.Print"/></a>
                                                     &nbsp;&nbsp;
-                                                    (<a href="javascript:void(0);"name="cmdRePrescribe"  onclick="javascript:RePrescribeLongTerm();" style="width: 200px" ><bean:message key="SearchDrug.msgReprescribeLongTermMed"/></a>)
+                                                    <a href="#" onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>
+                                                    &nbsp;&nbsp;
+                                                    <a href="javascript:void(0);"name="cmdRePrescribe"  onclick="javascript:RePrescribeLongTerm();" style="width: 200px" ><bean:message key="SearchDrug.msgReprescribeLongTermMed"/></a>
 
                                                     &nbsp;&nbsp;
-                                                    (<a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>)
+                                                    <a href="javascript: void(0);" onclick="callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');" >DS run</a>
                                                 </div>
 
                                             </td>
