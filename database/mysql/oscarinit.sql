@@ -615,7 +615,7 @@ CREATE TABLE drugs (
   patient_compliance tinyint(1),
   outside_provider_name varchar(100),
   outside_provider_ohip varchar(20),
-  archived_reason varchar(100) default 'deleted';,
+  archived_reason varchar(100) default 'deleted',
   archived_date datetime,
   hide_from_drug_profile tinyint(1) default '0',
   PRIMARY KEY  (drugid)
