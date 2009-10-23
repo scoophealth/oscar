@@ -54,10 +54,11 @@
 	<span class="ScreenTitle" >oscarRx</span>
                    --<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" />
 		     <b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
-                     <b><bean:message key="SearchDrug.PreferedPharmacy"/> :</b> <a href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs"><%=prefPharmacy%></a>
+                     <b>
+                         <a style="color:white; "href="SelectPharmacy.jsp"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> <a  style="color:white;" href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs" ><%=prefPharmacy%></a>
 				<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 						<indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">
-							<a href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send To PHR</a>
+							<a href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send To myOscar</a>
 						</indivo:indivoRegistered>
 					</oscar:oscarPropertiesCheck>
                   
