@@ -304,7 +304,7 @@ function navBarLoader() {
               
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
-                  ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",
+                  ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3&numToDisplay=12",
                   ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds",
                   ctx + "/CaseManagementView.do?hc=993333&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors",
                   ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory",
