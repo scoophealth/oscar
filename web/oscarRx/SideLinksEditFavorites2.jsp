@@ -32,11 +32,10 @@
         %>
 <td width="10%" height="100%" valign="top">
 <div class="PropSheetMenu">
-<p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgSpecial"/></p>
-<p class="PropSheetMenuItemLevel1"><a href="SelectPharmacy.jsp"><bean:message key="oscarRx.sideLinks.msgEditPharmacy"/></a></p>
-<p class="PropSheetMenuItemLevel1"><a href="EditFavorites.jsp"><bean:message key="oscarRx.sideLinks.msgEditFavorites"/></a></p>
-<p class="PropSheetMenuItemLevel1"><a href="CopyFavorites.jsp"><bean:message key="oscarRx.sideLinks.msgCopyFavorites"/></a></p>
-<p class="PropSheetLevel1CurrentItem<%=alle%>"><bean:message key="oscarRx.sideLinks.msgAllergies"/></p>
+<p class="PropSheetLevel1CurrentItem<%=alle%>">
+    <bean:message key="oscarRx.sideLinks.msgAllergies"/>
+    <a href="javascript:void(0);" name="cmdAllergies"   onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 200px" >+</a>
+</p>
 <p class="PropSheetMenuItemLevel1">
 <%
                 
@@ -47,7 +46,10 @@
 <%=allergies[j].getAllergy().getShortDesc(13,8,"...")%> </a></p>
 <%}%>
 </p>
-<p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/></p>
+<p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/>
+<a href="EditFavorites.jsp">edit</a>
+<a href="CopyFavorites.jsp">copy</a>  <%-- <bean:message key="oscarRx.sideLinks.msgCopyFavorites"/> --%>
+</p>
 <p class="PropSheetMenuItemLevel1">
 <%
         oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites
