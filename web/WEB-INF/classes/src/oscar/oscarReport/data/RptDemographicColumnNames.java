@@ -59,6 +59,8 @@ public class RptDemographicColumnNames {
         hstbl.put("hc_type",new String("HC Type"));
         hstbl.put("hc_renew_date",new String("HC Renew Date"));
         hstbl.put("family_doctor",new String("Family Doctor"));
+        hstbl.put("newsletter", new String("Newsletter"));
+        hstbl.put("email", new String("Email"));
 
         backhash = new java.util.Hashtable();
 
@@ -89,8 +91,8 @@ public class RptDemographicColumnNames {
         backhash.put("HC Renew Date",new String("hc_renew_date"));
         backhash.put("Family Doctor",new String("family_doctor"));
         backhash.put("Random",new String("rand()"));
-
-
+        backhash.put("newsletter", new String("Newsletter"));
+        backhash.put("email", new String("Email"));
         }
 
 
