@@ -40,7 +40,7 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page
 	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.caisi.model.Role"%>
+<%@page import="com.quatro.dao.security.*,com.quatro.model.security.Secrole"%>
 
 
 <%@page import="org.oscarehr.util.EncounterUtil"%><jsp:useBean
@@ -415,7 +415,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		<%
                         List roles = (List)request.getAttribute("roles");
                         for( int num = 0; num < roles.size(); ++num ) {
-                        Role role = (Role)roles.get(num);
+                        Secrole role = (Secrole)roles.get(num);
                         %>
 		<li><html:multibox property="filter_roles"
 			value="<%=String.valueOf(role.getId())%>"
