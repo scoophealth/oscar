@@ -26,17 +26,25 @@ package oscar.dms.actions;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Hashtable;
-
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.oscarehr.common.model.Provider;
+import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
@@ -47,17 +55,18 @@ import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.oscarEncounter.data.EctProgram;
 import oscar.util.UtilDateUtilities;
 
 public class AddEditDocumentAction extends DispatchAction {
-        
+
     public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
         System.out.println("IN MULTIFAST content len"+request.getContentLength()+" ---- "+request.getParameter("provider"));
         Hashtable errors = new Hashtable();
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
-        
+
         FormFile docFile = fm.getFiledata();
-        
+
          String fileName = docFile.getFileName();
 	 String user = (String)request.getSession().getAttribute("user");
             EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
@@ -73,28 +82,25 @@ public class AddEditDocumentAction extends DispatchAction {
             if (fileName.endsWith(".PDF") || fileName.endsWith(".pdf")){
                 newDoc.setContentType("application/pdf");
             }
-            
+
             String doc_no = EDocUtil.addDocumentSQL(newDoc);
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
-        
+
         if (request.getParameter("provider") !=null){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
             String proNo = request.getParameter("provider");
             providerInboxRoutingDao.addToProviderInbox(proNo,doc_no,"DOC");
         }
-            
-            
-            
-        
+
         if (docFile != null){
-            System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());        
+            System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());
         }
-        
-        return mapping.findForward("fastUploadSuccess"); 
-    
+
+        return mapping.findForward("fastUploadSuccess");
+
     }
-    
+
     public ActionForward fastUpload(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
         Hashtable errors = new Hashtable();
@@ -111,17 +117,17 @@ public class AddEditDocumentAction extends DispatchAction {
             }
             writeLocalFile(docFile, fileName);
             newDoc.setContentType(docFile.getContentType());
-            
+
             EDocUtil.addDocumentSQL(newDoc);
-   
-          
-          return mapping.findForward("fastUploadSuccess"); 
+
+
+          return mapping.findForward("fastUploadSuccess");
     }
-    
+
     public ActionForward unspecified(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response){
         return execute2(mapping, form,request, response);
     }
-    
+
     public ActionForward execute2(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
@@ -160,9 +166,10 @@ public class AddEditDocumentAction extends DispatchAction {
             return forward;
         }
     }
-    
+
     //returns true if successful
     private boolean addDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
+        System.out.println("=============in addDocument============");
         Hashtable errors = new Hashtable();
         try {
             if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
@@ -178,30 +185,124 @@ public class AddEditDocumentAction extends DispatchAction {
                 errors.put("uploaderror", "dms.error.uploadError");
                 throw new FileNotFoundException();
             }
-            String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
+            //original file name
+            String fileName1 = docFile.getFileName();
+            System.out.println("fileName1: "+fileName1);
+            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName1, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
             newDoc.setDocPublic(fm.getDocPublic());
-            fileName = newDoc.getFileName();
+            //new file name with date attached
+            String fileName2 = newDoc.getFileName();
             //save local file
-            writeLocalFile(docFile, fileName);
+            writeLocalFile(docFile, fileName2);
             newDoc.setContentType(docFile.getContentType());
 
             // if the document was added in the context of a program
             String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
             if (programIdStr!=null) newDoc.setProgramId(Integer.valueOf(programIdStr));
-            
+
             //---
             String doc_no = EDocUtil.addDocumentSQL(newDoc);
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
+            System.out.println("DEMOGRAPHIC NO: "+request.getSession().getAttribute("casemgmt_DemoNo").toString());
+            System.out.println("USER: "+request.getSession().getAttribute("user").toString());
+
+            Locale locale = getLocale(request);
+            
+            ResourceBundle props=ResourceBundle.getBundle("oscarResources", locale);
+            
+            //add a note to the newly added document.
+            Date now=EDocUtil.getDmsDateTimeAsDate();
+            //System.out.println("here11");
+            String docDesc=EDocUtil.getLastDocumentDesc();
+                       
+            CaseManagementNote cmn=new CaseManagementNote();
+            cmn.setUpdate_date(now);
+            //java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
+            cmn.setObservation_date(now);
+            String demoNo=request.getSession().getAttribute("casemgmt_DemoNo").toString();
+            cmn.setDemographic_no(demoNo);
+            HttpSession se = request.getSession();
+            String user_no = (String) se.getAttribute("user");
+            String prog_no = new EctProgram(se).getProgram(user_no);
+            WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+            CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+            cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
+            System.out.println("here");
+
+            System.out.println("here33 "+fm.getDocCreator());
+
+            String provFirstName=EDocUtil.getProviderInfo("first_name", fm.getDocCreator());
+            String provLastName=EDocUtil.getProviderInfo("last_name", fm.getDocCreator());
+            System.out.println("here22");
+            String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
+
+            System.out.println("here0 "+strNote);
+            cmn.setNote(strNote);
+            cmn.setSigned(true);
+            cmn.setSigning_provider_no("-1");
+            cmn.setProgram_no(prog_no);
+            cmn.setReporter_caisi_role("1");
+            cmn.setReporter_program_team("0");
+            cmn.setPassword("NULL");
+            cmn.setLocked(false);
+            cmn.setHistory(strNote);
+            cmn.setPosition(0);
+
+           
+           cmm.saveNoteSimple(cmn);
+
+            //Add a noteLink to casemgmt_note_link
+            CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
+            cmnl.setTableName(cmnl.DOCUMENT);
+            cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
+            cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+            System.out.println("ValuesSavedInCaseManagementNoteLink: ");
+            System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
+            EDocUtil.addCaseMgmtNoteLink(cmnl);
+
+            //add an annotation to document note in casemgmt_note table.
+    /*        String strNote2 = docDesc + props.getString("oscarEncounter.doc.annotation") +": ";
+            CaseManagementNote docAnnotation=new CaseManagementNote();
+            docAnnotation.setUpdate_date(now);
+            docAnnotation.setObservation_date(now);
+            docAnnotation.setDemographic_no(cmn.getDemographic_no());
+            docAnnotation.setProviderNo(cmn.getProviderNo());
+            docAnnotation.setNote(strNote2);
+            docAnnotation.setSigned(cmn.isSigned());
+            docAnnotation.setSigning_provider_no(cmn.getSigning_provider_no());
+            docAnnotation.setProgram_no(cmn.getProgram_no());
+            docAnnotation.setReporter_caisi_role(cmn.getReporter_caisi_role());
+            docAnnotation.setReporter_program_team(cmn.getReporter_program_team());
+            docAnnotation.setPassword(cmn.getPassword());
+            docAnnotation.setLocked(cmn.isLocked());
+            docAnnotation.setHistory("");
+            docAnnotation.setPosition(cmn.getPosition());
+            docAnnotation.setUuid(UUID.randomUUID().toString());
+
+            //add a new row in note_link table.
+            CaseManagementNoteLink cmnl2=new CaseManagementNoteLink();
+            cmnl2.setTableName(cmnl2.DOCUMENT);
+            String docNoteId=EDocUtil.getLastNoteId();
+            cmnl2.setTableId(Long.parseLong(docNoteId)) ;
+
+            //save the document annotation.
+            cmm.saveNoteSimple(docAnnotation);
+            String docAnnoId=EDocUtil.getLastNoteId();
+            cmnl2.setNoteId(Long.parseLong(docAnnoId));
+            System.out.println("ValuesSavedInCaseManagementNoteLink: ");
+            System.out.println("5= "+cmnl2.DOCUMENT+" last doc note no="+docNoteId+" last doc annotation id="+docAnnoId);
+            EDocUtil.addCaseMgmtNoteLink(cmnl2);
+*/
         } catch (Exception e) {
             //ActionRedirect redirect = new ActionRedirect(mapping.findForward("failAdd"));
             request.setAttribute("docerrors", errors);
             request.setAttribute("completedForm", fm);
             return false;
         }
+        System.out.println("=============End in addDocument============");
         return true;
     }
-    
+
     private ActionForward editDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
         Hashtable errors = new Hashtable();
         try {
@@ -217,8 +318,8 @@ public class AddEditDocumentAction extends DispatchAction {
             String fileName = docFile.getFileName();
 	    String reviewerId = filled(fm.getReviewerId()) ? fm.getReviewerId() : "";
 	    String reviewDateTime = filled(fm.getReviewDateTime()) ? fm.getReviewDateTime() : "";
-            
-	    
+
+
 	    if (!filled(reviewerId) && fm.getReviewDoc()) {
 		reviewerId = (String)request.getSession().getAttribute("user");
 		reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
@@ -226,7 +327,7 @@ public class AddEditDocumentAction extends DispatchAction {
                     LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REVIEWED , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr(),fm.getFunctionId());
                 }else{
                     LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REVIEWED , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr());
-                
+
                 }
 	    }
             EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
@@ -243,14 +344,14 @@ public class AddEditDocumentAction extends DispatchAction {
                 throw new FileNotFoundException();
             }
             EDocUtil.editDocumentSQL(newDoc, fm.getReviewDoc());
-            
+
             if (fm.getFunction() != null && fm.getFunction().equals("demographic")){
                 LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr(),fm.getFunctionId());
             }else{
                 LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr());
 
             }
-            
+
         } catch (Exception e) {
             request.setAttribute("docerrors", errors);
             request.setAttribute("completedForm", fm);
@@ -259,7 +360,7 @@ public class AddEditDocumentAction extends DispatchAction {
         }
         return mapping.findForward("successEdit");
     }
-    
+
     private void writeLocalFile(FormFile docFile, String fileName) throws Exception {
         InputStream fis = null;
         FileOutputStream fos = null;
@@ -279,7 +380,7 @@ public class AddEditDocumentAction extends DispatchAction {
             if (fos != null) fos.close();
         }
     }
-    
+
     private boolean filled(String s) {
         return (s!=null && s.trim().length()>0);
     }
