@@ -1,27 +1,29 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for 
- * Centre for Research on Inner City Health, St. Michael's Hospital, 
- * Toronto, Ontario, Canada 
+ *
+ * This software was written for
+ * Centre for Research on Inner City Health, St. Michael's Hospital,
+ * Toronto, Ontario, Canada
  */
 
 package org.oscarehr.casemgmt.model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -32,6 +34,10 @@ import java.util.Set;
 
 import org.caisi.model.BaseObject;
 import org.oscarehr.common.model.Provider;
+import oscar.dms.EDoc;
+import oscar.oscarDB.DBHandler;
+import oscar.dms.EDocUtil;
+
 
 public class CaseManagementNote extends BaseObject {
 
@@ -39,17 +45,14 @@ public class CaseManagementNote extends BaseObject {
 	private Date update_date;
 	private Date create_date;
 	private Date observation_date;
-
 	private String demographic_no;
 	private String note;
 	private boolean signed = false;
 	private boolean includeissue = true;
 	private String providerNo;
-
 	private String signing_provider_no;
 	private String encounter_type = "";
 	private String billing_code = "";
-
 	private String program_no;
 	private String reporter_caisi_role;
 	private String reporter_program_team;
@@ -355,9 +358,9 @@ public class CaseManagementNote extends BaseObject {
 		};
 
 	}
-
 	public static Comparator<CaseManagementNote> noteObservationDateComparator = new Comparator<CaseManagementNote>() {
-		public int compare(CaseManagementNote note1, CaseManagementNote note2) {
+
+            public int compare(CaseManagementNote note1, CaseManagementNote note2) {
 			if (note1 == null || note2 == null) {
 				return 0;
 			}
@@ -441,4 +444,117 @@ public class CaseManagementNote extends BaseObject {
 	public void setFacilityName(String facilityName) {
 		this.facilityName = facilityName;
 	}
+
+         public boolean isDocumentNote() {
+        String sql = "select id from casemgmt_note_link where note_id=" + this.id + " and table_name=5";
+        System.out.println("isDocNote query: "+sql);
+        ResultSet rs = null;
+        rs = getSQL(sql);
+        boolean bool = false;
+        try {
+            bool = rs.first();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        //System.out.println("ResultSet first value ="+bool);
+
+        return bool;
+    }
+
+    //check if note is a document annotation.
+   /* public boolean isDocumentAnnotation(){
+        boolean bool=false;
+
+        Long tableId=EDocUtil.getTableIdFromNoteId(this.id);
+        System.out.println("tableId="+tableId);
+        if (tableId==0L) {
+            bool=false; //false if no tableId is related to this.id
+        }
+        else {
+            CaseManagementNote cmn=new CaseManagementNote();
+            cmn.setId(tableId);
+            if (cmn.isDocumentNote()){
+                Long tableId2=EDocUtil.getTableIdFromNoteId(tableId);
+                //System.out.println("tableId2="+tableId2);
+                EDoc doc = EDocUtil.getDoc(tableId2.toString());
+                if(doc==null){
+                    bool=false;
+                }
+                else{//double check if the document has corresponding document note.
+                    Long docId=Long.parseLong(doc.getDocId());
+                    //System.out.println("it's a doc");
+                    //get the noteId corresponding to docId in casemgmt_note_link table.
+                    Long noteId=EDocUtil.getNoteIdFromDocId(docId);
+                    //System.out.println("noteIdFromDoc="+noteId);
+                    if(noteId==0){bool=false;}
+                    else{
+                        System.out.println("noteId="+noteId);
+                        System.out.println("tableId="+tableId);
+                        //true if the noteId is same as the tableId;
+                        if(noteId.equals(tableId)){
+                            System.out.println("this is true");
+                            bool=true;
+                        }
+                    }
+                }
+            }
+            else{
+                bool=false;//false if the noteId is not a document note
+            }
+        }
+        return bool;
+    }
+*/
+
+     public boolean isDocumentAnnotation(){
+        boolean bool=false;        
+        //check if annotation field in casemgmt_note table is set to DOC.
+        String annotationType=EDocUtil.typeAnnotation(this.id);
+        System.out.println("tableId="+annotationType);
+        if (annotationType.equals("DOC")) {
+            bool=true;
+        }
+        return bool;
+    }
+    public Long getDocIdFromAnno(Long annoId){
+        Long docId=0L;
+        CaseManagementNote cmn=new CaseManagementNote();
+        cmn.setId(annoId);
+        if(cmn.isDocumentAnnotation()){
+            docId=EDocUtil.getTableIdFromNoteId(this.id);
+        }
+        return docId;
+    }
+    public boolean isFirstDocNote(Long tableId) {
+        //System.out.println("tableId="+tableId);
+        String sql = "select min(note_id) as min_note_id from casemgmt_note_link where table_id=" + tableId;
+        ResultSet rs = null;
+        boolean bool = false;
+        try {
+            rs = getSQL(sql);
+            if (rs.first()) {
+                 String str = rs.getString("min_note_id");
+                 //System.out.println("isFirstDocNote str="+str);
+
+                if (str==null || this.id != Long.parseLong(str)) {
+                    bool = false;
+                } else {bool = true;}
+             }
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return bool;
+    }
+
+    protected static ResultSet getSQL(String sql) {
+        ResultSet rs = null;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            rs = db.GetSQL(sql);
+            db.CloseConn();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return (rs);
+    }
 }
