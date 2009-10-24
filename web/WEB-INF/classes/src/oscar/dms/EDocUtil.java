@@ -38,6 +38,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.MyDateFormat;
@@ -117,6 +119,17 @@ public class EDocUtil extends SqlUtilBaseS {
             sqe.printStackTrace();
         }
         return doctypes;
+    }
+ 
+
+    public static void addCaseMgmtNoteLink(CaseManagementNoteLink cmnl) {
+
+        String cnSQL = "INSERT INTO casemgmt_note_link (" +
+                "table_name,table_id,note_id) " +
+                "VALUES ('" +
+                cmnl.getTableName() + "','" + cmnl.getTableId() + "','" + cmnl.getNoteId() + "')";
+        System.out.println("ADD CASEMGMT NOTE LINK : " + cnSQL);
+        runSQL(cnSQL);
     }
 
     public static String addDocumentSQL(EDoc newDocument) {
@@ -362,7 +375,6 @@ public class EDocUtil extends SqlUtilBaseS {
 
         return resultDocs;
     }
-
 
     public ArrayList<EDoc> getUnmatchedDocuments(String creator, String responsible, Date startDate, Date endDate, boolean unmatchedDemographics){
        ArrayList<EDoc> list = new ArrayList();
@@ -653,7 +665,8 @@ public class EDocUtil extends SqlUtilBaseS {
         return key;
     }
 
-    private static String getLastDocumentNo() {
+//private static String getLastDocumentNo() {
+    public static String getLastDocumentNo() {
         String documentNo = null;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -664,11 +677,46 @@ public class EDocUtil extends SqlUtilBaseS {
             }
             rs.close();
             db.CloseConn();
-        }
-        catch (SQLException e) {
+        }        catch (SQLException e) {
             e.printStackTrace();
         }
         return documentNo;
+    }
+public static String getLastDocumentDesc() {
+        String docDesc=null;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String docNumber=EDocUtil.getLastDocumentNo();
+
+            String sql = "select docdesc from document where document_no="+docNumber;
+            ResultSet rs = db.GetSQL(sql);
+            if (rs.next()) {
+                 docDesc= oscar.Misc.getString(rs, 1);
+            }
+            rs.close();
+            db.CloseConn();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("docDesc="+docDesc);
+        return docDesc;
+    }
+
+    public static String getLastNoteId() {
+        String noteId = null;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select max(note_id) from casemgmt_note";
+            ResultSet rs = db.GetSQL(sql);
+            if (rs.next()) {
+                noteId = oscar.Misc.getString(rs, 1);
+            }
+            rs.close();
+            db.CloseConn();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return noteId;
     }
 
     public byte[] getFile(String fpath) {
@@ -685,20 +733,16 @@ public class EDocUtil extends SqlUtilBaseS {
             fis.read(fdata);
             fis.close();
 
-        }
-        catch (NullPointerException ex) {
+        }        catch (NullPointerException ex) {
             ex.printStackTrace();
-        }
-        catch (FileNotFoundException ex) {
+        }        catch (FileNotFoundException ex) {
             ex.printStackTrace();
-        }
-        catch (IOException ex) {
+        }        catch (IOException ex) {
             ex.printStackTrace();
         }
 
         return fdata;
     }
-
 
 	//add for inbox manager
 
@@ -741,4 +785,97 @@ public class EDocUtil extends SqlUtilBaseS {
         }
     	return flag;
     }
+
+       //get noteId from tableId
+    public static Long getNoteIdFromDocId(Long docId){
+        String getNoteIdSql = "select note_id from casemgmt_note_link where table_name=5 and table_id=" + docId;
+        System.out.println("getTableIdSql="+getNoteIdSql);
+        Long returnVal=0L;
+        try {
+            ResultSet rs = getSQL(getNoteIdSql);
+            if (!rs.first()) {
+                return returnVal;
+            } else {
+                System.out.println("rs.getstring="+rs.getString("note_id"));
+                returnVal = Long.parseLong(rs.getString("note_id"));
+                }
+            }
+        catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return returnVal;
+
+    }
+
+    //get tableId from noteId
+    public static Long getTableIdFromNoteId(Long noteId){
+        System.out.println("noteIdVal="+noteId);
+        String getTableIdSql = "select table_id from casemgmt_note_link where table_name=5 and note_id=" + noteId;
+        System.out.println("getTableIdSql="+getTableIdSql);
+        Long returnVal=0L;
+        try {
+            ResultSet rs = getSQL(getTableIdSql);
+            if (!rs.first()) {
+                return returnVal;
+            } else {
+                System.out.println("rs.getstring="+rs.getString("table_id"));
+                returnVal = Long.parseLong(rs.getString("table_id"));
+                }
+            }
+        catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return returnVal;
+
+    }
+
+    //get document from its note
+    public static EDoc getDocFromNote(Long noteId) {
+        String getDocIdSql = "select table_id from casemgmt_note_link where table_name=5 and note_id=" + noteId;
+        System.out.println("getDocIdSql="+getDocIdSql);
+        EDoc doc = new EDoc();
+        int counter=0;
+        try {
+            ResultSet rs = getSQL(getDocIdSql);
+            if (!rs.first()) {
+                return doc;
+            } else {
+                System.out.println("rs.getstring="+rs.getString("table_id"));
+                Integer docId = Integer.parseInt(rs.getString("table_id"));
+                String getDocSql = "select document_no, docfilename, status from document where document_no=" + docId;
+                ResultSet rs2 = getSQL(getDocSql);
+                if (!rs2.first()) {
+                    return doc;
+                } else {
+                    counter++;
+                    System.out.println("counter="+counter);
+                    doc.setDocId(rs2.getString("document_no"));
+                    doc.setFileName(rs2.getString("docfilename"));
+                    doc.setStatus(rs2.getString("status").charAt(0));
+                }
+            }
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return doc;
+    }
+
+    public static String typeAnnotation(Long noteId){
+        String getDocIdSql = "select annotation from casemgmt_note where note_id=" + noteId;
+        System.out.println("getDocIdSql="+getDocIdSql);
+        String retStr="";
+        try {
+            ResultSet rs = getSQL(getDocIdSql);
+            if (!rs.first()) {
+                return retStr;//if the noteId is not in casemgmt_note tale.
+            } else{
+                System.out.println("rs.getstring="+rs.getString("annotation"));
+                retStr=rs.getString("annotation");
+            }
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return retStr;
+    }
 }
+
