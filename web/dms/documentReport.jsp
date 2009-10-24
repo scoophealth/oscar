@@ -31,6 +31,7 @@ if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 System.out.println("Role Name " + roleName$);
 String user_no = (String) session.getAttribute("user");
+String demographicNo=(String)session.getAttribute("casemgmt_DemoNo");
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 
@@ -470,7 +471,7 @@ function popup1(height, width, url, windowName){
 					     title="<bean:message key="dms.documentReport.btnEdit"/>"></a>
 		    <%	} %>
 					    <a href="#" title="Annotation"
-					       onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=user_no%>','anwin','width=400,height=250');">
+					       onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=demographicNo%>','anwin','width=400,height=250');">
 					      <img src="../images/notes.gif" border="0">
 					    </a>
                           <% if(!moduleid.equals((String)session.getAttribute("user"))) {%>
