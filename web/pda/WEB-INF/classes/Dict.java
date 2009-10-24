@@ -49,9 +49,9 @@ public class Dict extends Properties {
     }
   }
   public void setDef(HttpServletRequest req) {
-    java.util.Enumeration enum=req.getParameterNames();
-    while(enum.hasMoreElements()) {
-      String name=(String)enum.nextElement();
+    java.util.Enumeration em=req.getParameterNames();
+    while(em.hasMoreElements()) {
+      String name=(String)em.nextElement();
       String val=req.getParameter(name);
       setDef(name,val);
     }
