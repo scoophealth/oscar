@@ -3,31 +3,31 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
- 
+
 -->
 <%@page	import="org.springframework.web.context.WebApplicationContext,
 		org.springframework.web.context.support.WebApplicationContextUtils,
@@ -37,6 +37,7 @@
 		oscar.oscarEncounter.data.EctProgram,
 		java.util.Date, java.util.List"%>
 <%@page import="oscar.log.LogAction, oscar.log.LogConst"%>
+<%@page import="oscar.dms.EDocUtil"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -46,52 +47,64 @@
 <%
     String attrib_name = request.getParameter("atbname");
     if (attrib_name==null) attrib_name="";
-    
+
     String demo = request.getParameter("demo");
     String display = request.getParameter("display");
+System.out.println("demo_no="+demo);
     boolean saved = Boolean.valueOf(request.getParameter("saved"));
-    
+
     String tid = request.getParameter("table_id");
     Long tableId = 0L;
     if (filled(tid)) tableId = Long.valueOf(tid);
     else tid = "";
-    
+
     HttpSession se = request.getSession();
     String user_no = (String) se.getAttribute("user");
-    
+
     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
     CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-    
+
     Integer tableName = cmm.getTableNameByDisplay(display);
     String note = "";
-    
-    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);
+    System.out.println("========= important section ===============");
+    System.out.println("tableName="+tableName+"---"+"tableId="+tableId);
+    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);//the lastest note which should be the annotation instead of document note.
     CaseManagementNote p_cmn = null;
     if (cml!=null) p_cmn = cmm.getNote(cml.getNoteId().toString());
+
     String uuid = "";
-    if (p_cmn!=null) uuid = p_cmn.getUuid();
-    
+    //if get provider no is -1 , it's a document note.
+    if (p_cmn!=null && !p_cmn.getProviderNo().equals("-1") ) uuid = p_cmn.getUuid();
+    else p_cmn=null;//don't use document note as annotation.
+    System.out.println("uuid value="+uuid);
     //get note from attribute
     CaseManagementNote a_cmn = (CaseManagementNote)se.getAttribute(attrib_name);
+    System.out.println("attrib_name value="+attrib_name);
     if (a_cmn!=null) {
 	note = a_cmn.getNote();
-    } else { 
+        System.out.println("a_cmn is not null , note="+note);
+    } else {
 	//get note from database
 	if (p_cmn!=null) { //previous annotation exists
 	    note = p_cmn.getNote();
+            System.out.println("if p_cmn is not null, note="+note);
 	}
     }
     if (saved) {
 	String prog_no = new EctProgram(se).getProgram(user_no);
+        //create a note with demo, user_no, prog_no
 	CaseManagementNote cmn = createCMNote(request.getParameter("note"), demo, user_no, prog_no);
+        System.out.println("annotation note id="+cmn.getNote());
 	if (cmn!=null) {
 	    if (p_cmn!=null) {  //previous annotation exists
-		cmn.setUuid(uuid); //assign same UUID to new annotation
+/*            if (p_cmn!=null && note !="") { //previous annotation exists
+*/		cmn.setUuid(uuid); //assign same UUID to new annotation
 	    }
 	    if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
                 System.out.println("NOT SAVING");
 		if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
 	    } else { //annotated subject exists
+                System.out.println("saving annotation here");
 		cmm.saveNoteSimple(cmn);
 		cml = new CaseManagementNoteLink();
 		cml.setTableName(tableName);
@@ -103,7 +116,7 @@
 	}
 	response.sendRedirect("../close.html");
     }
-    
+
     //Display revision history
     Integer rev = 0;
     if (p_cmn!=null) {
@@ -116,7 +129,7 @@
 <html:html locale="true">
 <head>
     <title>Annotation</title>
-    
+
     <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
     <script type="text/javascript">
 	function showHistory(uuid,display) {
@@ -166,7 +179,7 @@
 <%!
     CaseManagementNote createCMNote(String note, String demo_no, String provider, String program_no) {
 	if (!filled(note)) return null;
-	
+
 	CaseManagementNote cmNote = new CaseManagementNote();
 	    cmNote.setUpdate_date(new Date());
 	    cmNote.setObservation_date(new Date());
@@ -179,10 +192,10 @@
 	    cmNote.setReporter_caisi_role("2");  //secRole for "doctor"
 	    cmNote.setReporter_program_team("0");
 	    cmNote.setNote(note);
-	
+
 	return cmNote;
     }
-    
+
     boolean filled(String s) {
 	return (s!=null && s.trim().length()>0);
     }
