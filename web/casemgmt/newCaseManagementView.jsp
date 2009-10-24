@@ -1,25 +1,25 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!-- 
+<!--
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *  
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
  -->
 
@@ -27,28 +27,32 @@
 
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-
-<%@page
-	import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException"%>
+<%@page import="java.util.Enumeration"%>
+<%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO"%>
+<%@page	import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.Enumeration, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException" %>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page
-	import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*"%>
+<%@page	import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*"%>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="oscar.util.DateUtils"%>
+<%@page import="oscar.dms.EDocUtil"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page
-	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.caisi.model.Role"%>
+<%@page import="org.oscarehr.casemgmt.common.Colour"%>
+<%@page import="oscar.dms.EDoc"%>
+<%@page	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="com.quatro.dao.security.*,com.quatro.model.security.Secrole"%>
 
+<%@page import="java.lang.Character"%>
 
 <%@page import="org.oscarehr.util.EncounterUtil"%><jsp:useBean
 	id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
-        
+
 
 <%
     String demographicNo = request.getParameter("demographicNo");
@@ -60,48 +64,48 @@
     }
     long start = System.currentTimeMillis();
     long beginning = start;
-    long current = 0;    
-    String provNo = bean.providerNo;    
-    //Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo); 
-    
+    long current = 0;
+    String provNo = bean.providerNo;
+    //Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
+
     String pId=(String)session.getAttribute("case_program_id");
     if (pId==null) pId="";
-    
-    String dateFormat = "dd-MMM-yyyy H:mm";    
+
+    String dateFormat = "dd-MMM-yyyy H:mm";
     long savedId = 0;
     boolean found = false;
     String bgColour = "color:#000000;background-color:#CCCCFF;";
     ArrayList lockedNotes = new ArrayList();
     ArrayList unLockedNotes = new ArrayList();
     ArrayList unEditableNotes = new ArrayList();
-    
+
     java.util.List noteList=(java.util.List)request.getAttribute("Notes");
     int noteSize = noteList != null ? noteList.size() : 0;
-    
+
     SimpleDateFormat jsfmt = new SimpleDateFormat("MMM dd, yyyy");
     Date dToday = new Date();
     String strToday = jsfmt.format(dToday);
-        
+
     String frmName = "caseManagementEntryForm" + demographicNo;
-    CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);    
-    
-    if( request.getParameter("caseManagementEntryForm") == null ) {    
+    CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);
+
+    if( request.getParameter("caseManagementEntryForm") == null ) {
         request.setAttribute("caseManagementEntryForm", cform);
     }
-    
+
 %>
-<script type="text/javascript">  
+<script type="text/javascript">
     numNotes = <%=noteSize%>; //How many saved notes do we have?
     ctx = "<c:out value="${ctx}"/>";
     imgPrintgreen.src = ctx + "/oscarEncounter/graphics/printerGreen.png"; //preload green print image so firefox will update properly
     providerNo = "<%=provNo%>";
     demographicNo = "<%=demographicNo%>";
     case_program_id = "<%=pId%>";
-    
+
     <caisi:isModuleLoad moduleName="caisi">
         caisiEnabled = true;
     </caisi:isModuleLoad>
-        
+
     <c:if test="${sessionScope.passwordEnabled=='true'}">
         passwordEnabled = true;
     </c:if>
@@ -119,13 +123,13 @@
 		selectedTab=CaseManagementViewFormBean.tabs[0];
 	}
 	pageContext.setAttribute("selectedTab",selectedTab);
-		
-	java.util.List aList=(java.util.List)request.getAttribute("Allergies"); 
+
+	java.util.List aList=(java.util.List)request.getAttribute("Allergies");
 	boolean allergies=false;
 	if (aList!=null){
 		allergies = aList.size() > 0;
 	}
-	
+
 	boolean reminders = false;
 	CaseManagementCPP cpp = (CaseManagementCPP)request.getAttribute("cpp");
 	if(cpp!=null){
@@ -157,7 +161,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 				if((allergies && CaseManagementViewFormBean.tabs[x].equals("Allergies"))||(reminders && CaseManagementViewFormBean.tabs[x].equals("Reminders")) ) {
 					extra="color:red;";
 				}
-				
+
 			%>
 			<%if (CaseManagementViewFormBean.tabs[x].equals("Allergies") || CaseManagementViewFormBean.tabs[x].equals("Prescriptions")){%>
 			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
@@ -178,7 +182,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	</tr>
 </table>
 </div>
-<br/> 
+<br/>
 
 <table width="100%">
 <tr>
@@ -196,17 +200,17 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 <tr>
 	<td align="right"  valign="top" nowrap><b>Team:</b></td><td><c:out value="${requestScope.teamName}" /></td>
 </tr>
-<tr>	
+<tr>
 	<td align="right"  valign="top" nowrap></td>
 	<td><c:forEach var="tm" items="${teamMembers}">
 		<c:out value="${tm}" />&nbsp;&nbsp;&nbsp;
-	</c:forEach></td>	
+	</c:forEach></td>
 </tr>
 <tr>
 	<td align="right"  valign="top" nowrap><b>Primary Health Care Provider:</b></td><td><c:out value="${requestScope.cpp.primaryPhysician}" /></td>
 </tr>
 <tr>
-	<td align="right" valign="top" nowrap><b>Primary Counsellor/Caseworker:</b></td><td><c:out value="${requestScope.cpp.primaryCounsellor}" /></td>	
+	<td align="right" valign="top" nowrap><b>Primary Counsellor/Caseworker:</b></td><td><c:out value="${requestScope.cpp.primaryCounsellor}" /></td>
 </tr>
 </table>
 </td>
@@ -215,18 +219,18 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<%String demo=request.getParameter("demographicNo");%>
 	<c:choose>
 		<c:when test="${not empty requestScope.image_filename}">
-			<img style="cursor: pointer;" id="ci" src="<c:out value="${ctx}"/>/images/default_img.jpg" alt="id_photo"  height="100" title="Click to upload new photo." OnMouseOver="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/<c:out value="${requestScope.image_filename}"/>'" OnMouseOut="delay(5000)" window.status='Click to upload new photo'; return true;" onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;"/>	
+			<img style="cursor: pointer;" id="ci" src="<c:out value="${ctx}"/>/images/default_img.jpg" alt="id_photo"  height="100" title="Click to upload new photo." OnMouseOver="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/<c:out value="${requestScope.image_filename}"/>'" OnMouseOut="delay(5000)" window.status='Click to upload new photo'; return true;" onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;"/>
 		</c:when>
 		<c:otherwise>
 			<img style="cursor: pointer;" src="<c:out value="${ctx}"/>/images/defaultR_img.jpg" alt="No_Id_Photo" height="100" title="Click to upload new photo." OnMouseOver="window.status='Click to upload new photo';return true" onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;"/>
 		</c:otherwise>
 	</c:choose>
-	
+
 </td>
 
 </tr>
 </table>
- 
+
 <jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
 --%>
 	<!--Row One Headers -->
@@ -247,8 +251,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     <% } else { %>
                     <bean:message key="oscarEncounter.Index.medHist"/>:
                     <% } %>
-                </div>   
-                
+                </div>
+
                 <div class="RowTop" style="clear:right; float:right; width:18%; text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
                     <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                     <bean:message key="oscarEncounter.Index.x"/></a> |
@@ -262,7 +266,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     <bean:message key="oscarEncounter.Index.f"/></a> |
                     <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                     <bean:message key="oscarEncounter.Index.r"/></a>
-                </div>                                  
+                </div>
 
             <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->--%>
 	<div
@@ -287,9 +291,9 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 <bean:message key="oscarEncounter.Index.msgConcerns"/>:
                 <% } %>
             </div><input type="hidden" name="ocInput"/>
-            
-            <div style="float:left; width:32%; margin-right:-4px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>   
-            
+
+            <div style="float:left; width:32%; margin-right:-4px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>
+
             <div class="RowTop" style="clear:right; float:right; width:18%; text-align:right; vertical-align:bottom; background-color:#CCCCFF;">
                 <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                 <bean:message key="oscarEncounter.Index.x"/></a> |
@@ -388,8 +392,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		<li><html:multibox property="filter_providers" value="a"
 			onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title"/></li>
 		<%
-                        Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");                                                
-                        
+                        Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");
+
                         String providerNo;
                         Provider prov;
                         Iterator<Provider>iter = providers.iterator();
@@ -554,7 +558,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<input type="hidden" name="printCPP" id="printCPP" value="false">
 	<input type="hidden" name="printRx" id="printRx" value="false">
 	<input type="hidden" name="encType" id="encType" value="">
-        
+
 	<div id="mainContent"
 		style="background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;">
 	<div id="issueList"
@@ -573,90 +577,123 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		style="width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;">
 
 	<%
-               
+
                 System.out.println("Notes Size " + noteList.size());
                 %> <c:if test="${not empty Notes}">
 		<%
                     //java.util.List noteList=(java.util.List)request.getAttribute("Notes");
                     int idx = 0;
-                    
+
                     //Notes list will contain all notes including most recently saved
-                    //we need to skip this one when displaying                    
-                    
+                    //we need to skip this one when displaying
+
                     //if we're editing a note, display it
                     //else check for last unsigned note and use it if present
                     if( cform.getCaseNote().getId() != null ) {
-                    savedId = cform.getCaseNote().getId();                
-                    }  
+                    savedId = cform.getCaseNote().getId();
+                    }
                     System.out.println("savedId " + savedId);
-                    
+
                     //Check user property for stale date and show appropriately
                     UserProperty uProp = (UserProperty)request.getAttribute(UserProperty.STALE_NOTEDATE);
-                    
+
                     Date dStaleDate = null;
                     int numToDisplay = 5;
                     int numDisplayed = 0;
                     Calendar cal = Calendar.getInstance();
                     if( uProp != null ) {
-                        String strStaleDate = uProp.getValue();                                            
-                        if( strStaleDate.equalsIgnoreCase("A") ) {                            
+                        String strStaleDate = uProp.getValue();
+                        if( strStaleDate.equalsIgnoreCase("A") ) {
                             cal.set(0,1,1);
                         }
                         else {
                             int pastMths = Integer.parseInt(strStaleDate);
                             cal.add(Calendar.MONTH, pastMths);
                         }
-                                                
+
                     }
                     else {
-                        cal.add(Calendar.YEAR,-1);                        
+                        cal.add(Calendar.YEAR,-1);
                     }
-                    
+
                     dStaleDate = cal.getTime();
                     System.out.println("STALE DATE " + dStaleDate);
                     long time1,time2;
 		    String noteStr;
 		    int length;
                     String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors"};
-                    
+
                     /*
                      *  Cycle through notes starting from the most recent and marking them for full inclusion or one line display
                      *  Need to do this now as we only count face to face encounters against limit of how many to fully display
-                     *  If no user preference, show at most five face to face encounter notes 
+                     *  If no user preference, show at most five face to face encounter notes
                      *  Else show all notes withing the user preference
                     */
-                    ArrayList<Boolean>fullTxtFormat = new ArrayList<Boolean>(noteSize);                    
+                    ArrayList<Boolean>fullTxtFormat = new ArrayList<Boolean>(noteSize);
                     ArrayList<String>colourStyle = new ArrayList<String>(noteSize);
                     int pos;
-                    idx = 0;                    
+                    idx = 0;
                     boolean isCPP;
+                     //set all colours
+                        String blackColour="000000";
+                        String documentColour="color:#"+blackColour+";background-color:#"+Colour.documents+";";
+                        String diseaseColour="color:#"+blackColour+";background-color:#"+Colour.disease+";" ;
+                        String eFormsColour="color:#"+blackColour+";background-color:#"+Colour.eForms+";" ;
+                        String formsColour="color:#"+blackColour+";background-color:#"+Colour.forms+";" ;
+                        String labsColour="color:#"+blackColour+";background-color:#"+Colour.labs+";" ;
+                        String measurementsColour="color:#"+blackColour+";background-color:#"+Colour.measurements+";" ;
+                        String messagesColour="color:#"+blackColour+";background-color:#"+Colour.messages+";" ;
+                        String preventionColour="color:#"+blackColour+";background-color:#"+Colour.prevention+";" ;
+                        String ticklerColour="color:#"+blackColour+";background-color:#"+Colour.tickler+";" ;
+
                     for(pos = noteSize-1; pos >= 0; --pos) {
                         CaseManagementNote cmNote = (CaseManagementNote)noteList.get(pos);
-                        
+
                         isCPP = false;
-                        bgColour = "color:#000000;background-color:#CCCCFF;";
+                       //bgColour = "color:#000000;background-color:#CCCCFF;";
+                        bgColour = "color:#000000;background-color:#D2B9D3;";//set background colour to thistle
                         Set nIssues = cmNote.getIssues();
                         Iterator iterator = nIssues.iterator();
                         while( iterator.hasNext() ) {
                             CaseManagementIssue issue = (CaseManagementIssue)iterator.next();
+                            System.out.println("CaseManagementIssue="+issue);
                             for( int cppIdx = 0; cppIdx < cppCodes.length; ++cppIdx ) {
+                                //sets the note's lower bar brown.
+                                System.out.println("cppCodes[cppIdx]="+cppCodes[cppIdx]);
+                                System.out.println("issue.getIssue().getCode()="+issue.getIssue().getCode());
                                 if(issue.getIssue().getCode().equals(cppCodes[cppIdx])) {
                                     bgColour = "color:#FFFFFF;background-color:#996633;";
                                     isCPP = true;
                                     break;
-                                }                    
+                                }
                             }
                             if( isCPP )
                                 break;
                         }
-                        
+
+
+                        Integer nId=Integer.parseInt(cmNote.getId().toString());
+                        //System.out.println("nId value="+nId);
+                        //set document note to blue but document annotation remains bkground colour.
+                        if(cmNote.isDocumentNote()) {
+                            //if(cmNote.isDocumentAnnotation());
+                           // else{
+                                System.out.println("nId value inside if="+nId);
+                                bgColour = documentColour;
+                            //    }
+                        }
+
+
+
+
+
                         colourStyle.add(bgColour);
-                        
+
                         if( isCPP ) {
                             fullTxtFormat.add(Boolean.FALSE);
                             continue;
                         }
-                        
+
                         if( noteSize > numToDisplay ) {
                             if( uProp == null ) {
                                 if( numDisplayed < numToDisplay && cmNote.getObservation_date().compareTo(dStaleDate) >= 0 ) {
@@ -681,27 +718,45 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         }
                         else {
                             fullTxtFormat.add(Boolean.TRUE);
-                        }                        
-                    }
+                        }
+                    } //end of for loop
 
                     boolean fulltxt;
                     pos = noteSize - 1;
 		    for( idx = 0; idx < noteSize; ++idx ) {
-                    
+                     System.out.println("in loop");
                     CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
-                    noteStr = note.getNote();                    
-                    
+                    noteStr = note.getNote();
+                    Long noteId=note.getId();
+                    EDoc doc= new EDoc();
+                    String dispDocNo="";
+                    String dispFilename="";
+                    String dispStatus=" ";
+                    doc=EDocUtil.getDocFromNote(noteId);
+                    if(doc!=null){
+                        dispDocNo=doc.getDocId();
+                        dispFilename=doc.getFileName();
+                        Character status=doc.getStatus();
+
+
+                         if(status=='A') {
+                           dispStatus="active";
+                          }
+                        System.out.println("dispDocNo :: dispFilename :: dispStatus" );
+                        System.out.println( dispDocNo+" "+dispFilename+" "+dispStatus);
+                        //find docname, docno and docstatus
+                    }
                     noteStr = StringEscapeUtils.escapeHtml(noteStr);
                     fulltxt = fullTxtFormat.get(pos);
                     bgColour = colourStyle.get(pos--);
-                    if( fulltxt ) { 
-                        noteStr = noteStr.replaceAll("\n","<br>");                        
+                    if( fulltxt ) {
+                        noteStr = noteStr.replaceAll("\n","<br>");
                     }
                     else {
                         length = noteStr.length() > 50 ? 50 : noteStr.length();
-                        noteStr = noteStr.substring(0,length);                                                
-                    }                                        
-                    
+                        noteStr = noteStr.substring(0,length);
+                    }
+
                     //System.out.println("Starting " + note.getId());
 		    time1 = System.currentTimeMillis();
                     boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
@@ -712,11 +767,11 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			value="<%=fulltxt || note.getId() == savedId%>"> <input
 			type="hidden" id="bgColour<%=note.getId()%>" value="<%=bgColour%>">
                         <input type="hidden" id="editWarn<%=note.getId()%>" value="<%=editWarn%>">
-		
+
 		<div id="n<%=note.getId()%>">
 		<%
                             //display last saved note for editing
-                            if( note.getId() == savedId ) {    
+                            if( note.getId() == savedId ) {
                             found = true;
                             %>
                             <%--<input type="hidden" name="caseNote.id" value="<%=note.getId()%>">
@@ -739,18 +794,18 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			<p style='background-color: #CCCCFF; display: none; margin: 0px;'
 				id='notePasswd'>Password:&nbsp;<html:password
 				property="caseNote.password" /></p>
-		</c:if> <%    
+		</c:if> <%
                             }
                             //else display contents of note for viewing
                             else {
-                            
-				if( note.isLocked() ) {                                    
+
+				if( note.isLocked() ) {
                             %> <span id="txt<%=note.getId()%>"><bean:message
 			key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat,request.getLocale()) + " " + note.getProviderName()%></span>
 		<%
                             }
-                            else {                                      
-                            
+                            else {
+
                             String rev = note.getRevision();
                             if( fulltxt ) {
                             %> <img title="<bean:message key="oscarEncounter.MinDisplay.title"/>"
@@ -764,14 +819,69 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif' >
 		<% }
-                    
+
                             %> <img title="<bean:message key="oscarEncounter.print.title"/>"
 			id='print<%=note.getId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>"
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px; margin-top: 2px;'
-			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' >
-                        <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float:right; margin-right:5px; font-size:8px;"><bean:message key="oscarEncounter.edit.msgEdit"/></a>
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' > <%
 
+                        if (!note.isDocumentNote()) {
+
+                               %>
+                        <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float:right; margin-right:5px; font-size:8px;"><bean:message key="oscarEncounter.edit.msgEdit"/></a>
+ <% }
+                             else if (note.isDocumentNote() && !note.getProviderNo().equals("-1") ){ //document annotation
+
+                                String url;
+
+                                Enumeration em= request.getAttributeNames();
+                                /*System.out.println("all attribute names ===");
+                                while(em.hasMoreElements())
+                                         System.out.println((String)em.nextElement());
+                                System.out.println("end ===");*/
+                                String winName = "docs" + demographicNo;
+                                int hash=Math.abs(winName.hashCode());
+
+                                //System.out.println("request.getContextPath()="+request.getContextPath());
+                                url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document="
+                                        + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
+                                url= url+"return false;";
+                                System.out.println("url=" + url);
+                                //System.out.println("Notes="+ request.getAttribute("Notes"));
+        %>              <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float:right; margin-right:5px; font-size:8px;"><bean:message key="oscarEncounter.edit.msgEdit"/></a>
+                        <a class="links" title="<bean:message key="oscarEncounter.view.docView"/>"
+                           id="view<%=note.getId()%>" href="#" onclick= "<%=url%>" style="float:right; margin-right:5px; font-size:8px;">
+                            <bean:message key="oscarEncounter.view.docView"/>
+                        </a>
+
+                        <% }
+
+                            else {  //document note
+                                System.out.println("history="+note.getHistory()+"whats between");
+                                String url;
+
+                                Enumeration em= request.getAttributeNames();
+                                /*System.out.println("all attribute names ===");
+                                while(em.hasMoreElements())
+                                         System.out.println((String)em.nextElement());
+                                System.out.println("end ===");*/
+                                String winName = "docs" + demographicNo;
+                                int hash=Math.abs(winName.hashCode());
+
+                                //System.out.println("request.getContextPath()="+request.getContextPath());
+                                url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document="
+                                        + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
+                                url= url+"return false;";
+                                System.out.println("url=" + url);
+                                //System.out.println("Notes="+ request.getAttribute("Notes"));
+        %>
+                        <a class="links" title="<bean:message key="oscarEncounter.view.docView"/>"
+                           id="view<%=note.getId()%>" href="#" onclick= "<%=url%>" style="float:right; margin-right:5px; font-size:8px;">
+                            <bean:message key="oscarEncounter.view.docView"/>
+                        </a>
+
+                        <% }%>
 		<span id="txt<%=note.getId()%>"><%=noteStr%></span> <%--
 			    time2 = System.currentTimeMillis();
 			    System.out.println("Format note " + String.valueOf(time2 - time1));
@@ -798,14 +908,14 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
 		<div><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span>
 		<ul style="list-style: none inside none; margin: 0px;">
-			<%  
+			<%
                                             List editors = note.getEditors();
-                                            Iterator<Provider> it = editors.iterator(); 
+                                            Iterator<Provider> it = editors.iterator();
                                             int count = 0;
                                             int MAXLINE = 2;
                                             while( it.hasNext() ) {
                                             Provider p = it.next();
-                                            
+
                                             if( count % MAXLINE == 0 ) {
                                             out.print("<li>" + p.getFormattedName() + "; ");
                                             }
@@ -838,7 +948,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                     %>
 		<div style="display: block;"><span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title"/></span>
 		<ul style="float: left; list-style: circle inside none; margin: 0px;">
-			<% 
+			<%
                                         Iterator i = issSet.iterator();
                                         while( i.hasNext() ) {
                                         CaseManagementIssue iss = (CaseManagementIssue)i.next();
@@ -861,7 +971,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		<%
                             }
                             }
-                            //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
+                            //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));
                             %>
 		</div>
 		</div>
@@ -870,17 +980,17 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     //Internet Explorer does not play nice with inserting javascript between divs
                     //so we store the ids here and list the event listeners at the end of this script
                     if( note.getId() != savedId ) {
-                        
+
                         //if( note.isSigned() || (!note.isSigned() && note.getProviderNo().equals(provNo))) {
-                            if( note.isLocked() ) { 
+                            if( note.isLocked() ) {
                                 lockedNotes.add(note.getId());
                             }
                             else if( !fulltxt) {
                                 unLockedNotes.add(note.getId());
                             }
                         //}
-                    }    
-                    
+                    }
+
     //current = System.currentTimeMillis();
     //System.out.println("NEW CASEMANAGEMENT VIEW display note " + note.getId() + " :  " + String.valueOf(current-start));
     //start = current;
@@ -973,23 +1083,23 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 </nested:form>
 </div>
 
-<script type="text/javascript">                         
+<script type="text/javascript">
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
-    
-        
-    caseNote = "caseNote_note" + "<%=savedId%>"; 
+
+
+    caseNote = "caseNote_note" + "<%=savedId%>";
     //are we editing existing note?  if not init newNoteIdx as we are dealing with a new note
    //save initial note to determine whether save is necessary
    origCaseNote = $F(caseNote);
-   <%    
+   <%
    if(!bean.oscarMsg.equals("")){
    %>
         $(caseNote).value +="\n\n<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(bean.oscarMsg)%>";
    <%
         bean.reason = "";
         bean.oscarMsg = "";
-   } 
-    
+   }
+
    if( request.getParameter("noteBody") != null ) {
         String noteBody = request.getParameter("noteBody");
         noteBody = noteBody.replaceAll("<br>|<BR>", "\n");
@@ -997,15 +1107,15 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
         $(caseNote).value +="\n\n<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteBody)%>";
    <%
    }
-   
+
     if( found != true ) { %>
         document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
    <%}
-     else {%>        
+     else {%>
         document.forms["caseManagementEntryForm"].note_edit.value = "existing";
     <%} %>
     setupNotes();
-    Element.observe(caseNote, "keyup", monitorCaseNote); 
+    Element.observe(caseNote, "keyup", monitorCaseNote);
     Element.observe(caseNote, 'click', getActiveText);
     <%
         Long num;
@@ -1016,16 +1126,16 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             Element.observe('n<%=num%>', 'click', unlockNote);
     <%
         }
-        
+
         iterator = unLockedNotes.iterator();
         while( iterator.hasNext() ) {
             num = (Long)iterator.next();
     %>
             Element.observe('n<%=num%>', 'click', fullView);
     <%
-        }      
-    %>         
-    
+        }
+    %>
+
     //flag for determining if we want to submit case management entry form with enter key pressed in auto completer text box
     var submitIssues = false;
    //AutoCompleter for Issues
@@ -1046,7 +1156,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
      itemColours["<%=encounterTmp%>"] = "99CCCC";
    <%
     }
-   %>      
+   %>
    //set default event for assigning issues
    //we do this here so we can change event listener when changing diagnosis
    var obj = { };
@@ -1055,11 +1165,11 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
    var changeIssueFunc;  //set in changeDiagnosis function above
    var addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, defaultDiv);
    Element.observe('asgnIssues', 'click', addIssueFunc);
-   new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );      
-   
+   new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );
+
    //start timer for autosave
-   setTimer();        
-                           
+   setTimer();
+
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     reason = "<%=insertReason(request, bean)%>";    //function defined bottom of file
    </script>
@@ -1069,13 +1179,13 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     System.out.println("NEW CASEMANAGEMENT VIEW total " + String.valueOf(current-beginning));
 %>
 <%!
-  
+
     /*
      *Insert encounter reason for new note
      */
     protected String insertReason(HttpServletRequest request, oscar.oscarEncounter.pageUtil.EctSessionBean bean) {
         String encounterText = "";
-        if( bean != null ) {            
+        if( bean != null ) {
             String apptDate = convertDateFmt(bean.appointmentDate);
             if(bean.eChartTimeStamp==null){
                   encounterText ="\n["+oscar.util.UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy",request.getLocale())+" .: "+bean.reason+"] \n";
@@ -1088,43 +1198,43 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                    //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                    encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n";
             }*/
-           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));           
+           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
 
         }
         encounterText = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(encounterText);
         return encounterText;
     }
-    
+
     protected String convertDateFmt(String strOldDate) {
         String strNewDate = "";
         if( strOldDate != null && strOldDate.length() > 0 ) {
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                
+
                 Date tempDate = fmt.parse(strOldDate);
                 strNewDate = new SimpleDateFormat("dd-MMM-yyyy").format(tempDate);
-                
+
             }
             catch (ParseException ex) {
                 ex.printStackTrace();
             }
         }
-        
+
         return strNewDate;
     }
-    
+
     protected boolean largeNote(String note) {
         final int THRESHOLD = 10;
-        boolean isLarge = false;       
+        boolean isLarge = false;
         int pos = -1;
-        
-        for( int count = 0; (pos = note.indexOf("\n",pos+1)) != -1; ++count ) {            
+
+        for( int count = 0; (pos = note.indexOf("\n",pos+1)) != -1; ++count ) {
             if( count == THRESHOLD ) {
                 isLarge = true;
                 break;
             }
         }
-        
+
         return isLarge;
     }
 
