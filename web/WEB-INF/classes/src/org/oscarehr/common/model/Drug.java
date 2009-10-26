@@ -119,6 +119,35 @@ public class Drug implements Serializable {
         public static final String DRUG_INTERACTION = "drugInteraction";
         public static final String OTHER = "other";
 
+
+        public boolean isDeleted(){
+            if (isArchived() && DELETED.equals(getArchivedReason())){
+                return true;
+            }
+            return false;
+        }
+
+        public boolean isDiscontinued(){
+            if(isArchived() && (DOSE_CHANGE.equals(getArchivedReason()) ||
+                                ADVERSE_REACTION.equals(getArchivedReason()) ||
+                                ALLERGY.equals(getArchivedReason())  ||
+                                INEFFECTIVE_TREATMENT.equals(getArchivedReason()) ||
+                                PRESCRIBING_ERROR.equals(getArchivedReason())  ||
+                                NO_LONGER_NECESSARY.equals(getArchivedReason()) ||
+                                SIMPLIFYING_TREATMENT.equals(getArchivedReason()) ||
+                                PATIENT_REQUEST.equals(getArchivedReason()) ||
+                                NEW_SCIENTIFIC_EVIDENCE.equals(getArchivedReason()) ||
+                                INCREASED_RISK_BENEFIT_RATIO.equals(getArchivedReason())  ||
+                                DISCONTINUED_BY_ANOTHER_PHYSICIAN.equals(getArchivedReason()) ||
+                                COST.equals(getArchivedReason())  ||
+                                DRUG_INTERACTION.equals(getArchivedReason())  ||
+                                OTHER.equals(getArchivedReason()) )){
+            return true;
+            }
+            return false;
+        }
+
+
 	public String getProviderNo() {
     	return providerNo;
     }
@@ -537,5 +566,5 @@ public class Drug implements Serializable {
        }
        return days;
     }
-
+    
 }
