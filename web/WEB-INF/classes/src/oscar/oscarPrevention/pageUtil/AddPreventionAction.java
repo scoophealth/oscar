@@ -112,10 +112,17 @@ public class AddPreventionAction  extends Action {
          addHashtoArray(extraData,request.getParameter("product"),"product");
          addHashtoArray(extraData,request.getParameter("workflowId"),"workflowId");
          addHashtoArray(extraData,request.getParameter("formId"),"formId");
-         
-         
-         
-         
+         addHashtoArray(extraData,request.getParameter("dose1"),"dose1");
+         addHashtoArray(extraData,request.getParameter("dose2"),"dose2");
+         addHashtoArray(extraData,request.getParameter("chronic"),"chronic");
+         addHashtoArray(extraData,request.getParameter("pregnant"),"pregnant");
+         addHashtoArray(extraData,request.getParameter("remote"),"remote");
+         addHashtoArray(extraData,request.getParameter("healthcareworker"),"healthcareworker");
+         addHashtoArray(extraData,request.getParameter("householdcontact"),"householdcontact");
+         addHashtoArray(extraData,request.getParameter("firstresponder"),"firstresponder");
+         addHashtoArray(extraData,request.getParameter("swineworker"),"swineworker");
+         addHashtoArray(extraData,request.getParameter("poultryworker"),"poultryworker");
+         addHashtoArray(extraData,request.getParameter("firstnations"),"firstnations");
                                                                                                                   
          PreventionData pd = new  PreventionData() ;         
          if (id == null || id.equals("null")){ //New                                             
