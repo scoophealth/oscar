@@ -83,7 +83,7 @@
   if ( layoutType == null){
       layoutType = "default";
   }
-  
+
   ArrayList providers = ProviderData.getProviderList();  
   
   //calc age at time of prevention
@@ -94,7 +94,11 @@
   DemographicData demoData = new DemographicData();
   String[] demoInfo = demoData.getNameAgeSexArray(demographic_no);
   String nameage = demoInfo[0] + ", " + demoInfo[1] + " " + demoInfo[2] + " " + age;
-  
+
+  HashMap<String,String> genders = new HashMap<String,String>();
+  genders.put("M", "Male");
+  genders.put("F", "Female");
+  genders.put("U", "Unknown");
 %>
 
                          
@@ -349,7 +353,66 @@ clear: left;
                <script type="text/javascript">
                   hideExtraName(document.getElementById('providerDrop'));                                    
                </script>
-               <%}else if(layoutType.equals("PAPMAM")){/*next layout type*/%>                              
+               <%} else if(layoutType.equals("h1n1")) {%>
+               <div class="prevention">
+                   <fieldset>
+                      <legend>Prevention : <%=prevention%></legend>
+                         <div style="float:left;">
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
+                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
+                         </div>
+                         <div style="float:left;margin-left:30px;">
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
+                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/> 
+                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">                          
+                                      <%for (int i=0; i < providers.size(); i++) {
+                                           Hashtable h = (Hashtable) providers.get(i);%>
+                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
+                                      <%}%>                    
+                                      <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
+                                  </select>                                      
+                         </div>
+                   </fieldset>                                                                            
+                   <fieldset>
+                      <legend >Result</legend>
+                         <label for="location">Location:</label> <input type="text" name="location" value="<%=str(((String)extraData.get("location")),"")%>"/> <br/>
+                         <label for="route">Route:</label> <input type="text" name="route"   value="<%=str(((String)extraData.get("route")),"")%>"/><br/>
+                         <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str(((String)extraData.get("dose")),"")%>"/><br/>
+			 <label for="dose1">Dose 1:</label> <input type="checkbox" name="dose1" value="true" <%=checked(str(((String)extraData.get("dose1")),""),"true")%>/><br/>
+                         <label for="dose2">Dose 2:</label> <input type="checkbox" name="dose2"  value="true" <%=checked(str(((String)extraData.get("dose2")),""),"true")%>/><br/>
+                         <label for="lot">Lot:</label> <input type="text" name="lot"  value="<%=str(((String)extraData.get("lot")),"")%>"/><br/>
+                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str(((String)extraData.get("manufacture")),"")%>"/><br/>                         
+                   </fieldset>
+                   <fieldset>
+                       <legend>Info</legend>
+                       <% String gender = genders.get(demoInfo[2]);
+                          if( gender == null ) {
+                              gender = genders.get("U");
+                          }
+                          
+                       %>
+                         <label for="gender">Gender:</label> <input type="text" name="gender" readonly value="<%=gender%>"/> <br/>
+                         <label for="age">Age:</label> <input type="text" name="age" readonly value="<%=age%>"/><br/>
+			 <label for="chronic">Chronic Condition:</label> <input type="checkbox" name="chronic"  value="true" <%=checked(str(((String)extraData.get("chronic")),""),"true")%>/><br/>
+                         <label for="pregnant">Pregnant:</label> <input type="checkbox" name="pregnant"  value="true" <%=checked(str(((String)extraData.get("pregnant")),""),"true")%>/><br/>
+                         <label for="remote">Remote Setting:</label> <input type="checkbox" name="remote"  value="true" <%=checked(str(((String)extraData.get("remote")),""),"true")%>/><br/>
+                         <label for="healthcareworker">Health Care Worker:</label> <input type="checkbox" name="healthcareworker" value="true" <%=checked(str(((String)extraData.get("healthcareworker")),""),"true")%>/><br/>
+                         <label for="householdcontact">Household Contact or Care Provider:</label> <input type="checkbox" name="householdcontact" value="true" <%=checked(str(((String)extraData.get("householdcontact")),""),"true")%>/><br/>
+                         <label for="firstresponder">First Responder:</label> <input type="checkbox" name="firstresponder" value="true" <%=checked(str(((String)extraData.get("firstresponder")),""),"true")%>/><br/>
+                         <label for="swineworker">Swine Worker:</label> <input type="checkbox" name="swineworker" value="true" <%=checked(str(((String)extraData.get("swineworker")),""),"true")%>/><br/>
+                         <label for="poultryworker">Poultry Worker:</label> <input type="checkbox" name="poultryworker" value="true" <%=checked(str(((String)extraData.get("poultryworker")),""),"true")%>/><br/>
+                         <label for="firstnations">First Nations:</label> <input type="checkbox" name="firstnations" value="true" <%=checked(str(((String)extraData.get("firstnations")),""),"true")%>/><br/>
+                   </fieldset>
+                   <fieldset >
+                      <legend >Comments</legend>                   
+                      <textarea name="comments" ><%=str(((String)extraData.get("comments")),"")%></textarea>                   
+                   </fieldset>                   
+               </div>
+               <script type="text/javascript">
+                  hideExtraName(document.getElementById('providerDrop'));                                    
+               </script>
+               <%}else if(layoutType.equals("PAPMAM")){/*next layout type*/%>
                <div class="prevention">                                                                          
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
