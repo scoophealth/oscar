@@ -23,8 +23,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor implements CallbackHandler {
-	private static final String AUDIT_TRAIL_KEY = "auditTrail";
-	private static QName AUDIT_TRAIL_QNAME = new QName("http://oscarehr.org/caisi", AUDIT_TRAIL_KEY, "caisi");
 	private static final String REQUESTING_CAISI_PROVIDER_NO_KEY = "requestingCaisiProviderNo";
 	private static QName REQUESTING_CAISI_PROVIDER_NO_QNAME = new QName("http://oscarehr.org/caisi", REQUESTING_CAISI_PROVIDER_NO_KEY, "caisi");
 
@@ -54,7 +52,6 @@ public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor imple
 	}
 
 	public void handleMessage(SoapMessage message) throws Fault {
-		addAuditTrail(message);
 		addRequestionCaisiProviderNo(message);
 		super.handleMessage(message);
 	}
@@ -66,27 +63,6 @@ public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor imple
 		if (loggedInInfo.loggedInProvider != null) {
 			headers.add(createHeader(REQUESTING_CAISI_PROVIDER_NO_QNAME, REQUESTING_CAISI_PROVIDER_NO_KEY, loggedInInfo.loggedInProvider.getProviderNo()));
 		}
-	}
-
-	private static void addAuditTrail(SoapMessage message) {
-		List<Header> headers = message.getHeaders();
-
-		StringBuilder auditTrail = new StringBuilder();
-
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo.initiatingCode != null) auditTrail.append("oscar_caisi.code=").append(loggedInInfo.initiatingCode);
-
-		if (loggedInInfo.currentFacility != null) {
-			if (auditTrail.length() > 0) auditTrail.append(", ");
-			auditTrail.append("oscar_caisi.facilityId=").append(loggedInInfo.currentFacility.getId());
-		}
-
-		if (loggedInInfo.loggedInProvider != null) {
-			if (auditTrail.length() > 0) auditTrail.append(", ");
-			auditTrail.append("oscar_caisi.providerNo=").append(loggedInInfo.loggedInProvider.getProviderNo());
-		}
-
-		headers.add(createHeader(AUDIT_TRAIL_QNAME, AUDIT_TRAIL_KEY, auditTrail.toString()));
 	}
 
 	private static Header createHeader(QName qName, String key, String value) {
