@@ -1,4 +1,5 @@
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%/*
 <!--  
 /*
@@ -64,10 +65,12 @@
                   
                     </td>
                     <td valign="top" align="right">
-        <span class="HelpAboutLogout" style="color:white;"><span class="FakeLink" style="color:white;"><a style="color:white;"
-		href="Help.htm">Help</a></span> | <span class="FakeLink" ><a style="color:white;"
-		href="About.htm">About</a></span> | <span class="FakeLink" style="color:white;"> <a style="color:white;"
-		href="Disclaimer.htm">Disclaimer</a></span></span>
+                        <span class="HelpAboutLogout" style="color:white;">
+                            
+                            <span class="FakeLink" style="color:white;"><oscar:help keywords="RX371" key="app.top1" style="color:white;"/></span> |
+                            <span class="FakeLink" ><a style="color:white;" href="About.htm">About</a></span> |
+                            <span class="FakeLink" style="color:white;"><a style="color:white;" href="Disclaimer.htm">Disclaimer</a></span>
+                        </span>
                     </td>
                 </tr>
             </table>
