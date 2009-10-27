@@ -40,26 +40,26 @@
   String providerview;
   String assignedTo;
   if( request.getParameter("providerview")==null ) {
-      v = viewMap.get("providerview");
-      if( v != null ) {
-          providerview = v.getValue();
-      }
-      else {
+      //v = viewMap.get("providerview");
+      //if( v != null ) {
+      //    providerview = v.getValue();
+      //}
+      //else {
           providerview = "all";
-      }
+      //}
   }
   else {
       providerview = request.getParameter("providerview");
   }
   
   if( request.getParameter("assignedTo") == null ) {
-      v = viewMap.get("assignedTo");
-      if( v!= null ) {
-          assignedTo = v.getValue();
-      }
-      else {
+      //v = viewMap.get("assignedTo");
+      //if( v!= null ) {
+      //    assignedTo = v.getValue();
+      //}
+      //else {
           assignedTo = "all";
-      }
+      //}
   }
   else {
       assignedTo = request.getParameter("assignedTo");
@@ -79,13 +79,13 @@ GregorianCalendar now=new GregorianCalendar();
   //String ticklerview=request.getParameter("ticklerview")==null?"A":request.getParameter("ticklerview");
    String ticklerview;
    if( request.getParameter("ticklerview") == null ) {
-      v = viewMap.get("ticklerview");
-      if( v!= null ) {
-          ticklerview = v.getValue();
-      }
-      else {
+      //v = viewMap.get("ticklerview");
+      //if( v!= null ) {
+      //    ticklerview = v.getValue();
+      //}
+      //else {
           ticklerview = "A";
-      }
+      //}
   }
   else {
       ticklerview = request.getParameter("ticklerview");
@@ -95,13 +95,13 @@ GregorianCalendar now=new GregorianCalendar();
   //String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
   String xml_vdate;
    if( request.getParameter("xml_vdate") == null ) {
-      v = viewMap.get("dateBegin");
-      if( v!= null ) {
-          xml_vdate = v.getValue();
-      }
-      else {
+      //v = viewMap.get("dateBegin");
+      //if( v!= null ) {
+      //    xml_vdate = v.getValue();
+      //}
+      //else {
           xml_vdate = "";
-      }
+      //}
   }
   else {
       xml_vdate = request.getParameter("xml_vdate");
@@ -109,13 +109,13 @@ GregorianCalendar now=new GregorianCalendar();
   //String xml_appointment_date = request.getParameter("xml_appointment_date")==null?MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay):request.getParameter("xml_appointment_date");
   String xml_appointment_date;
    if( request.getParameter("xml_appointment_date") == null ) {
-      v = viewMap.get("dateEnd");
-      if( v!= null ) {
-          xml_appointment_date = v.getValue();
-      }
-      else {
+      //v = viewMap.get("dateEnd");
+      //if( v!= null ) {
+      //    xml_appointment_date = v.getValue();
+      //}
+      //else {
           xml_appointment_date = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-      }
+      //}
   }
   else {
       xml_appointment_date = request.getParameter("xml_appointment_date");
