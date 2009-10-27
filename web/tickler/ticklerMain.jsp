@@ -133,6 +133,7 @@ GregorianCalendar now=new GregorianCalendar();
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <!--
 /*
  *
@@ -595,8 +596,10 @@ function changeSite(sel) {
         <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">
         <input type="hidden" name="Submit" value="">
         <input type="button" value="<bean:message key="tickler.ticklerMain.btnCreateReport"/>" class="mbttn" onclick="document.forms['serviceform'].Submit.value='Create Report'; document.forms['serviceform'].submit();">
+        <oscar:oscarPropertiesCheck property="TICKLERSAVEVIEW" value="yes">
         &nbsp;
         <input type="button" value="<bean:message key="tickler.ticklerMain.msgSaveView"/>" class="mbttn" onclick="saveView();">
+        </oscar:oscarPropertiesCheck>
         </font>
         </td>
     </tr>
