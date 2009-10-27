@@ -70,7 +70,7 @@
 
             String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 
-             oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
+            oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
                         prescribedDrugs = patient.getPrescribedDrugScripts(); //this function only returns drugs which have an entry in prescription and drugs table
                         String script_no = "";
 
@@ -107,14 +107,15 @@
 <html:html locale="true">
     <head>
         <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
+
         <title><bean:message key="SearchDrug.title" /></title>
         <link rel="stylesheet" type="text/css" href="styles.css">
 
         <html:base />
 
-
+        <link rel="stylesheet" href="<c:out value="${ctx}/share/lightwindow/css/lightwindow.css"/>" type="text/css" media="screen" />
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  ></link>
-        <link rel="stylesheet" type="text/css" href="modaldbox.css"  />
+        <!--link rel="stylesheet" type="text/css" href="modaldbox.css"  /-->
         <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/rx.js"/>"></script>
@@ -122,7 +123,8 @@
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/effects.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/controls.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
-        <script type="text/javascript" src="<c:out value="modaldbox.js"/>"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}/share/lightwindow/javascript/lightwindow.js"/>"></script>
+        <!--script type="text/javascript" src="<%--c:out value="modaldbox.js"/--%>"></script-->
 
 
 
@@ -267,8 +269,10 @@ body {
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
                                                 <div class="buttonrow"><input id="saveButton" type="button"  onclick="updateAllDrugs();return false;" value="Prescribe" />
-                                                </div>
+                                                </div>                                              
+                                               
                                             </td>
+
                                             <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
                                                     <bean:message key="SearchDrug.drugSearchRouteLabel" />
                                                     <br>
@@ -779,25 +783,28 @@ body {
 
 }});
         return false;
-
     }
 
-    function popForm(){
-        try{oscarLog("popForm called");
+    function popForm2(){
+        try{
+            oscarLog("popForm2 called");
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
 
             var params = "demographicNo=<%=bean.getDemographicNo()%>";  //hack to get around ie caching the page
             new Ajax.Updater('previewForm',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,onComplete:function(transport){
                     oscarLog( "preview2 done");
-                    sm('previewForm',400,650);
+                    //sm('previewForm',400,650);
+                    myLightWindow.activateWindow({
+                        href: url,
+                        caption: 'Preivew',
+                        width: 410
+                    });
                 }});
         }
         catch(er){alert(er);}
         oscarLog("bottom of popForm");
     }
-
-
-
+    
      function callTreatments(textId,id){
          var ele = $(textId);
          var url = "TreatmentMyD.jsp"
@@ -961,19 +968,7 @@ function setSearchedDrug(drugId,name){
 }
 
 
-    function updateAllDrugs(){
 
-        var data=Form.serialize($('drugForm'))
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateAllDrugs";
-        new Ajax.Request(url,
-        {method: 'post',postBody:data,
-            onSuccess:function(transport){
-                oscarLog("successfully sent data "+url);
-                popForm();
-            }});
-
-        return false;
-    }
 
     //represcribe a drug
     function represcribe(element){
@@ -1051,9 +1046,7 @@ function setSearchedDrug(drugId,name){
     }
 
     function getData(){
-        var data=Form.serialize($('drugForm'))
-        //   alert(data);
-
+        var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=saveDrug";
         new Ajax.Request(url,
         {method: 'post',postBody:data,
@@ -1064,7 +1057,6 @@ function setSearchedDrug(drugId,name){
         return false;
     }
 
-
 //Called onclick for prescribe button. serilaizes the form and passes to WriteScruipt/updateAllDrugs Action
     function updateAllDrugs(){
 
@@ -1074,7 +1066,7 @@ function setSearchedDrug(drugId,name){
         {method: 'post',postBody:data,
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
-                popForm();
+                popForm2();
             }});
 
       //pass a list of randomIds to the server
