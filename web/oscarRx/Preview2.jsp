@@ -60,9 +60,13 @@
         //document.forms[0].submit.value="print";
         //var ret = checkAllDates();
         //if(ret==true) {
-            document.forms[0].action = "../form/createpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
-            document.forms[0].target="_blank";
+     
+            document.getElementById("preview2Form").action = "../form/createpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
+
+            document.getElementById("preview2Form").target="_blank";
+
         //}
+            document.getElementById("preview2Form").submit();
        return true;
     }
 </script>
@@ -138,7 +142,7 @@ ProviderData user = new ProviderData(strUser);System.out.println("user="+user);
 
 System.out.println("==========================done first java part Preview2.jsp=======================");
 %>
-<html:form action="/form/formname">
+<html:form action="/form/formname" styleId="preview2Form">
 
 	<table width="400px" height="500px" cellspacing=0 cellpadding=10
 		border=2>
@@ -304,8 +308,8 @@ System.out.println("==========================done first java part Preview2.jsp=
 <div align="center">
 <table border="0" style="text-align:center">
 <tr>
-<td><div id="popSave" style="text-align:center">Save data<br><button onclick="getData();hm('parsedForm');window.close()">Save</button></div></td>
-<td><div id="popEdit" style="text-align:center">Edit data<br><button onclick="hm('parsedForm');">Edit</button></div></td>
+<td><div id="popSave" style="text-align:center">Save data<br><button onclick="getData();window.close()">Save</button></div></td>
+<td><div id="popPrint" style="text-align:center">Print data<br><button onclick="window.print();" >Print</button></div></td>
 </tr>
 </table>
 </div>
