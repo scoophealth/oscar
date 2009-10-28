@@ -55,7 +55,16 @@
 </logic:present>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
+<style type="text/css" media="print">
+                   .noprint{
+                       display:none;
+                   }
+                   .justforprint{
+                       float:left;
+                   }
+               </style>
 <script type="text/javascript" language="Javascript">
+
     function onPrint(cfgPage) {
         //document.forms[0].submit.value="print";
         //var ret = checkAllDates();
@@ -69,6 +78,7 @@
             document.getElementById("preview2Form").submit();
        return true;
     }
+
 </script>
 
 </head>
@@ -305,9 +315,10 @@ System.out.println("==========================done first java part Preview2.jsp=
 	</table>
 
 </html:form>
-<div align="center">
+<div align="center" class="noprint">
 <table border="0" style="text-align:center">
 <tr>
+<td><div id="popEdit" style="text-align:center"><button onclick="onPrint('oscarRxPrintCfgPg1');">Print PDF</button></div></td>
 <td><div id="popSave" style="text-align:center">Save data<br><button onclick="getData();window.close()">Save</button></div></td>
 <td><div id="popPrint" style="text-align:center">Print data<br><button onclick="window.print();" >Print</button></div></td>
 </tr>
