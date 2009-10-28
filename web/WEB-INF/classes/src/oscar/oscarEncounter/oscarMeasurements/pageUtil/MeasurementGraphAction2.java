@@ -29,6 +29,7 @@ import java.awt.Color;
 import java.awt.Paint;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -101,6 +102,8 @@ public class MeasurementGraphAction2 extends Action {
 
         String patientName = oscar.oscarDemographic.data.DemographicNameAgeString.getInstance().getNameAgeString(demographicNo);
         String chartTitle = "Data Graph for " + patientName;
+        int width = 800;
+        int height = 400;
 
         String method = request.getParameter("method");
 
@@ -128,6 +131,12 @@ public class MeasurementGraphAction2 extends Action {
             }else{
                 chart = actualLabChartRefPlusMeds( demographicNo,  labType,  identifier, testName,  patientName,  chartTitle,drugs) ;
             }
+        }else if(method.equals("ChartMeds")){
+            String drugs[] = request.getParameterValues("drug");
+            chart =ChartMeds( demographicNo, patientName,  chartTitle, drugs);
+            if (drugs != null && drugs.length >10){
+                height = (drugs.length * 30);
+            }
         }else{
             chart = defaultChart(demographicNo, typeIdName, typeIdName2, patientName, chartTitle);
         }
@@ -135,7 +144,7 @@ public class MeasurementGraphAction2 extends Action {
 
         response.setContentType("image/png");
         OutputStream o = response.getOutputStream();
-        ChartUtilities.writeChartAsPNG(o, chart, 800, 400);
+        ChartUtilities.writeChartAsPNG(o, chart, width, height);
         o.close();
         return null;
     }
@@ -587,8 +596,21 @@ public class MeasurementGraphAction2 extends Action {
             org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
             
             CommonLabTestValues comVal =  new CommonLabTestValues();
-            ArrayList<Hashtable> list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
-       
+            ArrayList<Hashtable> list = null;
+            System.out.println(" lab type >"+labType+"< >"+labType.equals("loinc")+"<"+testName+" "+identifier);
+            if (labType.equals("loinc")){
+              try{  
+              DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
+              Connection conn = db.GetConnection();
+              list = comVal.findValuesByLoinc2(demographicNo, identifier, conn );
+              System.out.println("List ->"+list.size());
+              conn.close();
+              }catch(Exception ed){
+                  ed.printStackTrace();
+              }
+            }else{
+               list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
+            }
             String typeYAxisName = "";
             ArrayList<OHLCDataItem> dataItems = new ArrayList();
            
@@ -602,6 +624,10 @@ public class MeasurementGraphAction2 extends Action {
                 if (!nameSet){
                     typeYAxisName = (String)mdb.get("units");
                     typeLegendName = (String) mdb.get("testName");
+                    if (typeLegendName ==null){
+                        typeLegendName = testName;
+                    }
+                    
                     newSeries.setKey(typeLegendName);
                     nameSet = true;
                 }
@@ -882,6 +908,55 @@ public class MeasurementGraphAction2 extends Action {
         }
         return chart;
     }
+
+
+
+    /*
+     * Just Drugs
+     */
+    JFreeChart ChartMeds(String demographicNo,String patientName, String chartTitle,String[] drugs) {
+            System.out.println("In ChartMeds");
+            org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
+            JFreeChart chart = ChartFactory.createTimeSeriesChart(chartTitle, "Days", "MEDS", dataset, true, true, true);
+
+            XYPlot plot = chart.getXYPlot();
+//            plot.getDomainAxis().setAutoRange(true);
+//            Range rang = plot.getDataRange(plot.getRangeAxis());
+//
+//            log.debug("LEN " + plot.getDomainAxis().getLowerBound() + " ddd " + plot.getDomainAxis().getUpperMargin() + " eee " + plot.getDomainAxis().getLowerMargin());
+//            plot.getDomainAxis().setUpperMargin(plot.getDomainAxis().getUpperMargin()*6);
+//            plot.getDomainAxis().setLowerMargin(plot.getDomainAxis().getLowerMargin()*6);
+//            plot.getRangeAxis().setUpperMargin(plot.getRangeAxis().getUpperMargin()*1.7);
+//
+//            plot.getDomainAxis().setUpperMargin(0.9);
+//            plot.getDomainAxis().setLowerMargin(0.9);
+//            plot.getRangeAxis().setUpperMargin(plot.getRangeAxis().getUpperMargin() * 4);
+
+
+            XYTaskDataset drugDataset = getDrugDataSet( demographicNo,drugs);
+
+            SymbolAxis yAxis = new SymbolAxis("Meds",  getDrugSymbol(demographicNo,drugs));
+
+
+            yAxis.setGridBandsVisible(false);
+            XYBarRenderer xyrenderer = new XYBarRenderer();
+            xyrenderer.setUseYInterval(true);
+            xyrenderer.setBarPainter(new StandardXYBarPainter());
+
+            //XYPlot xyplot = new XYPlot(drugDataset, xAxis, yAxis, xyrenderer);
+            XYPlot xyplot = new XYPlot(drugDataset, plot.getDomainAxis(), yAxis, xyrenderer);
+
+            xyplot.getDomainAxis().setUpperMargin(0.9);
+            xyplot.getDomainAxis().setLowerMargin(0.9);
+
+            CombinedDomainXYPlot cplot = new CombinedDomainXYPlot(new DateAxis("Date/Time"));
+            cplot.add(xyplot);
+
+            chart = new JFreeChart(chartTitle,cplot);
+            chart.setBackgroundPaint(Color.white);
+            return chart;
+        }
+
     
     
     private  Hashtable getMeasurementsExt(Integer measurementId) throws SQLException {
