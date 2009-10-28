@@ -127,6 +127,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   			&nbsp;&nbsp;   
 			<a href=# onClick ="popupPage(600,750,'http://resource.oscarmcmaster.org/oscarResource/');return false;"><u>H</u>elp</a>
 			&nbsp;
+			<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Home</a> &nbsp;
 			<a href="<html:rewrite page="/logout.jsp"/>">Lo<u>g</u>out</a>
 		</td>
 	</tr>
