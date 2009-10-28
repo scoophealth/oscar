@@ -1027,7 +1027,7 @@ function addFav(randomId,brandName){
 
 function setSearchedDrug(drugId,name){
 
-    var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?method=createNewRx";
+    var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
     var ran_number=Math.round(Math.random()*1000000);
     var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+drugId+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
     oscarLog(params);
