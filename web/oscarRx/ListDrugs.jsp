@@ -73,8 +73,8 @@ if (heading != null){
 %>
 <h4 style="margin-bottom:1px;margin-top:3px;"><%=heading%></h4>
 <%}%>
-<div class="drugProfileText" style="width: 100%;">
-    <table width="100%" cellpadding="3">
+<div class="drugProfileText" style="">
+    <table width="100%" cellpadding="3" border="0" class="sortable" id="Drug_table<%=heading%>">
         <tr>
             <th align="left"><b>Rx Date</b></th>
             <th align="left"><b>Days to Exp</b></th>
@@ -125,11 +125,11 @@ if (heading != null){
         %>
         <tr>
             <td valign="top"><a id="rxDate_<%=prescriptDrug.getId()%>"   <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a></td>
-            <td><%=prescriptDrug.daysToExpire()%></td>
-            <td><%if(prescriptDrug.isLongTerm()){%>*<%}%> </td>
+            <td valign="top"><%=prescriptDrug.daysToExpire()%></td>
+            <td valign="top"><%if(prescriptDrug.isLongTerm()){%>*<%}%> </td>
             
             <td><a id="prescrip_<%=prescriptDrug.getId()%>" <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
-            <td width="75px" align="center">
+            <td width="75px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
                 <a name="rePrescribe" id="reRx_<%=prescriptDrug.getId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
                 <%} else {%>
@@ -140,12 +140,12 @@ if (heading != null){
                 </form>
                 <%}%>
             </td>
-            <td width="75px" align="center">
+            <td width="75px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
                    <a id="del_<%=prescriptDrug.getId()%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);"><%="Delete"%></a>
                 <%}%>
             </td>
-            <td width="75px" align="center">
+            <td width="75px" align="center" valign="top">
                 <%if(!prescriptDrug.isDiscontinued()){%>
                 <a id="discont_<%=prescriptDrug.getId()%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discontinue</a>
                 <%}else{%>
@@ -153,11 +153,11 @@ if (heading != null){
                 <%}%>
             </td>
 
-            <td width="20px" align="center">
+            <td width="20px" align="center" valign="top">
                 <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
             </td>
             
-            <td align="center">
+            <td align="center" valign="top">
                 <%
                 if (prescriptDrug.getRemoteFacilityName() != null){ %>
                     <%=prescriptDrug.getRemoteFacilityName()%>
@@ -176,6 +176,9 @@ if (heading != null){
 
 </div>
         <br>
+        <script type="text/javascript">
+sortables_init();
+            </script>
 <%!
 
 String getName(Drug prescriptDrug){
