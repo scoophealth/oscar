@@ -138,6 +138,16 @@
 
 
         <script type="text/javascript">
+            function onPrint(cfgPage) {                
+                var docF = $('printFormDD');
+                oscarLog('in onPrint'+docF);
+
+                docF.action = "../form/createpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
+                docF.target="_blank";
+                docF.submit();
+               return true;
+            }
+
             function buildRoute() {
         
                 pickRoute = "";
@@ -163,6 +173,17 @@
            }
 
         </script>
+  
+
+
+               <style type="text/css" media="print">
+                   noprint{
+                       display:none;
+                   }
+                   justforprint{
+                       float:left;
+                   }
+               </style>
 
         <style type="text/css">
 #myAutoComplete {
@@ -226,6 +247,11 @@ body {
 
      }
 
+     .deleted{
+         text-decoration: line-through;
+
+     }
+
 </style>
 
     </head>
@@ -238,7 +264,7 @@ body {
 
     
 
-    <body  vlink="#0000FF" onload="initmb();load()" class="yui-skin-sam">
+    <body  vlink="#0000FF" onload="<%-- initmb(); --%>load()" class="yui-skin-sam">
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
             <%@ include file="TopLinks2.jsp" %><!-- Row One included here-->
             <tr>
@@ -359,7 +385,9 @@ body {
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute','drugProfile')">Longterm /Acute</a>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')">Longterm /Acute</a>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')">Longterm /Acute/Inactive</a>
+
                                                                         </td>
                                                                         <td align="right">
 
@@ -367,7 +395,7 @@ body {
                                                                     </tr>
                                                                 </table>
                                                             </div>
-                                                            <div id="drugProfile"></div>
+                                                            <div id="drugProfile" ></div>
 
                                                             <html:form action="/oscarRx/rePrescribe">
                                                                 <html:hidden property="drugList" />
@@ -649,6 +677,45 @@ body {
         return false;
     }
 
+   function checkAllergy(id,atcCode){
+         var url="<c:out value="${ctx}"/>" + "/oscarRx/getAllergyData.jsp"  ;
+         var data="atcCode="+atcCode+"&id="+id;
+         new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
+                 oscarLog("here");
+                 var json=transport.responseText.evalJSON();
+                  
+                  oscarLog(json);
+                  oscarLog("here2 -- " +$('alleg_'+json.id));
+
+
+                <%--  //Severity:</b>
+                //<%=severityOfReaction(allerg[i].getAllergy().getSeverityOfReaction())%>
+		//			<b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getAllergy().getOnSetOfReaction())%>
+                --%>
+                  var str = "Allergy: "+ json.alleg.DESCRIPTION + " Reaction: "+json.alleg.reaction;
+                  $('alleg_'+json.id).innerHTML = str;
+                  oscarLog("-- "+ $('alleg_'+json.id).innerHTML);
+            }});
+   }
+   function checkIfInactive(id,dinNumber){
+        var url="<c:out value="${ctx}"/>" + "/oscarRx/getInactiveDate.jsp"  ;
+         var data="din="+dinNumber+"&id="+id;
+         new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
+                 oscarLog("here");
+                 var json=transport.responseText.evalJSON();
+
+                  oscarLog(new Date(json.vec[0].time));
+                  oscarLog("here inactive check 2 -- " +$('inactive_'+json.id));
+
+
+
+                  var str = "Inactive Drug Since: "+new Date(json.vec[0].time).toDateString();
+                  $('inactive_'+json.id).innerHTML = str;
+                  oscarLog("-- "+ $('inactive_'+json.id).innerHTML);
+            }});
+   }
+
+
     function Discontinue(event,element){
        var id_str=(element.id).split("_");
        var id=id_str[1];
@@ -790,16 +857,18 @@ body {
             oscarLog("popForm2 called");
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
 
-            var params = "demographicNo=<%=bean.getDemographicNo()%>";  //hack to get around ie caching the page
-            new Ajax.Updater('previewForm',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,onComplete:function(transport){
+            //var params = "demographicNo=<%=bean.getDemographicNo()%>";  //hack to get around ie caching the page
+            //new Ajax.Updater('previewForm',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,onComplete:function(transport){
                     oscarLog( "preview2 done");
+
                     //sm('previewForm',400,650);
                     myLightWindow.activateWindow({
                         href: url,
-                        caption: 'Preivew',
+                        //caption: 'Preview',
                         width: 410
                     });
-                }});
+
+              //  }});
         }
         catch(er){alert(er);}
         oscarLog("bottom of popForm");
