@@ -45,7 +45,7 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
     <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
 
     <label style="float:left;width:80px;">Name:</label>
-       <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     value="<%=drugName%>"     size="30"/><br>
+    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     value="<%=drugName%>"     size="30"/><span id="alleg_<%=rand%>" style="color:red;"></span><span id="inactive_<%=rand%>" style="color:red;"></span><br>
     <label style="float:left;width:80px;">Instructions:</label>
        <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="<%=instructions%>" size="60" onblur="parseIntr(this);" /> <br>
     <label style="float:left;width:80px;">Quantity:</label>
@@ -93,6 +93,8 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
    
         <script type="text/javascript">
             $('instructions_<%=rand%>').focus();
+            checkAllergy('<%=rand%>','<%=rx.getAtcCode()%>');
+            checkIfInactive('<%=rand%>','<%=rx.getRegionalIdentifier()%>');
         </script>
  <%}%>
  
