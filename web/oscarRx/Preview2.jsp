@@ -366,10 +366,9 @@ System.out.println("==========================done first java part Preview2.jsp=
 </html:form>
 <div align="center" class="noprint">
 <button onclick="onPrint('oscarRxPrintCfgPg1');">Print PDF</button>
-<button onclick="getData();window.close()">Save</button>
 <button onclick="window.print();" >Print</button>
 <button onclick="printPaste2Parent();">Print and paste</button>
-
+<button onclick="parent.saveData();parent.window.close()">Save and Close</button>
 <br>
 <textarea id="additionalNotes" style="width: 200px" onchange="javascript:addNotes();" ></textarea>
 <input type="button" value="Add to Rx" onclick="javascript:addNotes();"/>
