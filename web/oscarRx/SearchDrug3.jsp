@@ -609,11 +609,12 @@ body {
 %>
 <script type="text/javascript">
 
+
     function deletePrescribe(randomId){
         var data="randomId="+randomId;
         var url="<c:out value="${ctx}"/>" + "/oscarRx/rxStashDelete.do?parameterValue=deletePrescribe";
         new Ajax.Request(url, {method: 'get',parameters:data});
-
+    }
     function ThemeViewer(){
        
        var xy = Position.page($('drugProfile'));
@@ -627,9 +628,7 @@ body {
        
 
     }
-
-
-    }
+    
     function useFav2(favoriteId){
         var randomId=Math.round(Math.random()*1000000);
         var data="favoriteId="+favoriteId+"&randomId="+randomId;
@@ -1076,14 +1075,46 @@ function setSearchedDrug(drugId,name){
             oscarLog("quantity entered does not match quantity calculated form instructions.");
         }
     }
+function updateQty(element){
+        var elemId=element.id;
+        var ar=elemId.split("_");
+        var rand=ar[1];
+        var data="randomId="+rand+"&action=updateQty&quantity="+element.value;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateDrug";
 
+        var rxMethod="rxMethod_"+rand;
+        var rxRoute="rxRoute_"+rand;
+        var rxFreq="rxFreq_"+rand;
+        var rxDrugForm="rxDrugForm_"+rand;
+        var rxDuration="rxDuration_"+rand;
+        var rxDurationUnit="rxDurationUnit_"+rand;
+        var rxAmt="rxAmount_"+rand;
+
+
+        var str;
+        var rxString="rxString_"+rand;
+
+        new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
+                var json=transport.responseText.evalJSON();
+                str="Method: "+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
+                    +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                oscarLog("json.duration="+json.duration);
+ 
+                if(json.prn){
+                    str=str+" prn";
+                } else{ }
+                oscarLog("str="+str);
+                $(rxString).innerHTML=str;//display parsed string below instruction.
+            }});
+        return true;
+}
     function parseIntr(element){
         var instruction="instruction="+element.value+"&action=parseInstructions";
         oscarLog(instruction);
         var elemId=element.id;
         var ar=elemId.split("_");
         var rand=ar[1];
-
+        var instruction="instruction="+element.value+"&action=parseInstructions&randomId="+rand;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateDrug";
         var rxMethod="rxMethod_"+rand;
         var rxRoute="rxRoute_"+rand;
@@ -1092,19 +1123,16 @@ function setSearchedDrug(drugId,name){
         var rxDuration="rxDuration_"+rand;
         var rxDurationUnit="rxDurationUnit_"+rand;
         var rxAmt="rxAmount_"+rand;
-        var rxPRN="rxPRN_"+rand;
-        var divId="intr_parse_"+rand;
+
+
         var str;
         var rxString="rxString_"+rand;
-        var calQuantity="calQuantity_"+rand;
-        //new Ajax.Request(url, method: 'post',postBody:instruction, onSuccess:function(transport)
+
         new Ajax.Request(url, {method: 'get',parameters:instruction, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
                 str="Method: "+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
                 oscarLog("json.duration="+json.duration);
-                $(calQuantity).value = json.calQuantity;
-                oscarLog($(calQuantity).value);
                 if(json.prn){
                     str=str+" prn";
                 } else{ }
@@ -1114,7 +1142,7 @@ function setSearchedDrug(drugId,name){
         return true;
     }
 
-    function getData(){
+    function saveData(){
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=saveDrug";
         new Ajax.Request(url,
@@ -1129,7 +1157,7 @@ function setSearchedDrug(drugId,name){
 //Called onclick for prescribe button. serilaizes the form and passes to WriteScruipt/updateAllDrugs Action
     function updateAllDrugs(){
 
-        var data=Form.serialize($('drugForm'))
+        var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateAllDrugs";
         new Ajax.Request(url,
         {method: 'post',postBody:data,
