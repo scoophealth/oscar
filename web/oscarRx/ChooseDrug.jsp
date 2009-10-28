@@ -180,7 +180,10 @@ for (int j=0; j<selRoute.length; j++) {
                   <tr>
                     <td>
                     <html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="processData();">
-      
+                    <%if(request.getParameter("rx2") != null && request.getParameter("rx2").equals("true")){ %>
+                        <input type="hidden" name="rx2" value="true"/>
+                    <%}%>
+
                     <html:hidden property="demographicNo" />
                     <table>
                         <tr>
