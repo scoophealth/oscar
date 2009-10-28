@@ -27,7 +27,7 @@ pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
         <link rel="stylesheet" href="decisionSupport.css" type="text/css"></link>
     </head>
     <body>
-        <div style="font-size: 16px; font-weight: bold;">You currently have the following guidelines:</div>
+        <div style="font-size: 16px; font-weight: bold;">You currently have the following tips:</div>
         <logic:present name="demographic_no"><div style="font-size: 10px;">Demographic No: <bean:write name="demographic_no"/></div></logic:present>
         <br>
         <table class="dsTable">
