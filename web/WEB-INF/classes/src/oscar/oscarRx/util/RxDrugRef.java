@@ -97,7 +97,7 @@ public class RxDrugRef {
          return vec;
      }
 
-		
+
      /**
       *returns the English name of a drug that matches the stated ATC code
       *query = "select code, text from atc where code like '%s%%'" 
@@ -794,5 +794,13 @@ public class RxDrugRef {
          params.addElement(allergies);
          Vector vec = (Vector) callWebserviceLite("get_allergy_warnings",params);             
          return vec;		         
-     }	   
+     }
+
+
+    public Vector getInactiveDate(String din) throws Exception{
+        Vector params = new Vector();
+        params.addElement(din);
+        Vector vec = (Vector) callWebserviceLite("get_inactive_date",params);
+        return vec;
+    }
 }
