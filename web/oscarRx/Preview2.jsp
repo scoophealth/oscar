@@ -114,6 +114,19 @@ function printPaste2Parent(){
 }
 
 
+function addNotes(){
+
+
+    var url = "AddRxComment.jsp";
+    var ran_number=Math.round(Math.random()*1000000);
+    var comment = encodeURIComponent(document.getElementById('additionalNotes').value);
+    var params = "scriptNo=60&comment="+comment+"&rand="+ran_number;  //]
+    //new Ajax.Request(url, {method: 'post',parameters:params});
+    document.getElementById('additNotes').innerHTML =  document.getElementById('additionalNotes').value;
+}
+
+
+
 
 </script>
 
@@ -356,6 +369,13 @@ System.out.println("==========================done first java part Preview2.jsp=
 <button onclick="getData();window.close()">Save</button>
 <button onclick="window.print();" >Print</button>
 <button onclick="printPaste2Parent();">Print and paste</button>
+
+<br>
+<textarea id="additionalNotes" style="width: 200px" onchange="javascript:addNotes();" ></textarea>
+<input type="button" value="Add to Rx" onclick="javascript:addNotes();"/>
+
+
+
 </div>
 </body>
 </html:html>
