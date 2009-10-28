@@ -79,6 +79,42 @@
        return true;
     }
 
+     function printIframe(){
+   window.focus();
+   window.print();
+}
+
+
+function printPaste2Parent(){
+
+   try{
+      //text = ""****doctor oscardoc********************************************************************************";
+      //text = text.substring(0, 82) + "\n";
+      text = "";
+      //var previewForm = $('preview2Form');
+
+      if (document.all){
+         text += document.getElementById('rx_no_newlines').value
+      } else {
+         text += document.getElementById('rx_no_newlines').value + "\n";
+      }
+      //text += "**********************************************************************************\n";
+      
+      //we support pasting into orig encounter and new casemanagement
+      if( window.parent.opener.document.forms["caseManagementEntryForm"] != undefined ) {
+        window.parent.opener.pasteToEncounterNote(text);
+      }
+      else if( window.parent.opener.document.encForm != undefined )
+        window.parent.opener.document.encForm.enTextarea.value = window.parent.opener.document.encForm.enTextarea.value + text;
+
+   }catch (e){
+      alert ("ERROR: could not paste to EMR"+e);
+   }
+   printIframe();
+}
+
+
+
 </script>
 
 </head>
@@ -260,7 +296,7 @@ System.out.println("==========================done first java part Preview2.jsp=
                         }
                         %> <input type="hidden" name="rx"
 						value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>" />
-					<input type="hidden" name="rx_no_newlines"
+					<input type="hidden" name="rx_no_newlines" id="rx_no_newlines"
 						value="<%= strRxNoNewLines.toString() %>" />
                                         </td>
 				</tr>
@@ -319,6 +355,7 @@ System.out.println("==========================done first java part Preview2.jsp=
 <button onclick="onPrint('oscarRxPrintCfgPg1');">Print PDF</button>
 <button onclick="getData();window.close()">Save</button>
 <button onclick="window.print();" >Print</button>
+<button onclick="printPaste2Parent();">Print and paste</button>
 </div>
 </body>
 </html:html>
