@@ -243,7 +243,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, scriptId, ip, "" + bean.getDemographicNo(), auditStr.toString());
             }
         }
-        System.out.println("***===========End of Take RxWriteScriptAction.java");
+        System.out.println("***===========End of unspecified RxWriteScriptAction.java");
         return mapping.findForward(fwd);
     }
 
@@ -340,206 +340,6 @@ public final class RxWriteScriptAction extends DispatchAction {
         System.out.println("***===========End of saveDrug RxWriteScriptAction.java");
         return mapping.findForward("viewScript");
    }
-
-    public ActionForward parseInstruction(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException, Exception {
-        System.out.println("==========***### IN parseInstruction RxWriteScriptAction.java");
-        String s = request.getParameter("instruction");
-        p("instruction", s);
-        Enumeration emm = request.getParameterNames();
-        while (emm.hasMoreElements()) {
-            p("request attribute=" + emm.nextElement().toString());
-        }
-        StringTokenizer st = new StringTokenizer(s);
-        String[] strArray = new String[st.countTokens()];
-        //    p(Integer.toString(st.countTokens()));
-        int i = 0;
-        while (st.hasMoreTokens()) {
-            String str = st.nextToken();
-            strArray[i] = str;
-            i++;
-        }
-        String amount = "";
-        String route = "";
-        String frequency = "";
-        String form = "";
-        String duration = "";
-        String method = "";
-        char durationUnit = ' ';
-        boolean prn = false;
-
-        p(Integer.toString(strArray.length));
-        for (int j = 0; j < strArray.length; j++) {
-            //      p(Integer.toString(j));
-            String sa = strArray[j];
-
-            if (sa.equalsIgnoreCase("take") || sa.equalsIgnoreCase("apply") || sa.equalsIgnoreCase("rub well in")) {
-                method = sa;
-                //get number after take, use regular expression.
-                try {
-                    int n = Integer.parseInt(strArray[j + 1]);
-                    amount = Integer.toString(n);
-                } catch (NumberFormatException e) {
-                    //get the number from the string.
-                    }
-            } else if (sa.equalsIgnoreCase("PO") || sa.equalsIgnoreCase("SL") || sa.equalsIgnoreCase("IM") ||
-                    sa.equalsIgnoreCase("TOP.") || sa.equalsIgnoreCase("PATCH") || sa.equalsIgnoreCase("SC") ||
-                    sa.equalsIgnoreCase("INH") || sa.equalsIgnoreCase("SUPP") || sa.equalsIgnoreCase("O.D.") ||
-                    sa.equalsIgnoreCase("O.S.") || sa.equalsIgnoreCase("O.U.")) //PO|SL|IM|SC|PATCH|TOP.|INH|SUPP|O.D.|O.S.|O.U.
-            {
-                route = sa;
-            } else if (sa.equalsIgnoreCase("OD") || sa.equalsIgnoreCase("BID") || sa.equalsIgnoreCase("TID") || sa.equalsIgnoreCase("QID") ||
-                    sa.equalsIgnoreCase("Q1H") || sa.equalsIgnoreCase("Q2H") || sa.equalsIgnoreCase("Q1-2H") || sa.equalsIgnoreCase("Q3-4H") ||
-                    sa.equalsIgnoreCase("Q4H") || sa.equalsIgnoreCase("Q4-6H") || sa.equalsIgnoreCase("Q6H") || sa.equalsIgnoreCase("Q8H") ||
-                    sa.equalsIgnoreCase("Q12H") || sa.equalsIgnoreCase("QAM") || sa.equalsIgnoreCase("QPM") || sa.equalsIgnoreCase("QHS") ||
-                    sa.equalsIgnoreCase("Q1Week") || sa.equalsIgnoreCase("Q2Week") || sa.equalsIgnoreCase("Q1Month") || sa.equalsIgnoreCase("Q3Month")) //(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)
-            {
-                frequency = sa;
-            } else if (sa.equalsIgnoreCase("PRN")) {
-                prn = true;
-            } else if (sa.equalsIgnoreCase("days") || sa.equalsIgnoreCase("weeks") || sa.equalsIgnoreCase("months")) {
-                char[] cArray = sa.toCharArray();
-                durationUnit = cArray[0];
-                duration = strArray[j - 1];
-            }
-        }
-
-        int calQuantity = 0;
-        if ((durationUnit == 'd') || (durationUnit == 'D')) {
-            calQuantity = Integer.parseInt(duration) * Integer.parseInt(amount);
-        } else if (durationUnit == 'w' || durationUnit == 'W') {
-            calQuantity = Integer.parseInt(duration) * 7 * Integer.parseInt(amount);
-        } else if (durationUnit == 'm' || durationUnit == 'M') {
-            calQuantity = Integer.parseInt(duration) * 30 * Integer.parseInt(amount);
-        } //assume each month is 30 days, more complicated implementation if exact number needed.
-
-
-        Hashtable ha = new Hashtable();
-
-        ha.put("method", method);
-        ha.put("amount", amount);//should be like 1-2 , min-max
-        ha.put("duration", duration);
-        ha.put("frequency", frequency);
-        ha.put("route", route);
-        ha.put("durationUnit", durationUnit);
-        ha.put("prn", prn);
-        ha.put("calQuantity", calQuantity);
-        JSONObject jsonObject = JSONObject.fromObject(ha);
-        p("jsonObject", jsonObject.toString());
-        response.getOutputStream().write(jsonObject.toString().getBytes());
-        return null;
-    }
-
-    public ActionForward parseData(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException, Exception {
-
-        HashMap hm = new HashMap();
-        Enumeration em = request.getParameterNames();
-        p("attr in request");
-        while (em.hasMoreElements()) {
-            System.out.println(em.nextElement());
-        }
-        em = request.getParameterNames();
-
-        while (em.hasMoreElements()) {
-            String elem = (String) em.nextElement();
-            String val = request.getParameter(elem);
-
-            if (elem.startsWith("drugName_")) {
-                hm.put("drugName", val);
-                hm.put("brandName", val);
-            } else if (elem.startsWith("repeats_")) {
-                hm.put("repeats", val);
-            } else if (elem.startsWith("instructions_")) {
-                hm.put("instructions", val);
-            } else if (elem.startsWith("quantity_")) {
-                hm.put("quantity", val);
-
-            } else if (elem.startsWith("longTerm_")) {
-                hm.put("longTerm", val);
-
-            } else if (elem.startsWith("lastRefillDate_")) {
-                hm.put("lastRefillDate", val);
-
-            } else if (elem.startsWith("outsideProviderName_")) {
-                hm.put("outsideProviderName", val);
-
-            } else if (elem.startsWith("rxDate_")) {
-                hm.put("rxDate", val);
-
-            } else if (elem.startsWith("writtenDate_")) {
-                hm.put("writtenDate", val);
-
-
-            } else if (elem.startsWith("outsideProviderName_")) {
-                hm.put("outsideProviderName", val);
-
-            } else if (elem.startsWith("outsideProviderOhip_")) {
-                hm.put("outsideProviderOhip", val);
-
-            } else if (elem.startsWith("rxFreq_")) {
-                hm.put("rxFreq", val);
-
-            } else if (elem.startsWith("rxDuration_")) {
-                hm.put("rxDuration", val);
-
-            } else if (elem.startsWith("rxDurationUnit_")) {
-                hm.put("rxDurationUnit", val);
-
-            } else if (elem.startsWith("rxPRN_")) {
-                hm.put("rxPRN", val);
-
-            } else if (elem.startsWith("otext_")) {
-                hm.put("otext", val);
-
-            } else if (elem.startsWith("pastMed_")) {
-                hm.put("pastMed", val);
-
-            } else if (elem.startsWith("patientComplianceY_")) {
-                hm.put("patientComplianceY", val);
-
-            } else if (elem.startsWith("patientComplianceN_")) {
-                hm.put("patientComplianceN", val);
-
-            } else if (elem.startsWith("rxRoute_")) {
-                hm.put("rxRoute", val);
-
-            } else if (elem.startsWith("method")) {
-                hm.put("rxMethod", val);
-
-            } else if (elem.startsWith("rxAmount_")) {
-                hm.put("rxAmount", val);
-
-            }
-        }
-
-        JSONObject jsonObject = JSONObject.fromObject(hm);
-        p("jsonObject in parseData", jsonObject.toString());
-        response.getOutputStream().write(jsonObject.toString().getBytes());
-
-        return null;
-    }
-
-    public ActionForward getAllRandomId(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        p("=============Start getAllRandomId RxWriteScriptAction.java===============");
-        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-        long[] arRand = new long[bean.getStashSize()];
-        RxPrescriptionData.Prescription[] preAr = bean.getStash();
-        int i = 0;
-        for (RxPrescriptionData.Prescription p : preAr) {
-            arRand[i] = (p.getRandomId());
-            p("randId", "" + arRand[i]);
-            i++;
-        }
-        HashMap hm = new HashMap();
-        hm.put("arRand", arRand);
-        JSONObject jsonObject = JSONObject.fromObject(hm);
-        p("jsonObject", jsonObject.toString());
-        response.getOutputStream().write(jsonObject.toString().getBytes());
-        p("=============End getAllRandomId RxWriteScriptAction.java===============");
-        return null;
-    }
 
     public ActionForward createNewRx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start createNewRx RxWriteScriptAction.java===============");
@@ -662,16 +462,15 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.sendRedirect("error.html");
             return null;
         }
-        p("start bean.getStashIndex()", "" + bean.getStashIndex());
-        RxDrugData drugData = new RxDrugData();
-        RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
-        RxPrescriptionData prescription = new RxPrescriptionData();
-
-        p("IN updateDrug, atc=" + rx.getAtcCode() + "; regionalIdentifier=" + rx.getRegionalIdentifier());
+       
         String action = request.getParameter("action");
 
-      //  if (action != null && action.equals("parseInstructions")) {
+        if (action != null && action.equals("parseInstructions")) {
             System.out.println("==========***### IN parseInstruction RxWriteScriptAction.java");
+            String randomId = request.getParameter("randomId");
+            RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
+            p("IN updateDrug, atc=" + rx.getAtcCode() + "; regionalIdentifier=" + rx.getRegionalIdentifier());
+
             String instructions = request.getParameter("instruction");
             p("instruction", instructions);
             Enumeration emm = request.getParameterNames();
@@ -680,9 +479,6 @@ public final class RxWriteScriptAction extends DispatchAction {
             }
 
             HashMap retHm=RxUtil.instrucParser(instructions, rx);
-
-            p("here2");
-
             p("before updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
@@ -708,7 +504,117 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.getOutputStream().write(jsonObject.toString().getBytes());
             p("===================END parseInstruction RxWriteScriptAction.java======================");
             return null;
+        }else if(action != null && action.equals("updateQty")){
+            System.out.println("==========***### IN updateQty RxWriteScriptAction.java");
+            String quantity = request.getParameter("quantity");
+            String randomId = request.getParameter("randomId");
+            RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
+            //get rx from randomId
+
+            //check if quantity is same as rx.getquantity(), if yes, do nothing.
+            if(quantity.equals(rx.getQuantity())){
+                //do nothing
+            }
+            else{
+                rx.setQuantity(quantity);
+                String frequency=rx.getFrequencyCode();
+                String takeMin=rx.getTakeMinString();
+                String takeMax=rx.getTakeMaxString();
+                String durationUnit=rx.getDurationUnit();
+                double nPerDay=0d;
+                double nDays=0d;
+                 if(takeMin.equals("0") || takeMax.equals("0") ||frequency.equals("")){
+                }else{
+                    if(durationUnit.equals(""))
+                        durationUnit="D";
+                    if(frequency.equalsIgnoreCase("od"))
+                        nPerDay=1;
+                    else if(frequency.equalsIgnoreCase("bid"))
+                        nPerDay=2;
+                    else if(frequency.equalsIgnoreCase("tid"))
+                        nPerDay=3;
+                    else if(frequency.equalsIgnoreCase("qid"))
+                        nPerDay=4;
+                    else if(frequency.equalsIgnoreCase("Q1H"))
+                        nPerDay=24;
+                    else if(frequency.equalsIgnoreCase("Q2H"))
+                        nPerDay=12;
+                    else if(frequency.equalsIgnoreCase("Q1-2H"))
+                        nPerDay=24;
+                    else if(frequency.equalsIgnoreCase("Q3-4H"))
+                        nPerDay=8;
+                    else if(frequency.equalsIgnoreCase("Q4H"))
+                        nPerDay=6;
+                    else if(frequency.equalsIgnoreCase("Q4-6H"))
+                        nPerDay=6;
+                    else if(frequency.equalsIgnoreCase("Q6H"))
+                        nPerDay=4;
+                    else if(frequency.equalsIgnoreCase("Q8H"))
+                        nPerDay=3;
+                    else if(frequency.equalsIgnoreCase("Q12H"))
+                        nPerDay=2;
+                    else if(frequency.equalsIgnoreCase("QAM"))
+                        nPerDay=1;
+                    else if(frequency.equalsIgnoreCase("QPM"))
+                        nPerDay=1;
+                    else if(frequency.equalsIgnoreCase("QHS"))
+                        nPerDay=1;
+                    else if(frequency.equalsIgnoreCase("Q1Week"))
+                        nPerDay=0.14285714285714285;
+                    else if(frequency.equalsIgnoreCase("Q2Week"))
+                        nPerDay=0.07142857142857142;
+                    else if(frequency.equalsIgnoreCase("Q1Month"))
+                        nPerDay=0.03333333333333333;
+                    else if(frequency.equalsIgnoreCase("Q3Month"))
+                        nPerDay=0.011111111111111112;
+
+                    if(durationUnit.equalsIgnoreCase("D"))
+                        nDays=1;
+                    else if(durationUnit.equalsIgnoreCase("W"))
+                        nDays=7;
+                    else if(durationUnit.equalsIgnoreCase("M"))
+                        nDays=30;
+
+                    double qtyD=Double.parseDouble(quantity);
+                    //quantity=takeMax * nDays * duration * nPerDay
+                    double durD=qtyD/((Double.parseDouble(takeMax)) * nPerDay * nDays);
+                    int durI=(int)durD;
+                    rx.setDuration(Integer.toString(durI));
+                    rx.setDurationUnit(durationUnit);
+                }
+                //duration=quantity divide by no. of pills per duration period.
+                //if not, recalculate duration based on frequency if frequency is not empty
+                //if there is already a duration uni present, use that duration unit. if not, set duration unit to days, and output duration in days
+
+            }
+            
+
+            p("before updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+            p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
+
+            bean.setStashItem(bean.getStashIndex(), rx);
+
+            RxUtil.printStashContent(bean);
+            HashMap hm = new HashMap();
+            hm.put("method", rx.getMethod());
+            hm.put("takeMin", rx.getTakeMin());
+            hm.put("takeMax", rx.getTakeMax());
+            hm.put("duration", rx.getDuration());
+            hm.put("frequency", rx.getFrequencyCode());
+            hm.put("route", rx.getRoute());
+            hm.put("durationUnit", rx.getDurationUnit());
+            hm.put("prn", rx.getPrn());
+            hm.put("calQuantity", rx.getQuantity());
+            JSONObject jsonObject = JSONObject.fromObject(hm);
+            p("jsonObject", jsonObject.toString());
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+            p("===================END updateQty RxWriteScriptAction.java======================");
+            return null;
+        }else{
+        return null;
         }         
+    }
 
     public ActionForward updateAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
@@ -780,6 +686,8 @@ public final class RxWriteScriptAction extends DispatchAction {
                 boolean patientComplianceY = false;
                 boolean patientComplianceN = false;
                 boolean isOutsideProvider = false;
+                boolean isLongTerm=false;
+                boolean isPastMed=false;
                 try {
                     em = request.getParameterNames();
                     while (em.hasMoreElements()) {
@@ -806,9 +714,9 @@ public final class RxWriteScriptAction extends DispatchAction {
                             }
                         } else if (elem.equals("longTerm_" + num)) {
                             if (val.equals("on")) {
-                                rx.setLongTerm(true);
+                                isLongTerm=true;                                
                             } else {
-                                rx.setLongTerm(false);
+                                isLongTerm=false;
                             }
                         } else if (elem.equals("lastRefillDate_" + num)) {
                             rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
@@ -817,9 +725,6 @@ public final class RxWriteScriptAction extends DispatchAction {
                         } else if (elem.equals("rxDate_" + num)) {
                             //     p("paramName is rxDate!!");
                             if ((val == null) || (val.equals(""))) {
-                                //p("rxDate is null");
-                                Date d = RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd");
-                                //p(RxUtil.DateToString(d));
                                 rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
                             } else {
                                 rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
@@ -850,13 +755,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                             }
                         } else if (elem.equals("rxDurationUnit_" + num)) {
                             rx.setDurationUnit(val);
-                        } else if (elem.equals("rxPRN_" + num)) {
-                            if (val.equals("on")) {
-                                rx.setPrn(true);
-                            } else {
-                                rx.setPrn(false);
-                            }
-                        } else if (elem.equals("otext_" + num)) {
+                        }  else if (elem.equals("ocheck_" + num)) {
                             if (val.equals("on")) {
                                 isOutsideProvider = true;
                             } else {
@@ -864,9 +763,9 @@ public final class RxWriteScriptAction extends DispatchAction {
                             }
                         } else if (elem.equals("pastMed_" + num)) {
                             if (val.equals("on")) {
-                                rx.setPastMed(true);
+                                isPastMed=true;
                             } else {
-                                rx.setPastMed(false);
+                                isPastMed=false;
                             }
                         } else if (elem.equals("patientComplianceY_" + num)) {
                             if (val.equals("on")) {
@@ -896,13 +795,15 @@ public final class RxWriteScriptAction extends DispatchAction {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                  p("outside of the try {");
+                  p("outside of the try {}");
 
                 try {
                     if (!isOutsideProvider) {
                         rx.setOutsideProviderName("");
                         rx.setOutsideProviderOhip("");
                     }
+                    rx.setPastMed(isPastMed);
+                    rx.setLongTerm(isLongTerm);
                     String newline = System.getProperty("line.separator");
                     rx.setPatientCompliance(patientComplianceY, patientComplianceN);
                     String special =  rx.getGenericName() + newline + rx.getSpecial()+ newline + "Qty:" + rx.getQuantity() + " Repeats:" + ""+rx.getRepeat() ;
