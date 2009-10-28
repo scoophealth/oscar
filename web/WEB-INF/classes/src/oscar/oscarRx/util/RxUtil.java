@@ -182,7 +182,7 @@ public class RxUtil {
         String form = "";
         String duration = "0";
         String method = "";
-        char durationUnit = ' ';
+        String durationUnit = "";
         String durationUnitSpec = "";
         boolean prn = false;
         String amountFrequency = "";
@@ -194,18 +194,16 @@ public class RxUtil {
         String takeMin = "0";
         String takeMax = "0";
         String durationSpec = "";
-        double quantity=0d;
+        int quantity=0;
 
-        Pattern prnP=Pattern.compile("(?i)prn");
+        Pattern prnP=Pattern.compile("\\s(?i)prn");
         Matcher prnM=prnP.matcher(instructions);
         if(prnM.find()){
             p("prn is true");
             prn=true;
         }
 
-        //get prn first using contains.
-
-        //get route using contains.
+                
         String[] routes = {"(?i)PO", "(?i)SL", "(?i)IM", "(?i)SC", "(?i)PATCH", "(?i)TOP.", "(?i)INH",
             "(?i)SUPP", "(?i)O.D.", "(?i)O.S.", "(?i)O.U.", "(?i)OD", "(?i)OS", "(?i)OU"};
         String[] frequences = {"\\s(?i)OD\\s*", "\\s(?i)BID\\s*", "\\s(?i)TID\\s*", "\\s(?i)QID\\s*", "\\s(?i)Q1H\\s*", "\\s(?i)Q2H\\s*", "\\s(?i)Q1-2H\\s*", "\\s(?i)Q3-4H\\s*", "\\s(?i)Q4H\\s*", "\\s(?i)Q4-6H\\s*",
@@ -409,7 +407,7 @@ public class RxUtil {
             }
         }
 
-System.out.println("durationUnitSpec2="+durationUnitSpec);
+        System.out.println("durationUnitSpec2="+durationUnitSpec);
         //if durationUnit is not specified, deduce it
         if (durationUnitSpec.equals("")) {
             p("here?? if");
@@ -424,8 +422,8 @@ System.out.println("durationUnitSpec2="+durationUnitSpec);
                // p(f1);
                // p(frequency);
                 if (m.find()) {
-                    p("set durationUnit to D");
-                    durationUnit = 'D';
+                 
+                    durationUnit = "D";
                     found = true;
                 }
             }
@@ -435,7 +433,7 @@ System.out.println("durationUnitSpec2="+durationUnitSpec);
                     Pattern p2 = Pattern.compile(f2);
                     Matcher m2 = p2.matcher(frequency);
                     if (m2.find()) {
-                        durationUnit = 'W';
+                        durationUnit = "W";
                         found = true;
                     }
                 }
@@ -446,23 +444,23 @@ System.out.println("durationUnitSpec2="+durationUnitSpec);
                     Pattern p3 = Pattern.compile(f3);
                     Matcher m3 = p3.matcher(frequency);
                     if (m3.find()) {
-                        durationUnit = 'M';
+                        durationUnit = "M";
                         found = true;
                     }
                 }
             }
         }else {
-             p("here??0");
+            
             //D, W,M
             if(durationUnitSpec.equalsIgnoreCase("week")||durationUnitSpec.equalsIgnoreCase("weeks")||durationUnitSpec.equalsIgnoreCase("w")){
-                p("here??");
-                durationUnit='W';
+               
+                durationUnit="W";
             }else if (durationUnitSpec.equalsIgnoreCase("day")||durationUnitSpec.equalsIgnoreCase("days")||durationUnitSpec.equalsIgnoreCase("d")){
-                p("here??2");
-                durationUnit='D';
+              
+                durationUnit="D";
             }else if (durationUnitSpec.equalsIgnoreCase("month")||durationUnitSpec.equalsIgnoreCase("months")||durationUnitSpec.equalsIgnoreCase("m")){
-                p("here??3");
-                durationUnit='M';
+              
+                durationUnit="M";
             }
         }
 
@@ -479,58 +477,59 @@ System.out.println("durationUnitSpec2="+durationUnitSpec);
 
 
         //calculate quantity based on duration, frequency, duration unit, takeMin , takeMax
-        if(duration.equals("0") || durationUnit==' ' || takeMin.equals("0") || takeMax.equals("0") ||frequency.equals("")){
+        if(duration.equals("0") || durationUnit.equals("") || takeMin.equals("0") || takeMax.equals("0") ||frequency.equals("")){
         }else{
             if(frequency.equalsIgnoreCase("od"))
                 nPerDay=1;
-            if(frequency.equalsIgnoreCase("bid"))
+            else if(frequency.equalsIgnoreCase("bid"))
                 nPerDay=2;
-            if(frequency.equalsIgnoreCase("tid"))
+            else if(frequency.equalsIgnoreCase("tid"))
                 nPerDay=3;
-            if(frequency.equalsIgnoreCase("qid"))
+            else if(frequency.equalsIgnoreCase("qid"))
                 nPerDay=4;
-            if(frequency.equalsIgnoreCase("Q1H"))
+            else if(frequency.equalsIgnoreCase("Q1H"))
                 nPerDay=24;
-            if(frequency.equalsIgnoreCase("Q2H"))
+            else if(frequency.equalsIgnoreCase("Q2H"))
                 nPerDay=12;
-            if(frequency.equalsIgnoreCase("Q1-2H"))
+            else if(frequency.equalsIgnoreCase("Q1-2H"))
                 nPerDay=24;
-            if(frequency.equalsIgnoreCase("Q3-4H"))
+            else if(frequency.equalsIgnoreCase("Q3-4H"))
                 nPerDay=8;
-            if(frequency.equalsIgnoreCase("Q4H"))
+            else if(frequency.equalsIgnoreCase("Q4H"))
                 nPerDay=6;
-            if(frequency.equalsIgnoreCase("Q4-6H"))
+            else if(frequency.equalsIgnoreCase("Q4-6H"))
                 nPerDay=6;
-            if(frequency.equalsIgnoreCase("Q6H"))
+            else if(frequency.equalsIgnoreCase("Q6H"))
                 nPerDay=4;
-            if(frequency.equalsIgnoreCase("Q8H"))
+            else if(frequency.equalsIgnoreCase("Q8H"))
                 nPerDay=3;
-            if(frequency.equalsIgnoreCase("Q12H"))
+            else if(frequency.equalsIgnoreCase("Q12H"))
                 nPerDay=2;
-            if(frequency.equalsIgnoreCase("QAM"))
+            else if(frequency.equalsIgnoreCase("QAM"))
                 nPerDay=1;
-            if(frequency.equalsIgnoreCase("QPM"))
+            else if(frequency.equalsIgnoreCase("QPM"))
                 nPerDay=1;
-            if(frequency.equalsIgnoreCase("QHS"))
+            else if(frequency.equalsIgnoreCase("QHS"))
                 nPerDay=1;
-            if(frequency.equalsIgnoreCase("Q1Week"))
+            else if(frequency.equalsIgnoreCase("Q1Week"))
                 nPerDay=0.14285714285714285;
-            if(frequency.equalsIgnoreCase("Q2Week"))
+            else if(frequency.equalsIgnoreCase("Q2Week"))
                 nPerDay=0.07142857142857142;
-            if(frequency.equalsIgnoreCase("Q1Month"))
+            else if(frequency.equalsIgnoreCase("Q1Month"))
                 nPerDay=0.03333333333333333;
-            if(frequency.equalsIgnoreCase("Q3Month"))
+            else if(frequency.equalsIgnoreCase("Q3Month"))
                 nPerDay=0.011111111111111112;
 
-            if(durationUnit=='D')
+            if(durationUnit.equalsIgnoreCase("D"))
                 nDays=1;
-            else if(durationUnit=='W')
+            else if(durationUnit.equalsIgnoreCase("W"))
                 nDays=7;
-            else if(durationUnit=='M')
+            else if(durationUnit.equalsIgnoreCase("M"))
                 nDays=30;
 
             //quantity=takeMax * nDays * duration * nPerDay
-            quantity=(Double.parseDouble(takeMax)) * nPerDay * nDays * (Double.parseDouble(duration));
+          double  quantityD=(Double.parseDouble(takeMax)) * nPerDay * nDays * (Double.parseDouble(duration));
+          quantity=(int)quantityD;
         }        
 
         //if drug route is in rx is different from specified, set it to specified.
@@ -543,10 +542,10 @@ System.out.println("durationUnitSpec2="+durationUnitSpec);
         rx.setMethod(method);
         rx.setFrequencyCode(frequency);
         rx.setDuration(duration);
-        rx.setDurationUnit(String.valueOf(durationUnit));
+        rx.setDurationUnit(durationUnit);
         rx.setPrn(prn);
-        rx.setQuantity(Double.toString(quantity));
-
+        rx.setQuantity(Integer.toString(quantity));
+        rx.setSpecial(instructions);
         HashMap hm=new HashMap();
         hm.put("takeMin",rx.getTakeMin());
         hm.put("takeMax",rx.getTakeMax());
