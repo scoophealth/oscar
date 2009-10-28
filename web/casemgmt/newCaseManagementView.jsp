@@ -650,8 +650,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         CaseManagementNote cmNote = (CaseManagementNote)noteList.get(pos);
 
                         isCPP = false;
-                       //bgColour = "color:#000000;background-color:#CCCCFF;";
-                        bgColour = "color:#000000;background-color:#D2B9D3;";//set background colour to thistle
+                        bgColour = "color:#000000;background-color:#CCCCFF;";
+                        //bgColour = "color:#000000;background-color:#D2B9D3;";//set background colour to thistle
                         Set nIssues = cmNote.getIssues();
                         Iterator iterator = nIssues.iterator();
                         while( iterator.hasNext() ) {
