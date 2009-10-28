@@ -449,7 +449,7 @@
 						</security:oscarSec>
 						<c:choose>
 							<c:when test="${note.hasHistory == true and note.locked != true}">
-								<c:url value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="historyURL" />
+								<c:url value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="historyURL" />
 								<img src="<c:out value="${ctx}"/>/images/history.gif" title="Note History" style="cursor: pointer" onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
 							</c:when>
 							<c:otherwise>
@@ -460,7 +460,7 @@
 						<c:choose>
 							<c:when test="${note.locked}">
 								<c:url
-									value="/CaseManagementView.do?method=unlock&noteId=${note.id}"
+									value="/CaseManagementView.do?method=unlock&noteId=${note.noteId}"
 									var="lockedURL" />
 								<img src="<c:out value="${ctx}"/>/images/ulock.gif"
 									title="Unlock" style="cursor: pointer"
