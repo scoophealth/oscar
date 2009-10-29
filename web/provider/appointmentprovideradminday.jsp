@@ -564,6 +564,12 @@ phrAsyncActivate();
 <%}else{%>
 <body bgcolor="#EEEEFF" onLoad="refreshAllTabAlerts();" topmargin="0" leftmargin="0" rightmargin="0">
 <%}%>
+
+<% boolean isTeamScheduleOnly = false; %>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_team_schedule_only" rights="r" reverse="false">
+<% isTeamScheduleOnly = true; %>
+</security:oscarSec>
 <%
 int numProvider=0, numAvailProvider=0;
 String [] curProvider_no;
@@ -602,7 +608,7 @@ param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
          numAvailProvider = ((Long)(count.get(count.keySet().toArray()[0]))).intValue();
 	   }
   	 
-     if(numProvider==0) {
+     if(numProvider==0 || isTeamScheduleOnly) { // _team_schedule_only does not support groups
        numProvider=1; //the login user
        curProvider_no = new String []{curUser_no};  //[numProvider];
        curProviderName = new String []{(userlastname+", "+userfirstname)}; //[numProvider];
