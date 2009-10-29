@@ -184,7 +184,7 @@ detect those and search the source.
     <h3>----- Db Connection / Thread Monitor -----</h3>
 
 	<br />
-        <font color="blue">Threads with DbConnections : <%=DbConnectionFilter.debugMap.size()%></font>
+        <font color="blue">DbConnectionFilter style connections : <%=DbConnectionFilter.debugMap.size()%></font>
 	<br /><br />
 	<%
         //make local copy of the map to prevent thread interruption
@@ -219,7 +219,7 @@ detect those and search the source.
         }
 	%>
 	<br />
-        <font color="blue">StackTraces with Open Sessions : <%=sessionMap.size()%></font>
+        <font color="blue">Open Sessions : <%=sessionMap.size()%></font>
 	<br /><br />
 	<%
         i=0;
