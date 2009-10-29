@@ -10,16 +10,16 @@
 
 <preventions>
 
-	<!--item
+	<item
 		desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus; haemophilus influenzae type B for children under 5 years of age"
 		name="TdP-IPV-Hib"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html"
 		layout="injection" atc="J07CA06" minAge="0" maxAge="19"
-		showIfMinRecordNum="1" /-->
+		showIfMinRecordNum="1" />
 
         <item
 		desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus; Hib=haemophilus influenzae type B for children under 5 years of age"
-		name="DTap-IPV-Hib"
+		name="DTaP-IPV-Hib"
 		link="http://www.phac-aspc.gc.ca/"
 		layout="injection" atc="J07CA06" minAge="0" maxAge="19"
 		showIfMinRecordNum="1" />
