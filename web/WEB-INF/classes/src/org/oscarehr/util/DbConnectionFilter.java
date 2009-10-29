@@ -37,10 +37,6 @@ import javax.servlet.ServletResponse;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import oscar.util.SqlUtils;
 
@@ -75,28 +71,23 @@ public class DbConnectionFilter implements javax.servlet.Filter {
     }
 
 	public void doFilter(ServletRequest tmpRequest, ServletResponse tmpResponse, FilterChain chain) throws IOException, ServletException {
-		JpaTransactionManager txManager = (JpaTransactionManager) SpringUtils.getBean("txManager");
-		TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED));
-
 		try {
-			chain.doFilter(tmpRequest, tmpResponse);
-			
-			try {
-	            txManager.commit(status);
-            } catch (Exception e) {
-            	logger.warn(e.getMessage(), e);
-            }
+			chain.doFilter(tmpRequest, tmpResponse);			
 		} finally {
 			releaseThreadLocalDbConnection();
-			if (!status.isCompleted()) txManager.rollback(status);
+			SpringHibernateLocalSessionFactoryBean.releaseThreadSessions();
 		}
 	}
 
     public static void releaseThreadLocalDbConnection() {
-        Connection c = dbConnection.get();
-        SqlUtils.closeResources(c, null, null);
-        dbConnection.remove();
-        debugMap.remove(Thread.currentThread());
+        try {
+	        Connection c = dbConnection.get();
+	        SqlUtils.closeResources(c, null, null);
+	        dbConnection.remove();
+	        debugMap.remove(Thread.currentThread());
+        } catch (Exception e) {
+	        logger.error("Error closing db connection.", e);
+        }
     }
 
     /**

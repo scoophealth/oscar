@@ -10,6 +10,7 @@ import java.util.WeakHashMap;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
@@ -23,9 +24,60 @@ import org.hibernate.stat.Statistics;
 
 public class SpringHibernateLocalSessionFactoryBean extends org.springframework.orm.hibernate3.LocalSessionFactoryBean {
 
+	private static final Logger logger=MiscUtils.getLogger();
+	
     public static Map<Session, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Session, StackTraceElement[]>());
+    
+    // This is a fake weak hash set, the value is actually ignored, put null or what ever in it.
+    private static ThreadLocal<WeakHashMap<Session, Object>> sessions = new ThreadLocal<WeakHashMap<Session, Object>>();
 
-    public static class TrackingSessionFactory implements org.hibernate.SessionFactory
+	public static Session trackSession(Session session)
+	{
+        Thread currentThread=Thread.currentThread();
+        debugMap.put(session, currentThread.getStackTrace());
+        
+        WeakHashMap<Session, Object> map=sessions.get();
+        if (map==null)
+        {
+        	map=new WeakHashMap<Session, Object>();
+        	sessions.set(map);
+        }
+        
+        map.put(session, null);
+        
+        return(session);
+	}
+	
+	public static void releaseThreadSessions()
+	{
+        try {
+	        WeakHashMap<Session, Object> map=sessions.get();
+	        if (map!=null)
+	        {
+	        	for (Session session : map.keySet())
+	        	{
+	        		try
+	        		{
+	        			if (session.isOpen())
+	        			{
+	        				session.close();
+	        				logger.warn("Closing lingering hibernate session.");
+	        			}
+	        		}
+	        		catch (Exception e)
+	        		{
+	        			logger.error("Error closing hibernate session. (single instance)", e);
+	        		}
+	        	}
+	        	
+	        	sessions.remove();
+	        }
+        } catch (Exception e) {
+	        logger.error("Error closing hibernate sessions. (outter loop)", e);
+        }
+	}
+	
+	public static class TrackingSessionFactory implements org.hibernate.SessionFactory
 	{
 		private SessionFactory sessionFactory=null;
 		
@@ -34,14 +86,6 @@ public class SpringHibernateLocalSessionFactoryBean extends org.springframework.
 			this.sessionFactory=sessionFactory;
 		}
 	
-		private Session trackSession(Session session)
-		{
-            Thread currentThread=Thread.currentThread();
-            debugMap.put(session, currentThread.getStackTrace());
-            
-            return(session);
-		}
-		
 		public void close() throws HibernateException {
 	        sessionFactory.close();
         }
