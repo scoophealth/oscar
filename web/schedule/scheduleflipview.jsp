@@ -68,7 +68,8 @@ sites = siteDao.getAllSites();
     {"search_appt", "select * from appointment where provider_no=? and appointment_date>=? and appointment_date<=? order by appointment_date, start_time, end_time"}, 
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? order by first_name"}, 
     {"search_timecodesingle", "select * from scheduletemplatecode order by code"}, 
-  };
+    {"searchmyteamprovider", "select provider_no, last_name, first_name from provider where provider_no=? or team=(select team from provider where provider_no=?) order by first_name"}, 
+ };
   String[][] responseTargets=new String[][] {  };
   flipviewMainBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
@@ -154,7 +155,9 @@ function t(s1,s2,s3,s4,s5,s6) {
 			border='0'><img src="../images/previous.gif"></a> <select
 			name="provider_no" onChange="selectprovider(this)">
 			<%
-  ResultSet rsdemo = flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
+  ResultSet rsdemo = bMultisites
+  						? flipviewMainBean.queryResults(new String[]{curProvider_no, curProvider_no}, "searchmyteamprovider")
+  						: flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
   while (rsdemo.next()) { 
 %>
 			<option value="<%=rsdemo.getString("provider_no")%>"
