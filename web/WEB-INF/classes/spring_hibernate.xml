@@ -4,7 +4,7 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="no">
 
 	<!-- hibernate session factory -->
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="sessionFactory" class="org.oscarehr.util.SpringHibernateLocalSessionFactoryBean" lazy-init="default" autowire="default" dependency-check="default">
 		<property name="dataSource" ref="dataSource" />
 		<property name="entityInterceptor" ref="auditInterceptor" />
 		<property name="mappingDirectoryLocations">
