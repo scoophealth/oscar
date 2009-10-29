@@ -78,10 +78,13 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				<li>
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/report/reportindex.jsp"/>','reportPage');return false;" title="<bean:message key="global.genReport"/>"><u>R</u>eport</a>
 				</li>
+				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
 				<li>					
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/billing"/>/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" title="<bean:message key="global.genBillReport"/>"><u>B</u>illing</a>
 				</li>
+				</oscar:oscarPropertiesCheck>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
+				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
 				<li>
 					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/oscarMDS/Index.jsp"/>?providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
 						<span id="oscar_new_lab"><u>L</u>ab</span>
@@ -90,6 +93,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
        					<a class="tabalert" HREF="#" ONCLICK="popupPage2('<html:rewrite page="/oscarMDS/Index.jsp"/>?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
        				</oscar:newUnclaimedLab>					       
 				</li>
+				</oscar:oscarPropertiesCheck>
 </security:oscarSec>
 				<li>
 					<a HREF="#" ONCLICK ="popupOscarRx(600,900,'<html:rewrite page="/oscarMessenger/DisplayMessages.do?"/>providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');return false;" title="<bean:message key="global.messenger"/>">

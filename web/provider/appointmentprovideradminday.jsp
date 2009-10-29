@@ -698,6 +698,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <li>
     <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a>
 </li>
+
+<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
 <li>
      <%if (vLocale.getCountry().equals("BR")) { %>
        <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a>
@@ -714,7 +716,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
        <a class="tabalert" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
        </oscar:newUnclaimedLab>
    </li>
-     </security:oscarSec>
+  </security:oscarSec>
+</oscar:oscarPropertiesCheck>
      
  </caisi:isModuleLoad>
  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true"> 
