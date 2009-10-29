@@ -181,7 +181,7 @@ detect those and search the source.
 	Thread Format: <%=VMStat.getThreadFormat() %><br />
 	Thread Info: <%=VMStat.getThreadInfo()%>
 
-    <h3>----- Db Connection Thread Monitor -----</h3>
+    <h3>----- Db Connection / Thread Monitor -----</h3>
 
 	<br />
         <font color="blue">Threads with DbConnections : <%=DbConnectionFilter.debugMap.size()%></font>
@@ -207,7 +207,7 @@ detect those and search the source.
 		}
 	%>
 
-    <h3>----- Hibernate Session Thread Monitor (open,connected,dirty)-----</h3>
+    <h3>----- Hibernate Open Session / Stack Trace Monitor (open,connected,dirty)-----</h3>
 
 	<%
 	    //make local copy of the map to prevent thread interruption
