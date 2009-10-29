@@ -61,7 +61,7 @@ public class SpringHibernateLocalSessionFactoryBean extends org.springframework.
 	        			if (session.isOpen())
 	        			{
 	        				session.close();
-	        				logger.warn("Closing lingering hibernate session.");
+	        				logger.warn("Found lingering hibernate session. Closing session now.");
 	        			}
 	        		}
 	        		catch (Exception e)
