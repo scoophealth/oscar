@@ -48,7 +48,7 @@
 
 	<bean id="auditInterceptor" class="org.oscarehr.common.dao.AuditInterceptor" lazy-init="default" autowire="default" dependency-check="default" />
 
-	<bean id="auditSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="auditSessionFactory" class="org.oscarehr.util.SpringHibernateLocalSessionFactoryBean" lazy-init="default" autowire="default" dependency-check="default">
 		<property name="dataSource" ref="dataSource" />
 		<property name="mappingDirectoryLocations">
 			<!-- only *.hbm.xml will be loaded -->
