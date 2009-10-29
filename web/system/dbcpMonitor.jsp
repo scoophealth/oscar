@@ -50,6 +50,7 @@ detect those and search the source.
 
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="org.apache.commons.dbcp.*"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@page import="oscar.oscarDB.*"%>
 <%@page import="java.sql.*"%>
 
@@ -60,8 +61,6 @@ detect those and search the source.
         BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
         DBHandler dbHandler = new DBHandler(DBHandler.OSCAR_DATA);
 
-
-
         int numActive = basicDataSource.getNumActive();
         int numIdle = basicDataSource.getNumIdle();
 
@@ -69,7 +68,8 @@ detect those and search the source.
 
 %>
 
-<html>
+
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%><html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -181,24 +181,63 @@ detect those and search the source.
 	Thread Format: <%=VMStat.getThreadFormat() %><br />
 	Thread Info: <%=VMStat.getThreadInfo()%>
 
-	<br /><br />
-        <font color="blue">DbConnections in the Thread: <%=DbConnectionFilter.debugMap.size()%></font>
+    <h3>----- Db Connection Thread Monitor -----</h3>
+
+	<br />
+        <font color="blue">Threads with DbConnections : <%=DbConnectionFilter.debugMap.size()%></font>
 	<br /><br />
 	<%
-        int threadCount = 0;
         //make local copy of the map to prevent thread interruption
-        HashMap<Thread, StackTraceElement[]> threadMap = new HashMap(DbConnectionFilter.debugMap);
-        ArrayList<Map.Entry<Thread, StackTraceElement[]>> threadList = new ArrayList(Arrays.asList(threadMap.entrySet().toArray()));
-        for (int i=0; i<threadList.size(); i++)
+        HashMap<Thread, StackTraceElement[]> threadMap = new HashMap<Thread, StackTraceElement[]>(DbConnectionFilter.debugMap);
+        int i=0;
+        for (Map.Entry<Thread, StackTraceElement[]> entry : threadMap.entrySet())
 		{
-                    threadCount++;
 			%>
-		<a href="javascript: hideDiv('stacktrace<%=threadCount%>');">Hide Stacktrace</a> |
-                <a href="javascript: showDiv('stacktrace<%=threadCount%>');">Show FULL Stacktrace</a><br/>
-                <div id="stacktrace<%=threadCount%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
-                    <%=threadList.get(i).getKey().getName()%> : <%=Arrays.toString(threadList.get(i).getValue()).replace(",", "<br/>") %>
+				<a href="javascript: hideDiv('threadStacktrace<%=i%>');">Hide Stacktrace</a> |
+                <a href="javascript: showDiv('threadStacktrace<%=i%>');">Show FULL Stacktrace</a><br/>
+                <div id="threadStacktrace<%=i%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
+                	<%
+                		String key=StringEscapeUtils.escapeHtml(entry.getKey().toString());
+                		String value=StringEscapeUtils.escapeHtml(Arrays.toString(entry.getValue())).replace(",", "<br />");
+                	%>
+                    <%=key%> : <%=value%>
 				</div><br /><br />
 			<%
+			i++;
+		}
+	%>
+
+    <h3>----- Hibernate Session Thread Monitor (open,connected,dirty)-----</h3>
+
+	<%
+	    //make local copy of the map to prevent thread interruption
+		HashMap<org.hibernate.classic.Session, StackTraceElement[]> sessionMap = new HashMap<org.hibernate.classic.Session, StackTraceElement[]>(SpringHibernateLocalSessionFactoryBean.debugMap);
+        Iterator<org.hibernate.classic.Session> it=sessionMap.keySet().iterator();
+		while (it.hasNext())
+        {
+			if (!it.next().isOpen()) it.remove();
+        }
+	%>
+	<br />
+        <font color="blue">StackTraces with Open Sessions : <%=sessionMap.size()%></font>
+	<br /><br />
+	<%
+        i=0;
+        for (Map.Entry<org.hibernate.classic.Session, StackTraceElement[]> entry : sessionMap.entrySet())
+		{
+			%>
+				<a href="javascript: hideDiv('sessionStacktrace<%=i%>');">Hide Stacktrace</a> |
+                <a href="javascript: showDiv('sessionStacktrace<%=i%>');">Show FULL Stacktrace</a><br/>
+                <div id="sessionStacktrace<%=i%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
+                	<%
+                		org.hibernate.classic.Session hs=entry.getKey();
+                		String key=StringEscapeUtils.escapeHtml(hs.hashCode()+"("+hs.isOpen()+","+hs.isConnected()+","+hs.isDirty()+")");
+                		String value=StringEscapeUtils.escapeHtml(Arrays.toString(entry.getValue())).replace(",", "<br />");
+                	%>
+                    <%=key%> : <%=value%>
+				</div><br /><br />
+			<%
+			i++;
 		}
 	%>
 
