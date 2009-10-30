@@ -1059,6 +1059,11 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
      userAvail = true;
      int timecodeLength = dateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) dateTimeCodeBean.get(curProvider_no[nProvider]) ).length() : 4*24;
+
+     if (timecodeLength == 0){
+        timecodeLength = 4*24;
+     }
+
      depth = bDispTemplatePeriod ? (24*60 / timecodeLength) : everyMin; // add function to display different time slot
      param1[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
      param1[1] = curProvider_no[nProvider];
@@ -1343,9 +1348,11 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
           <!-- doctor code block -->
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
-      <a href=# onClick="popupWithApptNo(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>','rx',<%=appointment.get("appointment_no")%>)" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/>
-      </a>
-       <%
+      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/></a>
+<oscar:oscarPropertiesCheck property="RX3" value="yes">
+      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient3.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/>3</a>
+</oscar:oscarPropertiesCheck>
+      <%
 	  if("bc".equalsIgnoreCase(prov)){
 	  if(patientHasOutstandingPrivateBills(String.valueOf(demographic_no))){
 	  %>
