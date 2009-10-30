@@ -294,20 +294,76 @@ if (billNo.compareTo("") == 0 || billNo == null) {
 			face="Arial, Helvetica, sans-serif"><bean:message
 			key="billing.billingCorrection.formHCType" />:</font></strong> <select name="hc_type"
 			style="font-size: 80%;">
-			<option value="ON" <%=HCTYPE.equals("ON")?"selected":""%>>ON-Ontario</option>
-			<option value="AB" <%=HCTYPE.equals("AB")?"selected":""%>>AB-Alberta</option>
-			<option value="BC" <%=HCTYPE.equals("BC")?"selected":""%>>BC-British
-			Columbia</option>
-			<option value="MB" <%=HCTYPE.equals("MB")?"selected":""%>>MB-Manitoba</option>
-			<option value="NL" <%=HCTYPE.equals("NL")?"selected":""%>>NL-Newfoundland</option>
-			<option value="NB" <%=HCTYPE.equals("NB")?"selected":""%>>NB-New
-			Brunswick</option>
-			<option value="YT" <%=HCTYPE.equals("YT")?"selected":""%>>YT-Yukon</option>
-			<option value="NS" <%=HCTYPE.equals("NS")?"selected":""%>>NS-Nova
-			Scotia</option>
-			<option value="PE" <%=HCTYPE.equals("PE")?"selected":""%>>PE-Prince
-			Edward Island</option>
-			<option value="SK" <%=HCTYPE.equals("SK")?"selected":""%>>SK-Saskatchewan</option>
+			<option value="AB" <%=HCTYPE.equals("AB")?" selected":""%>>AB-Alberta</option>
+                        <option value="BC" <%=HCTYPE.equals("BC")?" selected":""%>>BC-British Columbia</option>
+                        <option value="MB" <%=HCTYPE.equals("MB")?" selected":""%>>MB-Manitoba</option>
+                        <option value="NB" <%=HCTYPE.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+                        <option value="NL" <%=HCTYPE.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+                        <option value="NT" <%=HCTYPE.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
+                        <option value="NS" <%=HCTYPE.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+                        <option value="NU" <%=HCTYPE.equals("NU")?" selected":""%>>NU-Nunavut</option>
+                        <option value="ON" <%=HCTYPE.equals("ON")?" selected":""%>>ON-Ontario</option>
+                        <option value="PE" <%=HCTYPE.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+                        <option value="QC" <%=HCTYPE.equals("QC")?" selected":""%>>QC-Quebec</option>
+                        <option value="SK" <%=HCTYPE.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+                        <option value="YT" <%=HCTYPE.equals("YT")?" selected":""%>>YT-Yukon</option>
+                        <option value="US" <%=HCTYPE.equals("US")?" selected":""%>>US resident</option>
+                        <option value="US-AK" <%=HCTYPE.equals("US-AK")?" selected":""%>>US-AK-Alaska</option>
+                        <option value="US-AL" <%=HCTYPE.equals("US-AL")?" selected":""%>>US-AL-Alabama</option>
+                        <option value="US-AR" <%=HCTYPE.equals("US-AR")?" selected":""%>>US-AR-Arkansas</option>
+                        <option value="US-AZ" <%=HCTYPE.equals("US-AZ")?" selected":""%>>US-AZ-Arizona</option>
+                        <option value="US-CA" <%=HCTYPE.equals("US-CA")?" selected":""%>>US-CA-California</option>
+                        <option value="US-CO" <%=HCTYPE.equals("US-CO")?" selected":""%>>US-CO-Colorado</option>
+                        <option value="US-CT" <%=HCTYPE.equals("US-CT")?" selected":""%>>US-CT-Connecticut</option>
+                        <option value="US-CZ" <%=HCTYPE.equals("US-CZ")?" selected":""%>>US-CZ-Canal Zone</option>
+                        <option value="US-DC" <%=HCTYPE.equals("US-DC")?" selected":""%>>US-DC-District Of Columbia</option>
+                        <option value="US-DE" <%=HCTYPE.equals("US-DE")?" selected":""%>>US-DE-Delaware</option>
+                        <option value="US-FL" <%=HCTYPE.equals("US-FL")?" selected":""%>>US-FL-Florida</option>
+                        <option value="US-GA" <%=HCTYPE.equals("US-GA")?" selected":""%>>US-GA-Georgia</option>
+                        <option value="US-GU" <%=HCTYPE.equals("US-GU")?" selected":""%>>US-GU-Guam</option>
+                        <option value="US-HI" <%=HCTYPE.equals("US-HI")?" selected":""%>>US-HI-Hawaii</option>
+                        <option value="US-IA" <%=HCTYPE.equals("US-IA")?" selected":""%>>US-IA-Iowa</option>
+                        <option value="US-ID" <%=HCTYPE.equals("US-ID")?" selected":""%>>US-ID-Idaho</option>
+                        <option value="US-IL" <%=HCTYPE.equals("US-IL")?" selected":""%>>US-IL-Illinois</option>
+                        <option value="US-IN" <%=HCTYPE.equals("US-IN")?" selected":""%>>US-IN-Indiana</option>
+                        <option value="US-KS" <%=HCTYPE.equals("US-KS")?" selected":""%>>US-KS-Kansas</option>
+                        <option value="US-KY" <%=HCTYPE.equals("US-KY")?" selected":""%>>US-KY-Kentucky</option>
+                        <option value="US-LA" <%=HCTYPE.equals("US-LA")?" selected":""%>>US-LA-Louisiana</option>
+                        <option value="US-MA" <%=HCTYPE.equals("US-MA")?" selected":""%>>US-MA-Massachusetts</option>
+                        <option value="US-MD" <%=HCTYPE.equals("US-MD")?" selected":""%>>US-MD-Maryland</option>
+                        <option value="US-ME" <%=HCTYPE.equals("US-ME")?" selected":""%>>US-ME-Maine</option>
+                        <option value="US-MI" <%=HCTYPE.equals("US-MI")?" selected":""%>>US-MI-Michigan</option>
+                        <option value="US-MN" <%=HCTYPE.equals("US-MN")?" selected":""%>>US-MN-Minnesota</option>
+                        <option value="US-MO" <%=HCTYPE.equals("US-MO")?" selected":""%>>US-MO-Missouri</option>
+                        <option value="US-MS" <%=HCTYPE.equals("US-MS")?" selected":""%>>US-MS-Mississippi</option>
+                        <option value="US-MT" <%=HCTYPE.equals("US-MT")?" selected":""%>>US-MT-Montana</option>
+                        <option value="US-NC" <%=HCTYPE.equals("US-NC")?" selected":""%>>US-NC-North Carolina</option>
+                        <option value="US-ND" <%=HCTYPE.equals("US-ND")?" selected":""%>>US-ND-North Dakota</option>
+                        <option value="US-NE" <%=HCTYPE.equals("US-NE")?" selected":""%>>US-NE-Nebraska</option>
+                        <option value="US-NH" <%=HCTYPE.equals("US-NH")?" selected":""%>>US-NH-New Hampshire</option>
+                        <option value="US-NJ" <%=HCTYPE.equals("US-NJ")?" selected":""%>>US-NJ-New Jersey</option>
+                        <option value="US-NM" <%=HCTYPE.equals("US-NM")?" selected":""%>>US-NM-New Mexico</option>
+                        <option value="US-NU" <%=HCTYPE.equals("US-NU")?" selected":""%>>US-NU-Nunavut</option>
+                        <option value="US-NV" <%=HCTYPE.equals("US-NV")?" selected":""%>>US-NV-Nevada</option>
+                        <option value="US-NY" <%=HCTYPE.equals("US-NY")?" selected":""%>>US-NY-New York</option>
+                        <option value="US-OH" <%=HCTYPE.equals("US-OH")?" selected":""%>>US-OH-Ohio</option>
+                        <option value="US-OK" <%=HCTYPE.equals("US-OK")?" selected":""%>>US-OK-Oklahoma</option>
+                        <option value="US-OR" <%=HCTYPE.equals("US-OR")?" selected":""%>>US-OR-Oregon</option>
+                        <option value="US-PA" <%=HCTYPE.equals("US-PA")?" selected":""%>>US-PA-Pennsylvania</option>
+                        <option value="US-PR" <%=HCTYPE.equals("US-PR")?" selected":""%>>US-PR-Puerto Rico</option>
+                        <option value="US-RI" <%=HCTYPE.equals("US-RI")?" selected":""%>>US-RI-Rhode Island</option>
+                        <option value="US-SC" <%=HCTYPE.equals("US-SC")?" selected":""%>>US-SC-South Carolina</option>
+                        <option value="US-SD" <%=HCTYPE.equals("US-SD")?" selected":""%>>US-SD-South Dakota</option>
+                        <option value="US-TN" <%=HCTYPE.equals("US-TN")?" selected":""%>>US-TN-Tennessee</option>
+                        <option value="US-TX" <%=HCTYPE.equals("US-TX")?" selected":""%>>US-TX-Texas</option>
+                        <option value="US-UT" <%=HCTYPE.equals("US-UT")?" selected":""%>>US-UT-Utah</option>
+                        <option value="US-VA" <%=HCTYPE.equals("US-VA")?" selected":""%>>US-VA-Virginia</option>
+                        <option value="US-VI" <%=HCTYPE.equals("US-VI")?" selected":""%>>US-VI-Virgin Islands</option>
+                        <option value="US-VT" <%=HCTYPE.equals("US-VT")?" selected":""%>>US-VT-Vermont</option>
+                        <option value="US-WA" <%=HCTYPE.equals("US-WA")?" selected":""%>>US-WA-Washington</option>
+                        <option value="US-WI" <%=HCTYPE.equals("US-WI")?" selected":""%>>US-WI-Wisconsin</option>
+                        <option value="US-WV" <%=HCTYPE.equals("US-WV")?" selected":""%>>US-WV-West Virginia</option>
+                        <option value="US-WY" <%=HCTYPE.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
 		</select></td>
 		<td width="270"><strong><font size="2"
 			face="Arial, Helvetica, sans-serif"><bean:message
