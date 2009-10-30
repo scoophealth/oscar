@@ -49,7 +49,6 @@
     </style>
 </head>
 <body>
-
     <div style="background: #CCCCFF; width: 100%; text-align:center; font-family:Helvetica,sans-serif; "><bean:message key="eform.download.msgDownloadEform" /> <a href="efmformmanagerdownload.jsp?grid=<%=!gridlayout%>">grid</a></div>
 
     <% if(gridlayout){%>
@@ -74,7 +73,7 @@
                 <td valign="middle">
                     <form action="../eform/manageEForm.do" method="POST" >
                            <input type="hidden" name="method" value="importEFormFromRemote"/>   <%--Look at just sending the filename from mydrugref  --%>
-                           <input type="hidden" name="url" value="<%=((String) ht.get("url")).replaceAll("http://mydrugref.org/data/","")%>"/>
+                           <input type="hidden" name="url" value="<%=stripDrugref(ht.get("url"))%>"/>
                            <input type="submit"  value="<bean:message key="eform.download.btnLoadEform" />"/>
                     </form>
                 </td>
@@ -111,7 +110,7 @@
 
         <form action="../eform/manageEForm.do" method="POST" >
                <input type="hidden" name="method" value="importEFormFromRemote"/>
-               <input type="hidden" name="url" value="<%=ht.get("url")%>"/>
+               <input type="hidden" name="url" value="<%=stripDrugref(ht.get("url"))%>"/>
                <input type="submit"  value="<bean:message key="eform.download.btnLoadEform" />"/>
         </form>
 
@@ -123,6 +122,18 @@
 </body>
 </html:html>
 <%!
+
+    String stripDrugref(Object obj){
+        String s = "";
+        if (obj !=null){
+           s = (String) obj;
+
+           return s.substring(26);
+        }
+
+        return "";
+    }
+
 
    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
         System.out.println("#CALLDRUGREF-"+procedureName);
