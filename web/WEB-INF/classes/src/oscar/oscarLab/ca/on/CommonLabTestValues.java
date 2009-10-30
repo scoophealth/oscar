@@ -298,6 +298,7 @@ public class CommonLabTestValues {
                 h.put("result", oscar.Misc.getString(rs,"dataField"));
                 h.put("date", oscar.Misc.getString(rs,"dateObserved"));
                 h.put("abn", oscar.Misc.getString(rs,"abnormal"));
+                h.put("collDateDate",rs.getDate("dateObserved"));
                 labList.add(h);
             }
             rs.close();
@@ -310,6 +311,46 @@ public class CommonLabTestValues {
         
         return labList;
     }
+    
+    
+    //WITH MORE DATA MERGE WITH 1 AFTER April 09
+     public ArrayList findValuesByLoinc2(String demographicNo, String loincCode, Connection conn){
+        ArrayList labList = new ArrayList();
+        
+        String sql = "SELECT dataField, dateObserved, e1.val AS lab_no, e3.val AS abnormal, e4.val as units FROM measurements m " +
+                "JOIN measurementsExt e1 ON m.id = e1.measurement_id AND e1.keyval='lab_no' " +
+                "JOIN measurementsExt e2 ON m.id = e2.measurement_id AND e2.keyval='identifier' " +
+                "JOIN measurementsExt e4 ON m.id = e4.measurement_id AND e4.keyval='identifier' " +
+                "JOIN measurementsExt e3 ON m.id = e3.measurement_id AND e3.keyval='abnormal', measurementMap " +
+                "WHERE e2.val = ident_code AND LOINC_CODE='"+loincCode+"' AND demographicNo='"+demographicNo+"' " +
+                "ORDER BY dateObserved DESC";
+        try {
+            //DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            //ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while(rs.next()){
+                Hashtable h = new Hashtable();
+                h.put("lab_no", oscar.Misc.getString(rs,"lab_no"));
+                h.put("result", oscar.Misc.getString(rs,"dataField"));
+                h.put("date", oscar.Misc.getString(rs,"dateObserved"));
+                h.put("abn", oscar.Misc.getString(rs,"abnormal"));
+                h.put("collDateDate",rs.getDate("dateObserved"));
+                h.put("units",oscar.Misc.getString(rs,"units"));
+                labList.add(h);
+            }
+            rs.close();
+            pstmt.close();
+            //db.CloseConn();
+        }catch(Exception e){
+            logger.error("exception in CommonLabTestValues.findValuesByLoinc()", e);
+            
+        }
+        
+        return labList;
+    }
+    
     
     /**Returns hashtable with the following characteristics
      * //first field is testName,
