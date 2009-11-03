@@ -38,10 +38,6 @@ public class DBHandler {
 
     public static String OSCAR_DATA = "oscar_sfhc";
 
-    public static boolean isInit() {
-        return true;
-    }
-
     public DBHandler(String dbName) throws SQLException {
     }
 
