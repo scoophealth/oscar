@@ -46,7 +46,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 
 /**
+ * deprecated on 2009-11-03, if it's been a while, delete this.
  */
+@Deprecated
 public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet {
     private static final Logger logger = LogManager.getLogger(RedirectLinkTrackingServlet.class);
 

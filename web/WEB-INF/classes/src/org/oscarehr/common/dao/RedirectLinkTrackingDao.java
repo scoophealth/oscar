@@ -34,6 +34,10 @@ import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.util.SqlUtils;
 
+/**
+ * deprecated on 2009-11-03, if it's been a while, delete this.
+ */
+@Deprecated
 public class RedirectLinkTrackingDao {
 
     public void addInstanceOfRedirect(Date date, String providerId, int redirectLinkId) {
