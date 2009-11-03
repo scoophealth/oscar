@@ -2092,20 +2092,25 @@ System.out.println("noteString="+noteString);
         request.setAttribute("demoName", getDemoName(demono));
         String issueIds = request.getParameter("issueIds");
         
-        List<CaseManagementNote> history = caseManagementMgr.getIssueHistory(issueIds,demono);
-        request.setAttribute("history", history);
-        
-        
+        List<CaseManagementNote> history = new ArrayList<CaseManagementNote>();
+        List<CaseManagementNote> temp = caseManagementMgr.getIssueHistory(issueIds,demono);
+                
         ArrayList<Boolean>current = new ArrayList<Boolean>(history.size());
-        for( Iterator<CaseManagementNote>iter = history.listIterator(); iter.hasNext();) {
+        for( Iterator<CaseManagementNote>iter = temp.listIterator(); iter.hasNext();) {
             CaseManagementNote historyNote = iter.next();
             CaseManagementNote recentNote = caseManagementMgr.getMostRecentNote(historyNote.getUuid());
-            if( recentNote.getUpdate_date().compareTo(historyNote.getUpdate_date()) > 0 ) {
-                current.add(new Boolean(false));
+
+            if( !recentNote.isLocked() ) {
+                history.add(historyNote);
+                if( recentNote.getUpdate_date().compareTo(historyNote.getUpdate_date()) > 0 ) {
+                    current.add(new Boolean(false));
+                }
+                else
+                    current.add(new Boolean(true));
             }
-            else
-                current.add(new Boolean(true));
         }
+
+        request.setAttribute("history", history);
         request.setAttribute("current", current);
         
         StringBuffer title = new StringBuffer();
@@ -2244,6 +2249,7 @@ System.out.println("noteString="+noteString);
 
 
         List<CaseManagementNote> issueNotes;
+        List<CaseManagementNote> tmpNotes;
         HashMap<String,List<CaseManagementNote> >cpp = null;
         if (request.getParameter("printCPP").equalsIgnoreCase("true")) {
             cpp = new HashMap<String,List<CaseManagementNote> >();
@@ -2251,7 +2257,13 @@ System.out.println("noteString="+noteString);
             for( int j = 0; j < issueCodes.length; ++j ) {
                 List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, issueCodes[j]);
                 String[] issueIds =  getIssueIds(issues);//= new String[issues.size()];
-                issueNotes = caseManagementMgr.getNotes(demono, issueIds);
+                tmpNotes = caseManagementMgr.getNotes(demono, issueIds);
+                issueNotes = new ArrayList<CaseManagementNote>();
+                for( int k = 0; k < tmpNotes.size(); ++k) {
+                    if( !tmpNotes.get(k).isLocked() ) {
+                        issueNotes.add(tmpNotes.get(k));
+                    }
+                }
                 cpp.put(issueCodes[j],issueNotes);
             }
         }
