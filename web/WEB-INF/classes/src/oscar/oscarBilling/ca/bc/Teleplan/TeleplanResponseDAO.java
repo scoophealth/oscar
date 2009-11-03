@@ -60,7 +60,7 @@ public class TeleplanResponseDAO {
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String query = "insert into teleplan_response_log (transaction_no,result,filename,msgs,real_filename) values (?,?,?,?,?)" ;
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstat = conn.prepareStatement(query);
             pstat.setString(1,tr.getTransactionNo());
             pstat.setString(2,tr.getResult());

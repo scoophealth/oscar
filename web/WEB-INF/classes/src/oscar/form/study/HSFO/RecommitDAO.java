@@ -32,7 +32,7 @@ public class RecommitDAO {
 	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	     try {
 	            db = new DBHandler(DBHandler.OSCAR_DATA);
-	            Connection connect = db.GetConnection();
+	            Connection connect = DBHandler.getConnection();
 	            st = connect.prepareStatement(sqlstatement);
 	            st.execute();
 	            rs = st.getResultSet();
@@ -77,7 +77,7 @@ public class RecommitDAO {
 	     
 	     try {
 	    	 db = new DBHandler(DBHandler.OSCAR_DATA);
-	         Connection connect = db.GetConnection();
+	         Connection connect = DBHandler.getConnection();
 	         st = connect.prepareStatement(sqlstatement);
 	         st.setString(1,rd.getId().toString());
 	         st.setString(2,rd.getStatus());
@@ -111,7 +111,7 @@ public class RecommitDAO {
 	     
 	     try {
 	    	 db = new DBHandler(DBHandler.OSCAR_DATA);
-	         Connection connect = db.GetConnection();
+	         Connection connect = DBHandler.getConnection();
 	         st = connect.prepareStatement(sqlstatement);
 	         
 	         st.setString(1,rd.getStatus());

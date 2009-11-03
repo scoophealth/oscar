@@ -70,7 +70,7 @@ public class ManageLetters {
             //System.out.println("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "insert into report_letters (provider_no,report_name, file_name,report_file,date_time,archive) values (?,?,?,?,now(),'0')" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
             pstmt.setString(2,reportName);
             pstmt.setString(3,fileName);
@@ -90,7 +90,7 @@ public class ManageLetters {
             //System.out.println("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "update report_letters set archive = '1' where id =  ?" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
             pstmt.executeUpdate();
             pstmt.close();
@@ -108,7 +108,7 @@ public class ManageLetters {
             //System.out.println("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select report_file from report_letters where id  = ?" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
             
             ResultSet rs = pstmt.executeQuery();
@@ -152,7 +152,7 @@ public class ManageLetters {
             //System.out.println("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select report_file from report_letters where id  = ?" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
             
             ResultSet rs = pstmt.executeQuery();
@@ -191,7 +191,7 @@ public class ManageLetters {
             //System.out.println("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where archive = '0' order by date_time,report_name" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()){
                list.add(getHashFromResultSet(rs));
@@ -212,7 +212,7 @@ public class ManageLetters {
             //System.out.println("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where ID = ?" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
@@ -255,7 +255,7 @@ public class ManageLetters {
             //System.out.println("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "insert into log_letters (provider_no,report_id, log, date_time) values (?,?,?,now())" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
             pstmt.setString(2,reportId);
             pstmt.setString(3,serializeDemographic(demos));

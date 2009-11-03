@@ -239,7 +239,7 @@ public class PreventionData {
 			// log.debug("e-DATE: "+date);
 			dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
 
-			PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(sql);
+			PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(sql);
 			pstmt.setString(1, injectionType);
 			pstmt.setDate(2, new java.sql.Date(startDate.getTime()));
 			pstmt.setDate(3, new java.sql.Date(endDate.getTime()));

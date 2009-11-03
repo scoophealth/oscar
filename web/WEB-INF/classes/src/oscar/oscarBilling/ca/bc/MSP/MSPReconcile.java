@@ -1091,7 +1091,7 @@ public class MSPReconcile {
       //Record exists so perform an update
       if (existingBill) {
           log.debug("updating bill_recip"+recip.getBillingNo());
-        stmt = db.GetConnection().prepareStatement("update bill_recipients set name=?,address=?,city=?,province=?,postal=?,updateTime=now() where billingNo=?");
+        stmt = DBHandler.getConnection().prepareStatement("update bill_recipients set name=?,address=?,city=?,province=?,postal=?,updateTime=now() where billingNo=?");
         stmt.setString(1, recip.getName());
         stmt.setString(2, recip.getAddress());
         stmt.setString(3, recip.getCity());
@@ -1102,7 +1102,7 @@ public class MSPReconcile {
       else {
           log.debug("inserting bill_recip"+recip.getBillingNo());
         //create a new record
-        stmt = db.GetConnection().prepareStatement("insert into bill_recipients(name,address,city,province,postal,creationTime,updateTime,billingNo) " +
+        stmt = DBHandler.getConnection().prepareStatement("insert into bill_recipients(name,address,city,province,postal,creationTime,updateTime,billingNo) " +
             "values(?,?,?,?,?,now(),now(),?)");
         stmt.setString(1, recip.getName());
         stmt.setString(2, recip.getAddress());

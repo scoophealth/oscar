@@ -34,7 +34,7 @@ public class DemographicMerged {
     
     public void Merge(String demographic_no, String head) throws SQLException{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
         
         String sql = "insert into demographic_merged (demographic_no, merged_to) values (?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -59,7 +59,7 @@ public class DemographicMerged {
     public void UnMerge(String demographic_no, String curUser_no) throws SQLException{
         
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
         
         String sql = "update demographic_merged set deleted=1 where demographic_no=?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -107,7 +107,7 @@ public class DemographicMerged {
     
     public String getHead(String demographic_no) throws SQLException{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
         ResultSet rs;
         String head = null;
         
@@ -132,7 +132,7 @@ public class DemographicMerged {
     public ArrayList getTail(String demographic_no) throws SQLException{
         
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
         ResultSet rs;
         ArrayList tailArray = new ArrayList();
         

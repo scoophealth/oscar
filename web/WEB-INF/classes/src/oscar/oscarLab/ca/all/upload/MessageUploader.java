@@ -106,7 +106,7 @@ public class MessageUploader {
             }
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             
             String fileUploadCheck_id = ""+ fileId;
                         
@@ -130,8 +130,8 @@ public class MessageUploader {
             pstmt.executeUpdate();
             pstmt.close();
             
-            String demProviderNo = patientRouteReport( insertID, lastName, firstName, sex, dob, hin, db.GetConnection());
-            providerRouteReport( insertID, docNums, db.GetConnection(), demProviderNo, type);
+            String demProviderNo = patientRouteReport( insertID, lastName, firstName, sex, dob, hin, DBHandler.getConnection());
+            providerRouteReport( insertID, docNums, DBHandler.getConnection(), demProviderNo, type);
             retVal = h.audit();
         }catch(Exception e){
             logger.error("Error uploading lab to database");
@@ -287,7 +287,7 @@ public class MessageUploader {
         try{
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt;
             
             ResultSet rs;

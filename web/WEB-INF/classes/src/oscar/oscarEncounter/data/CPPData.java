@@ -113,7 +113,7 @@ public class CPPData {
                               
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         Connection conn = db.GetConnection();
+         Connection conn = DBHandler.getConnection();
          PreparedStatement ps=  conn.prepareStatement(sql);
          ps.setString(1, demoNo);
          ps.setString(2, provNo);

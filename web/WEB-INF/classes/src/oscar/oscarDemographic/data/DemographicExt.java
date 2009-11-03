@@ -88,7 +88,7 @@ public class DemographicExt {
             //System.out.println("demo"+demo)                        
             String sql = "select value from demographicExt where demographic_no = ? and key_val = ? order by id desc  limit 1";
             
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);            
             pstmt.setString(1,demo ); 
@@ -118,7 +118,7 @@ public class DemographicExt {
                                     
             String sql = "select key_val, value from demographicExt where demographic_no = ? ";
             
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);            
             pstmt.setString(1,demo ); 
@@ -177,7 +177,7 @@ public class DemographicExt {
                                     
             String sql = "insert into demographicExt (provider_no,demographic_no,key_val,value,date_time) values (?,?,?,?,now())";
             
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,providerNo);              
@@ -212,7 +212,7 @@ public class DemographicExt {
                                     
             String sql = "insert into demographicExt (provider_no,demographic_no,key_val,value,date_time) values (?,?,?,?,now())";
             
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,providerNo);              

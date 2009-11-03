@@ -100,7 +100,7 @@ public class ScratchData {
             //Get Provider from database
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values (?,?,now())";
-             Connection conn = db.GetConnection();
+             Connection conn = DBHandler.getConnection();
              PreparedStatement pstat = conn.prepareStatement(sql);
               pstat.setString(1,providerNo);
               pstat.setString(2,text);

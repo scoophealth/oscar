@@ -68,7 +68,7 @@ public class HSFODAO {
 		
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             
             st.setString(1,patientData.getSiteCode());
@@ -152,7 +152,7 @@ public class HSFODAO {
         DBHandler db =null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             
             ///
@@ -214,7 +214,7 @@ public class HSFODAO {
 	    DBHandler db=null;
 	    try {
                 db = new DBHandler(DBHandler.OSCAR_DATA);
-                Connection connect = db.GetConnection();
+                Connection connect = DBHandler.getConnection();
 	        st = connect.prepareStatement(sqlstatement);
 	        st.executeUpdate();
             }catch (SQLException se) {
@@ -244,7 +244,7 @@ public class HSFODAO {
         ResultSet rs=null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             st.setString(1,demographic_no);
             rs = st.executeQuery();
@@ -293,7 +293,7 @@ public class HSFODAO {
 	    ResultSet rs =null;
 	    try {
                 db = new DBHandler(DBHandler.OSCAR_DATA);
-                Connection connect = db.GetConnection();
+                Connection connect = DBHandler.getConnection();
 	        st = connect.prepareStatement(sqlstatement);
                 st.setString(1,demographic_no);
 	        rs = st.executeQuery();
@@ -377,7 +377,7 @@ public class HSFODAO {
         DBHandler db =null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             //////
             
@@ -519,7 +519,7 @@ public class HSFODAO {
 		PreparedStatement ps = null;
 		try {
 			db = new DBHandler(DBHandler.OSCAR_DATA);
-			Connection connect = db.GetConnection();
+			Connection connect = DBHandler.getConnection();
 			ps = connect.prepareStatement(sql);
 			ps.setInt(1, hsfoRxDx);
 			ps.setString(2, patientId);
@@ -558,7 +558,7 @@ public class HSFODAO {
 		ResultSet rs = null;
 		try {
 			db = new DBHandler(DBHandler.OSCAR_DATA);
-			Connection connect = db.GetConnection();
+			Connection connect = DBHandler.getConnection();
 			ps = connect.prepareStatement(sql);
 			ps.setString(1, patientId);
 
@@ -597,7 +597,7 @@ public class HSFODAO {
         ResultSet result =null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
             System.out.println("here " + query);
@@ -672,7 +672,7 @@ public class HSFODAO {
         ResultSet result =null;
         try {
            db = new DBHandler(DBHandler.OSCAR_DATA);
-           Connection connect = db.GetConnection();
+           Connection connect = DBHandler.getConnection();
            sql = connect.createStatement();
            result = sql.executeQuery(query);
            System.out.println("here " + query);
@@ -811,7 +811,7 @@ public class HSFODAO {
         ResultSet rs =null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             
             query = connect.prepareStatement("SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id = ? group by VisitDate_Id)");
             query.setString(1,ID);
@@ -852,7 +852,7 @@ public class HSFODAO {
     public VisitData retrieveLatestRecord(Date visitdate,String demographic_no) throws SQLException {
 		 VisitData visitData = new VisitData();
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                 Connection connect = db.GetConnection();
+                 Connection connect = DBHandler.getConnection();
 		 Statement sql = connect.createStatement();
 		 //String query = "SELECT MAX(FormEdited) as Max FROM form_hsfo_Visit WHERE VisitDate_Id='" + visitdate + "' and demographic_no = '"+demographic_no+"' ";
 		 String query = "SELECT ID FROM form_hsfo_Visit WHERE VisitDate_Id='" + visitdate + "' and demographic_no = '"+demographic_no+"' ";
@@ -1001,7 +1001,7 @@ public class HSFODAO {
          try{
             int ID=0;
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             String query = "SELECT ID FROM form_hsfo_visit WHERE VisitDate_Id= ? and demographic_no = ?";
             sql = connect.prepareStatement(query);
             sql.setDate(1,new java.sql.Date(visitdate.getTime()));
@@ -1034,7 +1034,7 @@ public class HSFODAO {
      public VisitData retrieveSelectedRecord(int ID) throws SQLException {
 		 VisitData visitData = new VisitData();
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                 Connection connect = db.GetConnection();
+                 Connection connect = DBHandler.getConnection();
 		 Statement sql = connect.createStatement();
 		 String query = "SELECT DISTINCT * FROM form_hsfo_visit WHERE  ID = " + ID;;
 		 System.out.println("query: " + query);
@@ -1164,7 +1164,7 @@ public class HSFODAO {
     	ResultSet result =null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
             System.out.println("here " + query);
@@ -1206,7 +1206,7 @@ public class HSFODAO {
         List patientList = new LinkedList();
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection connect = db.GetConnection();
+            Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
             System.out.println("here " + query);
@@ -1516,7 +1516,7 @@ public class HSFODAO {
 //        System.out.println(sqlstatement);
 //        try {
 //            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-//            Connection connect = db.GetConnection();
+//            Connection connect = db.getConnection();
 //            st = connect.prepareStatement(sqlstatement);
 //            st.executeUpdate();
 //            st.clearParameters();

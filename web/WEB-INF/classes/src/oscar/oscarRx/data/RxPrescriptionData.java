@@ -568,7 +568,7 @@ public class RxPrescriptionData {
 			Prescription p;
 
 			rs = db.GetSQL(sql);
-			// java.sql.Connection conn = db.GetConnection();
+			// java.sql.Connection conn = db.getConnection();
 			// conn.createStatement()
 
 			while (rs.next()) {

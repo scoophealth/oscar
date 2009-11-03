@@ -59,7 +59,7 @@ try{
 *   dateIdHash: (date, lab_no)
     */
     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-    Connection conn = db.GetConnection();
+    Connection conn = db.getConnection();
     for (int i = 0; i < items.size(); i++){
         Element e = (Element) items.get(i);
         String loinc_code = e.getAttributeValue("loinc_code");

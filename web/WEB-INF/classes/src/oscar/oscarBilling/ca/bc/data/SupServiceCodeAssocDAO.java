@@ -123,14 +123,14 @@ public class SupServiceCodeAssocDAO {
       PreparedStatement stmt = null;
       //Record exists so perform an update
       if (rs.next()) {
-        stmt = db.GetConnection().prepareStatement(
+        stmt = DBHandler.getConnection().prepareStatement(
             "update billing_trayfees set billingServiceTrayNo = ? where billingServiceNo=?");
         stmt.setString(1, secondaryCodeId);
         stmt.setString(2, primaryCodeId);
       }
       else {
         //create a new record
-        stmt = db.GetConnection().prepareStatement(
+        stmt = DBHandler.getConnection().prepareStatement(
             "insert into billing_trayfees(billingServiceNo,billingServiceTrayNo) " +
             "values(?,?)");
         stmt.setString(1, primaryCodeId);

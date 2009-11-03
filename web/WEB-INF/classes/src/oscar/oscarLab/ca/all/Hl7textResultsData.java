@@ -53,7 +53,7 @@ public class Hl7textResultsData {
         
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             
             //Check for other versions of this lab
             String[] matchingLabs = getMatchingLabs(lab_no).split(",");

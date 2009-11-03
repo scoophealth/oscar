@@ -56,7 +56,7 @@ public class TeleplanSubmissionLinkDAO {
     public void save(int billActId,List billingMasterList ){
          try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            PreparedStatement pstmt = db.GetConnection().prepareStatement(nsql);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
             for (int i =0; i < billingMasterList.size(); i++){
                String bi = (String) billingMasterList.get(i);
                int b = Integer.parseInt(bi);

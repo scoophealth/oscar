@@ -177,7 +177,7 @@ public class Message {
                           //sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov+"', '"+parent+"', 'N','BCP')";
                           //System.out.println(" size "+listOfProviderNo.size()+" "+sql);
                           //db.RunSQL(sql);
-                          routing.route(parent, prov, db.GetConnection(), "BCP");
+                          routing.route(parent, prov, DBHandler.getConnection(), "BCP");
                        }
                        addedToProviderLabRouting =true;
                     }   // provider not found                                                          
@@ -331,7 +331,7 @@ public class Message {
                    //System.out.println(sql);
                    //db.RunSQL(sql);
                    ProviderLabRouting router = new ProviderLabRouting();
-                   router.route(lab_no, prov_no, db.GetConnection(), "BCP");
+                   router.route(lab_no, prov_no, DBHandler.getConnection(), "BCP");
                 } else {
                    System.out.println("prov was "+prov_no);
                 }

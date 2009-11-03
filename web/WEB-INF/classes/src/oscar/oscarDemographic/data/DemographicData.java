@@ -911,7 +911,7 @@ public class DemographicData {
         if (!duplicateRecord){
            try{
                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-               Connection conn = db.GetConnection();
+               Connection conn = DBHandler.getConnection();
 
                PreparedStatement add_record = conn.prepareStatement(add_record_string);
 	       add_record.setString(1,title);

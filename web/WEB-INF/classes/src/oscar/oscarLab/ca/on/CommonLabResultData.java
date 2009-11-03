@@ -276,7 +276,7 @@ public class CommonLabResultData {
                         }
                         insertString = insertString + "('" + providersArray[j] + "','" + labIds[k]+ "','N','"+labType+"')";
                          */
-                        plr.route(labIds[k], providersArray[j], db.GetConnection(), labType);
+                        plr.route(labIds[k], providersArray[j], DBHandler.getConnection(), labType);
                     }
                     
                     // delete old entries

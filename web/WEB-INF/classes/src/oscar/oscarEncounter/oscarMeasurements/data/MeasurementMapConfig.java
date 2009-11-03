@@ -39,7 +39,7 @@ public class MeasurementMapConfig {
         String sql = "select distinct lab_type from measurementMap";
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -60,7 +60,7 @@ public class MeasurementMapConfig {
 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, loincCode);
             logger.info(sql);
@@ -89,7 +89,7 @@ public class MeasurementMapConfig {
 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, loincCode);
             logger.info(sql);
@@ -118,7 +118,7 @@ public class MeasurementMapConfig {
 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -192,7 +192,7 @@ public class MeasurementMapConfig {
 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
 
@@ -220,7 +220,7 @@ public class MeasurementMapConfig {
 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
 
@@ -255,7 +255,7 @@ public class MeasurementMapConfig {
 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Connection conn = db.GetConnection();
+            Connection conn = DBHandler.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
 
@@ -281,7 +281,7 @@ public class MeasurementMapConfig {
         String sql = "INSERT INTO measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('" + loinc + "', '" + identifier + "', '" + name + "', '" + type + "')";
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql);
         logger.info(sql);
 
@@ -298,7 +298,7 @@ public class MeasurementMapConfig {
         String lab_type = "";
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
 
         String sql = "SELECT * FROM measurementMap WHERE id='" + id + "'";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -340,7 +340,7 @@ public class MeasurementMapConfig {
         String sql = "SELECT * from measurementMap WHERE loinc_code='" + loinc + "' AND lab_type='" + type + "'";
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql);
         logger.info(sql);
 

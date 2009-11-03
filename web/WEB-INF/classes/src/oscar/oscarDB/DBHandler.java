@@ -44,10 +44,6 @@ public class DBHandler {
     public DBHandler(String host, String dbName) throws SQLException {
     }
 
-    public static Connection GetConnection() throws SQLException {
-        return getConnection();
-    }
-
     public static Connection getConnection() throws SQLException {
         return DbConnectionFilter.getThreadLocalDbConnection();
     }

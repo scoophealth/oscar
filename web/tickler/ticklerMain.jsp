@@ -714,7 +714,7 @@ function changeSite(sel) {
                             param[5] = order;
                             String sql = "select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.update_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status='" + param[0] + "' and TO_DAYS(t.service_date) >=TO_DAYS('" + param[1] + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + param[2] + "') and " + param[3] + " and t.task_assigned_to like '" + param[4] + "' order by " + param[5];
                             oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
-                            java.sql.PreparedStatement ps =  db.GetConnection().prepareStatement(sql);
+                            java.sql.PreparedStatement ps =  db.getConnection().prepareStatement(sql);
                               
                             rs = db.GetSQL(sql);
                             //rs = apptMainBean.queryResults(param, "search_ticklerOrdered");

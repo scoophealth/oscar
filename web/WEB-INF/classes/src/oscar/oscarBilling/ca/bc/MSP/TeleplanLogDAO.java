@@ -58,7 +58,7 @@ public class TeleplanLogDAO {
     public void save(TeleplanLog tl){
          try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            PreparedStatement pstmt = db.GetConnection().prepareStatement(nsql);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
             executeUpdate(pstmt,tl);
             pstmt.close();
          }catch (SQLException e) {
@@ -77,7 +77,7 @@ public class TeleplanLogDAO {
     public void save(List list){
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            PreparedStatement pstmt = db.GetConnection().prepareStatement(nsql);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
             System.out.println("LOG LIST SIZE"+list.size());
             for (int i = 0; i < list.size(); i++){
                 TeleplanLog tl = (TeleplanLog) list.get(i);

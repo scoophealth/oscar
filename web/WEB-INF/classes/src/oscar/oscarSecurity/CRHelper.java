@@ -48,7 +48,7 @@ public class CRHelper implements RolesProvider {
 		DBHandler db = null;
 		try {
 			db=new DBHandler(DBHandler.OSCAR_DATA);
-			Connection con = db.GetConnection();
+			Connection con = DBHandler.getConnection();
 			String sql = establishStringToUse(con);
 			if(sql==null){
 				log.warn("No userSecRole table found!");

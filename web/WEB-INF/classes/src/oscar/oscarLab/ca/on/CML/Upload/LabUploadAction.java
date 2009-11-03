@@ -110,7 +110,7 @@ public class LabUploadAction extends Action {
                     ABCDParser abc = new ABCDParser();     
                     abc.parse(in);              
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);             
-                    abc.save(db.GetConnection());
+                    abc.save(DBHandler.getConnection());
                     outcome = "uploaded";
                 }
              }else{

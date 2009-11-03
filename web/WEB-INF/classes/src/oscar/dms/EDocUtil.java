@@ -392,7 +392,7 @@ public class EDocUtil extends SqlUtilBaseS {
             System.out.println("Creator "+creator+" start "+sDate + " end "+eDate);
 
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            PreparedStatement ps =  db.GetConnection().prepareStatement(sql);
+            PreparedStatement ps =  DBHandler.getConnection().prepareStatement(sql);
             ps.setString(1,creator);
 	    ps.setString(2,responsible);
             ps.setDate(3,new java.sql.Date(startDate.getTime()));
@@ -625,7 +625,7 @@ public class EDocUtil extends SqlUtilBaseS {
         int key = 0;
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        Connection conn = db.GetConnection();
+        Connection conn = DBHandler.getConnection();
         PreparedStatement add_record = conn.prepareStatement(add_record_string1);
 
         add_record.setString(1, docType);

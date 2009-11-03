@@ -601,7 +601,7 @@ public class MeasurementGraphAction2 extends Action {
             if (labType.equals("loinc")){
               try{  
               DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
-              Connection conn = db.GetConnection();
+              Connection conn = DBHandler.getConnection();
               list = comVal.findValuesByLoinc2(demographicNo, identifier, conn );
               System.out.println("List ->"+list.size());
               conn.close();

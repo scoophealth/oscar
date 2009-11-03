@@ -212,7 +212,7 @@ public class EctSaveEncounterAction
           try {             
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
-            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
                 pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime())); 
                 pstmt.setString(2,sessionbean.demographicNo);  
                 pstmt.setString(3,sessionbean.providerNo); 
