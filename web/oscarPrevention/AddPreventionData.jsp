@@ -394,12 +394,46 @@ clear: left;
                        %>
                          <label for="gender">Gender:</label> <input type="text" name="gender" readonly value="<%=gender%>"/> <br/>
                          <label for="age">Age:</label> <input type="text" name="age" readonly value="<%=age%>"/><br/>
-			 <label for="chronic">Chronic Condition:</label> <input type="checkbox" name="chronic"  value="true" <%=checked(str(((String)extraData.get("chronic")),""),"true")%>/><br/>
+                         <label for="chronic">Chronic Condition:</label>
+                         <select name="chronic">
+                             <option value="false">No</option>
+                             <option value="true" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("true") ? "selected" : "" %> >Yes</option>
+                             <option value="cardiac disorder" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("cardiac disorder") ? "selected" : "" %> >Cardiac Disorder</option>
+                             <option value="diabetes" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("diabetes") ? "selected" : "" %> >Diabetes</option>
+                             <option value="cancer" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("cancer") ? "selected" : "" %> >Cancer</option>
+                             <option value="immunodeficiency" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("immunodeficiency") ? "selected" : "" %> >Immunodeficiency</option>
+                             <option value="immunosuppression" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("immunosuppression") ? "selected" : "" %> >Immunosuppression</option>
+                             <option value="renal disease" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("renal disease") ? "selected" : "" %> >Renal Disease</option>
+                             <option value="anemia or hemoglobinopathy" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("anemia or hemoglobinopathy") ? "selected" : "" %> >Anemia or Hemoglobinopathy</option>
+                             <option value="compromised management of respiratory secretions" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("compromised management of respiratory secretions") ? "selected" : "" %> >Compromised Management of Respiratory Secretions</option>
+                             <option value="Children/Adolescent with Longterm Acetylsalicylic Acid" <%= str(((String)extraData.get("chronic")),"").equalsIgnoreCase("Children/Adolescent with Longterm Acetylsalicylic Acid") ? "selected" : "" %> >Children/Adolescent with Longterm Acetylsalicylic Acid</option>
+                         </select><br/>
                          <label for="pregnant">Pregnant:</label> <input type="checkbox" name="pregnant"  value="true" <%=checked(str(((String)extraData.get("pregnant")),""),"true")%>/><br/>
                          <label for="remote">Remote Setting:</label> <input type="checkbox" name="remote"  value="true" <%=checked(str(((String)extraData.get("remote")),""),"true")%>/><br/>
-                         <label for="healthcareworker">Health Care Worker:</label> <input type="checkbox" name="healthcareworker" value="true" <%=checked(str(((String)extraData.get("healthcareworker")),""),"true")%>/><br/>
+                         <label for="healthcareworker">Health Care Worker:</label>
+                         <select name="healthcareworker">
+                             <option value="false">No</option>
+                             <option value="true" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("true") ? "selected" : "" %> >Yes</option>
+                             <option value="acute care" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("acute care") ? "selected" : "" %> >Acute Care</option>
+                             <option value="chronic care" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("chronic care") ? "selected" : "" %> >Chronic Care</option>
+                             <option value="community care" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("community care") ? "selected" : "" %> >Ambulatory/Community Care</option>
+                             <option value="emergency medical services" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("emergency medical services") ? "selected" : "" %> >Emergency Medical Services</option>
+                             <option value="laboratory" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("laboratory") ? "selected" : "" %> >Laboratory</option>
+                             <option value="public health" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("public health") ? "selected" : "" %> >Public Health</option>
+                             <option value="pharmacy" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("pharmacy") ? "selected" : "" %> >Pharmacy</option>
+                             <option value="vaccine manufacturer" <%= str(((String)extraData.get("healthcareworker")),"").equalsIgnoreCase("vaccine manufacturer") ? "selected" : "" %> >Vaccine Mfr</option>
+                         </select><br/>
+
                          <label for="householdcontact">Household Contact or Care Provider:</label> <input type="checkbox" name="householdcontact" value="true" <%=checked(str(((String)extraData.get("householdcontact")),""),"true")%>/><br/>
-                         <label for="firstresponder">First Responder:</label> <input type="checkbox" name="firstresponder" value="true" <%=checked(str(((String)extraData.get("firstresponder")),""),"true")%>/><br/>
+                         <%
+                            boolean bothfirstresponders = false;
+                            if( str(((String)extraData.get("firstresponder")),"").equalsIgnoreCase("true")) {
+                                bothfirstresponders = true;
+                           }
+                            
+                         %>
+                         <label for="firstresponderpolice">First Responder Police:</label> <input type="checkbox" name="firstresponderpolice" value="true" <%=bothfirstresponders == true ? "checked" : checked(str(((String)extraData.get("firstresponderpolice")),""),"true")%>/><br/>
+                         <label for="firstresponderfire">First Responder Fire:</label> <input type="checkbox" name="firstresponderfire" value="true" <%=bothfirstresponders == true ? "checked" : checked(str(((String)extraData.get("firstresponderfire")),""),"true")%>/><br/>
                          <label for="swineworker">Swine Worker:</label> <input type="checkbox" name="swineworker" value="true" <%=checked(str(((String)extraData.get("swineworker")),""),"true")%>/><br/>
                          <label for="poultryworker">Poultry Worker:</label> <input type="checkbox" name="poultryworker" value="true" <%=checked(str(((String)extraData.get("poultryworker")),""),"true")%>/><br/>
                          <label for="firstnations">First Nations:</label> <input type="checkbox" name="firstnations" value="true" <%=checked(str(((String)extraData.get("firstnations")),""),"true")%>/><br/>
