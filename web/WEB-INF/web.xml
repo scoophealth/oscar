@@ -231,10 +231,13 @@
         <servlet-name>newUploader</servlet-name>
         <servlet-class>oscar.newOscarLab.Uploader</servlet-class>
     </servlet>
+    <!--
+    I'm pretty sure no one uses this anymore. It's being commented out on 2009-11-03, next time I look, if no one has complained, this is being deleted. 
     <servlet>
         <servlet-name>redirectLinkTracking</servlet-name>
         <servlet-class>org.caisi.servlets.RedirectLinkTrackingServlet</servlet-class>
     </servlet>
+     -->
 	<servlet>
 		<servlet-name>HsfoQuartzSchedulerServlet</servlet-name>
 		<servlet-class>oscar.form.study.HSFO.pageUtil.HsfoQuartzServlet</servlet-class>
@@ -333,10 +336,13 @@
         <servlet-name>newUploader</servlet-name>
         <url-pattern>/newUploader</url-pattern>
     </servlet-mapping>
+    <!--
+    I'm pretty sure no one uses this anymore. It's being commented out on 2009-11-03, next time I look, if no one has complained, this is being deleted. 
     <servlet-mapping>
         <servlet-name>redirectLinkTracking</servlet-name>
         <url-pattern>/redirectLinkTracking</url-pattern>
     </servlet-mapping>
+	-->
     <servlet-mapping>
 	 	<servlet-name>RxCloneService</servlet-name>
 	 	<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern>
