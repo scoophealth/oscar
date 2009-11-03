@@ -1070,7 +1070,7 @@ body {
                     myLightWindow.activateWindow({
                         href: url,
                         //caption: 'Preview',
-                        width: 410
+                        width: 420
                     });
 
               //  }});
