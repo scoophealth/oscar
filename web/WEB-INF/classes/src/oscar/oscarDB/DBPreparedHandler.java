@@ -72,9 +72,6 @@ public class DBPreparedHandler {
         stmt.execute();
     }
 
-    public void init(String dbDriver, String dbUrl, String dbUser, String dbPwd) throws Exception, SQLException {
-    }
-
     synchronized public void queryExecute(String preparedSQL, String[] param) throws SQLException {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         for (int i = 0; i < param.length; i++) {
