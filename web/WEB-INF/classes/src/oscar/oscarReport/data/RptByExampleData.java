@@ -86,7 +86,6 @@ rs = accessDB.queryResults(this.sql);
 }
 
               rs.close();
-              accessDB.closeConn();
 
 
 

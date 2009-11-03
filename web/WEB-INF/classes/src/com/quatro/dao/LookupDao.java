@@ -211,10 +211,6 @@ public class LookupDao extends HibernateDaoSupport {
 	   {
 		  e.printStackTrace();
 	   }
-	   finally
-	   {
-		   try {db.closeConn();}catch(SQLException e) {}
-	   }	 
 	   return list;
 	}
 
@@ -295,10 +291,6 @@ public class LookupDao extends HibernateDaoSupport {
 		{
 			e.printStackTrace();
 		}
-		finally
-		{
-			try {db.closeConn();}catch(SQLException e){}
-		}
 		return fs;
 	}
 	public List GetCodeFieldValues(LookupTableDefValue tableDef)
@@ -343,10 +335,6 @@ public class LookupDao extends HibernateDaoSupport {
 		{
 			System.out.println(e.getStackTrace());
 		}
-		finally
-		{
-			try {db.closeConn();}catch(SQLException e){};
-		}
 		return codes;
 	}
 	private int GetNextId(String idFieldName, String tableName) throws SQLException
@@ -364,7 +352,6 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		finally
 		{
-			db.closeConn();
 		}
 	}
 	
@@ -510,7 +497,6 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		finally
 		{
-			db.closeConn();
 		}
 		return idFieldVal;
 	}
@@ -558,7 +544,6 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		finally
 		{
-			db.closeConn();
 		}
 		return idFieldVal;
 	}
@@ -620,7 +605,6 @@ public class LookupDao extends HibernateDaoSupport {
 			}
 			finally
 			{
-				db.closeConn();
 			}
 		}
 	
@@ -641,7 +625,6 @@ public class LookupDao extends HibernateDaoSupport {
 			}
 			finally
 			{
-				db.closeConn();
 			}
 		}
 	
@@ -736,7 +719,6 @@ public class LookupDao extends HibernateDaoSupport {
 	{
 		DBPreparedHandler db = new DBPreparedHandler();
 		db.procExecute(procName, params);
-		db.closeConn();
 	}
 	
 	public int getCountOfActiveClient(String orgCd) throws SQLException{
@@ -762,7 +744,6 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		finally
 		{
-			db.closeConn();
 		}
 	}
 

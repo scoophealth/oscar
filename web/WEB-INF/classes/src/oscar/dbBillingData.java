@@ -71,28 +71,23 @@ public class dbBillingData {
     }
   }
 
-  private void getService_code() { //if failed, username will be null
-  	String [] temp=new String[4];
-    try {
-      accessDB = new DBPreparedHandler();
-      String strSQL="select service_code, description, value, percentage from billingservice where service_code = '" + service_code +"'";
-    //   System.out.println("SQL=" + strSQL);
+	private void getService_code() { // if failed, username will be null
+		String[] temp = new String[4];
 
-      temp = searchDB(strSQL, "service_code", "description", "value", "percentage" ); //use StringBuffer later
-      if(temp!=null) {
-        db_service_code=temp[0];
-        description = temp[1];
-        value= temp[2];
-        percentage = temp[3];
+		accessDB = new DBPreparedHandler();
+		String strSQL = "select service_code, description, value, percentage from billingservice where service_code = '" + service_code + "'";
+		// System.out.println("SQL=" + strSQL);
 
-      } else { //no this user in the table
-        accessDB.closeConn();
-       	return;
-      }
-
-        accessDB.closeConn();
-    }catch (SQLException e) {return;}
-  }
+		temp = searchDB(strSQL, "service_code", "description", "value", "percentage"); // use StringBuffer later
+		if (temp != null) {
+			db_service_code = temp[0];
+			description = temp[1];
+			value = temp[2];
+			percentage = temp[3];
+		} else { // no this user in the table
+			return;
+		}
+	}
 
   private String[] searchDB(String dbSQL, String str1, String str2, String str3, String str4) {
   	String [] temp=new String[4];
@@ -107,7 +102,6 @@ public class dbBillingData {
       }
       accessDB.closePstmt();
       return temp;
-      //accessDB.closeConn();
     } catch (SQLException e) {;}
     return null;
   }

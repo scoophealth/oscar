@@ -291,7 +291,6 @@ public class AppointmentMainBean {
   // Don't forget to clean up!
   public void closePstmtConn() throws SQLException {
     dbPH.closePstmt();
-    dbPH.closeConn();
   }
   public String getString(ResultSet rs, String columnName) throws SQLException
   {

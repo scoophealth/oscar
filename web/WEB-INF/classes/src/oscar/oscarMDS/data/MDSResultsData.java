@@ -654,7 +654,6 @@ public class MDSResultsData {
                 sql = "delete from providerLabRouting where provider_no='0' and lab_no=?";
                 db.queryExecute(sql, new String[] { Integer.toString(labNo) });
             }
-            db.closeConn();
             return true;
         }catch(Exception e){
             Logger l = Logger.getLogger(MDSResultsData.class);

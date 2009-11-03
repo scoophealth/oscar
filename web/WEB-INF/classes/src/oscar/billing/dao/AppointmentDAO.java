@@ -107,7 +107,6 @@ public class AppointmentDAO extends DAO {
         } finally {
             pstmDiag.close();
             pstmProc.close();
-            db.closeConn();
         }
     }
 
@@ -141,7 +140,6 @@ public class AppointmentDAO extends DAO {
         } finally {
             pstmDiag.close();
             pstmProc.close();
-            db.closeConn();
         }
     }
 

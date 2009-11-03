@@ -45,7 +45,6 @@ public class DBHelp {
         } catch (SQLException e) {
 //            _logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } finally {
-            db.closeConn();
         }
         return ret;
     }
@@ -72,7 +71,6 @@ public class DBHelp {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            db.closeConn();
         }
         return ret;
     }

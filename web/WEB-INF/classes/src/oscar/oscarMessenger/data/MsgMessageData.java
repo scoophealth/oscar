@@ -61,7 +61,6 @@ public class MsgMessageData {
                 this.messageDate = db.getString(rs,"thedate");
                 this.messageTime = db.getString(rs,"theime");
             }
-            db.closeConn();
         }
         catch (java.sql.SQLException e){ 
             System.out.println("Message data not found");
@@ -78,7 +77,6 @@ public class MsgMessageData {
                 currentLocationId = db.getString(rs,"locationId");
               }
               rs.close();
-              db.closeConn();
             }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         }
         return currentLocationId;
@@ -154,7 +152,6 @@ public class MsgMessageData {
               sentToWho.append(".");
 
         rs.close();
-        db.closeConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -209,7 +206,6 @@ public class MsgMessageData {
               sentToWho.append(".");
 
         rs.close();
-        db.closeConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -258,7 +254,6 @@ public class MsgMessageData {
           for (int i =0 ; i < providers.length ; i++){
              db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
           }
-        db.closeConn();
 
        }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
       return messageid;
@@ -321,7 +316,6 @@ public class MsgMessageData {
             MsgProviderData providerData = (MsgProviderData) providers.get(i);
             db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
          }
-       db.closeConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
       return messageid;
@@ -448,7 +442,6 @@ public class MsgMessageData {
 //           theAddressBook = db.getString(rs,"addressBook");
 //        }
 //        rs.close();
-//        db.closeConn();
 //        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
 //        // get a node list of all the providers for that addressBook then search for ones i need
 //
@@ -530,7 +523,6 @@ public class MsgMessageData {
                theAddressBook = db.getString(rs,"addressBook");
             }
             rs.close();
-            db.closeConn();
         }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         // get a node list of all the providers for that addressBook then search for ones i need
 
@@ -586,7 +578,6 @@ public class MsgMessageData {
             if(rs.next()){
                 subject = db.getString(rs,"thesubject");
             }
-            db.closeConn();
         }
         catch (java.sql.SQLException e){ 
             subject="error: subject not found!";

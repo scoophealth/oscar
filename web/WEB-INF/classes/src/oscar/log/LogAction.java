@@ -125,10 +125,6 @@ public class LogAction {
         } catch (SQLException e) {
         	;
         }
-        finally
-        {
-        	try {db.closeConn();}catch(SQLException e){}
-        }
         return ret;
     }
 }

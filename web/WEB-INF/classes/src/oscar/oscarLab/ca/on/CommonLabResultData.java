@@ -156,7 +156,6 @@ public class CommonLabResultData {
                 adr.recordRowsToBeDeleted(recordsToDeleteSql, ""+providerNo,"providerLabRouting");
                 db.queryExecute(sql, new String[] { Integer.toString(labNo) });
             }
-            db.closeConn();
             return true;
         }catch(Exception e){
             Logger l = Logger.getLogger(CommonLabResultData.class);

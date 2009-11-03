@@ -45,8 +45,6 @@ public class SqlUtilBaseS {
 	   try {
 		   DBPreparedHandler dbPre = new DBPreparedHandler();
 		   dbPre.queryExecuteUpdate(preparedSql, params);
-		   dbPre.closeConn();
-		   
 		   String lastID;
 		   String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
 		   if("oracle".equalsIgnoreCase(strDbType)){
@@ -73,7 +71,6 @@ public class SqlUtilBaseS {
 	   try {
 		   DBPreparedHandler dbPre = new DBPreparedHandler();
 		   dbPre.queryExecuteUpdate(preparedSql, params);
-		   dbPre.closeConn();
 	   } catch (SQLException sqe) { 
 		   sqe.printStackTrace(); 
 	   }       
