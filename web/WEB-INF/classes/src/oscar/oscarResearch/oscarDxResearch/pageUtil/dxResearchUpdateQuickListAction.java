@@ -97,8 +97,6 @@ public class dxResearchUpdateQuickListAction extends Action {
                         }
                         
                     }
-
-                    db.CloseConn();
                 }
             }
             else if(forward.equals("remove")){

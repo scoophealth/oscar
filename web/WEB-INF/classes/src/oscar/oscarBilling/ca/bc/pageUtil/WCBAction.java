@@ -167,7 +167,6 @@ public final class WCBAction extends Action {
 //    finally{
 //      if(db!=null){
 //        try {
-//          db.CloseConn();
 //        }
 //        catch (SQLException ex1) {
 //          ex1.printStackTrace();

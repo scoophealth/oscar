@@ -67,7 +67,6 @@ public class MsgSessionBean
                    userName =  db.getString(rs,"first_name")+" "+db.getString(rs,"last_name");
                 }
                 rs.close();
-                db.CloseConn();
         }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
     }
 

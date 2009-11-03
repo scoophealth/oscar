@@ -76,7 +76,6 @@ public class ProcedimentoRealizadoDAO extends DAO {
                 list.add(pr);
             }
         } finally {
-            db.CloseConn();
         }
 
         return list;
@@ -101,7 +100,6 @@ public class ProcedimentoRealizadoDAO extends DAO {
         try {
             db.RunSQL(sql);
         } finally {
-            db.CloseConn();
         }
 
         return;

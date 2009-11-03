@@ -18,12 +18,10 @@ public class SurveySecurityDao {
         rs = db.GetSQL(sqlCheck);
         if(!rs.next()) {
         	rs.close();
-        	db.CloseConn();
         	return true;
         }
         if(rs.getInt("count") == 0) {
         	rs.close();
-        	db.CloseConn();
         	return true;
         }
         rs.close();
@@ -32,11 +30,9 @@ public class SurveySecurityDao {
         rs = db.GetSQL(sql);
 		if(rs.next()) {
 			rs.close();
-			db.CloseConn();
 			return true;
 		} else {
 			rs.close();
-			db.CloseConn();
 			return false;
 		}
 	}

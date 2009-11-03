@@ -45,7 +45,6 @@ public class FrmInvoiceRecord extends FrmRecord {
                         _dateFormat));
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formInvoice WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;

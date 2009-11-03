@@ -59,8 +59,7 @@ public class ProcessSurveyFile{
          if(rs.next()){
             maxprocessed = rs.getInt("maxprocessed");            
          }            
-         rs.close();
-         db.CloseConn();         
+         rs.close();         
       }catch(Exception e){
          e.printStackTrace();
       }
@@ -71,8 +70,7 @@ public class ProcessSurveyFile{
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          String sql = "update surveyData set processed = '"+processedId+"' where surveyDataId = '"+surveyDataId+"'  ";         
-         db.RunSQL(sql);                           
-         db.CloseConn();         
+         db.RunSQL(sql);         
       }catch(Exception e){
          e.printStackTrace();
       }
@@ -140,7 +138,6 @@ public class ProcessSurveyFile{
             }
          }
          rs.close();
-         db.CloseConn();
          
       }catch(Exception e){
          e.printStackTrace();

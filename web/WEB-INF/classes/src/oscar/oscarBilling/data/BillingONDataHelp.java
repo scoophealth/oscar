@@ -66,7 +66,6 @@ public class BillingONDataHelp {
 			if (rs.next())
 				ret = rs.getInt(1);
 			rs.close();
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -78,8 +77,6 @@ public class BillingONDataHelp {
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ret = db.RunSQL(sql);
-
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -91,8 +88,6 @@ public class BillingONDataHelp {
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ret = db.GetSQL(sql);
-
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -107,7 +102,6 @@ public class BillingONDataHelp {
 	        for(int i=1; i<=iOffSet; i++){
 	            if(ret.next()==false) break;
 	        }
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

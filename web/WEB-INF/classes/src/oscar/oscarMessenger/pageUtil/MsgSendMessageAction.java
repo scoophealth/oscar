@@ -134,7 +134,6 @@ public class MsgSendMessageAction extends Action {
               //providerLastName.add(db.getString(rs,"last_name"));
               }
         rs.close();
-        db.CloseConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -169,7 +168,6 @@ public class MsgSendMessageAction extends Action {
                 db.RunSQL("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
               }
         rs.close();
-        db.CloseConn();
 
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
             // System.out.println("the subject "+subject+ "this is the message "+message+"<=");

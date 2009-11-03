@@ -63,7 +63,6 @@ public class GstReport {
             }
             rs1.close();
         }
-        db.CloseConn();
         return list;
     }
     

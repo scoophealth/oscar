@@ -107,7 +107,6 @@ public class EctMMSERecord {
 
             rs.close();
         }
-        db.CloseConn();
         return props;
     }
 
@@ -204,8 +203,6 @@ public class EctMMSERecord {
             ret = rs.getInt(1);
         }
         rs.close();
-        db.CloseConn();
-
         return ret;
     }
 }

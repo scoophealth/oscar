@@ -51,7 +51,6 @@ public class FrmOvulationRecord  extends FrmRecord {
                     props.setProperty("healthNum", db.getString(rs,"hin") + db.getString(rs,"ver"));
             }
             rs.close();
-			db.CloseConn();
 
         } else {
             String sql = "SELECT * FROM formovulation WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;

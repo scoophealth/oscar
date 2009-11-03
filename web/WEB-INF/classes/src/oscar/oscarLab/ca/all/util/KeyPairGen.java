@@ -97,8 +97,6 @@ public class KeyPairGen {
                 key = db.getString(rs,"pubKey");
             }
             rs.close();
-            db.CloseConn();
-            
             return(key);
             
         }catch(Exception e){
@@ -129,7 +127,6 @@ public class KeyPairGen {
                 result = db.getString(rs,0);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Could not retrieve service name from database: ",e);
             return true;
@@ -149,7 +146,6 @@ public class KeyPairGen {
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(insertStmt);
-            db.CloseConn();
             return true;
         }catch(Exception e){
             logger.error("Could not save insert key(s) into the database", e);

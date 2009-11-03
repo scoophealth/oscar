@@ -72,7 +72,6 @@ public class BillingBillingManager {
         }
 
         rs.close();
-        db.CloseConn();
 
       }
 
@@ -133,7 +132,6 @@ public class BillingBillingManager {
         billingItemsArray.add(billingItem);
       }
       rs.close();
-      db.CloseConn();
 
     }
     catch (SQLException e) {
@@ -381,7 +379,6 @@ public class BillingBillingManager {
         }
 
         rs.close();
-        db.CloseConn();
 
       }
       catch (SQLException e) {

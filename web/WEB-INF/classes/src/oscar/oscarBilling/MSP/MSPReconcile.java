@@ -76,7 +76,6 @@ public class MSPReconcile{
                     }
             }            
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }        
@@ -104,7 +103,6 @@ public class MSPReconcile{
                       i++;
             }            
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -163,8 +161,7 @@ public class MSPReconcile{
                             System.out.println("Had trouble Parsing int from "+rs.getString("t_mspctlno"));
                          }
                       }            
-                      rs.close();
-                      db.CloseConn();                   }catch(Exception e){
+                      rs.close();                   }catch(Exception e){
                       e.printStackTrace();
                    }
                 }   
@@ -186,7 +183,6 @@ public class MSPReconcile{
               retval.add(rs.getString("t_dataseq"));                                     
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -255,8 +251,7 @@ public class MSPReconcile{
             billSearch.list.add(b);
             billSearch.count++;
             }
-            rs.close();                                    
-            db.CloseConn();
+            rs.close();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -295,7 +290,6 @@ public class MSPReconcile{
               list.add(b);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -363,7 +357,6 @@ public class MSPReconcile{
               }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -396,7 +389,6 @@ public class MSPReconcile{
               }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -422,7 +414,6 @@ public class MSPReconcile{
                 }	                
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             System.out.println("name: "+name+" value: "+value);
             e.printStackTrace();
@@ -442,7 +433,6 @@ public class MSPReconcile{
                currStat = rs.getString("billingstatus");
             }		
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }                         
@@ -482,8 +472,7 @@ public class MSPReconcile{
             try {              
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 System.out.println("Updating billing no "+billingNo+" to "+newStat);
-                db.RunSQL("update billingmaster set billingstatus = '"+newStat+"' where billingmaster_no = '"+billingNo+"'");                
-                db.CloseConn();
+                db.RunSQL("update billingmaster set billingstatus = '"+newStat+"' where billingmaster_no = '"+billingNo+"'");
             }catch(Exception e){
                 e.printStackTrace();
             }

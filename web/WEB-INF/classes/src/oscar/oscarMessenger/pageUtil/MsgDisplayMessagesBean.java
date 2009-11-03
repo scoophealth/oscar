@@ -105,7 +105,6 @@ public class MsgDisplayMessagesBean {
                 currentLocationId = db.getString(rs,"locationId");
               }
               rs.close();
-              db.CloseConn();
             }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
         }
         return currentLocationId;
@@ -281,7 +280,6 @@ public class MsgDisplayMessagesBean {
         }
 
        rs.close();
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -366,7 +364,6 @@ public class MsgDisplayMessagesBean {
         }
 
        rs.close();
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -439,7 +436,6 @@ public java.util.Vector estDemographicInbox(){
         }
 
        rs.close();
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -504,7 +500,6 @@ public java.util.Vector estDemographicInbox(){
         }
 
        rs.close();
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -540,7 +535,6 @@ public java.util.Vector estDemographicInbox(){
         // System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
 
        rs.close();
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
     // System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
@@ -579,7 +573,6 @@ public java.util.Vector estDemographicInbox(){
         // System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
 
        rs.close();
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
     // System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
@@ -635,7 +628,6 @@ public java.util.Vector estDemographicInbox(){
         }
 
        rs.close();
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -694,8 +686,6 @@ public java.util.Vector estDemographicInbox(){
               }
            }//while
         rs.close();
-//        }//for
-       db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
   } //getInfo

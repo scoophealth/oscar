@@ -78,7 +78,6 @@ public class MsgAddressBook {
                CurrentLocationName = db.getString(rs,"locationDesc");
             }
             rs.close();
-            db.CloseConn();
          }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
          // System.out.println("myAddressBook :"+retval);
@@ -106,7 +105,6 @@ public class MsgAddressBook {
                remoteLocationId.add(db.getString(rs,"locationId"));
             }
             rs.close();
-            db.CloseConn();
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 

@@ -67,7 +67,6 @@ public class ScratchData {
                 retval.put("date",db.getString(rs,"date_time"));
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
            e.printStackTrace();
         }
@@ -88,7 +87,6 @@ public class ScratchData {
                scratch_id = Integer.toString( rs.getInt(1) );
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
            e.printStackTrace();
         }
@@ -114,7 +112,6 @@ public class ScratchData {
                }
               rs.close();
              pstat.close();
-            db.CloseConn();
         } catch (SQLException e) {
            e.printStackTrace();
         }

@@ -58,7 +58,6 @@ public class ReportManager {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
-            db.CloseConn();
             while (rs.next()) {
                 ReportObjectGeneric curReport = new ReportObjectGeneric(rs.getString("templateid"), rs.getString("templatetitle"), rs.getString("templatedescription"));
                 reports.add(curReport);
@@ -78,7 +77,6 @@ public class ReportManager {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
-            db.CloseConn();
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
                 String templatedescription = rs.getString("templatedescription");
@@ -96,7 +94,6 @@ public class ReportManager {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
-            db.CloseConn();
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
                 String templatedescription = rs.getString("templatedescription");
@@ -123,7 +120,6 @@ public class ReportManager {
                         if (paramquery != null) {
                             DBHandler db2 = new DBHandler(DBHandler.OSCAR_DATA);
                             ResultSet rschoices = db2.GetSQL(paramquery);
-                            db2.CloseConn();
                             while (rschoices.next()) {
                                 String choiceid = rschoices.getString(1);
                                 String choicetext = rschoices.getString(2);
@@ -175,7 +171,6 @@ public class ReportManager {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
-            db.CloseConn();
             if (rs.next()) {
                 return rs.getString("templatesql");
             } else return "";
@@ -191,7 +186,6 @@ public class ReportManager {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
-            db.CloseConn();
             if (rs.next()) xml = rs.getString("templatexml");
             if (xml == null) xml = "";
         } catch (SQLException sqe) {
@@ -208,7 +202,6 @@ public class ReportManager {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sqldelete);
             db.RunSQL(sqlinsert);
-            db.CloseConn();
         } catch (SQLException sqe) {
             sqe.printStackTrace();
         }
@@ -267,7 +260,6 @@ CREATE TABLE reportTemplates (
                 try {
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                     db.RunSQL(sql);
-                    db.CloseConn();
                 } catch (SQLException sqe) {
                     sqe.printStackTrace();
                     System.out.println("Report Error Caught: assumed duplicate report id");
@@ -345,7 +337,6 @@ CREATE TABLE reportTemplates (
                 try {
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                     db.RunSQL(sql);
-                    db.CloseConn();
                 } catch (SQLException sqe) {
                     sqe.printStackTrace();
                     System.out.println("Report Template Writing Error Caught");
@@ -364,7 +355,6 @@ CREATE TABLE reportTemplates (
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);
-            db.CloseConn();
         } catch (SQLException sqe) {
             sqe.printStackTrace();
             return "Database Error: Could not delete template";

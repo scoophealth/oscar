@@ -70,7 +70,6 @@ public class ProviderDAO extends DAO {
                 list.add(provider);
             }
         } finally {
-            db.CloseConn();
         }
 
         return list;

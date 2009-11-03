@@ -62,8 +62,7 @@ public class TeleplanSubmissionLinkDAO {
                int b = Integer.parseInt(bi);
                executeUpdate(pstmt,billActId,b);
             }
-            pstmt.close();  
-            db.CloseConn();
+            pstmt.close();
          }catch (SQLException e) {
             e.printStackTrace();
          }

@@ -48,7 +48,6 @@ public class ProviderBillCenter {
             if(rs.next())
                 retval = true;
             rs.close();
-            db.CloseConn();
         } catch(SQLException e) {
             System.out.println("There has been an error while checking if a provider had a bill center");
             System.out.println(e.getMessage());
@@ -66,7 +65,6 @@ public class ProviderBillCenter {
             if(rs.next())
                 retval = true;
             rs.close();
-            db.CloseConn();
         } catch(SQLException e) {
             System.out.println("There has been an error while checking if a provider had a bill center");
             System.out.println(e.getMessage());
@@ -81,7 +79,6 @@ public class ProviderBillCenter {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "insert into  providerbillcenter (provider_no,billcenter_code) values ('"+provider_no+"' ,'"+billCenterCode+"') ";
             db.RunSQL(sql);
-            db.CloseConn();
         } catch(SQLException e){
             System.out.println("There has been an error while adding a provider's bill center");
             System.out.println(e.getMessage());
@@ -97,7 +94,6 @@ public class ProviderBillCenter {
             if(rs.next())
                 billCenterCode = db.getString(rs,"billcenter_code");
             rs.close();
-            db.CloseConn();
         } catch(SQLException e){
             System.out.println("There has been an error while retrieving a provider's bill center");
             System.out.println(e.getMessage());
@@ -114,7 +110,6 @@ public class ProviderBillCenter {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 String sql = "update providerbillcenter set billcenter_code = '" + billCenterCode + "' where provider_no = '" + provider_no + "' ";
                 db.RunSQL(sql);
-                db.CloseConn();
             } catch (SQLException e) {
                 System.out.println("There has been an error while updating a provider's bill center");
                 System.out.println(e.getMessage());
@@ -132,7 +127,6 @@ public class ProviderBillCenter {
             while(rs.next())
                 allBillCenter.setProperty(db.getString(rs,"billcenter_code"),db.getString(rs,"billcenter_desc")) ;
             rs.close();
-            db.CloseConn();
         } catch(SQLException e){
             System.out.println("There has been an error while retrieving info from table billcenter");
             System.out.println(e.getMessage());

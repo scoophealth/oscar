@@ -96,7 +96,6 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
                     EDTOBECOutputSecifiationBeanVector.add(osBean);
                 }
             }
-            db.CloseConn();
         }
         catch (IOException ioe) {
             ioe.printStackTrace();         

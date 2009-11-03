@@ -42,7 +42,6 @@ public class MsgDemoMap {
             sql = "insert into msgDemoMap values ('"+msgId+"','"+demographic_no+"')";
             System.out.println(sql);
             db.RunSQL(sql);
-            db.CloseConn();
         }
         catch (java.sql.SQLException e){ 
             e.printStackTrace(System.out); 
@@ -61,7 +60,6 @@ public class MsgDemoMap {
             while(rs.next()){
                 demoMap.put(db.getString(rs,"d.demographic_no"), db.getString(rs,"last_name")+", "+db.getString(rs,"first_name") );
             }
-            db.CloseConn();
         }
         catch (java.sql.SQLException e){ 
             demoMap = null;
@@ -83,7 +81,6 @@ public class MsgDemoMap {
             while(rs.next()){
                 msgVector.add(db.getString(rs,"messageID"));
             }
-            db.CloseConn();
         }
         catch (java.sql.SQLException e){ 
             msgVector = null;
@@ -102,8 +99,6 @@ public class MsgDemoMap {
             sql = "delete from msgDemoMap where demographic_no='"+demographic_no+"' and messageID='"+messageID+"'";
             
             db.RunSQL(sql);
-            
-            db.CloseConn();
         }
         catch (java.sql.SQLException e){ 
             msgVector = null;

@@ -54,8 +54,6 @@ public class EctFormData {
             forms.add(frm);
         }
         rs.close();
-        db.CloseConn();
-
         Form[] ret = {};
         ret = (Form[])forms.toArray(ret);
         return ret;
@@ -134,7 +132,6 @@ public class EctFormData {
         	PatientForm[] ret = {};
             return ret; 
         }finally{
-            db.CloseConn();
         }
         
 
@@ -183,8 +180,6 @@ public class EctFormData {
         }
 
         rs.close();
-        db.CloseConn();
-
         return ret;
     }
     
@@ -197,7 +192,6 @@ public class EctFormData {
             if (rs.next())
                 formName = db.getString(rs,"form_name");
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e){
             e.printStackTrace();

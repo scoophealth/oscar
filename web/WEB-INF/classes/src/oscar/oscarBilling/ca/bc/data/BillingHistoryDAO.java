@@ -91,7 +91,6 @@ public class BillingHistoryDAO {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -137,14 +136,6 @@ public class BillingHistoryDAO {
     }
     catch (SQLException ex) {
       ex.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
     }
   }
 
@@ -207,7 +198,7 @@ public class BillingHistoryDAO {
         billingNo;
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = (ResultSet) db.GetSQL(qry);
+      rs = db.GetSQL(qry);
       while (rs.next()) {
         String billMasterNo = rs.getString(1);
         this.createBillingHistoryArchive(billMasterNo);
@@ -216,15 +207,6 @@ public class BillingHistoryDAO {
     catch (SQLException ex) {
       ex.printStackTrace();
     }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
-    }
-
   }
 
   /**

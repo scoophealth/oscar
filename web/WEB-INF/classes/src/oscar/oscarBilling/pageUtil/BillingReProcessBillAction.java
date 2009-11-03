@@ -230,7 +230,6 @@ public class BillingReProcessBillAction extends Action {
                     db.RunSQL(secondSQL);
                }
                System.out.println("sql "+sql);
-               db.CloseConn();
             } catch (SQLException e3) {
                System.out.println(e3.getMessage());
             }

@@ -392,7 +392,6 @@ public class FrmToXMLUtil{
                 if (rs.next())
                         s = dbhandler.getString(rs,"billing_date");
                 rs.close();
-                dbhandler.CloseConn();
             } catch (SQLException sqlexception) {
                 System.out.println(sqlexception.getMessage());
         }

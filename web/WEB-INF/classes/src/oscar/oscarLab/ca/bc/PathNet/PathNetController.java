@@ -86,7 +86,6 @@ public class PathNetController {
                      message.Parse((String) messages.get(i));
                      message.ToDatabase(db);
                   }
-                  db.CloseConn();
                }
                catch (Exception ex) {
                   //success = false; //<- for future when transactional

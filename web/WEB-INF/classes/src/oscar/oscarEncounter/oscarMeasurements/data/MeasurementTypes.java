@@ -111,7 +111,6 @@ public class MeasurementTypes {
 
                 }
                 rs.close();            
-                db.CloseConn();
                 loaded = true;
                 notifyAll();
             }
@@ -132,8 +131,7 @@ public class MeasurementTypes {
                 validation = db.getString(rs,"name");
                 //log.debug("setting validation to "+validation);
             }
-            rs.close();            
-            db.CloseConn();
+            rs.close();
         }catch(SQLException e) {
             e.printStackTrace();
         }

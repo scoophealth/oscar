@@ -44,7 +44,6 @@ public class EctImmImmunizationData
         if(rs.next())
             sRet = db.getString(rs,"immunizations");
         rs.close();
-        db.CloseConn();
         return sRet;
     }
     
@@ -59,7 +58,6 @@ public class EctImmImmunizationData
             retval = true;
         }         
         rs.close();
-        db.CloseConn();     
         return retval;
     }
 
@@ -81,7 +79,6 @@ public class EctImmImmunizationData
         sql = "UPDATE immunizations SET archived = 1 WHERE demographic_no = " + demographicNo + 
               " AND ID <>" + proper_func;
         db.RunSQL(sql);
-        db.CloseConn();
     }
 
     public String[] getProviders()
@@ -99,7 +96,6 @@ public class EctImmImmunizationData
         }
 
         rs.close();
-        db.CloseConn();
         String ret[] = new String[0];
         ret = (String[])vRet.toArray(ret);
         return ret;

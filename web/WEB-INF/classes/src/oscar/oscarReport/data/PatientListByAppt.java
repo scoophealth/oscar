@@ -84,8 +84,6 @@ public class PatientListByAppt extends HttpServlet {
                ps.print("\n");
             }
             ps.println("");
-
-            db.CloseConn();
         }
         catch(SQLException e)
         {

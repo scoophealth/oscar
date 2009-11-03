@@ -248,9 +248,6 @@ public class Hl7textResultsData {
                 }
             }
             
-            
-            db.CloseConn();
-            
         }catch(Exception e){
             logger.error("Exception in HL7 populateMeasurementsTable", e);
         }
@@ -289,7 +286,6 @@ public class Hl7textResultsData {
                 }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Exception in HL7 getMatchingLabs: ", e);
         }
@@ -346,7 +342,6 @@ public class Hl7textResultsData {
                 lbData = new LabResultData(LabResultData.HL7TEXT);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in HL7Populate",e);
         }
@@ -441,7 +436,6 @@ public class Hl7textResultsData {
                 labResults.add(lbData);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in Hl7Populate:", e);
         }

@@ -45,7 +45,6 @@ public class EctPatientData {
             if (rs.next())
                 ret = db.getString(rs,"provider_no");
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println("error - EctPatientData.getProviderNo");
         }
@@ -66,7 +65,6 @@ public class EctPatientData {
                         db.getString(rs,"address"), db.getString(rs,"city"), db.getString(rs,"postal"), db.getString(rs,"phone"),
                         db.getString(rs,"roster_status"));
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -184,7 +182,6 @@ public class EctPatientData {
                         this.subject = db.getString(rs,"subject");
                     }
                     rs.close();
-                    db.CloseConn();
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
                 }

@@ -9,7 +9,6 @@
 		String update_link = "UPDATE hl7_link SET hl7_link.status = 'P' WHERE hl7_link.pid_id='@pid';";
 		oscar.oscarDB.DBHandler dbLink = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
 		dbLink.RunSQL(update_link.replaceAll("@pid", pid));
-		dbLink.CloseConn();
 	}
 	if(null == demo_no){
 		out.println("<script language=\"JavaScript\">javascript:window.close();</SCRIPT>");
@@ -71,7 +70,6 @@ function PopupLab(pid)
 		out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");
 		rs.close();
 	}
-	db.CloseConn();
 %>
 </table>
 </form>

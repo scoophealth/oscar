@@ -70,7 +70,6 @@ public class Frm2MinWalkRecord extends FrmRecord {
                             props.setProperty("studyID", "N/A");
                         }
                         rs.close();
-			db.CloseConn();
 		} else {
 			sql =
 				"SELECT * FROM form2MinWalk WHERE demographic_no = "
@@ -124,9 +123,7 @@ public class Frm2MinWalkRecord extends FrmRecord {
                         }
                         rs.close();
                     }
-                    db.CloseConn();		
-
-		return props;
+                    return props;
 	}
 
 	public int saveFormRecord(Properties props) throws SQLException {

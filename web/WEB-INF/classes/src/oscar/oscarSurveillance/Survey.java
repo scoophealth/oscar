@@ -141,7 +141,6 @@ public class Survey {
                isdemographicSelected = false;
             }            
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -201,7 +200,6 @@ public class Survey {
             surveyStatus = db.getString(rs,"status");            
          }            
          rs.close();
-         db.CloseConn();
          
       }catch(Exception e){
          e.printStackTrace();
@@ -221,7 +219,6 @@ public class Survey {
             sStatus = db.getString(rs,"status");            
          }            
          rs.close();
-         db.CloseConn();
          
       }catch(Exception e){
          e.printStackTrace();
@@ -253,8 +250,7 @@ public class Survey {
          ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID()");
          if (rs.next()){
             insertId = db.getString(rs,1);
-         }
-         db.CloseConn();         
+         }         
       }catch(Exception e){
          e.printStackTrace();
       }
@@ -282,7 +278,6 @@ public class Survey {
             surveyDataId = db.getString(rs,"surveyDataId");            
          }            
          rs.close();
-         db.CloseConn();
          
       }catch(Exception e){
          e.printStackTrace();
@@ -311,7 +306,6 @@ public class Survey {
                      +" where surveyDataId = "
                      +"'"+surveyDataId+"'";
          db.RunSQL(sql);         
-         db.CloseConn();         
       }catch(Exception e){
          e.printStackTrace();
       }      
@@ -539,9 +533,7 @@ public class Survey {
          while(rs.next()){
             String[] s =  {db.getString(rs,"status"),db.getString(rs,"countstatus")};
             list.add(s);
-         }
-         
-         db.CloseConn();         
+         }         
       }catch(Exception e){
          e.printStackTrace();
       }      
@@ -559,9 +551,7 @@ public class Survey {
          while(rs.next()){
             String[] s =  {db.getString(rs,"answer"),db.getString(rs,"countanswer")};
             list.add(s);
-         }
-         
-         db.CloseConn();         
+         }         
       }catch(Exception e){
          e.printStackTrace();
       }      

@@ -51,7 +51,6 @@ public class FrmAnnualV2Record  extends FrmRecord {
                 props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
             rs.close();
-			db.CloseConn();
         } else {
             String sql = "SELECT * FROM formAnnualV2 WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			props = (new FrmRecordHelp()).getFormRecord(sql);

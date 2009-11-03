@@ -60,7 +60,6 @@ public class FrmBCBrithSumMoRecord extends FrmRecord {
                 props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
             }
             rs.close();
-			db.CloseConn();
         } else {
             String sql = "SELECT * FROM formBCBirthSumMo WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			FrmRecordHelp frh = new FrmRecordHelp();

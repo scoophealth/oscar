@@ -58,7 +58,6 @@ public class EctTypeDisplayNameBeanHandler {
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -110,9 +109,7 @@ public class EctTypeDisplayNameBeanHandler {
                     typeDisplayNameVector.add(typeDisplayName);
                 }
                 rs.close();
-            }                        
-           
-            db.CloseConn();
+            }
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

@@ -56,7 +56,6 @@ public class ScratchTag extends TagSupport {
 	    }
 
             rs.close();
-            db.CloseConn();
         }      catch(SQLException e)        {
             e.printStackTrace(System.out);
         }

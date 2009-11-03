@@ -62,8 +62,7 @@ public class RptByExamplesFavoriteAction extends Action {
                         System.out.println("HERE "+sql);
                         ResultSet rs = db.GetSQL(sql);
                         if(rs.next())
-                            frm.setFavoriteName(rs.getString("name"));                                       
-                        db.CloseConn();
+                            frm.setFavoriteName(rs.getString("name"));
                     }
                     catch(SQLException e) {
                         System.out.println(e.getMessage());            
@@ -117,7 +116,6 @@ public class RptByExamplesFavoriteAction extends Action {
                           "' WHERE id ='" + rs.getString("id") + "'";
                     db.RunSQL(sql);
                 }
-                db.CloseConn();
             }
             catch(SQLException e) {
                 System.out.println(e.getMessage());            
@@ -132,8 +130,6 @@ public class RptByExamplesFavoriteAction extends Action {
 
             String sql = "DELETE FROM reportByExamplesFavorite WHERE id = '" + id + "'";                
             db.RunSQL(sql);
-
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

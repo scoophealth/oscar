@@ -70,7 +70,6 @@ public class FrmTreatmentPrefRecord extends FrmRecord {
                             props.setProperty("studyID", "N/A");
                         }
                         rs.close();
-			db.CloseConn();
 		} else {
 			sql =
 				"SELECT * FROM formTreatmentPref WHERE demographic_no = "
@@ -124,9 +123,7 @@ public class FrmTreatmentPrefRecord extends FrmRecord {
                         }
                         rs.close();
                     }
-                    db.CloseConn();		
-
-		return props;
+                    return props;
 	}
 
 	public int saveFormRecord(Properties props) throws SQLException {

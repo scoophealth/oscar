@@ -72,8 +72,6 @@ public class SendAddressBookClient {
             throw new OscarCommClientException("Error occurred parsing response from web service.", ex);
         }
 
-        db.CloseConn();
-
         return ret;
     }
 

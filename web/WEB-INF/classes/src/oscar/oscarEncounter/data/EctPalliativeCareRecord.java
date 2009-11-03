@@ -108,8 +108,6 @@ public class EctPalliativeCareRecord
             }
             rs.close();
         }
-        db.CloseConn();
-
         return props;
     }
 
@@ -205,8 +203,6 @@ public class EctPalliativeCareRecord
             ret = rs.getInt(1);
         }
         rs.close();
-        db.CloseConn();
-
         return ret;
     }
 }

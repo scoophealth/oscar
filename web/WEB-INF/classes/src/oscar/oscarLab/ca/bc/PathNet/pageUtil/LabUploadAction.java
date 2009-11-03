@@ -96,7 +96,6 @@ public class LabUploadAction extends Action {
                       if (_logger.isDebugEnabled()){ _logger.debug("Call Message.ToDatabase for message # "+i); }
                       message.ToDatabase(db);
                    }
-                   db.CloseConn();
                    outcome = "success";
                 }                
                 catch (Exception ex) {

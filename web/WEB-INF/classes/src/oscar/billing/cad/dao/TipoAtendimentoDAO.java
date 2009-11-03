@@ -67,7 +67,6 @@ public class TipoAtendimentoDAO extends DAO {
                 list.add(tpAtend);
             }
         } finally {
-            db.CloseConn();
         }
         
         return list;

@@ -137,7 +137,6 @@ public class EctLabReqRecord
             }
             rs.close();
         }
-        db.CloseConn();
         return props;
     }
 
@@ -234,8 +233,6 @@ public class EctLabReqRecord
             ret = rs.getInt(1);
         }
         rs.close();
-        db.CloseConn();
-
         return ret;
     }
 }

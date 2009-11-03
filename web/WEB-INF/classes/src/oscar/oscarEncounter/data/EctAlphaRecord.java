@@ -73,7 +73,6 @@ public class EctAlphaRecord {
             }
             rs.close();
         }
-        db.CloseConn();
         return props;
     }
 
@@ -128,7 +127,6 @@ public class EctAlphaRecord {
         if(rs.next())
             ret = rs.getInt(1);
         rs.close();
-        db.CloseConn();
         return ret;
     }
 
@@ -157,7 +155,6 @@ public class EctAlphaRecord {
 
         }
         rs.close();
-        db.CloseConn();
         return props;
     }
 }

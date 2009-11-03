@@ -59,7 +59,6 @@ public class FaxClientLog {
                 ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
                 if(rs.next())
                     faxLogId = Integer.toString(rs.getInt(1));
-                db.CloseConn();
             }
             catch(SQLException e)
             {
@@ -75,7 +74,6 @@ public class FaxClientLog {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 String sql = "update FaxClientLog set requestId = '"+requestId+"' , faxId = '"+faxId+"' , endTime = now() where faxLogId = '"+faxLogId+"' ";
                 db.RunSQL(sql);
-                db.CloseConn();
             }
             catch(SQLException e)
             {
@@ -95,7 +93,6 @@ public class FaxClientLog {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 String sql = "update FaxClientLog set result = '"+result+"' , endTime = now() where faxLogId = '"+faxLogId+"' ";
                 db.RunSQL(sql);
-                db.CloseConn();
             }
             catch(SQLException e)
             {

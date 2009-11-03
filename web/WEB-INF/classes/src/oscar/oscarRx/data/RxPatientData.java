@@ -63,7 +63,6 @@ public class RxPatientData {
             lst.add(p);            
          }         
          rs.close();         
-         db.CloseConn();         
          arr = (Patient[]) lst.toArray(arr);         
       }
       catch (SQLException e) {         
@@ -97,7 +96,6 @@ public class RxPatientData {
             System.out.println(db.getString(rs,"first_name"));
          }         
          rs.close();         
-         db.CloseConn();         
       }
       catch (SQLException e) {         
          System.out.println(e.getMessage());         
@@ -128,7 +126,6 @@ public class RxPatientData {
             db.getString(rs,"phone"), db.getString(rs,"hin"));            
          }         
          rs.close();         
-         db.CloseConn();         
       }
       catch (SQLException e) {         
          System.out.println(e.getMessage());         
@@ -262,7 +259,6 @@ public class RxPatientData {
                               
             }            
             rs.close();            
-            db.CloseConn();            
             
          }
          catch (SQLException e) {            
@@ -299,7 +295,6 @@ public class RxPatientData {
                lst.add(allergy);               
             }            
             rs.close();            
-            db.CloseConn();            
             arr = (Allergy[]) lst.toArray(arr);            
          }
          catch (SQLException e) {            
@@ -325,8 +320,7 @@ public class RxPatientData {
          try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
             String sql = "update allergies set archived = '1'  WHERE allergyid = '"+allergyId+"'";            
-            b = db.RunSQL(sql);            
-            db.CloseConn();                                  
+            b = db.RunSQL(sql);                                  
          }catch (SQLException e) {            
             System.out.println(e.getMessage());            
             b = false;            
@@ -347,7 +341,6 @@ public class RxPatientData {
                lst.add(d);               
             }            
             rs.close();            
-            db.CloseConn();            
             arr = (Disease[]) lst.toArray(arr);            
          }catch (SQLException e) {            
             System.out.println(e.getMessage());            
@@ -366,7 +359,6 @@ public class RxPatientData {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
          String sql = "DELETE FROM diseases WHERE diseaseid = " + diseaseId;         
          boolean b = db.RunSQL(sql);         
-         db.CloseConn();         
          return b;         
       }
       
@@ -425,7 +417,6 @@ public class RxPatientData {
             boolean b = false;            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
             b = this.Save(db);            
-            db.CloseConn();            
             return b;            
          }
          
@@ -525,7 +516,6 @@ public class RxPatientData {
             boolean b = false;            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
             b = this.Save(db);            
-            db.CloseConn();            
             return b;            
          }
          

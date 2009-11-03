@@ -135,8 +135,6 @@ public class dxResearchAction extends Action {
                 }
                 
             }
-
-            db.CloseConn();
         }
 
         catch(SQLException e)

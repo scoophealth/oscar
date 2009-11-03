@@ -69,8 +69,7 @@ public class EfmData {
             ret.put("date", db.getString(rs,"form_date"));
             ret.put("time", db.getString(rs,"form_time"));
             ret.put("provider", db.getString(rs,"form_provider"));                          
-         }         
-         db.CloseConn();            
+         }            
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }

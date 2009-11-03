@@ -58,7 +58,6 @@ public class EctConDeleteServicesAction extends Action {
             String sql = "update consultationServices set active = '02' where ".concat(String.valueOf(String.valueOf(stringBuffer.toString())));
             System.out.println("sql = ".concat(String.valueOf(String.valueOf(sql))));
             db.RunSQL(sql);
-            db.CloseConn();
          }
          catch(SQLException e) {
             System.out.println(e.getMessage());

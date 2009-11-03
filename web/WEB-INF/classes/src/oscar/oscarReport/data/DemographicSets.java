@@ -66,8 +66,7 @@ public class DemographicSets {
          for (int i = 0; i < demoList.size(); i++){                            
             String demographicNo = (String) demoList.get(i);
             db.RunSQL("insert into demographicSets (set_name,demographic_no) values ('"+StringEscapeUtils.escapeSql(setName)+"','"+demographicNo+"')");
-         }              
-         db.CloseConn();
+         }
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
    }
    
@@ -82,7 +81,6 @@ public class DemographicSets {
             retval.add(db.getString(rs,"demographic_no"));            
          }
          rs.close();
-         db.CloseConn();
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -105,7 +103,6 @@ public class DemographicSets {
             retval.add(db.getString(rs,"demographic_no"));            
          }
          rs.close();
-         db.CloseConn();
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -127,7 +124,6 @@ public class DemographicSets {
             retval.add(h);            
          }
          rs.close();
-         db.CloseConn();
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -143,7 +139,6 @@ public class DemographicSets {
             retval.add(db.getString(rs,"demographic_no"));            
          }
          rs.close();
-         db.CloseConn();
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -158,7 +153,6 @@ public class DemographicSets {
             retval.add(db.getString(rs,"demographic_no"));            
          }
          rs.close();
-         db.CloseConn();
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -168,8 +162,7 @@ public class DemographicSets {
       ArrayList retval = new ArrayList();
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         db.RunSQL("update demographicSets set eligibility = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");                            
-         db.CloseConn();
+         db.RunSQL("update demographicSets set eligibility = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -178,8 +171,7 @@ public class DemographicSets {
       ArrayList retval = new ArrayList();
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         db.RunSQL("update demographicSets set archive = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");                            
-         db.CloseConn();
+         db.RunSQL("update demographicSets set archive = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -195,7 +187,6 @@ public class DemographicSets {
             retval.add(db.getString(rs,"set_name"));            
          }
          rs.close();
-         db.CloseConn();
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }
@@ -211,7 +202,6 @@ public class DemographicSets {
             retval.add(db.getString(rs,"set_name"));            
          }
          rs.close();
-         db.CloseConn();
       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
       return retval;
    }

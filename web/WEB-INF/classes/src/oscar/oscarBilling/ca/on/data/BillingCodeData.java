@@ -54,7 +54,6 @@ public class BillingCodeData {
              list.add(fillCodeDataHashtable(rs));
          }
          rs.close();
-	 db.CloseConn();
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }      
@@ -96,7 +95,6 @@ public class BillingCodeData {
             h.put("count",""+count);
          }
          rs.close();
-	 db.CloseConn();
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }        
@@ -115,7 +113,6 @@ public class BillingCodeData {
              count = rs.getInt("coun");
          }                  
          rs.close();
-	 db.CloseConn();
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }        
@@ -134,7 +131,6 @@ public class BillingCodeData {
             System.out.println(service_code.charAt(service_code.length()-1));
          }
          rs.close();
-	 db.CloseConn();
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }            
@@ -154,7 +150,6 @@ public class BillingCodeData {
                       "value       = '"+StringEscapeUtils.escapeSql(val)  +"' "+
                       "where billingservice_no = '"+StringEscapeUtils.escapeSql(codeId)+"'";
          db.RunSQL(str);
-         db.CloseConn();
       }catch(Exception e1){
          e1.printStackTrace();
       }
@@ -173,7 +168,6 @@ public class BillingCodeData {
          System.out.println(str);
          db.RunSQL(str);
          System.out.println("NOW updated");
-         db.CloseConn();
       }catch(Exception e1){
          e1.printStackTrace();
       }
@@ -193,7 +187,6 @@ public class BillingCodeData {
          System.out.println(str);
          db.RunSQL(str);
          System.out.println("NOW updated");
-         db.CloseConn();
       }catch(Exception e1){
          e1.printStackTrace();
       }
@@ -219,7 +212,6 @@ public class BillingCodeData {
          System.out.println(str);
          db.RunSQL(str);
          System.out.println("NOW updated");
-         db.CloseConn();
       }catch(Exception e1){
          e1.printStackTrace();
       }

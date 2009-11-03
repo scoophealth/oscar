@@ -61,7 +61,6 @@ public class DemographicData {
                fullName = db.getString(rs,"first_name") + " " + db.getString(rs, "last_name");
             }
             rs.close();
-            db.CloseConn();
 
         } catch (SQLException sqe) {
             _log.error("Could not get demographic first/last name", sqe);
@@ -85,7 +84,6 @@ public class DemographicData {
             }
             
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -105,7 +103,6 @@ public class DemographicData {
                demographicNo = db.getString(rs,"demographic_no");
            }
            rs.close();
-           db.CloseConn();
            return demographicNo;
        } catch (SQLException e) {
            System.out.println(e.getMessage());
@@ -133,7 +130,6 @@ public class DemographicData {
 	       demographicNo = db.getString(rs,"demographic_no");
 	   }
            rs.close();
-           db.CloseConn();
            return demographicNo;
        } catch (SQLException e) {
            System.out.println(e.getMessage());
@@ -152,8 +148,7 @@ public class DemographicData {
             if (rs.next()) {                      
                num = rs.getInt("c");               
             }            
-            rs.close();
-            db.CloseConn();            
+            rs.close();            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } 
@@ -177,8 +172,7 @@ public class DemographicData {
                //System.out.println("same hin as "+demoNo);
                list.add(getDemographic(demoNo));              
             }            
-            rs.close();
-            db.CloseConn();            
+            rs.close();            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } 
@@ -209,8 +203,7 @@ public class DemographicData {
                //System.out.println("looks to be the same  as "+demoNo);
                list.add(getDemographic(demoNo));              
             }            
-            rs.close();
-            db.CloseConn();            
+            rs.close();            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } 
@@ -232,7 +225,6 @@ public class DemographicData {
             }
             
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -254,7 +246,6 @@ public class DemographicData {
             }
             
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -277,7 +268,6 @@ public class DemographicData {
             }
             
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -328,7 +318,6 @@ public class DemographicData {
             }
             
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -349,7 +338,6 @@ public class DemographicData {
                 demographicNo = db.getString(rs,"demographic_no");
             }
             rs.close();
-            db.CloseConn();
             return demographicNo;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -372,7 +360,6 @@ public class DemographicData {
             }
             
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -384,7 +371,6 @@ public class DemographicData {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         String sql = "UPDATE demographic SET pin = '" + pin + "' WHERE demographic_no = " + demographicNo;
         db.RunSQL(sql);
-        db.CloseConn();
     }
     
     
@@ -544,8 +530,6 @@ public class DemographicData {
                 }
 
                 rs.close();
-                db.CloseConn();
-                
                 this.RxInfo = getRxInformation();
                 this.EctInfo = getEctInformation();
 
@@ -980,7 +964,6 @@ public class DemographicData {
                }
                add_record.close();
                rs.close();
-               db.CloseConn();
            }catch(Exception e){
             System.out.println("LOG ADD RECORD "+chart_no);
             e.printStackTrace();   

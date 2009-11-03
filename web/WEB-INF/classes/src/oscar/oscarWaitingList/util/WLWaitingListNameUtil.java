@@ -62,7 +62,6 @@ public class WLWaitingListNameUtil {
         System.out.println("remove waiting list name sql: " + sql);
 
         db.RunSQL(sql);
-        db.CloseConn();
         if(rs != null){
         	rs.close();
         }
@@ -102,7 +101,6 @@ public class WLWaitingListNameUtil {
         System.out.println("WLWaitingListNameUtil/createWaitingListName(): sql = " + sql);
         
         db.RunSQL(sql);
-        db.CloseConn();
         if(rs != null){
         	rs.close();
         }
@@ -159,8 +157,7 @@ public class WLWaitingListNameUtil {
         if(rs != null){
         	rs.close();
         }
-        db.CloseConn();
-	    return;
+        return;
 	}
 
 

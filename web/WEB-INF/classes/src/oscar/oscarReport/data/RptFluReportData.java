@@ -54,7 +54,6 @@ public class RptFluReportData {
 				if (resultset.next())
 					s = resultset.getString("billing_date");
 				resultset.close();
-				dbhandler.CloseConn();
 			} catch (SQLException sqlexception) {
 				System.out.println(sqlexception.getMessage());
 			}
@@ -77,7 +76,6 @@ public class RptFluReportData {
 				if (resultset.next())
 					s = resultset.getString("billing_date");
 				resultset.close();
-				dbhandler.CloseConn();
 			} catch (SQLException sqlexception) {
 				System.out.println(sqlexception.getMessage());
 			}
@@ -112,7 +110,6 @@ public class RptFluReportData {
 						+ resultset.getString("first_name"));
 			}
 			resultset.close();
-			dbhandler.CloseConn();
 		} catch (SQLException sqlexception) {
 			System.out.println("Problems");
 			System.out.println(sqlexception.getMessage());
@@ -144,7 +141,6 @@ public class RptFluReportData {
 				demofludatastruct.demoAge = resultset.getString("age");
 			}
 			resultset.close();
-			dbhandler.CloseConn();
 		} catch (SQLException sqlexception) {
 			System.out.println("Problems");
 			System.out.println(sqlexception.getMessage());

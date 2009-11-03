@@ -39,8 +39,7 @@ public class GstControlAction extends Action{
                 String sql;
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 sql = "Update gstControl set gstPercent = " + percent + ";";
-                db.RunSQL(sql);
-                db.CloseConn();   
+                db.RunSQL(sql);   
             }
         catch(SQLException e) {
                 System.out.println(e.getMessage());            
@@ -57,7 +56,6 @@ public class GstControlAction extends Action{
             props.setProperty("gstPercent", rs.getString("gstPercent"));
         }
         rs.close();
-        db.CloseConn();
         return props;   
     }
 }

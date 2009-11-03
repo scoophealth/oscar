@@ -47,7 +47,6 @@ public class FrmGrowth0_36Record extends FrmRecord {
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formGrowth0_36 WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;

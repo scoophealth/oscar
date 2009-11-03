@@ -54,7 +54,6 @@ public class FatFormulariosDAO extends DAO {
 			form.setDsFormulario(db.getString(rs,2));
 		}
 		} finally {
-			db.CloseConn();
 		}
 
 		return form;
@@ -79,7 +78,6 @@ public class FatFormulariosDAO extends DAO {
 			System.out.println("adicionou reg");
         }
         } finally {
-			db.CloseConn();
         }
 
         return list;
@@ -106,7 +104,6 @@ public class FatFormulariosDAO extends DAO {
                 
             }
         } finally {
-            db.CloseConn();
         }
 
         return list;
@@ -131,7 +128,6 @@ public class FatFormulariosDAO extends DAO {
                 list.add(formProc);
             }
         } finally {
-            db.CloseConn();
         }
 
         return list;

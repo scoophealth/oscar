@@ -80,7 +80,6 @@ public final class EctViewAttachmentAction extends Action {
           sentBy     = db.getString(rs,"sentBy");
        }
        rs.close();
-       db.CloseConn();
     }catch(SQLException e){System.out.println("CrAsH"); e.printStackTrace();}
 
     request.setAttribute("remoteName",remoteName);

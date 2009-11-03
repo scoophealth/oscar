@@ -65,7 +65,6 @@ public class EctConEditSpecialistsAction extends Action {
                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                String sql = "delete from professionalSpecialists where ".concat(String.valueOf(String.valueOf(stringBuffer.toString())));
                db.RunSQL(sql);
-               db.CloseConn();
             }
             catch(SQLException e) {
                System.out.println(e.getMessage());
@@ -103,7 +102,6 @@ public class EctConEditSpecialistsAction extends Action {
          }
          
          rs.close();
-         db.CloseConn();
       }
       catch(SQLException e) {
          System.out.println(e.getMessage());

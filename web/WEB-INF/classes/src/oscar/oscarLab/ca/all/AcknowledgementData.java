@@ -41,7 +41,6 @@ public class AcknowledgementData {
                 acknowledgements.add( new ReportStatus(db.getString(rs,"first_name")+" "+db.getString(rs,"last_name"), db.getString(rs,"provider_no"), db.getString(rs,"status"), db.getString(rs,"comment"), db.getString(rs,"timestamp"), segmentID ) );
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Could not retrieve acknowledgement data", e);
         }

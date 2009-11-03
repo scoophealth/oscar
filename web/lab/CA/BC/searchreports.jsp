@@ -153,7 +153,6 @@ function PopupLab(pid)
 		}
 		rs.close();
 	}
-	db.CloseConn();
 %>
 </table>
 </body>

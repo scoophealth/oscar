@@ -111,7 +111,6 @@ public class LabUploadAction extends Action {
                     abc.parse(in);              
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);             
                     abc.save(db.GetConnection());
-                    db.CloseConn();
                     outcome = "uploaded";
                 }
              }else{

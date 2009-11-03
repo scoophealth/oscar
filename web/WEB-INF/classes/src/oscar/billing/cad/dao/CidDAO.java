@@ -58,7 +58,6 @@ public class CidDAO extends DAO {
                 cid.setDsCid(rs.getString(2));
             }
         } finally {
-            db.CloseConn();
         }
 
         return cid;

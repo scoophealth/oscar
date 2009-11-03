@@ -65,7 +65,7 @@ public class BillingPreferencesDAO {
         pref.getProviderNo();
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = (ResultSet) db.GetSQL(recordExistsQRY);
+      rs = db.GetSQL(recordExistsQRY);
       if (rs.next()) {
         String updateSQL = "update billing_preferences set referral = " +
             pref.getReferral() + ",defaultPayeeNo = " + pref.getDefaultPayeeNo() +
@@ -83,14 +83,6 @@ public class BillingPreferencesDAO {
       ex.printStackTrace();
     }
     finally {
-      try {
-        if (db != null) {
-          db.CloseConn();
-        }
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
       if (rs != null) {
         try {
           rs.close();

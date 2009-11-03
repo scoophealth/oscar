@@ -92,8 +92,6 @@ for (int i = 0; i < props.size(); i++) {
 	if (db.RunSQL(sql)) out.println((String)props.get(i) + "<br>");
 }
 
-db.CloseConn();
-
 %>
 
 </body>

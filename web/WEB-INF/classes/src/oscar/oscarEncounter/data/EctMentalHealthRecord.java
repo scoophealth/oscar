@@ -112,8 +112,6 @@ public class EctMentalHealthRecord
             }
             rs.close();
         }
-        db.CloseConn();
-
         return props;
     }
 
@@ -236,8 +234,6 @@ public class EctMentalHealthRecord
             ret = rsNew.getInt(1);
         }
         rsNew.close();
-        db.CloseConn();
-
         return ret;
     }
 }

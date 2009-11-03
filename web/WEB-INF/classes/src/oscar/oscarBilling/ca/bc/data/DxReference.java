@@ -93,8 +93,7 @@ public class DxReference {
                     }
                 }
             }
-            pstmt.close();  
-            db.CloseConn();
+            pstmt.close();
        }catch (SQLException e) {
           e.printStackTrace();
        }

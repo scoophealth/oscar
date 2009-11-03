@@ -295,7 +295,6 @@ public class SqlUtils {
 		finally {
 			try {
 				if (db != null) {
-					db.CloseConn();
 				}
 
 				if (rs != null) {
@@ -376,14 +375,6 @@ public class SqlUtils {
 			e.printStackTrace();
 		}
 		finally {
-			if (db != null) {
-				try {
-					db.CloseConn();
-				}
-				catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-			}
 			if (rs != null) {
 				try {
 					rs.close();
@@ -454,14 +445,6 @@ public class SqlUtils {
 			e.printStackTrace();
 		}
 		finally {
-			if (db != null) {
-				try {
-					db.CloseConn();
-				}
-				catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-			}
 			if (rs != null) {
 				try {
 					rs.close();

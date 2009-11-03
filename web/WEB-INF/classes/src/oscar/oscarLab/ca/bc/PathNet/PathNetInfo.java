@@ -33,7 +33,6 @@ public class PathNetInfo {
          pendingLabs = rsLab.getInt("count");
       }
       rsLab.close();
-      dbLab.CloseConn();
       return pendingLabs;
    }
     
@@ -50,7 +49,6 @@ public class PathNetInfo {
          notSigned = rsLab.getInt("count");
       }
       rsLab.close();
-      dbLab.CloseConn();
       return notSigned;
    }
    

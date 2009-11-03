@@ -60,7 +60,6 @@ public class EctWindowSizes {
             props.setProperty("rowThreeSize", db.getString(rs,"rowThreeSize"));
             props.setProperty("presBoxSize", db.getString(rs,"presBoxSize"));                                       
             rs.close();
-            db.CloseConn();
         } catch (Exception e) {
             // e.printStackTrace(System.out);
             props.setProperty("rowOneSize", "60");

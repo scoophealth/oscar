@@ -113,9 +113,7 @@ public class BillActivityDAO {
                 }
                 int fileCount = Integer.parseInt(batchCount) + 1;
                 batchCount = String.valueOf(fileCount);    
-            pstmt.close();  
-            
-            dbhandler.CloseConn();
+            pstmt.close();
          }catch (SQLException sqlexception) {
             System.out.println(sqlexception.getMessage());
          }
@@ -172,8 +170,7 @@ public class BillActivityDAO {
                id = rs.getInt(1);
             }
             
-            pstmt.close();  
-            dbhandler.CloseConn();
+            pstmt.close();
         }catch (SQLException sqlexception) {
            System.out.println(sqlexception.getMessage());
         }
@@ -195,8 +192,7 @@ public class BillActivityDAO {
             pstmt.setString(3,""+b.getId());
             pstmt.executeUpdate();
 
-            pstmt.close();  
-            dbhandler.CloseConn();
+            pstmt.close();
         }catch (SQLException sqlexception) {
            System.out.println(sqlexception.getMessage());
         }

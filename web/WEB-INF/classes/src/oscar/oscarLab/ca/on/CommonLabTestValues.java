@@ -135,7 +135,6 @@ public class CommonLabTestValues {
                 labList.add(h);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
         }
@@ -190,7 +189,6 @@ public class CommonLabTestValues {
                 labList.add(h);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
             
@@ -224,7 +222,6 @@ public class CommonLabTestValues {
                 labList.add(h);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
             
@@ -262,7 +259,6 @@ public class CommonLabTestValues {
             }
             
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
             
@@ -303,7 +299,6 @@ public class CommonLabTestValues {
             }
             rs.close();
             pstmt.close();
-            //db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabTestValues.findValuesByLoinc()", e);
             
@@ -342,7 +337,6 @@ public class CommonLabTestValues {
             }
             rs.close();
             pstmt.close();
-            //db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabTestValues.findValuesByLoinc()", e);
             
@@ -418,8 +412,6 @@ public class CommonLabTestValues {
                     }
                 }
                 rs.close();
-                db.CloseConn();
-                
                 labList.addAll(labMap.values());
                 
             }catch(Exception e){
@@ -495,8 +487,6 @@ public class CommonLabTestValues {
                     
                 }
                 rs.close();
-                db.CloseConn();
-                
                 labList.addAll(labMap.values());
                 
             }catch(Exception e){
@@ -552,8 +542,6 @@ public class CommonLabTestValues {
                     }
                 }
                 rs.close();
-                db.CloseConn();
-                
                 labList.addAll(labMap.values());
                 
             }catch(Exception e){
@@ -610,7 +598,6 @@ public class CommonLabTestValues {
                     }
                 }
                 rs.close();
-                db.CloseConn();
             }catch(Exception e){
                 logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
                 
@@ -674,7 +661,6 @@ public class CommonLabTestValues {
                 labList.add(h);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             
             logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
@@ -729,7 +715,6 @@ public class CommonLabTestValues {
                 labList.add(h);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
         }

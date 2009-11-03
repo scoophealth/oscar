@@ -80,7 +80,6 @@ public class EctMeasurementsDataBeanHandler {
             }
      
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             log.debug(e.getMessage());
@@ -111,7 +110,6 @@ public class EctMeasurementsDataBeanHandler {
             }
             
             rs.close();
-            db.CloseConn();
         } catch(SQLException e) {
             log.error(e.getMessage());
             verdict = false;
@@ -177,7 +175,6 @@ public class EctMeasurementsDataBeanHandler {
                 
                 
             }
-            db.CloseConn();
         } catch(SQLException e) {
             log.debug(e.getMessage());
             verdict = false;
@@ -216,7 +213,6 @@ public class EctMeasurementsDataBeanHandler {
             }
             
             rs.close();
-            db.CloseConn();
         } catch(SQLException e) {
             log.error(e.getMessage());
             verdict = false;
@@ -261,7 +257,6 @@ public class EctMeasurementsDataBeanHandler {
                 measurements.add(measurement);
             }
             rs.close();
-            db.CloseConn();
             return measurements;
         } catch (SQLException sqe) {
             sqe.printStackTrace();
@@ -302,12 +297,10 @@ public class EctMeasurementsDataBeanHandler {
 //                data.put("provider_first", rsGetString(rs, "provider_first"));
 //                data.put("provider_last", rsGetString(rs, "provider_last"));
 //                rs.close();
-//                db.CloseConn();
 //                return data;
 //
 //            } else {
 //                rs.close();
-//                db.CloseConn();
 //                return null;
 //            }
 //        }
@@ -341,7 +334,6 @@ public class EctMeasurementsDataBeanHandler {
                 data.put("provider_last", rsGetString(rs, "provider_last"));
             }
             rs.close();
-            db.CloseConn();
         } catch(SQLException e) {
             log.error(e.getMessage());
         }

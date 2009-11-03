@@ -97,7 +97,6 @@ public class BillingData {
 				list.add(h);
 			}
 			rs.close();
-			db.CloseConn();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

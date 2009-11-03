@@ -695,7 +695,6 @@ public class BillingSessionBean {
   //                userName =  rs.getString("first_name")+" "+rs.getString("last_name");
   //             }
   //             rs.close();
-  //             db.CloseConn();
   //     }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
   // }
 

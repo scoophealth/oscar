@@ -202,7 +202,6 @@ public class AppointmentDAO extends DAO {
 				appointment.setAppointmentDate(rs.getDate(10));
             }
         } finally {
-            db.CloseConn();
         }
 
         return appointment;
@@ -251,7 +250,6 @@ public class AppointmentDAO extends DAO {
 				list.add(app);            	
             }
         } finally {
-            db.CloseConn();
         }
 
         return list;
@@ -287,7 +285,6 @@ public class AppointmentDAO extends DAO {
 				list.add(app);            	
 			}
 		} finally {
-			db.CloseConn();
 		}
 
 		return list;

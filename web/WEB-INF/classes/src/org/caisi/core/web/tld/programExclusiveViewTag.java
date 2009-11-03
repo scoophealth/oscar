@@ -55,7 +55,6 @@ public class programExclusiveViewTag extends TagSupport {
 		exclusiveView = db.getString(rs,1);
 	    }
             rs.close();
-            db.CloseConn();
         }      catch(SQLException e)        {
             e.printStackTrace(System.out);
         }

@@ -22,7 +22,6 @@ public class SqlUtilBaseS {
        try {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
-           db.CloseConn();
        } catch (SQLException sqe) {
            sqe.printStackTrace();
        }
@@ -85,7 +84,6 @@ public class SqlUtilBaseS {
        try {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            rs = db.GetSQL(sql);
-           db.CloseConn();
        } catch (SQLException sqe) {
            sqe.printStackTrace();
        }

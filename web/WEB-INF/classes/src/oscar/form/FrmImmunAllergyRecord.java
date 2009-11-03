@@ -50,7 +50,6 @@ public class FrmImmunAllergyRecord extends FrmRecord {
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
             }
             rs.close();
-			db.CloseConn();
         } else {
             String sql = "SELECT * FROM formImmunAllergy WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			props = (new FrmRecordHelp()).getFormRecord(sql);

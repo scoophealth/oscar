@@ -95,21 +95,13 @@ public class FrmStudyXMLClientSend {
 		//initial
 		aStudy.init(args[0], args[1]);
 		aStudy.getStudyContent();
-		if (aStudy.studyContent.size() == 0) {aStudy.db.CloseConn(); return;}
+		if (aStudy.studyContent.size() == 0) {return;}
 
 		//loop for each content record
 		for (int i = 0; i < aStudy.studyContent.size() ; i++ )	{
 			aStudy.sendJaxmMsg((String)aStudy.studyContent.get(i), args[2]);
 			aStudy.updateStatus((String)aStudy.studyNo.get(i));
 		}
-/*		for (Enumeration e = aStudy.studyContent.propertyNames() ; e.hasMoreElements() ;)	{
-			String tempStudyNo = (String) e.nextElement();
-
-			aStudy.sendJaxmMsg(aStudy.studyContent.getProperty(tempStudyNo), args[2]);
-			aStudy.updateStatus(tempStudyNo);
-		}
-*/ 
-		aStudy.db.CloseConn();
 
 	}
 

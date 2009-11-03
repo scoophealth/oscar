@@ -60,8 +60,7 @@ public class WLPatientWaitingListBeanHandler {
                 patientWaitingListVector.add(wLBean);
             }
                             
-            rs.close();            
-            db.CloseConn();
+            rs.close();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

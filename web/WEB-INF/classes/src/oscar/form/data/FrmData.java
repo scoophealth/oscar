@@ -59,8 +59,6 @@ public class FrmData {
         }
 
         rs.close();
-        db.CloseConn();
-
         Form[] ret = {};
         ret = (Form[])forms.toArray(ret);
         return ret;
@@ -99,8 +97,6 @@ public class FrmData {
         }
 
         rs.close();
-        db.CloseConn();
-
         PatientForm[] ret = {};
         ret = (PatientForm[])forms.toArray(ret);
         return ret;
@@ -126,8 +122,6 @@ public class FrmData {
         }
 
         rs.close();
-        db.CloseConn();
-
         return frm;
     }
 
@@ -143,7 +137,6 @@ public class FrmData {
         }
 
         rs.close();
-        db.CloseConn();
         return ret;
     }
 
@@ -255,7 +248,6 @@ public class FrmData {
         }
 
         rs.close();
-        db.CloseConn();
         System.out.println("RETURNING "+ret[0]+" = "+ret[1]);
         return ret;
     }
@@ -271,7 +263,6 @@ public class FrmData {
         }
 
         rs.close();
-        db.CloseConn();
         if(ret.compareTo("")==0)
             ret = "http://resource.oscarmcmaster.org/oscarResource/";
         return ret;
@@ -289,7 +280,6 @@ public class FrmData {
         }
 
         rs.close();
-        db.CloseConn();
         return ret;
     }
 

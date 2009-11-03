@@ -72,8 +72,7 @@ public class EctMeasurementTypesBeanHandler {
                 rsValidation.close();
             }
                             
-            rs.close();            
-            db.CloseConn();
+            rs.close();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -167,8 +166,7 @@ public class EctMeasurementTypesBeanHandler {
                 
             }
             
-            rsMGr.close();            
-            db.CloseConn();
+            rsMGr.close();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

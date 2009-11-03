@@ -61,7 +61,6 @@ public class DiagnosticoDAO extends DAO {
                 list.add(diagnostico);
             }
         } finally {
-            db.CloseConn();
         }
 
         return list;

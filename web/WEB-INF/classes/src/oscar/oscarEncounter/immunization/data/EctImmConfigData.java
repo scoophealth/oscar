@@ -56,7 +56,6 @@ public class EctImmConfigData {
 		}
 
 		rs.close();
-		db.CloseConn();
 		return UtilXML.toXML(doc);
 	}
 
@@ -72,7 +71,6 @@ public class EctImmConfigData {
 			ret.add(db.getString(rs,"setName"));
 		}
 		rs.close();
-		db.CloseConn();
 		return ret;
 	}
 	
@@ -88,7 +86,6 @@ public class EctImmConfigData {
 			ret.add(""+rs.getInt("setId"));
 		}
 		rs.close();
-		db.CloseConn();
 		return ret;
 	}
 	

@@ -80,8 +80,6 @@ public class EctAddMeasurementTypeAction extends Action {
                 + str.q(validation)+"')";
             System.out.println(" sql statement "+sql);
             db.RunSQL(sql);
-
-            db.CloseConn();
                 
         }
         catch(SQLException e)
@@ -117,7 +115,6 @@ public class EctAddMeasurementTypeAction extends Action {
                 saveErrors(request, errors);
                 isValid = false;                
             }
-            db.CloseConn();
         }
         catch(SQLException e)
         {

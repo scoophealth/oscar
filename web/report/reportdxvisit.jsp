@@ -140,7 +140,6 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 
 
 rs.close();
-db.CloseConn();
 
 %>
 

@@ -72,7 +72,6 @@ public class FileUploadCheck {
          if(rs.next()){
             hasFileBeenUploaded = true;
          }         
-         db.CloseConn();         
       }catch(Exception e){
          e.printStackTrace();
       }
@@ -102,7 +101,6 @@ public class FileUploadCheck {
             fileInfo.put("md5sum", db.getString(rs,"md5sum"));
             fileInfo.put("dateTime",db.getString(rs,"date_time"));
          }         
-         db.CloseConn();         
       }catch(Exception e){
          e.printStackTrace();
       }
@@ -126,8 +124,7 @@ public class FileUploadCheck {
             ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
             if(rs.next()){
                 fileUploaded= rs.getInt(1) ;
-            } 
-            db.CloseConn();       
+            }       
          }
       }catch(SQLException conE){
          conE.printStackTrace();            

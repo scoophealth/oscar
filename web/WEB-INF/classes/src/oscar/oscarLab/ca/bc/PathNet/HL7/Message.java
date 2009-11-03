@@ -199,8 +199,7 @@ public class Message {
                 sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+parent+"', 'N','BCP')";
                 System.out.println(sql);
                 db.RunSQL(sql);
-            }
-            db.CloseConn();            
+            }            
         } catch (Exception e) {
             System.out.println("Database error in providerRouteReport:"+e);
         }        
@@ -230,7 +229,6 @@ public class Message {
              ret = rsr.getString("provider_no");
           }
           rsr.close();
-          db.CloseConn();
        }catch(Exception e){
           e.printStackTrace();  
        }
@@ -308,8 +306,7 @@ public class Message {
             e.printStackTrace();
             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";                            
             db.RunSQL(sql);
-         }
-         db.CloseConn();            
+         }            
       } catch (Exception e) {
          System.out.println("Database error in patientRouteReport:"+e);
       }        
@@ -341,8 +338,7 @@ public class Message {
                 rs2.close();                      
              }                 
           }
-          rs.close();                
-          db.CloseConn();            
+          rs.close();            
        } catch (Exception e) {
           System.out.println("Database error in patientProviderRoute:"+e);
        }        

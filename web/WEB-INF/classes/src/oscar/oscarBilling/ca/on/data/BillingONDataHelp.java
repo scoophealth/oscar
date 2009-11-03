@@ -69,12 +69,6 @@ public class BillingONDataHelp {
 			rs.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-		} finally {
-			try {
-				db.CloseConn();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return ret;
 	}
@@ -89,12 +83,6 @@ public class BillingONDataHelp {
 		} catch (SQLException e) {
 			ret = false;
 			System.out.println(e.getMessage());
-		} finally {
-			try {
-				db.CloseConn();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return ret;
 	}
@@ -107,12 +95,6 @@ public class BillingONDataHelp {
 			ret = db.GetSQL(sql);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-		} finally {
-			try {
-				db.CloseConn();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return ret;
 	}

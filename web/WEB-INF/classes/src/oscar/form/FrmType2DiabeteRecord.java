@@ -42,7 +42,6 @@ public class FrmType2DiabeteRecord extends FrmRecord {
                 props.setProperty("pName", db.getString(rs,"pName"));
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;

@@ -84,7 +84,6 @@ public class SQLDenominator implements Denominator{
                list.add(toAdd);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }

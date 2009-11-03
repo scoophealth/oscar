@@ -178,7 +178,6 @@ public class EctConsultationFormRequestAction
                     }
                     
                 }
-                db.CloseConn();
                 
             }
             
@@ -222,8 +221,6 @@ public class EctConsultationFormRequestAction
                         ).append(str.q(requestId)).
                         append("'")));
                 db.RunSQL(sql);
-                
-                db.CloseConn();
                 
             }
             

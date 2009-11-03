@@ -54,7 +54,6 @@ public class FrmRourkeRecord extends FrmRecord {
                 //props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
             rs.close();
-			db.CloseConn();
         } else {
             String sql = "SELECT * FROM formRourke WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			props = (new FrmRecordHelp()).getFormRecord(sql);
@@ -86,7 +85,6 @@ public class FrmRourkeRecord extends FrmRecord {
 			}
 		}
 	rs.close();
-	db.CloseConn();
 	}catch(Exception exc){exc.printStackTrace();}	
 	return retval;
     }
@@ -143,8 +141,6 @@ public class FrmRourkeRecord extends FrmRecord {
             }//end if
             rs.close();
         }
-        db.CloseConn();
-
         return props;
     }
 

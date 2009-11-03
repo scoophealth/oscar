@@ -21,7 +21,6 @@
     	db.RunSQL(delete_linking.replaceAll("@pid", (String)request.getParameter("pid")));
     	db.RunSQL(insert_linking.replaceAll("@pid", (String)request.getParameter("pid")).replaceAll("@demo", (String)request.getParameter("demo_id")));
     }
-	db.CloseConn();
 %>
 <!--  
 /*
@@ -127,7 +126,6 @@ function PopupLab(pid){
 	<%
 			other=!other;
 		}
-		db.CloseConn();
 %>
 	<tr>
 		<td colspan="9" align="left"><input type="submit" name="submit"

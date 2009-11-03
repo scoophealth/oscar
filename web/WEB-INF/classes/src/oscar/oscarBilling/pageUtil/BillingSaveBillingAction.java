@@ -82,7 +82,6 @@ public class BillingSaveBillingAction
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(sql);
-      db.CloseConn();
 
     }
     catch (SQLException e) {
@@ -107,7 +106,6 @@ public class BillingSaveBillingAction
         billingid = rs.getString(1);
       }
       rs.close();
-      db.CloseConn();
 
     }
     catch (SQLException e) {
@@ -235,7 +233,6 @@ public class BillingSaveBillingAction
 
             //ensure that this insert action is audited
             this.createBillArchive(billingMasterNo++, "O");
-            db.CloseConn();
           }
           catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -305,8 +302,6 @@ public class BillingSaveBillingAction
 
             //ensure that this insert action is audited
             this.createBillArchive(billingMasterNo++, "O");
-
-            db.CloseConn();
           }
           catch (SQLException e) {
             System.out.println(e.getMessage());

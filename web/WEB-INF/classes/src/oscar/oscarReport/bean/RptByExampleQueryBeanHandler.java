@@ -76,7 +76,6 @@ public class RptByExampleQueryBeanHandler {
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            
@@ -103,7 +102,6 @@ public class RptByExampleQueryBeanHandler {
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            
@@ -129,7 +127,6 @@ public class RptByExampleQueryBeanHandler {
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

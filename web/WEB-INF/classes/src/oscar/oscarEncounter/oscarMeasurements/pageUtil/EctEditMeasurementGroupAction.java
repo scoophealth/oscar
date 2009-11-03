@@ -103,7 +103,6 @@ public class EctEditMeasurementGroupAction extends Action {
                 ResultSet rs = db.GetSQL(dbSpecificCommand);
                 if(rs.next())
                     requestId = Integer.toString(rs.getInt(1));
-                db.CloseConn();
             }
            
             catch(SQLException e)

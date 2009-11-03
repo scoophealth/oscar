@@ -99,8 +99,7 @@ public class ReferralBillingData {
          if(rs.next()){
             fillHash(rs,h);
          }
-         rs.close();          
-         db.CloseConn();                    
+         rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -115,8 +114,7 @@ public class ReferralBillingData {
          while(rs.next()){
             l.add(fillHash(rs));
          }
-         rs.close();          
-         db.CloseConn();                    
+         rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -164,8 +162,7 @@ public class ReferralBillingData {
          if(rs.next()){
             retval = rs.getString("last_name")+", "+rs.getString("first_name");            
          }
-         rs.close();          
-         db.CloseConn();                    
+         rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -181,8 +178,7 @@ public class ReferralBillingData {
          if(rs.next()){
             ret = rs.getInt("coun");
          }
-         rs.close();          
-         db.CloseConn();                    
+         rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -209,8 +205,7 @@ public class ReferralBillingData {
          + " '"+StringEscapeUtils.escapeSql(fax)+"' "           
          + ")";          
          
-         db.RunSQL(sql);
-         db.CloseConn();                    
+         db.RunSQL(sql);                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -242,8 +237,7 @@ public class ReferralBillingData {
          + "fax = '"+StringEscapeUtils.escapeSql(fax)+"' "           
          + " where billingreferral_no = '"+billingreferral_no+"'";          
          
-         db.RunSQL(sql);
-         db.CloseConn();                    
+         db.RunSQL(sql);                    
       }catch (Exception e){
          e.printStackTrace();        
       }

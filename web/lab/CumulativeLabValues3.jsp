@@ -116,7 +116,6 @@ try{
         
     }
 
-    db.CloseConn();
 // if the last item in the name list is a space or header remove it
     String[] nameMapKeys = new String[nameMap.size()];
     nameMap.keySet().toArray(nameMapKeys);

@@ -88,15 +88,6 @@ public class BillingAssociationPersistence {
     }
     catch (SQLException ex) {
       ex.printStackTrace();
-
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
     }
     return ret;
   }
@@ -118,14 +109,6 @@ public class BillingAssociationPersistence {
     catch (SQLException ex) {
       ex.printStackTrace();
 
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
     }
     return ret;
 
@@ -168,7 +151,6 @@ public class BillingAssociationPersistence {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -237,7 +219,6 @@ public class BillingAssociationPersistence {
     }
     finally {
         try {
-          db.CloseConn();
           rs.close();
         }
         catch (SQLException ex1) {
@@ -276,7 +257,6 @@ public class BillingAssociationPersistence {
     }
     finally {
         try {
-          db.CloseConn();
           rs.close();
         }
         catch (SQLException ex1) {

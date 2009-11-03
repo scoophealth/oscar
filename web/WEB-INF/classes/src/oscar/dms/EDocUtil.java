@@ -420,7 +420,6 @@ public class EDocUtil extends SqlUtilBaseS {
                list.add(currentdoc);
             }
             rs.close();
-            db.CloseConn();
        }catch(Exception e){
            e.printStackTrace();
        }
@@ -549,7 +548,6 @@ public class EDocUtil extends SqlUtilBaseS {
                 filename = oscar.Misc.getString(rs, "docfilename");
             }
             rs.close();
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -572,8 +570,6 @@ public class EDocUtil extends SqlUtilBaseS {
                 status = rs.getString("status");
             }
             rs.close();
-            db.CloseConn();
-
             DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];
             java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
             param[0] = new DBPreparedHandlerParam(status);
@@ -661,7 +657,6 @@ public class EDocUtil extends SqlUtilBaseS {
             add_record.close();
             rs.close();
         }
-        db.CloseConn();
         return key;
     }
 
@@ -676,7 +671,6 @@ public class EDocUtil extends SqlUtilBaseS {
                 documentNo = oscar.Misc.getString(rs, 1);
             }
             rs.close();
-            db.CloseConn();
         }        catch (SQLException e) {
             e.printStackTrace();
         }
@@ -694,7 +688,6 @@ public static String getLastDocumentDesc() {
                  docDesc= oscar.Misc.getString(rs, 1);
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -712,7 +705,6 @@ public static String getLastDocumentDesc() {
                 noteId = oscar.Misc.getString(rs, 1);
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -758,7 +750,6 @@ public static String getLastDocumentDesc() {
                 	flag=true;
             }
             rs.close();
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -778,7 +769,6 @@ public static String getLastDocumentDesc() {
                 	flag=true;
             }
             rs.close();
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();

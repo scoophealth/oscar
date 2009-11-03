@@ -94,7 +94,6 @@ public class ProviderLabRouting {
 	    info.put("lab_type", rs.getString("lab_type"));
 	    info.put("id", rs.getInt("id"));
 	}
-	db.CloseConn();
 	return info;
     }
 }

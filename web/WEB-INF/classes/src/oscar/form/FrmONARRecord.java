@@ -101,7 +101,6 @@ public class FrmONARRecord extends FrmRecord {
             }
 
             rs.close();
-            db.CloseConn();
         }
         return ret;
     }

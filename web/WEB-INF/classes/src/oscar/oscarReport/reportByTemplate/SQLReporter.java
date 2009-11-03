@@ -66,7 +66,6 @@ public class SQLReporter implements Reporter {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             rs = db.GetSQL(sql);
-            db.CloseConn();
             rsHtml = RptResultStruct.getStructure2(rs);  //makes html from the result set
             StringWriter swr = new StringWriter();
             CSVPrinter csvp = new CSVPrinter(swr);

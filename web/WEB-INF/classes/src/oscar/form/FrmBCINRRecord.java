@@ -41,7 +41,6 @@ public class FrmBCINRRecord extends FrmRecord {
 				props.setProperty("c_phone2", db.getString(rs,"phone2"));
 			}
 			rs.close();
-			db.CloseConn();
 		} else {
 			String sql = "SELECT * FROM formBCINR WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 			FrmRecordHelp frh = new FrmRecordHelp();
@@ -131,7 +130,6 @@ public class FrmBCINRRecord extends FrmRecord {
 		}
 
 		rs.close();
-		db.CloseConn();
 		return ret;
 	}
 

@@ -80,8 +80,7 @@ public class DemographicRelationship {
             ResultSet rs;
             String sql = "insert into relationships (facility_id,demographic_no,relation_demographic_no,relation,sub_decision_maker,emergency_contact,notes,creator,creation_date) values "
             + "("+facilityId+",'"+demographic+"','"+linkingDemographic+"','"+StringEscapeUtils.escapeSql(relationship)+"','"+sdmStr+"','"+eContact+"','"+StringEscapeUtils.escapeSql(notes)+"','"+providerNo+"',now())";
-            db.RunSQL(sql);                                                
-            db.CloseConn();
+            db.RunSQL(sql);
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -92,8 +91,7 @@ public class DemographicRelationship {
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          String sql = "update relationships  set deleted = '1' where  id = '"+id+"'";
-         db.RunSQL(sql);                                                
-         db.CloseConn();
+         db.RunSQL(sql);
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }       
@@ -116,8 +114,7 @@ public class DemographicRelationship {
 	    h.put("emergency_contact", db.getString(rs,"emergency_contact"));
             h.put("notes", db.getString(rs,"notes"));
             list.add(h);
-         }
-         db.CloseConn();            
+         }            
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }       
@@ -141,8 +138,7 @@ public class DemographicRelationship {
 	    h.put("emergency_contact", db.getString(rs,"emergency_contact"));
             h.put("notes", db.getString(rs,"notes"));
             list.add(h);
-         }
-         db.CloseConn();            
+         }            
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }       
@@ -159,8 +155,7 @@ public class DemographicRelationship {
          rs = db.GetSQL(sql);
          if(rs.next()){            
             sdm = db.getString(rs,"relation_demographic_no");
-         }
-         db.CloseConn();            
+         }            
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }       
@@ -192,8 +187,7 @@ public class DemographicRelationship {
             h.put("notes", db.getString(rs,"notes"));
             h.put("age",demographic.getAge());
             list.add(h);
-         }
-         db.CloseConn();            
+         }            
       } catch (SQLException e) {
          System.out.println(e.getMessage());
       }       
@@ -224,8 +218,7 @@ public class DemographicRelationship {
 	            h.put("notes", db.getString(rs,"notes"));
 	            h.put("age",demographic.getAge());
 	            list.add(h);
-	         }
-	         db.CloseConn();            
+	         }            
 	      } catch (SQLException e) {
 	         System.out.println(e.getMessage());
 	      }       

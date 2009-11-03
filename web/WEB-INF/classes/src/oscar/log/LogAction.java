@@ -93,8 +93,6 @@ public class LogAction {
 		    rs.getString("content"), rs.getString("contentId"), rs.getString("ip")));
 	}
 	rs.close();
-	db.CloseConn();
-	
 	return _log;
     }
     
@@ -111,8 +109,6 @@ public class LogAction {
 		    rs.getString("content"), rs.getString("contentId"), rs.getString("ip")));
 	}
 	rs.close();
-	db.CloseConn();
-	
 	return _log;
     }
     

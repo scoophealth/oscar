@@ -93,7 +93,6 @@ public class EctSelectMeasurementGroupAction extends Action {
             db.RunSQL(sql);            
             sql = "DELETE FROM measurementGroup WHERE name='" + inputGroupName + "'";
             db.RunSQL(sql);
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

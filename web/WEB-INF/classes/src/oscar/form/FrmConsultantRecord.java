@@ -46,9 +46,6 @@ public class FrmConsultantRecord extends FrmRecord {
 			props.setProperty("cl_fax", db.getString(rs,"clinic_fax"));
 		}
 		rs.close();
-
-		
-		db.CloseConn();
         	} else {
             		String sql = "SELECT * FROM formConsult WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
             		props = (new FrmRecordHelp()).getFormRecord(sql);
@@ -71,7 +68,6 @@ public class FrmConsultantRecord extends FrmRecord {
 		props.setProperty("t_fax", db.getString(rs,"fax"));
             }
             rs.close();
-            db.CloseConn();
             return props;
         }
         
@@ -84,8 +80,7 @@ public class FrmConsultantRecord extends FrmRecord {
 			props.setProperty("doc_name", db.getString(rs,"doc_Name"));
 		}
 		rs.close();
-                db.CloseConn();
-		return props.getProperty("doc_name", "");
+                return props.getProperty("doc_name", "");
 	}
         
         public Properties getInitRefDoc(Properties props, int demo_no) throws SQLException {
@@ -139,7 +134,6 @@ public class FrmConsultantRecord extends FrmRecord {
             }
 
             rs.close();
-            db.CloseConn();
         }
         return ret;
     }

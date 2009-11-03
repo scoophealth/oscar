@@ -62,9 +62,6 @@ public class dxResearchUpdateAction extends Action {
                 sql = "update dxresearch set update_date='"+nowDate + "', status='D' where dxresearch_no='"+did+"'";
                 db.RunSQL(sql);
             }
-            
-
-            db.CloseConn();
         }
 
         catch(SQLException e){

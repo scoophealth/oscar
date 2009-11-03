@@ -44,7 +44,6 @@ public class BillingNote {
             hasNote = true;
          }
          rs.close();
-         db.CloseConn();
       }catch (Exception e){
          e.printStackTrace();
       }
@@ -65,7 +64,6 @@ public void addNote(String billingmaster_no,String provider_no,String note) thro
 
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 db.RunSQL(notesql);
-                db.CloseConn();
    }
 
 public void addNoteFromBillingNo(String billingNo, String provider,String note) throws SQLException{
@@ -79,7 +77,6 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
             addNote(billingMasterNo,provider,note);
          }
          rs.close();
-         db.CloseConn();
       }catch (Exception e){
          e.printStackTrace();
       }
@@ -105,7 +102,6 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
          n.setNote(rs.getString("note"));
       }
       rs.close();
-      db.CloseConn();
       }catch (Exception e){
          e.printStackTrace();
       }
@@ -123,7 +119,6 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
             retStr = rs.getString("note");
          }
          rs.close();
-         db.CloseConn();
          }catch (Exception e){
             e.printStackTrace();
          }

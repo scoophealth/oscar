@@ -60,7 +60,6 @@ public class EctConsultationFormRequestUtil {
                         db.getString(rs, "date_of_birth")));
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             verdict = false;
@@ -84,7 +83,6 @@ public class EctConsultationFormRequestUtil {
                 }
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             verdict = false;
@@ -146,7 +144,6 @@ public class EctConsultationFormRequestUtil {
                 }
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             verdict = false;
@@ -182,7 +179,6 @@ public class EctConsultationFormRequestUtil {
                 }
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -206,7 +202,6 @@ public class EctConsultationFormRequestUtil {
                 retval = specEmail;
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -223,7 +218,6 @@ public class EctConsultationFormRequestUtil {
                 retval = db.getString(rs, "last_name") + ", " + db.getString(rs, "first_name");
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -240,7 +234,6 @@ public class EctConsultationFormRequestUtil {
                 retval = db.getString(rs, "last_name") + ", " + db.getString(rs, "first_name");
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -257,7 +250,6 @@ public class EctConsultationFormRequestUtil {
                 retval = db.getString(rs, "serviceDesc");
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -274,7 +266,6 @@ public class EctConsultationFormRequestUtil {
                 retval = db.getString(rs, "clinic_name");
             }
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

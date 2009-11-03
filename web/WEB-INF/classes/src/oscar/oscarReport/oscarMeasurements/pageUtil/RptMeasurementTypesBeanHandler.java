@@ -68,8 +68,7 @@ public class RptMeasurementTypesBeanHandler {
                 }
             }
             
-            rs.close();            
-            db.CloseConn();
+            rs.close();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

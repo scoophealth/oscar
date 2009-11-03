@@ -107,7 +107,6 @@ public class EctDefineNewMeasurementGroupAction extends Action {
                 sql = "INSERT INTO measurementGroupStyle(groupName, cssID) VALUES ('" + inputGroupName + "','" + styleSheet + "')";
                 db.RunSQL(sql);
             }
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

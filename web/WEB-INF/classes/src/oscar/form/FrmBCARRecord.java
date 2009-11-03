@@ -73,7 +73,6 @@ public class FrmBCARRecord extends FrmRecord {
                 props.setProperty("pg1_famPhy", rd);
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formBCAR WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
             FrmRecordHelp frh = new FrmRecordHelp();

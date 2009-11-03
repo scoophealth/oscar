@@ -40,7 +40,6 @@ public class EctConConfigurationJavascriptData {
             String quotedString = org.apache.commons.lang.StringEscapeUtils.escapeSql(jscript);
 	    String sql = "update specialistsJavascript set javascriptString = '" +quotedString+ "' where setId = '1'";
             db.RunSQL(sql);
-            db.CloseConn();
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -54,7 +53,6 @@ public class EctConConfigurationJavascriptData {
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())
                 retval = db.getString(rs,"javascriptString");
-            db.CloseConn();
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }

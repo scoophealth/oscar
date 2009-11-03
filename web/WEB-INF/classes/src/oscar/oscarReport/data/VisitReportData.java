@@ -79,7 +79,6 @@ public class VisitReportData {
 
 			}
              rs.close();
-             db.CloseConn();
           }
           catch(SQLException e){
              System.out.println("There has been an error while retrieving a visit count");
@@ -116,7 +115,6 @@ public class VisitReportData {
 
 				}
 	             rs.close();
-	             db.CloseConn();
 	          }
 	          catch(SQLException e){
 	             System.out.println("There has been an error while retrieving a visit count");

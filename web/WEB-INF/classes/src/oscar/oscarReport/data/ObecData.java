@@ -76,8 +76,6 @@ public class ObecData {
 }
 			 }
               rs.close();
-              db.CloseConn();
-
               if (retval.compareTo("") == 0){
 				  filename = "0";
 			  } else {

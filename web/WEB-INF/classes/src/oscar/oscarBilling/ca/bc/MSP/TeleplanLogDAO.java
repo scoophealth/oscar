@@ -60,8 +60,7 @@ public class TeleplanLogDAO {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             PreparedStatement pstmt = db.GetConnection().prepareStatement(nsql);
             executeUpdate(pstmt,tl);
-            pstmt.close();  
-            db.CloseConn();
+            pstmt.close();
          }catch (SQLException e) {
             e.printStackTrace();
          }
@@ -84,8 +83,7 @@ public class TeleplanLogDAO {
                 TeleplanLog tl = (TeleplanLog) list.get(i);
                 executeUpdate(pstmt,tl);
             }
-            pstmt.close();  
-            db.CloseConn();
+            pstmt.close();
          }catch (SQLException e) {
             System.out.append("LOG LIST NULL?"+list); 
             e.printStackTrace();

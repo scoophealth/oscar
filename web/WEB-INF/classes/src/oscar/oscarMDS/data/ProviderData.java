@@ -79,7 +79,6 @@ public class ProviderData {
                 provider.add(db.getString(rs,"last_name"));
                 result.add(provider);
             }
-            db.CloseConn();            
             return result;
         }catch(Exception e){
             System.out.println("exception in ProviderData:"+e);
@@ -102,7 +101,6 @@ public class ProviderData {
                 provider.add(db.getString(rs,"last_name"));
                 result.add(provider);
             }
-            db.CloseConn();            
             return result;
         }catch(Exception e){
             System.out.println("exception in ProviderData:"+e);
@@ -117,7 +115,6 @@ public class ProviderData {
                                     
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
             ResultSet rs = db.GetSQL(sql);            
-            db.CloseConn();            
             if ( rs.next() ) {            
                 return ( db.getString(rs,"first_name") + " " + db.getString(rs,"last_name") );            
             } else {                            

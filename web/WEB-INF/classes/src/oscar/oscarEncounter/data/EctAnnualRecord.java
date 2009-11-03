@@ -118,10 +118,6 @@ public class EctAnnualRecord
             }
             rs.close();
         }
-        db.CloseConn();
-
-//        props.list(System.out);
-
         return props;
     }
 
@@ -226,8 +222,6 @@ public class EctAnnualRecord
             ret = rs.getInt(1);
         }
         rs.close();
-        db.CloseConn();
-
         return ret;
     }
 }

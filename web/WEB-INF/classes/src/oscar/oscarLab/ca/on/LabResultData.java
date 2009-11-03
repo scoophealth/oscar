@@ -269,7 +269,6 @@ public class LabResultData implements Comparable{
                     date=db.getString(rs,"print_date")+db.getString(rs,"print_time");
                 }
                 rs.close();
-                db.CloseConn();
             }catch(Exception e){
                 logger.error("Error in getDateObj (CML message)", e);
             }

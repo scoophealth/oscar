@@ -52,7 +52,6 @@ public class RptSearchData {
                 //System.out.println("roster "+db.getString(rs,"roster_status"));
               }
               rs.close();
-              db.CloseConn();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
             return retval;
     }
@@ -71,7 +70,6 @@ public class RptSearchData {
                 //System.out.println("patient "+db.getString(rs,"patient_status"));
               }
               rs.close();
-              db.CloseConn();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
             return retval;
     }
@@ -88,7 +86,6 @@ public class RptSearchData {
                 //System.out.println("patient "+db.getString(rs,"patient_status"));
               }
               rs.close();
-              db.CloseConn();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
             return retval;
     }
@@ -109,7 +106,6 @@ public class RptSearchData {
                 //System.out.println("patient "+db.getString(rs,"patient_status"));
               }
               rs.close();
-              db.CloseConn();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
             return retval;
     }

@@ -79,7 +79,6 @@ public class RxProviderData {
                     clinicCity, clinicPostal, clinicPhone, clinicFax, clinicProvince, practitionerNo);
 
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

@@ -242,7 +242,6 @@ public class EctConsultationFaxAction extends Action {
          ResultSet rs = db.GetSQL(sql);
          if(rs.next())
             retval = db.getString(rs,"locationId");
-         db.CloseConn();
       }
       catch(SQLException e) {
          System.out.println(e.getMessage());

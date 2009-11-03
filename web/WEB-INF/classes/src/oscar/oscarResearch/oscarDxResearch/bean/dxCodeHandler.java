@@ -22,7 +22,6 @@ public class dxCodeHandler {
             	result = db.getString(rs,"description"); 
             }
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

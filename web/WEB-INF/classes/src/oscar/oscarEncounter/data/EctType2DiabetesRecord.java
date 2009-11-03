@@ -75,7 +75,6 @@ public class EctType2DiabetesRecord {
             }
             rs.close();
         }
-        db.CloseConn();
         props.list(System.out);
         return props;
     }
@@ -159,7 +158,6 @@ public class EctType2DiabetesRecord {
 		ret = rs.getInt(1);
 	    rs.close();
 	}
-	db.CloseConn();
-        return ret;
+	return ret;
     }
 }

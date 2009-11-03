@@ -81,7 +81,6 @@ public class MsgProceedAction extends Action {
             request.setAttribute("confMessage","2");
 
         }
-        db.CloseConn();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 

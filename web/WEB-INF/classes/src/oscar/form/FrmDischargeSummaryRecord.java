@@ -204,8 +204,6 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             }
             props.setProperty("prescriptionSummary", prescriptions.toString());
             rs5.close();
-            
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formDischargeSummary WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;
@@ -239,7 +237,6 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
                 props.setProperty("clientName", db.getString(rs,"pName"));
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formDischargeSummary WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;

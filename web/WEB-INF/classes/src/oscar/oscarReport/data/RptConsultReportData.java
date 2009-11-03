@@ -53,7 +53,6 @@ public class RptConsultReportData {
                  arrayList.add(a);
               }
               rs.close();
-              db.CloseConn();
         }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  e.printStackTrace();}
     return arrayList;
     }
@@ -95,7 +94,6 @@ public class RptConsultReportData {
               }
 
               rs.close();
-              db.CloseConn();
         }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
 
 
@@ -129,7 +127,6 @@ public class DemoConsultDataStruct{
              consultList.add(con);
           }
           rs.close();
-          db.CloseConn();
        }catch (java.sql.SQLException e2) { System.out.println(e2.getMessage()); }
       return consultList;
     }
@@ -151,8 +148,7 @@ public class DemoConsultDataStruct{
              conLetter.docStatus   = db.getString(rs,"status");
              conReplyList.add(conLetter);
           }         
-          rs.close();
-          db.CloseConn(); 
+          rs.close(); 
        }catch (java.sql.SQLException e3) { System.out.println(e3.getMessage()); }
     return conReplyList;
     }
@@ -168,7 +164,6 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
-           db.CloseConn();
        }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
        return retval;
     }
@@ -184,7 +179,6 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
-           db.CloseConn();
        }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
        return retval;
     }
@@ -200,7 +194,6 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
            }
            rs.close();
-           db.CloseConn();
        }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
        return retval;
     }
@@ -224,7 +217,6 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"serviceDesc");
            }
            rs.close();
-           db.CloseConn();
        }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
        return retval;
     }
@@ -240,7 +232,6 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
            }
            rs.close();
-           db.CloseConn();
        }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
        return retval;
     }

@@ -66,11 +66,6 @@ public class FrmARBloodWorkTest {
                         rs.close();
                     } catch (SQLException e) {}
                 }
-                if(db != null){
-                    try {
-                        db.CloseConn();
-                    } catch (SQLException e) {}
-                }
             }
         	
         }

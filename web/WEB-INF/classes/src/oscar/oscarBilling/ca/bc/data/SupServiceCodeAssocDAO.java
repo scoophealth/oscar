@@ -144,7 +144,6 @@ public class SupServiceCodeAssocDAO {
     finally {
       try {
         if (db != null) {
-          db.CloseConn();
         }
         if (rs != null) {
           rs.close();
@@ -196,16 +195,6 @@ public class SupServiceCodeAssocDAO {
     }
     catch (Exception e) {
       e.printStackTrace();
-    }
-    finally {
-      try {
-        if (db != null) {
-          db.CloseConn();
-        }
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
     }
   }
 }

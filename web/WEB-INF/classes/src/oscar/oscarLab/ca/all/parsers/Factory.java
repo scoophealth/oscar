@@ -60,7 +60,6 @@ public class Factory {
             }
             
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Could not retrieve lab for segmentID("+segmentID+")", e);
         }
@@ -82,7 +81,6 @@ public class Factory {
                 ret = new String(base64.decode(fileString.getBytes("ASCII")), "ASCII");
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Could not retrieve lab for segmentID("+segmentID+")", e);
         }

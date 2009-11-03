@@ -192,8 +192,7 @@ public class TeleplanSubmission {
         String query = "update billing set status = 'B' where billing_no in ("+ StringUtils.getCSV(list) +")"; 
         try {             
            DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-           dbhandler.RunSQL(query);                                              //1 2 3 4 5 6 7 8 9 0 1 2 3
-           dbhandler.CloseConn();
+           dbhandler.RunSQL(query);
         }catch (SQLException sqlexception) {
            System.out.println(sqlexception.getMessage());
         }

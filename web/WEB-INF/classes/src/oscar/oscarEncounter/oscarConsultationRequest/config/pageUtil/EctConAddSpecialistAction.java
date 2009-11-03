@@ -73,7 +73,6 @@ public class EctConAddSpecialistAction extends Action {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 String sql = "insert into professionalSpecialists (fName,lName,proLetters,address,phone,fax,website,email,specType) values ('"+str.q(fName)+"','"+str.q(lName)+"','"+str.q(proLetters)+"','"+str.q(address)+"','"+str.q(phone)+"','"+str.q(fax)+"','"+str.q(website)+"','"+str.q(email)+"','"+str.q(specType)+"')";
                 db.RunSQL(sql);
-                db.CloseConn();
             }
             catch(SQLException e) {
                 System.out.println(e.getMessage());
@@ -83,7 +82,6 @@ public class EctConAddSpecialistAction extends Action {
                 try {
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                String sql = String.valueOf(String.valueOf((new StringBuffer("update professionalSpecialists set fName = '")).append(str.q(fName)).append("',lName = '").append(str.q(lName)).append("', ").append(" proLetters = '").append(str.q(proLetters)).append("', address = '").append(str.q(address)).append("', phone = '").append(str.q(phone)).append("',").append(" fax = '").append(str.q(fax)).append("', website = '").append(str.q(website)).append("', email = '").append(str.q(email)).append("', specType = '").append(str.q(specType)).append("' ").append(" where specId = '").append(specId).append("'")));
                     db.RunSQL(sql);
-                    db.CloseConn();
                 }
                 catch(SQLException e) {
                     System.out.println(e.getMessage());

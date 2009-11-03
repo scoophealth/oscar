@@ -44,7 +44,6 @@ public class EctConDisplayServiceUtil
             if(rs.next())
                 retval = db.getString(rs,"serviceDesc");
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e)
         {
@@ -84,7 +83,6 @@ public class EctConDisplayServiceUtil
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e)
         {
@@ -102,7 +100,6 @@ public class EctConDisplayServiceUtil
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); vector.add(db.getString(rs,"specId")));
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e)
         {
@@ -124,7 +121,6 @@ public class EctConDisplayServiceUtil
                 serviceId.add(db.getString(rs,"serviceId"));
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e)
         {

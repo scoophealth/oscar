@@ -98,7 +98,6 @@ public class EctFindMeasurementTypeUtil {
             }
             
             rs.close();            
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -146,7 +145,6 @@ public class EctFindMeasurementTypeUtil {
                     add2MeasurementForm(formName, db.getString(rs,("id"));
             }*/
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -165,7 +163,6 @@ public class EctFindMeasurementTypeUtil {
                 verdict = false;
             }
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -187,7 +184,6 @@ public class EctFindMeasurementTypeUtil {
                 verdict = false;
             }
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -219,7 +215,6 @@ public class EctFindMeasurementTypeUtil {
                         add2MeasurementForm(formName, db.getString(rs,("id"));
                 }*/
             }
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());         
@@ -234,7 +229,6 @@ public class EctFindMeasurementTypeUtil {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "INSERT INTO measurementForm VALUES('" + formName + "','"+typeId+"')";
             db.RunSQL(sql);
-            db.CloseConn();
             
         }
         catch(SQLException e) {

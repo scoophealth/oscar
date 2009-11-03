@@ -96,7 +96,6 @@ public class dxQuickListBeanHandler {
                 dxQuickListBeanVector.add(bean);
             }
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -122,7 +121,6 @@ public class dxQuickListBeanHandler {
                 dxQuickListBeanVector.add(bean);
             }
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

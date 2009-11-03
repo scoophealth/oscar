@@ -62,8 +62,7 @@ public class WLWaitingListNameBeanHandler {
                 waitingListNameList.add(wLBean);
                 waitingListNames.add(db.getString(rs,"name"));
             }                            
-            rs.close();                                
-            db.CloseConn();
+            rs.close();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

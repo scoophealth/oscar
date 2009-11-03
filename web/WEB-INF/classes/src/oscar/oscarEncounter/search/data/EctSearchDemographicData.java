@@ -179,7 +179,6 @@ public class EctSearchDemographicData
                 }
 
                 rs.close();
-                db.CloseConn();
             }
             catch(SQLException e)
             {

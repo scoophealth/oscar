@@ -140,7 +140,6 @@ public class TeleplanCorrectionActionWCB
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL("update billingmaster set billing_unit = '" + i + "' WHERE billing_no ='" + billingno + "'");
-            db.CloseConn();
         } catch (java.sql.SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -157,12 +156,6 @@ public class TeleplanCorrectionActionWCB
             if (rs.next()) {
                 billamt = rs.getString("value");
             }
-            //rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='"+ fee2 + "'");
-            //if (rs.next()) {
-            //   amnt += rs.getDouble("value");
-            //}
-            //billamt = String.valueOf(amnt);
-            db.CloseConn();
         } catch (java.sql.SQLException e) {
             System.err.println(e.getMessage());
         }

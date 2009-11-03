@@ -73,8 +73,7 @@ public class EctEditMeasurementStyleAction extends Action {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "UPDATE measurementGroupStyle SET cssID ='" + styleSheet + "' WHERE groupName='" + inputGroupName + "'";
             System.out.println("Sql Statement: " + sql);
-            db.RunSQL(sql);            
-            db.CloseConn();
+            db.RunSQL(sql);
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

@@ -73,8 +73,7 @@ public class RptRehabStudyAction extends Action {
                     results = results + getStructure(rsDemo);
                 rsDemo.close();                    
             }
-            rs.close();                            
-            db.CloseConn();
+            rs.close();
         }
         catch(SQLException e){
             System.out.println(e.getMessage());

@@ -384,7 +384,6 @@ public class ExtractBean extends Object implements Serializable {
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(query30);
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -396,7 +395,6 @@ public class ExtractBean extends Object implements Serializable {
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(query30);
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -414,7 +412,6 @@ public class ExtractBean extends Object implements Serializable {
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(nsql);
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -437,7 +434,6 @@ public class ExtractBean extends Object implements Serializable {
                 n = rs.getString(1);
             }
             rs.close();
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();

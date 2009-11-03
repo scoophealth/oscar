@@ -103,7 +103,6 @@ public class MDSResultsData {
                 lbData = new LabResultData(LabResultData.CML);
             }
             rs.close();
-            db.CloseConn();
             
         }catch(Exception e){
             logger.error("exception in CMLPopulate", e);
@@ -202,7 +201,6 @@ public class MDSResultsData {
                 labResults.add(lbData);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CMLPopulate", e);
             
@@ -223,7 +221,6 @@ public class MDSResultsData {
                 count++;
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData", e);
         }
@@ -318,7 +315,6 @@ public class MDSResultsData {
                 }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData", e);
         }
@@ -379,7 +375,6 @@ public class MDSResultsData {
                 lData = new LabResultData(LabResultData.MDS);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData", e);
         }
@@ -512,7 +507,6 @@ public class MDSResultsData {
                 labResults.add(lData);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Error processing MDS lab, segment # "+seqId);
             logger.error("exception in MDSResultsData", e);
@@ -537,7 +531,6 @@ public class MDSResultsData {
                 ret = justGetAccessionNumber(db.getString(rs,"messageConID"));
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData", e);
         }
@@ -554,7 +547,6 @@ public class MDSResultsData {
                 ret = db.getString(rs,"accession_num");
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in findCMLAccessionNumber", e);
         }
@@ -590,7 +582,6 @@ public class MDSResultsData {
                 }
             }
             rs.close();
-            db.CloseConn();
             
         }catch(Exception e){
             logger.error("exception in getMatchingCMLLabs",e);
@@ -631,7 +622,6 @@ public class MDSResultsData {
                 }
             }
             rs.close();
-            db.CloseConn();
             
         }catch(Exception e){
             logger.error("exception in MDSResultsData", e);
@@ -704,7 +694,6 @@ public class MDSResultsData {
             // add new entries
             sql = "insert ignore into providerLabRouting (provider_no, lab_no, status) values "+insertString;
             result = db.RunSQL(sql);
-            db.CloseConn();
             return result;
         }catch(Exception e){
             Logger l = Logger.getLogger(MDSResultsData.class);
@@ -719,7 +708,6 @@ public class MDSResultsData {
             
             String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"'";
             ResultSet rs = db.GetSQL(sql);
-            db.CloseConn();
             rs.next();
             return db.getString(rs,"demographic_no");
         }catch(Exception e){
@@ -742,7 +730,6 @@ public class MDSResultsData {
             // add new entries
             sql = "insert into patientLabRouting (lab_no, demographic_no) values ('"+labNo+"', '"+demographicNo+"')";
             result = db.RunSQL(sql);
-            db.CloseConn();
             return result;
         }catch(Exception e){
             Logger l = Logger.getLogger(MDSResultsData.class);

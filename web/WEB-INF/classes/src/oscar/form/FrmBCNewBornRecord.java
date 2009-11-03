@@ -63,7 +63,6 @@ public class FrmBCNewBornRecord extends FrmRecord {
                 props.setProperty("pg3_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
             }
             rs.close();
-			db.CloseConn();
         } else {
             String sql = "SELECT * FROM formBCNewBorn WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			FrmRecordHelp frh = new FrmRecordHelp();

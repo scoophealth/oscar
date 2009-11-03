@@ -83,8 +83,6 @@ public class FrmRhImmuneGlobulinRecord extends FrmRecord {
                                 }
 			}
 			rs.close();
-                        
-			db.CloseConn();
 		} else {
 			sql =
 				"SELECT * FROM formRhImmuneGlobulin WHERE demographic_no = "
@@ -138,9 +136,7 @@ public class FrmRhImmuneGlobulinRecord extends FrmRecord {
                         }
                         rs.close();
                     }
-                    db.CloseConn();		
-
-		return props;
+                    return props;
 	}
 
 	public int saveFormRecord(Properties props) throws SQLException {

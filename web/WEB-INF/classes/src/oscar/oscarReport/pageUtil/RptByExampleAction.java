@@ -94,8 +94,6 @@ public class RptByExampleAction extends Action {
                 
                 String sql = "INSERT INTO reportByExamples(providerNo, query, date) VALUES('" + providerNo + "','" + query + "', NOW())";
                 db.RunSQL(sql);
-
-                db.CloseConn();
             }
             catch(SQLException e) {
                 System.out.println(e.getMessage());            

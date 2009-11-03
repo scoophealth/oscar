@@ -87,7 +87,6 @@ public class dxQuickListItemsHandler {
                 }
                 rs.close();
             }
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -119,7 +118,6 @@ public class dxQuickListItemsHandler {
                 }
                 rs.close();
             }
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

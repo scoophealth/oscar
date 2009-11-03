@@ -84,7 +84,6 @@ public class FrmBCAR2007Record extends FrmRecord {
                 
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formBCAR2007 WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
             FrmRecordHelp frh = new FrmRecordHelp();

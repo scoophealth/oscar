@@ -64,8 +64,6 @@ public class EctSaveEncounterAction
       }
       rs.close();
 
-      dbhandler.CloseConn();
-            
       return latestID;
   }
   
@@ -253,7 +251,6 @@ public class EctSaveEncounterAction
                 dbhandler.RunSQL(s);
               }
             }
-            dbhandler.CloseConn();
           }
           catch (SQLException sqlexception) {
             System.out.println(sqlexception.getMessage());
@@ -273,7 +270,6 @@ public class EctSaveEncounterAction
           httpservletrequest.getParameter("presBoxSize") + "', '" +
           httpservletrequest.getParameter("rowThreeSize") + "')";
       dbhandler.RunSQL(s);
-      dbhandler.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace(System.out);

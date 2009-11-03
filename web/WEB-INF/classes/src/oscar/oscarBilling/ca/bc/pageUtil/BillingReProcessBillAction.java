@@ -355,8 +355,6 @@ public class BillingReProcessBillAction
           n.addNote(billingmasterNo,(String) request.getSession().getAttribute("user"),messageNotes);
         }
       }
-
-      db.CloseConn();
     }
     catch (SQLException e3) {
       System.out.println(e3.getMessage());

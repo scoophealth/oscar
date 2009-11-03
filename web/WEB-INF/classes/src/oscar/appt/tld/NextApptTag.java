@@ -70,7 +70,6 @@ public class NextApptTag extends TagSupport {
                  nextApptDate = rs.getDate("appointment_date");
               }
               rs.close();
-              db.CloseConn();
            }catch(SQLException e)        {
               e.printStackTrace(System.out);
            } 

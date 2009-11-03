@@ -66,14 +66,6 @@ public class EChartDAO {
     catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
   }
 
   /**
@@ -106,7 +98,6 @@ public class EChartDAO {
         echart.setProviderNo(db.getString(rs,"providerNo"));
       }
       rs.close();
-      db.CloseConn();
     }
     catch (SQLException e) {
       e.printStackTrace();

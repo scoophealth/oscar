@@ -94,8 +94,6 @@ public class EctDeleteMeasurementTypesAction extends Action {
             }
             else
                 throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-
-            db.CloseConn();
         }
 
         catch(SQLException e)

@@ -72,8 +72,6 @@ public class MsgMessengerAdminAction extends Action {
               
               MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
               boolean  res = addMake.updateAddressBook();
-              // System.out.println("new address book = ? "+res);
-              db.CloseConn();
            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
 
@@ -109,8 +107,6 @@ public class MsgMessengerAdminAction extends Action {
               rs.close();
               MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
               boolean res = addMake.updateAddressBook();
-              // System.out.println("new address book = ? "+res);
-              db.CloseConn();
            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
          request.setAttribute("groupNo",parent);

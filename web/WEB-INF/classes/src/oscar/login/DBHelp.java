@@ -30,7 +30,6 @@ public class DBHelp {
             ret = false;
             System.out.println(e.getMessage());
         } finally {
-            db.CloseConn();
         }
         return ret;
     }
@@ -60,7 +59,6 @@ public class DBHelp {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
-            db.CloseConn();
         }
         return ret;
     }
@@ -91,7 +89,6 @@ public class DBHelp {
             ret = false;
             _logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")",e);
         } finally {
-            db.CloseConn();
         }
         return ret;
     }
@@ -106,7 +103,6 @@ public class DBHelp {
         } catch (SQLException e) {
             _logger.error("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } finally {
-            db.CloseConn();
         }
         return ret;
     }

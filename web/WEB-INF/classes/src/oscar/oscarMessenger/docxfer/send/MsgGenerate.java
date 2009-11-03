@@ -76,9 +76,6 @@ public class MsgGenerate {
                 }
             }
         }
-        db.CloseConn();
-        // System.out.println(MsgCommxml.toXML(doc));
-        
         return doc;
     }
     

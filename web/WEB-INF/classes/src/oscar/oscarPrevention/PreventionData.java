@@ -101,7 +101,6 @@ public class PreventionData {
 					}
 				}
 			}
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -117,7 +116,6 @@ public class PreventionData {
 			sql = "Insert into preventionsExt (prevention_id,keyval,val) values " + "('" + preventionId + "','" + keyval + "','" + StringEscapeUtils.escapeSql(val) + "')";
 			log.debug(sql);
 			db.RunSQL(sql);
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -141,7 +139,6 @@ public class PreventionData {
 					h.put(key, val);
 				}
 			}
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -158,7 +155,6 @@ public class PreventionData {
 			sql = "update preventions set deleted = '1' where id = '" + id + "' "; // TODO: logg this in the Deletion record table or generic logging table
 			log.debug(sql);
 			db.RunSQL(sql);
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -174,7 +170,6 @@ public class PreventionData {
 			sql = "update preventions set next_date = '" + date + "' where id = '" + id + "' ";
 			log.debug(sql);
 			db.RunSQL(sql);
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -221,7 +216,6 @@ public class PreventionData {
 					list.add(hash);
 				}
 			}
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -322,8 +316,6 @@ public class PreventionData {
 				h.put("age", age);
 				list.add(h);
 			}
-
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -353,7 +345,6 @@ public class PreventionData {
 					comment = null;
 				}
 			}
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -380,7 +371,6 @@ public class PreventionData {
 						.getDate("next_date"), rs.getString("refused"));
 				p.addPreventionItem(pi);
 			}
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -563,8 +553,6 @@ public class PreventionData {
 				log.debug("1" + h.get("preventionType") + " " + h.size());
 				log.debug("id" + h.get("id"));
 			}
-
-			db.CloseConn();
 		}
 		catch (SQLException e) {
 			log.error(e.getMessage(), e);

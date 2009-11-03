@@ -130,7 +130,6 @@ public class CPPData {
          ps.setDate(13,new java.sql.Date(UtilDateUtilities.Today().getTime()));            
          ps.execute();         
          ps.close();
-         db.CloseConn();
       }catch(Exception e){
          e.printStackTrace();
          //inserted = false;
@@ -178,8 +177,6 @@ public class CPPData {
             hm.put("created",created);                           
                         
          }
-         
-         db.CloseConn();
       }catch(Exception e){
          e.printStackTrace();
          //inserted = false;

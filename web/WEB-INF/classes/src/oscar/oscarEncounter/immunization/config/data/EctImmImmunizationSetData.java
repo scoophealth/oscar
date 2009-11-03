@@ -61,7 +61,6 @@ public class EctImmImmunizationSetData {
 					+ UtilMisc.charEscape(providerNo, '\\')
 					+ "')";
 			db.RunSQL(sql);
-			db.CloseConn();
 		} catch (SQLException eee) {
 			System.out.println(eee.getMessage());
 		}
@@ -82,7 +81,6 @@ public class EctImmImmunizationSetData {
 			}
 
 			rs.close();
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			verdict = false;
@@ -106,7 +104,6 @@ public class EctImmImmunizationSetData {
 			}
 
 			rs.close();
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			verdict = false;
@@ -129,7 +126,6 @@ public class EctImmImmunizationSetData {
 			if (rs.next())
 				xmlDoc = db.getString(rs,"setXmlDoc");
 			rs.close();
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -145,7 +141,6 @@ public class EctImmImmunizationSetData {
 					+ " where setId = "
 					+ setId;
 			db.RunSQL(sql);
-			db.CloseConn();
 		} catch (SQLException eee) {
 			System.out.println(eee.getMessage());
 		}

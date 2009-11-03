@@ -58,7 +58,6 @@ public class FrmGrowthChartRecord extends FrmRecord {
                 //props.setProperty("c_phone", db.getString(rs,"phone") +"  "+ db.getString(rs,"phone2"));
             }
             rs.close();
-			db.CloseConn();
         } else {
             String sql = "SELECT * FROM formGrowthChart WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			FrmRecordHelp frh = new FrmRecordHelp();

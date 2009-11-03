@@ -67,14 +67,6 @@ public class PrivateBillTransactionsDAO {
     catch (SQLException ex) {
       ex.printStackTrace();
     }
-    finally{
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
-    }
   }
 
 }

@@ -124,7 +124,6 @@ public class GDMLHandler implements MessageHandler {
                     break;
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Exception in HL7 getMatchingLabs: ", e);
         }

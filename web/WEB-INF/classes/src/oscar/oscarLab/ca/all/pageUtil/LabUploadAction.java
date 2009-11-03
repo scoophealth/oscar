@@ -196,8 +196,6 @@ public class LabUploadAction extends Action {
             }
 
             rs.close();
-            db.CloseConn();
-
             publicKey = base64.decode(keyString.getBytes("ASCII"));;
             X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
@@ -233,8 +231,6 @@ public class LabUploadAction extends Action {
             }
             logger.info("oscar key: "+keyString);
             rs.close();
-            db.CloseConn();
-
             privateKey = base64.decode(keyString.getBytes("ASCII"));
             PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privateKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");

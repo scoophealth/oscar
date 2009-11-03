@@ -131,7 +131,6 @@ public class SecurityTag implements Tag {
             ret.add(roleInObj);
             //System.out.println(roleInObj);
             rs.close();
-            db.CloseConn();
         } catch (java.sql.SQLException e) {
             e.printStackTrace(System.out);
         }

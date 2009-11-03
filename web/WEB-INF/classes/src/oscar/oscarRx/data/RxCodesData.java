@@ -51,8 +51,6 @@ public class RxCodesData {
             }
             
             rs.close();
-            db.CloseConn();
-            
             arr = (FrequencyCode[])lst.toArray(arr);
             
         } catch (SQLException e) {
@@ -78,8 +76,6 @@ public class RxCodesData {
             }
             
             rs.close();
-            db.CloseConn();
-            
             arr = (String[])lst.toArray(arr);
         } catch (SQLException e) {
             System.out.println(e.getMessage());

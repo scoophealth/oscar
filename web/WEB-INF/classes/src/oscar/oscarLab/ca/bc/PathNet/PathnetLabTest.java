@@ -156,7 +156,6 @@ public class PathnetLabTest {
                 ret = null;
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -202,8 +201,6 @@ public class PathnetLabTest {
                 }
                 ccedDocs = sb.toString();
             }
-            
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -279,7 +276,6 @@ public class PathnetLabTest {
                 list.add(gr);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){e.printStackTrace();}
         return list;
     }
@@ -329,7 +325,6 @@ public class PathnetLabTest {
                 rs2.close();
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){e.printStackTrace();}
         return list;
     }

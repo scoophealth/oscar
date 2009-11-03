@@ -97,7 +97,6 @@ public class EctRourkeRecord {
             }
             rs.close();
         }
-        db.CloseConn();
         return props;
     }
 
@@ -188,8 +187,6 @@ public class EctRourkeRecord {
             ret = rsPage.getInt(1);
         }
         rsPage.close();
-        db.CloseConn();
-
         return ret;
     }
 
@@ -244,8 +241,6 @@ public class EctRourkeRecord {
             }//end if
             rs.close();
         }
-        db.CloseConn();
-
         return props;
     }
 
@@ -292,7 +287,6 @@ public class EctRourkeRecord {
                         }
                 }
         rs.close();
-        db.CloseConn();
         }catch(Exception exc){exc.printStackTrace();}
         return retval;
     }

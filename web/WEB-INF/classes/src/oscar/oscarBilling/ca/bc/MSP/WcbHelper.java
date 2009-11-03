@@ -64,8 +64,7 @@ public class WcbHelper {
             wcbEmp.w_opcity    = rs.getString("w_opcity");         
          employers.add(wcbEmp);                  
       }
-      rs.close();          
-      db.CloseConn();                    
+      rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -94,8 +93,7 @@ public class WcbHelper {
          
          claimList.add(wcb);
       }
-      rs.close();          
-      db.CloseConn();                    
+      rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -120,8 +118,7 @@ public class WcbHelper {
          wcb.wcbEmp = wcbEmp;                  
          claimList.add(wcb);
       }
-      rs.close();          
-      db.CloseConn();                    
+      rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }

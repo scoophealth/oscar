@@ -61,8 +61,7 @@ public final class EctInsertTemplateAction extends Action {
                 encounterTmpValue = encounterTmpValue.replaceAll("\n", "\\\\u000A");
                 encounterTmpValue = encounterTmpValue.replaceAll("\r", "\\\\u000D");
                 request.setAttribute("templateValue", encounterTmpValue);
-            }                     
-            db.CloseConn();
+            }
         }
         catch(SQLException e)
         {

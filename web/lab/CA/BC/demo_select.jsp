@@ -100,7 +100,6 @@ function PopupReturn(index){
 		other = !(other);
 	}
 	rs.close();
-	db.CloseConn();
 	int start = Integer.parseInt(startLimit);
 	String next = url + "&orderby=" + orderby + "&startLimit=" + (start + 10),
 	previous = url + "&orderby=" + orderby + "&startLimit=" + (start - 10);

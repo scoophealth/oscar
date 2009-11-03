@@ -39,7 +39,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.caisi.model.Appointment;
 import org.oscarehr.casemgmt.dao.ApptDAO;
 import org.springframework.web.context.WebApplicationContext;
@@ -48,7 +47,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 import oscar.entities.Billing;
 import oscar.entities.Billingmaster;
-
 import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
@@ -103,7 +101,6 @@ public class BillingSaveBillingAction extends Action {
             try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 db.RunSQL(sql);
-                db.CloseConn();
 
             }catch (SQLException e) {
                 log.error(e.getMessage(),e);
@@ -265,7 +262,6 @@ public class BillingSaveBillingAction extends Action {
 //            } finally {
 //                if (db != null) {
 //                    try {
-//                        db.CloseConn();
 //                    } catch (SQLException ex) {
 //                        log.error(ex.getMessage(), ex);
 //                        ex.printStackTrace();
@@ -305,7 +301,6 @@ public class BillingSaveBillingAction extends Action {
 //                billingId = rs.getString(1);
 //            }
 //            rs.close();
-//            db.CloseConn();
 //        } catch (SQLException e) {
 //            log.error(e.getMessage(), e);
 //            e.printStackTrace();
@@ -405,14 +400,6 @@ public class BillingSaveBillingAction extends Action {
             log.error(ex.getMessage(), ex);
             ex.printStackTrace();
         } finally {
-            if (db != null) {
-                try {
-                    db.CloseConn();
-                } catch (SQLException ex1) {
-                    log.error(ex1.getMessage(), ex1);
-                    ex1.printStackTrace();
-                }
-            }
             if (rs != null) {
                 try {
                     rs.close();
@@ -432,7 +419,6 @@ public class BillingSaveBillingAction extends Action {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);
-            db.CloseConn();
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             log.error("LLLOOK: APPT ERROR FOR demo:" + bean.getPatientName() + " date " + curDate);

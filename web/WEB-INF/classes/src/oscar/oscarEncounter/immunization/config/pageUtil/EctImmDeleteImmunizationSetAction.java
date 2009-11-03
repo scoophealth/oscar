@@ -57,7 +57,6 @@ public class EctImmDeleteImmunizationSetAction extends Action {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = stringBuffer.toString();
             db.RunSQL(sql);
-            db.CloseConn();
          }
          catch(SQLException e) {
             System.out.println(e.getMessage());

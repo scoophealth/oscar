@@ -49,7 +49,6 @@ public class FrmchfRecord extends FrmRecord {
  
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formchf WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;

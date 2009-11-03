@@ -82,7 +82,6 @@ public class FrmRourke2006Record extends FrmRecord {
                 }
             }            
         }
-        db.CloseConn();
         props.setProperty("updated", updated);
         return props;
     }
@@ -112,7 +111,6 @@ public class FrmRourke2006Record extends FrmRecord {
 			}
 		}
 	rs.close();
-	db.CloseConn();
 	}catch(Exception exc){exc.printStackTrace();}	
 	return retval;
     }
@@ -160,8 +158,6 @@ public class FrmRourke2006Record extends FrmRecord {
             }//end if
             rs.close();
         }
-        db.CloseConn();
-
         return props;
     }
 

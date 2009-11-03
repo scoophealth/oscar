@@ -117,7 +117,6 @@ public class ServiceCodeValidationLogic {
       if (rs.next()) {
         v.setGender(rs.getString(1));
       }
-      db.CloseConn();
       rs.close();
     }
     catch (SQLException ex) {
@@ -146,7 +145,6 @@ public class ServiceCodeValidationLogic {
         v.setMinAge(rs.getInt(1));
         v.setMaxAge(rs.getInt(2));
       }
-      db.CloseConn();
       rs.close();
     }
     catch (SQLException ex) {
@@ -182,7 +180,6 @@ public class ServiceCodeValidationLogic {
       if (index == 0) {
         ret = -1;
       }
-      db.CloseConn();
       rs.close();
     }
     catch (SQLException ex) {
@@ -218,7 +215,6 @@ public class ServiceCodeValidationLogic {
       if (index == 0) {
         ret = -1;
       }
-      db.CloseConn();
       rs.close();
     }
     catch (SQLException ex) {
@@ -252,7 +248,6 @@ public class ServiceCodeValidationLogic {
         int numCodes = rs.getInt(1);
         ret = numCodes < 4;
       }
-      db.CloseConn();
       rs.close();
     }
     catch (SQLException ex) {
@@ -422,7 +417,6 @@ public class ServiceCodeValidationLogic {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {

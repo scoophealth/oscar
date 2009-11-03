@@ -49,7 +49,6 @@ public class FrmARRecord extends FrmRecord {
                         .Today(), "yyyy/MM/dd"));
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formAR WHERE demographic_no = " + demographicNo
                     + " AND ID = " + existingID;
@@ -96,7 +95,6 @@ public class FrmARRecord extends FrmRecord {
             }
 
             rs.close();
-            db.CloseConn();
         }
         return ret;
     }

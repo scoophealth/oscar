@@ -116,7 +116,6 @@ public class ProviderData {
                 }
 
                 rs.close();
-                db.CloseConn();
                                
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
@@ -156,7 +155,6 @@ public class ProviderData {
                 }
 
                 rs.close();
-                db.CloseConn();
                                
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
@@ -489,7 +487,6 @@ public class ProviderData {
 		provider.put("ohipNo",db.getString(rs,"ohip_no"));
                 result.add(provider);
             }
-            db.CloseConn();            
             return result;
         }catch(Exception e){
             System.out.println("exception in ProviderData:"+e);
@@ -509,7 +506,6 @@ public class ProviderData {
                                     
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
             ResultSet rs = db.GetSQL(sql);            
-            db.CloseConn();            
             if ( rs.next() ) {            
                 return ( db.getString(rs,"first_name") + " " + db.getString(rs,"last_name") );            
             } else {                            
@@ -565,8 +561,6 @@ public class ProviderData {
 	if(rs.next()) key = rs.getInt(1);
 	add_record.close();
 	rs.close();
-	db.CloseConn();
-	
 	return key;
     }
     
@@ -578,8 +572,6 @@ public class ProviderData {
 	ResultSet rs = db.GetSQL(sql);
 	if (rs.next()) providerNo = db.getString(rs,1);
 	rs.close();
-	db.CloseConn();
-	
 	if (providerNo!=null && !providerNo.trim().equals("")) {
 	    int lastPN = Integer.valueOf(providerNo);
 	    lastPN = lastPN<-100 ? lastPN-1 : -101;

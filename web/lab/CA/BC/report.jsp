@@ -17,12 +17,10 @@
 	if(null != save){
 		oscar.oscarDB.DBHandler dbSave = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
 		dbSave.RunSQL(update_doc_notes.replaceAll("@pid", pid).replaceAll("@notes", oscar.Misc.mysqlEscape((String)request.getParameter("notes"))));
-		dbSave.CloseConn();
 	}
 	if(null != sign){
 		oscar.oscarDB.DBHandler dbSign = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
 		dbSign.RunSQL(update_lab_report_signed.replaceAll("@pid", sign).replaceAll("@provider_no", (String)session.getAttribute("user")));
-		dbSign.CloseConn();
 	}
 	if(null == pid){
 		out.print("<script language=\"JavaScript\">window.close();</script>");
@@ -219,7 +217,6 @@ function Sign(check){
 <%
 	}
 	rs.close();
-	db.CloseConn();
 %>
 </form>
 </body>

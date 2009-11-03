@@ -42,7 +42,6 @@ public class ProSignatureData {
                 if(rs.next())
                     retval = true;
                 rs.close();
-                db.CloseConn();
             }
             catch(SQLException e)
             {
@@ -62,7 +61,6 @@ public class ProSignatureData {
              if(rs.next())
                 retval = db.getString(rs,"signature");
              rs.close();
-             db.CloseConn();
           }
           catch(SQLException e){
              System.out.println("There has been an error while retrieving a provider's signature");
@@ -89,7 +87,6 @@ public class ProSignatureData {
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              String sql = "insert into  providerExt (provider_no,signature) values ('"+providerNo+"','"+s.q(signature)+"') ";
              db.RunSQL(sql);
-             db.CloseConn();
           }
           catch(SQLException e){
              System.out.println("There has been an error while adding a provider's signature");
@@ -105,7 +102,6 @@ public class ProSignatureData {
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              String sql = "update  providerExt set signature = '"+s.q(signature)+"' where provider_no = '"+providerNo+"' ";
              db.RunSQL(sql);
-             db.CloseConn();
           }
           catch(SQLException e){
              System.out.println("There has been an error while updating a provider's signature");

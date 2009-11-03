@@ -69,8 +69,6 @@ public class FrmLabReq07Record extends FrmRecord {
             }
             rs.close();
 
-            db.CloseConn();
-
         } else {
             String sql = "SELECT * FROM formLabReq07 WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;
@@ -143,8 +141,6 @@ public class FrmLabReq07Record extends FrmRecord {
             
         }
         rs.close();
-
-        db.CloseConn();
 
         return props;
     }

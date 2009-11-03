@@ -158,8 +158,6 @@ public class FrmSelectAction extends Action {
                         }
                     }
                 }
-                
-                db.CloseConn();
             }
            
             catch(SQLException e)

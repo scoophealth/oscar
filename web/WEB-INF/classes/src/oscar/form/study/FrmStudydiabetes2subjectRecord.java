@@ -73,8 +73,6 @@ public class FrmStudydiabetes2subjectRecord extends FrmStudyRecord {
             }
             rs.close();
         }
-        db.CloseConn();
-        //props.list(System.out);
         return props;
     }
 
@@ -130,7 +128,6 @@ public class FrmStudydiabetes2subjectRecord extends FrmStudyRecord {
         if(rs.next())
             ret = rs.getInt(1);
         rs.close();
-        db.CloseConn();
         return ret;
     }
 

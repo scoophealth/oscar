@@ -101,26 +101,18 @@ public class HSFODAO {
             st.setDate(28,new java.sql.Date(patientData.getConsentDate().getTime()) );
             st.executeUpdate();
             st.clearParameters();
-            //st.close();        
-            //db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
             se.printStackTrace();
         }catch (Exception ne) {
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
             ne.printStackTrace();
-        }finally {
-			
+        }finally {			
 			if (st != null)
 				try {
 					st.close();
 				} catch (SQLException e) {
-				}
-			if (db != null)
-				try {
-					db.CloseConn();
-				} catch (SQLException e) {
-				}
+			}
 		}
     }
     
@@ -198,8 +190,6 @@ public class HSFODAO {
             
             st.executeUpdate();
             st.clearParameters();
-            //st.close();
-            //db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
@@ -210,12 +200,7 @@ public class HSFODAO {
 				try {
 					st.close();
 				} catch (SQLException e) {
-				}
-			if (db != null)
-				try {
-					db.CloseConn();
-				} catch (SQLException e) {
-				}
+			}
 		}
         
     }
@@ -232,7 +217,6 @@ public class HSFODAO {
                 Connection connect = db.GetConnection();
 	        st = connect.prepareStatement(sqlstatement);
 	        st.executeUpdate();
-                //db.CloseConn();
             }catch (SQLException se) {
 				System.out.println("SQL Error while inserting into the database : "+ se.toString());
 	    }catch (Exception ne) {
@@ -244,11 +228,6 @@ public class HSFODAO {
 	    			try {
 	    				st.clearParameters();
 	    				st.close();
-	    			} catch (SQLException e) {
-				}
-	    		if (db != null)
-	    			try {
-					db.CloseConn();
 	    			} catch (SQLException e) {
 				}
 		}
@@ -272,7 +251,6 @@ public class HSFODAO {
             while(rs.next()){
                 i++;
             }
-            //db.CloseConn();
         }catch (SQLException se) {
                             System.out.println("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
@@ -289,11 +267,6 @@ public class HSFODAO {
     			try {
     				st.clearParameters();
     				st.close();
-    			} catch (SQLException e) {
-			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
     			} catch (SQLException e) {
 			}
         }
@@ -327,7 +300,6 @@ public class HSFODAO {
                 if(rs.next()){
                     hasLockedVisit = true;
                 }
-                //db.CloseConn();
             }catch (SQLException se) {
 				System.out.println("SQL Error while inserting into the database : "+ se.toString());
 	    }catch (Exception ne) {
@@ -346,11 +318,7 @@ public class HSFODAO {
     				st.close();
     			} catch (SQLException e) {
 			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
-    			} catch (SQLException e) {
-			}
+    		
         }
             return hasLockedVisit;
     }
@@ -517,7 +485,6 @@ public class HSFODAO {
             }
             st.clearParameters();
             //st.close();
-            //db.CloseConn();
         }catch (SQLException se) {
             se.printStackTrace();
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
@@ -531,11 +498,6 @@ public class HSFODAO {
     			try {
     				
     				st.close();
-    			} catch (SQLException e) {
-			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
     			} catch (SQLException e) {
 			}
         }
@@ -571,11 +533,6 @@ public class HSFODAO {
 			if (ps != null)
 				try {
 					ps.close();
-				} catch (SQLException e) {
-				}
-			if (db != null)
-				try {
-					db.CloseConn();
 				} catch (SQLException e) {
 				}
 		}
@@ -624,11 +581,6 @@ public class HSFODAO {
 			if (ps != null)
 				try {
 					ps.close();
-				} catch (SQLException e) {
-				}
-			if (db != null)
-				try {
-					db.CloseConn();
 				} catch (SQLException e) {
 				}
 		}
@@ -687,7 +639,6 @@ public class HSFODAO {
             }
             //result.close();
             //sql.close();
-            //db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
@@ -703,11 +654,6 @@ public class HSFODAO {
     			try {
     				
     				sql.close();
-    			} catch (SQLException e) {
-			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
     			} catch (SQLException e) {
 			}
         }
@@ -737,7 +683,6 @@ public class HSFODAO {
            }
 //           result.close();
 //           sql.close();
-//           db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
@@ -753,11 +698,6 @@ public class HSFODAO {
     			try {
     				
     				sql.close();
-    			} catch (SQLException e) {
-			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
     			} catch (SQLException e) {
 			}
         }
@@ -884,7 +824,6 @@ public class HSFODAO {
 //            query.clearParameters();
 //            query.close();
 //            
-//            db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
@@ -900,11 +839,6 @@ public class HSFODAO {
     			try {
     				
     				query.close();
-    			} catch (SQLException e) {
-			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
     			} catch (SQLException e) {
 			}
         }
@@ -1053,11 +987,6 @@ public class HSFODAO {
 	    				sql.close();
 	    			} catch (SQLException e) {
 				}
-	    		if (db != null)
-	    			try {
-					db.CloseConn();
-	    			} catch (SQLException e) {
-				}
 	        }
 		
 	     
@@ -1085,7 +1014,6 @@ public class HSFODAO {
             }
             System.out.println("ID retrieved: " + ID); 
 //            sql.close();
-//            db.CloseConn();
          }catch(Exception e ){
                 
          }finally {
@@ -1094,11 +1022,6 @@ public class HSFODAO {
 	    			try {
 	    				
 	    				sql.close();
-	    			} catch (SQLException e) {
-				}
-	    		if (db != null)
-	    			try {
-					db.CloseConn();
 	    			} catch (SQLException e) {
 				}
 	        }
@@ -1227,11 +1150,6 @@ public class HSFODAO {
 	    				sql.close();
 	    			} catch (SQLException e) {
 				}
-	    		if (db != null)
-	    			try {
-					db.CloseConn();
-	    			} catch (SQLException e) {
-				}
 	        }
 	     return visitData;
 	 }
@@ -1256,7 +1174,6 @@ public class HSFODAO {
             }
 //            result.close();
 //            sql.close();
-//            db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
@@ -1272,11 +1189,6 @@ public class HSFODAO {
     			try {
     				
     				sql.close();
-    			} catch (SQLException e) {
-			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
     			} catch (SQLException e) {
 			}
         }
@@ -1455,7 +1367,6 @@ public class HSFODAO {
             }
 //            result.close();
 //            sql.close();
-//            db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
@@ -1471,11 +1382,6 @@ public class HSFODAO {
     			try {
     				
     				sql.close();
-    			} catch (SQLException e) {
-			}
-    		if (db != null)
-    			try {
-				db.CloseConn();
     			} catch (SQLException e) {
 			}
         }
@@ -1615,7 +1521,6 @@ public class HSFODAO {
 //            st.executeUpdate();
 //            st.clearParameters();
 //            st.close();
-//            db.CloseConn();
 //        }catch (SQLException se) {
 //            System.out.println("SQL Error while inserting into the database : "+ se.toString());
 //        }catch (Exception ne) {

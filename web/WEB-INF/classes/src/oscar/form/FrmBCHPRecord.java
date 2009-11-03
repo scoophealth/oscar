@@ -67,8 +67,6 @@ public class FrmBCHPRecord extends FrmRecord {
                 props.setProperty("pg1_md", "Dr. "+proData.getLast_name());
                 
             }
-                
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formBCHP WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
             FrmRecordHelp frh = new FrmRecordHelp();

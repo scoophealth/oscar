@@ -299,7 +299,6 @@ public final class FrmSetupFormAction extends Action {
                 if (rs.next())
                         s = dbhandler.getString(rs,"billing_date");
                 rs.close();
-                dbhandler.CloseConn();
             } catch (SQLException sqlexception) {
                 System.out.println(sqlexception.getMessage());
         }
@@ -427,9 +426,7 @@ public final class FrmSetupFormAction extends Action {
                 mt.setLastDateEntered(db.getString(rs,"dateEntered"));                
             }
                             
-            rs.close();                                                               
-                            
-            db.CloseConn();
+            rs.close();
         }
         catch (SQLException e) {
             e.printStackTrace();

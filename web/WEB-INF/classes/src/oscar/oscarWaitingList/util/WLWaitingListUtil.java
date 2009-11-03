@@ -51,7 +51,6 @@ public class WLWaitingListUtil {
             System.out.println("WLWaitingListUtil.removeFromWaitingList():" + e.getMessage());         
 	    }finally{
 	    	try{
-	            db.CloseConn();
 	    	}catch(Exception ex2){
 	        	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
 	    	}
@@ -102,8 +101,7 @@ public class WLWaitingListUtil {
                 System.out.println("WLWaitingListUtil.add2WaitingList():" + e.getMessage());         
 	        }finally{
 	        	try{
-		            rs.close(); 
-		            db.CloseConn();
+		            rs.close();
 	        	}catch(Exception ex2){
 	            	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
 	        	}
@@ -172,8 +170,7 @@ public class WLWaitingListUtil {
 	            System.out.println("WLWaitingListUtil.updateWaitingListRecord():" + e.getMessage());         
 	        }finally{
 	        	try{
-		            rs.close(); 
-		            db.CloseConn();
+		            rs.close();
 	        	}catch(Exception ex2){
 	            	System.out.println("WLWaitingListUtil.updateWaitingListRecord(1):" + ex2.getMessage()); 
 	        	}
@@ -221,8 +218,7 @@ public class WLWaitingListUtil {
 	            System.out.println("WLWaitingListUtil.updateWaitingList():" + e.getMessage());         
 	        }finally{
 	        	try{
-		            rs.close(); 
-		            db.CloseConn();
+		            rs.close();
 	        	}catch(Exception ex2){
 	            	System.out.println("WLWaitingListUtil.updateWaitingList(1):" + ex2.getMessage()); 
 	        	}
@@ -292,8 +288,7 @@ public class WLWaitingListUtil {
         	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex.getMessage()); 
         }finally{
         	try{
-	            rs.close(); 
-	            db.CloseConn();
+	            rs.close();
         	}catch(Exception ex2){
             	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
         	}

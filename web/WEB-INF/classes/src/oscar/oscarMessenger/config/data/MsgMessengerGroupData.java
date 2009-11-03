@@ -60,7 +60,6 @@ public class MsgMessengerGroupData {
                     retval = db.getString(rs,"groupDesc");
                  }
               rs.close();
-              db.CloseConn();
          }catch (Exception e){ e.printStackTrace(System.out); }
       }
 
@@ -80,7 +79,6 @@ public class MsgMessengerGroupData {
                  retval = db.getString(rs,"parentID");
               }
            rs.close();
-           db.CloseConn();
          }catch (Exception e){ e.printStackTrace(System.out); }
       return retval;
    }
@@ -101,7 +99,6 @@ public class MsgMessengerGroupData {
                  numGroups++;
               }
            rs.close();
-           db.CloseConn();
       }catch (Exception e){ e.printStackTrace(System.out); }
    return stringBuffer.toString();
    }
@@ -120,7 +117,6 @@ public class MsgMessengerGroupData {
           groupMemberVector.add(db.getString(rs,"provider_No"));
         }
         rs.close();
-        db.CloseConn();
       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
       return groupMemberVector;
@@ -180,7 +176,6 @@ public class MsgMessengerGroupData {
 
 
               rs.close();
-              db.CloseConn();
           }catch (Exception e){ e.printStackTrace(System.out); }
 
    }
@@ -206,10 +201,6 @@ public class MsgMessengerGroupData {
                  }
               rs.close();
            }
-
-
-
-           db.CloseConn();
          }catch (Exception e){ e.printStackTrace(System.out); }
          stringBuffer.insert(0,"<a href=\"MessengerAdmin.jsp?groupNo=0\">Root</a>");
          return stringBuffer.toString();

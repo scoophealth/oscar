@@ -157,9 +157,6 @@ public class RptDemographicQuerySaver {
                   +"  '"+sqRosterStatus+"', '"+s.q(sqSex)+"', '"+sqProviderNo+"' , '"+sqPatientStatus+"','"+sqQueryName+"','1')";;
                   System.out.println("sql statement : "+sql);
                   db.RunSQL(sql);
-
-
-                  db.CloseConn();
        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
 
 

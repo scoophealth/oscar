@@ -84,8 +84,6 @@ public class ForwardingRulesAction extends Action{
                     String sql = "UPDATE incomingLabRules SET status='"+status+"' WHERE archive='0' AND provider_no='"+providerNo+"'";
                     db.RunSQL(sql);
                 }
-                
-                db.CloseConn();
             }catch(Exception e){
                 logger.error("Could not update forwarding rules", e);
                 return mapping.findForward("failure");
@@ -108,7 +106,6 @@ public class ForwardingRulesAction extends Action{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"'";
             db.RunSQL(sql);
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Could not clear forwarding rules", e);
             return false;
@@ -137,8 +134,6 @@ public class ForwardingRulesAction extends Action{
                 logger.info(sql);
                 db.RunSQL(sql);
             }
-            
-            db.CloseConn();
         }catch(Exception e){
             logger.error("Could not remove provider '"+remProviderNum+"' from the forwarding rules", e);
             return false;

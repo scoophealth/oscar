@@ -36,7 +36,6 @@ public class DoctorList {
                 dnl.add(pb);
                 
             }
-            db.CloseConn();
         }
         catch(SQLException e)
         {

@@ -115,8 +115,6 @@ public class EctAddMeasurementStyleSheetAction extends Action {
                     bos.write(buffer, 0, bytesRead);
             }
             bos.close();
-            db.CloseConn();
-            //close the stream
             stream.close();
         }
         catch (FileNotFoundException fnfe) {
@@ -148,8 +146,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
             System.out.println("Sql Statement: " + sql);
-            db.RunSQL(sql);            
-            db.CloseConn();
+            db.RunSQL(sql);
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

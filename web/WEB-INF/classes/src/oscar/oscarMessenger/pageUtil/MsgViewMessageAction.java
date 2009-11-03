@@ -150,7 +150,6 @@ public class MsgViewMessageAction extends Action {
 
           //}
          rs.close();
-         db.CloseConn();
 
         }
         catch (java.sql.SQLException e){ 

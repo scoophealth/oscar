@@ -60,7 +60,6 @@ public class BillingFormData {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -90,7 +89,6 @@ public class BillingFormData {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -170,8 +168,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
-
       arr = (BillingService[]) lst.toArray(arr);
 
     }
@@ -216,8 +212,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
-
       arr = (BillingService[]) lst.toArray(arr);
 
     }
@@ -257,8 +251,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
-
       arr = (Diagnostic[]) lst.toArray(arr);
 
     }
@@ -296,8 +288,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
-
       arr = (Location[]) lst.toArray(arr);
 
     }
@@ -335,8 +325,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
-
       arr = (BillingVisit[]) lst.toArray(arr);
 
     }
@@ -376,8 +364,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
-
       arr = (BillingPhysician[]) lst.toArray(arr);
 
     }
@@ -415,8 +401,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
-
       arr = (BillingForm[]) lst.toArray(arr);
 
     }
@@ -582,7 +566,6 @@ public class BillingFormData {
         billType = rs.getString("billingtype");
       }
       rs.close();
-      db.CloseConn();
     }
     catch (SQLException e) {
       System.out.println(e.getMessage());
@@ -612,7 +595,6 @@ public class BillingFormData {
             rs.getString("first_name");
       }
       rs.close();
-      db.CloseConn();
 
     }
     catch (SQLException e) {
@@ -644,7 +626,6 @@ public class BillingFormData {
         prac_no = rs.getString("ohip_no");
       }
       rs.close();
-      db.CloseConn();
 
     }
     catch (SQLException e) {
@@ -676,7 +657,6 @@ public class BillingFormData {
         prac_no = rs.getString("billing_no");
       }
       rs.close();
-      db.CloseConn();
 
     }
     catch (SQLException e) {
@@ -702,7 +682,6 @@ public class BillingFormData {
         dxdesc = rs.getString("description");
       }
       rs.close();
-      db.CloseConn();
     }
     catch (SQLException e) {
       System.out.println(e.getMessage());
@@ -723,7 +702,6 @@ public class BillingFormData {
         codeDesc = rs.getString("description");
       }
       rs.close();
-      db.CloseConn();
     }
     catch (SQLException e) {
       System.out.println(e.getMessage());
@@ -748,7 +726,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
     }
     catch (SQLException e) {
       System.out.println(e.getMessage());
@@ -774,7 +751,6 @@ public class BillingFormData {
       }
 
       rs.close();
-      db.CloseConn();
     }
     catch (SQLException e) {
       System.out.println(e.getMessage());
@@ -797,7 +773,6 @@ public class BillingFormData {
                              svc[i].service_code + " : " + rs.getString(1));
         }
         rs.close();
-        db.CloseConn();
       }
     }
     catch (SQLException e) {
@@ -826,16 +801,6 @@ public class BillingFormData {
     }
     catch (SQLException e) {
       e.printStackTrace();
-    }
-    finally {
-      if (db != null) {
-        try {
-          db.CloseConn();
-        }
-        catch (SQLException ex) {
-          ex.printStackTrace();
-        }
-      }
     }
     return rs;
   }

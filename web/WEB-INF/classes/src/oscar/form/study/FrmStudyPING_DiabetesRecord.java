@@ -57,7 +57,6 @@ public class FrmStudyPING_DiabetesRecord extends FrmStudyRecord {
                 props.setProperty("pName", db.getString(rs,"pName"));
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no = "
                 + demographicNo + " AND ID = " + existingID;

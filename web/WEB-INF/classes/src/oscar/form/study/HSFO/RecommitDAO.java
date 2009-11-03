@@ -64,11 +64,6 @@ public class RecommitDAO {
 						st.close();
 					} catch (SQLException e) {
 					}
-				if (db != null)
-					try {
-						db.CloseConn();
-					} catch (SQLException e) {
-					}
 			}
 	        return reSchedule;
 	 }
@@ -103,11 +98,6 @@ public class RecommitDAO {
 						st.close();
 					} catch (SQLException e) {
 					}
-			 if (db != null)
-				try {
-						db.CloseConn();
-					} catch (SQLException e) {
-					}
 			}
 	     
 	 }
@@ -140,11 +130,6 @@ public class RecommitDAO {
 	    	 if (st != null)
 				try {
 						st.close();
-					} catch (SQLException e) {
-					}
-			 if (db != null)
-				try {
-						db.CloseConn();
 					} catch (SQLException e) {
 					}
 			}

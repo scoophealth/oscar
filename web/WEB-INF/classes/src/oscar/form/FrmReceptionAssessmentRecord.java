@@ -49,7 +49,6 @@ public class FrmReceptionAssessmentRecord  extends FrmRecord {
                     props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
             rs.close();
-			db.CloseConn();
 
         } else {
             String sql = "SELECT * FROM formreceptionassessment WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;

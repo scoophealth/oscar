@@ -387,7 +387,6 @@ public class FrmFormAction extends Action {
                 }
                 rs.close();                
             }
-            db.CloseConn();
         }
         catch(SQLException e){
             System.out.println(e.getMessage());

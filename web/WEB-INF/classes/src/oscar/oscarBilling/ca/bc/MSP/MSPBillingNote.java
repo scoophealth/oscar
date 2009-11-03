@@ -72,8 +72,7 @@ public class MSPBillingNote {
                         "'1')";
       
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                db.RunSQL(notesql);
-                db.CloseConn();                    
+                db.RunSQL(notesql);                    
    }
    
    /**
@@ -94,8 +93,7 @@ public class MSPBillingNote {
          n.setProviderNo(rs.getString("provider_no"));
          n.setNote(rs.getString("note"));
       }
-      rs.close();          
-      db.CloseConn();                    
+      rs.close();                    
       }catch (Exception e){
          e.printStackTrace();        
       }
@@ -112,8 +110,7 @@ public class MSPBillingNote {
          if(rs.next()){
             retStr = rs.getString("note");
          }
-         rs.close();          
-         db.CloseConn();                    
+         rs.close();                    
          }catch (Exception e){
             e.printStackTrace();        
          }

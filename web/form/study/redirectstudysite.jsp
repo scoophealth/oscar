@@ -50,8 +50,6 @@
 	}
 
 	rs.close();
-	db.CloseConn();
-
 
 	String studyURL = baseURL + "?DI=PEPPER&DIPatID=&UN=" + username + "&PW=" + password ;
 	response.sendRedirect(studyURL);

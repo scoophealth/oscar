@@ -78,7 +78,7 @@ public class CRHelper implements RolesProvider {
 			e.printStackTrace();
 			return new String[0];
 		}finally{
-			if(db!=null) try{db.CloseConn();}catch(Throwable t){}
+			if(db!=null) try{}catch(Throwable t){}
 		}
 	}
 	

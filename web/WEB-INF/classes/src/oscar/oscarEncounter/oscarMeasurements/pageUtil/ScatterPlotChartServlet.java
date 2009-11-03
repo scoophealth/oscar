@@ -248,7 +248,6 @@ public class ScatterPlotChartServlet extends HttpServlet
                         rs.next();
                     }
                     rs.close();
-                    db.CloseConn();
                 }
                 else if (type.compareTo("BP")==0){
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -297,7 +296,6 @@ public class ScatterPlotChartServlet extends HttpServlet
                     }*/
                     System.out.println("Store blood pressure data to a new array successfully" );
                     rs.close();
-                    db.CloseConn();
                 }
                 
             }
@@ -330,7 +328,6 @@ public class ScatterPlotChartServlet extends HttpServlet
                 }
                 
                 rs.close();
-                db.CloseConn();
 
             }
             catch(SQLException e)

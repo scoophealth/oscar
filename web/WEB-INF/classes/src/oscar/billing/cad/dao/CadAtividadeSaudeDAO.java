@@ -84,7 +84,6 @@ public class CadAtividadeSaudeDAO extends DAO {
                 }
             }
         } finally {
-            db.CloseConn();
         }
 
         return beans;

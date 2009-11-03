@@ -272,7 +272,6 @@ public class MSPReconcile {
         }
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -311,7 +310,6 @@ public class MSPReconcile {
         }
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -344,7 +342,6 @@ public class MSPReconcile {
         s = createCorrectionsString(exp);
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -408,7 +405,6 @@ public class MSPReconcile {
             }
           }
           rs.close();
-          db.CloseConn();
         }
         catch (Exception e) {
           System.out.println("Through an error in getCurrentErrorMessages:" +
@@ -448,7 +444,6 @@ public class MSPReconcile {
         retval.add(rs.getString("t_dataseq"));
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -475,7 +470,6 @@ public class MSPReconcile {
         map.put(key, value);
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -625,7 +619,6 @@ public class MSPReconcile {
         billSearch.count++;
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -670,7 +663,6 @@ public class MSPReconcile {
         list.add(b);
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -932,7 +924,6 @@ public class MSPReconcile {
         }
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1037,7 +1028,6 @@ public class MSPReconcile {
         }
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1067,7 +1057,6 @@ public class MSPReconcile {
         }
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       System.out.println("name: " + name + " value: " + value);
@@ -1131,7 +1120,6 @@ public class MSPReconcile {
     finally {
       try {
         if (db != null) {
-          db.CloseConn();
         }
         if (rs != null) {
           rs.close();
@@ -1186,7 +1174,6 @@ public class MSPReconcile {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL("update billingmaster set billingstatus = '" + stat +
                 "' where billingmaster_no = '" + billingNo + "'");
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1200,8 +1187,6 @@ public class MSPReconcile {
                 "' where billing_no = '" + billingNo + "'");
       db.RunSQL("update billing set status = '" + stat +
                 "' where billing_no = '" + billingNo + "'");
-
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1232,16 +1217,6 @@ public class MSPReconcile {
     }
     catch (Exception e) {
       e.printStackTrace();
-    }
-    finally {
-      try {
-        if (db != null) {
-          db.CloseConn();
-        }
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
     }
   }
 
@@ -1277,16 +1252,6 @@ public class MSPReconcile {
     catch (Exception e) {
       e.printStackTrace();
     }
-    finally {
-      try {
-        if (db != null) {
-          db.CloseConn();
-        }
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
   }
 
   /**
@@ -1319,16 +1284,6 @@ public class MSPReconcile {
       }
       catch (Exception e) {
         e.printStackTrace();
-      }
-      finally {
-        try {
-          if (db != null) {
-            db.CloseConn();
-          }
-        }
-        catch (SQLException ex) {
-          ex.printStackTrace();
-        }
       }
     }
   }
@@ -1368,16 +1323,6 @@ public class MSPReconcile {
     catch (SQLException ex) {
       ex.printStackTrace();
     }
-    finally {
-      try {
-        if (db != null) {
-          db.CloseConn();
-        }
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
-    }
   }
 
   /**
@@ -1391,7 +1336,6 @@ public class MSPReconcile {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL("update billingmaster set billingstatus = '" + stat +
                 "' where billingmaster_no = '" + billingMasterNo + "'");
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1412,7 +1356,6 @@ public class MSPReconcile {
         currStat = rs.getString("billingstatus");
       }
       rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1470,12 +1413,6 @@ public class MSPReconcile {
                            newStat);
         db.RunSQL("update billingmaster set billingstatus = '" + newStat +
                   "' where billingmaster_no = '" + billingNo + "'");
-        db.CloseConn();
-        /**
-         * Ensure that an audit of the currently modified bill is captured
-         * @todo Test this audit event
-         */
-
         dao.createBillingHistoryArchive(billingNo);
       }
       catch (Exception e) {
@@ -1692,7 +1629,6 @@ public class MSPReconcile {
     finally {
       try {
         if (db != null) {
-          db.CloseConn();
         }
         if (rs != null) {
           rs.close();
@@ -1753,7 +1689,6 @@ public class MSPReconcile {
       }
       finally {
         try {
-          db.CloseConn();
           rs.close();
         }
         catch (SQLException ex1) {
@@ -1791,7 +1726,6 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -1825,7 +1759,6 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -1977,7 +1910,6 @@ public class MSPReconcile {
     finally {
       try {
         rs.close();
-        db.CloseConn();
       }
       catch (SQLException ex) {
         ex.printStackTrace();
@@ -2075,7 +2007,6 @@ public class MSPReconcile {
     finally {
       try {
         rs.close();
-        db.CloseConn();
       }
       catch (SQLException ex) {
         ex.printStackTrace();
@@ -2104,7 +2035,6 @@ public class MSPReconcile {
       if (rs.next()) {
         desc = rs.getString(1);
       }
-      db.CloseConn();
       rs.close();
     }
     catch (SQLException e) {
@@ -2300,16 +2230,6 @@ public class MSPReconcile {
     catch (SQLException ex) {
       ex.printStackTrace();
     }
-    finally {
-      if (db != null) {
-        try {
-          db.CloseConn();
-        }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
-        }
-      }
-    }
     return rs;
   }
 
@@ -2351,7 +2271,6 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -2392,7 +2311,6 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -2426,7 +2344,6 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -2462,7 +2379,6 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -2541,7 +2457,6 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {

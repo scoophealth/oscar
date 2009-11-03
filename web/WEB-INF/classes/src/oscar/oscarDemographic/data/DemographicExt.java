@@ -99,8 +99,7 @@ public class DemographicExt {
                retval = db.getString(rs,"value");
             }
                                       
-            pstmt.close();                                     
-            db.CloseConn();
+            pstmt.close();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -136,8 +135,7 @@ public class DemographicExt {
                }
             }
                                       
-            pstmt.close();                                     
-            db.CloseConn();
+            pstmt.close();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -189,8 +187,7 @@ public class DemographicExt {
                     
             pstmt.executeUpdate();
                                       
-            pstmt.close();                                     
-            db.CloseConn();
+            pstmt.close();
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -225,8 +222,7 @@ public class DemographicExt {
                     
             pstmt.executeUpdate();
                                       
-            pstmt.close();                                     
-            db.CloseConn();
+            pstmt.close();
             
          } catch (SQLException e) {
             System.out.println(e.getMessage());

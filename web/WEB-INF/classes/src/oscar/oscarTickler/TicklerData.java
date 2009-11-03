@@ -81,8 +81,7 @@ public class TicklerData {
       //System.out.println(sql);
       try {         
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            db.RunSQL(sql);            
-            db.CloseConn();         
+            db.RunSQL(sql);         
       } catch (SQLException e) {         
          System.out.println(e.getMessage());
          e.printStackTrace();
@@ -101,8 +100,7 @@ public class TicklerData {
          if (rs.next()){
             hastickler = true;
          }
-         rs.close();
-         db.CloseConn();         
+         rs.close();         
       } catch (SQLException e) {
          System.out.println(e.getMessage());
          e.printStackTrace();

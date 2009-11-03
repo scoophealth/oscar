@@ -54,7 +54,6 @@ public class FrmMMSERecord  extends FrmRecord {
                 props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
             rs.close();
-			db.CloseConn();
 
         } else {
             String sql = "SELECT * FROM formMMSE WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;

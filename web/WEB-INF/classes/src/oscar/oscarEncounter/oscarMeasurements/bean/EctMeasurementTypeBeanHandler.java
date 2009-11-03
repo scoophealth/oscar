@@ -71,7 +71,6 @@ public class EctMeasurementTypeBeanHandler {
 //               ret.setValidationName(getValidation(db.getString(rs,"validation")));
 //            }
 //            rs.close();            
-//            db.CloseConn();
 //        }
 //        catch(SQLException e) {
 //            System.out.println(e.getMessage());
@@ -89,8 +88,7 @@ public class EctMeasurementTypeBeanHandler {
                 validation = db.getString(rs,"name");
                 //System.out.println("setting validation to "+validation);
             }
-            rs.close();            
-            db.CloseConn();
+            rs.close();
         }catch(SQLException e) {
             e.printStackTrace();
         }

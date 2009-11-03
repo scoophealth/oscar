@@ -132,8 +132,6 @@ public class MessageUploader {
             
             String demProviderNo = patientRouteReport( insertID, lastName, firstName, sex, dob, hin, db.GetConnection());
             providerRouteReport( insertID, docNums, db.GetConnection(), demProviderNo, type);
-            db.CloseConn();
-            
             retVal = h.audit();
         }catch(Exception e){
             logger.error("Error uploading lab to database");
@@ -495,7 +493,6 @@ public class MessageUploader {
             }
             
             pstmt.close();
-            db.CloseConn();
             logger.info("Successfully cleaned the database");
             
         }catch(SQLException e){

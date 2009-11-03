@@ -249,7 +249,6 @@ public class MDSSegmentData {
                     rs.close();
                 }
             }
-            db.CloseConn();
         }catch(SQLException e){
             logger.error("In MDS Segment Data: SQL: "+sql, e);
         }

@@ -52,7 +52,6 @@ public class FrmPeriMenopausalRecord  extends FrmRecord {
                     props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
             rs.close();
-			db.CloseConn();
 
         } else {
             String sql = "SELECT * FROM formPeriMenopausal WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;

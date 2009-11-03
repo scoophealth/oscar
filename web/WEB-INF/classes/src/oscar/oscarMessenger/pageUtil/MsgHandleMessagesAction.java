@@ -114,8 +114,6 @@ public  class MsgHandleMessagesAction extends Action {
              java.sql.ResultSet rs;
              String sql = "update messagelisttbl set status = 'del' where provider_no = '"+providerNo+"' and message = '"+messageNo+"'";
              db.RunSQL(sql);
-            
-            db.CloseConn();
 
           }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -162,7 +160,6 @@ public  class MsgHandleMessagesAction extends Action {
                  }
               }
              rs.close();
-             db.CloseConn();
 
            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
@@ -198,7 +195,6 @@ public  class MsgHandleMessagesAction extends Action {
 
 
              rs.close();
-             db.CloseConn();
 
            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 

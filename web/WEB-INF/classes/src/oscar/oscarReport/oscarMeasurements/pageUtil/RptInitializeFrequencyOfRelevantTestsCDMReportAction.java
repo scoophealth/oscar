@@ -96,8 +96,6 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 }
                 else
                     throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
-                                    
-                db.CloseConn();
                 
         }
         

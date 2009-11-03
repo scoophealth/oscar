@@ -182,7 +182,6 @@ public class CommonLabResultData {
                 //statusArray.add( new ReportStatus(db.getString(rs,"first_name")+" "+db.getString(rs,"last_name"), db.getString(rs,"provider_no"), descriptiveStatus(db.getString(rs,"status")), db.getString(rs,"comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CommonLabResultData.getStatusArray()",e);
         }
@@ -205,7 +204,6 @@ public class CommonLabResultData {
             
             String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"' and lab_type = '"+labType+"'";
             ResultSet rs = db.GetSQL(sql);
-            db.CloseConn();
             if(rs.next()){
                 retval = db.getString(rs,"demographic_no");
             }
@@ -241,7 +239,6 @@ public class CommonLabResultData {
                 
             }
             
-            db.CloseConn();
             return result;
             
         }catch(Exception e){
@@ -295,7 +292,6 @@ public class CommonLabResultData {
             // add new entries
             //String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) values "+insertString;
             //result = db.RunSQL(sql);
-            db.CloseConn();
             return true;
         }catch(Exception e){
             Logger l = Logger.getLogger(CommonLabResultData.class);
@@ -362,7 +358,6 @@ public class CommonLabResultData {
                 }
             }
             rs.close();
-            db.CloseConn();
             
         }catch(Exception e){
             e.printStackTrace();
@@ -383,7 +378,6 @@ public class CommonLabResultData {
                 }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in isLabLinkedWithPatient",e);
             
@@ -401,7 +395,6 @@ public class CommonLabResultData {
                 ret = rs.getInt(1);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in getAckCount",e);
             

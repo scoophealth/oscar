@@ -143,7 +143,6 @@ public class JDBCUtil
                 rs.insertRow();
             }
             rs.close();
-            db.CloseConn();
         }   
         catch(Exception e)
         {

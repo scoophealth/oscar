@@ -96,8 +96,6 @@ public class ClinicData {
                  clinic_delim_fax       = db.getString(rs,"clinic_delim_fax"); 
                   
                }
-               
-                db.CloseConn();
             }
             catch(SQLException e)
             {

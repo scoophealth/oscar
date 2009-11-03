@@ -73,7 +73,6 @@ public class TicklerWorker extends Thread {
                 }
             }
             rs.close();
-            db.CloseConn();
         }
         catch (SQLException e) {
             e.printStackTrace();

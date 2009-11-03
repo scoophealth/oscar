@@ -66,7 +66,6 @@ public class BillingBillingManager {
                 }
                 
                 rs.close();
-                db.CloseConn();
                 
             }
             
@@ -107,7 +106,6 @@ public class BillingBillingManager {
             }
             
             rs.close();
-            db.CloseConn();
             
         } catch (SQLException e){ System.out.println(e.getMessage());  }
         
@@ -319,7 +317,6 @@ public class BillingBillingManager {
                 }
                 
                 rs.close();
-                db.CloseConn();
                 
             } catch (SQLException e){ System.out.println(e.getMessage());  }
             

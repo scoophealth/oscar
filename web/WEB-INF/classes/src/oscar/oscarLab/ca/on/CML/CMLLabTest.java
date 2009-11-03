@@ -125,7 +125,6 @@ public class CMLLabTest {
                 }
             }
             rs.close();
-            db.CloseConn();
             
         }catch(Exception e){
             e.printStackTrace();
@@ -172,7 +171,6 @@ public class CMLLabTest {
             }
             
             rs.close();
-            db.CloseConn();
             
         }catch(Exception e){
             e.printStackTrace();
@@ -238,7 +236,6 @@ public class CMLLabTest {
                 }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -265,7 +262,6 @@ public class CMLLabTest {
                 this.totalDType = db.getString(rs,"total_DType");
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -309,7 +305,6 @@ public class CMLLabTest {
                 }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -329,7 +324,6 @@ public class CMLLabTest {
                 count++;
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             log.error("sql: "+sql,e);
         }

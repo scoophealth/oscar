@@ -102,7 +102,6 @@ public class RxPharmacyData {
             updatePharmacy(ID,name,address,city,province,postalCode,phone1,phone2, fax,email,notes);
                                     
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -144,8 +143,7 @@ public class RxPharmacyData {
             +" '1', "
             +" now() )";
                                     
-            db.RunSQL(sql);                                                            
-            db.CloseConn();
+            db.RunSQL(sql);
         } catch (SQLException e) {
            e.printStackTrace();
             System.out.println(e.getMessage());
@@ -161,8 +159,7 @@ public class RxPharmacyData {
       try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
             String sql = "update pharmacyInfo set status = '0' where ID = '"+ID+"'";                                                
-            db.RunSQL(sql);                                                            
-            db.CloseConn();
+            db.RunSQL(sql);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -184,7 +181,6 @@ public class RxPharmacyData {
                pharmacy = new Pharmacy(rs);
             }                                                
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -208,7 +204,6 @@ public class RxPharmacyData {
                pharmacy = new Pharmacy(rs);
             }                                                
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -232,7 +227,6 @@ public class RxPharmacyData {
                pharmacyList.add(getPharmacyByRecordID(db.getString(rs,"maxrec")));
             }                                                
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -255,8 +249,7 @@ public class RxPharmacyData {
             +" '1', "
             +" now() )";
                                     
-            db.RunSQL(sql);                                                            
-            db.CloseConn();
+            db.RunSQL(sql);
         } catch (SQLException e) {
            e.printStackTrace();
             System.out.println(e.getMessage());
@@ -282,7 +275,6 @@ public class RxPharmacyData {
                pharmacy = getPharmacy(db.getString(rs,"pharmacyID"));
             }                                                
             rs.close();
-            db.CloseConn();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

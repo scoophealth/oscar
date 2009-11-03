@@ -85,7 +85,6 @@ public class ArchiveDeletedRecords {
                addRowsToModifiedTable(null,provNo,ArchiveDeletedRecords.DELETE,table,null,xmlStr);
             }
             rs.close();
-            db.CloseConn();
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -107,7 +106,6 @@ public class ArchiveDeletedRecords {
                                ")";            
             System.out.println(insertSql);
             db.RunSQL(insertSql);
-            db.CloseConn();
         }
         catch(SQLException e) {
             e.printStackTrace();

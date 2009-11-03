@@ -85,7 +85,6 @@ public class FrmAdfRecord extends FrmRecord {
 						_dateFormat));
 			}
 			rs.close();
-			db.CloseConn();
 		} else {
 			String sql =
 				"SELECT * FROM formAdf WHERE demographic_no = "

@@ -137,7 +137,6 @@ public class EctViewConsultationRequestsUtil {
             this.patientWillBook.add(db.getString(rs,"patientWillBook"));
          }            
          rs.close();            
-         db.CloseConn();            
       } catch(SQLException e) {            
          System.out.println(e.getMessage());            
          verdict = false;            
@@ -172,7 +171,6 @@ public class EctViewConsultationRequestsUtil {
             patientWillBook.add(db.getString(rs,"patientWillBook"));            
          }                  
          rs.close();         
-         db.CloseConn();         
       } catch(SQLException e) {         
          System.out.println(e.getMessage());         
          verdict = false;         

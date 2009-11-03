@@ -54,8 +54,6 @@ public class DemographicMerged {
         pstmt = conn.prepareStatement(sql);
         pstmt.executeUpdate();
         pstmt.close();
-        
-        db.CloseConn();
     }
     
     public void UnMerge(String demographic_no, String curUser_no) throws SQLException{
@@ -104,7 +102,6 @@ public class DemographicMerged {
         }
         
         pstmt.close();
-        db.CloseConn();
         
     }
     
@@ -123,8 +120,6 @@ public class DemographicMerged {
             head = db.getString(rs,"merged_to");
         
         pstmt.close();
-        db.CloseConn();
-        
         if (head != null)
             head = getHead(head);
         else
@@ -151,9 +146,6 @@ public class DemographicMerged {
         }
         
         pstmt.close();
-        db.CloseConn();
-        
-        // must define size here so it does not increase as the array is added to
         int size = tailArray.size();
         for (int i=0; i < size; i++){
             tailArray.addAll(getTail( (String) tailArray.get(i) ));

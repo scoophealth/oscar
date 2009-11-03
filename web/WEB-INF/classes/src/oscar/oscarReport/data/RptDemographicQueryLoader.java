@@ -116,9 +116,6 @@ public class RptDemographicQueryLoader {
                     String[] t = fromXMLtoArray(mPatientStatus);
                     dRF.setPatientStatus(t);
                   }
-
-
-                  db.CloseConn();
        }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
 
 

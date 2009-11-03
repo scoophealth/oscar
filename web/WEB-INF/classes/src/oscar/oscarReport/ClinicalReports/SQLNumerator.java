@@ -29,7 +29,6 @@
 package oscar.oscarReport.ClinicalReports;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Hashtable;
 
 import oscar.oscarDB.DBHandler;
@@ -102,19 +101,10 @@ public class SQLNumerator implements Numerator {
             }
             System.out.println("demo "+demographicNo+" eval: "+evalTrue);
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
-        finally{
-            if (db != null){
-                try {
-                    db.CloseConn();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
+        
         return evalTrue;
     }
     
@@ -144,19 +134,10 @@ public class SQLNumerator implements Numerator {
             }
             System.out.println("demo "+demographicNo+" eval: "+evalTrue);
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             e.printStackTrace();
         }
-        finally{
-            if (db != null){
-                try {
-                    db.CloseConn();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
+        
         return evalTrue;
     }
     

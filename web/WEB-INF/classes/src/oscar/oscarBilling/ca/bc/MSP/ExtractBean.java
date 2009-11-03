@@ -320,7 +320,6 @@ public class ExtractBean extends Object implements Serializable {
                    ohipRecord = String.valueOf(rCount);
                    ohipClaim = String.valueOf(pCount);
                }
-               db.CloseConn();
            }catch (SQLException e) {
                e.printStackTrace();
            }
@@ -334,7 +333,6 @@ public class ExtractBean extends Object implements Serializable {
          try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(query30);
-            db.CloseConn();
          }catch (SQLException e) {
             e.printStackTrace();
          }
@@ -347,12 +345,6 @@ public class ExtractBean extends Object implements Serializable {
          try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(query30);
-            db.CloseConn();
-            /**
-          * Ensure that an audit of the currently modified bill is captured
-          * @todo Test this audit event
-          */
-
             createBillArchive(newInvNo);
          }catch (SQLException e) {
             e.printStackTrace();
@@ -375,7 +367,6 @@ public class ExtractBean extends Object implements Serializable {
          try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(nsql);
-            db.CloseConn();
          }catch (SQLException e) {
             e.printStackTrace();
          }
@@ -396,7 +387,6 @@ public class ExtractBean extends Object implements Serializable {
                n = rs.getString(1);
             }
             rs.close();
-            db.CloseConn();
          }catch (SQLException e) {
             e.printStackTrace();
          }
@@ -641,7 +631,6 @@ public class ExtractBean extends Object implements Serializable {
          db.GetSQL("SELECT COUNT(billing_no) As `count` FROM billing WHERE status <> 'B' AND billingtype IN ('ICBC', 'WCB', 'MSP')");
          tosubmit = rs.next() && 0 < rs.getInt("count");
          rs.close();
-         db.CloseConn();
       }catch (Exception ex) {
          System.err.println(ex.getMessage());
       }

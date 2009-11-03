@@ -62,7 +62,6 @@ public class EctRemoteAttachments
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e)
         {
@@ -86,7 +85,6 @@ public class EctRemoteAttachments
                  retval.add(db.getString(rs,"locationDesc"));
  	     }
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e)
         {

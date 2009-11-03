@@ -657,7 +657,6 @@ boolean wasBilledLocal(String account,String provider,String billing_date, Strin
        }
         
        rs.close();
-       db.CloseConn(); 
    }catch(Exception wasbilled){
        wasbilled.printStackTrace();
    }

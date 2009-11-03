@@ -81,7 +81,6 @@ public class ManageLetters {
         }catch(Exception e){
             e.printStackTrace();
         }
-        //dbhandler.FinalCloseConn();
     }
     
     //method to archive an existing report

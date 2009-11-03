@@ -73,7 +73,6 @@ public class RAData {
                 list.add(h);
             }
             rs.close();
-            db.CloseConn();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +103,6 @@ public class RAData {
                 list.add(h);
             }
             rs.close();
-            db.CloseConn();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -173,7 +171,6 @@ public class RAData {
                 }
             }
             rs.close();
-            db.CloseConn();
         } catch (Exception e) {
             e.printStackTrace();
         }

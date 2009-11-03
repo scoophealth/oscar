@@ -46,7 +46,6 @@ public class FrmMentalHealthForm14Record extends FrmRecord {
                 
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formMentalHealthForm14 WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;
@@ -109,8 +108,6 @@ public class FrmMentalHealthForm14Record extends FrmRecord {
             }
         }     
         
-
-        db.CloseConn();
 
         return props;
     }

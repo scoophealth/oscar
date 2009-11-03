@@ -66,7 +66,6 @@ public class MsgMessengerCreateGroupAction extends Action {
                  
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
                  addMake.updateAddressBook();
-                 db.CloseConn();
 
                }catch (java.sql.SQLException e){ System.out.println("Update of address book didn't happen when updating groups"); e.printStackTrace(System.out); }
            }else if (type.equals("2")){
@@ -78,7 +77,6 @@ public class MsgMessengerCreateGroupAction extends Action {
 
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
                  addMake.updateAddressBook();
-                 db.CloseConn();
 
                }catch (java.sql.SQLException e){ System.out.println("Update of address book didn't happen when deleting group"); e.printStackTrace(System.out); }
            }

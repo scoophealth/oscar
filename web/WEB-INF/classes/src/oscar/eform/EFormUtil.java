@@ -355,7 +355,6 @@ public class EFormUtil {
                 System.out.println("SQL ====" + sql);
                 db.RunSQL(sql);
             }
-            db.CloseConn();
         } catch (SQLException sqe) { sqe.printStackTrace(); }
    }
    
@@ -518,7 +517,6 @@ public class EFormUtil {
        try {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
-           db.CloseConn();
        } catch (SQLException sqe) {
            sqe.printStackTrace();
        }
@@ -543,7 +541,6 @@ public class EFormUtil {
        try {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            rs = db.GetSQL(sql);
-           db.CloseConn();
        } catch (SQLException sqe) {
            sqe.printStackTrace();
        }

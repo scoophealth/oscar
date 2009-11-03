@@ -117,8 +117,6 @@ public class EctPeriMenopausalRecord
                 ee.printStackTrace(System.out);
             }
         }//end else
-        db.CloseConn();
-
         return props;
     }
 
@@ -203,8 +201,6 @@ public class EctPeriMenopausalRecord
             ret = rs.getInt(1);
         }
         rs.close();
-        db.CloseConn();
-
         return ret;
     }
 }

@@ -49,7 +49,6 @@ public class FrmPalliativeCareRecord  extends FrmRecord {
                 props.setProperty("pName", db.getString(rs,"pName"));
             }
             rs.close();
-			db.CloseConn();
 
         } else {
             String sql = "SELECT * FROM formPalliativeCare WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;

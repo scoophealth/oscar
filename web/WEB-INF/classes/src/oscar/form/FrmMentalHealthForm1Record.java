@@ -45,7 +45,6 @@ public class FrmMentalHealthForm1Record extends FrmRecord {
                 demoProvider = db.getString(rs,"provider_no");
             }
             rs.close();
-            db.CloseConn();
         } else {
             String sql = "SELECT * FROM formMentalHealthForm1 WHERE demographic_no = " + demographicNo + " AND ID = "
                     + existingID;            
@@ -108,8 +107,6 @@ public class FrmMentalHealthForm1Record extends FrmRecord {
             }
         }
         
-
-        db.CloseConn();
 
         return props;
     }

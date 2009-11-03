@@ -149,7 +149,6 @@ public class EctProviderData {
                 provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax, myOscarLoginId, selfLearningPasswd);
             }
             rs.close();
-            db.CloseConn();
         }  catch(SQLException e) {
             System.out.println(e.getMessage());
         }

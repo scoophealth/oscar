@@ -81,8 +81,7 @@ public class WLWaitingListBeanHandler {
             if(rs.next()){
                 waitingListName = db.getString(rs,"name");
             }
-            rs.close();        
-            db.CloseConn();
+            rs.close();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -137,7 +136,6 @@ public class WLWaitingListBeanHandler {
                 }                            
                 rs.close();
             }
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());         

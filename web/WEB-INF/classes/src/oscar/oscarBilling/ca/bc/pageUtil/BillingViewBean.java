@@ -131,7 +131,6 @@ public class BillingViewBean {
       }
       //setBillItem(billingItemsArray);
       rs.close();
-      db.CloseConn();
 
     }
     catch (SQLException e) {
@@ -172,16 +171,6 @@ public class BillingViewBean {
     }
     catch (Exception e) {
       e.printStackTrace();
-    }
-    finally {
-      try {
-        if (db != null) {
-          db.CloseConn();
-        }
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
     }
   }
 
@@ -644,7 +633,6 @@ public class BillingViewBean {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {

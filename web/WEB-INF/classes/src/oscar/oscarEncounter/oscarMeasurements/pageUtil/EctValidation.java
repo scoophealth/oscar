@@ -226,9 +226,7 @@ public class EctValidation{
                     }
                     cssLocation = place+db.getString(rs,"location");
                 }
-            }                                 
-            
-            db.CloseConn();
+            }
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            
@@ -259,9 +257,7 @@ public class EctValidation{
                 if(rs.next()){                    
                     cssName = db.getString(rs,"location");
                 }
-            }                                 
-            
-            db.CloseConn();
+            }
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());            

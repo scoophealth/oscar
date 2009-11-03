@@ -307,7 +307,6 @@ public class EctConsultationFormRequestPrintPdf {
                 pdfDocs.add(fileName);
             }
             rs.close();
-            db.CloseConn();
 
         }catch(DocumentException de) {
             request.setAttribute("printError", new Boolean(true));

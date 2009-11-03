@@ -47,7 +47,6 @@ public class MeasurementMapConfig {
                 ret.add(db.getString(rs, "lab_type"));
             }
             pstmt.close();
-            db.CloseConn();
         } catch (SQLException e) {
             logger.error("Exception in getLoincCodes", e);
         }
@@ -78,7 +77,6 @@ public class MeasurementMapConfig {
             }
 
             pstmt.close();
-            db.CloseConn();
         } catch (SQLException e) {
             logger.error("Exception in getMeasurementMap", e);
         }
@@ -108,7 +106,6 @@ public class MeasurementMapConfig {
             }
 
             pstmt.close();
-            db.CloseConn();
         } catch (SQLException e) {
             logger.error("Exception in getMeasurementMap", e);
         }
@@ -129,7 +126,6 @@ public class MeasurementMapConfig {
                 ret.add(db.getString(rs, "loinc_code"));
             }
             pstmt.close();
-            db.CloseConn();
         } catch (SQLException e) {
             logger.error("Exception in getLoincCodes", e);
         }
@@ -209,7 +205,6 @@ public class MeasurementMapConfig {
             }
 
             pstmt.close();
-            db.CloseConn();
         } catch (SQLException e) {
             logger.error("Exception in getLoincCodes", e);
         }
@@ -241,7 +236,6 @@ public class MeasurementMapConfig {
             }
 
             pstmt.close();
-            db.CloseConn();
         } catch (SQLException e) {
             logger.error("Exception in getMeasurementMap", e);
         }
@@ -275,7 +269,6 @@ public class MeasurementMapConfig {
             }
 
             pstmt.close();
-            db.CloseConn();
         } catch (SQLException e) {
             logger.error("Exception in getUnmappedMeasurements", e);
         }
@@ -294,7 +287,6 @@ public class MeasurementMapConfig {
 
         pstmt.executeUpdate();
         pstmt.close();
-        db.CloseConn();
 
     }
 
@@ -335,7 +327,6 @@ public class MeasurementMapConfig {
         }
 
         pstmt.close();
-        db.CloseConn();
 
     }
 

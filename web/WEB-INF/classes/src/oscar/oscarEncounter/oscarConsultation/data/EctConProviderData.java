@@ -42,7 +42,6 @@ public class EctConProviderData
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()) team = db.getString(rs,"team");
             rs.close();
-            db.CloseConn();
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }

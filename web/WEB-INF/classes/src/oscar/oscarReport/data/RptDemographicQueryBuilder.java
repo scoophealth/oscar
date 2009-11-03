@@ -350,7 +350,6 @@ public class RptDemographicQueryBuilder {
 
 
               rs.close();
-              db.CloseConn();
         }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
 
 

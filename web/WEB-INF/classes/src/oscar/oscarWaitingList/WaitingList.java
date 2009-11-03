@@ -64,7 +64,6 @@ public class WaitingList{
     		   if(rs != null){
     			   rs.close(); 
     		   }
-    		   db.CloseConn();
     	   }catch(Exception ex2){
     		   System.out.println("WaitingList.checkWaitingListTable():" + ex2.getMessage()); 
     	   }

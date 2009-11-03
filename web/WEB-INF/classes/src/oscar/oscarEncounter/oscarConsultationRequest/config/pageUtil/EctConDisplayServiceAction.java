@@ -54,8 +54,6 @@ public class EctConDisplayServiceAction extends Action {
             sql = String.valueOf(String.valueOf((new StringBuffer("insert into serviceSpecialists (serviceId,specId) values ('")).append(serviceId).append("','").append(specialists[i]).append("')")));
             db.RunSQL(sql);
          }
-         
-         db.CloseConn();
       }
       catch(SQLException e) {
          System.out.println(e.getMessage());

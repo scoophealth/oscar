@@ -551,7 +551,6 @@ public class CaseManagementNote extends BaseObject {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             rs = db.GetSQL(sql);
-            db.CloseConn();
         } catch (SQLException sqe) {
             sqe.printStackTrace();
         }

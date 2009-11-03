@@ -149,7 +149,6 @@ public class EctSessionBean {
                 }
             }
             rs.close();
-            db.CloseConn();
             UtilDateUtilities dateUtil = new UtilDateUtilities();
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
@@ -178,8 +177,6 @@ public class EctSessionBean {
             }
             rs.close();
 
-            db.CloseConn();
-
             sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC";
             rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -203,8 +200,6 @@ public class EctSessionBean {
                 subject = "";
             }
             rs.close();
-            db.CloseConn();
-
             if (oscarMsgID != null) {
                 sql = "Select * from messagetbl where messageid = \'" + oscarMsgID + "\' ";
                 rs = db.GetSQL(sql);
@@ -219,8 +214,6 @@ public class EctSessionBean {
                             + "\n" + "Subject: " + subject + "\n" + message;
                 }
                 rs.close();
-
-                db.CloseConn();
             }
 
         } catch (java.sql.SQLException e) {
@@ -260,7 +253,6 @@ public class EctSessionBean {
                 status = db.getString(rs,"status");
             }
             rs.close();
-            db.CloseConn();
         } catch (java.sql.SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -280,7 +272,6 @@ public class EctSessionBean {
                 templateNames.add(db.getString(rs,"encountertemplate_name"));
             }
             rs.close();
-            db.CloseConn();
         } catch (java.sql.SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -310,7 +301,6 @@ public class EctSessionBean {
                 subject = "";
             }
             rs.close();
-            db.CloseConn();
         } catch (java.sql.SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -344,7 +334,6 @@ public class EctSessionBean {
                 }
             }
             rs.close();
-            db.CloseConn();
             UtilDateUtilities dateUtil = new oscar.util.UtilDateUtilities();
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
@@ -383,7 +372,6 @@ public class EctSessionBean {
                 subject = db.getString(rs,"subject");
             }
             rs.close();
-            db.CloseConn();
         } catch (java.sql.SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -415,7 +403,6 @@ public class EctSessionBean {
                 }
             }
             rs.close();
-            db.CloseConn();
             UtilDateUtilities dateUtil = new oscar.util.UtilDateUtilities();
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));

@@ -88,7 +88,6 @@ public class EctConConstructSpecialistsScriptsFile
                 }
 
                 rs.close();
-                db.CloseConn();
             }
             catch(SQLException e)
             {
@@ -148,7 +147,6 @@ public class EctConConstructSpecialistsScriptsFile
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e)
         {

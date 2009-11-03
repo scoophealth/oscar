@@ -58,7 +58,6 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 				props.setProperty("c_clinicName", db.getString(rs,"clinic_name"));
 			}
 			rs.close();
-			db.CloseConn();
 		} else {
 			String sql = "SELECT * FROM formBCClientChartChecklist WHERE demographic_no = "
 					+ demographicNo + " AND ID = " + existingID;

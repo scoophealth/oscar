@@ -81,7 +81,6 @@ public class EctARRecord {
             }
             resultset1.close();
         }
-        dbhandler.CloseConn();
         return properties;
     }
 
@@ -154,7 +153,6 @@ public class EctARRecord {
         if(resultset1.next())
             j = resultset1.getInt(1);
         resultset1.close();
-        dbhandler.CloseConn();
         return j;
     }
 
@@ -183,7 +181,6 @@ public class EctARRecord {
 
         }
         resultset.close();
-        dbhandler.CloseConn();
         return properties;
     }
 }

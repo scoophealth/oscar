@@ -96,7 +96,6 @@ public class PathnetResultsData {
                 lbData = new LabResultData(LabResultData.EXCELLERIS);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in CMLPopulate:",e);
         }
@@ -181,7 +180,6 @@ public class PathnetResultsData {
                 labResults.add(lbData);
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in pathnetPopulate", e);
         }
@@ -199,7 +197,6 @@ public class PathnetResultsData {
                 ret = db.getString(rs,"d");
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in pathnetResultsData",e);
         }
@@ -216,7 +213,6 @@ public class PathnetResultsData {
                 ret = (rs.getInt(1));
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData:",e);
         }
@@ -237,7 +233,6 @@ public class PathnetResultsData {
                 }
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in isLabLinkedWithPatient",e);
             
@@ -296,7 +291,6 @@ public class PathnetResultsData {
                 }
             }
             rs.close();
-            db.CloseConn();
             
         }catch(Exception e){
             logger.error("exception in PathnetResultsData",e);
@@ -324,7 +318,6 @@ public class PathnetResultsData {
                 ret = justGetDocName(db.getString(rs,"ordering_provider"));
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData",e);
         }
@@ -340,7 +333,6 @@ public class PathnetResultsData {
                 ret = db.getString(rs,"stat");
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData",e);
         }
@@ -361,7 +353,6 @@ public class PathnetResultsData {
                 first = false;
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData",e);
         }
@@ -379,7 +370,6 @@ public class PathnetResultsData {
                 count++;
             }
             rs.close();
-            db.CloseConn();
         }catch(Exception e){
             logger.error("exception in MDSResultsData",e);
         }

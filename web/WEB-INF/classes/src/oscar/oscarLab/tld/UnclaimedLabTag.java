@@ -58,7 +58,6 @@ public class UnclaimedLabTag extends TagSupport {
                //System.out.println("Un claimed Labs" +numNewLabs);
             }
             rs.close();
-            db.CloseConn();
         }catch(SQLException e){
            e.printStackTrace(System.out);
         }

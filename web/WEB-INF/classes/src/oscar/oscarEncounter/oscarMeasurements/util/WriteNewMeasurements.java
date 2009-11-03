@@ -122,7 +122,6 @@ public class WriteNewMeasurements {
                 }
                 curmeasure.put("dateEntered", dateEntered);
             }
-            db.CloseConn();
         } catch (SQLException sqe) { sqe.printStackTrace(); }
     }
     
@@ -244,7 +243,6 @@ public class WriteNewMeasurements {
                 System.out.println("SQL measure ====" + sql);
                 db.RunSQL(sql);
             }
-            db.CloseConn();
         }
         catch(SQLException e) { e.printStackTrace(); }
     }
@@ -265,8 +263,6 @@ public class WriteNewMeasurements {
             + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
             System.out.println("SQL measure ====" + sql);
             db.RunSQL(sql);
-           
-            db.CloseConn();
         }
         catch(SQLException e) { e.printStackTrace(); }
     }

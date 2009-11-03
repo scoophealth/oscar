@@ -49,7 +49,6 @@ public class FrmAlphaRecord extends FrmRecord {
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
             }
             rs.close();
-			db.CloseConn();
         } else {
             String sql = "SELECT * FROM formAlpha WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
 			props = (new FrmRecordHelp()).getFormRecord(sql);

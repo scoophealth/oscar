@@ -63,8 +63,6 @@ public class FrmRecordHelp {
             }
         }
         rs.close();
-        db.CloseConn();
-
         return props;
     }
 
@@ -120,8 +118,6 @@ public class FrmRecordHelp {
         if (rs.next())
             ret = rs.getInt(1);
         rs.close();
-        db.CloseConn();
-
         return ret;
     }
 
@@ -203,7 +199,6 @@ public class FrmRecordHelp {
         rs.updateRow();
 
         rs.close();
-        db.CloseConn();
     }
 
     public Properties getPrintRecord(String sql) throws SQLException {
@@ -232,8 +227,6 @@ public class FrmRecordHelp {
             }
         }
         rs.close();
-        db.CloseConn();
-
         return props;
     }
 

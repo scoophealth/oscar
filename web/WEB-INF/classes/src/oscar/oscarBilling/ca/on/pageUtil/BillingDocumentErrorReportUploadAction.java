@@ -147,7 +147,6 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
 			System.out.println("Sql Statement: " + sql);
 			db.RunSQL(sql);
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -353,7 +352,6 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 					}
 				}
 			}
-			db.CloseConn();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

@@ -50,7 +50,6 @@ public class EctConAddServiceAction extends Action
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = String.valueOf(String.valueOf((new StringBuffer("insert into consultationServices (serviceDesc,active) values ('")).append(service).append("','1')")));
             db.RunSQL(sql);
-            db.CloseConn();
         }
         catch(SQLException e)
         {

@@ -55,7 +55,6 @@ public class EctValidationsBeanHandler {
             }
 
             rs.close();
-            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
@@ -115,7 +114,6 @@ public class EctValidationsBeanHandler {
                 //System.out.println(validationId + ": " + sql);
             }
             rs.close();
-            db.CloseConn();
         }
         
         catch(SQLException e) {
@@ -176,7 +174,6 @@ public class EctValidationsBeanHandler {
             if(rs.next()){
                 validationId = rs.getInt("id");
             }
-            db.CloseConn();
         }
         
         catch(SQLException e) {
@@ -205,8 +202,6 @@ public class EctValidationsBeanHandler {
                 validation.setIsNumeric(db.getString(rs,"isNumeric"));
                 validation.setIsDate(db.getString(rs,"isDate"));
             }
-            
-            db.CloseConn();
         }catch(SQLException e) {
             System.out.println(e.getMessage());
         }

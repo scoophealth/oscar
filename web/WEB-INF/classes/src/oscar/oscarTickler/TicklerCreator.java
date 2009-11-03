@@ -60,14 +60,6 @@ public class TicklerCreator {
       catch (SQLException ex) {
         ex.printStackTrace();
       }
-      finally {
-        try {
-          db.CloseConn();
-        }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
-        }
-      }
     }
   }
 
@@ -95,7 +87,6 @@ public class TicklerCreator {
     }
     finally {
       try {
-        db.CloseConn();
         rs.close();
       }
       catch (SQLException ex1) {
@@ -118,14 +109,6 @@ public class TicklerCreator {
     }
     catch (SQLException ex) {
       ex.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
     }
   }
 
@@ -154,14 +137,6 @@ public class TicklerCreator {
     }
     catch (SQLException ex) {
       ex.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
     }
   }
 }

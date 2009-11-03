@@ -63,7 +63,6 @@ public class SendMessageClient {
             throw new OscarCommClientException("Send Message failed.", ex);
         }
 
-        db.CloseConn();
         return ret;
     }
 

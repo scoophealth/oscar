@@ -58,7 +58,6 @@ public class FrmMentalHealthRecord  extends FrmRecord {
                 props.setProperty("demo_roster_status", db.getString(rs,"roster_status"));
             }
             rs.close();
-			db.CloseConn();
 
         } else {
             String sql = "SELECT * FROM formMentalHealth WHERE demographic_no = " +demographicNo +" AND ID = " +existingID;
@@ -73,7 +72,6 @@ public class FrmMentalHealthRecord  extends FrmRecord {
 				props.setProperty("demo_roster_status", db.getString(rs,"roster_status"));
 			}
 			rs.close();
-			db.CloseConn();
         }
 
         return props;
@@ -92,9 +90,7 @@ public class FrmMentalHealthRecord  extends FrmRecord {
             props.setProperty("c_referredBy", db.getString(rs,"provName"));
         }
         rs.close();
-		db.CloseConn();
-
-        return props;
+		return props;
 	}
 
     public int saveFormRecord(Properties props) throws SQLException {

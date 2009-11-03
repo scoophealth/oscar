@@ -63,7 +63,6 @@ public class RptLabReportData {
                  arrayList.add(a);
               }
               rs.close();
-              db.CloseConn();
         }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
     return arrayList;
     }
@@ -94,7 +93,6 @@ public class RptLabReportData {
               }
 
               rs.close();
-              db.CloseConn();
         }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
 
     }
@@ -125,7 +123,6 @@ public class DemoLabDataStruct{
              consultList.add(con);
           }
           rs.close();
-          db.CloseConn();
        }catch (java.sql.SQLException e2) { System.out.println(e2.getMessage()); }
       return consultList;
     }
@@ -147,8 +144,7 @@ public class DemoLabDataStruct{
              conLetter.docStatus   = db.getString(rs,"status");
              conReplyList.add(conLetter);
           }         
-          rs.close();
-          db.CloseConn(); 
+          rs.close(); 
        }catch (java.sql.SQLException e3) { System.out.println(e3.getMessage()); }
     return conReplyList;
     }
@@ -192,9 +188,7 @@ public class DemoLabDataStruct{
                list.add(h);
              }
           }                  
-          rs.close();
-          //againg with MDS
-          db.CloseConn(); 
+          rs.close(); 
        }catch (java.sql.SQLException e3) { System.out.println(e3.getMessage()); e3.printStackTrace(); }
        return list;
     }
@@ -238,7 +232,6 @@ public class DemoLabDataStruct{
               retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
-           db.CloseConn();
        }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
        return retval;
     }
