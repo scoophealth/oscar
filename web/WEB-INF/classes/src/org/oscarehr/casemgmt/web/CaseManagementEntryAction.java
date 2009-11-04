@@ -853,14 +853,31 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
         String sign = (String) request.getParameter("sign");
-        if (sign == null || !sign.equals("on")) {
+        if (sign == null ) {
             note.setSigning_provider_no("");
             note.setSigned(false);
             sessionFrm.setSign("off");
         }
-        else {
+        else if( sign.equalsIgnoreCase("persist") ) {
+
+            if( note.isSigned() ) {
+                note.setSigning_provider_no(providerNo);
+                note.setSigned(true);
+            }
+            else {
+                note.setSigning_provider_no("");
+                note.setSigned(false);
+                sessionFrm.setSign("off");
+            }
+        }
+        else if( sign.equalsIgnoreCase("on") ) {
             note.setSigning_provider_no(providerNo);
             note.setSigned(true);
+        }
+        else {
+            note.setSigning_provider_no("");
+            note.setSigned(false);
+            sessionFrm.setSign("off");
         }
 
         note.setProviderNo(providerNo);
