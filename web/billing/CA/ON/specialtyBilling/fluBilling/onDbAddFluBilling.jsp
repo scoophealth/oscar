@@ -13,10 +13,10 @@
 
 			if(billSaved) {
 				System.out.println(request.getParameter("goPrev"));
-				if (request.getParameter("goPrev") != null && request.getParameter("goPrev").equals("goPrev")
-					&& billSaved) {
-				response
-						.sendRedirect("../../../../../oscarPrevention/AddPreventionData.jsp?prevention=Flu&demographic_no="
+                                String prevention = request.getParameter("goPrev");
+				if ( prevention != null && !prevention.equalsIgnoreCase("") ) {
+					
+				response.sendRedirect("../../../../../oscarPrevention/AddPreventionData.jsp?prevention=" + prevention + "&demographic_no="
 								+ request.getParameter("functionid"));
 				}
 			}
