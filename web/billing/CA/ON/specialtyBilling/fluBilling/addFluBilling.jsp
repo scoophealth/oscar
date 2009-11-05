@@ -121,8 +121,8 @@ function OtherScriptAttach() {
   awnd.focus();
 }
 
-function validate2(form){
-form.goPrev.value = "goPrev";
+function validate2(form, prevention){
+form.goPrev.value = prevention;
 if (validateProviderNo(form)){
 form.action = "<%=actionPage%>" ; //"dbAddFluBilling.jsp"
 form.submit()
@@ -605,8 +605,11 @@ apptMainBean.closePstmtConn();
 				<td width="19%" height="20" colspan="4"><input type="hidden"
 					name="goPrev" value="" /> <input type="button" name="cancel"
 					value="Submit" class="mbttn" onClick="validate(this.form)">
-				<input type="button" name="subPrev" value="Submit & Goto Prevention"
-					class="mbttn" onClick="validate2(this.form)"> <input
+				<input type="button" name="subPrev" value="Submit & Goto Flu Prevention"
+					class="mbttn" onClick="validate2(this.form,'Flu')">
+                                <input type="button" name="subPrev" value="Submit & Goto H1N1 Prevention"
+					class="mbttn" onClick="validate2(this.form,'H1N1')">
+                                <input
 					type="button" name="cancel" value="Cancel" onClick="window.close()"
 					class="mbttn"></td>
 
