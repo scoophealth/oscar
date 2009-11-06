@@ -70,7 +70,7 @@
         //var ret = checkAllDates();
         //if(ret==true) {
      
-            document.getElementById("preview2Form").action = "../form/createpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
+            document.getElementById("preview2Form").action = "../form/createcustomedpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
 
             document.getElementById("preview2Form").target="_blank";
 
@@ -210,7 +210,8 @@ System.out.println("==========================done first java part Preview2.jsp=
 				src="img/rx.gif" border="0" value="submit" alt="[Submit]"
 				name="submit" title="Print in a half letter size paper"
 				onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint('oscarRxRePrintCfgPg1');" : "javascript:return onPrint('oscarRxPrintCfgPg1');" %>">
-			<input type="hidden" name="printPageSize" value="PageSize.A6" /> <% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
+			<!--input type="hidden" name="printPageSize" value="PageSize.A6" /-->
+                        <% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
 			 	clinicTitle += provider.getClinicAddress() + "<br>" ;
 			 	clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
 			%> <input type="hidden" name="doctorName"
@@ -362,10 +363,20 @@ System.out.println("==========================done first java part Preview2.jsp=
 			</td>
 		</tr>                
 	</table>
-
+        <table border="0">
+            <tr>
+                <th>Size of Print PDF :</th>
+                <th><select name="printPageSize">
+                        <option value="PageSize.A6">A6 page</option>
+                        <option value="PageSize.A4">A4 page</option>
+                    </select>
+                </th>
+            </tr>
+        </table> 
+        
 </html:form>
 <div align="center" class="noprint">
-<button onclick="onPrint('oscarRxPrintCfgPg1');">Print PDF</button>
+<button onclick="onPrint('dummieConfigFile');">Print PDF</button>
 <button onclick="window.print();" >Print</button>
 <button onclick="printPaste2Parent();">Print and paste</button>
 <button onclick="parent.saveData();parent.window.close()">Save and Close</button>
