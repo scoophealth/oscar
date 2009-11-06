@@ -211,7 +211,6 @@
 		<property name="providerDAO" ref="providerDao" />
 		<property name="demographicDao" ref="clientDao" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
-		<property name="clientImageDAO" ref="clientImageDAO" />
 		<property name="hashAuditDAO" ref="HashAuditDAO" />
 		<property name="ectWindowDAO" ref="EncounterWindowDAO" />
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />

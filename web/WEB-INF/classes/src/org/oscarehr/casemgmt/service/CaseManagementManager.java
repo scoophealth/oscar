@@ -128,7 +128,6 @@ public class CaseManagementManager {
 	private ClientDao demographicDao;
 	private ProviderSignitureDao providerSignitureDao;
 	private RoleProgramAccessDAO roleProgramAccessDAO;
-	private ClientImageDAO clientImageDAO;
 	private RolesManager roleManager;
 	private CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
 	private AdmissionManager admissionManager;
@@ -1346,10 +1345,6 @@ public class CaseManagementManager {
 	public void setProgramProviderDao(ProgramProviderDAO programProviderDao) {
     	this.programProviderDao = programProviderDao;
     }
-
-	public void setClientImageDAO(ClientImageDAO dao) {
-		this.clientImageDAO = dao;
-	}
 
 	public void setRolesManager(RolesManager mgr) {
 		this.roleManager = mgr;
