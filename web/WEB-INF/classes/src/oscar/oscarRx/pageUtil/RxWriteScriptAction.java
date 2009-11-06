@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarRx.pageUtil;
 
@@ -368,13 +368,13 @@ public final class RxWriteScriptAction extends DispatchAction {
             rx.setRandomId(randomId);
             String drugId = request.getParameter("drugId");
             String text = request.getParameter("text");
-    
+
             p("drugId", drugId);
             p("text", text);
 
             //TODO: Is this to slow to do here?  It's possible to do this in ajax,  as in when this comes back launch an ajax request to fill in.
             RxDrugData.DrugMonograph dmono = drugData.getDrug2(drugId);
-            
+
             String brandName = text;
             //String genericName = request.getParameter("drugName");
 
@@ -411,7 +411,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
             rx.setDosage(dosage);
             rx.setUnit(unit);
-            
+
             p("set drug form to ",rx.getDrugForm());
             p("set dosage to ",rx.getDosage());
             p("set unit to ",rx.getUnit());
@@ -462,31 +462,32 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.sendRedirect("error.html");
             return null;
         }
-       
+
         String action = request.getParameter("action");
 
         if (action != null && action.equals("parseInstructions")) {
             System.out.println("==========***### IN parseInstruction RxWriteScriptAction.java");
+          try{  Enumeration emm = request.getParameterNames();
+            while (emm.hasMoreElements()) {
+                p("request attribute=" + emm.nextElement().toString());
+            }
             String randomId = request.getParameter("randomId");
+            p("randomId from request",randomId);
             RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
+            if(rx==null)
+                p("rx is null");
             p("IN updateDrug, atc=" + rx.getAtcCode() + "; regionalIdentifier=" + rx.getRegionalIdentifier());
 
             String instructions = request.getParameter("instruction");
             p("instruction", instructions);
-            Enumeration emm = request.getParameterNames();
-            while (emm.hasMoreElements()) {
-                p("request attribute=" + emm.nextElement().toString());
-            }
 
             HashMap retHm=RxUtil.instrucParser(instructions, rx);
             p("before updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
-            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+           // bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
             p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             // bean.setStashIndex(bean.addStashItem(rx));
-            bean.setStashItem(bean.getStashIndex(), rx);
-            //   p("after bean.getStashIndex()",Integer.toString(bean.getStashIndex()));
-
-          //  RxDrugData drugData = new RxDrugData();
+            bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
             RxUtil.printStashContent(bean);
             HashMap hm = new HashMap();
 
@@ -502,6 +503,9 @@ public final class RxWriteScriptAction extends DispatchAction {
             JSONObject jsonObject = JSONObject.fromObject(hm);
             p("jsonObject", jsonObject.toString());
             response.getOutputStream().write(jsonObject.toString().getBytes());
+          }catch(Exception e){
+            e.printStackTrace();
+          }
             p("===================END parseInstruction RxWriteScriptAction.java======================");
             return null;
         }else if(action != null && action.equals("updateQty")){
@@ -510,7 +514,9 @@ public final class RxWriteScriptAction extends DispatchAction {
             String randomId = request.getParameter("randomId");
             RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
             //get rx from randomId
-
+            if (quantity == null){
+                quantity = "";
+            }
             //check if quantity is same as rx.getquantity(), if yes, do nothing.
             if(quantity.equals(rx.getQuantity())){
                 //do nothing
@@ -587,14 +593,12 @@ public final class RxWriteScriptAction extends DispatchAction {
                 //if there is already a duration uni present, use that duration unit. if not, set duration unit to days, and output duration in days
 
             }
-            
+
 
             p("before updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
-            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
             p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
-
-            bean.setStashItem(bean.getStashIndex(), rx);
-
+            bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
             RxUtil.printStashContent(bean);
             HashMap hm = new HashMap();
             hm.put("method", rx.getMethod());
@@ -613,7 +617,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             return null;
         }else{
         return null;
-        }         
+        }
     }
 
     public ActionForward updateAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
@@ -652,7 +656,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 System.out.println("rNum:"+rNum);
                 if(!randNum.contains(rNum)){
                    randNum.add(rNum);
-                } 
+                }
             }
         }
         p("here2 ran num size "+randNum.size());
@@ -666,7 +670,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
             //Iterator uniqueIterator = new UniqueFilterIterator(randNum.iterator());
             for(String num:randNum){
-           
+
                 p("num", num);
 
                 int stashIndex=bean.getIndexFromRx(Integer.parseInt(num));
@@ -714,7 +718,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                             }
                         } else if (elem.equals("longTerm_" + num)) {
                             if (val.equals("on")) {
-                                isLongTerm=true;                                
+                                isLongTerm=true;
                             } else {
                                 isLongTerm=false;
                             }
@@ -832,7 +836,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     //       p("here5");
                     //       p(rx.getGenericName());
                     rx.setBrandName(rx.getGenericName());
-                    Long rand = Math.round(Math.random() * 1000000);                    
+                    Long rand = Math.round(Math.random() * 1000000);
                     rx.setRegionalIdentifier(Long.toString(rand));
                     rx.setAtcCode(Long.toString(rand + 1));
                     System.out.println("----"+rx.toString());

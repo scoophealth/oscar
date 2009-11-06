@@ -1321,7 +1321,7 @@ function updateQty(element){
         var ar=elemId.split("_");
         var rand=ar[1];
         var instruction="instruction="+element.value+"&action=parseInstructions&randomId="+rand;
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateDrug";
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/UpdateScript.do?parameterValue=updateDrug";
         var rxMethod="rxMethod_"+rand;
         var rxRoute="rxRoute_"+rand;
         var rxFreq="rxFreq_"+rand;
