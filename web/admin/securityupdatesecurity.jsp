@@ -157,7 +157,7 @@
 	<tr>
 		<td align="right" nowrap><bean:message
 			key="admin.securityrecord.formPassword" />:</td>
-		<td><input type="password" name="password" value="*********" maxlength="10"> <font size="-2">(<bean:message
+		<td><input type="password" name="password" value="*********" maxlength="15"> <font size="-2">(<bean:message
 			key="admin.securityrecord.msgAtLeast" />
 			<%=op.getProperty("password_min_length")%> <bean:message
 			key="admin.securityrecord.msgSymbols" />)</font></td>
@@ -165,7 +165,7 @@
 	<tr>
 		<td align="right"><bean:message
 			key="admin.securityrecord.formConfirm" />:</td>
-		<td><input type="password" name="conPassword" value="*********" maxlength="10"></td>
+		<td><input type="password" name="conPassword" value="*********" maxlength="15"></td>
 	</tr>
 	<tr>
 		<td>
