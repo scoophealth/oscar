@@ -46,6 +46,7 @@ function StopTheClock()
 
 function StartTheTimer()
 {
+	document.unreadTicklerForm.target='_self';
     if (secs==0)
     {
         StopTheClock()
@@ -71,8 +72,8 @@ function StartTheTimer()
 You have
 <c:out value="${sessionScope.num_ticklers}" />
 ticklers.
-<html:form action="/UnreadTickler.do">
-	<input type="hidden" name="method" value="refresh" />
+<html:form styleId="unreadTicklerForm" action="/UnreadTickler.do" target="_self">
+	<input type="hidden" name="method" value="refresh"/>
 </html:form>
 
 <!-- 

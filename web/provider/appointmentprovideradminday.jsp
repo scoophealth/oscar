@@ -469,9 +469,11 @@ function load() {
 if ("<%=newticklerwarningwindow%>"=="enabled") {
 if (IsPopupBlocker()) {
     alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");
-} 
-var pu=window.open("../UnreadTickler.do",null,"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
-pu.focus();
+} else{
+var pu=window.open("../UnreadTickler.do",'viewUnreadTickler',"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
+if(window.focus)
+	pu.focus();
+}
 }
 popupPageOfChangePassword();
 refreshAllTabAlerts();
