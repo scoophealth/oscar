@@ -180,6 +180,11 @@
 		<servlet-class>oscar.form.pdfservlet.FrmPDFServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+        <servlet>
+		<servlet-name>pdfCustomedCreator</servlet-name>
+		<servlet-class>oscar.form.pdfservlet.FrmCustomedPDFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	<servlet>
 		<servlet-name>reportDownload</servlet-name>
 		<servlet-class>oscar.oscarReport.pageUtil.RptDownloadCSVServlet</servlet-class>
@@ -287,6 +292,10 @@
 	<servlet-mapping>
 		<servlet-name>pdfCreator</servlet-name>
 		<url-pattern>/form/createpdf</url-pattern>
+	</servlet-mapping>
+        <servlet-mapping>
+		<servlet-name>pdfCustomedCreator</servlet-name>
+		<url-pattern>/form/createcustomedpdf</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>reportDownload</servlet-name>
