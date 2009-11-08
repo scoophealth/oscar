@@ -613,7 +613,7 @@ function refreshTabAlerts(id) {
       bFistEntry = true;
       if(String.valueOf(date.get("available")).equals("0")) continue;
     }
-    if(!providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
+    if(isTeamOnly || !providerview.startsWith("_grp_",0) || myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
 %> <br>
 <% if (bMultisites) { out.print(getSiteHTML((String)date.get("reason"), sites)); } %>
 					<span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(String.valueOf(date.get("provider_no")),"",NameMaxLen )%></span><span
