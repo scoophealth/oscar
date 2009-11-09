@@ -21,7 +21,6 @@
  * Hamilton
  * Ontario, Canada
  */
-
 package oscar.form.pdfservlet;
 
 import java.io.ByteArrayOutputStream;
@@ -60,6 +59,7 @@ import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 import java.util.List;
 import oscar.OscarProperties;
+
 /**
  *
  *
@@ -213,38 +213,40 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             }*/
         }
 
-        public EndPage(String clinicName, String clinicTel,String  clinicFax,String patientPhone,String patientCityPostal,String patientAddress,
-                String patientName,String doctorName,String sigDoctorName,String rxDate) {
+        public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
+                String patientName, String doctorName, String sigDoctorName, String rxDate) {
             this.clinicName = clinicName;
             this.clinicTel = clinicTel;
             this.clinicFax = clinicFax;
-            this.patientPhone=patientPhone;
-                 this.patientCityPostal   =patientCityPostal;
-                this.patientAddress    =patientAddress;
-                this.patientName    =patientName;
-                this.doctorName    =doctorName;
-                this.sigDoctorName    =sigDoctorName;
-                this.rxDate    =rxDate;
-                this.promoText= OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
-                if( promoText == null ) {
-                        promoText = "";
-                }
+            this.patientPhone = patientPhone;
+            this.patientCityPostal = patientCityPostal;
+            this.patientAddress = patientAddress;
+            this.patientName = patientName;
+            this.doctorName = doctorName;
+            this.sigDoctorName = sigDoctorName;
+            this.rxDate = rxDate;
+            this.promoText = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
+            if (promoText == null) {
+                promoText = "";
+            }
         }
 
         public void onEndPage(PdfWriter writer, Document document) {
-            renderPage(writer,document);       
+            renderPage(writer, document);
         }
-        public void writeDirectContent(PdfContentByte cb,BaseFont bf,float fontSize,int alignment,String text, float x, float y, float rotation){
+
+        public void writeDirectContent(PdfContentByte cb, BaseFont bf, float fontSize, int alignment, String text, float x, float y, float rotation) {
             cb.beginText();
             cb.setFontAndSize(bf, fontSize);
             cb.showTextAligned(alignment, text, x, y, rotation);
             cb.endText();
         }
-        public void renderPage(PdfWriter writer, Document document){
+
+        public void renderPage(PdfWriter writer, Document document) {
             Rectangle page = document.getPageSize();
-            p("page to string",page.toString());
+            p("page to string", page.toString());
             PdfContentByte cb = writer.getDirectContent();
-            
+
             try {
 
                 /*    File file=new File("/oscar/form/prop/rx.gif");
@@ -262,22 +264,22 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 p("page height: " + page.height());
                 float height = page.height();
                 //head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
-                
+
                 //header table for patient's information.
-                PdfPTable head=new PdfPTable(1);
+                PdfPTable head = new PdfPTable(1);
                 String newline = System.getProperty("line.separator");
-                String hStr=this.patientName+"                                     "+this.rxDate+newline+this.patientAddress+newline+this.patientCityPostal+newline+this.patientPhone;
+                String hStr = this.patientName + "                                     " + this.rxDate + newline + this.patientAddress + newline + this.patientCityPostal + newline + this.patientPhone;
                 BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                Phrase hPhrase=new Phrase(hStr, new Font(bf,10));
+                Phrase hPhrase = new Phrase(hStr, new Font(bf, 10));
                 head.addCell(hPhrase);
                 head.setTotalWidth(272f);
-                head.writeSelectedRows(0, -1, 13f, height-90f, cb);
+                head.writeSelectedRows(0, -1, 13f, height - 90f, cb);
 
                 //draw R
-                writeDirectContent(cb,bf,50,PdfContentByte.ALIGN_LEFT,"R",20,page.height()-53,0);
-                
+                writeDirectContent(cb, bf, 50, PdfContentByte.ALIGN_LEFT, "R", 20, page.height() - 53, 0);
+
                 //draw X
-                writeDirectContent(cb,bf,43,PdfContentByte.ALIGN_LEFT, "X", 40, page.height() - 71, 0);
+                writeDirectContent(cb, bf, 43, PdfContentByte.ALIGN_LEFT, "X", 40, page.height() - 71, 0);
 
                 //render clinicName;
                 bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -291,9 +293,9 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 ct.go();
                 //render clnicaTel;
                 bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 190, (page.height() - 70), 0);
+                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 190, (page.height() - 70), 0);
                 //render clinicFax;
-                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 190, (page.height() - 80), 0);
+                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 190, (page.height() - 80), 0);
                 //render line after header
                 //cb.setRGBColorStrokeF(0f, 0f, 0f);
                 //cb.setLineWidth(0.8f);
@@ -302,12 +304,12 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 //cb.stroke();
 
                 //get the end of paragraph
-                float endPara=writer.getVerticalPosition(true);
+                float endPara = writer.getVerticalPosition(true);
                 //draw left line
                 cb.setRGBColorStrokeF(0f, 0f, 0f);
                 cb.setLineWidth(0.5f);
                 //cb.moveTo(13f, 20f);
-                cb.moveTo(13f, endPara-60);
+                cb.moveTo(13f, endPara - 60);
                 cb.lineTo(13f, height - 15f);
                 cb.stroke();
 
@@ -315,7 +317,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 cb.setRGBColorStrokeF(0f, 0f, 0f);
                 cb.setLineWidth(0.5f);
                 //cb.moveTo(285f, 20f);
-                cb.moveTo(285f,endPara-60);
+                cb.moveTo(285f, endPara - 60);
                 cb.lineTo(285f, height - 15f);
                 cb.stroke();
                 //draw top line 10, 405, 285, 405, 0.5
@@ -330,27 +332,27 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 cb.setLineWidth(0.5f);
                 //cb.moveTo(13f, 20f);
                 //cb.lineTo(285f, 20f);
-                cb.moveTo(13f, endPara-60);
-                cb.lineTo(285f, endPara-60);
+                cb.moveTo(13f, endPara - 60);
+                cb.lineTo(285f, endPara - 60);
                 cb.stroke();
                 //Render "Signature:"
-                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, "Signature:", 20f, endPara-30f, 0);
+                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Signature:", 20f, endPara - 30f, 0);
                 //Render line for Signature 75, 55, 280, 55, 0.5
                 cb.setRGBColorStrokeF(0f, 0f, 0f);
                 cb.setLineWidth(0.5f);
                 //cb.moveTo(75f, 50f);
                 //cb.lineTo(280f, 50f);
-                cb.moveTo(75f, endPara-30f);
-                cb.lineTo(280f, endPara-30f);
+                cb.moveTo(75f, endPara - 30f);
+                cb.lineTo(280f, endPara - 30f);
                 cb.stroke();
                 //Render doctor name
-                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, endPara-40f, 0);
-                
+                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, endPara - 40f, 0);
+
                 //print promoText
-                writeDirectContent(cb,bf,6,PdfContentByte.ALIGN_LEFT, this.promoText,70, endPara - 55, 0);
+                writeDirectContent(cb, bf, 6, PdfContentByte.ALIGN_LEFT, this.promoText, 70, endPara - 55, 0);
                 //print page number
-                String footer = ""+writer.getPageNumber();
-                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_RIGHT, footer, 280, endPara - 55, 0);
+                String footer = "" + writer.getPageNumber();
+                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_RIGHT, footer, 280, endPara - 55, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -365,7 +367,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         while (em.hasMoreElements()) {
             System.out.println("para=" + em.nextElement());
         }
-     /*   p("test",req.getLocalAddr());
+        /*   p("test",req.getLocalAddr());
         p("test",req.getLocalName());
         p("test",req.getRequestURL().toString());
         p("test",req.getServerName());
@@ -381,7 +383,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         p("test",req.getServerName());
         p("test",""+req.getLocalPort());
         p("test",""+req.getRemotePort());
-*/
+         */
         if (HSFO_RX_DATA_KEY.equals(req.getParameter("__title"))) {
             return generateHsfoRxPDF(req);
         }
@@ -395,55 +397,60 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String clinicName = req.getParameter("clinicName");
         String clinicTel = req.getParameter("clinicPhone");
         String clinicFax = req.getParameter("clinicFax");
-        String patientPhone=req.getParameter("patientPhone");
-        String patientCityPostal=req.getParameter("patientCityPostal");
-        String patientAddress=req.getParameter("patientAddress");
-        String patientName=req.getParameter("patientName");
-        String doctorName=req.getParameter("doctorName");
-        String sigDoctorName=req.getParameter("sigDoctorName");
-        String rxDate=req.getParameter("rxDate");
-        String rx=req.getParameter("rx");
-        String[] rxA=rx.split(newline);
-        List<String> listRx=new ArrayList();
-        String listElem="";
-         //parse rx and put into a list of rx;
-        for(String s:rxA){
-            p("splitted",s);
-            p("s length="+s.length());
+        String patientPhone = req.getParameter("patientPhone");
+        String patientCityPostal = req.getParameter("patientCityPostal");
+        String patientAddress = req.getParameter("patientAddress");
+        String patientName = req.getParameter("patientName");
+        String doctorName = req.getParameter("doctorName");
+        String sigDoctorName = req.getParameter("sigDoctorName");
+        String rxDate = req.getParameter("rxDate");
+        String rx = req.getParameter("rx");
+        if (rx == null) {
+            rx = "";
+        }
+        String additNotes = req.getParameter("additNotes");
+        String[] rxA = rx.split(newline);
+        List<String> listRx = new ArrayList();
+        String listElem = "";
+        //parse rx and put into a list of rx;
+        for (String s : rxA) {
+            p("splitted", s);
+            p("s length=" + s.length());
 
-            if(s.equals("")||s.equals(newline)||s.length()==1){
+            if (s.equals("") || s.equals(newline) || s.length() == 1) {
                 p("s if");
                 listRx.add(listElem);
-                listElem="";
-            }else{
-                listElem=listElem+s;
-                listElem+=newline;
+                listElem = "";
+            } else {
+                listElem = listElem + s;
+                listElem += newline;
             }
 
         }
-        for(String s:listRx)
-            p("each list element",s);      
+        for (String s : listRx) {
+            p("each list element", s);
+        }
 
-            // get the print prop values
-            Properties props = new Properties();
-            StringBuffer temp = new StringBuffer("");
-            for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
-                temp = new StringBuffer(e.nextElement().toString());
-                p("temp", temp.toString());
-                p("temp para", req.getParameter(temp.toString()));
-                props.setProperty(temp.toString(), req.getParameter(temp.toString()));
-            }
+        // get the print prop values
+        Properties props = new Properties();
+        StringBuffer temp = new StringBuffer("");
+        for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
+            temp = new StringBuffer(e.nextElement().toString());
+            p("temp", temp.toString());
+            p("temp para", req.getParameter(temp.toString()));
+            props.setProperty(temp.toString(), req.getParameter(temp.toString()));
+        }
 
-            for (Enumeration e = req.getAttributeNames(); e.hasMoreElements();) {
-                temp = new StringBuffer(e.nextElement().toString());
-                p("temp", temp.toString());
-                p("temp attr", req.getAttribute(temp.toString()).toString());
-                props.setProperty(temp.toString(), req.getAttribute(temp.toString()).toString());
-            }
-            Document document = new Document();
+        for (Enumeration e = req.getAttributeNames(); e.hasMoreElements();) {
+            temp = new StringBuffer(e.nextElement().toString());
+            p("temp", temp.toString());
+            p("temp attr", req.getAttribute(temp.toString()).toString());
+            props.setProperty(temp.toString(), req.getAttribute(temp.toString()).toString());
+        }
+        Document document = new Document();
 
         try {
-             String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
+            String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
             p("title", title);
             String[] cfgFile = req.getParameterValues("__cfgfile");
             for (String s : cfgFile) {
@@ -476,21 +483,19 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             Rectangle pageSize = PageSize.LETTER;
             if ("PageSize.HALFLETTER".equals(props.getProperty(PAGESIZE))) {
                 pageSize = PageSize.HALFLETTER;
-            }
-            else if ("PageSize.A6".equals(props.getProperty(PAGESIZE))) {
+            } else if ("PageSize.A6".equals(props.getProperty(PAGESIZE))) {
                 pageSize = PageSize.A6;
-            }
-            else if ("PageSize.A4".equals(props.getProperty(PAGESIZE))) {
+            } else if ("PageSize.A4".equals(props.getProperty(PAGESIZE))) {
                 pageSize = PageSize.A4;
             }
             p("size of page ", props.getProperty(PAGESIZE));
 
             document.setPageSize(pageSize);
             //285=left margin+width of box, 5f is space for looking nice
-            document.setMargins(15, pageSize.width()-285f+5f,140, 60);//left, right, top , bottom
+            document.setMargins(15, pageSize.width() - 285f + 5f, 140, 60);//left, right, top , bottom
 
             writer = PdfWriter.getInstance(document, baosPDF);
-            writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax,patientPhone,patientCityPostal,patientAddress,patientName,doctorName,sigDoctorName,rxDate));
+            writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName, doctorName, sigDoctorName, rxDate));
             document.addTitle(title);
             document.addSubject("");
             document.addKeywords("pdf, itext");
@@ -511,23 +516,30 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             PdfContentByte cb = writer.getDirectContent();
             p("here2");
             BaseFont bf; // = normFont;
-          
+
             p("here3");
             cb.setRGBColorStroke(0, 0, 255);
             //render prescriptions
-                for(String rxStr:listRx){
-                    bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                    Paragraph p=new Paragraph(new Phrase(rxStr,new Font(bf,10)));
-                    p.setKeepTogether(true);
-                    p.setSpacingBefore(5f);
-                    p("space before",""+p.spacingBefore());
-                    p("space after",""+p.spacingAfter());
-                    document.add(p);
-                }
+            for (String rxStr : listRx) {
+                bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                Paragraph p = new Paragraph(new Phrase(rxStr, new Font(bf, 10)));
+                p.setKeepTogether(true);
+                p.setSpacingBefore(5f);
+                document.add(p);
+            }
+            //render additional notes
+            if (!additNotes.equals("")) {
+                p("additional notes not null");
+                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                Paragraph p = new Paragraph(new Phrase(additNotes, new Font(bf, 10)));
+                p.setKeepTogether(true);
+                p.setSpacingBefore(10f);
+                document.add(p);
+            }
         } //catch (Exception e) {
-           // e.printStackTrace();
-            //  }
-            catch (DocumentException dex) {
+        // e.printStackTrace();
+        //  }
+        catch (DocumentException dex) {
             baosPDF.reset();
             throw dex;
         } finally {

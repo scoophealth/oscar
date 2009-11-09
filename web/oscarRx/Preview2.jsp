@@ -123,6 +123,7 @@ function addNotes(){
     var params = "scriptNo=60&comment="+comment+"&rand="+ran_number;  //]
     //new Ajax.Request(url, {method: 'post',parameters:params});
     document.getElementById('additNotes').innerHTML =  document.getElementById('additionalNotes').value;
+    document.getElementsByName('additNotes')[0].value=  document.getElementById('additionalNotes').value;
 }
 
 
@@ -317,6 +318,7 @@ System.out.println("==========================done first java part Preview2.jsp=
                                 
                                 <tr valign="bottom">
 					<td colspan="2" id="additNotes"></td>
+                                        <input type="hidden" name="additNotes" value="">
                                 </tr>
                                 
 		
