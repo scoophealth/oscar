@@ -367,8 +367,8 @@ System.out.println("==========================done first java part Preview2.jsp=
             <tr>
                 <th>Size of Print PDF :</th>
                 <th><select name="printPageSize">
-                        <option value="PageSize.A6">A6 page</option>
                         <option value="PageSize.A4">A4 page</option>
+                        <option value="PageSize.A6">A6 page</option>                        
                     </select>
                 </th>
             </tr>

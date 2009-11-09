@@ -25,14 +25,12 @@
 package oscar.form.pdfservlet;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Vector;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -57,13 +55,11 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
-import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 import java.util.List;
-
+import oscar.OscarProperties;
 /**
  *
  *
@@ -207,6 +203,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         private String doctorName;
         private String sigDoctorName;
         private String rxDate;
+        private String promoText;
 
         public EndPage() {
             /*    now = new Date();
@@ -228,12 +225,26 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 this.doctorName    =doctorName;
                 this.sigDoctorName    =sigDoctorName;
                 this.rxDate    =rxDate;
+                this.promoText= OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
+                if( promoText == null ) {
+                        promoText = "";
+                }
         }
 
         public void onEndPage(PdfWriter writer, Document document) {
+            renderPage(writer,document);       
+        }
+        public void writeDirectContent(PdfContentByte cb,BaseFont bf,float fontSize,int alignment,String text, float x, float y, float rotation){
+            cb.beginText();
+            cb.setFontAndSize(bf, fontSize);
+            cb.showTextAligned(alignment, text, x, y, rotation);
+            cb.endText();
+        }
+        public void renderPage(PdfWriter writer, Document document){
             Rectangle page = document.getPageSize();
             p("page to string",page.toString());
-            float textBase = document.bottom();
+            PdfContentByte cb = writer.getDirectContent();
+            
             try {
 
                 /*    File file=new File("/oscar/form/prop/rx.gif");
@@ -242,9 +253,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 byte imext[]=new byte[size];
                 rf.readFully(imext);
                 rf.close();
-
                 Image rxPic= Image.getInstance(imext);
-
                 head.addCell(new PdfPCell(rxPic,false));
                  */
 
@@ -253,40 +262,25 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 p("page height: " + page.height());
                 float height = page.height();
                 //head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
-                PdfContentByte cb = writer.getDirectContent();
-
-
+                
                 //header table for patient's information.
                 PdfPTable head=new PdfPTable(1);
                 String newline = System.getProperty("line.separator");
-                String hStr=this.patientName+"                                  "+this.rxDate+newline+this.patientAddress+newline+this.patientCityPostal+newline+this.patientPhone;
-                String fontType = BaseFont.HELVETICA;
-                String encoding = BaseFont.CP1252;
-                BaseFont bf = BaseFont.createFont(fontType, encoding, BaseFont.NOT_EMBEDDED);
+                String hStr=this.patientName+"                                     "+this.rxDate+newline+this.patientAddress+newline+this.patientCityPostal+newline+this.patientPhone;
+                BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 Phrase hPhrase=new Phrase(hStr, new Font(bf,10));
                 head.addCell(hPhrase);
                 head.setTotalWidth(272f);
                 head.writeSelectedRows(0, -1, 13f, height-90f, cb);
-                //document.add(head);
-                //draw R
-                fontType = BaseFont.HELVETICA;
-                encoding = BaseFont.CP1252;
-                bf = BaseFont.createFont(fontType, encoding, BaseFont.NOT_EMBEDDED);
-                cb.beginText();
-                cb.setFontAndSize(bf, 50);
-                cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "R", 20, page.height() - 53, 0);
 
+                //draw R
+                writeDirectContent(cb,bf,50,PdfContentByte.ALIGN_LEFT,"R",20,page.height()-53,0);
+                
                 //draw X
-                fontType = BaseFont.HELVETICA;
-                encoding = BaseFont.CP1252;
-                bf = BaseFont.createFont(fontType, encoding, BaseFont.NOT_EMBEDDED);
-                cb.setFontAndSize(bf, 43);
-                cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "X", 40, page.height() - 71, 0);
+                writeDirectContent(cb,bf,43,PdfContentByte.ALIGN_LEFT, "X", 40, page.height() - 71, 0);
 
                 //render clinicName;
-                fontType = BaseFont.COURIER;
-                encoding = BaseFont.CP1252;
-                bf = BaseFont.createFont(fontType, encoding, BaseFont.NOT_EMBEDDED);
+                bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 p("render clinicName");
                 int fontFlags = Font.NORMAL;
                 Font font = new Font(bf, 10, fontFlags);
@@ -296,13 +290,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 ct.setText(new Phrase(12, this.clinicName, font));
                 ct.go();
                 //render clnicaTel;
-                fontType = BaseFont.HELVETICA;
-                encoding = BaseFont.CP1252;
-                bf = BaseFont.createFont(fontType, encoding, BaseFont.NOT_EMBEDDED);
-                cb.setFontAndSize(bf, 10);
-                cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 190, (page.height() - 70), 0);
+                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 190, (page.height() - 70), 0);
                 //render clinicFax;
-                cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 190, (page.height() - 80), 0);
+                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 190, (page.height() - 80), 0);
                 //render line after header
                 //cb.setRGBColorStrokeF(0f, 0f, 0f);
                 //cb.setLineWidth(0.8f);
@@ -316,7 +307,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 cb.setRGBColorStrokeF(0f, 0f, 0f);
                 cb.setLineWidth(0.5f);
                 //cb.moveTo(13f, 20f);
-                cb.moveTo(13f, endPara-50);
+                cb.moveTo(13f, endPara-60);
                 cb.lineTo(13f, height - 15f);
                 cb.stroke();
 
@@ -324,7 +315,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 cb.setRGBColorStrokeF(0f, 0f, 0f);
                 cb.setLineWidth(0.5f);
                 //cb.moveTo(285f, 20f);
-                cb.moveTo(285f,endPara-50);
+                cb.moveTo(285f,endPara-60);
                 cb.lineTo(285f, height - 15f);
                 cb.stroke();
                 //draw top line 10, 405, 285, 405, 0.5
@@ -339,16 +330,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 cb.setLineWidth(0.5f);
                 //cb.moveTo(13f, 20f);
                 //cb.lineTo(285f, 20f);
-                cb.moveTo(13f, endPara-50);
-                cb.lineTo(285f, endPara-50);
+                cb.moveTo(13f, endPara-60);
+                cb.lineTo(285f, endPara-60);
                 cb.stroke();
-                //Render "Signature:" left, 20, 55, 0, BaseFont.HELVETICA, 10 , Signature:
-                cb.beginText();
-                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                cb.setFontAndSize(bf, 10);
-               // cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "Signature:", 20f, 50f, 0);
-                cb.showTextAligned(PdfContentByte.ALIGN_LEFT, "Signature:", 20f, endPara-30f, 0);
-                cb.endText();
+                //Render "Signature:"
+                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, "Signature:", 20f, endPara-30f, 0);
                 //Render line for Signature 75, 55, 280, 55, 0.5
                 cb.setRGBColorStrokeF(0f, 0f, 0f);
                 cb.setLineWidth(0.5f);
@@ -357,27 +343,14 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 cb.moveTo(75f, endPara-30f);
                 cb.lineTo(280f, endPara-30f);
                 cb.stroke();
-                //Render doctor name,left, 90, 35, 0, BaseFont.HELVETICA, 10
-                cb.beginText();
-                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                cb.setFontAndSize(bf, 10);
-                //cb.showTextAligned( PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, textBase-20, 0);
-                cb.showTextAligned( PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, endPara-40f, 0);
-                cb.endText();
-
+                //Render doctor name
+                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, endPara-40f, 0);
+                
                 //print promoText
-                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                float width = page.width();
-                String promoText="Created by: OSCAR The open-source EMR www.oscarcanada.org";
-                cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED), 6);
-                cb.showTextAligned(PdfContentByte.ALIGN_CENTER, promoText, (width/2.0f), textBase - 40, 0);
+                writeDirectContent(cb,bf,6,PdfContentByte.ALIGN_LEFT, this.promoText,70, endPara - 55, 0);
                 //print page number
-                String footer = "-" + writer.getPageNumber() + "-";
-                cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED), 10);
-                cb.showTextAligned(PdfContentByte.ALIGN_CENTER, footer, (width / 2.0f), textBase - 30, 0);
-                cb.endText();
-
-                //cb.restoreState();
+                String footer = ""+writer.getPageNumber();
+                writeDirectContent(cb,bf,10,PdfContentByte.ALIGN_RIGHT, footer, 280, endPara - 55, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -415,10 +388,6 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String newline = System.getProperty("line.separator");
         final String PAGESIZE = "printPageSize";
 
-
-        //document.setMargins(36f, 36f,200f , 36f);//left,right,top,bottom
-        //document = new Document(psize, 50, 50, 50, 50);
-
         ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
         PdfWriter writer = null;
 
@@ -437,6 +406,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String[] rxA=rx.split(newline);
         List<String> listRx=new ArrayList();
         String listElem="";
+         //parse rx and put into a list of rx;
         for(String s:rxA){
             p("splitted",s);
             p("s length="+s.length());
@@ -452,9 +422,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
         }
         for(String s:listRx)
-            p("each list element",s);
-
-        //parse rx and put into a list of rx;
+            p("each list element",s);      
 
             // get the print prop values
             Properties props = new Properties();
@@ -523,11 +491,6 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
             writer = PdfWriter.getInstance(document, baosPDF);
             writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax,patientPhone,patientCityPostal,patientAddress,patientName,doctorName,sigDoctorName,rxDate));
-
-            String[] cfgVal = null;
-            StringBuffer tempName = null;
-            String tempValue = null;
-
             document.addTitle(title);
             document.addSubject("");
             document.addKeywords("pdf, itext");
@@ -551,18 +514,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
           
             p("here3");
             cb.setRGBColorStroke(0, 0, 255);
-            //String[] propertyNames = {"patientName", "patientAddress", "patientCityPostal", "patientPhone", "rxDate", "__$line2", "rx", "__signature", "__$line3", "sigDoctorName"};
-            String[] propertyNames = {};
-            String[] fontType;
-            p("here4");
             //render prescriptions
                 for(String rxStr:listRx){
-                 /*     bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                        Phrase hPhrase=new Phrase(rxStr, new Font(bf,10));
-                        PdfPCell rxCell=new PdfPCell(hPhrase);
-                        //remove table border.
-                        rxCell.setBorder(PdfPCell.NO_BORDER);
-                        rxTable.addCell(rxCell);*/
                     bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     Paragraph p=new Paragraph(new Phrase(rxStr,new Font(bf,10)));
                     p.setKeepTogether(true);
@@ -587,13 +540,5 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         }
         System.out.println("***END in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
         return baosPDF;
-    }
-
-    private String getProjectName() {
-        System.out.println("in getProjectName FrmPDFServlet.java");
-        String propPath = "" + this.getClass().getClassLoader().getResource("/");
-        propPath = propPath.substring(0, propPath.lastIndexOf("/WEB-INF"));
-        String propFilename = propPath.substring(propPath.lastIndexOf("/") + 1);
-        return propFilename;
     }
 }
