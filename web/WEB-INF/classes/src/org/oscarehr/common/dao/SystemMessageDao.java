@@ -33,12 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class SystemMessageDao extends AbstractDao {
+public class SystemMessageDao extends AbstractDao<SystemMessage> {
 	
-	public SystemMessage find(Integer id) {
-        return(entityManager.find(SystemMessage.class, id));
+	public SystemMessageDao() {
+		modelClass=SystemMessage.class;
 	}
-	
+
 	public List<SystemMessage> findAll() {
 		Query query = entityManager.createQuery("select x from SystemMessage x order by x.expiryDate desc");
 		

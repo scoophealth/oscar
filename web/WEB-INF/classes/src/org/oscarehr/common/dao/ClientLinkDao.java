@@ -33,12 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class ClientLinkDao extends AbstractDao {
+public class ClientLinkDao extends AbstractDao<ClientLink> {
 	
-	public ClientLink find(Integer id) {
-        return(entityManager.find(ClientLink.class, id));
+	public ClientLinkDao() {
+		modelClass=ClientLink.class;
 	}
-	
+
 	/**
 	 * @param facilityId can not be null
 	 * @param clientId can not be null

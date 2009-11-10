@@ -50,7 +50,7 @@ import org.oscarehr.util.HinValidator;
  * data changed. i.e. if I say the picture is valid, then some one uploads a new one, I need to be able to say only the previous one was caled valid, this one is no longer valid until some one validates it too.
  */
 @Entity
-public class HnrDataValidation {
+public class HnrDataValidation extends AbstractModel<Integer> {
 
 	private static final char RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR = '\u009C';
 

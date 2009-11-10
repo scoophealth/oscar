@@ -17,7 +17,7 @@ import oscar.util.UtilDateUtilities;
 
 @Entity
 @Table(name = "drugs")
-public class Drug implements Serializable {
+public class Drug extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

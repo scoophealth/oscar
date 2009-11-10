@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="dx_associations")
-public class DxAssociation implements Serializable {
+public class DxAssociation extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

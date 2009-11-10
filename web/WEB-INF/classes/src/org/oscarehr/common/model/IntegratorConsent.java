@@ -21,7 +21,7 @@ import org.hibernate.annotations.CollectionOfElements;
 /**
  */
 @Entity
-public class IntegratorConsent {
+public class IntegratorConsent extends AbstractModel<Integer> {
 
 	public enum ConsentStatus {
 		GIVEN, REVOKED, DEFERRED_NOT_APPROPRIATE, DEFERRED_CONSIDER_LATER, REFUSED_TO_SIGN

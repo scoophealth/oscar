@@ -26,10 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class DigitalSignatureDao extends AbstractDao {
-	
-    public DigitalSignature find(Integer id) {
-        return(entityManager.find(DigitalSignature.class, id));
-    }
+public class DigitalSignatureDao extends AbstractDao<DigitalSignature> {
     
+	public DigitalSignatureDao() {
+		modelClass=DigitalSignature.class;
+	}
 }

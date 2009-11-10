@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
  * make a new entity instead of updating an existing one.
  */
 @Entity
-public class CdsClientForm implements Serializable {
+public class CdsClientForm extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

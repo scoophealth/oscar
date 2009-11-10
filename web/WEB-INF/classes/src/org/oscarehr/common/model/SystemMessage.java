@@ -32,7 +32,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class SystemMessage {
+public class SystemMessage extends AbstractModel<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

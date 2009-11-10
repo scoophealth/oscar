@@ -23,131 +23,123 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
+
 import org.oscarehr.common.model.BillingService;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import oscar.util.UtilDateUtilities;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class BillingServiceDao extends AbstractDao {
-    public final String  BC = "BC";
+public class BillingServiceDao extends AbstractDao<BillingService> {
+	public final String BC = "BC";
+
+	public BillingServiceDao() {
+		modelClass=BillingService.class;
+	}
 	
-    public BillingService find(Integer id) {
-        return(entityManager.find(BillingService.class, id));
-    }
+	public List<BillingService> findBillingCodesByCode(String code, String region) {
+		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and region = (:region) order by bs.billingserviceDate");
+		query.setParameter("code", code + "%");
+		query.setParameter("region", region);
 
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		return list;
+	}
 
-    public List<BillingService> findBillingCodesByCode(String code,String region) {
-        Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode like (:code) and region = (:region) order by bs.billingserviceDate");
-        query.setParameter("code", code+"%");
-        query.setParameter("region", region);
-        List<BillingService> list  = query.getResultList();
-        return list;
-    }
+	public List<BillingService> findBillingCodesByCode(String code, String region, int order) {
+		return findBillingCodesByCode(code, region, new Date(), order);
+	}
 
-    public List<BillingService> findBillingCodesByCode(String code,String region, int order) {
-        return findBillingCodesByCode(code,region,new Date(), order);
-    }
+	public List<BillingService> findBillingCodesByCode(String code, String region, Date billingDate, int order) {
+		String orderByClause = order == 1 ? "desc" : "";
+		System.out.println("Order by " + orderByClause + " code " + code);
+		Query query = entityManager
+		        .createQuery("select bs  from BillingService bs where bs.region = (:region) and bs.serviceCode like (:code) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))  order by bs.serviceCode "
+		                + orderByClause);// (:order) ");
+		query.setParameter("region", region);
+		query.setParameter("code", code + "%");
+		query.setParameter("billDate", billingDate);
+		// query.setParameter("order", orderByClause);
 
-    public List<BillingService> findBillingCodesByCode(String code,String region,Date billingDate, int order) {
-        String orderByClause = order == 1?"desc":"";
-        System.out.println("Order by "+orderByClause+" code "+code);
-        Query query = entityManager.createQuery("select bs  from BillingService bs where bs.region = (:region) and bs.serviceCode like (:code) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))  order by bs.serviceCode "+orderByClause);//(:order) ");
-        query.setParameter("region", region);
-        query.setParameter("code", code+"%");
-        query.setParameter("billDate", billingDate);
-        //query.setParameter("order", orderByClause);
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
 
-        List<BillingService> list  = query.getResultList();
+		return list;
+	}
 
-        return list;
-    }
+	public List<BillingService> search(String str, String region) {
 
+		Query query = entityManager.createQuery("select bs from BillingService bs where bs.region = (:region) and bs.serviceCode like (:searchString) or bs.description like (:searchString) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
+		query.setParameter("region", region);
+		query.setParameter("searchString", str);
+		// String sql = "select * from billingservice where service_code like '"+str+"' or description like '%"+str+"%' ";
 
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		return list;
+	}
 
+	public BillingService searchBillingCode(String str, String region) {
+		return searchBillingCode(str, region, new Date());
+	}
 
+	public BillingService searchBillingCode(String str, String region, Date billingDate) {
+		Query query = entityManager.createQuery("select bs from BillingService bs where bs.region = (:region) and bs.serviceCode like (:searchStr) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
 
-    public List<BillingService> search(String str,String region){
-      
-      Query query = entityManager.createQuery("select bs from BillingService bs where bs.region = (:region) and bs.serviceCode like (:searchString) or bs.description like (:searchString) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
-      query.setParameter("region",region);
-      query.setParameter("searchString",str);
-      //String sql = "select * from billingservice where service_code like '"+str+"' or description like '%"+str+"%' ";
-      List<BillingService> list  = query.getResultList();
-      return list;
-   }
+		query.setParameter("region", region);
+		query.setParameter("searchStr", str + "%");
+		query.setParameter("billDate", billingDate);
 
+		@SuppressWarnings("unchecked")
+		List<BillingService> list = query.getResultList();
+		if (list == null || list.size() < 1) {
+			return null;
+		}
 
-   public BillingService searchBillingCode(String str,String region){
-        return searchBillingCode( str, region, new Date() );
-   }
-   
-   public BillingService searchBillingCode(String str,String region, Date billingDate){
-      Query query = entityManager.createQuery("select bs from BillingService bs where bs.region = (:region) and bs.serviceCode like (:searchStr) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
-    
-      query.setParameter("region",region);
-      query.setParameter("searchStr", str+"%");
-      query.setParameter("billDate", billingDate);
-      List<BillingService> list  = query.getResultList();
-      if ( list == null || list.size() < 1){
-          return null;
-      }
+		return list.get(list.size() - 1);
+	}
 
-      return list.get(list.size()-1);
-   }
+	public boolean editBillingCodeDesc(String desc, String val, String codeId) {
+		boolean retval = true;
+		BillingService billingservice = find(Integer.parseInt(codeId));
+		billingservice.setValue(val);
+		billingservice.setDescription(desc);
+		merge(billingservice);
+		return retval;
+	}
 
+	public boolean editBillingCode(String val, String codeId) {
+		boolean retval = true;
+		BillingService billingservice = find(Integer.parseInt(codeId));
+		billingservice.setValue(val);
+		merge(billingservice);
+		return retval;
+	}
 
-   
+	public boolean insertBillingCode(String code, String date, String description, String termDate, String region) {
+		boolean retval = true;
+		BillingService bs = new BillingService();
+		bs.setServiceCode(code);
+		bs.setDescription(description);
+		bs.setTerminationDate(UtilDateUtilities.StringToDate(termDate));
+		bs.setBillingserviceDate(UtilDateUtilities.StringToDate(date));
+		bs.setRegion(region);
+		entityManager.persist(bs);
+		return retval;
+	}
 
+	// /
+	// public int searchNumBillingCode(String str){
+	// String sql =
+	// "select count(*) as coun from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
+	// Query query = entityManager.createNativeQuery(sql);
+	// List<BillingService> list = query.getResultList();
+	// return list.size();
+	//
+	// }
 
-
-
-
-
-   public boolean editBillingCodeDesc(String desc, String val, String codeId){
-      boolean retval = true;
-      BillingService billingservice = find(Integer.parseInt(codeId));
-      billingservice.setValue(val);
-      billingservice.setDescription(desc);
-      merge(billingservice);
-      return retval;
-   }
-
-
-
-   public boolean editBillingCode(String val, String codeId){
-      boolean retval = true;
-      BillingService billingservice = find(Integer.parseInt(codeId));
-      billingservice.setValue(val);
-      merge(billingservice);
-      return retval;
-   }
-
-
-
-   public boolean insertBillingCode(String value, String code, String date, String description, String termDate,String region) {
-      boolean retval = true;
-      BillingService bs = new BillingService();
-      bs.setServiceCode(code);
-      bs.setDescription(description);
-      bs.setTerminationDate(UtilDateUtilities.StringToDate(termDate));
-      bs.setBillingserviceDate(UtilDateUtilities.StringToDate(date));
-      bs.setRegion(region);
-      entityManager.persist(bs);
-      return retval;
-   }
-
-///
-//   public int searchNumBillingCode(String str){
-//      String sql = "select count(*) as coun from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
-//      Query query = entityManager.createNativeQuery(sql);
-//      List<BillingService> list  = query.getResultList();
-//      return list.size();
-//
-//   }
-
-
-    
 }

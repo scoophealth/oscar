@@ -30,13 +30,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class IntegratorConsentDao extends AbstractDao {
+public class IntegratorConsentDao extends AbstractDao<IntegratorConsent> {
 
-    public IntegratorConsent find(Integer id) {
-        return(entityManager.find(IntegratorConsent.class, id));
-    }
-    
-    /**
+	public IntegratorConsentDao() {
+		modelClass=IntegratorConsent.class;
+	}
+
+	/**
      * results are ordered by newest first
      */
     public IntegratorConsent findLatestByFacilityDemographic(int facilityId, int demographicId) {
@@ -45,7 +45,7 @@ public class IntegratorConsentDao extends AbstractDao {
 		query.setParameter(2, demographicId);
 		query.setMaxResults(1);
 
-		return((IntegratorConsent)getSingleResultOrNull(query));
+		return(getSingleResultOrNull(query));
     }
 
     /**

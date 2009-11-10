@@ -30,13 +30,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class FacilityDao extends AbstractDao {
+public class FacilityDao extends AbstractDao<Facility> {
 
-    public Facility find(Integer id) {
-        return(entityManager.find(Facility.class, id));
-    }    
-    
-    /**
+	public FacilityDao() {
+		modelClass=Facility.class;
+	}
+
+	/**
      * Find all ordered by name.
      * @param active, null is find all, true is find only active, false is find only inactive.
      */

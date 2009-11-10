@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.PreUpdate;
 
 @Entity
-public class Facility implements Serializable {
+public class Facility extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -25,11 +25,18 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.CdsClientFormData;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class CdsClientFormDataDao extends AbstractDao {
+@Transactional(propagation=Propagation.REQUIRES_NEW)
+public class CdsClientFormDataDao extends AbstractDao<CdsClientFormData> {
 
-    public List<CdsClientFormData> findByQuestion(Integer cdsClientFormId, String question) {
+	public CdsClientFormDataDao() {
+		modelClass=CdsClientFormData.class;
+	}
+
+	public List<CdsClientFormData> findByQuestion(Integer cdsClientFormId, String question) {
 
 		String sqlCommand = "select x from CdsClientFormData x where x.cdsClientFormId=?1 and x.question=?2";
 
@@ -57,7 +64,7 @@ public class CdsClientFormDataDao extends AbstractDao {
 		query.setParameter(1, cdsClientFormId);
 		query.setParameter(2, answer);
 
-		return (CdsClientFormData) (getSingleResultOrNull(query));
+		return (getSingleResultOrNull(query));
 	}
 
 }

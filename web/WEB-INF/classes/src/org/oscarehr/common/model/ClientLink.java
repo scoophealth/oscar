@@ -34,7 +34,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class ClientLink {
+public class ClientLink extends AbstractModel<Integer> {
 
 	/**
 	 * As a special mention, the OSCAR_CAISI links are not actually currently saved locally due to

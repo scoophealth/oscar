@@ -17,7 +17,7 @@
 %>
 <ul>
 	<%
-		for (int facilityId : facilityIds)
+		for (Integer facilityId : facilityIds)
 		{
 			Facility facility=facilityDao.find(facilityId);
 			%>

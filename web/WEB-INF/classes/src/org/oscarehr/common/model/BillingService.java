@@ -23,7 +23,6 @@
  */
 package org.oscarehr.common.model;
 
-
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -36,189 +35,194 @@ import javax.persistence.Temporal;
 
 @Entity
 @Table(name = "billingservice")
-public class BillingService implements Serializable {
+public class BillingService extends AbstractModel<Integer> implements Serializable {
 
-        @Id()
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "billingservice_no")
-        private int billingserviceNo;
-    @Column(name = "service_compositecode")
-    private String serviceCompositecode;
-    @Column(name = "service_code")
-    private String serviceCode;
-    //@Column(name = "description")
-    private String description;
-    //@Column(name = "value")
-    private String value;
-    //@Column(name = "percentage")
-    private String percentage;
-    @Column(name = "billingservice_date")
-    @Temporal(value = javax.persistence.TemporalType.DATE)
-    private Date billingserviceDate;
-    //@Column(name = "specialty")
-    private String specialty;
-    //@Column(name = "region")
-    private String region;
-    //@Column(name = "anaesthesia")
-    private String anaesthesia;
-    @Column(name = "termination_date")
-    @Temporal(value = javax.persistence.TemporalType.DATE)
-    private Date terminationDate;
+	@Id()
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "billingservice_no")
+	private Integer billingserviceNo;
 
-    /**
-     * @return the billingserviceNo
-     */
-    public int getBillingserviceNo() {
-        return billingserviceNo;
+	@Column(name = "service_compositecode")
+	private String serviceCompositecode;
+	@Column(name = "service_code")
+	private String serviceCode;
+	// @Column(name = "description")
+	private String description;
+	// @Column(name = "value")
+	private String value;
+	// @Column(name = "percentage")
+	private String percentage;
+	@Column(name = "billingservice_date")
+	@Temporal(value = javax.persistence.TemporalType.DATE)
+	private Date billingserviceDate;
+	// @Column(name = "specialty")
+	private String specialty;
+	// @Column(name = "region")
+	private String region;
+	// @Column(name = "anaesthesia")
+	private String anaesthesia;
+	@Column(name = "termination_date")
+	@Temporal(value = javax.persistence.TemporalType.DATE)
+	private Date terminationDate;
+
+	@Override
+    public Integer getId() {
+	    // TODO Auto-generated method stub
+	    return billingserviceNo;
     }
 
-    /**
-     * @param billingserviceNo the billingserviceNo to set
-     */
-    public void setBillingserviceNo(int billingserviceNo) {
-        this.billingserviceNo = billingserviceNo;
-    }
+	/**
+	 * @return the billingserviceNo
+	 */
+	public int getBillingserviceNo() {
+		return billingserviceNo;
+	}
 
-    /**
-     * @return the serviceCompositecode
-     */
-    public String getServiceCompositecode() {
-        return serviceCompositecode;
-    }
+	/**
+	 * @param billingserviceNo the billingserviceNo to set
+	 */
+	public void setBillingserviceNo(int billingserviceNo) {
+		this.billingserviceNo = billingserviceNo;
+	}
 
-    /**
-     * @param serviceCompositecode the serviceCompositecode to set
-     */
-    public void setServiceCompositecode(String serviceCompositecode) {
-        this.serviceCompositecode = serviceCompositecode;
-    }
+	/**
+	 * @return the serviceCompositecode
+	 */
+	public String getServiceCompositecode() {
+		return serviceCompositecode;
+	}
 
-    /**
-     * @return the service_code
-     */
-    public String getServiceCode() {
-        return serviceCode;
-    }
+	/**
+	 * @param serviceCompositecode the serviceCompositecode to set
+	 */
+	public void setServiceCompositecode(String serviceCompositecode) {
+		this.serviceCompositecode = serviceCompositecode;
+	}
 
-    /**
-     * @param service_code the service_code to set
-     */
-    public void setServiceCode(String service_code) {
-        this.serviceCode = service_code;
-    }
+	/**
+	 * @return the service_code
+	 */
+	public String getServiceCode() {
+		return serviceCode;
+	}
 
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * @param service_code the service_code to set
+	 */
+	public void setServiceCode(String service_code) {
+		this.serviceCode = service_code;
+	}
 
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * @return the value
-     */
-    public String getValue() {
-        return value;
-    }
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    /**
-     * @param value the value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
 
-    /**
-     * @return the percentage
-     */
-    public String getPercentage() {
-        return percentage;
-    }
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    /**
-     * @param percentage the percentage to set
-     */
-    public void setPercentage(String percentage) {
-        this.percentage = percentage;
-    }
+	/**
+	 * @return the percentage
+	 */
+	public String getPercentage() {
+		return percentage;
+	}
 
-    /**
-     * @return the billingserviceDate
-     */
-    public Date getBillingserviceDate() {
-        return billingserviceDate;
-    }
+	/**
+	 * @param percentage the percentage to set
+	 */
+	public void setPercentage(String percentage) {
+		this.percentage = percentage;
+	}
 
-    /**
-     * @param billingserviceDate the billingserviceDate to set
-     */
-    public void setBillingserviceDate(Date billingserviceDate) {
-        this.billingserviceDate = billingserviceDate;
-    }
+	/**
+	 * @return the billingserviceDate
+	 */
+	public Date getBillingserviceDate() {
+		return billingserviceDate;
+	}
 
-    /**
-     * @return the specialty
-     */
-    public String getSpecialty() {
-        return specialty;
-    }
+	/**
+	 * @param billingserviceDate the billingserviceDate to set
+	 */
+	public void setBillingserviceDate(Date billingserviceDate) {
+		this.billingserviceDate = billingserviceDate;
+	}
 
-    /**
-     * @param specialty the specialty to set
-     */
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
+	/**
+	 * @return the specialty
+	 */
+	public String getSpecialty() {
+		return specialty;
+	}
 
-    /**
-     * @return the region
-     */
-    public String getRegion() {
-        return region;
-    }
+	/**
+	 * @param specialty the specialty to set
+	 */
+	public void setSpecialty(String specialty) {
+		this.specialty = specialty;
+	}
 
-    /**
-     * @param region the region to set
-     */
-    public void setRegion(String region) {
-        this.region = region;
-    }
+	/**
+	 * @return the region
+	 */
+	public String getRegion() {
+		return region;
+	}
 
-    /**
-     * @return the anaesthesia
-     */
-    public String getAnaesthesia() {
-        return anaesthesia;
-    }
+	/**
+	 * @param region the region to set
+	 */
+	public void setRegion(String region) {
+		this.region = region;
+	}
 
-    /**
-     * @param anaesthesia the anaesthesia to set
-     */
-    public void setAnaesthesia(String anaesthesia) {
-        this.anaesthesia = anaesthesia;
-    }
+	/**
+	 * @return the anaesthesia
+	 */
+	public String getAnaesthesia() {
+		return anaesthesia;
+	}
 
-    /**
-     * @return the terminationDate
-     */
-    public Date getTerminationDate() {
-        return terminationDate;
-    }
+	/**
+	 * @param anaesthesia the anaesthesia to set
+	 */
+	public void setAnaesthesia(String anaesthesia) {
+		this.anaesthesia = anaesthesia;
+	}
 
-    /**
-     * @param terminationDate the terminationDate to set
-     */
-    public void setTerminationDate(Date terminationDate) {
-        this.terminationDate = terminationDate;
-    }
+	/**
+	 * @return the terminationDate
+	 */
+	public Date getTerminationDate() {
+		return terminationDate;
+	}
 
+	/**
+	 * @param terminationDate the terminationDate to set
+	 */
+	public void setTerminationDate(Date terminationDate) {
+		this.terminationDate = terminationDate;
+	}
 
-	
 }

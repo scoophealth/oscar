@@ -18,7 +18,7 @@ import javax.persistence.PreUpdate;
  * we are not able to use the cds category.
  */
 @Entity
-public class CdsClientFormData implements Serializable {
+public class CdsClientFormData extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

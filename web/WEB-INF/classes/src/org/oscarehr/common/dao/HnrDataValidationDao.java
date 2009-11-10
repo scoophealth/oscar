@@ -31,10 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class HnrDataValidationDao extends AbstractDao {
+public class HnrDataValidationDao extends AbstractDao<HnrDataValidation> {
 
-	public HnrDataValidation find(Integer id) {
-		return (entityManager.find(HnrDataValidation.class, id));
+	public HnrDataValidationDao() {
+		modelClass=HnrDataValidation.class;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class HnrDataValidationDao extends AbstractDao {
 		query.setMaxResults(1);
 		
 		// run query
-		HnrDataValidation result = (HnrDataValidation)getSingleResultOrNull(query);
+		HnrDataValidation result = getSingleResultOrNull(query);
 		return (result);
 	}
 }

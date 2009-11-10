@@ -11,13 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class DxDao extends AbstractDao {
+public class DxDao extends AbstractDao<DxAssociation> {
 
-	public DxAssociation findAssociation(Integer id) {
-		return (entityManager.find(DxAssociation.class, id));
+	public DxDao() {
+		modelClass=DxAssociation.class;
 	}
-	
-    public List<DxAssociation> findAllAssociations()
+
+	public List<DxAssociation> findAllAssociations()
 	{			
 		Query query = entityManager.createQuery("select x from DxAssociation x order by x.dxCodeType,x.dxCode");
 		
@@ -37,6 +37,7 @@ public class DxDao extends AbstractDao {
     	query.setParameter(1, codeType);
     	query.setParameter(2, code);
     	    	
+        @SuppressWarnings("unchecked")
     	List<DxAssociation> results = query.getResultList();
     	if(!results.isEmpty()) {
     		return results.get(0);

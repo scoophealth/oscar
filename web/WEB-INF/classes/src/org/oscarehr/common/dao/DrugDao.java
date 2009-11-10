@@ -30,13 +30,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class DrugDao extends AbstractDao {
+public class DrugDao extends AbstractDao<Drug> {
 
-    public Drug find(Integer id) {
-        return (entityManager.find(Drug.class, id));
-    }
+	public DrugDao() {
+		modelClass=Drug.class;
+	}
 
-    /**
+	/**
      * @param archived can be null for both archived and non archived entries
      */
     public List<Drug> findByDemographicIdOrderByDate(Integer demographicId, Boolean archived) {
@@ -87,7 +87,7 @@ public class DrugDao extends AbstractDao {
             
             boolean b = true;
             for (int i = 0; i < rt.size(); i++) {
-                Drug p2 = (Drug) rt.get(i);
+                Drug p2 = rt.get(i);
                 if (p2.getGcnSeqNo() == drug.getGcnSeqNo()) {
                     //    System.out.println("p2.getGCN_SEQNO().intValue() == prescriptDrug.getGCN_SEQNO().intValue()="+p2.getGCN_SEQNO());
                     if (p2.getGcnSeqNo() != 0){ // not custom - safe GCN

@@ -26,9 +26,16 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.CdsClientForm;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class CdsClientFormDao extends AbstractDao {
+@Transactional(propagation=Propagation.REQUIRES_NEW)
+public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
+
+	public CdsClientFormDao() {
+		modelClass=CdsClientForm.class;
+	}
 
 	public CdsClientForm findLatestByFacilityClient(Integer facilityId, Integer clientId) {
 
@@ -39,7 +46,7 @@ public class CdsClientFormDao extends AbstractDao {
 		query.setParameter(2, clientId);
 		query.setMaxResults(1);
 		
-		return ((CdsClientForm)getSingleResultOrNull(query));
+		return getSingleResultOrNull(query);
 	}
 
     public List<CdsClientForm> findByFacilityClient(Integer facilityId, Integer clientId) {
