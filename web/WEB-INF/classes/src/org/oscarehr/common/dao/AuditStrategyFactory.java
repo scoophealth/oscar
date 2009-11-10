@@ -36,14 +36,8 @@ public class AuditStrategyFactory {
 		}
 	}
 
-	private static final Map<AuditStrategyKey, AuditStrategy> strategies = new HashMap<AuditStrategyKey, AuditStrategy>();
-
 	public static AuditStrategy create(Object entity, AuditableEvent event) {
-		if (entity == null || event == null) {
-			throw new IllegalArgumentException("Parameters entity and event must be non-null");
-		}
-
-		return strategies.get(new AuditStrategyKey(entity.getClass(), event));
+		return(null);
 	}
 
 	private AuditStrategyFactory() {}
