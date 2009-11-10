@@ -1,9 +1,10 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@page import="oscar.oscarRx.data.RxDrugData,java.util.*" %>
 <%@page import="java.text.SimpleDateFormat" %>
 <%@page import="java.util.Calendar" %>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData" %>
-<%@page import="oscar.oscarRx.util.RxUtil" %>
+<%@page import="oscar.oscarRx.util.*" %>
 <%
 System.out.println("***### IN prescribe.jsp");
 
@@ -94,8 +95,33 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
         <label style="float:left;width:80px;">Written Date:</label>
            <input type="text" id="writtenDate_<%=rand%>"  name="writtenDate_<%=rand%>" value="<%=writtenDate%>" />
            <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="addFav('<%=rand%>','<%=drugName%>')">Add to Favorite</a>
+       </div>
+    
+           <div id="renalDosing_<%=rand%>" ></div>
 
-    </div>
+           <oscar:oscarPropertiesCheck property="billregion" value="ON">
+           <%
+            ArrayList<LimitedUseCode> luList = LimitedUseLookup.getLUInfoForDin(rx.getRegionalIdentifier());
+            if (luList != null){ System.out.println("inside luList size is "+luList.size()); %>
+            <div style="margin-top:2px;">
+            <table style="border-width: 1px; border-spacing: 2px; border-style: outset; border-color: black;">
+                        <tr>
+                                <th colspan="2" align="left">Limited Use Codes</th>
+                        </tr>
+
+                        <%for (LimitedUseCode limitedUseCode : luList){%>
+                        <tr>
+                                <td valign="top"><a
+                                        onclick="javascript:addLuCode('<%=limitedUseCode.getUseId()%>')"
+                                        href="javascript: return void();"><%=limitedUseCode.getUseId()%></a>&nbsp;
+                                </td>
+                                <td><%=limitedUseCode.getTxt()%></td>
+                        </tr>
+                        <%}%>
+            </table>
+            </div>
+            <%}%>
+            </oscar:oscarPropertiesCheck>
 
 </fieldset>
    
@@ -103,6 +129,10 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
             $('instructions_<%=rand%>').focus();
             checkAllergy('<%=rand%>','<%=rx.getAtcCode()%>');
             checkIfInactive('<%=rand%>','<%=rx.getRegionalIdentifier()%>');
+            <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
+            getRenalDosingInformation('renalDosing_<%=rand%>','<%=rx.getAtcCode()%>');
+            </oscar:oscarPropertiesCheck>
+
         </script>
  <%}%>
  
