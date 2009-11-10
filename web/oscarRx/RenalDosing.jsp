@@ -132,7 +132,7 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
     font-size: 11px;
     }
 </style>
-<div style="float:left; margin-left:10px; margin-right 10px;">
+<div style="float:left; margin-left:10px; margin-right: 10px;">
     <h3>Dosing Information <small><a href="javascript: function myFunction() {return false; }" onclick="getRenalDosingInformation();">Refresh</a></small></h3>
     <table class="sofT">
         <tr class="heading">
@@ -186,7 +186,9 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
     </div>
     
     <div style="clear:left"><%=rd.getMoreinfo()%></div>
-    
+    <%if (request.getParameter("divId") != null){ %>
+    <div style="float:right"><a href="javascript:void(0);"  onclick="$('<%=request.getParameter("divId")%>').toggle();">hide</a></div>
+    <%}%>
 </div>
 <%--
   -Right now only works for CML
