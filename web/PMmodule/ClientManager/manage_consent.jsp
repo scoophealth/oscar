@@ -182,25 +182,8 @@
 				Consent obtained by <%=manageConsent.getPreviousConsentProvider()%> on <%=manageConsent.getPreviousConsentDate()%> <br/>
 			<%
 		}
-	%>
-	<script type="text/javascript">
-		function verifyRequiredSignature() {
-		
-			// this is not true, as per discussion we can not sanely verify that a signature has been provided and is a human process.
-			/*
-			var currentStatus = document.getElementById('signature_status').value;
-			if(currentStatus == 'FOUND') {
-				return true;
-			}
-			alert('The client must sign the form to obtain consent');
-			return false;
-			*/
-			
-			return(true);
-		}
-	</script>
-		
-	<input type="submit" onclick="return verifyRequiredSignature()" value="sign save and exit" <%=manageConsent.disableEdit()?"disabled=\"disabled\" style=\"display:none\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
+	%>		
+	<input type="submit" value="sign save and exit" <%=manageConsent.disableEdit()?"disabled=\"disabled\" style=\"display:none\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>
