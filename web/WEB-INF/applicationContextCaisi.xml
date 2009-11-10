@@ -19,9 +19,6 @@
 		</property>
 	</bean>
 
-	<!-- audit strategy -->
-	<bean id="roomAuditStrategy" class="org.oscarehr.PMmodule.dao.RoomAuditStrategy" lazy-init="default" autowire="byName" />
-
 	<!-- DAO -->
 	<bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO" autowire="byName" />
 	<bean id="accessTypeDAO" class="org.caisi.dao.AccessTypeDAO" autowire="byName" />
