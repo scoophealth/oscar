@@ -943,14 +943,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     	programPk.setCaisiItemId(cachedDemographicNote.getCaisiProgramId());
     	CachedProgram remoteProgram=CaisiIntegratorManager.getRemoteProgram(programPk);
     	if (remoteProgram!=null) noteDisplay.program=remoteProgram.getName();
-    	else noteDisplay.program="Not unavailable";
+    	else noteDisplay.program="Unavailable";
     	
     	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
     	providerPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
     	providerPk.setCaisiItemId(cachedDemographicNote.getObservationCaisiProviderId());
     	CachedProvider remoteProvider=CaisiIntegratorManager.getProvider(providerPk);
     	if (remoteProvider!=null) noteDisplay.provider=remoteProvider.getLastName()+", "+remoteProvider.getFirstName();
-    	else noteDisplay.provider="Not unavailable";
+    	else noteDisplay.provider="Unavailable";
     	
     	noteDisplay.role=cachedDemographicNote.getRole();
     	noteDisplay.status=cachedDemographicNote.getSigningCaisiProviderId()!=null?"Signed":"Unsigned";
