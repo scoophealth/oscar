@@ -25,12 +25,15 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -42,7 +45,6 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.SpringUtils;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarRx.data.RxPrescriptionData;
 
 
 public final class RxDeleteRxAction extends DispatchAction {
@@ -168,7 +170,14 @@ public final class RxDeleteRxAction extends DispatchAction {
 
         drugDao.merge(drug);
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);
-        response.getWriter().write(id);
+       
+        Hashtable d = new Hashtable();
+        d.put("id",""+id);
+        d.put("reason",reason);
+        response.setContentType("text/x-json");
+        JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d );
+        jsonArray.write(response.getWriter());
+
         return null;
     }
 
