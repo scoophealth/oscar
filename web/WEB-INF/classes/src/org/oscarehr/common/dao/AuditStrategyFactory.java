@@ -46,14 +46,6 @@ public class AuditStrategyFactory {
 		return strategies.get(new AuditStrategyKey(entity.getClass(), event));
 	}
 
-	public static void register(Class clazz, AuditableEvent event, AuditStrategy strategy) {
-		if (clazz == null || event == null || strategy == null) {
-			throw new IllegalArgumentException("Parameters class, event and strategy must be non-null");
-		}
-
-		strategies.put(new AuditStrategyKey(clazz, event), strategy);
-	}
-
 	private AuditStrategyFactory() {}
 
 }
