@@ -99,7 +99,7 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
     
            <div id="renalDosing_<%=rand%>" ></div>
 
-           <oscar:oscarPropertiesCheck property="billregion" value="ON">
+           <oscar:oscarPropertiesCheck property="billregion" value="ON" >
            <%
             ArrayList<LimitedUseCode> luList = LimitedUseLookup.getLUInfoForDin(rx.getRegionalIdentifier());
             if (luList != null){ System.out.println("inside luList size is "+luList.size()); %>
@@ -111,11 +111,10 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
 
                         <%for (LimitedUseCode limitedUseCode : luList){%>
                         <tr>
-                                <td valign="top"><a
-                                        onclick="javascript:addLuCode('<%=limitedUseCode.getUseId()%>')"
-                                        href="javascript: return void();"><%=limitedUseCode.getUseId()%></a>&nbsp;
-                                </td>
-                                <td><%=limitedUseCode.getTxt()%></td>
+                            <td valign="top">
+                                <a onclick="javascript:addLuCode('instructions_<%=rand%>','<%=limitedUseCode.getUseId()%>')" href="javascript: return void();"><%=limitedUseCode.getUseId()%></a>&nbsp;
+                            </td>
+                            <td><%=limitedUseCode.getTxt()%></td>
                         </tr>
                         <%}%>
             </table>
