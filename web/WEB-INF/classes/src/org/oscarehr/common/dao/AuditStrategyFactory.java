@@ -36,10 +36,6 @@ public class AuditStrategyFactory {
 		}
 	}
 
-	public static AuditStrategy create(Object entity, AuditableEvent event) {
-		return(null);
-	}
-
 	private AuditStrategyFactory() {}
 
 }

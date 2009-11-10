@@ -25,7 +25,7 @@ public class AuditInterceptor extends EmptyInterceptor {
 	@Override
 	public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
 		if (entity instanceof Auditable) {
-			AuditStrategy strategy = AuditStrategyFactory.create(entity, AuditableEvent.CREATE);
+			AuditStrategy strategy = null;
 			
 			if (strategy != null) {
 				strategies.add(strategy);
@@ -42,7 +42,7 @@ public class AuditInterceptor extends EmptyInterceptor {
 	@Override
 	public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
 		if (entity instanceof Auditable) {
-			AuditStrategy strategy = AuditStrategyFactory.create(entity, AuditableEvent.UPDATE);
+			AuditStrategy strategy = null;
 			
 			if (strategy != null) {
 				strategies.add(strategy);
@@ -59,7 +59,7 @@ public class AuditInterceptor extends EmptyInterceptor {
 	@Override
 	public void onDelete(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
 		if (entity instanceof Auditable) {
-			AuditStrategy strategy = AuditStrategyFactory.create(entity, AuditableEvent.DELETE);
+			AuditStrategy strategy = null;
 			
 			if (strategy != null) {
 				strategies.add(strategy);
