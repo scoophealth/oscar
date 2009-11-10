@@ -49,9 +49,6 @@ public class AuditInterceptor extends EmptyInterceptor {
 	 */
 	@Override
 	public void postFlush(Iterator entities) {
-		for (AuditStrategy strategy : strategies) {
-	        strategy.saveAudits();
-        }
 	}
 
 }
