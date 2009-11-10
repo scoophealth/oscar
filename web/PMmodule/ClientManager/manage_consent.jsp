@@ -50,9 +50,10 @@
 					<br /><br />
 					<input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> /><span style="font-weight:bold">I choose to exclude my mental health record from the integration of my information.</span>
 					<br /><br />
-					I do not wish records from the following agencies to be seen in other agencies that provide me care.
+				--%>
+				
 					<br />
-					Check to indicate which agencies to exclude
+					Check to indicate which agencies to exclude from consent :
 					<br />
 					<%
 						Collection<CachedFacility> facilitiesToDisplay=manageConsent.getAllFacilitiesToDisplay();
@@ -75,7 +76,6 @@
 						}
 					%>
 					<br />	
-				--%>	
 			</td>
 		</tr>
 		<tr>
