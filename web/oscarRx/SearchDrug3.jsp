@@ -480,14 +480,14 @@ body {
                         <tr>
                             <td>
                                 <%-- div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title" /></div --%>
-                                <html:form action="/oscarRx/searchDrug"  onsubmit="return processData();" styleId="drugForm">
+                                <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" styleId="drugForm">
                                     <div id="rxText" style="float:left;"></div><div id="interactionsRxMyD" style="float:right;"></div><br style="clear:left;">
                                 
                                     <html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
                                     <table border="0">
                                         <tr valign="top">
                                             <td style="width:350px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
-                                                <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off" />
+                                                <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off"  />
                                                 <div id="autocomplete_choices"></div>
                                                 <span id="indicator1" style="display: none"><img src="/images/spinner.gif" alt="Working..." ></span>                                                
 
@@ -943,16 +943,17 @@ body {
     }
 
     function Discontinue2(id,reason,comment){
-        var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?method=Discontinue"  ;
+        var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=Discontinue"  ;
         var data="drugId="+id+"&reason="+reason+"&comment="+comment;
             new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                  oscarLog("Drug is now discontinued"+transport.responseText);
+                  oscarLog("Drug is now discontinued>"+transport.responseText);
+                  var json=transport.responseText.evalJSON();
                   $('discontinueUI').hide();
-                  //$(rxDate).style.textDecoration='line-through';
-                  //$(reRx).style.textDecoration='line-through';
-                  //$(del).style.textDecoration='line-through';
-                  //$(discont).style.textDecoration='line-through';
-                  //$(prescrip).style.textDecoration='line-through';
+                  $('rxDate_'+json.id).style.textDecoration='line-through';
+                  $('reRx_'+json.id).style.textDecoration='line-through';
+                  $('del_'+json.id).style.textDecoration='line-through';
+                  $('discont_'+json.id).innerHTML = json.reason;
+                  $('prescrip_'+json.id).style.textDecoration='line-through';
                   oscarLog("here2");
             }});
     
@@ -1360,6 +1361,17 @@ function updateQty(element){
         return false;
     }
 
+
+         function getRenalDosingInformation(divId,atcCode){
+               var url = "RenalDosing.jsp";
+               var ran_number=Math.round(Math.random()*1000000);
+               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode="+atcCode+"&divId="+divId+"&rand="+ran_number;  //hack to get around ie caching the page
+               //alert(params);
+               new Ajax.Updater(divId,url, {method:'get',parameters:params,asynchronous:true});
+               //alert(origRequest.responseText);
+         }
+        
+
 //Called onclick for prescribe button. serilaizes the form and passes to WriteScruipt/updateAllDrugs Action
     function updateAllDrugs(){
 
@@ -1383,12 +1395,25 @@ function updateQty(element){
 RePrescribeLongTerm();
 <%}%>
 
+
+function checkEnterSendRx(){
+        popupRxSearchWindow();
+        return false;
+}
+                                                
+
+
 $("searchString").focus();
 //load();
+
+
+
 </script>
-<script language="javascript" src="../commons/scripts/sort_table/css.js">
-<script language="javascript" src="../commons/scripts/sort_table/common.js">
-<script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js">
+<script language="javascript" src="../commons/scripts/sort_table/css.js"></script>
+<script language="javascript" src="../commons/scripts/sort_table/common.js"></script>
+<script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js"></script>
+<%--
+<script>
 
 </body>
 </html:html>
