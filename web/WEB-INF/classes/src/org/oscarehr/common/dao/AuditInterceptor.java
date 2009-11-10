@@ -13,10 +13,7 @@ import org.hibernate.type.Type;
  */
 public class AuditInterceptor extends EmptyInterceptor {
 
-	private List<AuditStrategy> strategies;
-	
 	public AuditInterceptor() {
-		strategies = new ArrayList<AuditStrategy>();
 	}
 	
 	/**
