@@ -22,19 +22,18 @@
 
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.common.model.Provider;
 import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
-import org.oscarehr.common.dao.Auditable;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 
 /**
  * RoomDemographic
  */
-public class RoomDemographic implements Auditable, Serializable {
+public class RoomDemographic implements Serializable {
 
     public static String REF = "RoomDemographic";
 

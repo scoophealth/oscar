@@ -27,14 +27,13 @@ import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
-import org.oscarehr.common.dao.Auditable;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
 /**
  * BedDemographic
  */
-public class BedDemographic implements Auditable, Serializable {
+public class BedDemographic implements Serializable {
 
 	private static String INFINITE_DATE = "2999-12-31";
     public static String REF = "BedDemographic";
