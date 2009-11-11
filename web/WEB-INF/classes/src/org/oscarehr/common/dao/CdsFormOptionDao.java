@@ -27,8 +27,12 @@ import org.oscarehr.common.model.CdsFormOption;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CdsFormOptionDao extends AbstractDao {
+public class CdsFormOptionDao extends AbstractDao<CdsFormOption> {
 
+	public CdsFormOptionDao() {
+		super(CdsFormOption.class);
+	}
+	
 	/**
 	 * @param formVersion should be the major cds version, i.e. '4' (we're assuming minor versions are compatable, if it's not we can use the full version number instead)
 	 * @param mainCatgeory should be the cds main category, i.e. for '016-06' the main category should be '016'

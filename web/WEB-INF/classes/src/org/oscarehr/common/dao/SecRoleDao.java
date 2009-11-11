@@ -29,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public class SecRoleDao extends AbstractDao {
+public class SecRoleDao extends AbstractDao<SecRole> {
 
-    public SecRole find(Integer id) {
-        return(entityManager.find(SecRole.class, id));
-    }    
-    
+	public SecRoleDao() {
+		super(SecRole.class);
+	}
+	
     /**
      * Find all ordered by name.
      * @param active, null is find all, true is find only active, false is find only inactive.

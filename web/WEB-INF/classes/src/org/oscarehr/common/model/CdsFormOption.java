@@ -14,7 +14,7 @@ import javax.persistence.PreUpdate;
  * "4" assuming that all "4.x" versions are compatible. The CdsDataCategory is as an example "016-06" for "Eating Disorders", to select all "Disorders" it will be expected to use "select * from CdsFormOptions where CdsDataCatrogy like '016-%'.
  */
 @Entity
-public class CdsFormOption implements Serializable {
+public class CdsFormOption extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

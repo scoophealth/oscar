@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClientLinkDao extends AbstractDao<ClientLink> {
 	
 	public ClientLinkDao() {
-		modelClass=ClientLink.class;
+		super(ClientLink.class);
 	}
 
 	/**

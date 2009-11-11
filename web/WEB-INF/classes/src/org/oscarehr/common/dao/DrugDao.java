@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DrugDao extends AbstractDao<Drug> {
 
 	public DrugDao() {
-		modelClass=Drug.class;
+		super(Drug.class);
 	}
 
 	/**

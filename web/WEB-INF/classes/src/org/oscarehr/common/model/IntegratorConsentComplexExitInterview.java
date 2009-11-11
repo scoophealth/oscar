@@ -4,7 +4,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 @Entity
-public class IntegratorConsentComplexExitInterview {
+public class IntegratorConsentComplexExitInterview extends AbstractModel<FacilityDemographicPrimaryKey> {
 	@EmbeddedId
 	private FacilityDemographicPrimaryKey id;
 

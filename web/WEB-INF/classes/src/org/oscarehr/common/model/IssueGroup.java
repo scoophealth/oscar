@@ -8,14 +8,14 @@ import javax.persistence.Id;
 import org.apache.commons.lang.StringUtils;
 
 @Entity
-public class IssueGroup implements Comparable<IssueGroup>{
+public class IssueGroup extends AbstractModel<Integer> implements Comparable<IssueGroup>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	private int id=0;
+	private Integer id=null;
 	private String name=null;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 

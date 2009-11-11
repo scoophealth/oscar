@@ -30,10 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class IssueGroupDao extends AbstractDao {
+public class IssueGroupDao extends AbstractDao<IssueGroup> {
 
-    public IssueGroup find(int id) {
-        return(entityManager.find(IssueGroup.class, id));
+    public IssueGroupDao() {
+        super(IssueGroup.class);
     }
 
     public List<IssueGroup> findAll() {

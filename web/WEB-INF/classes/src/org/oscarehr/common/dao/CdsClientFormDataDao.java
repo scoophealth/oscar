@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CdsClientFormDataDao extends AbstractDao<CdsClientFormData> {
 
 	public CdsClientFormDataDao() {
-		modelClass=CdsClientFormData.class;
+		super(CdsClientFormData.class);
 	}
 
 	public List<CdsClientFormData> findByQuestion(Integer cdsClientFormId, String question) {

@@ -29,6 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class DigitalSignatureDao extends AbstractDao<DigitalSignature> {
     
 	public DigitalSignatureDao() {
-		modelClass=DigitalSignature.class;
+		super(DigitalSignature.class);
 	}
 }

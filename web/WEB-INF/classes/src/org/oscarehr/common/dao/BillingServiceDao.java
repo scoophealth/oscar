@@ -37,7 +37,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	public final String BC = "BC";
 
 	public BillingServiceDao() {
-		modelClass=BillingService.class;
+		super(BillingService.class);
 	}
 	
 	public List<BillingService> findBillingCodesByCode(String code, String region) {

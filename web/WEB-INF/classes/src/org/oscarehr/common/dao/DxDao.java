@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DxDao extends AbstractDao<DxAssociation> {
 
 	public DxDao() {
-		modelClass=DxAssociation.class;
+		super(DxAssociation.class);
 	}
 
 	public List<DxAssociation> findAllAssociations()

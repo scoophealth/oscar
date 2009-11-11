@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HnrDataValidationDao extends AbstractDao<HnrDataValidation> {
 
 	public HnrDataValidationDao() {
-		modelClass=HnrDataValidation.class;
+		super(HnrDataValidation.class);
 	}
 
 	/**

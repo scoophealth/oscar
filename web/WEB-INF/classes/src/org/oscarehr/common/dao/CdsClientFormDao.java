@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
 
 	public CdsClientFormDao() {
-		modelClass=CdsClientForm.class;
+		super(CdsClientForm.class);
 	}
 
 	public CdsClientForm findLatestByFacilityClient(Integer facilityId, Integer clientId) {

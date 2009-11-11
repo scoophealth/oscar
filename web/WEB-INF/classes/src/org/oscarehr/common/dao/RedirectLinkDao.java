@@ -34,8 +34,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Deprecated
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class RedirectLinkDao extends AbstractDao {
+public class RedirectLinkDao extends AbstractDao<RedirectLink> {
 
+	public RedirectLinkDao() {
+		super(RedirectLink.class);
+	}
+	
     public RedirectLink find(Integer id) {
         return(entityManager.find(RedirectLink.class, id));
     }    

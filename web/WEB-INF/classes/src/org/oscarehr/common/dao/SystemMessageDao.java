@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SystemMessageDao extends AbstractDao<SystemMessage> {
 	
 	public SystemMessageDao() {
-		modelClass=SystemMessage.class;
+		super(SystemMessage.class);
 	}
 
 	public List<SystemMessage> findAll() {

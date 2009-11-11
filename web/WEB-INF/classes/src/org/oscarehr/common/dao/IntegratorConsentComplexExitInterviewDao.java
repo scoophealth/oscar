@@ -27,8 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class IntegratorConsentComplexExitInterviewDao extends AbstractDao {
+public class IntegratorConsentComplexExitInterviewDao extends AbstractDao<IntegratorConsentComplexExitInterview> {
 
+	public IntegratorConsentComplexExitInterviewDao() {
+		super(IntegratorConsentComplexExitInterview.class);
+	}
+	
     public IntegratorConsentComplexExitInterview find(FacilityDemographicPrimaryKey id) {
         return(entityManager.find(IntegratorConsentComplexExitInterview.class, id));
     }

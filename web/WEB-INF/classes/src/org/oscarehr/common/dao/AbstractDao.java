@@ -38,6 +38,11 @@ abstract class AbstractDao<T extends AbstractModel<?>>
     @PersistenceContext
     protected EntityManager entityManager = null;
 
+    protected AbstractDao(Class<T> modelClass)
+    {
+    	this.modelClass=modelClass;
+    }
+    
     /**
      * aka update
      */

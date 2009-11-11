@@ -25,7 +25,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class RedirectLink {
+public class RedirectLink extends AbstractModel<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

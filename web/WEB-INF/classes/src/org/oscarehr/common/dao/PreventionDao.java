@@ -37,12 +37,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
-public class PreventionDao extends AbstractDao {
+public class PreventionDao extends AbstractDao<Prevention> {
 
-	public Prevention find(Integer id) {
-		return (entityManager.find(Prevention.class, id));
+	public PreventionDao() {
+		super(Prevention.class);
 	}
-
+	
 	public List<Prevention> findNotDeletedByDemographicId(Integer demographicId) {
 		Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and deleted=?2");
 		query.setParameter(1, demographicId);

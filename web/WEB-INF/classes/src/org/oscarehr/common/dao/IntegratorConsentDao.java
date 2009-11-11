@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IntegratorConsentDao extends AbstractDao<IntegratorConsent> {
 
 	public IntegratorConsentDao() {
-		modelClass=IntegratorConsent.class;
+		super(IntegratorConsent.class);
 	}
 
 	/**

@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FacilityDao extends AbstractDao<Facility> {
 
 	public FacilityDao() {
-		modelClass=Facility.class;
+		super(Facility.class);
 	}
 
 	/**
