@@ -2,11 +2,11 @@
 //
 // Copyright (c) 2007 stickmanlabs
 // Author: Kevin P Miller | http://www.stickmanlabs.com
-// 
+//
 // LightWindow is freely distributable under the terms of an MIT-style license.
 //
 // I don't care what you think about the file size...
-//   Be a pro: 
+//   Be a pro:
 //	    http://www.thinkvitamin.com/features/webapps/serving-javascript-fast
 //      http://rakaz.nl/item/make_your_pages_load_faster_by_combining_and_compressing_javascript_and_css_files
 //
@@ -21,7 +21,8 @@ try {
 	document.execCommand("BackgroundImageCache", false, true);
 } catch(e) {}
 
-var lightwindow = Class.create();	
+var lightwindow = Class.create();
+//oscarLog("created lightwindow");
 lightwindow.prototype = {
 	//
 	//	Setup Variables
@@ -59,6 +60,8 @@ lightwindow.prototype = {
 		fixedTop : null,
 		fixedLeft : null
 	},
+        customedHeight : 0,
+        oscar_domain: null,
 	scrollbarOffset : 18,
 	navigationObservers : {
 		previous : null,
@@ -77,6 +80,8 @@ lightwindow.prototype = {
 	//	Initialize the lightwindow.
 	//
 	initialize : function(options) {
+            oscarLog("initialize of lightwindow");
+            //get the domain.
 		this.options = Object.extend({
 			resizeSpeed : 8,
 			contentOffset : {
@@ -91,7 +96,7 @@ lightwindow.prototype = {
 				external : {height : 250, width : 250},
 				titleHeight : 25
 			},
-			classNames : {	
+			classNames : {
 				standard : 'lightwindow',
 				action : 'lightwindow_action'
 			},
@@ -137,8 +142,8 @@ lightwindow.prototype = {
 				viv : 'video/vivo',
 				vivo : 'video/vivo',
 				wav : 'audio/wav',
-				wmv : 'application/x-mplayer2'			
-			},	
+				wmv : 'application/x-mplayer2'
+			},
 			classids : {
 				mov : 'clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B',
 				swf : 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000',
@@ -148,7 +153,7 @@ lightwindow.prototype = {
 				mov : 'http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0',
 				swf : 'http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0',
 				wmv : 'http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,5,715'
-			},	
+			},
 			viewportPadding : 10,
 			EOLASFix : 'swf,wmv,fla,flv',
 			overlay : {
@@ -161,7 +166,7 @@ lightwindow.prototype = {
 							'<div id="lightwindow_title_bar" >'+
 								'<div id="lightwindow_title_bar_inner" >'+
 									'<span id="lightwindow_title_bar_title"></span>'+
-									'<a id="lightwindow_title_bar_close_link" >close</a>'+
+									'<a id="lightwindow_title_bar_close_link" >CLOSE</a>'+
 								'</div>'+
 							'</div>'+
 							'<div id="lightwindow_stage" >'+
@@ -175,7 +180,7 @@ lightwindow.prototype = {
 										'<span id="lightwindow_next_title"></span>'+
 									'</a>'+
 									'<iframe name="lightwindow_navigation_shim" id="lightwindow_navigation_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
-								'</div>'+								
+								'</div>'+
 								'<div id="lightwindow_galleries">'+
 									'<div id="lightwindow_galleries_tab_container" >'+
 										'<a href="#" id="lightwindow_galleries_tab" >'+
@@ -202,9 +207,9 @@ lightwindow.prototype = {
 									'</div>'+
 								'</div>'+
 							'</div>'+
-						'</div>',	
+						'</div>',
 				loading : 	'<div id="lightwindow_loading" >'+
-								'<img src="images/ajax-loading.gif" alt="loading" />'+
+								'<img src="share/lightwindow/images/ajax-loading.gif" alt="loading" />'+
 								'<span>Loading or <a href="javascript: myLightWindow.deactivate();">Cancel</a></span>'+
 								'<iframe name="lightwindow_loading_shim" id="lightwindow_loading_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
 							'</div>',
@@ -243,22 +248,23 @@ lightwindow.prototype = {
 		this._getPageDimensions();
 		this._browserDimensions();
 		this._addLightWindowMarkup(false);
-		this._setupDimensions(); 
+		this._setupDimensions();
 		this.buildGalleryList();
 	},
 	//
 	//	Activate the lightwindow.
 	//
-	activate : function(e, link){		
+	activate : function(e, link){
+            //oscarLog("activate");
 		// Clear out the window Contents
 		this._clearWindowContents(true);
-			
+
 		// Add back in out loading panel
 		this._addLoadingWindowMarkup();
 
 		// Setup the element properties
 		this._setupWindowElements(link);
-		
+
 		// Setup everything
 		this._getScroll();
 		this._browserDimensions();
@@ -273,47 +279,47 @@ lightwindow.prototype = {
 	//
 	//	Turn off the window
 	//
-	deactivate : function(){
+	deactivate : function(){//oscarLog("deactivate");
 		// The window is not active
 		this.windowActive = false;
-		
+
 		// There is no longer a gallery active
 		this.activeGallery = false;
 		if (!this.options.hideGalleryTab) {
 			this._handleGalleryAnimation(false);
 		}
-		
+
 		// Kill the animation
 		this.animating = false;
-		
+
 		// Clear our element
 		this.element = null;
-		
+
 		// hide the window.
 		this._displayLightWindow('none', 'visible');
-		
+
 		// Clear out the window Contents
 		this._clearWindowContents(false);
-		
+
 		// Stop all animation
 		var queue = Effect.Queues.get('lightwindowAnimation').each(function(e){e.cancel();});
-		
+
 		// Undo the setup
 		this._prepareIE(false);
 		this._setupDimensions();
-		this._toggleTroubleElements('visible', false);	
-		this._monitorKeyboard(false);	
+		this._toggleTroubleElements('visible', false);
+		this._monitorKeyboard(false);
 	},
 	//
 	//  Initialize specific window
 	//
-	createWindow : function(element, attributes) {
+	createWindow : function(element, attributes) {//oscarLog("createWindow");
 		this._processLink($(element));
 	},
 	//
 	//  Open a Window from a hash of attributes
 	//
-	activateWindow : function(options) {
+	activateWindow : function(options) {oscarLog("activateWindow");
 		this.element = Object.extend({
 			href : null,
 			title : null,
@@ -330,17 +336,17 @@ lightwindow.prototype = {
 			iframeEmbed : null,
 			form : null
 		}, options || {});
-		
+                oscarLog("this.element.href "+this.element.href);
 		// Set the window type
 		this.contentToFetch = this.element.href;
-		this.windowType = this.element.type ? this.element.type : this._fileType(this.element.href);	
-		
+		this.windowType = this.element.type ? this.element.type : this._fileType(this.element.href);
+                //oscarLog("this.windowType  "+this.windowType);
 		// Clear out the window Contents
 		this._clearWindowContents(true);
-			
+
 		// Add back in out loading panel
 		this._addLoadingWindowMarkup();
-		
+
 		// Setup everything
 		this._getScroll();
 		this._browserDimensions();
@@ -355,7 +361,7 @@ lightwindow.prototype = {
 	//
 	//  Fire off our Form handler
 	//
-	submitForm : function(e) {
+	submitForm : function(e) {//oscarLog("submitForm");
 		if (this.options.formHandler) {
 			this.options.formHandler(e);
 		} else {
@@ -365,18 +371,18 @@ lightwindow.prototype = {
 	//
 	//	Reload the window with another location
 	//
-	openWindow : function(element) {
+	openWindow : function(element) {//oscarLog("openWindow");
 		var element = $(element);
 
 		// The window is active
 		this.windowActive = true;
-		
+
 		// Clear out the window Contents
 		this._clearWindowContents(true);
-		
+
 		// Add back in out loading panel
 		this._addLoadingWindowMarkup();
-		
+
 		// Setup the element properties
 		this._setupWindowElements(element);
 
@@ -386,25 +392,25 @@ lightwindow.prototype = {
 	//
 	//  Navigate the window
 	//
-	navigateWindow : function(direction) {
+	navigateWindow : function(direction) {//oscarLog("navigateWindow");
 		this._handleNavigation(false);
 		if (direction == 'previous') {
 			this.openWindow(this.navigationObservers.previous);
-		} else if (direction == 'next'){ 
+		} else if (direction == 'next'){
 			this.openWindow(this.navigationObservers.next);
 		}
 	},
 	//
 	//  Build the Gallery List and Load it
 	//
-	buildGalleryList : function() {
+	buildGalleryList : function() {//oscarLog("buildGalleryList");
 		var output = '';
 		var galleryLink;
 		for (i in this.galleries) {
 			if (typeof this.galleries[i] == 'object') {
 				output += (this.options.skin.gallery.top).replace('{gallery_title_replace}', unescape(i));
 				for (j in this.galleries[i]) {
-					if (typeof this.galleries[i][j] == 'object') {						
+					if (typeof this.galleries[i][j] == 'object') {
 						galleryLink = '<a href="#" id="lightwindow_gallery_'+i+'_'+j+'" >'+unescape(j)+'</a>';
 						output += (this.options.skin.gallery.middle).replace('{gallery_link_replace}', galleryLink);
 					}
@@ -413,32 +419,32 @@ lightwindow.prototype = {
 			}
 		}
 		new Insertion.Top('lightwindow_galleries_list', output);
-		
+
 		// Attach Events
 		for (i in this.galleries) {
 			if (typeof this.galleries[i] == 'object') {
 				for (j in this.galleries[i]) {
 					if (typeof this.galleries[i][j] == 'object') {
 						Event.observe($('lightwindow_gallery_'+i+'_'+j), 'click', this.openWindow.bind(this, this.galleries[i][j][0]), false);
-						$('lightwindow_gallery_'+i+'_'+j).onclick = function() {return false;};	
+						$('lightwindow_gallery_'+i+'_'+j).onclick = function() {return false;};
 					}
 				}
 			}
 		}
 	},
-	// 
+	//
 	//  Set Links Up
 	//
-	_setupLinks : function() {
+	_setupLinks : function() {oscarLog("_setupLinks");
 		var links = $$('.'+this.options.classNames.standard);
 		links.each(function(link) {
 			this._processLink(link);
-		}.bind(this));	
+		}.bind(this));
 	},
 	//
 	//  Process a Link
 	//
-	_processLink : function(link) {
+	_processLink : function(link) {oscarLog("&&&&&&&&&& _processLink");
 		if ((this._fileType(link.getAttribute('href')) == 'image' || this._fileType(link.getAttribute('href')) == 'media')) {
 			if (gallery = this._getGalleryInfo(link.rel)) {
 				if (!this.galleries[gallery[0]]) {
@@ -450,27 +456,28 @@ lightwindow.prototype = {
 				this.galleries[gallery[0]][gallery[1]].push(link);
 			}
 		}
-		
+
 		// Take care of our inline content
 		var url = link.getAttribute('href');
+                oscarLog("url in ");
 		if (url.indexOf('?') > -1) {
 			url = url.substring(0, url.indexOf('?'));
 		}
-		
+
 		var container = url.substring(url.indexOf('#')+1);
 		if($(container)) {
 			$(container).setStyle({
 				display : 'none'
 			});
 		}
-		
+
 		Event.observe(link, 'click', this.activate.bindAsEventListener(this, link), false);
-		link.onclick = function() {return false;};		
+		link.onclick = function() {return false;};
 	},
 	//
 	//	Setup our actions
 	//
-	_setupActions : function() {
+	_setupActions : function() {//oscarLog("_setupActions");
 		var links = $$('#lightwindow_container .'+this.options.classNames.action);
 		links.each(function(link) {
 			Event.observe(link, 'click', this[link.getAttribute('rel')].bindAsEventListener(this, link), false);
@@ -480,17 +487,18 @@ lightwindow.prototype = {
 	//
 	//	Add the markup to the page.
 	//
-	_addLightWindowMarkup : function(rebuild) {
+	_addLightWindowMarkup : function(rebuild) {oscarLog("&&&&&&&&&&&&&&&&&&&& _addLightWindowMarkup");
 		var overlay = Element.extend(document.createElement('div'));
-		overlay.setAttribute('id', 'lightwindow_overlay');		
+		overlay.setAttribute('id', 'lightwindow_overlay');
 		// FF Mac has a problem with putting Flash above a layer without a 100% opacity background, so we need to use a pre-made
 		if (Prototype.Browser.Gecko) {
+                    oscarLog("overlay presetImage :"+this.options.overlay.presetImage);
 			overlay.setStyle({
-				backgroundImage: 'url('+this.options.overlay.presetImage+')',
+				backgroundImage: 'url('+ this.options.overlay.presetImage+')',
 				backgroundRepeat: 'repeat',
 				height: this.pageDimensions.height+'px'
-			});			
-		} else {
+			});
+		} else {oscarLog("overlay image :"+this.options.overlay.image);
 			overlay.setStyle({
 				opacity: this.options.overlay.opacity,
 				backgroundImage: 'url('+this.options.overlay.image+')',
@@ -498,22 +506,22 @@ lightwindow.prototype = {
 				height: this.pageDimensions.height+'px'
 			});
 		}
-		
+
 		var lw = document.createElement('div');
 		lw.setAttribute('id', 'lightwindow');
 		lw.innerHTML = this.options.skin.main;
-		
+
 		var body = document.getElementsByTagName('body')[0];
 		body.appendChild(overlay);
-		body.appendChild(lw);	
-				
+		body.appendChild(lw);
+
 		if ($('lightwindow_title_bar_close_link')) {
 			Event.observe('lightwindow_title_bar_close_link', 'click', this.deactivate.bindAsEventListener(this));
 			$('lightwindow_title_bar_close_link').onclick = function() {return false;};
 		}
-			
+
 		Event.observe($('lightwindow_previous'), 'click', this.navigateWindow.bind(this, 'previous'), false);
-		$('lightwindow_previous').onclick = function() {return false;};		
+		$('lightwindow_previous').onclick = function() {return false;};
 		Event.observe($('lightwindow_next'), 'click', this.navigateWindow.bind(this, 'next'), false);
 		$('lightwindow_next').onclick = function() {return false;};
 
@@ -521,14 +529,14 @@ lightwindow.prototype = {
 			Event.observe($('lightwindow_galleries_tab'), 'click', this._handleGalleryAnimation.bind(this, true), false);
 			$('lightwindow_galleries_tab').onclick = function() {return false;};
 		}
-		
+
 		// Because we use position absolute, kill the scroll Wheel on animations
 		if (Prototype.Browser.IE) {
 			Event.observe(document, 'mousewheel', this._stopScrolling.bindAsEventListener(this), false);
 		} else {
 			Event.observe(window, 'DOMMouseScroll', this._stopScrolling.bindAsEventListener(this), false);
 		}
-				
+
 		Event.observe(overlay, 'click', this.deactivate.bindAsEventListener(this), false);
 		overlay.onclick = function() {return false;};
 	},
@@ -536,12 +544,19 @@ lightwindow.prototype = {
 	//  Add loading window markup
 	//
 	_addLoadingWindowMarkup : function() {
+            oscarLog("_addLoadingWindowMarkup");
+            //modified loading;
+            this.options.skin.loading='<div id="lightwindow_loading" >'+
+								'<img src="/'+this.oscar_domain+ '/share/lightwindow/images/ajax-loading.gif" alt="loading" />'+
+								'<span>Loading or <a href="javascript: myLightWindow.deactivate();">Cancel</a></span>'+
+								'<iframe name="lightwindow_loading_shim" id="lightwindow_loading_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
+							'</div>'
 		$('lightwindow_contents').innerHTML += this.options.skin.loading;
 	},
 	//
 	//  Setup the window elements
 	//
-	_setupWindowElements : function(link) {
+	_setupWindowElements : function(link) {//oscarLog("_setupWindowElements ");
 		this.element = link;
 		this.element.title = null ? '' : link.getAttribute('title');
 		this.element.author = null ? '' : link.getAttribute('author');
@@ -551,12 +566,12 @@ lightwindow.prototype = {
 
 		// Set the window type
 		this.contentToFetch = this.element.href;
-		this.windowType = this._getParameter('lightwindow_type') ? this._getParameter('lightwindow_type') : this._fileType(this.contentToFetch);	
+		this.windowType = this._getParameter('lightwindow_type') ? this._getParameter('lightwindow_type') : this._fileType(this.contentToFetch);
 	},
 	//
 	//  Clear the window contents out
 	//
-	_clearWindowContents : function(contents) {
+	_clearWindowContents : function(contents) {//oscarLog("_clearWindowContents ");
 		// If there is an iframe, its got to go
 		if ($('lightwindow_iframe')) {
 			Element.remove($('lightwindow_iframe'));
@@ -570,26 +585,26 @@ lightwindow.prototype = {
 			Element.remove($('lightwindow_media_primary'));
 		}
 
-		// Stop playing an object if its still around		
+		// Stop playing an object if its still around
 		if ($('lightwindow_media_secondary')) {
 			try {
 				$('lightwindow_media_secondary').Stop();
 			} catch(e) {}
 			Element.remove($('lightwindow_media_secondary'));
 		}
-		
+
 		this.activeGallery = false;
 		this._handleNavigation(this.activeGallery);
-		
+
 		if (contents) {
 			// Empty the contents
 			$('lightwindow_contents').innerHTML = '';
-			
+
 			// Reset the scroll bars
 			$('lightwindow_contents').setStyle({
 				overflow: 'hidden'
-			});		
-			
+			});
+
 			if (!this.windowActive) {
 				$('lightwindow_data_slide_inner').setStyle({
 					display: 'none'
@@ -603,7 +618,7 @@ lightwindow.prototype = {
 				height: 'auto'
 			});
 		}
-		
+
 		this.resizeTo.height = null;
 		this.resizeTo.width = null;
 	},
@@ -611,11 +626,14 @@ lightwindow.prototype = {
 	//	Set the status of our animation to keep things from getting clunky
 	//
 	_setStatus : function(status) {
+            //oscarLog("in _setStatus");
 		this.animating = status;
 		if (status) {
+                    //oscarLog("status is true");
 			Element.show('lightwindow_loading');
 		}
 		if (!(/MSIE 6./i.test(navigator.userAgent))) {
+                    //oscarLog("before call _fixedWindow in _setStatus");
 			this._fixedWindow(status);
 		}
 	},
@@ -623,34 +641,55 @@ lightwindow.prototype = {
 	//  Make this window Fixed
 	//
 	_fixedWindow : function(status) {
+            //oscarLog("in _fixedWindow");
 		if (status) {
-			if (this.windowActive) {
+                    //oscarLog("yyyyyyyyyyyyyyyyyyyyyyy");
+			if (this.windowActive) {//oscarLog("y1");
 				this._getScroll();
 				$('lightwindow').setStyle({
 					position: 'absolute',
 					top: parseFloat($('lightwindow').getStyle('top'))+this.pagePosition.y+'px',
 					left: parseFloat($('lightwindow').getStyle('left'))+this.pagePosition.x+'px'
-				});		
-			} else {
+				});
+			} else {//oscarLog("y2");
 				$('lightwindow').setStyle({
 					position: 'absolute'
-				});						
+				});
 			}
 		} else {
+                    //oscarLog("xxxxxxxx");
 			if (this.windowActive) {
-				this._getScroll();
+                            //oscarLog(this._getScroll());
 				$('lightwindow').setStyle({
 					position: 'fixed',
+                                        //position: 'absolute',
 					top: parseFloat($('lightwindow').getStyle('top'))-this.pagePosition.y+'px',
 					left: parseFloat($('lightwindow').getStyle('left'))-this.pagePosition.x+'px'
-				});		
+				});
 			} else {
+                                //oscarLog("x2");
+                              // if(!(window.frames['lightwindow_iframe'].document==null)){
+                                   //oscarLog("$$$ $$$ pwTable's height="+window.frames['lightwindow_iframe'].document.getElementById('pwTable').clientHeight);
+                                   //oscarLog(window.frames['lightwindow_iframe'].document);
+                               //    this.customedHeight=window.frames['lightwindow_iframe'].document.getElementById('pwTable').clientHeight+200;
+
+                                    //oscarLog("222 222 pwTable's height="+document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('pwTable').clientHeight);
+                                    this.customedHeight=document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('pwTable').clientHeight+250;
+                               //oscarLog("contentWindow scrollHeight: "+document.getElementById('lightwindow_iframe').contentWindow.document.body.scrollHeight);
+                                //oscarLog("$$$ $$$ this.customedHeight="+this.customedHeight);
+                                $('lightwindow_contents').setStyle({
+                                       height:  this.customedHeight+'px'
+                               });
+                                //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                                //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
+                                
 				if ($('lightwindow_iframe')) {
 					// Ideally here we would set a 50% value for top and left, but Safari rears it ugly head again and we need to do it by pixels
 					this._browserDimensions();
 				}
 				$('lightwindow').setStyle({
-					position: 'fixed',
+					//position: 'fixed',
+                                        position: 'absolute',//scroll along with page
 					top: (parseFloat(this._getParameter('lightwindow_top')) ? parseFloat(this._getParameter('lightwindow_top'))+'px' : this.dimensions.viewport.height/2+'px'),
 					left: (parseFloat(this._getParameter('lightwindow_left')) ? parseFloat(this._getParameter('lightwindow_left'))+'px' : this.dimensions.viewport.width/2+'px')
 				});
@@ -660,10 +699,10 @@ lightwindow.prototype = {
 	//
 	//	Prepare the window for IE.
 	//
-	_prepareIE : function(setup) {
+	_prepareIE : function(setup) {//oscarLog(" _prepareIE");
 		if (Prototype.Browser.IE) {
 			var height, overflowX, overflowY;
-			if (setup) { 
+			if (setup) {
 				var height = '100%';
 			} else {
 				var height = 'auto';
@@ -673,18 +712,18 @@ lightwindow.prototype = {
 			html.style.height = body.style.height = height;
 		}
 	},
-	_stopScrolling : function(e) {
+	_stopScrolling : function(e) {//oscarLog("_stopScrolling");
 		if (this.animating) {
 			if (e.preventDefault) {
 				e.preventDefault();
 			}
-			e.returnValue = false;		
+			e.returnValue = false;
 		}
 	},
 	//
 	//	Get the scroll for the page.
 	//
-	_getScroll : function(){
+	_getScroll : function(){//oscarLog(" _getScroll");
       	if(typeof(window.pageYOffset) == 'number') {
         	this.pagePosition.x = window.pageXOffset;
         	this.pagePosition.y = window.pageYOffset;
@@ -699,26 +738,26 @@ lightwindow.prototype = {
 	//
 	//	Reset the scroll.
 	//
-	_setScroll : function(x, y) {
-		document.documentElement.scrollLeft = x; 
-		document.documentElement.scrollTop = y; 
+	_setScroll : function(x, y) {//oscarLog("_setScroll");
+		document.documentElement.scrollLeft = x;
+		document.documentElement.scrollTop = y;
 	},
 	//
 	//	Hide Selects from the page because of IE.
 	//     We could use iframe shims instead here but why add all the extra markup for one browser when this is much easier and cleaner
 	//
-	_toggleTroubleElements : function(visibility, content){
-		
+	_toggleTroubleElements : function(visibility, content){//oscarLog("_toggleTroubleElements");
+
 		if (content) {
 			var selects = $('lightwindow_contents').getElementsByTagName('select');
 		} else {
 			var selects = document.getElementsByTagName('select');
 		}
-		
+
 		for(var i = 0; i < selects.length; i++) {
 			selects[i].style.visibility = visibility;
 		}
-		
+
 		if (!content) {
 			if (this.options.hideFlash){
 				var objects = document.getElementsByTagName('object');
@@ -736,41 +775,41 @@ lightwindow.prototype = {
 			}
 		}
 	},
-	// 
+	//
 	//  Get the actual page size
 	//
-	_getPageDimensions : function() {
+	_getPageDimensions : function() {//oscarLog("_getPageDimensions");
 		var xScroll, yScroll;
-		if (window.innerHeight && window.scrollMaxY) {	
+		if (window.innerHeight && window.scrollMaxY) {
 			xScroll = document.body.scrollWidth;
 			yScroll = window.innerHeight + window.scrollMaxY;
-		} else if (document.body.scrollHeight > document.body.offsetHeight){ 
+		} else if (document.body.scrollHeight > document.body.offsetHeight){
 			xScroll = document.body.scrollWidth;
 			yScroll = document.body.scrollHeight;
-		} else { 
+		} else {
 			xScroll = document.body.offsetWidth;
 			yScroll = document.body.offsetHeight;
 		}
 
 		var windowWidth, windowHeight;
-		if (self.innerHeight) {	
+		if (self.innerHeight) {
 			windowWidth = self.innerWidth;
 			windowHeight = self.innerHeight;
-		} else if (document.documentElement && document.documentElement.clientHeight) { 
+		} else if (document.documentElement && document.documentElement.clientHeight) {
 			windowWidth = document.documentElement.clientWidth;
 			windowHeight = document.documentElement.clientHeight;
-		} else if (document.body) { 
+		} else if (document.body) {
 			windowWidth = document.body.clientWidth;
 			windowHeight = document.body.clientHeight;
-		}	
+		}
 
 		if(yScroll < windowHeight){
 			this.pageDimensions.height = windowHeight;
-		} else { 
+		} else {
 			this.pageDimensions.height = yScroll;
 		}
 
-		if(xScroll < windowWidth){	
+		if(xScroll < windowWidth){
 			this.pageDimensions.width = windowWidth;
 		} else {
 			this.pageDimensions.width = xScroll;
@@ -779,8 +818,8 @@ lightwindow.prototype = {
 	//
 	//	Display the lightWindow.
 	//
-	_displayLightWindow : function(display, visibility) {
-		$('lightwindow_overlay').style.display = $('lightwindow').style.display = $('lightwindow_container').style.display = display;	
+	_displayLightWindow : function(display, visibility) {//oscarLog("_displayLightWindow");
+		$('lightwindow_overlay').style.display = $('lightwindow').style.display = $('lightwindow_container').style.display = display;
 		$('lightwindow_overlay').style.visibility = $('lightwindow').style.visibility = $('lightwindow_container').style.visibility = visibility;
 	},
 	//
@@ -788,7 +827,7 @@ lightwindow.prototype = {
 
 	//
 	_setupDimensions : function() {
-
+//oscarLog("_setupDimensions");
 		var originalHeight, originalWidth;
 		switch (this.windowType) {
 			case 'page' :
@@ -800,45 +839,45 @@ lightwindow.prototype = {
 				originalHeight = this.options.dimensions.image.height;
 				originalWidth = this.options.dimensions.image.width;
 				break;
-				
+
 			case 'media' :
 				originalHeight = this.options.dimensions.media.height;
 				originalWidth = this.options.dimensions.media.width;
 				break;
-			
-			case 'external' : 
+
+			case 'external' :
 				originalHeight = this.options.dimensions.external.height;
 				originalWidth = this.options.dimensions.external.width;
 				break;
-				
+
 			case 'inline' :
 				originalHeight = this.options.dimensions.inline.height;
 				originalWidth = this.options.dimensions.inline.width;
 				break;
-				
+
 			default :
 				originalHeight = this.options.dimensions.page.height;
 				originalWidth = this.options.dimensions.page.width;
 				break;
-				
+
 		}
 
 		var offsetHeight = this._getParameter('lightwindow_top') ? parseFloat(this._getParameter('lightwindow_top'))+this.pagePosition.y : this.dimensions.viewport.height/2+this.pagePosition.y;
 		var offsetWidth = this._getParameter('lightwindow_left') ? parseFloat(this._getParameter('lightwindow_left'))+this.pagePosition.x : this.dimensions.viewport.width/2+this.pagePosition.x;
-		
+
 		// So if a theme has say shadowed edges, they should be consistant and take care of in the contentOffset
 		$('lightwindow').setStyle({
 			top: offsetHeight+'px',
 			left: offsetWidth+'px'
 		});
-		
+
 		$('lightwindow_container').setStyle({
 			height: originalHeight+'px',
 			width: originalWidth+'px',
 			left: -(originalWidth/2)+'px',
 			top: -(originalHeight/2)+'px'
 		});
-
+                //oscarLog("***********originalHeight: "+originalHeight+"; originalWidth: "+originalWidth);
 		$('lightwindow_contents').setStyle({
 			height: originalHeight+'px',
 			width: originalWidth+'px'
@@ -847,10 +886,11 @@ lightwindow.prototype = {
 	//
 	//	Get the type of file.
 	//
-	_fileType : function(url) {
+	_fileType : function(url) {//oscarLog("&&&&&&&&&&&&&&&&&&&&&& _fileType");
+            oscarLog("&&&&&&&&&&&&&&&&&&&&&& url "+url);
 		var image = new RegExp("[^\.]\.("+this.options.fileTypes.image.join('|')+")\s*$", "i");
 		if (image.test(url)) return 'image';
-		if (url.indexOf('#') > -1 && (document.domain == this._getDomain(url))) return 'inline';		
+		if (url.indexOf('#') > -1 && (document.domain == this._getDomain(url))) return 'inline';
 		if (url.indexOf('?') > -1) url = url.substring(0, url.indexOf('?'));
 		var type = 'unknown';
 		var page = new RegExp("[^\.]\.("+this.options.fileTypes.page.join('|')+")\s*$", "i");
@@ -864,7 +904,7 @@ lightwindow.prototype = {
 	//
 	//  Get file Extension
 	//
-	_fileExtension : function(url) {
+	_fileExtension : function(url) {//oscarLog("&&&&&&&&&&&&&&&&&&&&& _fileExtension");
 		if (url.indexOf('?') > -1) {
 			url = url.substring(0, url.indexOf('?'));
 		}
@@ -879,50 +919,50 @@ lightwindow.prototype = {
 	//
 	//	Monitor the keyboard while this lightwindow is up
 	//
-	_monitorKeyboard : function(status) {
-		if (status) document.onkeydown = this._eventKeypress.bind(this); 
+	_monitorKeyboard : function(status) {//oscarLog("_monitorKeyboard");
+		if (status) document.onkeydown = this._eventKeypress.bind(this);
 		else document.onkeydown = '';
 	},
 	//
 	//  Perform keyboard actions
 	//
-	_eventKeypress : function(e) {
+	_eventKeypress : function(e) {//oscarLog("_eventKeypress");
 		if (e == null) {
 			var keycode = event.keyCode;
 		} else {
 			var keycode = e.which;
 		}
-		
-		switch (keycode) { 
-			case 27: 
-				this.deactivate(); 
+
+		switch (keycode) {
+			case 27:
+				this.deactivate();
 				break;
-			
+
 			case 13:
 				return;
-				
+
 			default:
 				break;
 		}
-	
+
 		// Gotta stop those quick fingers
 		if (this.animating) {
 			return false;
 		}
-		
+
 		switch (String.fromCharCode(keycode).toLowerCase()) {
 			case 'p':
 				if (this.navigationObservers.previous) {
 					this.navigateWindow('previous');
 				}
 				break;
-				
+
 			case 'n':
 				if (this.navigationObservers.next) {
 					this.navigateWindow('next');
 				}
 				break;
-				
+
 			default:
 				break;
 		}
@@ -930,7 +970,7 @@ lightwindow.prototype = {
 	//
 	//	Get Gallery Information
 	//
-	_getGalleryInfo : function(rel) {
+	_getGalleryInfo : function(rel) {//oscarLog("_getGalleryInfo");
 		if (!rel) return false;
 		if (rel.indexOf('[') > -1) {
 			return new Array(escape(rel.substring(0, rel.indexOf('['))), escape(rel.substring(rel.indexOf('[')+1, rel.indexOf(']'))));
@@ -941,7 +981,7 @@ lightwindow.prototype = {
 	//
 	//	Get the domain from a string.
 	//
-	_getDomain : function(url) {    
+	_getDomain : function(url) {  oscarLog("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& _getDomain");
         var leadSlashes = url.indexOf('//');
         var domainStart = leadSlashes+2;
         var withoutResource = url.substring(domainStart, url.length);
@@ -951,12 +991,18 @@ lightwindow.prototype = {
 			var portColon = domain.indexOf(':');
 			domain = domain.substring(0, portColon);
        	}
+        oscarLog("domain="+domain);
+        //change the options.loading
+        this.oscar_domain=domain;
 		return domain;
     },
 	//
 	//	Get the value from the params attribute string.
 	//
 	_getParameter : function(parameter, parameters) {
+            //oscarLog("_getParameter");
+            //oscarLog("parameter: "+parameter);
+            //oscarLog("parameters: "+parameters);
 		if (!this.element) return false;
 		if (parameter == 'lightwindow_top' && this.element.top) {
 			return unescape(this.element.top);
@@ -967,8 +1013,11 @@ lightwindow.prototype = {
 		} else if (parameter == 'lightwindow_show_images' && this.element.showImages) {
 			return unescape(this.element.showImages);
 		} else if (parameter == 'lightwindow_height' && this.element.height) {
+                    this.customedHeight=this.element.height;
+                                //oscarLog("this.element.height : "+this.element.height);
 			return unescape(this.element.height);
 		} else if (parameter == 'lightwindow_width' && this.element.width) {
+                    //oscarLog("this.element.width : "+this.element.width);
 			return unescape(this.element.width);
 		} else if (parameter == 'lightwindow_loading_animation' && this.element.loadingAnimation) {
 			return unescape(this.element.loadingAnimation);
@@ -999,11 +1048,11 @@ lightwindow.prototype = {
 	//
 	//  Get the Browser Viewport Dimensions
 	//
-	_browserDimensions : function() {
+	_browserDimensions : function() {//oscarLog("_browserDimensions");
 		if (Prototype.Browser.IE) {
             this.dimensions.viewport.height = document.documentElement.clientHeight;
-            this.dimensions.viewport.width = document.documentElement.clientWidth;   
-        } else {
+            this.dimensions.viewport.width = document.documentElement.clientWidth;
+        } else {//oscarLog("window.innerHeight="+window.innerHeight);
             this.dimensions.viewport.height = window.innerHeight;
             this.dimensions.viewport.width = document.width || document.body.offsetWidth;
         }
@@ -1011,7 +1060,7 @@ lightwindow.prototype = {
 	//
 	//  Get the scrollbar offset, I don't like this method but there is really no other way I can find.
 	//
-	_getScrollerWidth : function() {
+	_getScrollerWidth : function() {//oscarLog("_getScrollerWidth");
 	    var scrollDiv = Element.extend(document.createElement('div'));
 		scrollDiv.setAttribute('id', 'lightwindow_scroll_div');
 		scrollDiv.setStyle({
@@ -1030,6 +1079,7 @@ lightwindow.prototype = {
 		contentDiv.setStyle({
 			width: '100%',
 			height: '200px'
+                        //height: '10px'
 		});
 
 	    scrollDiv.appendChild(contentDiv);
@@ -1039,18 +1089,19 @@ lightwindow.prototype = {
 
 	    var noScroll = $('lightwindow_content_scroll_div').offsetWidth;
 	    scrollDiv.style.overflow = 'auto';
+            //scrollDiv.style.overflow = 'hidden';
     	var withScroll = $('lightwindow_content_scroll_div').offsetWidth;
 
 	   	Element.remove($('lightwindow_scroll_div'));
 
 	    this.scrollbarOffset = noScroll-withScroll;
 	},
-	
+
 
 	//
 	//  Add a param to an object dynamically created
 	//
-	_addParamToObject : function(name, value, object, id) {
+	_addParamToObject : function(name, value, object, id) {//oscarLog("_addParamToObject");
 		var param = document.createElement('param');
 		param.setAttribute('value', value);
 		param.setAttribute('name', name);
@@ -1063,7 +1114,7 @@ lightwindow.prototype = {
 	//
 	//  Get the outer HTML of an object CROSS BROWSER
 	//
-	_outerHTML : function(object) {
+	_outerHTML : function(object) {//oscarLog("_outerHTML");
  		if (Prototype.Browser.IE) {
 			return object.outerHTML;
 		} else {
@@ -1076,7 +1127,7 @@ lightwindow.prototype = {
 	//
 	//  Convert an object to markup
 	//
-	_convertToMarkup : function(object, closeTag) {
+	_convertToMarkup : function(object, closeTag) {//oscarLog("_convertToMarkup");
 		var markup = this._outerHTML(object).replace('</'+closeTag+'>', '');
 		if (Prototype.Browser.IE) {
 			for (var i = 0; i < object.childNodes.length; i++){
@@ -1090,9 +1141,11 @@ lightwindow.prototype = {
 	//  Depending what type of browser it is we have to append the object differently... DAMN YOU IE!!
 	//
 	_appendObject : function(object, closeTag, appendTo) {
-		if (Prototype.Browser.IE) {
+            //oscarLog("_appendObject");
+            //oscarLog("apendTo height: ");
+		if (Prototype.Browser.IE) {//oscarLog("if");
 			appendTo.innerHTML += this._convertToMarkup(object, closeTag);
-			
+
 			// Fix the Eolas activate thing but only for specified media, for example doing this to a quicktime film breaks it.
 			if (this.options.EOLASFix.indexOf(this._fileType(this.element.href)) > -1) {
 				var objectElements = document.getElementsByTagName('object');
@@ -1102,14 +1155,15 @@ lightwindow.prototype = {
 					objectElements[i].style.visibility = "visible";
 				}
 			}
-		} else {
-			appendTo.appendChild(object);	
-		}	
+		} else {//oscarLog("else");
+			appendTo.appendChild(object);
+		}
 	},
 	//
 	//  Add in iframe
 	//
 	_appendIframe : function(scroll) {
+            //oscarLog("in _appendIframe");
 		var iframe = document.createElement('iframe');
 		iframe.setAttribute('id', 'lightwindow_iframe');
 		iframe.setAttribute('name', 'lightwindow_iframe');
@@ -1119,16 +1173,24 @@ lightwindow.prototype = {
 		iframe.setAttribute('frameborder', '0');
 		iframe.setAttribute('marginwidth', '0');
 		iframe.setAttribute('marginheight', '0');
-		iframe.setAttribute('scrolling', scroll);	
-		
+		//iframe.setAttribute('scrolling', scroll);
+		iframe.setAttribute('scrolling', "no");
+                //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
+                //oscarLog("lightwindow_contents' width :"+$('lightwindow_contents').getWidth());
+                //oscarLog("lightwindow_contents' scroll width :"+$('lightwindow_contents').scrollWidth);
 		this._appendObject(iframe, 'iframe', $('lightwindow_contents'));
 	},
 	//
 	//  Write Content to the iframe using the skin
 	//
 	_writeToIframe : function(content) {
+            oscarLog("_writeToIframe");
+            oscarLog(this.options.skin.iframe);
+
 		var template = this.options.skin.iframe;
-		template = template.replace('{body_replace}', content); 
+		template = template.replace('{body_replace}', content);
+                oscarLog(template);
 		if ($('lightwindow_iframe').contentWindow){
 			$('lightwindow_iframe').contentWindow.document.open();
 			$('lightwindow_iframe').contentWindow.document.write(template);
@@ -1141,8 +1203,8 @@ lightwindow.prototype = {
 	},
 	//
 	//  Load the window Information
-	//  
-	_loadWindow : function() {
+	//
+	_loadWindow : function() {//oscarLog("_loadWindow");
 		switch (this.windowType) {
 			case 'image' :
 
@@ -1153,7 +1215,7 @@ lightwindow.prototype = {
 				this.imageCount = this._getParameter('lightwindow_show_images') ? parseInt(this._getParameter('lightwindow_show_images')) : 1;
 
 				// If there is a gallery get it
-				if (gallery = this._getGalleryInfo(this.element.rel)) {	
+				if (gallery = this._getGalleryInfo(this.element.rel)) {
 					for (current = 0; current < this.galleries[gallery[0]][gallery[1]].length; current++) {
 						if (this.contentToFetch.indexOf(this.galleries[gallery[0]][gallery[1]][current].href) > -1) {
 							break;
@@ -1169,22 +1231,22 @@ lightwindow.prototype = {
 					} else {
 						this.navigationObservers.next = false;
 					}
-					
+
 					this.activeGallery = true;
 				} else {
 					this.navigationObservers.previous = false;
-					this.navigationObservers.next = false;					
+					this.navigationObservers.next = false;
 
 					this.activeGallery = false;
 				}
-				
+
 				for (var i = current; i < (current+this.imageCount); i++) {
-		
+
 					if (gallery && this.galleries[gallery[0]][gallery[1]][i]) {
 						this.contentToFetch = this.galleries[gallery[0]][gallery[1]][i].href;
-						
+
 						this.galleryLocation = {current: (i+1)/this.imageCount, total: (this.galleries[gallery[0]][gallery[1]].length)/this.imageCount};
-											
+
 						if (!this.galleries[gallery[0]][gallery[1]][i+this.imageCount]) {
 							$('lightwindow_next').setStyle({
 								display: 'none'
@@ -1195,7 +1257,7 @@ lightwindow.prototype = {
 							});
 							$('lightwindow_next_title').innerHTML = this.galleries[gallery[0]][gallery[1]][i+this.imageCount].title;
 						}
-						
+
 						if (!this.galleries[gallery[0]][gallery[1]][i-this.imageCount]) {
 							$('lightwindow_previous').setStyle({
 								display: 'none'
@@ -1214,47 +1276,47 @@ lightwindow.prototype = {
 					images[i].setAttribute('src', this.contentToFetch);
 					$('lightwindow_contents').appendChild(images[i]);
 
-					// We have to do this instead of .onload 
+					// We have to do this instead of .onload
 					this.checkImage[i] = new PeriodicalExecuter(function(i) {
 						if (!(typeof $('lightwindow_image_'+i).naturalWidth != "undefined" && $('lightwindow_image_'+i).naturalWidth == 0)) {
-	
+
 							this.checkImage[i].stop();
-	
+
 							var imageHeight = $('lightwindow_image_'+i).getHeight();
 							if (imageHeight > this.resizeTo.height) {
 								this.resizeTo.height = imageHeight;
 							}
 							this.resizeTo.width += $('lightwindow_image_'+i).getWidth();
 							this.imageCount--;
-	
+
 							$('lightwindow_image_'+i).setStyle({
 								height: '100%'
 							});
-	
+
 						 	if (this.imageCount == 0) {
 								this._processWindow();
 						 	}
 						}
-					
-					}.bind(this, i), 1);			
+
+					}.bind(this, i), 1);
 				}
 
 
 			break;
-		
-		case 'media' :			
-		
+
+		case 'media' :
+
 			var current = 0;
 			this.resizeTo.height = this.resizeTo.width = 0;
 
 			// If there is a gallery get it
-			if (gallery = this._getGalleryInfo(this.element.rel)) {	
+			if (gallery = this._getGalleryInfo(this.element.rel)) {
 				for (current = 0; current < this.galleries[gallery[0]][gallery[1]].length; current++) {
 					if (this.contentToFetch.indexOf(this.galleries[gallery[0]][gallery[1]][current].href) > -1) {
 						break;
 					}
 				}
-				
+
 				if (this.galleries[gallery[0]][gallery[1]][current-1]) {
 					this.navigationObservers.previous = this.galleries[gallery[0]][gallery[1]][current-1];
 				} else {
@@ -1265,21 +1327,21 @@ lightwindow.prototype = {
 				} else {
 					this.navigationObservers.next = false;
 				}
-		
+
 				this.activeGallery = true;
 			} else {
 				this.navigationObservers.previous = false;
 				this.navigationObservers.next = false;
-				
+
 				this.activeGallery = false;
 			}
-		
+
 
 			if (gallery && this.galleries[gallery[0]][gallery[1]][current]) {
 				this.contentToFetch = this.galleries[gallery[0]][gallery[1]][current].href;
 
 				this.galleryLocation = {current: current+1, total: this.galleries[gallery[0]][gallery[1]].length};
-				
+
 				if (!this.galleries[gallery[0]][gallery[1]][current+1]) {
 					$('lightwindow_next').setStyle({
 						display: 'none'
@@ -1290,7 +1352,7 @@ lightwindow.prototype = {
 					});
 					$('lightwindow_next_title').innerHTML = this.galleries[gallery[0]][gallery[1]][current+1].title;
 				}
-				
+
 				if (!this.galleries[gallery[0]][gallery[1]][current-1]) {
 					$('lightwindow_previous').setStyle({
 						display: 'none'
@@ -1302,36 +1364,36 @@ lightwindow.prototype = {
 					$('lightwindow_previous_title').innerHTML = this.galleries[gallery[0]][gallery[1]][current-1].title;
 				}
 			}
-			
+
 			if (this._getParameter('lightwindow_iframe_embed')) {
 				this.resizeTo.height = this.dimensions.viewport.height;
-				this.resizeTo.width = this.dimensions.viewport.width;	
+				this.resizeTo.width = this.dimensions.viewport.width;
 			} else {
 				this.resizeTo.height = this._getParameter('lightwindow_height');
-				this.resizeTo.width = this._getParameter('lightwindow_width');				
+				this.resizeTo.width = this._getParameter('lightwindow_width');
 			}
-			
+
 			this._processWindow();
-			
+
 			break;
 
-		case 'external' :		
+		case 'external' :
 
 			this._appendIframe('auto');
 
 			this.resizeTo.height = this.dimensions.viewport.height;
 			this.resizeTo.width = this.dimensions.viewport.width;
-						
+
 			this._processWindow();
 
 			break;
-				
-		case 'page' :	
-			
+
+		case 'page' :
+
 			var newAJAX = new Ajax.Request(
 				this.contentToFetch, {
-					method: 'get', 
-					parameters: '', 
+					method: 'get',
+					parameters: '',
 					onComplete: function(response) {
 						$('lightwindow_contents').innerHTML += response.responseText;
 						this.resizeTo.height = $('lightwindow_contents').scrollHeight+(this.options.contentOffset.height);
@@ -1340,28 +1402,28 @@ lightwindow.prototype = {
 					}.bind(this)
 				}
 			);
-			
+
 			break;
-			
-		case 'inline' : 
-		
+
+		case 'inline' :
+
 			var content = this.contentToFetch;
 			if (content.indexOf('?') > -1) {
 				content = content.substring(0, content.indexOf('?'));
 			}
 			content = content.substring(content.indexOf('#')+1);
-			
+
 			new Insertion.Top($('lightwindow_contents'), $(content).innerHTML);
-			
+
 			this.resizeTo.height = $('lightwindow_contents').scrollHeight+(this.options.contentOffset.height);
 			this.resizeTo.width = $('lightwindow_contents').scrollWidth+(this.options.contentOffset.width);
-			
-			this._toggleTroubleElements('hidden', true); 			
+
+			this._toggleTroubleElements('hidden', true);
 			this._processWindow();
-			
+
 			break;
-			
-		default : 
+
+		default :
 			throw("Page Type could not be determined, please amend this lightwindow URL "+this.contentToFetch);
 			break;
 		}
@@ -1369,19 +1431,24 @@ lightwindow.prototype = {
 	//
 	//  Resize the Window to fit the viewport if necessary
 	//
-	_resizeWindowToFit : function() {
-		if (this.resizeTo.height+this.dimensions.cruft.height > this.dimensions.viewport.height) {
+	_resizeWindowToFit : function() {//oscarLog("_resizeWindowToFit");
+		if (this.resizeTo.height+this.dimensions.cruft.height > this.dimensions.viewport.height) {//oscarLog("if1");
 			var heightRatio = this.resizeTo.height/this.resizeTo.width;
+                        //oscarLog("heightRatio: "+heightRatio);
+                        //comment out so size of lightwindow_contents is not reset to fit.
 			this.resizeTo.height = this.dimensions.viewport.height-this.dimensions.cruft.height-(2*this.options.viewportPadding);
-			// We only care about ratio's with this window type			
-			if (this.windowType == 'image' || (this.windowType == 'media' && !this._getParameter('lightwindow_iframe_embed'))) {
+                        //
+			// We only care about ratio's with this window type
+			//oscarLog("this.resizeTo.height: "+this.resizeTo.height);
+                        if (this.windowType == 'image' || (this.windowType == 'media' && !this._getParameter('lightwindow_iframe_embed'))) {
 				this.resizeTo.width = this.resizeTo.height/heightRatio;
+                                //oscarLog("this.resizeTo.width: "+this.resizeTo.width);
 				$('lightwindow_data_slide_inner').setStyle({
 					width: this.resizeTo.width+'px'
-				});			
+				});
 			}
-		} 
-		if (this.resizeTo.width+this.dimensions.cruft.width > this.dimensions.viewport.width) {
+		}
+		if (this.resizeTo.width+this.dimensions.cruft.width > this.dimensions.viewport.width) {//oscarLog("if2");
 			var widthRatio = this.resizeTo.width/this.resizeTo.height;
 			this.resizeTo.width = this.dimensions.viewport.width-2*this.dimensions.cruft.width-(2*this.options.viewportPadding);
 			// We only care about ratio's with this window type
@@ -1392,23 +1459,28 @@ lightwindow.prototype = {
 				});
 			}
 		}
-			
+
 	},
 	//
 	//  Set the Window to a preset size
 	//
-	_presetWindowSize : function() {
+	_presetWindowSize : function() {//oscarLog("_presetWindowSize");
 		if (this._getParameter('lightwindow_height')) {
 			this.resizeTo.height = parseFloat(this._getParameter('lightwindow_height'));
 		}
 		if (this._getParameter('lightwindow_width')) {
 			this.resizeTo.width = parseFloat(this._getParameter('lightwindow_width'));
 		}
+                //oscarLog("_presetWindowSize lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                //oscarLog("_presetWindowSize lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
+
+//oscarLog("_presetWindowSize lightwindow_contents' width :"+$('lightwindow_contents').getWidth());
+                //oscarLog("_presetWindowSize lightwindow_contents' scroll width :"+$('lightwindow_contents').scrollWidth);
 	},
 	//
 	//  Process the Window
 	//
-	_processWindow : function() {
+	_processWindow : function() {//oscarLog("_processWindow");
 		// Clean out our effects
 		this.dimensions.dataEffects = [];
 
@@ -1422,7 +1494,7 @@ lightwindow.prototype = {
 			} else {
 				$('lightwindow_data_caption').setStyle({
 					display: 'none'
-				});				
+				});
 			}
 			if (this.element.author) {
 				$('lightwindow_data_author').innerHTML = this.element.author;
@@ -1432,7 +1504,7 @@ lightwindow.prototype = {
 			} else {
 				$('lightwindow_data_author_container').setStyle({
 					display: 'none'
-				});				
+				});
 			}
 			if (this.activeGallery && this.options.showGalleryCount) {
 				$('lightwindow_data_gallery_current').innerHTML = this.galleryLocation.current;
@@ -1443,7 +1515,7 @@ lightwindow.prototype = {
 			} else {
 				$('lightwindow_data_gallery_container').setStyle({
 					display: 'none'
-				});				
+				});
 			}
 
 			$('lightwindow_data_slide_inner').setStyle({
@@ -1470,13 +1542,13 @@ lightwindow.prototype = {
 				height: '0px'
 			});
 		}
-				
-		if (this.element.title != 'null') {		
+
+		if (this.element.title != 'null') {
 			$('lightwindow_title_bar_title').innerHTML = this.element.title;
 		} else {
 			$('lightwindow_title_bar_title').innerHTML = '';
 		}
-		
+
 		var originalContainerDimensions = {height: $('lightwindow_container').getHeight(), width: $('lightwindow_container').getWidth()};
 		// Position the window
     	$('lightwindow_container').setStyle({
@@ -1485,14 +1557,14 @@ lightwindow.prototype = {
 			width: $('lightwindow_container').getWidth()+this.options.contentOffset.width-(this.windowActive ? this.options.contentOffset.width : 0)+'px'
 		});
 		var newContainerDimensions = {height: $('lightwindow_container').getHeight(), width: $('lightwindow_container').getWidth()};
- 		
+
 		// We need to record the container dimension changes
 		this.containerChange = {height: originalContainerDimensions.height-newContainerDimensions.height, width: originalContainerDimensions.width-newContainerDimensions.width};
 
 		// Get out general dimensions
 		this.dimensions.container = {height: $('lightwindow_container').getHeight(), width: $('lightwindow_container').getWidth()};
 		this.dimensions.cruft = {height: this.dimensions.container.height-$('lightwindow_contents').getHeight()+this.options.contentOffset.height, width: this.dimensions.container.width-$('lightwindow_contents').getWidth()+this.options.contentOffset.width};
-		
+
 		// Set Sizes if we need too
 		this._presetWindowSize();
 		this._resizeWindowToFit(); // Even if the window is preset we still don't want it to go outside of the viewport
@@ -1508,7 +1580,7 @@ lightwindow.prototype = {
 			height: this.dimensions.container.height+'px',
 			width: this.dimensions.container.width+'px'
 		});
-		
+
 		// We are ready, lets show this puppy off!
 		this._displayLightWindow('block', 'visible');
 		this._animateLightWindow();
@@ -1516,7 +1588,7 @@ lightwindow.prototype = {
 	//
 	//  Fire off our animation handler
 	//
-	_animateLightWindow : function() {
+	_animateLightWindow : function() {//oscarLog("_animateLightWindow");
 		if (this.options.animationHandler) {
 			this.options.animationHandler().bind(this);
 		} else {
@@ -1526,17 +1598,20 @@ lightwindow.prototype = {
 	//
 	//  Fire off our transition handler
 	//
-	_handleNavigation : function(display) {
-		if (this.options.navigationHandler) {
+	_handleNavigation : function(display) {//oscarLog("in _handleNavigation");
+		if (this.options.navigationHandler) {//oscarLog("in if _handleNavigation");
 			this.options.navigationHandler().bind(this, display);
 		} else {
+                    //oscarLog("in else _handleNavigation");
+                    //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                    //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 			this._defaultDisplayNavigation(display);
 		}
 	},
 	//
 	//  Fire off our transition handler
 	//
-	_handleTransition : function() {
+	_handleTransition : function() {//oscarLog("_handleTransition");
 		if (this.options.transitionHandler) {
 			this.options.transitionHandler().bind(this);
 		} else {
@@ -1545,47 +1620,52 @@ lightwindow.prototype = {
 	},
 	//
 	//  Handle the finish of the window animation
-	// 
-	_handleFinalWindowAnimation : function(delay) {
+	//
+	_handleFinalWindowAnimation : function(delay) {//oscarLog("_handleFinalWindowAnimation");
 		if (this.options.finalAnimationHandler) {
 			this.options.finalAnimationHandler().bind(this, delay);
 		} else {
 			this._defaultfinalWindowAnimationHandler(delay);
-		}		
+		}
 	},
 	//
 	//  Handle the gallery Animation
-	// 
-	_handleGalleryAnimation : function(list) {
+	//
+	_handleGalleryAnimation : function(list) {//oscarLog("_handleGalleryAnimation");
 		if (this.options.galleryAnimationHandler) {
 			this.options.galleryAnimationHandler().bind(this, list);
 		} else {
 			this._defaultGalleryAnimationHandler(list);
-		}		
+		}
 	},
 	//
-	//  Display the navigation 
+	//  Display the navigation
 	//
-	_defaultDisplayNavigation : function(display) {
-		if (display) {
+	_defaultDisplayNavigation : function(display) {//oscarLog("_defaultDisplayNavigation");
+		if (display) {//oscarLog("if _defaultDisplayNavigation");
 			$('lightwindow_navigation').setStyle({
 				display: 'block',
 				height: $('lightwindow_contents').getHeight()+'px',
 				width: '100%',
 				marginTop: this.options.dimensions.titleHeight+'px'
-			});			
-		} else {
+			});
+		} else {//oscarLog("else _defaultDisplayNavigation");
+                    //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                        //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 			$('lightwindow_navigation').setStyle({
 				display: 'none',
 				height: 'auto',
+                                //height: '600px',
 				width: 'auto'
-			});			
+			});
+                        //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                        //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 		}
 	},
 	//
 	//  This is the default animation handler for LightWindow
 	//
-	_defaultAnimationHandler : function() {	
+	_defaultAnimationHandler : function() {	 oscarLog("_defaultAnimationHandler");
 		// Now that we have figures out the cruft lets make the caption go away and add its effects
 		if (this.element.caption || this.element.author || (this.activeGallery && this.options.showGalleryCount)) {
 			$('lightwindow_data_slide').setStyle({
@@ -1603,13 +1683,13 @@ lightwindow.prototype = {
 			height: '0px',
 			marginTop: this.options.dimensions.titleHeight+'px'
 		});
-		
+
 		// We always want the title bar as well
 		this.dimensions.dataEffects.push(
 			new Effect.Morph('lightwindow_title_bar_inner', {sync: true, style: {height: this.options.dimensions.titleHeight+'px', marginTop: '0px'}}),
 		 	new Effect.Appear('lightwindow_title_bar_inner', {sync: true, from: 0.0, to: 1.0})
-		);		
-		
+		);
+
 		if (!this.options.hideGalleryTab) {
 			this._handleGalleryAnimation(false);
 			if ($('lightwindow_galleries_tab_container').getHeight() == 0) {
@@ -1621,7 +1701,7 @@ lightwindow.prototype = {
 				});
 			}
 		}
-		
+
 		var resized = false;
 		var ratio = this.dimensions.container.width-$('lightwindow_contents').getWidth()+this.resizeTo.width+this.options.contentOffset.width;
 		if (ratio != $('lightwindow_container').getWidth()) {
@@ -1629,21 +1709,21 @@ lightwindow.prototype = {
 					new Effect.Scale('lightwindow_contents', 100*(this.resizeTo.width/$('lightwindow_contents').getWidth()), {scaleFrom: 100*($('lightwindow_contents').getWidth()/($('lightwindow_contents').getWidth()+(this.options.contentOffset.width))), sync: true,  scaleY: false, scaleContent: false}),
 					new Effect.Scale('lightwindow_container', 100*(ratio/(this.dimensions.container.width)), {sync: true, scaleY: false, scaleFromCenter: true, scaleContent: false})
 				], {
-					duration: this.duration, 
+					duration: this.duration,
 					delay: 0.25,
 					queue: {position: 'end', scope: 'lightwindowAnimation'}
 				}
-			);		
+			);
 		}
-		
+
 		ratio = this.dimensions.container.height-$('lightwindow_contents').getHeight()+this.resizeTo.height+this.options.contentOffset.height;
 		if (ratio != $('lightwindow_container').getHeight()) {
 			new Effect.Parallel([
 					new Effect.Scale('lightwindow_contents', 100*(this.resizeTo.height/$('lightwindow_contents').getHeight()), {scaleFrom: 100*($('lightwindow_contents').getHeight()/($('lightwindow_contents').getHeight()+(this.options.contentOffset.height))), sync: true, scaleX: false, scaleContent: false}),
 					new Effect.Scale('lightwindow_container', 100*(ratio/(this.dimensions.container.height)), {sync: true, scaleX: false, scaleFromCenter: true, scaleContent: false})
 				], {
-					duration: this.duration, 
-					afterFinish: function() {				
+					duration: this.duration,
+					afterFinish: function() {
 						if (this.dimensions.dataEffects.length > 0) {
 							if (!this.options.hideGalleryTab) {
 								$('lightwindow_galleries').setStyle({
@@ -1655,19 +1735,19 @@ lightwindow.prototype = {
 									afterFinish: function() {
 										this._finishWindow();
 									}.bind(this),
-									queue: {position: 'end', scope: 'lightwindowAnimation'} 
+									queue: {position: 'end', scope: 'lightwindowAnimation'}
 								}
 							);
 						}
-					}.bind(this), 
-					queue: {position: 'end', scope: 'lightwindowAnimation'} 
+					}.bind(this),
+					queue: {position: 'end', scope: 'lightwindowAnimation'}
 				}
 			);
 			resized = true;
 		}
-		
+
 		// We need to do our data effect since there was no resizing
-		if (!resized && this.dimensions.dataEffects.length > 0) {	
+		if (!resized && this.dimensions.dataEffects.length > 0) {
 			new Effect.Parallel(this.dimensions.dataEffects, {
 					duration: this.duration,
 					beforeStart: function() {
@@ -1679,38 +1759,57 @@ lightwindow.prototype = {
 						if (this.containerChange.height != 0 || this.containerChange.width != 0) {
 							new Effect.MoveBy('lightwindow_container', this.containerChange.height, this.containerChange.width, {transition: Effect.Transitions.sinoidal});
 						}
-					}.bind(this),			
+					}.bind(this),
 					afterFinish: function() {
 						this._finishWindow();
 					}.bind(this),
-					queue: {position: 'end', scope: 'lightwindowAnimation'} 
+					queue: {position: 'end', scope: 'lightwindowAnimation'}
 				}
 			);
-		}			
-		
+		}
+
 	},
 	//
 	//  Finish up Window Animation
 	//
 	_defaultfinalWindowAnimationHandler : function(delay) {
-		if (this.windowType == 'media' || this._getParameter('lightwindow_loading_animation')) {	
+            //oscarLog("in _defaultfinalWindowAnimationHandler");
+		if (this.windowType == 'media' || this._getParameter('lightwindow_loading_animation')) {
 			// Because of major flickering with the overlay we just hide it in this case
 			Element.hide('lightwindow_loading');
 			this._handleNavigation(this.activeGallery);
+                        //oscarLog("if")
 			this._setStatus(false);
-		} else {
+		} else {//oscarLog("else")
+                    //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 			Effect.Fade('lightwindow_loading', {
 				duration: 0.75,
-				delay: 1.0, 
+				delay: 1.0,
 				afterFinish: function() {
 					// Just in case we need some scroll goodness (this also avoids the swiss cheese effect)
 					if (this.windowType != 'image' && this.windowType != 'media' && this.windowType != 'external') {
+                                            //oscarLog("in iffff");
 						$('lightwindow_contents').setStyle({
 							overflow: 'auto'
+                                                        //overflow: 'hidden'
 						});
+                                                //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 					}
+
+
+
+
+
+                                        //oscarLog("before _handleNavigation height:"+$('lightwindow_contents').getHeight());
+                //oscarLog("before _handleNavigation scroll height :"+$('lightwindow_contents').scrollHeight);
 					this._handleNavigation(this.activeGallery);
+                                        //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 					this._defaultGalleryAnimationHandler();
+                                         //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
+                //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 					this._setStatus(false);
 				}.bind(this),
 				queue: {position: 'end', scope: 'lightwindowAnimation'}
@@ -1720,7 +1819,7 @@ lightwindow.prototype = {
 	//
 	//  Handle the gallery Animation
 	//
-	_defaultGalleryAnimationHandler : function(list) {
+	_defaultGalleryAnimationHandler : function(list) {//oscarLog("_defaultGalleryAnimationHandler");
 		if (this.activeGallery) {
 			$('lightwindow_galleries').setStyle({
 				display: 'block',
@@ -1732,7 +1831,7 @@ lightwindow.prototype = {
 		} else {
 			$('lightwindow_galleries').setStyle({
 				display: 'none'
-			});	
+			});
 			$('lightwindow_galleries_tab_container').setStyle({
 				height: '0px',
 				marginTop: '20px'
@@ -1742,7 +1841,7 @@ lightwindow.prototype = {
 			});
 			return false;
 		}
-		
+
 		if (list) {
 			if ($('lightwindow_galleries_list').getHeight() == 0) {
 				var height = $('lightwindow_contents').getHeight()*0.80;
@@ -1759,23 +1858,24 @@ lightwindow.prototype = {
 				beforeStart: function() {
 					$('lightwindow_galleries_list').setStyle({
 						overflow: 'hidden'
-					});					
+					});
 				},
 				afterFinish: function() {
 					$('lightwindow_galleries_list').setStyle({
 						overflow: 'auto'
+                                                //overflow: 'hidden'
 					});
 				},
 				queue: {position: 'end', scope: 'lightwindowAnimation'}
-			});	
+			});
 		}
-		
-		
+
+
 	},
 	//
 	//  Default Transition Handler
 	//
-	_defaultTransitionHandler : function() {
+	_defaultTransitionHandler : function() {//oscarLog("_defaultTransitionHandler");
 		// Clean out our effects
 		this.dimensions.dataEffects = [];
 
@@ -1786,36 +1886,37 @@ lightwindow.prototype = {
 				new Effect.Fade('lightwindow_data_slide', {sync: true, from: 1.0, to: 0.0})
 			);
 		}
-		
+
 		if (!this.options.hideGalleryTab) {
 			if ($('lightwindow_galleries').getHeight() != 0 && !this.options.hideGalleryTab) {
 				this.dimensions.dataEffects.push(
 					new Effect.Morph('lightwindow_galleries_tab_container', {sync: true, style: {height: '0px', marginTop: '20px'}})
 				);
 			}
-			
+
 			if ($('lightwindow_galleries_list').getHeight() != 0) {
 				$('lightwindow_galleries_tab_span').className = 'up';
 				this.dimensions.dataEffects.push(
 					new Effect.Morph('lightwindow_galleries_list', {
-						sync: true, 
+						sync: true,
 						style: {height: '0px'},
 						transition: Effect.Transitions.sinoidal,
 						beforeStart: function() {
 							$('lightwindow_galleries_list').setStyle({
 								overflow: 'hidden'
-							});					
+							});
 						},
 						afterFinish: function() {
 							$('lightwindow_galleries_list').setStyle({
 								overflow: 'auto'
+                                                                //overflow: 'hidden'
 							});
 						}
 					})
 				);
 			}
 		}
-		
+
 		// We always want the title bar as well
 		this.dimensions.dataEffects.push(
 			new Effect.Morph('lightwindow_title_bar_inner', {sync: true, style: {height: '0px', marginTop: this.options.dimensions.titleHeight+'px'}}),
@@ -1827,38 +1928,38 @@ lightwindow.prototype = {
 				afterFinish: function() {
 					this._loadWindow();
 				}.bind(this),
-				queue: {position: 'end', scope: 'lightwindowAnimation'} 
+				queue: {position: 'end', scope: 'lightwindowAnimation'}
 			}
-		);	
+		);
 	},
 	//
 	//	Default Form handler for LightWindow
 	//
-	_defaultFormHandler : function(e) {
+	_defaultFormHandler : function(e) {//oscarLog("_defaultFormHandler");
 		var element = Event.element(e).parentNode;
 		var parameterString = Form.serialize(this._getParameter('lightwindow_form', element.getAttribute('params')));
 		if (this.options.formMethod == 'post') {
-			var newAJAX = new Ajax.Request(element.href, { 
-				method: 'post', 
-				postBody: parameterString, 
+			var newAJAX = new Ajax.Request(element.href, {
+				method: 'post',
+				postBody: parameterString,
 				onComplete: this.openWindow.bind(this, element)
 			});
 		} else if (this.options.formMethod == 'get') {
-			var newAJAX = new Ajax.Request(element.href, { 
-				method: 'get', 
-				parameters: parameterString, 
+			var newAJAX = new Ajax.Request(element.href, {
+				method: 'get',
+				parameters: parameterString,
 				onComplete: this.openWindow.bind(this, element)
 			});
 		}
 	},
-	// 
+	//
 	//  Wrap everything up
 	//
-	_finishWindow : function() {
+	_finishWindow : function() { oscarLog("_finishWindow");
 		if (this.windowType == 'external') {
 			// We set the externals source here because it allows for a much smoother animation
 			$('lightwindow_iframe').setAttribute('src', this.element.href);
-			this._handleFinalWindowAnimation(1);	
+			this._handleFinalWindowAnimation(1);
 		} else if (this.windowType == 'media') {
 
 			var outerObject = document.createElement('object');
@@ -1887,10 +1988,10 @@ lightwindow.prototype = {
 				innerObject = this._addParamToObject('wmode', 'transparent', innerObject);
 				innerObject = this._addParamToObject('cache', 'false', innerObject);
 				innerObject = this._addParamToObject('quality', 'high', innerObject);
-			
+
 				outerObject.appendChild(innerObject);
-			}	
-			
+			}
+
 			if (this._getParameter('lightwindow_iframe_embed')) {
 				this._appendIframe('no');
 				this._writeToIframe(this._convertToMarkup(outerObject, 'object'));
@@ -1917,5 +2018,6 @@ Event.observe(window, 'load', lightwindowInit, false);
 //
 var myLightWindow = null;
 function lightwindowInit() {
+    //oscarLog("in lightwindowInit");
 	myLightWindow = new lightwindow();
 }

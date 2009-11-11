@@ -204,7 +204,7 @@ System.out.println("==========================done first java part Preview2.jsp=
 %>
 <html:form action="/form/formname" styleId="preview2Form">
 
-	<table width="400px" height="500px" cellspacing=0 cellpadding=10
+	<table id="pwTable" width="400px" height="500px" cellspacing=0 cellpadding=10
 		border=2>
 		<tr>
 			<td valign=top height="100px"><input type="image"
@@ -345,7 +345,7 @@ System.out.println("==========================done first java part Preview2.jsp=
                                     <td height=25px colspan="2"><bean:message key="RxPreview.msgReprintBy"/> <%=user.getProviderName(strUser)%><span style="float: left;">
 					<bean:message key="RxPreview.msgOrigPrinted"/>:&nbsp;<%=rx.getPrintDate()%></span> <span
 						style="float: right;"><bean:message key="RxPreview.msgTimesPrinted"/>:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
-					</td>
+					</td>                                        
 					<input type="hidden" name="origPrintDate"
 						value="<%=rx.getPrintDate()%>">
 					<input type="hidden" name="numPrints"
