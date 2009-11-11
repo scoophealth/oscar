@@ -930,10 +930,10 @@ body {
        var y = xy[1]+'px';
        var wid = ($('drugProfile').getWidth()-300)+'px';
        var styleStr= {left: x, top: y,width: wid};
-       oscarLog(styleStr);
+       oscarLog("styleStr="+styleStr);
 
         var drugName = $('prescrip_'+id).innerHTML;
-        oscarLog(drugName);
+        oscarLog("drugName="+drugName);
        $('discontinueUI').setStyle(styleStr);
        $('disDrug').innerHTML = drugName;
        $('discontinueUI').show();
@@ -1173,10 +1173,11 @@ YAHOO.example.BasicRemote = function() {
  		oscarLog(type+" :: "+args);
                 oscarLog(args[2]);
                 arr = args[2];
-                oscarLog('In selection id----'+arr[1]);
+                oscarLog('In selection id----'+arr[1]);oscarLog('In selection name----'+arr[0]);
                 var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                 var ran_number=Math.round(Math.random()*1000000);
-                var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr[1]+"&text="+arr[0]+"&randomId="+ran_number;  //hack to get around ie caching the page
+                var name=encodeURIComponent(arr[0]);
+                var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr[1]+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
                 new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
                 $('searchString').value = "";
     });
@@ -1216,17 +1217,6 @@ function addFav(randomId,brandName){
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/addFavorite2.do?parameterValue=addFav2";
         var data="randomId="+randomId+"&favoriteName="+favoriteName;
         new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
-            /*    var json=transport.responseText.evalJSON();
-                str="Method: "+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
-                    +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
-                oscarLog("json.duration="+json.duration);
-                $(calQuantity).value = json.calQuantity;
-                oscarLog($(calQuantity).value);
-                if(json.prn){
-                    str=str+" prn";
-                } else{ }
-                oscarLog("str="+str);
-                $(rxString).innerHTML=str;//display parsed string below instruction.*/
             }});
    }
 }
@@ -1235,6 +1225,9 @@ function setSearchedDrug(drugId,name){
 
     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
     var ran_number=Math.round(Math.random()*1000000);
+    oscarLog("name in setSearchedDrug: "+name);
+    oscarLog("encodeURIComponent name in setSearchedDrug: "+encodeURIComponent(name));
+    name=encodeURIComponent(name);
     var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+drugId+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
     oscarLog(params);
     new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
