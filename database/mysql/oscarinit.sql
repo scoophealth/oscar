@@ -59,7 +59,7 @@ CREATE TABLE appointment (
   notes varchar(80) default NULL,
   reason varchar(80) default NULL,
   location varchar(30) default NULL,
-  resources varchar(10) default NULL,
+  resources varchar(255) default NULL,
   type varchar(10) default NULL,
   style varchar(10) default NULL,
   billing varchar(10) default NULL,
