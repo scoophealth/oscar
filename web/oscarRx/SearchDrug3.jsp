@@ -1361,6 +1361,9 @@ function updateQty(element){
         return false;
     }
 
+    function addLuCode(eleId,luCode){
+        $(eleId).value = $(eleId).value +" LU Code: "+luCode;
+    }
 
          function getRenalDosingInformation(divId,atcCode){
                var url = "RenalDosing.jsp";
@@ -1412,8 +1415,6 @@ $("searchString").focus();
 <script language="javascript" src="../commons/scripts/sort_table/css.js"></script>
 <script language="javascript" src="../commons/scripts/sort_table/common.js"></script>
 <script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js"></script>
-<%--
-<script>
 
 </body>
 </html:html>
