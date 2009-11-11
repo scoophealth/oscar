@@ -27,10 +27,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.AbstractModel;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(propagation=Propagation.REQUIRES_NEW)
+@Transactional
 abstract class AbstractDao<T extends AbstractModel<?>>
 {
 	protected Class<T> modelClass;

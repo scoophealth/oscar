@@ -26,11 +26,8 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.CdsClientForm;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
 
 	public CdsClientFormDao() {

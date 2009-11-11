@@ -26,13 +26,10 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.BillingService;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import oscar.util.UtilDateUtilities;
 
 @Repository
-@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class BillingServiceDao extends AbstractDao<BillingService> {
 	public final String BC = "BC";
 

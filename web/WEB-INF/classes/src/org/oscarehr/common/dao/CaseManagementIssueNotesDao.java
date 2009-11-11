@@ -28,11 +28,8 @@ import javax.persistence.Query;
 
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class CaseManagementIssueNotesDao {
     
     @PersistenceContext

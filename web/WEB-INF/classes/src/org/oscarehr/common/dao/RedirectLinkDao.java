@@ -25,15 +25,12 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.RedirectLink;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * deprecated on 2009-11-03, if it's been a while, delete this.
  */
 @Deprecated
 @Repository
-@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class RedirectLinkDao extends AbstractDao<RedirectLink> {
 
 	public RedirectLinkDao() {
