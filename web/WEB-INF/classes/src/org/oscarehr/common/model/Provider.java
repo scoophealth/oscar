@@ -267,8 +267,8 @@ public class Provider implements Serializable, Comparable<Provider>{
 	public class ComparatorName implements Comparator<Provider>, Serializable {
 
 		public int compare(Provider o1, Provider o2) {
-			Provider bp1 = (Provider) o1;
-			Provider bp2 = (Provider) o2;
+			Provider bp1 = o1;
+			Provider bp2 = o2;
 			String lhs = bp1.getLastName() + bp1.getFirstName();
 			String rhs = bp2.getLastName() + bp2.getFirstName();
 
