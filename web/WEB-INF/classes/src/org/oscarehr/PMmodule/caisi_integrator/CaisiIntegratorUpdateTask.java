@@ -25,8 +25,8 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,11 +39,14 @@ import javax.xml.ws.WebServiceException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
@@ -117,6 +120,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
+	private AdmissionDao admissionDao= (AdmissionDao) SpringUtils.getBean("admissionDao");
 
 	static {
 		// ensure cxf uses log4j
@@ -351,6 +355,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographicPreventions(facility, providerIdsInFacility, demographicService, demographicId);
 				pushDemographicNotes(facility, demographicService, demographicId);
 				pushDemographicDrugs(facility, providerIdsInFacility, demographicService, demographicId);
+				pushAdmissions(facility, programsInFacility, demographicService, demographicId);
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
@@ -447,6 +452,40 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		if (issues.size() > 0) service.setCachedDemographicIssues(issues);
 	}
+
+	private void pushAdmissions(Facility facility, List<Program> programsInFacility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+		logger.debug("pushing admissions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		List<Admission> admissions = admissionDao.getAdmissionsByFacility(demographicId, facility.getId());
+		if (admissions.size() == 0) return;
+
+		ArrayList<CachedAdmission> cachedAdmissions = new ArrayList<CachedAdmission>();
+		for (Admission admission : admissions) {
+			MiscUtils.checkShutdownSignaled();
+
+			// don't send admission if it is not in our facility. yeah I know I'm double checking since it's selected
+			// but the reality is I don't trust it and our facility segmentation is flakey at best so.. better to check again.
+			logger.debug("Facility:" + facility.getName() + " - admissionId = " + admission.getId());
+			if (!isProgramIdInProgramList(programsInFacility, admission.getProgramId())) continue;
+
+			CachedAdmission cachedAdmission = new CachedAdmission();
+
+			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+			facilityIdIntegerCompositePk.setCaisiItemId(admission.getId().intValue());
+			cachedAdmission.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+			cachedAdmission.setAdmissionDate(admission.getAdmissionDate());
+			cachedAdmission.setAdmissionNotes(admission.getAdmissionNotes());
+			cachedAdmission.setCaisiDemographicId(demographicId);
+			cachedAdmission.setCaisiProgramId(admission.getProgramId());
+			cachedAdmission.setDischargeDate(admission.getDischargeDate());
+			cachedAdmission.setDischargeNotes(admission.getDischargeNotes());
+
+			cachedAdmissions.add(cachedAdmission);
+		}
+
+		if (cachedAdmissions.size() > 0) demographicService.setCachedAdmissions(cachedAdmissions);	    
+    }
 
 	private boolean isProgramIdInProgramList(List<Program> programList, int programId) {
 		for (Program p : programList) {
