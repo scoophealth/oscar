@@ -71,7 +71,7 @@ sites = siteDao.getAllSites();
     {"searchmyteamprovider", "select provider_no, last_name, first_name from provider where provider_no=? or team=(select team from provider where provider_no=?) order by first_name"}, 
  };
   String[][] responseTargets=new String[][] {  };
-  flipviewMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+  flipviewMainBean.doConfigure(dbQueries,responseTargets);
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

@@ -54,7 +54,7 @@ String [][] dbQueries=new String[][] {
 	{"search_demographic", "select * from demographic where demographic_no=? "}, 
     {"search_formtype2diabete", "select * from formType2Diabetes where demographic_no= ? order by formEdited desc, ID desc limit 0,1"}, 
 };
-studyBean.doConfigure(dbParams,dbQueries);
+studyBean.doConfigure(dbQueries);
 %>
 
 

@@ -46,7 +46,7 @@
 {"searchmygroupall", "select * from mygroup where mygroup_no= ? order by last_name"}, 
   };
   String[][] responseTargets=new String[][] {  };
-  patientBean.doConfigure(dbParams,dbQueries,responseTargets);
+  patientBean.doConfigure(dbQueries,responseTargets);
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>

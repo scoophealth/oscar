@@ -47,7 +47,7 @@ String [][] dbQueries=new String[][] {
 {"search_desaprisk", "select * from desaprisk where form_no <= ? and demographic_no = ? order by form_no desc, desaprisk_date desc, desaprisk_time desc limit 1 " }, 
 {"save_desaprisk", "insert into desaprisk (desaprisk_date,desaprisk_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) " }, 
 };
-plannerBean.doConfigure(dbParams,dbQueries);
+plannerBean.doConfigure(dbQueries);
 //System.out.println("TOP");
 %>
  

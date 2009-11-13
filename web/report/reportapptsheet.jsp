@@ -46,7 +46,7 @@
 {"searchmygroupall", "select * from mygroup where mygroup_no= ?"}, 
   };
   String[][] responseTargets=new String[][] {  };
-  daySheetBean.doConfigure(dbParams,dbQueries,responseTargets);
+  daySheetBean.doConfigure(dbQueries,responseTargets);
 %>
 <html>
 <head>

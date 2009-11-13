@@ -100,7 +100,8 @@
 
 
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.SpringUtils"%><html:html locale="true">
 <head>
 <title><bean:message
 	key="demographic.demographiceditdemographic.title" /></title>
@@ -544,6 +545,10 @@ div.demographicWrapper {
                                 String resident="", nurse="", alert="", notes="", midwife="";
                                 ResultSet rs = null;
                                 rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
+                                
+                                DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
+                                Demographic demographic=demographicDao.getDemographic(demographic_no);
+                                
                                 while (rs.next()) {
                                         resident = (apptMainBean.getString(rs,"cust1"));
                                         nurse = (apptMainBean.getString(rs,"cust2"));
@@ -1196,7 +1201,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									onBlur="upCaseCtrl(this)"></td>
 							</tr>
 							<tr>
-							  <td align="right" <b><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>: </b></td>
+							  <td align="right"> <b><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>: </b></td>
 							    <td align="left">
 					<% String title = apptMainBean.getString(rs,"title"); %>
 								<select name="title" onchange="checkTitleSex();">
@@ -1557,8 +1562,9 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									type="text" name="ver"
 									value="<%=apptMainBean.getString(rs,"ver")%>" size="3"
 									onBlur="upCaseCtrl(this)"></td>
-								<td align="right"><b><bean:message
-									key="demographic.demographiceditdemographic.formEFFDate" />:</b></td>
+								<td align="right">
+									<b><bean:message key="demographic.demographiceditdemographic.formEFFDate" />:</b>
+								</td>
 								<td align="left">
 								<%
                                  // Put 0 on the left on dates
@@ -1575,7 +1581,26 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									type="text" name="eff_date_month" size="2" maxlength="2"
 									value="<%= effDateMonth%>"> <input type="text"
 									name="eff_date_date" size="2" maxlength="2"
-									value="<%= effDateDay%>"></td>
+									value="<%= effDateDay%>">
+								&nbsp;<b><bean:message key="demographic.demographiceditdemographic.formHCRenewDate" />:</b>
+								<%
+                                 // Put 0 on the left on dates
+                                 // Year
+                                 decF.applyPattern("0000");
+
+								 GregorianCalendar hcRenewalCal=new GregorianCalendar();
+								 hcRenewalCal.setTime(demographic.getHcRenewDate());
+								 
+                                 String renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
+                                 // Month and Day
+                                 decF.applyPattern("00");
+                                 String renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
+                                 String renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
+                              %> 
+                              		<input type="text" name="eff_date_year" size="4" maxlength="4" value="<%= renewDateYear%>">
+									<input type="text" name="eff_date_month" size="2" maxlength="2"	value="<%= renewDateMonth%>">
+									<input type="text" name="eff_date_date" size="2" maxlength="2" value="<%= renewDateDay%>">
+								</td>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message

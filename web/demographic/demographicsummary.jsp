@@ -50,7 +50,7 @@
     {"delete_encounter2", "delete from encounter where encounter_no = ?"},
    };
    String[][] responseTargets=new String[][] {   };
-   demosummaryBean.doConfigure(dbParams,dbQueries,responseTargets);
+   demosummaryBean.doConfigure(dbQueries,responseTargets);
 %>
 
 <% //delete the selected records

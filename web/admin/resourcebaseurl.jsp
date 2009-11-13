@@ -41,7 +41,7 @@
     {"add_resource", "insert into property (name,value) values('resource',?)"}, 
   };
   String[][] responseTargets=new String[][] {  };
-  baseurlBean.doConfigure(dbParams,dbQueries,responseTargets);
+  baseurlBean.doConfigure(dbQueries,responseTargets);
 %>
 <%
   if(request.getParameter("submit_form")!=null && request.getParameter("submit_form").equals(" Save ") ) {

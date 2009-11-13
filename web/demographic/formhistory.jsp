@@ -39,7 +39,7 @@
     {"delete_form1", "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(?,?,'form',?,?)"},
     {"delete_form2", "delete from form where form_no = ?"},
    };
-   formHistBean.doConfigure(dbParams,dbQueries);
+   formHistBean.doConfigure(dbQueries);
 %>
 
 <% //delete the selected records

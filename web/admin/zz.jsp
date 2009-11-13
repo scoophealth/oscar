@@ -14,7 +14,7 @@
     String [][] dbQueries=new String[][] { 
         {"search_echart", "select * from eChart order by timeStamp desc" }, 
     };
-    studyBean.doConfigure(dbParams,dbQueries);
+    studyBean.doConfigure(dbQueries);
 %>
 <!--  
 /*

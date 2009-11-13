@@ -39,7 +39,7 @@
     {"search_demograph", "select * from demographic where demographic_no=?"},
   };
   String[][] responseTargets=new String[][] {  };
-  encPrintBean.doConfigure(dbParams,dbQueries,responseTargets);
+  encPrintBean.doConfigure(dbQueries,responseTargets);
 %>
 
 <html>

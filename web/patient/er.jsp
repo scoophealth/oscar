@@ -44,7 +44,7 @@
    String[][] responseTargets=new String[][] {
      {"Add Record" , "demographicaddarecord.jsp"},
    };
-   apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+   apptMainBean.doConfigure(dbQueries,responseTargets);
 %>
 
 <html>

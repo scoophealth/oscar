@@ -58,7 +58,7 @@
           "insert into desannualreviewplan (des_date,des_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) "
           }};
 
-  plannerBean.doConfigure(dbParams, dbQueries);
+  plannerBean.doConfigure(dbQueries);
 %>
 <html>
 <%

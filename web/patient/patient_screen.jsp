@@ -39,7 +39,7 @@
     {"search_demographic", "select * from demographic where demographic_no = ?"},  
   };
   String[][] responseTargets=new String[][] {  };
-  ptsLoginBean.doConfigure(dbParams,dbQueries,responseTargets);
+  ptsLoginBean.doConfigure(dbQueries,responseTargets);
 
   int age=0, dob_year=0, dob_month=0, dob_date=0;
   ResultSet rsdemo = ptsLoginBean.queryResults(demographic_no, "search_demographic"); 

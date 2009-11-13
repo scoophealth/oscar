@@ -49,7 +49,7 @@ String fieldName = request.getParameter("fieldname")!=null ? request.getParamete
 String [][] dbQueries=new String[][] { 
 	{"search_provider", "select provider_no, last_name, first_name from provider where ohip_no!=\"\" or rma_no!=\"\" or billing_no!=\"\" or hso_no!=\"\" order by " + orderBy }, 
 };
-reportMainBean.doConfigure(dbParams,dbQueries);
+reportMainBean.doConfigure(dbQueries);
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

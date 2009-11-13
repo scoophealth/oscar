@@ -44,5 +44,5 @@
     {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") + "' and is_history='N' " },
   };
 
-  reportMainBean.doConfigure(dbParams,dbQueries);
+  reportMainBean.doConfigure(dbQueries);
 %>

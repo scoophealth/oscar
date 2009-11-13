@@ -26,7 +26,7 @@
 {"delete_template", "delete from encountertemplate where encountertemplate_name = ? " },
 {"add_template", "insert into encountertemplate (encountertemplate_name, encountertemplate_value, creator, createdatetime) values (?,?,?,?)" },
   };
-  apptMainBean.doConfigure(dbParams,dbQueries);
+  apptMainBean.doConfigure(dbQueries);
 
   //save or delete the settings
   int rowsAffected = 0;

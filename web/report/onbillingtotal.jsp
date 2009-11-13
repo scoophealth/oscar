@@ -15,7 +15,7 @@
 {"search_billing", "select total, billing_no, billing_date from billing where total not like ? order by billing_no desc" }, 
 {"update_billingtotal", "update billing set total = ? where billing_no = ?" }, 
   };
-  daySheetBean.doConfigure(dbParams,dbQueries);
+  daySheetBean.doConfigure(dbQueries);
 %>
 <!--  
 /*

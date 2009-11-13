@@ -20,7 +20,7 @@
   String [][] dbQueries=new String[][] { 
 {"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ? offset ?" }, 
   };
-  daySheetBean.doConfigure(dbParams,dbQueries);
+  daySheetBean.doConfigure(dbQueries);
 %>
 <!--  
 /*

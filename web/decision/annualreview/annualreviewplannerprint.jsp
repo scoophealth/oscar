@@ -47,7 +47,7 @@ String [][] dbQueries=new String[][] {
 {"search_demographic", "select last_name,first_name,sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?" }, 
 {"search_des", "select * from desannualreviewplan where form_no <= ? and demographic_no = ? order by form_no desc, des_date desc, des_time desc limit 1 " }, 
 };
-plannerBean.doConfigure(dbParams,dbQueries);
+plannerBean.doConfigure(dbQueries);
 %>
 
 <html>

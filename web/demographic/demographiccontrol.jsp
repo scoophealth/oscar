@@ -178,7 +178,7 @@
      {"Update Record & Back to Appointment" , "updatedemographicbacktoappt.jsp"},
      {"linkMsg2Demo" , "../oscarMessenger/msgSearchDemo.jsp"},             
    };
-   apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+   apptMainBean.doConfigure( dbQueries,responseTargets);
 %>
 <%
   apptMainBean.doCommand(request); //store request to a help class object Dict - function&params

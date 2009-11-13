@@ -22,7 +22,7 @@
 {"search_ect","select eChartId, providerNo, timeStamp, subject, encounter from eChart where demographicNo=? order by timeStamp desc limit ? offset ?" },
 //{"search_splitectsize","select encounter from eChart where demographicNo=? and timeStamp > ? order by timeStamp limit 1" },
   };
-  daySheetBean.doConfigure(dbParams,dbQueries);
+  daySheetBean.doConfigure(dbQueries);
 %>
 <!--
 /*

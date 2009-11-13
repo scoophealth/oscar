@@ -46,7 +46,7 @@ if(session.getAttribute("user") == null || !( ((String) session.getAttribute("us
     {"search_allergies", "select DESCRIPTION from allergies where demographic_no=? "}, 
     //{"search_drugs", "select * from drugs where demographic_no=? and rx_date >= ? order by rx_date desc, drugid desc "}, 
   };
-  studyBean.doConfigure(dbParams,dbQueries);
+  studyBean.doConfigure(dbQueries);
 %>
 
 

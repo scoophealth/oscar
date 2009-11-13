@@ -16,7 +16,7 @@
 {"update_demographicdate", "update demographic set date_of_birth = ? where demographic_no = ?" }, 
   };
   String[][] responseTargets=new String[][] {  };
-  daySheetBean.doConfigure(dbParams,dbQueries,responseTargets);
+  daySheetBean.doConfigure(dbQueries,responseTargets);
 %>
 <!--  
 /*

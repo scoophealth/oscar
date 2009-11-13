@@ -78,7 +78,7 @@
 		  };
   }
   String[][] responseTargets=new String[][] {  };
-  updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
+  updatedpBean.doConfigure(dbQueries,responseTargets);
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -153,7 +153,7 @@ function setregexp2() {
       String instrdemo = sbtemp.toString();
       dbQueries[0][1] = dbQueries[0][1] + "("+ instrdemo +")" ;
       // System.out.println( dbQueries[0][1] );
-      updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
+      updatedpBean.doConfigure(dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_residentmultiple");
     } %>
 <%=rowsAffected %>
@@ -190,7 +190,7 @@ function setregexp2() {
       String instrdemo = sbtemp.toString();
       dbQueries[1][1] += "("+ instrdemo +")" ;
       // System.out.println( dbQueries[1][1] );
-      updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
+      updatedpBean.doConfigure(dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_nursemultiple");
     } %>
 <%=rowsAffected %>
@@ -227,7 +227,7 @@ function setregexp2() {
       String instrdemo = sbtemp.toString();
       dbQueries[2][1] += "("+ instrdemo +")" ;
       // System.out.println( dbQueries[2][1] );
-      updatedpBean.doConfigure(dbParams,dbQueries,responseTargets);
+      updatedpBean.doConfigure(dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_midwifemultiple");
     } %>
 <%=rowsAffected %>

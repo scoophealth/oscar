@@ -23,7 +23,7 @@
 		{"search_study", "select study_no, study_name, description from study where current1 = ?"}, 
 		{"search_demostudy", "select s.demographic_no, s.study_no, d.last_name , d.first_name, d.provider_no, d.email from demographicstudy s left join demographic d on s.demographic_no=d.demographic_no order by d.last_name"}, 
 	};
-	reportMainBean.doConfigure(dbParams,dbQueries);
+	reportMainBean.doConfigure(dbQueries);
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

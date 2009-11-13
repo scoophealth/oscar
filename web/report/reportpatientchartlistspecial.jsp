@@ -62,7 +62,7 @@
        }
 
   String[][] responseTargets=new String[][] {  };
-  patientBean.doConfigure(dbParams,dbQueries,responseTargets);
+  patientBean.doConfigure(dbQueries,responseTargets);
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

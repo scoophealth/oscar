@@ -41,7 +41,7 @@
         };
     }
   	
-    daySheetBean.doConfigure(dbParams,dbQueries);
+    daySheetBean.doConfigure(dbQueries);
 %>
 <!--
 /*

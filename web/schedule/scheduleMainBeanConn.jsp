@@ -67,5 +67,5 @@
   };
    
   //associate each operation with an output JSP file -- displaymode
-  scheduleMainBean.doConfigure(dbParams,dbQueries);
+  scheduleMainBean.doConfigure(dbQueries);
 %>

@@ -61,7 +61,7 @@ int indexCount = 0;
 <% 
   String [][] dbQueries=new String[][] { 
         {"search_ect","select eChartId, timeStamp, subject, encounter from eChart where demographicNo=? order by timeStamp desc" },   };
-  daySheetBean.doConfigure(dbParams,dbQueries);
+  daySheetBean.doConfigure(dbQueries);
   
 
 oscar.oscarSecurity.CookieSecurity cs   = new oscar.oscarSecurity.CookieSecurity();

@@ -52,7 +52,7 @@
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 {"select_patientStatus", "select patient_status, provider_no from demographic where demographic_no = ?"  },
   };
-  reportMainBean.doConfigure(dbParams,dbQueries);
+  reportMainBean.doConfigure(dbQueries);
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

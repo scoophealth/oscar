@@ -41,7 +41,7 @@
 {"searchallprovider", "select * from provider order by last_name" }, 
   };
   String[][] responseTargets=new String[][] {  };
-  daySheetBean.doConfigure(dbParams,dbQueries,responseTargets);
+  daySheetBean.doConfigure(dbQueries,responseTargets);
 %>
 <html>
 <head>

@@ -46,7 +46,7 @@
   };
   //associate each operation with an output JSP file - displaymode
   String[][] responseTargets=new String[][] {  };
-  apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+  apptMainBean.doConfigure(dbQueries,responseTargets);
 %>
 
 <html:html locale="true">

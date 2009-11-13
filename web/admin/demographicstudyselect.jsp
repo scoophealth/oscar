@@ -20,7 +20,7 @@
         {"search_study", "select s.* from study s order by s.study_no" }, 
         {"search_demostudy", "select demographic_no from demographicstudy where demographic_no=? and study_no=? " }, 
 	};
-    studyBean.doConfigure(dbParams,dbQueries);
+    studyBean.doConfigure(dbQueries);
 %>
 
 <%

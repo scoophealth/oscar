@@ -51,7 +51,7 @@ String [][] dbQueries=new String[][] {
 {"select_bcformar", "select demographic_no, c_EDD, c_surname,c_givenName, pg1_ageAtEDD, pg1_dateOfBirth, pg1_langPref, c_phn, pg1_gravida, pg1_term, c_phone, c_phyMid, ar2_doula, ar2_doulaNo, provider_no from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc, ID desc  limit ? offset ?"  }, 
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"}, 
 };
-reportMainBean.doConfigure(dbParams,dbQueries);
+reportMainBean.doConfigure(dbQueries);
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

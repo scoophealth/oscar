@@ -42,7 +42,7 @@
 	String [][] dbQueries=new String[][] { 
 		{"search_master","select pin from demographic where demographic_no=?" }, 
 	};
-	daySheetBean.doConfigure(dbParams,dbQueries);
+	daySheetBean.doConfigure(dbQueries);
 %>
 <!--  
 /*

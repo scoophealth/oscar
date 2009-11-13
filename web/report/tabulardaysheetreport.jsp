@@ -15,7 +15,7 @@
 	{"search_daysheetsingleall", "select a.appointment_date, a.provider_no,a.start_time,a.end_time, a.reason,p.last_name,p.first_name,d.last_name,d.first_name,d.chart_no, d.phone, d.date_of_birth, d.month_of_birth, d.year_of_birth, d.hin from appointment a,demographic d,provider p where a.appointment_date=? and a.provider_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no order by a.appointment_date,"+orderby },
   };
  	String[][] responseTargets=new String[][] {  };
-  	daySheetBean.doConfigure(dbParams,dbQueries,responseTargets);
+  	daySheetBean.doConfigure(dbQueries,responseTargets);
    	GregorianCalendar now = new GregorianCalendar();
   	String createtime = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) +" "+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) ;
 	String date = request.getParameter("sdate");

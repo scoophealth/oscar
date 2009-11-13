@@ -47,7 +47,7 @@
   };
   String[][] responseTargets=new String[][] {
   };
-  formMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+  formMainBean.doConfigure(dbQueries,responseTargets);
 %>
 
 <html>

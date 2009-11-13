@@ -26,7 +26,7 @@
     {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") +"' and is_history='N'  order by name"}
   };
   String[][] responseTargets=new String[][] {  };
-  addDemoBean.doConfigure(dbParams,dbQueries,responseTargets);
+  addDemoBean.doConfigure(dbQueries,responseTargets);
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 

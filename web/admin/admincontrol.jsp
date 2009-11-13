@@ -247,7 +247,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"newgroup" , "adminnewgroup.jsp"},
     {"savemygroup" , "adminsavemygroup.jsp"},
   };
-  apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+  apptMainBean.doConfigure(dbQueries,responseTargets);
   apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
   if(true) {
     out.clear();

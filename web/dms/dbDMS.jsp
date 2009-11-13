@@ -68,5 +68,5 @@
     {"savebill" , "providersavebill.jsp"},
     {"encounterhistory" , "providerencounterhistory.jsp"},
   };
-  apptMainBean.doConfigure(dbParams,dbQueries,responseTargets);
+  apptMainBean.doConfigure(dbQueries,responseTargets);
 %>
