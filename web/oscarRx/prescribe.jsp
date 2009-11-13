@@ -13,7 +13,7 @@ List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("li
 System.out.println("listRxDrugs="+listRxDrugs);
 
 for(RxPrescriptionData.Prescription rx : listRxDrugs ){
-         System.out.println("display prescribe"+rx);
+         System.out.println("display prescribe :"+rx);
          String rand            = Long.toString(rx.getRandomId());
          String instructions    = rx.getSpecial();
          String drugForm        = rx.getDrugForm();
@@ -36,14 +36,27 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          String duration        = rx.getDuration();
          String method          = rx.getMethod();
          String outsideProvName = rx.getOutsideProviderName();
-         boolean isOutsideProvider;System.out.println("---"+outsideProvOhip+"--");System.out.println("---"+outsideProvName+"--");
-         if((outsideProvOhip!=null && !outsideProvOhip.equals("")) || (outsideProvName!=null && !outsideProvName.equals(""))){
+         boolean isDiscontinued = rx.isDiscontinued();
+         String archivedDate="";
+         String archivedReason="";
+         boolean isOutsideProvider ;
+         System.out.println("---"+outsideProvOhip+"--");System.out.println("---"+outsideProvName+"--");
+         if(isDiscontinued){
+                System.out.println("isDiscontinued true");
+                archivedReason=rx.getLastArchReason();
+                archivedDate=rx.getLastArchDate();
+                System.out.println("---"+archivedDate +"--"+archivedReason);
+         }
+         else{
+             System.out.println("isDiscontinued false");
+         }
+          if((outsideProvOhip!=null && !outsideProvOhip.equals("")) || (outsideProvName!=null && !outsideProvName.equals(""))){
              isOutsideProvider=true;
-               // System.out.println("trueeeeeeeeee");
+               // System.out.println("isOutsideProvider trueeeeeeeeee");
          }
          else{
              isOutsideProvider=false;
-             //System.out.println("falseeeeeeeeeeee");
+             //System.out.println("isOutsideProvider falseeeeeeeeeeee");
          }
          System.out.println("instructions from repscbAllLongTerm="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
 
@@ -131,7 +144,32 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
             <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
             getRenalDosingInformation('renalDosing_<%=rand%>','<%=rx.getAtcCode()%>');
             </oscar:oscarPropertiesCheck>
-
+            var isDiscontinued=<%=isDiscontinued%>;
+            oscarLog("isDiscon "+isDiscontinued);
+            //pause(1000);
+            if(isDiscontinued){            
+               var archD='<%=archivedDate%>';
+               var archR='<%=archivedReason%>';
+               oscarLog("in js discon "+archR+"--"+archD);
+               
+                    if(confirm('This drug was discontinued on <%=archivedDate%> because of <%=archivedReason%> are you sure you want to continue it?')==true){
+                        //do nothing
+                    }
+                    else{
+                        $('set_<%=rand%>').remove();
+                        //call java class to delete it from stash pool.
+                        var randId='<%=rand%>';
+                        deletePrescribe(randId);
+                    }
+            }
+            function pause(ms){//can be used to delay execution of a js function
+                var date=new Date();
+                var current=null;
+                current=new Date();
+                while(current-date<ms){
+                    current=new Date();
+                }
+            }
         </script>
  <%}%>
  
