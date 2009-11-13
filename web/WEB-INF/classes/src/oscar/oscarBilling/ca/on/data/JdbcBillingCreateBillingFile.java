@@ -72,7 +72,6 @@ public class JdbcBillingCreateBillingFile {
 	private String ohipRecord;
 	private String ohipVer;
 	private String output;
-	public String password;
 	private int patientCount = 0;
 	private String pCount = "";
 	// private BigDecimal percent = new BigDecimal((double) 0).setScale(2,
@@ -82,11 +81,8 @@ public class JdbcBillingCreateBillingFile {
 	private String rCount = "";
 	private int recordCount = 0;
 	private String referral;
-	public String sdriver;
-	public String surl;
 	private java.util.Date today;
 	private String totalAmount;
-	public String user;
 	private String value;
 
 	public JdbcBillingCreateBillingFile() {
@@ -436,7 +432,7 @@ public class JdbcBillingCreateBillingFile {
 					// UtilDateUtilities.DateToString(rs2.getDate("appointment_date"),
 					// "yyyyMMdd");
 					dFee = Double.parseDouble(fee);
-					bdFee = new BigDecimal((double) dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 					BigTotal = BigTotal.add(bdFee);
 					_logger.info("createBillingFileStr(BigTotal = " + BigTotal + ")");
 					checkItem();

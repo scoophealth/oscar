@@ -33,13 +33,11 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.data.BillingONDataHelp;
 import oscar.util.UtilDateUtilities;
 public class ExtractBean extends Object implements Serializable {
-	private String appt;
 	private String apptDate;
 	private String batchCount = "";
 	private String batchHeader;
@@ -62,7 +60,6 @@ public class ExtractBean extends Object implements Serializable {
 	public String errorMsg = "";
 	public String errorPartMsg = "";
 	private String fee;
-	private int flag = 0;
 	private int flagOrder = 0;
 	private SimpleDateFormat formatter;
 	private String groupNo;
@@ -75,10 +72,8 @@ public class ExtractBean extends Object implements Serializable {
 	private String HE = "HE";
 	private int healthcardCount = 0;
 	private String hin;
-	private String htmlClass = "";
 	private String htmlCode = "";
 	private String htmlContent = "";
-	private String htmlContentHeader = "";
 	private String htmlFilename;
 	private String htmlFooter = "";
 	private String htmlHeader = "";
@@ -86,8 +81,6 @@ public class ExtractBean extends Object implements Serializable {
 	private String inPatient;
 	private int invCount = 0;
 	private String invNo;
-	private int it;
-	private ArrayList iterator;
 	private String m_Flag = "";
 	private String m_review = "";
 	private String ohipCenter;
@@ -96,12 +89,9 @@ public class ExtractBean extends Object implements Serializable {
 	private String ohipReciprocal;
 	private String ohipRecord;
 	private String ohipVer;
-	private String oscar_home;
 	private String outPatient;
-	private String outPatientDate;
 	private String outPatientDateValue;
 	private String output;
-	public String password;
 	private int patientCount = 0;
 	private String patientHeader;
 	private String patientHeader2;
@@ -114,21 +104,15 @@ public class ExtractBean extends Object implements Serializable {
 	private int recordCount = 0;
 	private String referral;
 	private String referralDoc;
-	private String reportCount;
-	private String reportGenDate;
-	public String sdriver;
 	private int secondFlag = 0;
 	private String serviceCode;
 	private String spec;
 	private String specCode;
 	private String specialty;
-	public String surl;
 	private int thirdFlag = 0;
 	private java.util.Date today;
 	private String totalAmount;
-	public String user;
 	private String value;
-	private String ver;
 	private java.sql.Date visitDate;
 	private String visitType;
 	public ExtractBean() {
@@ -356,12 +340,7 @@ public class ExtractBean extends Object implements Serializable {
 	}
 	public void dbQuery(String[] dbP) {
 		dbParam = dbP;
-		sdriver = dbParam[0];
-		surl = dbParam[1];
-		user = dbParam[2];
-		password = dbParam[3];
 		try {
-			htmlClass = "class='bodytext'";
 			batchOrder = 4 - batchCount.length();
 			// check length
 			checkBatchHeader();
@@ -508,7 +487,6 @@ public class ExtractBean extends Object implements Serializable {
 		ohipVer = newOhipVer;
 	}
 	public synchronized void setOscarHome(String oscarHOME) {
-		oscar_home = oscarHOME;
 	}
 	public synchronized void setProviderNo(String newProviderNo) {
 		providerNo = newProviderNo;

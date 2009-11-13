@@ -92,7 +92,6 @@ public class ExtractBean extends Object implements Serializable {
     private String outPatient;
     private String outPatientDateValue;
     private String output;
-    public String password;
     private int patientCount = 0;
     private String patientHeader;
     private String patientHeader2;
@@ -104,17 +103,14 @@ public class ExtractBean extends Object implements Serializable {
     private int recordCount = 0;
     private String referral;
     private String referralDoc;
-    public String sdriver;
     private int secondFlag = 0;
     private String serviceCode;
     private String spec;
     private String specCode;
     private String specialty;
-    public String surl;
     private int thirdFlag = 0;
     private java.util.Date today;
     private String totalAmount;
-    public String user;
     private String value;
     private java.sql.Date visitDate;
     private String visitType;
@@ -325,10 +321,6 @@ public class ExtractBean extends Object implements Serializable {
 
     public void dbQuery(String[] dbP) {
         dbParam = dbP;
-        sdriver = dbParam[0];
-        surl = dbParam[1];
-        user = dbParam[2];
-        password = dbParam[3];
         try {
             batchOrder = 4 - batchCount.length();
             // check length

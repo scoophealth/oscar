@@ -48,91 +48,36 @@ public class ExtractBean extends Object implements Serializable {
     private String htmlFilename;
     private String value;
     private String query;
-    private String query2;
-    private String query3;
-    private String HE = "HE";
     private String providerNo;
     private String ohipVer;
     private String ohipCenter;
-    private String reportGenDate;
-    private String reportCount;
     private String demoName;
-    private String hin;
-    private String ver;
-    private String dob;
     private String invNo;
-    private String spec;
-    private String specCode;
-    private String inPatient;
-    private String outPatient;
-    private String outPatientDate;
-    private String outPatientDateValue;
-    private String diagcode;
-    private String fee;
-    private String apptDate;
-    private String appt;
-    private String serviceCode;
     private String batchHeader;
-    private String patientHeader;
-    private String patientHeader2;
-    private String visitType;
-    private String specialty;
-    private String groupNo;
-    private String billingUnit;
     private String totalAmount;
-    private java.sql.Date visitDate;
-    private int count = 0;
     private int invCount = 0;
-    private int htmlCount = 0;
-    private int flag =0;
-    private int flagOrder =0;
-    private int secondFlag = 0;
-    private int thirdFlag = 0;
-    private int it;
-    private ArrayList iterator ;
     private java.util.Date today;
     private String output;
     private SimpleDateFormat formatter;
     private int recordCount=0;
     private int patientCount=0;
-    private int healthcardCount = 0;
     private String rCount="";
     private String pCount="";
     private String hcCount = "";
-    private String htmlHeader="";
     private String htmlCode="";
     private String htmlContent="";
     private String htmlContentHeader="";
     private String htmlFooter="";
     private String htmlValue="";
-    private String htmlClass="";
-    private String batchCount ="";
-    private int batchOrder =0;
     private double dFee;
     private BigDecimal BigTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     private BigDecimal bdFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-    private BigDecimal percent = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     private String dateRange="";
     private String eFlag="";
-    private String hcFlag="";
-    private String hcType = "";
-    private String hcHin="";
-    private String hcFirst="";
-    private String hcLast="";
-    private String demoSex = "";
-    private String referral;
-    private String referralDoc;
-    private String oscar_home;
-    private String m_review ="";
-    private String m_Flag = "";
     private int vsFlag=0;
     private String logNo = "";
     private String logValue="";
     public String[] dbParam;
-    public String surl;
-    public String user;
-    public String password;
-    public String sdriver;
     public String errorMsg;
 
     public CheckBillingData checkData = new CheckBillingData();
@@ -150,12 +95,11 @@ public class ExtractBean extends Object implements Serializable {
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
         if (HasBillingItemsToSubmit()) {
            try{
-               batchOrder = 4 - batchCount.length();
 
                if (vsFlag == 0) {
                    logNo =  getSequence() ;
-                   batchHeader = "VS1" + dataCenterId + misc.forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + misc.space(25) + misc.space(57) + "\r";
-                   errorMsg = checkData.checkVS1("VS1" , dataCenterId , misc.forwardZero(logNo,7) , "V6242" , "OSCAR_MCMASTER           " , "V1.1      " , "20030930" , "OSCAR MCMASTER                          " , "(905) 575-1300 " , misc.space(25) , misc.space(57));
+                   batchHeader = "VS1" + dataCenterId + Misc.forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + Misc.space(25) + Misc.space(57) + "\r";
+                   errorMsg = checkData.checkVS1("VS1" , dataCenterId , Misc.forwardZero(logNo,7) , "V6242" , "OSCAR_MCMASTER           " , "V1.1      " , "20030930" , "OSCAR MCMASTER                          " , "(905) 575-1300 " , Misc.space(25) , Misc.space(57));
                    logValue = batchHeader;
                    setLog(logNo, logValue);
                    vsFlag = 1;
@@ -191,7 +135,7 @@ public class ExtractBean extends Object implements Serializable {
                            ResultSet rs2 = db.GetSQL("select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'");
                               while (rs2.next()) {
                                  recordCount ++;
-                                 count = 0;
+
                                  logNo = getSequence();
                                  System.out.println("processing "+invNo);
 
@@ -225,7 +169,6 @@ public class ExtractBean extends Object implements Serializable {
                                  htmlContent += errorMsg;
 
                                  invCount++;
-                                 String billingMasterNo = rs2.getString("billingmaster_no");
                                  setAsBilledMaster(rs2.getString("billingmaster_no"));
 
 
@@ -233,8 +176,6 @@ public class ExtractBean extends Object implements Serializable {
                         }else if (billType.equals("WCB")){
                            /////////////////////////////////////
                            System.out.println("Type equals WCB for invNo "+invNo);
-                           String newLine = "\r\n";
-                           String fee1 = null;
                            ResultSet rs2 =
                            db.GetSQL("SELECT *, billingservice.value As `feeitem1` FROM billingservice, wcb JOIN billing ON wcb.billing_no=billing.billing_no WHERE wcb.billing_no='"
                            + invNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') AND billingservice.service_code=wcb.w_feeitem");
@@ -451,16 +392,13 @@ public class ExtractBean extends Object implements Serializable {
         ohipVer = newOhipVer;
     }
     public synchronized void setGroupNo(String newGroupNo) {
-        groupNo = newGroupNo;
     }
     public synchronized void setSpecialty(String newSpecialty) {
-        specialty = newSpecialty;
     }
     public String getOhipCenter() {
         return ohipCenter;
     }
     public synchronized void setBatchCount(String newBatchCount) {
-        batchCount = newBatchCount;
     }
     public synchronized void setOhipCenter(String newOhipCenter) {
         ohipCenter = newOhipCenter;
@@ -478,7 +416,6 @@ public class ExtractBean extends Object implements Serializable {
         return invNo;
     }
     public synchronized void setOscarHome(String oscarHOME){
-        oscar_home = oscarHOME;
     }
     public synchronized void seteFlag(String neweFlag){
         eFlag = neweFlag;
@@ -497,61 +434,61 @@ public class ExtractBean extends Object implements Serializable {
        return retval;
     }
     public String getClaimDetailRecord(ResultSet rs2,String LogNo) throws SQLException{
-        String dataLine =     misc.forwardSpace(rs2.getString("claimcode"),3)            //p00   3
-                            + misc.forwardSpace(rs2.getString("datacenter"),5)           //p02   5
-                            + misc.forwardZero(logNo,7)                                  //p04   7
-                            + misc.forwardSpace(rs2.getString("payee_no"),5)             //p06   5
-                            + misc.forwardSpace(rs2.getString("practitioner_no"),5)      //p08   5
-                            + misc.forwardZero(rs2.getString("phn"),10)                  //p14  10
-                            + misc.forwardSpace(rs2.getString("name_verify"),4)          //p16   4
-                            + misc.forwardSpace(rs2.getString("dependent_num"),2)        //p18   2
-                            + misc.forwardZero(roundUp(rs2.getString("billing_unit")),3) //p20   3
-                            + misc.forwardZero(rs2.getString("clarification_code"),2)    //p22   2
-                            + misc.forwardSpace(rs2.getString("anatomical_area"), 2)     //p23   2
-                            + misc.forwardSpace(rs2.getString("after_hour"),1)           //p24   1
-                            + misc.forwardZero(rs2.getString("new_program"),2)           //p25   2
-                            + misc.forwardZero(rs2.getString("billing_code"),5)          //p26   5
-                            + misc.moneyFormatPaddedZeroNoDecimal(rs2.getString("bill_amount"),7)           //p27   7
-                            + misc.forwardZero(rs2.getString("payment_mode"), 1)         //p28   1
-                            + misc.forwardSpace(rs2.getString("service_date"), 8)        //p30   8
-                            + misc.forwardZero(rs2.getString("service_to_day"),2)        //p32   2
-                            + misc.forwardSpace(rs2.getString("submission_code"), 1)     //p34   1
-                            + misc.space(1)                                              //p35   1
-                            + misc.backwardSpace(rs2.getString("dx_code1"), 5)           //p36   5
-                            + misc.backwardSpace(rs2.getString("dx_code2"), 5)           //p37   5
-                            + misc.backwardSpace(rs2.getString("dx_code3"), 5)           //p38   5
-                            + misc.space(15)                                             //p39  15
-                            + misc.forwardSpace(rs2.getString("service_location"), 1)    //p40   1
-                            + misc.forwardZero(rs2.getString("referral_flag1"), 1)       //p41   1
-                            + misc.forwardZero(rs2.getString("referral_no1"),5)          //p42   5
-                            + misc.forwardZero(rs2.getString("referral_flag2"),1)        //p44   1
-                            + misc.forwardZero(rs2.getString("referral_no2"),5)          //p46   5
-                            + misc.forwardZero(rs2.getString("time_call"),4)             //p47   4
-                            + misc.forwardZero(rs2.getString("service_start_time"),4)    //p48   4
-                            + misc.forwardZero(rs2.getString("service_end_time"),4)      //p50   4
-                            + misc.forwardZero(rs2.getString("birth_date"),8)            //p52   8
-                            + misc.forwardZero(rs2.getString("billingmaster_no"), 7)     //p54   7
-                            + misc.forwardSpace(rs2.getString("correspondence_code"), 1) //p56   1
+        String dataLine =     Misc.forwardSpace(rs2.getString("claimcode"),3)            //p00   3
+                            + Misc.forwardSpace(rs2.getString("datacenter"),5)           //p02   5
+                            + Misc.forwardZero(logNo,7)                                  //p04   7
+                            + Misc.forwardSpace(rs2.getString("payee_no"),5)             //p06   5
+                            + Misc.forwardSpace(rs2.getString("practitioner_no"),5)      //p08   5
+                            + Misc.forwardZero(rs2.getString("phn"),10)                  //p14  10
+                            + Misc.forwardSpace(rs2.getString("name_verify"),4)          //p16   4
+                            + Misc.forwardSpace(rs2.getString("dependent_num"),2)        //p18   2
+                            + Misc.forwardZero(roundUp(rs2.getString("billing_unit")),3) //p20   3
+                            + Misc.forwardZero(rs2.getString("clarification_code"),2)    //p22   2
+                            + Misc.forwardSpace(rs2.getString("anatomical_area"), 2)     //p23   2
+                            + Misc.forwardSpace(rs2.getString("after_hour"),1)           //p24   1
+                            + Misc.forwardZero(rs2.getString("new_program"),2)           //p25   2
+                            + Misc.forwardZero(rs2.getString("billing_code"),5)          //p26   5
+                            + Misc.moneyFormatPaddedZeroNoDecimal(rs2.getString("bill_amount"),7)           //p27   7
+                            + Misc.forwardZero(rs2.getString("payment_mode"), 1)         //p28   1
+                            + Misc.forwardSpace(rs2.getString("service_date"), 8)        //p30   8
+                            + Misc.forwardZero(rs2.getString("service_to_day"),2)        //p32   2
+                            + Misc.forwardSpace(rs2.getString("submission_code"), 1)     //p34   1
+                            + Misc.space(1)                                              //p35   1
+                            + Misc.backwardSpace(rs2.getString("dx_code1"), 5)           //p36   5
+                            + Misc.backwardSpace(rs2.getString("dx_code2"), 5)           //p37   5
+                            + Misc.backwardSpace(rs2.getString("dx_code3"), 5)           //p38   5
+                            + Misc.space(15)                                             //p39  15
+                            + Misc.forwardSpace(rs2.getString("service_location"), 1)    //p40   1
+                            + Misc.forwardZero(rs2.getString("referral_flag1"), 1)       //p41   1
+                            + Misc.forwardZero(rs2.getString("referral_no1"),5)          //p42   5
+                            + Misc.forwardZero(rs2.getString("referral_flag2"),1)        //p44   1
+                            + Misc.forwardZero(rs2.getString("referral_no2"),5)          //p46   5
+                            + Misc.forwardZero(rs2.getString("time_call"),4)             //p47   4
+                            + Misc.forwardZero(rs2.getString("service_start_time"),4)    //p48   4
+                            + Misc.forwardZero(rs2.getString("service_end_time"),4)      //p50   4
+                            + Misc.forwardZero(rs2.getString("birth_date"),8)            //p52   8
+                            + Misc.forwardZero(rs2.getString("billingmaster_no"), 7)     //p54   7
+                            + Misc.forwardSpace(rs2.getString("correspondence_code"), 1) //p56   1
                             //+ misc.space(20)                                             //p58  20
-                            + misc.backwardSpace(rs2.getString("claim_comment"),20)      //p58  20
-                            + misc.forwardSpace(rs2.getString("mva_claim_code"),1)       //p60   1
-                            + misc.forwardZero(rs2.getString("icbc_claim_no"), 8)        //p62   8
-                            + misc.forwardZero(rs2.getString("original_claim"), 20 )     //p64  20
-                            + misc.forwardZero(rs2.getString("facility_no"), 5)          //p70   5
-                            + misc.forwardZero(rs2.getString("facility_sub_no"), 5)      //p72   5
-                            + misc.space(58)                                             //p80  58
-                            + misc.backwardSpace(rs2.getString("oin_insurer_code"),2)    //p100  2
-                            + misc.forwardZero(rs2.getString("oin_registration_no"),12)  //p102 12
-                            + misc.backwardSpace(rs2.getString("oin_birthdate"),8)       //p104  8
-                            + misc.backwardSpace(rs2.getString("oin_first_name"),12)     //p106 12
-                            + misc.backwardSpace(rs2.getString("oin_second_name"),1)     //p108  1
-                            + misc.backwardSpace(rs2.getString("oin_surname"),18)        //p110 18
-                            + misc.backwardSpace(rs2.getString("oin_sex_code"),1)        //p112  1
-                            + misc.backwardSpace(rs2.getString("oin_address"),25)        //p114 25
-                            + misc.backwardSpace(rs2.getString("oin_address2"),25)       //p116 25
-                            + misc.backwardSpace(rs2.getString("oin_address3"),25)       //p118 25
-                            + misc.backwardSpace(rs2.getString("oin_address4"),25)       //p120 25
-                            + misc.backwardSpace(rs2.getString("oin_postalcode"),6);     //p122  6
+                            + Misc.backwardSpace(rs2.getString("claim_comment"),20)      //p58  20
+                            + Misc.forwardSpace(rs2.getString("mva_claim_code"),1)       //p60   1
+                            + Misc.forwardZero(rs2.getString("icbc_claim_no"), 8)        //p62   8
+                            + Misc.forwardZero(rs2.getString("original_claim"), 20 )     //p64  20
+                            + Misc.forwardZero(rs2.getString("facility_no"), 5)          //p70   5
+                            + Misc.forwardZero(rs2.getString("facility_sub_no"), 5)      //p72   5
+                            + Misc.space(58)                                             //p80  58
+                            + Misc.backwardSpace(rs2.getString("oin_insurer_code"),2)    //p100  2
+                            + Misc.forwardZero(rs2.getString("oin_registration_no"),12)  //p102 12
+                            + Misc.backwardSpace(rs2.getString("oin_birthdate"),8)       //p104  8
+                            + Misc.backwardSpace(rs2.getString("oin_first_name"),12)     //p106 12
+                            + Misc.backwardSpace(rs2.getString("oin_second_name"),1)     //p108  1
+                            + Misc.backwardSpace(rs2.getString("oin_surname"),18)        //p110 18
+                            + Misc.backwardSpace(rs2.getString("oin_sex_code"),1)        //p112  1
+                            + Misc.backwardSpace(rs2.getString("oin_address"),25)        //p114 25
+                            + Misc.backwardSpace(rs2.getString("oin_address2"),25)       //p116 25
+                            + Misc.backwardSpace(rs2.getString("oin_address3"),25)       //p118 25
+                            + Misc.backwardSpace(rs2.getString("oin_address4"),25)       //p120 25
+                            + Misc.backwardSpace(rs2.getString("oin_postalcode"),6);     //p122  6
         return dataLine;
     }
 
