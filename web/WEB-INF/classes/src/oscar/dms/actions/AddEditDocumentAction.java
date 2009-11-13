@@ -260,39 +260,6 @@ public class AddEditDocumentAction extends DispatchAction {
             System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
             EDocUtil.addCaseMgmtNoteLink(cmnl);
 
-            //add an annotation to document note in casemgmt_note table.
-    /*        String strNote2 = docDesc + props.getString("oscarEncounter.doc.annotation") +": ";
-            CaseManagementNote docAnnotation=new CaseManagementNote();
-            docAnnotation.setUpdate_date(now);
-            docAnnotation.setObservation_date(now);
-            docAnnotation.setDemographic_no(cmn.getDemographic_no());
-            docAnnotation.setProviderNo(cmn.getProviderNo());
-            docAnnotation.setNote(strNote2);
-            docAnnotation.setSigned(cmn.isSigned());
-            docAnnotation.setSigning_provider_no(cmn.getSigning_provider_no());
-            docAnnotation.setProgram_no(cmn.getProgram_no());
-            docAnnotation.setReporter_caisi_role(cmn.getReporter_caisi_role());
-            docAnnotation.setReporter_program_team(cmn.getReporter_program_team());
-            docAnnotation.setPassword(cmn.getPassword());
-            docAnnotation.setLocked(cmn.isLocked());
-            docAnnotation.setHistory("");
-            docAnnotation.setPosition(cmn.getPosition());
-            docAnnotation.setUuid(UUID.randomUUID().toString());
-
-            //add a new row in note_link table.
-            CaseManagementNoteLink cmnl2=new CaseManagementNoteLink();
-            cmnl2.setTableName(cmnl2.DOCUMENT);
-            String docNoteId=EDocUtil.getLastNoteId();
-            cmnl2.setTableId(Long.parseLong(docNoteId)) ;
-
-            //save the document annotation.
-            cmm.saveNoteSimple(docAnnotation);
-            String docAnnoId=EDocUtil.getLastNoteId();
-            cmnl2.setNoteId(Long.parseLong(docAnnoId));
-            System.out.println("ValuesSavedInCaseManagementNoteLink: ");
-            System.out.println("5= "+cmnl2.DOCUMENT+" last doc note no="+docNoteId+" last doc annotation id="+docAnnoId);
-            EDocUtil.addCaseMgmtNoteLink(cmnl2);
-*/
         } catch (Exception e) {
             //ActionRedirect redirect = new ActionRedirect(mapping.findForward("failAdd"));
             request.setAttribute("docerrors", errors);
