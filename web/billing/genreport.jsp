@@ -89,7 +89,7 @@ batchCount = rslocal2.getString("batchcount");
    extract.setGroupNo(billinggroup_no);
    extract.setSpecialty(specialty_code);
    extract.setBatchCount(String.valueOf(bCount));
-   extract.dbQuery(dbParams);
+   extract.dbQuery();
   
  int fLength = 3 - batchCount.length();
 	    	  	  String zero ="";
@@ -168,7 +168,7 @@ batchCount = rslocal2.getString("batchcount");
 	     extract.setGroupNo(billinggroup_no);
 	     extract.setSpecialty(specialty_code);
 	     extract.setBatchCount(String.valueOf(bCount));
-	     extract.dbQuery(dbParams);
+	     extract.dbQuery();
 	      
 	      
 	      int fLength = 3 - batchCount.length();

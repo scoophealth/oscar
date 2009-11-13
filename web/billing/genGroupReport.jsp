@@ -75,10 +75,7 @@ batchCount = rslocal2.getString("batchcount");
    
    fileCount = Integer.parseInt(batchCount) + 1;
    batchCount = String.valueOf(fileCount);
-   } else {
-   batchCount = batchCount;
-   }
-   
+   }   
 
     if (specialty_code == null || specialty_code.compareTo("") == 0 || specialty_code.compareTo("null")==0){
           specialty_code = "00"; 
@@ -95,7 +92,7 @@ batchCount = rslocal2.getString("batchcount");
    extract.setGroupNo(billinggroup_no);
    extract.setSpecialty(specialty_code);
    extract.setBatchCount(String.valueOf(bCount));
-   extract.dbQuery(dbParams);
+   extract.dbQuery();
   
  int fLength = 3 - batchCount.length();
 	    	  	  String zero ="";
@@ -180,7 +177,7 @@ batchCount = rslocal2.getString("batchcount");
 	     extract.setGroupNo(billinggroup_no);
 	     extract.setSpecialty(specialty_code);
 	     extract.setBatchCount(String.valueOf(bCount));
-	     extract.dbQuery(dbParams);
+	     extract.dbQuery();
 	      
 	      
 	      int fLength = 3 - batchCount.length();

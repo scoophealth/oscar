@@ -90,7 +90,7 @@ public class ExtractBean extends Object implements Serializable {
         output = formatter.format(today);
     }
     
-    public void dbQuery(String[] dbP){
+    public void dbQuery(){
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
         try{
                         

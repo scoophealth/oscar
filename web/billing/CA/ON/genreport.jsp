@@ -100,7 +100,7 @@ if (provider.compareTo("all") == 0 ){
 		extract.setGroupNo(billinggroup_no);
 		extract.setSpecialty(specialty_code);
 		extract.setBatchCount(String.valueOf(bCount));
-		extract.dbQuery(dbParams);
+		extract.dbQuery();
 
 		int fLength = 3 - batchCount.length();
 		String zero ="";
@@ -174,7 +174,7 @@ if (provider.compareTo("all") == 0 ){
 		extract.setGroupNo(billinggroup_no);
 		extract.setSpecialty(specialty_code);
 		extract.setBatchCount(String.valueOf(bCount));
-		extract.dbQuery(dbParams);
+		extract.dbQuery();
 
 		int fLength = 3 - batchCount.length();
 		String zero ="";

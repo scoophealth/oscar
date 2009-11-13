@@ -66,7 +66,7 @@ public class AppointmentMainBean {
     toFile.setDef(controlToFile);
     dbSQL=new UtilDict();
     dbSQL.setDef(dbOperation);
-//    makeDBPreparedHandler(dbParams, dbOperation);
+
     dbPH=new DBPreparedHandler();
   }
   public void doCommand(HttpServletRequest request) {

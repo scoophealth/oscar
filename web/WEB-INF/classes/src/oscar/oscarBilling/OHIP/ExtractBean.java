@@ -338,8 +338,7 @@ public class ExtractBean extends Object implements Serializable {
 		errorPartMsg = "";
 		return ret;
 	}
-	public void dbQuery(String[] dbP) {
-		dbParam = dbP;
+	public void dbQuery() {
 		try {
 			batchOrder = 4 - batchCount.length();
 			// check length

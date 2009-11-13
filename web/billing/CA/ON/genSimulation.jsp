@@ -93,7 +93,7 @@ while(rslocal.next()){
 	extract.setGroupNo(billinggroup_no);
 	extract.setSpecialty(specialty_code);
 	extract.setBatchCount(String.valueOf(bCount));
-	extract.dbQuery(dbParams);
+	extract.dbQuery();
 
 	htmlValue = "<font color='red'>" + errorMsg + "</font>" + extract.getHtmlValue();
 }

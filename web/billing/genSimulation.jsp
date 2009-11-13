@@ -84,7 +84,7 @@
    extract.setGroupNo(billinggroup_no);
    extract.setSpecialty(specialty_code);
    extract.setBatchCount(String.valueOf(bCount));
-   extract.dbQuery(dbParams);
+   extract.dbQuery();
   
  htmlValue = extract.getHtmlValue();
 	  	    

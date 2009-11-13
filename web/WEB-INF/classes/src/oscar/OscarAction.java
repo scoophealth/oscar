@@ -77,28 +77,7 @@ public class OscarAction
     }
 
     return true;
-  }
-
-  /**
-   * Returns a string array of the parameters from the session, used to connect to the Database
-   * @param request HttpServletRequest
-   * @return String[]
-   */
-  public String[] getDBParams(HttpServletRequest request) {
-    Properties oscarVariables = (Properties) request.getSession().getAttribute(
-        "oscarVariables");
-    String[] dbParams = new String[] {
-        oscarVariables.getProperty("db_driver"),
-        oscarVariables.getProperty("db_uri") +
-        oscarVariables.getProperty("db_name") + "?user=" +
-        oscarVariables.getProperty("db_username") + "&password=" +
-        oscarVariables.getProperty("db_password"),
-        oscarVariables.getProperty("db_username"),
-        oscarVariables.getProperty("db_password")};
-    return dbParams;
-  }
-
- 
+  } 
 
   /**
    * Configures the response header for upload of specified mime-type
