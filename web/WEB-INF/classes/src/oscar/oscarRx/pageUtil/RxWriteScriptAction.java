@@ -445,10 +445,10 @@ public final class RxWriteScriptAction extends DispatchAction {
             Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
             rx.setRxDate(tod);
             rx.setWrittenDate(tod);
-
+            rx.checkDiscontinued();//check and set if rx was discontinued before.
             List<RxPrescriptionData.Prescription> listRxDrugs=new ArrayList();
             listRxDrugs.add(rx);
-            request.setAttribute("listRxDrugs",listRxDrugs);
+            request.setAttribute("listRxDrugs",listRxDrugs);                     
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
@@ -699,7 +699,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                         String val = request.getParameter(elem);
                         System.out.println("paramName=" + elem + ", value=" + val);
                         if (elem.startsWith("drugName_" + num)) {
-                            rx.setGenericName(val);
+                           rx.setBrandName(val);
                         } else if (elem.equals("repeats_" + num)) {
 
                             if (val.equals("") || val == null) {
@@ -810,7 +810,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     rx.setLongTerm(isLongTerm);
                     String newline = System.getProperty("line.separator");
                     rx.setPatientCompliance(patientComplianceY, patientComplianceN);
-                    String special =  rx.getGenericName() + newline + rx.getSpecial()+ newline + "Qty:" + rx.getQuantity() + " Repeats:" + ""+rx.getRepeat() ;
+                    String special =  rx.getBrandName() + newline + rx.getSpecial()+ newline + "Qty:" + rx.getQuantity() + " Repeats:" + ""+rx.getRepeat() ;
                     //     p("here222");
                     rx.setSpecial(special);
                     System.out.println("SETTING SPECIAL TOO >"+special+"<");
@@ -835,7 +835,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     //       p("here2");
                     //       p("here5");
                     //       p(rx.getGenericName());
-                    rx.setBrandName(rx.getGenericName());
+                    
                     Long rand = Math.round(Math.random() * 1000000);
                     rx.setRegionalIdentifier(Long.toString(rand));
                     rx.setAtcCode(Long.toString(rand + 1));
