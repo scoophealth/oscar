@@ -34,14 +34,12 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
 import oscar.util.UtilDateUtilities;
 
 public class ExtractBean extends Object implements Serializable {
-    private String appt;
     private String apptDate;
     private String batchCount = "";
     private String batchHeader;
@@ -62,7 +60,6 @@ public class ExtractBean extends Object implements Serializable {
     public String errorMsg = "";
     public String errorPartMsg = "";
     private String fee;
-    private int flag = 0;
     private int flagOrder = 0;
     private SimpleDateFormat formatter;
     private String groupNo;
@@ -75,10 +72,8 @@ public class ExtractBean extends Object implements Serializable {
     private String HE = "HE";
     private int healthcardCount = 0;
     private String hin;
-    private String htmlClass = "";
     private String htmlCode = "";
     private String htmlContent = "";
-    private String htmlContentHeader = "";
     private String htmlFilename;
     private String htmlFooter = "";
     private String htmlHeader = "";
@@ -86,8 +81,6 @@ public class ExtractBean extends Object implements Serializable {
     private String inPatient;
     private int invCount = 0;
     private String invNo;
-    private int it;
-    private ArrayList iterator;
     private String m_Flag = "";
     private String m_review = "";
     private String ohipCenter;
@@ -96,9 +89,7 @@ public class ExtractBean extends Object implements Serializable {
     private String ohipReciprocal;
     private String ohipRecord;
     private String ohipVer;
-    private String oscar_home;
     private String outPatient;
-    private String outPatientDate;
     private String outPatientDateValue;
     private String output;
     public String password;
@@ -113,8 +104,6 @@ public class ExtractBean extends Object implements Serializable {
     private int recordCount = 0;
     private String referral;
     private String referralDoc;
-    private String reportCount;
-    private String reportGenDate;
     public String sdriver;
     private int secondFlag = 0;
     private String serviceCode;
@@ -127,7 +116,6 @@ public class ExtractBean extends Object implements Serializable {
     private String totalAmount;
     public String user;
     private String value;
-    private String ver;
     private java.sql.Date visitDate;
     private String visitType;
 
@@ -342,7 +330,6 @@ public class ExtractBean extends Object implements Serializable {
         user = dbParam[2];
         password = dbParam[3];
         try {
-            htmlClass = "class='bodytext'";
             batchOrder = 4 - batchCount.length();
             // check length
             checkBatchHeader();
@@ -351,8 +338,7 @@ public class ExtractBean extends Object implements Serializable {
             // start here
             value = batchHeader;
             BillingONDataHelp dbObj = new BillingONDataHelp();
-            //dbExtract dbExt = new dbExtract();
-            //dbExt.openConnection(sdriver, surl, user, password);
+
             query = "select * from billing where provider_ohip_no='" + providerNo
                     + "' and (status='O' or status='W') " + dateRange + " order by billing_date, billing_time";
             ResultSet rs = dbObj.searchDBRecord(query);
@@ -392,7 +378,7 @@ public class ExtractBean extends Object implements Serializable {
                     count = 6 - fee.length();
                     apptDate = UtilDateUtilities.DateToString(rs2.getDate("appointment_date"), "yyyyMMdd");
                     dFee = Double.parseDouble(fee);
-                    bdFee = new BigDecimal((double) dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
                     BigTotal = BigTotal.add(bdFee);
                     checkItem();
                     value += buildItem();
@@ -412,7 +398,7 @@ public class ExtractBean extends Object implements Serializable {
             flagOrder = 4 - pCount.length();
             secondFlag = 5 - rCount.length();
             thirdFlag = 4 - hcCount.length();
-            percent = new BigDecimal((double) 0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
+            percent = new BigDecimal(.01).setScale(2, BigDecimal.ROUND_HALF_UP);
             BigTotal = BigTotal.multiply(percent);
             value += buildTrailer();
             htmlCode = buildHTMLContentTrailer();
@@ -508,7 +494,6 @@ public class ExtractBean extends Object implements Serializable {
     }
 
     public synchronized void setOscarHome(String oscarHOME) {
-        oscar_home = oscarHOME;
     }
 
     public synchronized void setProviderNo(String newProviderNo) {

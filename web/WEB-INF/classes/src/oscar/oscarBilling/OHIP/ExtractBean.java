@@ -370,8 +370,7 @@ public class ExtractBean extends Object implements Serializable {
 			// start here
 			value = batchHeader;
 			BillingONDataHelp dbObj = new BillingONDataHelp();
-			//dbExtract dbExt = new dbExtract();
-			//dbExt.openConnection(sdriver, surl, user, password);
+
 			query = "select * from billing where provider_ohip_no='"
 					+ providerNo + "' and (status='O' or status='W') "
 					+ dateRange + " order by billing_date, billing_time";

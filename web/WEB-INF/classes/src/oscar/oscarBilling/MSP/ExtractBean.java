@@ -48,82 +48,33 @@ public class ExtractBean extends Object implements Serializable {
     private String value;
     private String query;
     private String query2;
-    private String query3;
-    private String HE = "HE";
     private String providerNo;
     private String ohipVer;
     private String ohipCenter;
-    private String reportGenDate;
-    private String reportCount;
     private String demoName;
-    private String hin;
-    private String ver;
-    private String dob;
     private String invNo;
-    private String spec;
-    private String specCode;
-    private String inPatient;
-    private String outPatient;
-    private String outPatientDate;
-    private String outPatientDateValue;
-    private String diagcode;
-    private String fee;
-    private String apptDate;
-    private String appt;
-    private String serviceCode;
     private String batchHeader;
-    private String patientHeader;
-    private String patientHeader2;
-    private String visitType;
-    private String specialty;
-    private String groupNo;
-    private String billingUnit;
     private String totalAmount;
-    private java.sql.Date visitDate;
-    private int count = 0;
     private int invCount = 0;
-    private int htmlCount = 0;
-    private int flag =0;
-    private int flagOrder =0;
-    private int secondFlag = 0;
-    private int thirdFlag = 0;
-    private int it;
-    private ArrayList iterator ;
     private java.util.Date today;
     private String output;
     private SimpleDateFormat formatter;
     private int recordCount=0;
     private int patientCount=0;
-    private int healthcardCount = 0;
     private String rCount="";
     private String pCount="";
     private String hcCount = "";
-    private String htmlHeader="";
     private String htmlCode="";
     private String htmlContent="";
     private String htmlContentHeader="";
     private String htmlFooter="";
     private String htmlValue="";
-    private String htmlClass="";
-    private String batchCount ="";
-    private int batchOrder =0;
     private double dFee;
     private BigDecimal BigTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     private BigDecimal bdFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-    private BigDecimal percent = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     private String dateRange="";
     private String eFlag="";
-    private String hcFlag="";
-    private String hcType = "";
-    private String hcHin="";
-    private String hcFirst="";
-    private String hcLast="";
-    private String demoSex = "";
-    private String referral;
-    private String referralDoc;
     private String oscar_home;
-    private String m_review ="";
-    private String m_Flag = "";
     private int vsFlag=0;
     private String logNo = "";
     private String logValue="";
@@ -152,10 +103,7 @@ public class ExtractBean extends Object implements Serializable {
         password = dbParam[3];
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
         try{
-            
-            //htmlClass="class='bodytext'";
-            batchOrder = 4 - batchCount.length();
-            
+                        
             if (vsFlag == 0) {
                 logNo = eFlag.equals("1") ? getSequence(sdriver, surl, user, password) : "1";
                 batchHeader = "VS1" + dataCenterId + forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + space(25) + space(57) + "\r";
@@ -307,7 +255,7 @@ public class ExtractBean extends Object implements Serializable {
                     ResultSet rs2 = dbExt.executeQuery2(query2);
                     while (rs2.next()) {
                         recordCount = recordCount + 1;                        
-                        count = 0;                        
+
                         logNo = eFlag.equals("1") ? getSequence(sdriver, surl, user, password) : "1";
                                               
                         //String dataLine =     rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") +     forwardZero(rs2.getString("phn"),10)    + rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6);
@@ -402,7 +350,6 @@ public class ExtractBean extends Object implements Serializable {
     }
     
     public void setLog(String x, String logValue){
-        String n="0";
         String nsql ="";
         
         nsql = "update log_teleplantx ";
@@ -444,7 +391,6 @@ public class ExtractBean extends Object implements Serializable {
     
     public void writeFile(String value1){                       
         try{
-            int fileCount = 0;
             String home_dir;
             String userHomePath = System.getProperty("user.home", "user.dir");
             //System.out.println(userHomePath);
@@ -474,7 +420,6 @@ public class ExtractBean extends Object implements Serializable {
     
     public void writeHtml(String htmlvalue1){                        
         try{
-            int fileCount = 0;
             String home_dir1;
             String userHomePath1 = System.getProperty("user.home", "user.dir");
             // System.out.println(userHomePath);
@@ -591,16 +536,13 @@ public class ExtractBean extends Object implements Serializable {
     }
     
     public synchronized void setGroupNo(String newGroupNo) {
-        groupNo = newGroupNo;
     }
     public synchronized void setSpecialty(String newSpecialty) {
-        specialty = newSpecialty;
     }
     public String getOhipCenter() {
         return ohipCenter;
     }
     public synchronized void setBatchCount(String newBatchCount) {
-        batchCount = newBatchCount;
     }
     public synchronized void setOhipCenter(String newOhipCenter) {
         ohipCenter = newOhipCenter;
