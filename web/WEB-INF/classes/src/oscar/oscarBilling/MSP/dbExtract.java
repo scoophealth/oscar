@@ -39,10 +39,6 @@ public class dbExtract implements Serializable {
     private Statement stmt = null;
     private Statement stmt2 = null;
     private Statement stmt3 = null;
-    private String surl;
-    private String user;
-    private String password;
-    private String sdriver;
     private int numUpdate;
     private Statement prepStmt = null;
     private String updateString;
@@ -71,15 +67,9 @@ public class dbExtract implements Serializable {
         //   }
     }
 
-    public void openConnection(String sd, String ur, String us, String ps) throws SQLException {
-        sdriver = sd;
-        surl = ur;
-        us = user;
-        password = ps;
+    public void openConnection() {
         try {
 
-            //Load the particular driver
-            Class.forName(sdriver);
             //establish connection with the specified username, password and url
             con = DbConnectionFilter.getThreadLocalDbConnection();
             stmt = con.createStatement();
@@ -89,14 +79,10 @@ public class dbExtract implements Serializable {
             System.out.println("Cannot get connection ");
             System.out.println("Exception is: " + e);
         }
-        catch (ClassNotFoundException e) {
-            System.out.println("Class not found exception ");
-            System.out.println("Exception is: " + e);
-        }
 
     }
 
-    public ResultSet executeQuery(String sql) throws SQLException {
+    public ResultSet executeQuery(String sql) {
         try {
             String SQLString = sql;
             // Execute sql
@@ -111,7 +97,7 @@ public class dbExtract implements Serializable {
         }
     }
 
-    public ResultSet executeQuery2(String sql) throws SQLException {
+    public ResultSet executeQuery2(String sql) {
         try {
             String SQLString = sql;
             // Execute sql
@@ -126,7 +112,7 @@ public class dbExtract implements Serializable {
         }
     }
 
-    public ResultSet executeQuery3(String sql) throws SQLException {
+    public ResultSet executeQuery3(String sql) {
         try {
             String SQLString = sql;
             // Execute sql
@@ -141,7 +127,7 @@ public class dbExtract implements Serializable {
         }
     }
 
-    public int executeUpdate() throws SQLException {
+    public int executeUpdate() {
 
         try {
             String SQLup = getUpdateString();
@@ -167,7 +153,7 @@ public class dbExtract implements Serializable {
         return updateString;
     }
 
-    public void closeConnection() throws SQLException {
+    public void closeConnection() {
         try {
             if ((con != null) && (stmt != null)) {
                 con.close();
@@ -176,7 +162,7 @@ public class dbExtract implements Serializable {
 
         }
         catch (Exception e) {
-            System.out.println("Error closing the database connection : " + surl);
+            e.printStackTrace();
         }
 
     } //closeConnection ends
