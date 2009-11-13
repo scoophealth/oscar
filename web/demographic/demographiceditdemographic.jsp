@@ -1582,6 +1582,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									value="<%= effDateMonth%>"> <input type="text"
 									name="eff_date_date" size="2" maxlength="2"
 									value="<%= effDateDay%>">
+									<%--
 								&nbsp;<b><bean:message key="demographic.demographiceditdemographic.formHCRenewDate" />:</b>
 								<%
                                  // Put 0 on the left on dates
@@ -1600,6 +1601,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               		<input type="text" name="eff_date_year" size="4" maxlength="4" value="<%= renewDateYear%>">
 									<input type="text" name="eff_date_month" size="2" maxlength="2"	value="<%= renewDateMonth%>">
 									<input type="text" name="eff_date_date" size="2" maxlength="2" value="<%= renewDateDay%>">
+									 --%>
 								</td>
 							</tr>
 							<tr valign="top">
