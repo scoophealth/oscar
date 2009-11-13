@@ -25,6 +25,7 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
 
@@ -32,6 +33,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpSession;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.struts.action.ActionForm;
@@ -40,11 +42,18 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.oscarEncounter.data.EctProgram;
 
 
 public final class RxDeleteRxAction extends DispatchAction {
@@ -167,8 +176,68 @@ public final class RxDeleteRxAction extends DispatchAction {
         drug.setArchivedDate(date);
         drug.setArchived(true);
         drug.setArchivedReason(reason);
-
+        //System.out.println("");
         drugDao.merge(drug);
+      /*  Enumeration em=request.getParameterNames();
+        while(em.hasMoreElements()){
+            String s=em.nextElement().toString();
+            System.out.println("request.parameterName="+s);
+            System.out.println("value="+request.getParameter(s));
+        }
+        em=request.getAttributeNames();
+        while(em.hasMoreElements()){
+            String s=em.nextElement().toString();
+            System.out.println("request.attributeName="+s);
+            System.out.println("value="+request.getAttribute(s));
+        }
+        em=request.getSession().getAttributeNames();
+        while(em.hasMoreElements()){
+            String s=em.nextElement().toString();
+            System.out.println("request.attributeName in session="+s);
+            System.out.println("value="+request.getSession().getAttribute(s));
+        }*/
+        
+        //create a note and store this info in casemanagement_note table
+        //note_id,update_date,observation_date,demographic_no,provider_no,note: ,signed,include_issue_innote,archived,position, uuid
+        //signing_provider_no,encounter_type:  billing_code:  program_no,reporter_caisi_role,reporter_program_team,history, password, locked
+        CaseManagementNote cmn=new CaseManagementNote();
+        //get parameter values
+        Date now=EDocUtil.getDmsDateTimeAsDate();
+        String demoNo=request.getParameter("demoNo");
+        String user=request.getSession().getAttribute("user").toString();        
+        String strNote="Discontinued reason: "+request.getParameter("reason")+ "\nDiscontinued comment: "+request.getParameter("comment") ;
+        HttpSession se = request.getSession();
+        String prog_no = new EctProgram(se).getProgram(user);
+
+        //set parameter values
+        cmn.setUpdate_date(now);
+        cmn.setObservation_date(now);
+        cmn.setDemographic_no(demoNo);
+        cmn.setProviderNo(user);
+        cmn.setNote(strNote);
+        cmn.setSigned(true);
+        cmn.setSigning_provider_no(user);
+        cmn.setProgram_no(prog_no);
+        cmn.setReporter_caisi_role("1");//1 for doctor, 2 for nurse
+        cmn.setReporter_program_team("0");
+        cmn.setPassword("NULL");
+        cmn.setLocked(false);
+        cmn.setHistory(strNote);
+        //cmn.setPosition(0);
+        //save note
+        WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+        CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+        cmm.saveNoteSimple(cmn);
+
+        //create an entry in casemgmt note link
+        CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
+        cmnl.setTableName(cmnl.DRUGS);
+        cmnl.setTableId(Long.parseLong(idStr));//drug id
+        cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+        System.out.println("ValuesSavedInCaseManagementNoteLink: ");
+        System.out.println(" last note id="+EDocUtil.getLastNoteId());
+        EDocUtil.addCaseMgmtNoteLink(cmnl);
+
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);
        
         Hashtable d = new Hashtable();
