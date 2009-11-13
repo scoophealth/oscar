@@ -505,7 +505,7 @@ function navBarLoader() {
                     --num2reduce;
                 
                 threshold = numLines - num2reduce;
-                console.log(idx + " threshold " + threshold);
+               // console.log(idx + " threshold " + threshold);
                 listDisplay(divs[idx].id, threshold);                
             }        
         };

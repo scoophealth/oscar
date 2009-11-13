@@ -850,10 +850,10 @@
     }
       
 
-    console.log("before="+document.getElementById("autocomplete_choices"));
+   // console.log("before="+document.getElementById("autocomplete_choices"));
     new Ajax.Autocompleter("searchString", "autocomplete_choices", "search2.jsp", {minChars:2, paramName:"searchString", updateElement:upElement});
     
-    console.log("after");
+   // console.log("after");
    // var ran_number;
     function upElement(li){
         //console.log('In up Element '+li);
