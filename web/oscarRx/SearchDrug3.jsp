@@ -944,7 +944,8 @@ body {
 
     function Discontinue2(id,reason,comment){
         var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=Discontinue"  ;
-        var data="drugId="+id+"&reason="+reason+"&comment="+comment;
+        var demoNo='<%=patient.getDemographicNo()%>';
+        var data="drugId="+id+"&reason="+reason+"&comment="+comment+"&demoNo="+demoNo;
             new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
                   oscarLog("Drug is now discontinued>"+transport.responseText);
                   var json=transport.responseText.evalJSON();
@@ -964,10 +965,9 @@ body {
     function RePrescribeLongTerm(){
         //var longTermDrugs=$(longTermDrugList).value;
        // var data="drugIdList="+longTermDrugs;
-       var demoNo=<%=patient.getDemographicNo()%>;
-       var showall=<%=showall%>;
-       oscarLog("demoNo="+demoNo);
-        var data="demoNo="+demoNo+"&showall="+showall;
+       var demoNo='<%=patient.getDemographicNo()%>';
+              oscarLog("demoNo="+demoNo);
+        var data="demoNo="+demoNo+"&showall=<%=showall%>";
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=repcbAllLongTerm";
 
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
@@ -1063,8 +1063,6 @@ body {
             oscarLog("popForm2 called");
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
 
-            //var params = "demographicNo=<%=bean.getDemographicNo()%>";  //hack to get around ie caching the page
-            //new Ajax.Updater('previewForm',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,onComplete:function(transport){
                     oscarLog( "preview2 done");
 
                     //sm('previewForm',400,650);
@@ -1173,7 +1171,7 @@ YAHOO.example.BasicRemote = function() {
  		oscarLog(type+" :: "+args);
                 oscarLog(args[2]);
                 arr = args[2];
-                oscarLog('In selection id----'+arr[1]);oscarLog('In selection name----'+arr[0]);
+                oscarLog('In yahoo----'+arr[1]);oscarLog('In yahoo----'+arr[0]);
                 var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                 var ran_number=Math.round(Math.random()*1000000);
                 var name=encodeURIComponent(arr[0]);
