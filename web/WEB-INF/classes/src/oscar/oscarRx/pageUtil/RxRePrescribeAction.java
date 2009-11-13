@@ -239,7 +239,7 @@ public final class RxRePrescribeAction extends DispatchAction {
        rx.setSpecial(spec);
 
         List<RxPrescriptionData.Prescription> listReRx=new ArrayList();
-
+        rx.checkDiscontinued();
         //add rx to rx list
         if(isUnique(beanRX,rx)){
             listReRx.add(rx);
