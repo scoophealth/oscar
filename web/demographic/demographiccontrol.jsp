@@ -181,12 +181,11 @@
    apptMainBean.doConfigure( dbQueries,responseTargets);
 %>
 <%
-  apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
-  if(true) {
-    out.clear();
-    String pg=apptMainBean.whereTo();
-    pageContext.forward(pg); //forward request&response to the target page
-    return;
-  }
+	apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
+
+	out.clear();
+	String pg=apptMainBean.whereTo();
+	pageContext.forward(pg); //forward request&response to the target page
+	return;
 %>
 
