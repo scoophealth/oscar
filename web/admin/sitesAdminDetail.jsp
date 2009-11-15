@@ -78,7 +78,7 @@
 	<table>
 	<tr><td>Site Name:<sup style="color:red">*</sup></td><td><nested:text property="site.name" maxlength="30"></nested:text></td></tr>
 	<tr><td>Short Name:<sup style="color:red">*</sup></td><td><nested:text property="site.shortName" maxlength="10"></nested:text></td></tr>
-	<tr><td>Theme Color:<sup style="color:red">*</sup></td><td><nested:text styleId="colorField" property="site.bgColor" onfocus="popup(350,450,'../colorpicker/colorpicker.htm','colorpicker');return false;"></nested:text>
+	<tr><td>Theme Color:<sup style="color:red">*</sup></td><td><nested:text styleId="colorField" property="site.bgColor" onclick="popup(350,450,'../colorpicker/colorpicker.htm','colorpicker');return false;"></nested:text>
 	</td></tr>
 	<tr><td>Active:</td><td><nested:checkbox property="site.status" value="1"/></td></tr>
 	<tr><td>Telephone:</td><td><nested:text property="site.phone"></nested:text></td></tr>
