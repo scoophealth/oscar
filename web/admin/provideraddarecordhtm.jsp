@@ -182,7 +182,7 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right"><bean:message
 				key="admin.provider.formSpecialty" />:</td>
 			<td><input type="text" name="specialty"
-				onBlur="upCaseCtrl(this)" maxlength="20"></td>
+				onBlur="upCaseCtrl(this)" maxlength="40"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formTeam" />:
