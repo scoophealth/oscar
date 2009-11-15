@@ -199,7 +199,7 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right"><bean:message
 				key="admin.provider.formSpecialty" />:</td>
 			<td><input type="text" name="specialty"
-				value="<%= apptMainBean.getString(rs,"specialty") %>" maxlength="20"></td>
+				value="<%= apptMainBean.getString(rs,"specialty") %>" maxlength="40"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formTeam" />:

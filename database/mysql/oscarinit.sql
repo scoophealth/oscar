@@ -221,7 +221,7 @@ CREATE TABLE billingservice (
 
 CREATE TABLE clinic (
   clinic_no int(10) NOT NULL auto_increment,
-  clinic_name varchar(50) default NULL,
+  clinic_name varchar(100) default NULL,
   clinic_address varchar(60) default '',
   clinic_city varchar(40) default '',
   clinic_postal varchar(15) default '',
@@ -6439,7 +6439,7 @@ CREATE TABLE provider (
   last_name varchar(30) NOT NULL default '',
   first_name varchar(30) NOT NULL default '',
   provider_type varchar(15) NOT NULL default '',
-  specialty varchar(20) NOT NULL default '',
+  specialty varchar(40) NOT NULL default '',
   team varchar(20) default '',
   sex char(1) NOT NULL default '',
   dob date default NULL,
