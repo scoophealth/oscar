@@ -48,7 +48,7 @@ public class SiteDao extends HibernateDaoSupport {
 	}
 
 	public void save(Site s) {
-		boolean isUpdate = s.getSiteId() != null;
+		boolean isUpdate = s.getSiteId() != null && s.getSiteId() > 0;
 		if (isUpdate) {
 			Site old = (Site) getHibernateTemplate().get(Site.class,
 					s.getSiteId());
