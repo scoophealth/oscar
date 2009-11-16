@@ -214,27 +214,20 @@ public final class RxRePrescribeAction extends DispatchAction {
         int i;
         String strId = (request.getParameter("drugId").split("_"))[1];
         p("!!!!!!!!!s", strId);
-
+try{
 
         int drugId = Integer.parseInt(strId);
         // get original drug
         RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
-        //   System.out.println("oldRx.getDrugId()="+oldRx.getDrugId());
         // create copy of Prescription
         RxPrescriptionData.Prescription rx =
-                rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
-        // System.out.println("***###addStathItem called44");
-        
-        //     System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
-        //allocate space for annotation
-        
+                rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);      
         Long rand = Math.round(Math.random() * 1000000);
         rx.setRandomId(rand);
 
         request.setAttribute("BoxNoFillFirstLoad", "true");
 
-        //trimSpecial
-       
+        //trim Special
        String spec=RxUtil.trimSpecial(rx);
        rx.setSpecial(spec);
 
@@ -255,27 +248,9 @@ public final class RxRePrescribeAction extends DispatchAction {
         
         //   System.out.println("script_no ="+script_no);
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(), "" + beanRX.getDemographicNo(), auditStr.toString());
-
-      //  RxDrugData drugData = new RxDrugData();
-        p("***drugs in present stash,stash size",""+beanRX.getStashSize());
-        for (int j = 0; j < beanRX.getStashSize(); j++) {
-            try {
-                RxPrescriptionData.Prescription rxTemp = beanRX.getStashItem(j);
-                p("stash index",""+j);
-                p("randomId",""+rxTemp.getRandomId());
-                p("generic name", rxTemp.getGenericName());
-                p("special",rxTemp.getSpecial());
-                p("quantity",rxTemp.getQuantity());
-                p("repeat=" + rxTemp.getRepeat());
-                p("atccode",rxTemp.getAtcCode());
-                p("regional identifier",rxTemp.getRegionalIdentifier());
-                p("---");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
+        RxUtil.printStashContent(beanRX);
         request.setAttribute("listRxDrugs", listReRx);
+}catch(Exception e){e.printStackTrace();}
         System.out.println("================END represcribe2 of RxRePrescribeAction.java=================");
         return (mapping.findForward("represcribe"));
     }
@@ -360,25 +335,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 
             
         }
-
-       // RxDrugData drugData = new RxDrugData();
-        p("drugs in present stash, stash size",""+beanRX.getStashSize());
-        for (int j = 0; j < beanRX.getStashSize(); j++) {
-            try {
-                RxPrescriptionData.Prescription rxTemp = beanRX.getStashItem(j);
-                p("stash index",""+j);
-                p("randomId",""+rxTemp.getRandomId());
-                p("generic name", rxTemp.getGenericName());
-                p("special",rxTemp.getSpecial());
-                p("quantity",rxTemp.getQuantity());
-                p("repeat=" + rxTemp.getRepeat());
-                p("atccode",rxTemp.getAtcCode());
-                p("regional identifier",rxTemp.getRegionalIdentifier());
-                p("---");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        RxUtil.printStashContent(beanRX);
         request.setAttribute("listRxDrugs", listLongTerm);
         
         System.out.println("================END repcbAllLongTerm of RxRePrescribeAction.java=================");
