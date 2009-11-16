@@ -645,7 +645,7 @@ public class CaseManagementManager {
 	/**
 	 *Substitute for updateCurrentIssueToCPP we replace old issue with new without clobbering existing text
 	 **/
-	public void changeIssueInCPP(String demoNo, CaseManagementIssue origIssue, CaseManagementIssue newIssue) {
+	public void changeIssueInCPP(String demoNo, String origIssueDesc, String newIssueDesc) {
 		CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
 		if (cpp == null) {
 			logger.error("Cannot change issue: No CPP found for demographic: " + demoNo);
@@ -653,16 +653,12 @@ public class CaseManagementManager {
 		}
 		String ongoing = cpp.getOngoingConcerns();
 		String newOngoing;
-		String description;
 
-		description = origIssue.getIssue().getDescription();
-
-		Pattern pattern = Pattern.compile("^" + description + "$", Pattern.MULTILINE);
+		Pattern pattern = Pattern.compile("^" + origIssueDesc + "$", Pattern.MULTILINE);
 		Matcher matcher = pattern.matcher(ongoing);
 
 		if (matcher.find()) {
-			description = newIssue.getIssue().getDescription();
-			newOngoing = matcher.replaceFirst(description);
+			newOngoing = matcher.replaceFirst(newIssueDesc);
 			cpp.setOngoingConcerns(newOngoing);
 			caseManagementCPPDAO.saveCPP(cpp);
 			echartDAO.updateEchartOngoing(cpp);

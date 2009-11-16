@@ -352,20 +352,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         else // old CME
         {
         	CaseManagementViewAction caseManagementViewAction=new CaseManagementViewAction();
-    		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
-    		caseManagementViewAction.addLocalIssues(issuesToDisplay, demographicNo, false, programId);
-    		caseManagementViewAction.addRemoteIssues(issuesToDisplay, demographicNo, false);
-    		
     		ArrayList<CheckBoxBean> checkBoxBeanList=new ArrayList<CheckBoxBean>();
+    		caseManagementViewAction.addLocalIssues(checkBoxBeanList, demographicNo, false, programId);
+    		caseManagementViewAction.addRemoteIssues(checkBoxBeanList, demographicNo, false);
     		
-            for (IssueDisplay issueToDisplay : issuesToDisplay) {
-            	CheckBoxBean checkBoxBean = new CheckBoxBean();
-            	checkBoxBean.setIssueDisplay(issueToDisplay);
-            	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(issueToDisplay.code, demographicNo));
-            	checkBoxBeanList.add(checkBoxBean);
-            }
         	checkedList = checkBoxBeanList.toArray(new CheckBoxBean[0]);
-
         	
             for (CaseManagementIssue cmi : note.getIssues()) {
                 setChecked_oldCme(checkedList, cmi);
@@ -1894,12 +1885,12 @@ System.out.println("noteString="+noteString);
         int index = Integer.parseInt(strIndex);
 
         // change issue
-        CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
+        CheckBoxBean[] oldList = cform.getIssueCheckList();
 
-        CheckIssueBoxBean[] issueList = (CheckIssueBoxBean[]) cform.getNewIssueCheckList();
+        CheckIssueBoxBean[] issueList = cform.getNewIssueCheckList();
         CheckIssueBoxBean substitution = null;
-        CaseManagementIssue origIssue = null;
-        CaseManagementIssue newIssue = null;
+        String origIssueDesc = null;
+        String newIssueDesc = null;
         // find the checked issue
         for (CheckIssueBoxBean curr : issueList) {
             if (curr.isChecked()) {
@@ -1911,18 +1902,27 @@ System.out.println("noteString="+noteString);
         if (substitution != null) {
             for (int x = 0; x < oldList.length; x++) {
                 if (x == index) {
-                    Issue iss = caseManagementMgr.getIssue(String.valueOf(substitution.getIssue().getId().longValue()));
-                    origIssue = new CaseManagementIssue(oldList[x].getIssue());
-                    oldList[x].getIssue().setIssue(iss);
+                	
+					Issue oldIssue = oldList[x].getIssue().getIssue();
+                    origIssueDesc = oldIssue.getDescription();
+					
+					Issue newIssue = caseManagementMgr.getIssue(String.valueOf(substitution.getIssue().getId().longValue()));
+					newIssueDesc=newIssue.getDescription();
+
+                    oldList[x].getIssue().setIssue(newIssue);
                     oldList[x].getIssue().setIssue_id(substitution.getIssue().getId().longValue());
-                    newIssue = oldList[x].getIssue();
+                    oldList[x].getIssue().setType(newIssue.getType());
+                    oldList[x].getIssueDisplay().setCode(newIssue.getCode());
+                    oldList[x].getIssueDisplay().setCodeType(newIssue.getType());
+                    oldList[x].getIssueDisplay().setDescription(newIssue.getDescription());
+                    
                     caseManagementMgr.saveCaseIssue(oldList[x].getIssue());
                 }
             }
         }
 
         cform.setIssueCheckList(oldList);
-        if (substitution != null && origIssue != null) this.caseManagementMgr.changeIssueInCPP(demono, origIssue, newIssue);
+        if (substitution != null && origIssueDesc != null) this.caseManagementMgr.changeIssueInCPP(demono, origIssueDesc, newIssueDesc);
         // updateIssueToConcern(cform);
 
         return mapping.findForward("view");

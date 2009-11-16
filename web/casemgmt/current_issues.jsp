@@ -29,6 +29,7 @@
 <%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.Map"%>
+<%@page import="org.oscarehr.casemgmt.web.CheckBoxBean"%>
 
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -70,7 +71,8 @@
 		<tr bgcolor="<%=bgcolor %>" align="center">
 			<%
 				String checked="";
-				CaseManagementViewAction.IssueDisplay issue = (CaseManagementViewAction.IssueDisplay)pageContext.getAttribute("issue");
+				CheckBoxBean checkBoxBean= (CheckBoxBean)pageContext.getAttribute("issue");
+				CaseManagementViewAction.IssueDisplay issue = checkBoxBean.getIssueDisplay();
 				String issueCompositeId=issue.codeType+"."+issue.code;
 				String[] checkedIssues=request.getParameterValues("check_issue");
 				if(checkedIssues != null) {
@@ -87,14 +89,14 @@
 			<td>
 				<input type="checkbox" name="check_issue" value="<%=issueCompositeId%>" <%=checked%> onclick="document.caseManagementViewForm.submit();" />
 			</td>
-			<td><c:out value="${issue.code}" /></td>
-			<td bgcolor="<%=priority%>"><c:out value="${issue.description }" /></td>
-			<td><c:out value="${issue.location}" /></td>
-			<td><c:out value="${issue.acute}" /></td>
-			<td><c:out value="${issue.certain}" /></td>
-			<td><c:out value="${issue.major}" /></td>
-			<td><c:out value="${issue.resolved}" /></td>
-			<td><c:out value="${issue.role}" /></td>
+			<td><c:out value="${issue.issueDisplay.code}" /></td>
+			<td bgcolor="<%=priority%>"><c:out value="${issue.issueDisplay.description }" /></td>
+			<td><c:out value="${issue.issueDisplay.location}" /></td>
+			<td><c:out value="${issue.issueDisplay.acute}" /></td>
+			<td><c:out value="${issue.issueDisplay.certain}" /></td>
+			<td><c:out value="${issue.issueDisplay.major}" /></td>
+			<td><c:out value="${issue.issueDisplay.resolved}" /></td>
+			<td><c:out value="${issue.issueDisplay.role}" /></td>
 			<td>
 			<%
 					if("major".equals(issue.major)) {
@@ -103,7 +105,7 @@
 						} else {
 							%><span
 				style="text-decoration: underline; cursor: pointer; color: blue"
-				onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='addToDx';document.caseManagementViewForm.issue_code.value='<c:out value="${issue.code}"/>';document.caseManagementViewForm.submit(); return false;">+Dx</span>
+				onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='addToDx';document.caseManagementViewForm.issue_code.value='<c:out value="${issue.issueDisplay.code}"/>';document.caseManagementViewForm.submit(); return false;">+Dx</span>
 			<%
 						}
 					}

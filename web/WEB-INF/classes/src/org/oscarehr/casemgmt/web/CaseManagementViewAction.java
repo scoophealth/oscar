@@ -580,12 +580,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		int demographicNo=Integer.parseInt(demoNo);
 		boolean hideInactiveIssues=Boolean.parseBoolean(caseForm.getHideActiveIssue());
 		
-		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
-		addLocalIssues(issuesToDisplay, demographicNo, hideInactiveIssues, null);
-		addRemoteIssues(issuesToDisplay, demographicNo, hideInactiveIssues);
+		ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
+		addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
+		addRemoteIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
 		
-    	request.setAttribute("Issues", issuesToDisplay);
-    	log.debug("Get issues time : " + (System.currentTimeMillis()-startTime));
+       	request.setAttribute("Issues", checkBoxBeanList);
+ 	log.debug("Get issues time : " + (System.currentTimeMillis()-startTime));
     	
 	    log.debug("Get stale note date");
 	    startTime = System.currentTimeMillis();
@@ -995,7 +995,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    }
     }
 
-	protected void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean hideInactiveIssues) {
+	protected void addRemoteIssues(ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
@@ -1006,9 +1006,19 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 				try {
-					if (!hideInactiveIssues) issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue)); 
-					else if (!cachedDemographicIssue.isResolved()) issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue));
-				} catch (Exception e) {
+						IssueDisplay issueDisplay=null;
+					
+					if (!hideInactiveIssues) issueDisplay=getIssueToDisplay(cachedDemographicIssue); 
+					else if (!cachedDemographicIssue.isResolved()) issueDisplay=getIssueToDisplay(cachedDemographicIssue);
+					
+					if (issueDisplay!=null)
+					{
+						CheckBoxBean checkBoxBean=new CheckBoxBean();
+						checkBoxBean.setIssueDisplay(issueDisplay);
+			        	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(issueDisplay.getCode(), demographicNo));
+						checkBoxBeanList.add(checkBoxBean);
+					}
+			} catch (Exception e) {
 					log.error("Unexpected error.", e);
 				}
 			}
@@ -1053,13 +1063,21 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (issueDisplay);
 	}
 
-	protected void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean hideInactiveIssues, Integer programId) {
+	protected void addLocalIssues(ArrayList<CheckBoxBean> checkBoxBeanList, Integer demographicNo, boolean hideInactiveIssues, Integer programId) {
 		List<CaseManagementIssue> localIssues = caseManagementManager.getIssues(demographicNo, hideInactiveIssues?false:null);
 
 		for (CaseManagementIssue cmi : localIssues)
 		{
-			IssueDisplay issueDisplay = getIssueDisplay(programId, cmi);
-			issuesToDisplay.add(issueDisplay);
+				CheckBoxBean checkBoxBean=new CheckBoxBean();
+			
+			checkBoxBean.setIssue(cmi);
+			
+		IssueDisplay issueDisplay = getIssueDisplay(programId, cmi);
+			checkBoxBean.setIssueDisplay(issueDisplay);
+			
+        	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(cmi.getIssue().getCode(), demographicNo));
+			
+			checkBoxBeanList.add(checkBoxBean);
 		}
 	}
 
