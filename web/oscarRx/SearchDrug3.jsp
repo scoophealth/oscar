@@ -489,18 +489,20 @@ body {
                                             <td style="width:350px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
                                                 <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off"  />
                                                 <div id="autocomplete_choices"></div>
-                                                <span id="indicator1" style="display: none"><img src="/images/spinner.gif" alt="Working..." ></span>                                                
+                                                <span id="indicator1" style="display: none"><img src="/images/spinner.gif" alt="Working..." ></span>                                      
 
 
                                             </td>
                                             <td >
-                                                <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">
                                                 <a href="javascript:void(0);" onclick="callTreatments('searchString','treatmentsMyD')"><bean:message key="SearchDrug.msgDrugOfChoice" /></a>
+                                                <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">  
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
-                                                <div class="buttonrow"><input id="saveButton" type="button"  onclick="updateAllDrugs();return false;" value="Prescribe" />
-                                                </div>                                              
+                                                <div class="buttonrow">
+                                                    <input id="saveButton" type="button"  onclick="updateAllDrugs();return false;" value="Prescribe" />
+                                                    <input id="customDrug" type="button"  onclick="customWarning2();" value="Custom Drug" />
+                                                </div>                                  
                                                
                                             </td>
 
@@ -983,7 +985,7 @@ body {
     }
     
     //not used
-    function updateDrug(element,whichPrescribe){//save drug to session.
+  /*  function updateDrug(element,whichPrescribe){//save drug to session.
         //get the rand number
         oscarLog("whichPrescribe="+whichPrescribe);
         //make a call to stashaction to set the bean stash index.
@@ -1056,9 +1058,33 @@ body {
 
 }});
         return false;
+    }*/
+function customWarning2(){
+    if (confirm('This feature will allow you to manually enter a drug.'
+	+ '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
+	+ '\n  *  Known Dosage Forms / Routes'
+	+ '\n  *  Drug Allergy Information'
+	+ '\n  *  Drug-Drug Interaction Information'
+	+ '\n  *  Drug Information'
+	+ '\n\nAre you sure you wish to use this feature?')==true) {
+	//call another function to bring up prescribe.jsp
+        var randomId=Math.round(Math.random()*1000000);
+        var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=newCustomDrug";
+        var data="randomId="+randomId;
+        new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
     }
 
-    function popForm2(){
+}
+function saveCustomName(element){
+    var elemId=element.id;
+    var ar=elemId.split("_");
+    var rand=ar[1];
+    var url="<c:out value="${ctx}"/>"+"/oscarRx/WriteScript.do?parameterValue=saveCustomName";
+    var data="customName="+element.value+"&randomId="+rand;
+    new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
+            }});
+}
+function popForm2(){
         try{
             oscarLog("popForm2 called");
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
@@ -1137,15 +1163,8 @@ function upElement(li){
        var ran_number=Math.round(Math.random()*1000000);
         oscarLog('In selection id');
         var url1=  "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
-        //var url = "prescribe.jsp";
         var data1="randomId="+ran_number+"&drugId="+li.id+"&text="+text;
-       // countPrescribe=increaseCountPrescribe();
-        //   alert(li.id+"||"+ text+"||"+ ran_number);
         new Ajax.Updater('rxText',url1, {method:'get',parameters:data1,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
-
-                //var params = "demographicNo=<%--=bean.getDemographicNo()--%>&id="+li.id+"&text="+text+"&rand="+ran_number+"&notRePrescribe=true"+"&countPrescribe="+countPrescribe; //hack to get around ie caching the page
-                  //  new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})}})
-        //  chooseDrug();
     }
 
 YAHOO.example.BasicRemote = function() {
@@ -1232,11 +1251,7 @@ function setSearchedDrug(drugId,name){
 
     $('searchString').value = "";
 }
-
-
-
-
-    //represcribe a drug
+ //represcribe a drug
     function represcribe(element){
         var drugId=element.id;
         var data="drugId="+drugId;
@@ -1287,8 +1302,6 @@ function updateQty(element){
         var rxDuration="rxDuration_"+rand;
         var rxDurationUnit="rxDurationUnit_"+rand;
         var rxAmt="rxAmount_"+rand;
-
-
         var str;
         var rxString="rxString_"+rand;
 
@@ -1321,8 +1334,6 @@ function updateQty(element){
         var rxDuration="rxDuration_"+rand;
         var rxDurationUnit="rxDurationUnit_"+rand;
         var rxAmt="rxAmount_"+rand;
-
-
         var str;
         var rxString="rxString_"+rand;
 
@@ -1368,7 +1379,6 @@ function updateQty(element){
 
 //Called onclick for prescribe button. serilaizes the form and passes to WriteScruipt/updateAllDrugs Action
     function updateAllDrugs(){
-
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateAllDrugs";
         new Ajax.Request(url,
@@ -1377,11 +1387,6 @@ function updateQty(element){
                 oscarLog("successfully sent data "+url);
                 popForm2();
             }});
-
-      //pass a list of randomIds to the server
-      //server has a action to find all rx relates to each randomId and update one by one
-      //only call server action class once.
-
         return false;
     }
 <%if (request.getParameter("ltm") != null && request.getParameter("ltm").equals("true")){%>
