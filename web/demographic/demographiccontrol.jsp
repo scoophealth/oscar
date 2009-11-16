@@ -149,15 +149,11 @@
 
    	apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
 
-	try
+	String pg=apptMainBean.whereTo();
+	if (pg!=null)
 	{
-		String pg=apptMainBean.whereTo();
-		pageContext.forward(pg); //forward request&response to the target page
+	   	pageContext.forward(pg); //forward request&response to the target page
 		return;
-	}
-	catch (Exception e)
-	{
-		e.printStackTrace();
 	}
 %>
 
