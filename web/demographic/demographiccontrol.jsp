@@ -148,6 +148,5 @@
 	out.clear();
 	String pg=apptMainBean.whereTo();
 	pageContext.forward(pg); //forward request&response to the target page
-	return;
 %>
 
