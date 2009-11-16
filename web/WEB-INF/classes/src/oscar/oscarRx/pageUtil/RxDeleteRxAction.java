@@ -174,6 +174,7 @@ public final class RxDeleteRxAction extends DispatchAction {
         Date date = new Date();
         String logStatement = drug+" Changing end date to :"+date;
         drug.setArchivedDate(date);
+        drug.setEndDate(drug.getArchivedDate());
         drug.setArchived(true);
         drug.setArchivedReason(reason);
         //System.out.println("");
