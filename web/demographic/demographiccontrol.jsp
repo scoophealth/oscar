@@ -24,7 +24,11 @@
  */
 --%>
 <%
-  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+  if(session.getAttribute("user") == null)
+  {
+	  response.sendRedirect("../logout.jsp");
+	  return;
+  }  
 %>
 
 <%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties"%>
