@@ -20,7 +20,8 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          String startDate       = RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd");
          String writtenDate     = RxUtil.DateToString(rx.getWrittenDate(), "yyyy-MM-dd");
          String lastRefillDate  = RxUtil.DateToString(rx.getLastRefillDate(), "yyyy-MM-dd");
-
+         int gcn=rx.getGCN_SEQNO();//if gcn is 0, customed drug.
+         String customName      = rx.getCustomName();
          int patientCompliance  = rx.getPatientCompliance();
          String frequency       = rx.getFrequencyCode();
          String route           = rx.getRoute();
@@ -30,7 +31,17 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          String amount          = rx.getTakeMinString();
          boolean longTerm       = rx.getLongTerm();
          String outsideProvOhip = rx.getOutsideProviderOhip();
-         String drugName        = rx.getBrandName();
+         String brandName        = rx.getBrandName();
+         String drugName;
+         if(gcn==0){//it's a custom drug
+            drugName=customName;
+         }else{
+            drugName=brandName;
+         }
+         //for display
+         if(drugName==null || drugName.equalsIgnoreCase("null"))
+             drugName="" ;
+
          boolean pastMed        = rx.getPastMed();
          String quantity        = rx.getQuantity();
          String duration        = rx.getDuration();
@@ -59,7 +70,8 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
              //System.out.println("isOutsideProvider falseeeeeeeeeeee");
          }
          System.out.println("instructions from repscbAllLongTerm="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
-
+         if(drugName==null){System.out.println("null meta");}
+             else if(drugName.equals("null")){System.out.println("null phys");}
 %>
 
 <fieldset style="margin-top:2px;width:600px;" id="set_<%=rand%>">
@@ -67,16 +79,13 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
     <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
 
     <label style="float:left;width:80px;">Name:</label>
-    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     value="<%=drugName%>"     size="30"/><span id="alleg_<%=rand%>" style="color:red;"></span><span id="inactive_<%=rand%>" style="color:red;"></span><br>
+    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"   value="<%=drugName%>"  size="30" <%if(gcn==0){%> onchange="saveCustomName(this);" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span><span id="inactive_<%=rand%>" style="color:red;"></span><br>
     <label style="float:left;width:80px;">Instructions:</label>
        <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="<%=instructions%>" size="60" onblur="parseIntr(this);" /> <br>
     <label style="float:left;width:80px;">Quantity:</label>
     <input type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantity%>" onblur="updateQty(this);" />
     <label style="">Repeats:</label>                            
-       <input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />
-
-
-       
+       <input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />       
        <input type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
        <div id="rxString_<%=rand%>"> </div>
        <div id="quantityWarning_<%=rand%>"> </div>
@@ -138,7 +147,12 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
 </fieldset>
    
         <script type="text/javascript">
-            $('instructions_<%=rand%>').focus();
+            var gcn_val=<%=gcn%>;
+           if(gcn_val==0){
+               $('drugName_<%=rand%>').focus();
+           } else{
+               $('instructions_<%=rand%>').focus();
+           }
             checkAllergy('<%=rand%>','<%=rx.getAtcCode()%>');
             checkIfInactive('<%=rand%>','<%=rx.getRegionalIdentifier()%>');
             <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
