@@ -254,17 +254,17 @@ public class RxUtil {
             Matcher matcher = p.matcher(instructions);
             if (matcher.find()) {
                 frequency = (instructions.substring(matcher.start(), matcher.end())).trim();
-                Pattern p2 = Pattern.compile("\\s*[0-9]+\\s+" + frequency);
+                Pattern p2 = Pattern.compile("\\s*\\d*\\.*\\d+\\s+" + frequency); //allow to detect decimal number.
                 Matcher m2 = p2.matcher(instructions);
 
 
-                Pattern p4 = Pattern.compile("\\s*[0-9]+-[0-9]+\\s+" + frequency);
+                Pattern p4 = Pattern.compile("\\s*\\d*\\.*\\d+-\\s*\\d*\\.*\\d+\\s+" + frequency); //use * after the first \s because "1 OD", 1 doesn't have a space in front.
                 Matcher m4 = p4.matcher(instructions);
                 p("here11", instructions);
                 //since "\\s+[0-9]+-[0-9]+\\s+" is a case in "\\s+[0-9]+\\s+", check the latter regex first.
                 if (m4.find()) {
                     String str2 = instructions.substring(m4.start(), m4.end());
-                    Pattern p5 = Pattern.compile("[0-9]+-[0-9]+");
+                    Pattern p5 = Pattern.compile("\\d*\\.*\\d+-\\s*\\d*\\.*\\d+");
                     Matcher m5 = p5.matcher(str2);
                     if (m5.find()) {
                         String str3 = str2.substring(m5.start(), m5.end());
@@ -272,9 +272,9 @@ public class RxUtil {
                         takeMinFrequency = str3.split("-")[0];
                         takeMaxFrequency = str3.split("-")[1];
                     }
-                } else if (m2.find()) {
+                }  else if (m2.find()) {
                     String str = instructions.substring(m2.start(), m2.end());
-                    Pattern p3 = Pattern.compile("[0-9]+");
+                    Pattern p3 = Pattern.compile("\\d*\\.*\\d+");
                     Matcher m3 = p3.matcher(str);
                     p("here22", str);
                     if (m3.find()) {
@@ -295,16 +295,16 @@ public class RxUtil {
             if (m.find()) {
                 method = instructions.substring(m.start(), m.end());
 
-                Pattern p2 = Pattern.compile(method + "\\s+[0-9]+\\s+");
+                Pattern p2 = Pattern.compile(method + "\\s*\\d*\\.*\\d+\\s+");
                 Matcher m2 = p2.matcher(instructions);
 
-                Pattern p4 = Pattern.compile(method + "\\s+[0-9]+-[0-9]+\\s+");
+                Pattern p4 = Pattern.compile(method + "\\s*\\d*\\.*\\d+-\\s*\\d*\\.*\\d+\\s+");
                 Matcher m4 = p4.matcher(instructions);
                 //since "\\s+[0-9]+-[0-9]+\\s+" is a case in "\\s+[0-9]+\\s+", check the latter regex first.
                 if (m4.find()) {
                     p("else if 1");
                     String str2 = instructions.substring(m4.start(), m4.end());
-                    Pattern p5 = Pattern.compile("[0-9]+-[0-9]+");
+                    Pattern p5 = Pattern.compile("\\d*\\.*\\d+-\\s*\\d*\\.*\\d+");
                     Matcher m5 = p5.matcher(str2);
                     if (m5.find()) {
                         String str3 = str2.substring(m5.start(), m5.end());
@@ -316,7 +316,7 @@ public class RxUtil {
                     p("if 1");
                     String str = instructions.substring(m2.start(), m2.end());
                     p("str1 ", str);
-                    Pattern p3 = Pattern.compile("[0-9]+");
+                    Pattern p3 = Pattern.compile("\\d*\\.*\\d+");
                     Matcher m3 = p3.matcher(str);
                     if (m3.find()) {
                         p("found1");
