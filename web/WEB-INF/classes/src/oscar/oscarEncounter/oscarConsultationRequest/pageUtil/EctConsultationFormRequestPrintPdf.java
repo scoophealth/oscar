@@ -210,7 +210,7 @@ public class EctConsultationFormRequestPrintPdf {
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.patientName, 385, height - 112, 0);
         cb.endText();
         ct.setSimpleColumn(new Float(385), height - 153, new Float(585), height - 112, LINEHEIGHT, Element.ALIGN_LEFT);
-        ct.addText(new Phrase(reqForm.patientAddress.replaceAll("<br>", "\n"), font));
+        ct.addText(new Phrase(reqForm.patientAddress.replaceAll("<br>", " "), font));
         ct.go();
         
         cb.beginText();
@@ -279,7 +279,7 @@ public class EctConsultationFormRequestPrintPdf {
         String reqId = (String) request.getAttribute("reqId");
         ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);
         ArrayList pdfDocs = new ArrayList();
-        
+
         // add recently created pdf to the list
         pdfDocs.add(currentFileName);
         
@@ -288,6 +288,7 @@ public class EctConsultationFormRequestPrintPdf {
             if ( curDoc.isPDF() )
                 pdfDocs.add(curDoc.getFilePath());
         }
+        //TODO:need to do something about the docs that are not PDFs
         
         // create pdfs from attached labs
         try {
