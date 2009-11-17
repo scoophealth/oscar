@@ -183,7 +183,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			try {
 				if (!facility.isDisabled() && facility.isIntegratorEnabled()) {
-					pushAllFacilityData(facility);
+					pushAllDataForOneFacility(facility);
 				}
 			} catch (WebServiceException e) {
 				if (CxfClientUtils.isConnectionException(e)) {
@@ -198,7 +198,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllFacilityData(Facility facility) throws IOException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushAllDataForOneFacility(Facility facility) throws IOException, IllegalAccessException, InvocationTargetException, ShutdownException {
 		logger.info("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// set working facility
@@ -216,9 +216,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		FacilityWs service = CaisiIntegratorManager.getFacilityWs();
 		CachedFacility cachedFacility=service.getMyFacility();
+		
 		// set to the beginning of time so by default everything is pushed
 		Date lastDataUpdated=new Date(0); 
 		if (cachedFacility!=null && cachedFacility.getLastDataUpdate()!=null) lastDataUpdated=cachedFacility.getLastDataUpdate();
+		
 		// this needs to be set now, before we do any sends, this will cause anything updated after now to be resent twice but it's better than items being missed that were updated after this started.
 		Date currentUpdateDate=new Date();
 		
@@ -227,9 +229,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
 		// data model. The last update date is available though as per above...
 		pushFacility(lastDataUpdated);
-		pushProviders(facility);
-		pushPrograms(facility);
-		pushAllDemographics();
+		pushProviders(lastDataUpdated, facility);
+		pushPrograms(lastDataUpdated, facility);
+		pushAllDemographics(lastDataUpdated);
 		
 		// all things updated successfully
 		service.updateMyFacilityLastUpdateDate(currentUpdateDate);
@@ -254,7 +256,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushPrograms(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushPrograms(Date lastDataUpdated, Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
 		// all are always sent so program deletions have be proliferated.
 		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 
@@ -296,7 +298,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedPrograms(cachedPrograms);
 	}
 
-	private void pushProviders(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushProviders(Date lastDataUpdated, Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
 		List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
 
 		ArrayList<ProviderTransfer> providerTransfers = new ArrayList<ProviderTransfer>();
@@ -335,7 +337,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedProviders(providerTransfers);
 	}
 
-	private void pushAllDemographics() throws MalformedURLException, ShutdownException {
+	private void pushAllDemographics(Date lastDataUpdated) throws MalformedURLException, ShutdownException {
 		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 		
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
