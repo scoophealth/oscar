@@ -1582,7 +1582,6 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									value="<%= effDateMonth%>"> <input type="text"
 									name="eff_date_date" size="2" maxlength="2"
 									value="<%= effDateDay%>">
-									<%--
 								&nbsp;<b><bean:message key="demographic.demographiceditdemographic.formHCRenewDate" />:</b>
 								<%
                                  // Put 0 on the left on dates
@@ -1598,10 +1597,9 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                  String renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
                                  String renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
                               %> 
-                              		<input type="text" name="eff_date_year" size="4" maxlength="4" value="<%= renewDateYear%>">
-									<input type="text" name="eff_date_month" size="2" maxlength="2"	value="<%= renewDateMonth%>">
-									<input type="text" name="eff_date_date" size="2" maxlength="2" value="<%= renewDateDay%>">
-									 --%>
+								<input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=renewDateYear%>">
+								<input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%=renewDateMonth%>">
+								<input type="text" name="hc_renew_date_date" size="2" maxlength="2" value="<%=renewDateDay%>"></td>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -1869,20 +1867,10 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.DateJoined" />: </b></td>
 								<td align="left">
-								<%
-                                 // Format year
-                                 decF.applyPattern("0000");
-                                 String hcRenewYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
-                                 decF.applyPattern("00");
-                                 String hcRenewMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
-                                 String hcRenewDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"hc_renew_date")));
-                              %> <input type="text"
-									name="hc_renew_date_year" size="4" maxlength="4"
-									value="<%= hcRenewYear %>"> <input type="text"
-									name="hc_renew_date_month" size="2" maxlength="2"
-									value="<%= hcRenewMonth %>"> <input type="text"
-									name="hc_renew_date_date" size="2" maxlength="2"
-									value="<%= hcRenewDay %>"></td>
+                                <input disabled="disabled" type="text" name="" size="4" maxlength="4" value="">
+                                <input disabled="disabled" type="text" name="" size="2" maxlength="2" value="">
+                                <input disabled="disabled" type="text" name="" size="2" maxlength="2" value="">
+								</td>
 							</tr>
 							<tr valign="top">
 								<td align="right"><b><bean:message
