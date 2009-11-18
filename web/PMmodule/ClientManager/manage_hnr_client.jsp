@@ -79,12 +79,12 @@
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinType())%></td>
 	</tr>
 	<tr>
-		<td class="genericTableHeader">Health Card Valid Start</td>
+		<td class="genericTableHeader">Health Card EFF Date</td>
 		<td><%=manageHnrClient.getLocalFormatedHinStartDate()%><%=(manageHnrClient.getLocalFormatedHinStartDate()==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=manageHnrClient.getRemoteFormatedHinStartDate()%></td>
 	</tr>
 	<tr>
-		<td class="genericTableHeader">Health Card Valid End</td>
+		<td class="genericTableHeader">Health Card Renewal Date</td>
 		<td><%=manageHnrClient.getLocalFormatedHinEndDate()%><%=(manageHnrClient.getLocalFormatedHinEndDate()==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=manageHnrClient.getRemoteFormatedHinEndDate()%></td>
 	</tr>
