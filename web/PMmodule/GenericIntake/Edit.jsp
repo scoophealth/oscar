@@ -45,7 +45,8 @@
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.util.Calendar"%>
-<%@page import="java.text.DateFormatSymbols"%><html:html xhtml="true" locale="true">
+<%@page import="java.text.DateFormatSymbols"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%><html:html xhtml="true" locale="true">
 <head>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/check_hin.js"></script>
@@ -353,20 +354,34 @@
             </html:select>
         </td>    
         <td>
-        	<label>
-        		EFF Date
-           	</label>
-        		
-       		<br>
-			<%
-				String effDateVal = "";	   			
-	   	 		if (intakeEditForm.getClient()!=null && intakeEditForm.getClient().getEffDate()!=null)
-	   	 		{
-	   	 			effDateVal = intakeEditForm.getClient().getFormattedEffDate();
-	   	 		}	   		
-			%>
-			<input id="client.formattedEffDate" name="client.formattedEffDate" value="<%=effDateVal %>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_effdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedEffDate',ifFormat :'%Y-%m-%d',button :'cal_effdate',align :'cr',singleClick :true,firstDay :1});</script>                                    
- 
+			<table style="border-collapse:collapse">
+				<tr>
+					<td><label>EFF Date</label></td>
+					<td><label>HC Renewal Date</label></td>
+				</tr>
+				<tr>
+					<td>
+						<%
+							String effDateVal = "";	   			
+				   	 		if (intakeEditForm.getClient()!=null && intakeEditForm.getClient().getEffDate()!=null)
+				   	 		{
+				   	 			effDateVal = intakeEditForm.getClient().getFormattedEffDate();
+				   	 		}	   		
+						%>
+						<input style="width:8em" id="client.formattedEffDate" name="client.formattedEffDate" value="<%=effDateVal %>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_effdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedEffDate',ifFormat :'%Y-%m-%d',button :'cal_effdate',align :'cr',singleClick :true,firstDay :1});</script>                                     
+					</td>
+					<td>
+						<%
+							String renewDateVal = "";	   			
+				   	 		if (intakeEditForm.getClient()!=null && intakeEditForm.getClient().getHcRenewDate()!=null)
+				   	 		{
+				   	 			renewDateVal = intakeEditForm.getClient().getFormattedRenewDate();
+				   	 		}	   		
+						%>
+						<input style="width:8em" id="client.formattedRenewDate" name="client.formattedRenewDate" value="<%=renewDateVal%>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_renewdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedRenewDate',ifFormat :'%Y-%m-%d',button :'cal_renewdate',align :'cr',singleClick :true,firstDay :1});</script>                                     
+					</td>
+				</tr>
+			</table>
         </td>    
 	</caisi:isModuleLoad>
 </tr>

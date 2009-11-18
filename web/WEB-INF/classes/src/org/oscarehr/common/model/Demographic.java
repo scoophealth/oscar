@@ -610,6 +610,21 @@ public class Demographic implements Serializable {
 		
 	}
 	
+	public String getFormattedRenewDate() {
+		Date d=getHcRenewDate();
+		if (d!=null) return(DateFormatUtils.ISO_DATE_FORMAT.format(d));
+		else return("");
+	}
+
+	public void setFormattedRenewDate(String formattedDate) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date d = sdf.parse(formattedDate);		
+			this.setHcRenewDate(d);
+		}catch(ParseException e) {e.printStackTrace();}
+		
+	}
+	
 	/**
 	 * Set the value related to the column: eff_date
 	 * 
