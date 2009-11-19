@@ -108,7 +108,7 @@ public class FrmXml2VTData {
             String xmlValue) {
         if (xmlMethodsName.length() > 3 && propPFieldName.containsKey(xmlMethodsName.substring(3))) {
             try {
-                Class[] argClass = new Class[] { String.class };
+                Class[] argClass = new Class[] { Class.forName("java.lang.String") };
                 Object[] arguments = new Object[] { xmlValue };
                 // Find the obj set method and set prop
                 Method tempPMethod = objC.getMethod("set"
