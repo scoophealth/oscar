@@ -42,7 +42,7 @@ public class FrmXml2VTData {
         String version = visit.getVersion();
 
         // Get output Objects
-        Class vtDataC = Class.forName("oscar.form.data.FrmVTData");
+        Class vtDataC = oscar.form.data.FrmVTData.class;
         Field[] vtFields = vtDataC.getDeclaredFields();
         Method[] vtMethods = vtDataC.getMethods();
 
@@ -108,7 +108,7 @@ public class FrmXml2VTData {
             String xmlValue) {
         if (xmlMethodsName.length() > 3 && propPFieldName.containsKey(xmlMethodsName.substring(3))) {
             try {
-                Class[] argClass = new Class[] { Class.forName("java.lang.String") };
+                Class[] argClass = new Class[] { String.class };
                 Object[] arguments = new Object[] { xmlValue };
                 // Find the obj set method and set prop
                 Method tempPMethod = objC.getMethod("set"

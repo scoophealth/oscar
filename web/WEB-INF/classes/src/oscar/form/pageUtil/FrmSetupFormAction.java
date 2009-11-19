@@ -147,7 +147,7 @@ public final class FrmSetupFormAction extends Action {
             FrmVTData vtData = null;
             if(xmlStr!=null){
                 vtData = xml2VTData.getObjectFromXmlStr(xmlStr);
-                vtDataC = Class.forName("oscar.form.data.FrmVTData");
+                vtDataC = oscar.form.data.FrmVTData.class;
             }
             
             ResultSet rs;
