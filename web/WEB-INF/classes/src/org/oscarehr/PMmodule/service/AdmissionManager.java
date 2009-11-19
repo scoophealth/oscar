@@ -62,7 +62,7 @@ public class AdmissionManager {
 	private BedManager bedManager;
 	private RoomDemographicManager roomDemographicManager;
 
-    public List getAdmissions_archiveView(String programId, Integer demographicNo) {
+    public List<Admission> getAdmissions_archiveView(String programId, Integer demographicNo) {
 		return dao.getAdmissions_archiveView(Integer.valueOf(programId), demographicNo);
 	}
 	
@@ -74,7 +74,7 @@ public class AdmissionManager {
 		return dao.getCurrentAdmission(Integer.valueOf(programId), demographicNo);
 	}
 		
-	public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+	public List<Admission> getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
 		return dao.getAdmissionsByFacility(demographicNo, facilityId);
 	}
 
@@ -82,15 +82,15 @@ public class AdmissionManager {
 		return dao.getCurrentAdmissionsByFacility(demographicNo, facilityId);
 	}
 	
-	public List getAdmissions() {
+	public List<Admission> getAdmissions() {
 		return dao.getAdmissions();
 	}
 
-	public List getAdmissions(Integer demographicNo) {
+	public List<Admission> getAdmissions(Integer demographicNo) {
 		return dao.getAdmissions(demographicNo);
 	}
 	
-	public List getCurrentAdmissions(Integer demographicNo) {
+	public List<Admission> getCurrentAdmissions(Integer demographicNo) {
 		return dao.getCurrentAdmissions(demographicNo);
 	}
 
@@ -98,7 +98,7 @@ public class AdmissionManager {
 		return dao.getCurrentBedProgramAdmission(programDao, demographicNo);
 	}
 
-	public List getCurrentServiceProgramAdmission(Integer demographicNo) {
+	public List<Admission> getCurrentServiceProgramAdmission(Integer demographicNo) {
 		return dao.getCurrentServiceProgramAdmission(programDao, demographicNo);
 	}
 
@@ -110,7 +110,7 @@ public class AdmissionManager {
 		return dao.getCurrentCommunityProgramAdmission(programDao, demographicNo);
 	}
 
-	public List getCurrentAdmissionsByProgramId(String programId) {
+	public List<Admission> getCurrentAdmissionsByProgramId(String programId) {
 		return dao.getCurrentAdmissionsByProgramId(Integer.valueOf(programId));
 	}
 
@@ -161,7 +161,6 @@ public class AdmissionManager {
         }
                 
         boolean fromTransfer=false;
-        boolean hasIntersection=false;
         boolean automaticDischarge=false;
         // If admitting to bed program, discharge from old bed program
 		if (program.getType().equalsIgnoreCase("bed") && !tempAdmission) {
