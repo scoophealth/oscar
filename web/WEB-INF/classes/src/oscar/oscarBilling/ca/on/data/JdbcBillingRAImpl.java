@@ -252,8 +252,13 @@ public class JdbcBillingRAImpl {
 					if (amountsubmit.compareTo("0") == 0)
 						amountsubmit = "000";
 
-					amountsubmit = amountsubmit.substring(0, amountsubmit.length() - 2) + "."
+                                        if( amountsubmit.length() == 1 ) {
+                                            amountsubmit = "0.0" + amountsubmit;
+                                        }
+                                        else {
+                                            amountsubmit = amountsubmit.substring(0, amountsubmit.length() - 2) + "."
 							+ amountsubmit.substring(amountsubmit.length() - 2);
+                                        }
 					newhin = hin + ver;
 
 					// if it needs to write a radt record for the rahd record
