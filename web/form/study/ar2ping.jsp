@@ -169,8 +169,7 @@ prop.setProperty("arPlanner", riskContent );
 if(connected){
 
     try {
-        //Class c = Class.forName(className);
-        Class c = Class.forName("oscar.ping.xml.ARRecord");
+        Class c = oscar.ping.xml.ARRecord.class;
 
         Method method;
         Method[] theMethods = c.getMethods();
