@@ -207,9 +207,6 @@ if(connected){
         System.out.println(e);
     } catch (InvocationTargetException e) {
         System.out.println(e);
-    } catch (ClassNotFoundException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
     }
 
 	DataType dataType = ping.getDataType(ARRecord);
