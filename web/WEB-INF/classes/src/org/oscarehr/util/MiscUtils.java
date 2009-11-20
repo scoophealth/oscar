@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -207,5 +208,14 @@ public class MiscUtils {
 		
 		return(diff);
 		
+	}
+	
+	/**
+	 * This method does date2-date1 to calculate the year difference.
+	 */
+	public static int calculateDayDifference(Date date1, Date date2)
+	{
+		long ms=date2.getTime()-date1.getTime();
+		return((int) (ms/DateUtils.MILLIS_PER_DAY));
 	}
 }

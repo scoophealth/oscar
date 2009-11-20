@@ -27,7 +27,8 @@
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
-<script type="text/javascript">
+
+<%@page import="org.oscarehr.PMmodule.web.AdmissionForHistoryTabDisplay"%><script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
         url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_admission&admissionId="/>';
         window.open(url + admissionId, 'admission', 'width=600,height=600');
@@ -48,45 +49,28 @@
 <display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissionHistory" requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
-
 	<%
-		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
+		AdmissionForHistoryTabDisplay admissionForDisplay = (AdmissionForHistoryTabDisplay) pageContext.getAttribute("admission");
 	%>
     <display:column sortable="false">
-        <a href="javascript:void(0)" onclick="popupAdmissionInfo('<c:out value="${admission.id}" />')">
-            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
-        </a>
+    <%
+    	if (admissionForDisplay.getRemoteFacilityName()==null)
+    	{
+    		%>
+		        <a href="javascript:void(0)" onclick="popupAdmissionInfo('<%=admissionForDisplay.getAdmissionId()%>')">
+		            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
+		        </a>
+    		<%
+    	}
+    %>
     </display:column>
     <display:column property="programName" sortable="true" title="Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
-	<display:column property="admissionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Admission Date" />
-	<display:column title="Facility<br />Admission" >
-	<%=!tmpAd.isAdmissionFromTransfer()%>
-	</display:column>
-	<display:column property="dischargeDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Discharge Date" />
-	<display:column title="Facility<br />Discharge" >
-	<%=!tmpAd.isDischargeFromTransfer()%>
-	</display:column>
-	<display:column sortable="true" title="Days in Program">
-		<%
-		Date admissionDate = tmpAd.getAdmissionDate();
-		Date dischargeDate = tmpAd.getDischargeDate();
-		
-		if (dischargeDate == null) {
-			dischargeDate = new Date();
-		}
-		
-		long diff = dischargeDate.getTime() - admissionDate.getTime();
-		
-		diff = diff / 1000; // seconds;
-		diff = diff / 60; // minutes;
-		diff = diff / 60; // hours
-		diff = diff / 24; // days
-		
-		String numDays = String.valueOf(diff);
-		%>
-		<%=numDays%>
-	</display:column>
+	<display:column property="admissionDate" sortable="true" title="Admission Date" />
+	<display:column property="facilityAdmission" title="Facility<br />Admission" />
+	<display:column property="dischargeDate" sortable="true" title="Discharge Date" />
+	<display:column property="facilityDischarge" title="Facility<br />Discharge" />
+	<display:column property="daysInProgram" sortable="true" title="Days in Program" />
 	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
 	</caisi:isModuleLoad>

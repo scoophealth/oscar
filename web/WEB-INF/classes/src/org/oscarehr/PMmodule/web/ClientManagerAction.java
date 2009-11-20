@@ -1369,7 +1369,12 @@ public class ClientManagerAction extends BaseAction {
 
 		/* history */
 		if (tabBean.getTab().equals("History")) {
-			request.setAttribute("admissionHistory", admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId));
+			ArrayList<AdmissionForHistoryTabDisplay> allResults=new ArrayList<AdmissionForHistoryTabDisplay>();
+
+			List<Admission> addLocalAdmissions=admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId);
+			for (Admission admission : addLocalAdmissions) allResults.add(new AdmissionForHistoryTabDisplay(admission));
+			
+			request.setAttribute("admissionHistory", allResults);
 			request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, facilityId));
 		}
 
