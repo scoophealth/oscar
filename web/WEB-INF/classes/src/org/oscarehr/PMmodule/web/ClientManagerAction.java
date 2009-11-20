@@ -1374,6 +1374,12 @@ public class ClientManagerAction extends BaseAction {
 			List<Admission> addLocalAdmissions=admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId);
 			for (Admission admission : addLocalAdmissions) allResults.add(new AdmissionForHistoryTabDisplay(admission));
 			
+			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+// add integrator  admissions here
+			}
+			
+// sort results
+			
 			request.setAttribute("admissionHistory", allResults);
 			request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, facilityId));
 		}
