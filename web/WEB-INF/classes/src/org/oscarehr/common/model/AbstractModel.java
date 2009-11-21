@@ -38,7 +38,7 @@ public abstract class AbstractModel<T> implements java.io.Serializable
 			MiscUtils.getLogger().warn(OBJECT_NOT_YET_PERISTED, new Exception());
 		}
 
-		return(getId()==o.getId());
+		return(getId().equals(o.getId()));
 	}
 
 	/**
