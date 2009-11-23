@@ -16,6 +16,7 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.WeakHashMap;
@@ -28,39 +29,49 @@ public class TrackingBasicDataSource extends BasicDataSource {
 	public static final Logger logger=MiscUtils.getLogger();
 	
     public static final Map<Connection, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Connection, StackTraceElement[]>());
-    // This is a fake weak hash set, the value is actually ignored, put null or what ever in it.
-    private static ThreadLocal<WeakHashMap<Connection, Object>> connections = new ThreadLocal<WeakHashMap<Connection, Object>>();
+    private static final ThreadLocal<HashSet<Connection>> connections = new ThreadLocal<HashSet<Connection>>();
 
-    private static void trackConnection(Connection c)
+    private static Connection trackConnection(Connection c)
     {
-        debugMap.put(c, Thread.currentThread().getStackTrace());
+    	c=new TrackingJdbcConnection(c);
+    	
+    	debugMap.put(c, Thread.currentThread().getStackTrace());
 
-        WeakHashMap<Connection, Object> map=connections.get();
-        if (map==null)
+    	HashSet<Connection> threadConnections=connections.get();
+        if (threadConnections==null)
         {
-        	map=new WeakHashMap<Connection, Object>();
-        	connections.set(map);
+        	threadConnections=new HashSet<Connection>();
+        	connections.set(threadConnections);
         }
         
-        map.put(c, null);
+        threadConnections.add(c);
         
-        if (map.size()>5)
+        if (threadConnections.size()>5)
         {
         	String msg="Thread has more than 5 jdbc connection in use simultaniously.";
         	logger.warn(msg);
         	logger.debug(msg, new Exception(msg));
         }
+
+        return(c);
     }
     
     public static void releaseThreadConnections()
     {
-        WeakHashMap<Connection, Object> map=connections.get();
-        if (map!=null)
+    	HashSet<Connection> threadConnections=connections.get();
+        if (threadConnections!=null && threadConnections.size()>0)
         {
-        	for (Connection c : map.keySet())
+System.err.println("BUILK MAIN CALLED --------------- "+threadConnections.size());
+
+        	threadConnections=new HashSet<Connection>(threadConnections);
+        	for (Connection c : threadConnections)
         	{
         		try {
-	                if (!c.isClosed()) c.close();
+	                if (!c.isClosed())
+	                {
+System.err.println("--- BULK CLOSE");
+	                	c.close();
+	                }
                 } catch (SQLException e) {
                 	logger.error("Error closing jdbc connection.", e);
                 }
@@ -71,22 +82,20 @@ public class TrackingBasicDataSource extends BasicDataSource {
     }
     
 	public Connection getConnection() throws SQLException {
-		Connection c=super.getConnection();
-		trackConnection(c);
-	    return(new TrackingJdbcConnection(c));
+		Connection c=trackConnection(super.getConnection());
+	    return(c);
     }
 
 	public Connection getConnection(String username, String password) throws SQLException {
-	    Connection c=super.getConnection(username, password);
-		trackConnection(c);
-	    return(new TrackingJdbcConnection(c));
+	    Connection c=trackConnection(super.getConnection(username, password));
+	    return(c);
     }
 	
 	public static class TrackingJdbcConnection implements Connection {
 
 		private Connection connection;
 
-		public TrackingJdbcConnection(Connection connection) {
+		public TrackingJdbcConnection(Connection connection) {    	
 		    this.connection = connection;
 	    }
 
@@ -97,14 +106,20 @@ public class TrackingBasicDataSource extends BasicDataSource {
 		public void close() throws SQLException {
 			try
 			{
-				debugMap.remove(connection);
+				debugMap.remove(this);
+				
+				HashSet<Connection> map=connections.get();
+				if (map!=null)
+				{
+					map.remove(this);
+				}
 			}
 			finally
 			{
 				connection.close();
 			}
 	    }
-
+		
 		public void commit() throws SQLException {
 		    connection.commit();
 	    }
