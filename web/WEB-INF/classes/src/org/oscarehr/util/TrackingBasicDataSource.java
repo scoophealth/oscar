@@ -61,7 +61,6 @@ public class TrackingBasicDataSource extends BasicDataSource {
     	HashSet<Connection> threadConnections=connections.get();
         if (threadConnections!=null && threadConnections.size()>0)
         {
-System.err.println("BUILK MAIN CALLED --------------- "+threadConnections.size());
 
         	threadConnections=new HashSet<Connection>(threadConnections);
         	for (Connection c : threadConnections)
@@ -69,7 +68,6 @@ System.err.println("BUILK MAIN CALLED --------------- "+threadConnections.size()
         		try {
 	                if (!c.isClosed())
 	                {
-System.err.println("--- BULK CLOSE");
 	                	c.close();
 	                }
                 } catch (SQLException e) {
