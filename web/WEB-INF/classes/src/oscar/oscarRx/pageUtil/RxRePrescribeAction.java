@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -221,7 +219,7 @@ try{
         RxPrescriptionData.Prescription oldRx = rxData.getPrescription(drugId);
         // create copy of Prescription
         RxPrescriptionData.Prescription rx =
-                rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);      
+                rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);     //set writtendate, rxdate ,enddate=null.
         Long rand = Math.round(Math.random() * 1000000);
         rx.setRandomId(rand);
 
