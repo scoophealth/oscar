@@ -6397,6 +6397,7 @@ CREATE TABLE prescription (
   date_printed date default NULL,
   dates_reprinted text,
   textView text,
+  rx_comments text,
   PRIMARY KEY  (script_no)
 ) ;
 
