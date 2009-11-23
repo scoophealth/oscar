@@ -35,7 +35,8 @@
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 <%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
 <%@ page import="org.oscarehr.common.model.OscarAnnotation" %>
-<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager,org.springframework.web.context.WebApplicationContext,
+		org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.casemgmt.model.CaseManagementNoteLink,org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@page import="java.text.SimpleDateFormat" %>
 <%@page import="java.util.Calendar" %>
 <%@page import="java.util.Enumeration"%>
@@ -99,7 +100,18 @@ if (heading != null){
             long month = 1000L * 60L * 60L * 24L * 30L;
             
             for (Drug prescriptDrug : prescriptDrugs) {
+                boolean isPrevAnnotation=false;
                 String styleColor = "";
+                //test for previous note
+                HttpSession se = request.getSession();
+                WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+                CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+                Integer tableName = cmm.getTableNameByDisplay(annotation_display);
+                CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, Long.parseLong(prescriptDrug.getId().toString()));
+                CaseManagementNote p_cmn = null;
+                if (cml!=null) {p_cmn = cmm.getNote(cml.getNoteId().toString());}
+                if (p_cmn!=null){isPrevAnnotation=true;}
+                System.out.println("in list drugs.jsp: "+Long.parseLong(prescriptDrug.getId().toString())+"--"+tableName+"--"+p_cmn+"--"+cml);
 
                 if (request.getParameter("status") != null) { //TODO: Redo this in a better way
                     String stat = request.getParameter("status");
@@ -154,7 +166,8 @@ if (heading != null){
             </td>
 
             <td width="20px" align="center" valign="top">
-                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
+                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> 
+                    <%if(!isPrevAnnotation){%> <img src="../images/notes.gif" alt="rxAnnotation" border="0"><%} else{%><img src="../images/filledNotes.gif" alt="rxFilledNotes" border="0"> <%}%></a>
             </td>
             
             <td align="center" valign="top">
