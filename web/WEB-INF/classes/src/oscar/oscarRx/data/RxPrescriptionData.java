@@ -1032,13 +1032,13 @@ public class RxPrescriptionData {
             return lastPrescribed;
         }
         
-        public void checkDiscontinued() {
-            //make query to database to query
-            //things to compare BN and demoNo
+        public void checkDiscontinued() {            
             System.out.println("in checkDiscontinued()");
-            System.out.println("this.BN, genericName, demotraphicNo: " + this.BN + "--" + this.genericName + "--" + this.demographicNo);
-            String sql = "SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND BN='" + this.BN + "' AND GN='" + this.genericName + "' AND demographic_no=" + this.demographicNo+" order by drugid desc";
-
+            System.out.println("this.BN, genericName, demotraphicNo: " + this.atcCode+ "--" + this.regionalIdentifier + "--" + this.demographicNo);
+            //String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by written_date desc";
+            //the query will fail to check if a drug A is prescribed, and drug A is prescribed again, and then the first drug A is discontinued,when the second drug A is represcribed
+            //or a third drug A is added, no warning will be given.
+            String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by drugid desc";
             try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs;
@@ -1832,6 +1832,7 @@ public class RxPrescriptionData {
 
                 } else { // update the database
                     System.out.println("drugid not equal 0");
+                    //create_date is not updated
                     sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " + "past_med = " + this.getPastMed() + ", " + "patient_compliance = " + this.getPatientCompliance() + " " + "WHERE drugid = " + this.getDrugId();
                     System.out.println(sql);
                     db.RunSQL(sql);
