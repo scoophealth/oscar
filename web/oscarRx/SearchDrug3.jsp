@@ -984,81 +984,6 @@ body {
         return false;
     }
     
-    //not used
-  /*  function updateDrug(element,whichPrescribe){//save drug to session.
-        //get the rand number
-        oscarLog("whichPrescribe="+whichPrescribe);
-        //make a call to stashaction to set the bean stash index.
-        var data1="whichPrescribe="+whichPrescribe;
-        var url1= "<c:out value="${ctx}"/>" + "/oscarRx/stash.do?parameterValue=setStashIndex";
-        new Ajax.Request(url1,
-        {method: 'post',postBody:data1,
-            onSuccess:function(transport){
-                oscarLog("successfully sent data to stashAction "+url1);
-
-
-        var elemId=element.id;
-        var ar=elemId.split("_");
-        var rand=ar[1];
-        var drugName="drugName_"+rand;
-        var instructions="instructions_"+rand;
-        var quantity="quantity_"+rand;
-        var repeats="repeats_"+rand;
-        var startDate="rxDate_"+rand;
-        var writtenDate="writtenDate_"+rand;
-        var lastRefillDate="lastRefillDate_"+rand;
-        var longTerm="longTerm_"+rand;
-        var ocheck="ocheck_"+rand;
-        var outsideProviderName="outsideProviderName_"+rand;
-        var outsideProviderOhip="outsideProviderOhip_"+rand;
-        var pastMed="pastMed_"+rand;
-        var patientComplianceY="patientComplianceY_"+rand;
-        var patientComplianceN="patientComplianceN_"+rand;
-
-        var data=drugName+"="+$(drugName).value+"&"+instructions+"="+$(instructions).value+"&"+quantity+"="+$(quantity).value+"&"+repeats+"="+$(repeats).value;
-
-        if($(writtenDate).value!=null){
-            data=data+"&"+writtenDate+"="+$(writtenDate).value;
-        }
-        if($(startDate).value!=null){
-            data=data+"&"+startDate+"="+$(startDate).value;
-        }
-        if($(lastRefillDate).value!=null){
-            data=data+"&"+lastRefillDate+"="+$(lastRefillDate).value;
-        }
-        if($(longTerm).checked){
-            data=data+"&"+longTerm+"=on";
-        }else{
-            data=data+"&"+longTerm+"=off";
-        }if($(pastMed).checked){
-            data=data+"&"+pastMed+"=on";
-        }else{
-            data=data+"&"+pastMed+"=off";
-        }if($(ocheck).checked){
-            data=data+"&"+ocheck+"=on"+"&"+outsideProviderName+"="+$(outsideProviderName).value+"&"+outsideProviderOhip+"="+$(outsideProviderOhip).value;
-        }else{
-            data=data+"&"+ocheck+"=off"+"&"+outsideProviderName+"=''&"+outsideProviderOhip+"=''";
-        }if($(patientComplianceY).checked){
-            data=data+"&"+patientComplianceY+"=on";
-        }else{
-            data=data+"&"+patientComplianceY+"=off";
-        }if($(patientComplianceN).checked){
-            data=data+"&"+patientComplianceN+"=on";
-        }else{
-            data=data+"&"+patientComplianceN+"=off";
-        }
-        //oscarLog(data);
-        //make call to server, send data to server.
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateDrug";
-        new Ajax.Request(url,
-        {method: 'post',postBody:data,
-            onSuccess:function(transport){
-                oscarLog("successfully sent data "+url);
-            }});
-
-}});
-        return false;
-    }*/
 function customWarning2(){
     if (confirm('This feature will allow you to manually enter a drug.'
 	+ '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
@@ -1081,7 +1006,15 @@ function saveCustomName(element){
     var rand=ar[1];
     var url="<c:out value="${ctx}"/>"+"/oscarRx/WriteScript.do?parameterValue=saveCustomName";
     var data="customName="+element.value+"&randomId="+rand;
+    var instruction="instructions_"+rand;
+    var quantity="quantity_"+rand;
+    var repeat="repeats_"+rand;
     new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
+            //output default instructions
+            var json=transport.responseText.evalJSON();oscarLog("json: "+json.instructions);
+                $(instruction).value=json.instructions;
+                $(quantity).value=json.quantity;
+                $(repeat).value=json.repeat;
             }});
 }
 function popForm2(){
@@ -1090,15 +1023,11 @@ function popForm2(){
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
 
                     oscarLog( "preview2 done");
-
-                    //sm('previewForm',400,650);
                     myLightWindow.activateWindow({
                         href: url,
-                        //caption: 'Preview',
                         width: 420
                     });
 
-              //  }});
         }
         catch(er){alert(er);}
         oscarLog("bottom of popForm");
@@ -1260,7 +1189,7 @@ function setSearchedDrug(drugId,name){
         
     }
 
-
+   //not used now.
    function checkQuantity(element){
         var elemId=element.id;
         var ar=elemId.split("_");
@@ -1403,7 +1332,6 @@ function checkEnterSendRx(){
 
 
 $("searchString").focus();
-//load();
 
 
 
