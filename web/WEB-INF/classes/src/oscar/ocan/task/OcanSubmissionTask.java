@@ -124,7 +124,7 @@ public class OcanSubmissionTask extends TimerTask {
 			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
 		} finally {
 			LoggedInInfo.loggedInInfo.remove();
-			DbConnectionFilter.releaseThreadLocalDbConnection();
+			DbConnectionFilter.releaseAllThreadDbResources();
 		}
 	}
 

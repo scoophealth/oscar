@@ -76,7 +76,7 @@ public class RxInteractionWorker extends Thread {
         }
         finally {
     		LoggedInInfo.loggedInInfo.remove();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+            DbConnectionFilter.releaseAllThreadDbResources();
         }
         long end = System.currentTimeMillis() - start;
         System.out.println("THREAD ENDING " + end);

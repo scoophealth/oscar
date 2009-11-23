@@ -63,8 +63,7 @@ public class DbConnectionFilter implements javax.servlet.Filter {
 		try {
 			chain.doFilter(tmpRequest, tmpResponse);			
 		} finally {
-			releaseThreadLocalDbConnection();
-			SpringHibernateLocalSessionFactoryBean.releaseThreadSessions();
+			releaseAllThreadDbResources();
 		}
 	}
 
@@ -78,6 +77,13 @@ public class DbConnectionFilter implements javax.servlet.Filter {
         }
     }
 
+    public static void releaseAllThreadDbResources()
+    {
+		releaseThreadLocalDbConnection();
+		SpringHibernateLocalSessionFactoryBean.releaseThreadSessions();
+		TrackingBasicDataSource.releaseThreadConnections();
+    }
+    
     /**
      * This method should only be called by DbConnectionFilter internally, everyone else should use getThreadLocalDbConnection to obtain a connection. 
      */

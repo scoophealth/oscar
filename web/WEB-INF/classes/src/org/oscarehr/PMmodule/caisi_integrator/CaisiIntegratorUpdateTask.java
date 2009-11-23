@@ -169,7 +169,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.error("unexpected error occurred", e);
 		} finally {
 			LoggedInInfo.loggedInInfo.remove();
-			DbConnectionFilter.releaseThreadLocalDbConnection();
+			DbConnectionFilter.releaseAllThreadDbResources();
 
 			logger.debug("CaisiIntegratorUpdateTask finished");
 		}

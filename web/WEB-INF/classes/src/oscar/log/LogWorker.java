@@ -106,7 +106,7 @@ public class LogWorker extends Thread {
         }
         finally
         {
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+            DbConnectionFilter.releaseAllThreadDbResources();
         }
     }
 

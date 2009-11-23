@@ -135,7 +135,7 @@ public class ErProgramDischargeTask extends TimerTask {
         }
         finally {
     		LoggedInInfo.loggedInInfo.remove();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+            DbConnectionFilter.releaseAllThreadDbResources();
         }
     }
 

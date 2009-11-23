@@ -211,7 +211,7 @@ public  class MsgRemoteMessageData extends Thread{
             }
             finally {
     			LoggedInInfo.loggedInInfo.remove();
-                DbConnectionFilter.releaseThreadLocalDbConnection();
+                DbConnectionFilter.releaseAllThreadDbResources();
             }
 
          }

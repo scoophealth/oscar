@@ -79,7 +79,7 @@ public class TicklerWorker extends Thread {
         }
         finally {
     		LoggedInInfo.loggedInInfo.remove();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+            DbConnectionFilter.releaseAllThreadDbResources();
         }
         /// check to see if tickler is needed
         //if so, check to see if one is already added

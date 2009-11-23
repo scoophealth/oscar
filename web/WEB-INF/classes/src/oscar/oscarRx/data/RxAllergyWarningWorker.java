@@ -80,7 +80,7 @@ public class RxAllergyWarningWorker extends Thread {
         }
         finally {
     		LoggedInInfo.loggedInInfo.remove();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+            DbConnectionFilter.releaseAllThreadDbResources();
         }
         long end = System.currentTimeMillis() - start;
         System.out.println("THREAD ENDING -RxAllergyWarningWorker " + end);

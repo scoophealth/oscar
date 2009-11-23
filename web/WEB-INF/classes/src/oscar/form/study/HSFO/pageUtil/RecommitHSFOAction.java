@@ -172,7 +172,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
             }
             finally {
     			LoggedInInfo.loggedInInfo.remove();
-                DbConnectionFilter.releaseThreadLocalDbConnection();
+                DbConnectionFilter.releaseAllThreadDbResources();
             }
         }
 

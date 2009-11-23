@@ -21,20 +21,64 @@ import java.util.Properties;
 import java.util.WeakHashMap;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.log4j.Logger;
 
 public class TrackingBasicDataSource extends BasicDataSource {
 	
+	public static final Logger logger=MiscUtils.getLogger();
+	
     public static final Map<Connection, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Connection, StackTraceElement[]>());
+    // This is a fake weak hash set, the value is actually ignored, put null or what ever in it.
+    private static ThreadLocal<WeakHashMap<Connection, Object>> connections = new ThreadLocal<WeakHashMap<Connection, Object>>();
 
+    private static void trackConnection(Connection c)
+    {
+        debugMap.put(c, Thread.currentThread().getStackTrace());
+
+        WeakHashMap<Connection, Object> map=connections.get();
+        if (map==null)
+        {
+        	map=new WeakHashMap<Connection, Object>();
+        	connections.set(map);
+        }
+        
+        map.put(c, null);
+        
+        if (map.size()>5)
+        {
+        	String msg="Thread has more than 5 jdbc connection in use simultaniously.";
+        	logger.warn(msg);
+        	logger.debug(msg, new Exception(msg));
+        }
+    }
+    
+    public static void releaseThreadConnections()
+    {
+        WeakHashMap<Connection, Object> map=connections.get();
+        if (map!=null)
+        {
+        	for (Connection c : map.keySet())
+        	{
+        		try {
+	                if (!c.isClosed()) c.close();
+                } catch (SQLException e) {
+                	logger.error("Error closing jdbc connection.", e);
+                }
+        	}
+        }
+        
+        connections.remove();
+    }
+    
 	public Connection getConnection() throws SQLException {
 		Connection c=super.getConnection();
-        debugMap.put(c, Thread.currentThread().getStackTrace());
+		trackConnection(c);
 	    return(new TrackingJdbcConnection(c));
     }
 
 	public Connection getConnection(String username, String password) throws SQLException {
 	    Connection c=super.getConnection(username, password);
-        debugMap.put(c, Thread.currentThread().getStackTrace());
+		trackConnection(c);
 	    return(new TrackingJdbcConnection(c));
     }
 	

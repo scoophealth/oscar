@@ -83,7 +83,7 @@ public class AlertTimer {
             }
             finally {
         		LoggedInInfo.loggedInInfo.remove();
-                DbConnectionFilter.releaseThreadLocalDbConnection();
+                DbConnectionFilter.releaseAllThreadDbResources();
             }
         }
     }

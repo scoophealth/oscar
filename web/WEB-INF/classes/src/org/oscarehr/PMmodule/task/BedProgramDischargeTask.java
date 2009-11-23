@@ -119,7 +119,7 @@ public class BedProgramDischargeTask extends TimerTask {
         }
         finally {
 			LoggedInInfo.loggedInInfo.remove();
-            DbConnectionFilter.releaseThreadLocalDbConnection();
+            DbConnectionFilter.releaseAllThreadDbResources();
         }
 	}
 
