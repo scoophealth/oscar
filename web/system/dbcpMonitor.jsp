@@ -53,9 +53,9 @@ detect those and search the source.
 <%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@page import="oscar.oscarDB.*"%>
 <%@page import="java.sql.*"%>
-
 <%@page import="java.lang.management.*"%>
 <%@page import="java.util.*"%>
+<%@page import="java.util.Map.Entry"%>
 
 <%
         BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
@@ -69,8 +69,7 @@ detect those and search the source.
 %>
 
 
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="java.util.Map.Entry"%><html>
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
