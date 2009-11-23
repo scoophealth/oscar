@@ -69,7 +69,8 @@ detect those and search the source.
 %>
 
 
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%><html>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="java.util.Map.Entry"%><html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -181,23 +182,23 @@ detect those and search the source.
 	Thread Format: <%=VMStat.getThreadFormat() %><br />
 	Thread Info: <%=VMStat.getThreadInfo()%>
 
-    <h3>----- Db Connection / Thread Monitor -----</h3>
+    <h3>----- DataSource Connection Monitor -----</h3>
 
 	<br />
-        <font color="blue">DbConnectionFilter style connections : <%=DbConnectionFilter.debugMap.size()%></font>
+        <font color="blue">DataSource connections : <%=TrackingBasicDataSource.debugMap.size()%></font>
 	<br /><br />
 	<%
         //make local copy of the map to prevent thread interruption
-        HashMap<Thread, StackTraceElement[]> threadMap = new HashMap<Thread, StackTraceElement[]>(DbConnectionFilter.debugMap);
+        HashMap<Connection, StackTraceElement[]> connectionMap = new HashMap<Connection, StackTraceElement[]>(TrackingBasicDataSource.debugMap);
         int i=0;
-        for (Map.Entry<Thread, StackTraceElement[]> entry : threadMap.entrySet())
+        for (Map.Entry<Connection, StackTraceElement[]> entry : connectionMap.entrySet())
 		{
 			%>
-				<a href="javascript: hideDiv('threadStacktrace<%=i%>');">Hide Stacktrace</a> |
-                <a href="javascript: showDiv('threadStacktrace<%=i%>');">Show FULL Stacktrace</a><br/>
-                <div id="threadStacktrace<%=i%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
+				<a href="javascript: hideDiv('connectionStacktrace<%=i%>');">Hide Stacktrace</a> |
+                <a href="javascript: showDiv('connectionStacktrace<%=i%>');">Show FULL Stacktrace</a><br/>
+                <div id="connectionStacktrace<%=i%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
                 	<%
-                		String key=StringEscapeUtils.escapeHtml(entry.getKey().toString());
+                		String key=StringEscapeUtils.escapeHtml(entry.getKey().hashCode()+":"+entry.getKey().toString());
                 		String value=StringEscapeUtils.escapeHtml(Arrays.toString(entry.getValue())).replace(",", "<br />");
                 	%>
                     <%=key%> : <%=value%>

@@ -25,17 +25,14 @@ package org.oscarehr.util;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import oscar.util.SqlUtils;
@@ -44,13 +41,7 @@ public class DbConnectionFilter implements javax.servlet.Filter {
 	private static final Logger logger=MiscUtils.getLogger();
 	
     private static ThreadLocal<Connection> dbConnection = new ThreadLocal<Connection>();
-
-    /**
-     * This map was added because not all the code was using hibernate/JDBC properly, once we 
-     * fix the data access we should remove this map as it's a waste of cpu time and memory.
-     */
-    public static Map<Thread, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Thread, StackTraceElement[]>());
-
+    
     /**
      * deprecated we should stop using raw jdbc connections. Don't write new code using raw jdbc, use JPA and native queries instead.
      */
@@ -59,8 +50,6 @@ public class DbConnectionFilter implements javax.servlet.Filter {
         if (c == null || c.isClosed()) {
             c = getDbConnection();
             dbConnection.set(c);
-            Thread currentThread=Thread.currentThread();
-            debugMap.put(currentThread, currentThread.getStackTrace());
         }
 
         return(c);
@@ -84,7 +73,6 @@ public class DbConnectionFilter implements javax.servlet.Filter {
 	        Connection c = dbConnection.get();
 	        SqlUtils.closeResources(c, null, null);
 	        dbConnection.remove();
-	        debugMap.remove(Thread.currentThread());
         } catch (Exception e) {
 	        logger.error("Error closing db connection.", e);
         }
@@ -94,8 +82,8 @@ public class DbConnectionFilter implements javax.servlet.Filter {
      * This method should only be called by DbConnectionFilter internally, everyone else should use getThreadLocalDbConnection to obtain a connection. 
      */
     private static Connection getDbConnection() throws SQLException {
-        BasicDataSource ds = (BasicDataSource)SpringUtils.getBean("dataSource");
-        Connection c=ds.getConnection();
+    	
+        Connection c=((DataSource)SpringUtils.getBean("dataSource")).getConnection();
         c.setAutoCommit(true);
         return(c);
     }

@@ -26,7 +26,7 @@ public class SpringHibernateLocalSessionFactoryBean extends org.springframework.
 
 	private static final Logger logger=MiscUtils.getLogger();
 	
-    public static Map<Session, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Session, StackTraceElement[]>());
+    public static final Map<Session, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Session, StackTraceElement[]>());
     
     // This is a fake weak hash set, the value is actually ignored, put null or what ever in it.
     private static ThreadLocal<WeakHashMap<Session, Object>> sessions = new ThreadLocal<WeakHashMap<Session, Object>>();
