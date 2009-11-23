@@ -20,7 +20,7 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          String startDate       = RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd");
          String writtenDate     = RxUtil.DateToString(rx.getWrittenDate(), "yyyy-MM-dd");
          String lastRefillDate  = RxUtil.DateToString(rx.getLastRefillDate(), "yyyy-MM-dd");
-         int gcn=rx.getGCN_SEQNO();//if gcn is 0, customed drug.
+         int gcn=rx.getGCN_SEQNO();//if gcn is 0, rx is customed drug.
          String customName      = rx.getCustomName();
          int patientCompliance  = rx.getPatientCompliance();
          String frequency       = rx.getFrequencyCode();
@@ -63,11 +63,11 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          }
           if((outsideProvOhip!=null && !outsideProvOhip.equals("")) || (outsideProvName!=null && !outsideProvName.equals(""))){
              isOutsideProvider=true;
-               // System.out.println("isOutsideProvider trueeeeeeeeee");
+               // System.out.println("isOutsideProvider true");
          }
          else{
              isOutsideProvider=false;
-             //System.out.println("isOutsideProvider falseeeeeeeeeeee");
+             //System.out.println("isOutsideProvider false");
          }
          System.out.println("instructions from repscbAllLongTerm="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
          if(drugName==null){System.out.println("null meta");}
@@ -176,14 +176,14 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
                         deletePrescribe(randId);
                     }
             }
-            function pause(ms){//can be used to delay execution of a js function
+         /*   function pause(ms){//can be used to delay execution of a js function
                 var date=new Date();
                 var current=null;
                 current=new Date();
                 while(current-date<ms){
                     current=new Date();
                 }
-            }
+            }*/
         </script>
  <%}%>
  
