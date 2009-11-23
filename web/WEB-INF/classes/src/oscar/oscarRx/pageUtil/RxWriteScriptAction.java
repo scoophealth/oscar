@@ -32,11 +32,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +41,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
-import org.apache.commons.collections.iterators.UniqueFilterIterator;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -78,7 +74,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
-        System.out.println("***===========IN Take RxWriteScriptAction.java");
+        System.out.println("***===========IN unspecified RxWriteScriptAction.java");
 
         RxWriteScriptForm frm = (RxWriteScriptForm) form;
         String fwd = "refresh";
@@ -121,7 +117,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 rx.setGCN_SEQNO(0);
                 rx.setCustomName(frm.getCustomName());
             }
-            p("frm.getRxDate()", frm.getRxDate());
+         /*   p("frm.getRxDate()", frm.getRxDate());
             p("frm.getWrittenDate()", frm.getWrittenDate());
             p("frm.getTakeMinFloat()", Float.toString(frm.getTakeMinFloat()));
             p("frm.getTakeMaxFloat()", Float.toString(frm.getTakeMaxFloat()));
@@ -142,7 +138,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
             p("rxdate before process", frm.getRxDate());
             p("rxdate after process", RxUtil.StringToDate(frm.getRxDate(), "yyyy-MM-dd").toString());
-
+*/
             rx.setRxDate(RxUtil.StringToDate(frm.getRxDate(), "yyyy-MM-dd"));
             rx.setWrittenDate(RxUtil.StringToDate(frm.getWrittenDate(), "yyyy-MM-dd"));
             rx.setTakeMin(frm.getTakeMinFloat());
@@ -192,7 +188,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             //      System.out.println("SETTING StashIndex '" + "" + bean.getStashIndex() + "'");
             bean.addAttributeName(annotation_attrib, bean.getStashIndex());
             bean.setStashItem(bean.getStashIndex(), rx);
-            p("bean.getStashIndex() in take=" + "" + bean.getStashIndex());
+            p("bean.getStashIndex() in unspecified=" + "" + bean.getStashIndex());
             rx = null;
 
             if (frm.getAction().equals("update")) {
@@ -350,7 +346,6 @@ public final class RxWriteScriptAction extends DispatchAction {
             response.sendRedirect("error.html");
             return null;
         }
-
         try {
             String randomId = request.getParameter("randomId");
             String customName=request.getParameter("customName");
@@ -360,7 +355,6 @@ public final class RxWriteScriptAction extends DispatchAction {
             if(rx==null)
                 p("rx is null");
             p("IN updateDrug, atc=" + rx.getAtcCode() + "; regionalIdentifier=" + rx.getRegionalIdentifier());
-
             p("before updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             rx.setCustomName(customName);
             rx.setBrandName(null);
@@ -369,6 +363,15 @@ public final class RxWriteScriptAction extends DispatchAction {
             p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
             RxUtil.printStashContent(bean);
+            //check for most recent drug,
+            RxUtil.setSpecialQuantityRepeat(rx);
+            HashMap hm = new HashMap();
+            hm.put("instructions", rx.getSpecial());
+            hm.put("quantity", rx.getQuantity());
+            hm.put("repeat", rx.getRepeat());
+            JSONObject jsonObject = JSONObject.fromObject(hm);
+            p("jsonObject", jsonObject.toString());
+            response.getOutputStream().write(jsonObject.toString().getBytes());
           }catch(Exception e){
             e.printStackTrace();
           }
@@ -517,9 +520,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             p("set regional identifier to ", rx.getRegionalIdentifier());
             String atcCode = dmono.atc;
             rx.setAtcCode(atcCode);
-            rx.setSpecial("1 OD");
-            rx.setRepeat(0);
-            rx.setQuantity("30");
+            RxUtil.setSpecialQuantityRepeat(rx);
             p("set atc code to ", rx.getAtcCode());
 
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
@@ -831,7 +832,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                         } else if (elem.equals("writtenDate_" + num)) {
                             if (val == null || (val.equals(""))) {
                                 p("writtenDate is null");
-                                rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
+                                rx.setWrittenDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
                             } else {
                                 rx.setWrittenDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
                             }
@@ -844,17 +845,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                             } else {
                                 rx.setOutsideProviderOhip(val);
                             }
-                        } else if (elem.equals("rxFreq_" + num)) {
-                            rx.setFrequencyCode(val);
-                        } else if (elem.equals("rxDuration_" + num)) {
-                            if (val.equals("") || val == null) {
-                                rx.setDuration("0");
-                            } else {
-                                rx.setDuration(val);
-                            }
-                        } else if (elem.equals("rxDurationUnit_" + num)) {
-                            rx.setDurationUnit(val);
-                        }  else if (elem.equals("ocheck_" + num)) {
+                        } else if (elem.equals("ocheck_" + num)) {
                             if (val.equals("on")) {
                                 isOutsideProvider = true;
                             } else {
@@ -877,17 +868,6 @@ public final class RxWriteScriptAction extends DispatchAction {
                                 patientComplianceN = true;
                             } else {
                                 patientComplianceN = false;
-                            }
-                        } else if (elem.equals("rxRoute_" + num)) {
-                            rx.setRoute(val);
-                        } else if (elem.equals("rxMethod_" + num)) {
-                            rx.setMethod(val);
-                        } else if (elem.equals("rxAmount_" + num)) {
-                            p("amount here", val);
-                            if (val.equals("") || val == null) {
-                                rx.setTakeMin(0f);
-                            } else {
-                                rx.setTakeMin(Float.parseFloat(val));
                             }
                         }
                     }
