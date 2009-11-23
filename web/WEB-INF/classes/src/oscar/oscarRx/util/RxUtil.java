@@ -23,12 +23,19 @@
  */
 package oscar.oscarRx.util;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import oscar.oscarRx.data.RxPrescriptionData;
 import java.util.regex.*;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
+import oscar.oscarDB.DBHandler;
 
 public class RxUtil {
 
@@ -272,7 +279,7 @@ public class RxUtil {
                         takeMinFrequency = str3.split("-")[0];
                         takeMaxFrequency = str3.split("-")[1];
                     }
-                }  else if (m2.find()) {
+                } else if (m2.find()) {
                     String str = instructions.substring(m2.start(), m2.end());
                     Pattern p3 = Pattern.compile("\\d*\\.*\\d+");
                     Matcher m3 = p3.matcher(str);
@@ -620,7 +627,7 @@ public class RxUtil {
             special = special.substring(special.indexOf("Rub Well In"));
         }
 
-        return special;
+        return special.trim();
 
     }
     public static void printStashContent(oscar.oscarRx.pageUtil.RxSessionBean bean) {
@@ -644,6 +651,78 @@ public class RxUtil {
         p("***done***");
 
     }
+    private static final Logger logger = MiscUtils.getLogger();
+    private static void setDefaultSpecialQuantityRepeat(RxPrescriptionData.Prescription rx){
+                    rx.setSpecial("1 OD");
+                    rx.setQuantity("30");
+                    rx.setRepeat(0);
+    }
+
+   private static void setResultSpecialQuantityRepeat ( RxPrescriptionData.Prescription rx, ResultSet rs ) {
+       try{
+           rx.setSpecial(rs.getString("special"));
+           rx.setSpecial(trimSpecial(rx));
+           rx.setQuantity(rs.getString("quantity"));
+           rx.setRepeat(rs.getInt("repeat"));
+       }catch(SQLException e){
+           e.printStackTrace();
+       }
+    }
+    public static void setSpecialQuantityRepeat(RxPrescriptionData.Prescription rx) {
+
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            if (rx.getRegionalIdentifier() != null) {
+                //query the database to see if there is a rx with same din as this rx.
+               // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
+                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by drugid desc"; //most recent is the first.
+                rs = db.GetSQL(sql);
+                if (rs.first()) {//use the first result if there are multiple.
+                    setResultSpecialQuantityRepeat(rx,rs);
+                } else {
+                    //else, set to special to "1 OD", quantity to "30", repeat to "0".
+                    setDefaultSpecialQuantityRepeat(rx);
+                }
+            } else {
+                if (rx.getBrandName() != null) {
+                    //String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by written_date desc"; //most recent is the first.
+                    String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by drugid desc"; //most recent is the first.
+                    //if none, query database to see if there is rx with same brandname.
+                    //if there are multiple, use latest.
+                    rs = db.GetSQL(sql2);
+                    if (rs.first()) {
+                        setResultSpecialQuantityRepeat(rx,rs);
+                    } else {
+                        //else, set to special to "1 OD", quantity to "30", repeat to "0".
+                        setDefaultSpecialQuantityRepeat(rx);
+                    }
+                } else {
+                    if (rx.getCustomName() != null) {
+                        //String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by written_date desc"; //most recent is the first.
+                        String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by drugid desc"; //most recent is the first.
+                        //if none, query database to see if there is rx with same customName.
+                        //if there are multiple, use latest.
+                        rs = db.GetSQL(sql3);
+                        if (rs.first()) {
+                            setResultSpecialQuantityRepeat(rx,rs);
+                        } else {
+                            //else, set to special to "1 OD", quantity to "30", repeat to "0".
+                            setDefaultSpecialQuantityRepeat(rx);
+                        }
+                    } else {
+                        //else, set to special to "1 OD", quantity to "30", repeat to "0".
+                        setDefaultSpecialQuantityRepeat(rx);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("SQL Query ERROR", e);
+        } finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+    }
+
     public static void p(String str, String s) {
         System.out.println(str + "=" + s);
     }
