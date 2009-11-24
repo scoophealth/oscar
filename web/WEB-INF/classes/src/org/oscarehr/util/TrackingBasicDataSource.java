@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 
 public class TrackingBasicDataSource extends BasicDataSource {
 	
+	public static final int MAX_CONNECTION_WARN_SIZE=2;
 	public static final Logger logger=MiscUtils.getLogger();
 	
     public static final Map<Connection, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Connection, StackTraceElement[]>());
@@ -46,9 +47,9 @@ public class TrackingBasicDataSource extends BasicDataSource {
         
         threadConnections.add(c);
         
-        if (threadConnections.size()>5)
+        if (threadConnections.size()>MAX_CONNECTION_WARN_SIZE)
         {
-        	String msg="Thread has more than 5 jdbc connection in use simultaniously.";
+        	String msg="Thread is currently using "+threadConnections.size()+" separate jdbc connections, it souldn't need more than "+MAX_CONNECTION_WARN_SIZE;
         	logger.warn(msg);
         	logger.debug(msg, new Exception(msg));
         }
