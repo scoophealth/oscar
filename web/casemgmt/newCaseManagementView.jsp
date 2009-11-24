@@ -1056,10 +1056,12 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>"
 		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');"
 		title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
-	<input tabindex="14" type='image'
+        <c:if test="${sessionScope.passwordEnabled=='true'}">
+            <input tabindex="14" type='image'
 		src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>"
 		onclick="return toggleNotePasswd();"
 		title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
+        </c:if>
 	<input tabindex="15" type='image'
 		src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>"
 		onclick='closeEnc(event);return false;'
