@@ -89,8 +89,10 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.Referral;
@@ -1375,10 +1377,21 @@ public class ClientManagerAction extends BaseAction {
 			for (Admission admission : addLocalAdmissions) allResults.add(new AdmissionForHistoryTabDisplay(admission));
 			
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-// add integrator  admissions here
+				
+				try
+				{
+					DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
+					List<CachedAdmission> cachedAdmissions=demographicWs.getLinkedCachedAdmissionsByDemographicId(Integer.parseInt(demographicNo));
+					
+					for (CachedAdmission cachedAdmission : cachedAdmissions) allResults.add(new AdmissionForHistoryTabDisplay(cachedAdmission));
+					
+					Collections.sort(allResults, AdmissionForHistoryTabDisplay.ADMISSION_DATE_COMPARATOR);
+				}
+				catch (Exception e)
+				{
+					logger.error("Error retrieveing integrated admissions.", e);
+				}
 			}
-			
-// sort results
 			
 			request.setAttribute("admissionHistory", allResults);
 			request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, facilityId));

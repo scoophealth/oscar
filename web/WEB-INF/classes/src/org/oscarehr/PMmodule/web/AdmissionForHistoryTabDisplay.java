@@ -1,94 +1,146 @@
 package org.oscarehr.PMmodule.web;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.caisi_integrator.ws.CachedAdmission;
+import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.CachedProgram;
+import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.util.MiscUtils;
 
 /**
  * This is a display object for the history tab of a clients admissions.
  */
 public class AdmissionForHistoryTabDisplay {
+	
+	public static final Comparator<AdmissionForHistoryTabDisplay> ADMISSION_DATE_COMPARATOR=new Comparator<AdmissionForHistoryTabDisplay>() {
+		public int compare(AdmissionForHistoryTabDisplay arg0, AdmissionForHistoryTabDisplay arg1) {
+			return(arg1.admissionDate.compareTo(arg0.admissionDate));
+		}
+	};
+	
+	private static final Logger logger = MiscUtils.getLogger();
+	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
 
-	private static final String DATE_FORMAT="yyyy-MM-dd HH:mm";
-	
-	private SimpleDateFormat dateFormatter=new SimpleDateFormat(DATE_FORMAT);
-	
+	private SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+
 	private Integer admissionId;
-
+	private boolean isFromIntegrator;
 	private String programName;
 	private String programType;
-
-	/** if it's null it means it's a local admission, i.e. local facility */
-	private String remoteFacilityName;
-
+	private String facilityName;
 	private String admissionDate;
-	private boolean facilityAdmission;
+	private String facilityAdmission;
 	private String dischargeDate;
-	private boolean facilityDischarge;
+	private String facilityDischarge;
 	private int daysInProgram;
-	private boolean tempraryAdmission;
+	private String temporaryAdmission;
 
-	public AdmissionForHistoryTabDisplay(Admission admission)
-	{
-		admissionId=admission.getId().intValue();
-		programName=admission.getProgramName();
-		programType=admission.getProgramType();
-		
-		admissionDate=dateFormatter.format(admission.getAdmissionDate());
-		facilityAdmission=!admission.isAdmissionFromTransfer();
-		
-		if (admission.getDischargeDate()!=null) dischargeDate=dateFormatter.format(admission.getDischargeDate());
-		facilityDischarge=!admission.isDischargeFromTransfer();
+	public AdmissionForHistoryTabDisplay(Admission admission) {
+		admissionId = admission.getId().intValue();
+		isFromIntegrator = false;
+		programName = admission.getProgramName();
+		programType = admission.getProgramType();
+		facilityName = "local facility";
 
-		Date endDate=null;
-		if (admission.getDischargeDate()!=null) endDate=admission.getDischargeDate();
-		else endDate=new Date();
-		daysInProgram=MiscUtils.calculateDayDifference(admission.getAdmissionDate(), endDate);
-		
-		tempraryAdmission=admission.isTemporaryAdmission();
+		admissionDate = dateFormatter.format(admission.getAdmissionDate());
+		facilityAdmission = String.valueOf(!admission.isAdmissionFromTransfer());
+
+		if (admission.getDischargeDate() != null) {
+			dischargeDate = dateFormatter.format(admission.getDischargeDate());
+			daysInProgram = MiscUtils.calculateDayDifference(admission.getAdmissionDate(), admission.getDischargeDate());
+		} else {
+			daysInProgram = MiscUtils.calculateDayDifference(admission.getAdmissionDate(), new Date());
+		}
+
+		facilityDischarge = String.valueOf(!admission.isDischargeFromTransfer());
+		temporaryAdmission = String.valueOf(admission.isTemporaryAdmission());
+	}
+
+	public AdmissionForHistoryTabDisplay(CachedAdmission cachedAdmission) {
+		isFromIntegrator = true;
+
+		FacilityIdIntegerCompositePk remoteProgramPk = new FacilityIdIntegerCompositePk();
+		int remoteFacilityId = cachedAdmission.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
+		remoteProgramPk.setIntegratorFacilityId(remoteFacilityId);
+		remoteProgramPk.setCaisiItemId(cachedAdmission.getCaisiProgramId());
+		try {
+			CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(remoteProgramPk);
+			programName = cachedProgram.getName();
+			programType = cachedProgram.getType();
+		} catch (Exception e) {
+			logger.error("Error retriving integrator program.", e);
+		}
+
+		try {
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+			facilityName = cachedFacility.getName();
+		} catch (Exception e) {
+			logger.error("Error retrieving integrator Facility.", e);
+		}
+
+		admissionDate = dateFormatter.format(cachedAdmission.getAdmissionDate());
+		facilityAdmission = "n/a";
+
+		if (cachedAdmission.getDischargeDate() != null) {
+			dischargeDate = dateFormatter.format(cachedAdmission.getDischargeDate());
+			daysInProgram = MiscUtils.calculateDayDifference(cachedAdmission.getAdmissionDate(), cachedAdmission.getDischargeDate());
+		} else {
+			daysInProgram = MiscUtils.calculateDayDifference(cachedAdmission.getAdmissionDate(), new Date());
+
+		}
+
+		facilityDischarge = "n/a";
+		temporaryAdmission = "n/a";
 	}
 
 	public Integer getAdmissionId() {
-    	return admissionId;
-    }
+		return admissionId;
+	}
 
 	public String getProgramName() {
-    	return programName;
-    }
+		return programName;
+	}
 
 	public String getProgramType() {
-    	return programType;
-    }
+		return programType;
+	}
 
-	public String getRemoteFacilityName() {
-    	return remoteFacilityName;
-    }
+	public boolean isFromIntegrator() {
+		return isFromIntegrator;
+	}
+
+	public String getFacilityName() {
+		return facilityName;
+	}
 
 	public String getAdmissionDate() {
-    	return admissionDate;
-    }
+		return admissionDate;
+	}
 
-	public boolean isFacilityAdmission() {
-    	return facilityAdmission;
-    }
+	public String getFacilityAdmission() {
+		return facilityAdmission;
+	}
 
 	public String getDischargeDate() {
-    	return dischargeDate;
-    }
+		return dischargeDate;
+	}
 
-	public boolean isFacilityDischarge() {
-    	return facilityDischarge;
-    }
+	public String getFacilityDischarge() {
+		return facilityDischarge;
+	}
 
 	public int getDaysInProgram() {
-    	return daysInProgram;
-    }
+		return daysInProgram;
+	}
 
-	public boolean isTempraryAdmission() {
-    	return tempraryAdmission;
-    }
+	public String getTemporaryAdmission() {
+		return temporaryAdmission;
+	}
 
-	
 }

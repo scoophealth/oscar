@@ -54,7 +54,7 @@
 	%>
     <display:column sortable="false">
     <%
-    	if (admissionForDisplay.getRemoteFacilityName()==null)
+    	if (!admissionForDisplay.isFromIntegrator())
     	{
     		%>
 		        <a href="javascript:void(0)" onclick="popupAdmissionInfo('<%=admissionForDisplay.getAdmissionId()%>')">
@@ -64,6 +64,7 @@
     	}
     %>
     </display:column>
+	<display:column property="facilityName" sortable="false" title="Facility Name" />
     <display:column property="programName" sortable="true" title="Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="admissionDate" sortable="true" title="Admission Date" />
