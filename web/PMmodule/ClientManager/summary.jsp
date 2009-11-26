@@ -590,20 +590,13 @@ function openSurvey() {
 </table>
 </div>
 
-<display:table class="simple" cellspacing="2" cellpadding="3"
-	id="referral" name="referrals" export="false" pagesize="10"
-	requestURI="/PMmodule/ClientManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="referrals" export="false" pagesize="10" requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 
-	<display:column property="programName" sortable="true"
-		title="Program Name" />
-	<display:column property="programType" sortable="true"
-		title="Program Type" />
-	<display:column property="referralDate"
-		format="{0, date, yyyy-MM-dd kk:mm}" sortable="true"
-		title="Referral Date" />
-	<display:column property="providerFormattedName" sortable="true"
-		title="Referring Provider" />
+	<display:column property="programName" sortable="true" title="Program Name" />
+	<display:column property="programType" sortable="true" title="Program Type" />
+	<display:column property="referralDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Referral Date" />
+	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
 	<display:column sortable="true" title="Days in Queue">
 		<%
 			ClientReferral tempReferral=(ClientReferral)pageContext.getAttribute("referral");
