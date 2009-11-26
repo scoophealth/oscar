@@ -252,8 +252,9 @@ public final class RxWriteScriptAction extends DispatchAction {
         //  while (emm.hasMoreElements()) {
         //      p("session attribute=" + emm.nextElement().toString());
         //  }
+        System.out.println("before get bean");
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-
+        System.out.println("after got bean");
         //    p("**## print out fields in bean==========");
         //   p(bean.getProviderNo());
         //     p(Integer.toString(bean.getDemographicNo()));
@@ -267,7 +268,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             //       p(attributeNames.get(i).toString());
         }
         //     p("done print out fields in bean=========");
-        p("here");
+        System.out.println("here");
         //     p("bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
         List<String> paramList = new ArrayList();
         Enumeration em = request.getParameterNames();
@@ -280,7 +281,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 randNum.add(temp[1]);
             }
         }
-        p("here2");
+        System.out.println("here2");
 
 
         RxDrugData drugData = new RxDrugData();
@@ -289,7 +290,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         String scriptId = prescription.saveScript(bean);
         StringBuffer auditStr = new StringBuffer();
         ArrayList<String> attrib_names = bean.getAttributeNames();
-        p("here3");
+        System.out.println("here3");
         p("bean.getStashSize()", Integer.toString(bean.getStashSize()));
         for (int i = 0; i < bean.getStashSize(); i++) {
             try {
@@ -715,7 +716,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         }
     }
 
-    public ActionForward updateAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public synchronized ActionForward updateAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
         System.out.println("==========***### IN updateAllDrugs RxWriteScriptAction.java");
         // Enumeration emm = request.getSession().getAttributeNames();
@@ -723,7 +724,8 @@ public final class RxWriteScriptAction extends DispatchAction {
         //      p("session attribute=" + emm.nextElement().toString());
         //  }
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-
+//   synchronized(bean){
+        request.getSession().setAttribute("rePrint", "false");//set to print.
         p("**## print out fields in bean==========");
         p(bean.getProviderNo());
         p(Integer.toString(bean.getDemographicNo()));
@@ -940,8 +942,9 @@ public final class RxWriteScriptAction extends DispatchAction {
                        bean.setStashIndex(bean.getStashSize() - 1);
                 }
             }
-
+        
         System.out.println("***===========End of updateAllDrugs RxWriteScriptAction.java");
+  // }
         return mapping.findForward("viewScript");
         }
     }
