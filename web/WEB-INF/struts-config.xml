@@ -643,8 +643,11 @@
         <action input="/oscarRx/EditFavorites.jsp" name="RxUpdateFavoriteForm" path="/oscarRx/updateFavorite" scope="request" type="oscar.oscarRx.pageUtil.RxUpdateFavoriteAction">
             <forward name="success" path="/oscarRx/EditFavorites.jsp" />
         </action>
-        <action input="/oscarRx/EditFavorites.jsp" name="RxDeleteFavoriteForm" path="/oscarRx/deleteFavorite" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteFavoriteAction">
-            <forward name="success" path="/oscarRx/EditFavorites.jsp" />
+        <action input="/oscarRx/EditFavorites2.jsp" name="RxUpdateFavoriteForm" path="/oscarRx/updateFavorite2" scope="request" type="oscar.oscarRx.pageUtil.RxUpdateFavoriteAction">
+            <forward name="success" path="/oscarRx/EditFavorites2.jsp" />
+        </action>
+        <action input="/oscarRx/EditFavorites2.jsp" name="RxDeleteFavoriteForm" path="/oscarRx/deleteFavorite2" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteFavoriteAction">
+            <forward name="success" path="/oscarRx/EditFavorites2.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
@@ -663,17 +666,28 @@
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
             <forward name="close" path="/oscarRx/close.html" />
         </action>
+
         <action input="/oscarRx/ChooseAllergy.jsp" name="RxSearchAllergyForm" path="/oscarRx/searchAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxSearchAllergyAction">
             <forward name="success" path="/oscarRx/ChooseAllergy.jsp" />
         </action>
-         <action input="/oscarRx/ChooseAllergy.jsp" name="RxSearchAllergyForm" path="/oscarRx/searchAllergy2" scope="request" type="oscar.oscarRx.pageUtil.RxSearchAllergyAction">
+
+        <action input="/oscarRx/ChooseAllergy2.jsp" name="RxSearchAllergyForm" path="/oscarRx/searchAllergy2" scope="request" type="oscar.oscarRx.pageUtil.RxSearchAllergyAction">
             <forward name="success" path="/oscarRx/ChooseAllergy2.jsp" />
         </action>
+
         <action input="/oscarRx/ChooseAllergy.jsp" name="RxAddAllergyForm" path="/oscarRx/addAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxAddAllergyAction">
             <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
         </action>
+
+        <action input="/oscarRx/ChooseAllergy2.jsp" name="RxAddAllergyForm" path="/oscarRx/addAllergy2" scope="request" type="oscar.oscarRx.pageUtil.RxAddAllergyAction">
+            <forward name="success" path="/oscarRx/ShowAllergies2.jsp" />
+        </action>
+
         <action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/addReaction" scope="request" type="oscar.oscarRx.pageUtil.RxAddReactionAction">
             <forward name="success" path="/oscarRx/AddReaction.jsp" />
+        </action>
+        <action input="/oscarRx/ChooseAllergy2.jsp" path="/oscarRx/addReaction2" scope="request" type="oscar.oscarRx.pageUtil.RxAddReactionAction">
+            <forward name="success" path="/oscarRx/AddReaction2.jsp" />
         </action>
         <action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/deleteAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteAllergyAction">
             <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
@@ -687,8 +701,14 @@
         <action input="/oscarRx/ManagePharacy.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxManagePharmacyAction">
             <forward name="success" path="/oscarRx/SelectPharmacy.jsp" />
         </action>
+        <action input="/oscarRx/ManagePharacy2.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy2" scope="request" type="oscar.oscarRx.pageUtil.RxManagePharmacyAction">
+            <forward name="success" path="/oscarRx/SelectPharmacy2.jsp" />
+        </action>
         <action input="/oscarRx/SelectPharacy.jsp" path="/oscarRx/LinkPharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+        </action>
+        <action input="/oscarRx/SelectPharacy2.jsp" path="/oscarRx/LinkPharmacy2" scope="request" type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction">
+            <forward name="success" path="/oscarRx/SearchDrug3.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug.jsp" name="FrmForm" path="/oscarRx/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
             <forward name="finished" path="/phr/response.jsp"></forward>
@@ -1977,6 +1997,16 @@
             scope="request"
             parameter="dispatch">
             <forward name="success" path="/oscarRx/CopyFavorites.jsp"/>
+            <forward name="edit" path="/appointment/appointmentstatusedit.jsp"/>
+        </action>
+
+        <action
+            path="/oscarRx/copyFavorite2"
+            name="rxCopyForm"
+            type="org.springframework.web.struts.DelegatingActionProxy"
+            scope="request"
+            parameter="dispatch">
+            <forward name="success" path="/oscarRx/CopyFavorites2.jsp"/>
             <forward name="edit" path="/appointment/appointmentstatusedit.jsp"/>
         </action>
 
