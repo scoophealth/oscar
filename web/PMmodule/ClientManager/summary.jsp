@@ -600,16 +600,10 @@ function openSurvey() {
 	<display:column sortable="true" title="Days in Queue">
 		<%
 			ClientReferral tempReferral=(ClientReferral)pageContext.getAttribute("referral");
-					Date referralDate=tempReferral.getReferralDate();
-					Date currentDate=new Date();
+			Date referralDate=tempReferral.getReferralDate();
+			Date currentDate=new Date();
 
-					long referralDiff=currentDate.getTime()-referralDate.getTime();
-					referralDiff=referralDiff/1000; // seconds
-					referralDiff=referralDiff/60; // minutes
-					referralDiff=referralDiff/60; // hours
-					referralDiff=referralDiff/24; // days
-
-					String referralNumDays=String.valueOf(referralDiff);
+			int referralNumDays=MiscUtils.calculateDayDifference(referralDate, currentDate);
 		%>
 		<%=referralNumDays%>
 	</display:column>
