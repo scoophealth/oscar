@@ -204,6 +204,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         private String sigDoctorName;
         private String rxDate;
         private String promoText;
+        private String origPrintDate=null;
+        private String numPrint=null;
 
         public EndPage() {
             /*    now = new Date();
@@ -214,7 +216,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         }
 
         public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
-                String patientName, String doctorName, String sigDoctorName, String rxDate) {
+                String patientName, String doctorName, String sigDoctorName, String rxDate,String origPrintDate,String numPrint) {
             this.clinicName = clinicName;
             this.clinicTel = clinicTel;
             this.clinicFax = clinicFax;
@@ -226,6 +228,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             this.sigDoctorName = sigDoctorName;
             this.rxDate = rxDate;
             this.promoText = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
+            this.origPrintDate=origPrintDate;
+            this.numPrint=numPrint;
             if (promoText == null) {
                 promoText = "";
             }
@@ -347,12 +351,17 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 cb.stroke();
                 //Render doctor name
                 writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, this.sigDoctorName, 90, endPara - 40f, 0);
-
+                //public void writeDirectContent(PdfContentByte cb, BaseFont bf, float fontSize, int alignment, String text, float x, float y, float rotation)
+                //render reprint origPrintDate and numPrint
+                if(origPrintDate!=null && numPrint!=null){
+                    String rePrintStr="Reprint by "+this.sigDoctorName+"; Original Printed: "+origPrintDate+"; Times Printed: "+numPrint;
+                    writeDirectContent(cb,bf,6,PdfContentByte.ALIGN_LEFT,rePrintStr,50,endPara-48,0);
+                }
                 //print promoText
-                writeDirectContent(cb, bf, 6, PdfContentByte.ALIGN_LEFT, this.promoText, 70, endPara - 55, 0);
+                writeDirectContent(cb, bf, 6, PdfContentByte.ALIGN_LEFT, this.promoText, 70, endPara - 57, 0);
                 //print page number
                 String footer = "" + writer.getPageNumber();
-                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_RIGHT, footer, 280, endPara - 55, 0);
+                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_RIGHT, footer, 280, endPara - 57, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -367,6 +376,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         while (em.hasMoreElements()) {
             System.out.println("para=" + em.nextElement());
         }
+        em=req.getAttributeNames();
+        while(em.hasMoreElements())
+            System.out.println("attr: "+em.nextElement());
+
         /*   p("test",req.getLocalAddr());
         p("test",req.getLocalName());
         p("test",req.getRequestURL().toString());
@@ -392,7 +405,16 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
         ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
         PdfWriter writer = null;
+        String method=req.getParameter("__method");
+        String origPrintDate=null;
+        String numPrint=null;
+        if(method!=null&&method.equalsIgnoreCase("rePrint")){
+            origPrintDate=req.getParameter("origPrintDate");
+            numPrint=req.getParameter("numPrints");
+        }
 
+        System.out.println("method in generatePDFDocumentBytes "+method);
+                
         //parameters need to be passed to header and footer
         String clinicName = req.getParameter("clinicName");
         String clinicTel = req.getParameter("clinicPhone");
@@ -452,10 +474,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         try {
             String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
             p("title", title);
-            String[] cfgFile = req.getParameterValues("__cfgfile");
-            for (String s : cfgFile) {
-                p("cfgFile", s);
-            }
+          //  String[] cfgFile = req.getParameterValues("__cfgfile");
+        //    for (String s : cfgFile) {
+        //        p("cfgFile", s);
+        //    }
 
             //specify the page of the picture using __graphicPage, it may be used multiple times to specify multiple pages
             //however the same graphic will be applied to all pages
@@ -495,7 +517,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             document.setMargins(15, pageSize.width() - 285f + 5f, 140, 60);//left, right, top , bottom
 
             writer = PdfWriter.getInstance(document, baosPDF);
-            writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName, doctorName, sigDoctorName, rxDate));
+            writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName, doctorName, sigDoctorName, rxDate,origPrintDate,numPrint));
             document.addTitle(title);
             document.addSubject("");
             document.addKeywords("pdf, itext");
