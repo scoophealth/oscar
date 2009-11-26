@@ -99,6 +99,7 @@ System.out.println("bean.getStashIndex() searchDrug.jsp="+bean.getStashIndex());
 <%@page import="org.oscarehr.util.LoggedInInfo"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/prototype.js"></script>
 <title><bean:message key="SearchDrug.title" /></title>
 <link rel="stylesheet" type="text/css" href="styles.css">
 
