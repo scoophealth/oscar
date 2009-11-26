@@ -270,6 +270,9 @@
     <bean name="/oscarRx/copyFavorite" class="oscar.oscarRx.web.CopyFavoritesAction" singleton="false">
 	</bean>
 
+    <bean name="/oscarRx/copyFavorite2" class="oscar.oscarRx.web.CopyFavoritesAction" singleton="false">
+	</bean>
+
 	<bean name="/admin/ManageClinic" class="org.oscarehr.common.web.ClinicManageAction" singleton="false">
 		<property name="clinicDAO" ref="clinicDAO" />
 	</bean>
