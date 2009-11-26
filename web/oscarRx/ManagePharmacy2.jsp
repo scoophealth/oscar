@@ -73,7 +73,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 			height="100%">
 			<tr>
 				<td width="0%" valign="top">
-				<div class="DivCCBreadCrumbs"><a href="SearchDrug2.jsp"> <bean:message
+				<div class="DivCCBreadCrumbs"><a href="SearchDrug3.jsp"> <bean:message
 					key="SearchDrug.title" /></a></div>
 				</td>
 			</tr>
@@ -184,7 +184,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 			<tr>
 				<td>
 				<%
-                        String sBack="SearchDrug2.jsp";
+                        String sBack="SearchDrug3.jsp";
                       %> <input type=button class="ControlPushButton"
 					onclick="javascript:window.location.href='<%=sBack%>';"
 					value="Back to Search Drug" /></td>
