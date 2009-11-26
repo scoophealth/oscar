@@ -34,7 +34,7 @@
 <div class="PropSheetMenu">
 <p class="PropSheetLevel1CurrentItem<%=alle%>">
     <bean:message key="oscarRx.sideLinks.msgAllergies"/>
-    <a href="javascript:void(0);" name="cmdAllergies"   onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 200px" >+</a>
+    <a href="javascript:void(0);" name="cmdAllergies"   onclick="javascript:window.location.href='ShowAllergies2.jsp';" style="width: 200px" >+</a>
 </p>
 <p class="PropSheetMenuItemLevel1">
 <%
@@ -47,8 +47,8 @@
 <%}%>
 </p>
 <p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/>
-<a href="EditFavorites.jsp">edit</a>
-<a href="CopyFavorites.jsp">copy</a>  <%-- <bean:message key="oscarRx.sideLinks.msgCopyFavorites"/> --%>
+<a href="EditFavorites2.jsp">edit</a>
+<a href="CopyFavorites2.jsp">copy</a>  <%-- <bean:message key="oscarRx.sideLinks.msgCopyFavorites"/> --%>
 </p>
 <p class="PropSheetMenuItemLevel1">
 <%
