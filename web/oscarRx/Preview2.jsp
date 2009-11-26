@@ -5,7 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ page import="oscar.oscarProvider.data.*, oscar.log.*"%>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils, java.util.Enumeration"%>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="oscar.*,java.lang.*,java.util.Date"%>
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -65,16 +65,10 @@
                </style>
 <script type="text/javascript" language="Javascript">
 
-    function onPrint(cfgPage) {
-        //document.forms[0].submit.value="print";
-        //var ret = checkAllDates();
-        //if(ret==true) {
+    function onPrint2(method) {
      
-            document.getElementById("preview2Form").action = "../form/createcustomedpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
-
+            document.getElementById("preview2Form").action = "../form/createcustomedpdf?__title=Rx&__method=" + method;
             document.getElementById("preview2Form").target="_blank";
-
-        //}
             document.getElementById("preview2Form").submit();
        return true;
     }
@@ -138,13 +132,19 @@ function addNotes(){
 System.out.println("==========================IN Preview2.jsp=======================");
 
 Date rxDate = oscar.oscarRx.util.RxUtil.Today();
-String rePrint = request.getParameter("rePrint");
+//String rePrint = request.getParameter("rePrint");
+//String rePrint=(String)request.getAttribute("rePrint");
+String rePrint=(String)request.getSession().getAttribute("rePrint");
 System.out.println("rePrint="+rePrint);
+//Enumeration en=request.getSession().getAttributeNames();
+  //      while(en.hasMoreElements())
+    //       System.out.println("session attr :"+en.nextElement());
 oscar.oscarRx.pageUtil.RxSessionBean bean;
 oscar.oscarRx.data.RxProviderData.Provider provider;
 String signingProvider;
 if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
-    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");    
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");
+   // System.out.println("stash size "+bean);
     signingProvider = bean.getStashItem(0).getProviderNo();
     System.out.println("in if, signingProvider="+signingProvider);
     rxDate = bean.getStashItem(0).getRxDate();
@@ -210,7 +210,8 @@ System.out.println("==========================done first java part Preview2.jsp=
 			<td valign=top height="100px"><input type="image"
 				src="img/rx.gif" border="0" value="submit" alt="[Submit]"
 				name="submit" title="Print in a half letter size paper"
-				onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint('oscarRxRePrintCfgPg1');" : "javascript:return onPrint('oscarRxPrintCfgPg1');" %>">
+				onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');" %>"
+                                >
 			<!--input type="hidden" name="printPageSize" value="PageSize.A6" /-->
                         <% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
 			 	clinicTitle += provider.getClinicAddress() + "<br>" ;
@@ -378,10 +379,10 @@ System.out.println("==========================done first java part Preview2.jsp=
         
 </html:form>
 <div align="center" class="noprint">
-<button onclick="onPrint('dummieConfigFile');">Print PDF</button>
+<button onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');" %>">Print PDF</button>
 <button onclick="window.print();" >Print</button>
 <button onclick="printPaste2Parent();">Print and paste</button>
-<button onclick="parent.saveData();parent.window.close()">Save and Close</button>
+<button onclick="parent.window.close()">Back to Oscar</button>
 <br>
 <textarea id="additionalNotes" style="width: 200px" onchange="javascript:addNotes();" ></textarea>
 <input type="button" value="Add to Rx" onclick="javascript:addNotes();"/>
