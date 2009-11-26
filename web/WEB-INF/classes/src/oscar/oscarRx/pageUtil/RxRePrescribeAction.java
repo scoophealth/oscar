@@ -26,6 +26,7 @@ package oscar.oscarRx.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.util.Enumeration;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -80,27 +81,83 @@ public final class RxRePrescribeAction extends DispatchAction {
         StringBuffer auditStr = new StringBuffer();
         for (int idx = 0; idx < list.size(); ++idx) {
             p = list.get(idx);
-            p("before beanRX.getStashIndex() in reprint", "" + beanRX.getStashIndex());
-            beanRX.setStashIndex(beanRX.addStashItem(p));
-            p("after beanRX.getStashIndex() in reprint", "" + beanRX.getStashIndex());
+            p("in for loop");
+            p("prescription data: "+p.getNumPrints());
+            beanRX.setStashIndex(beanRX.addStashItem(p));            
             auditStr.append(p.getAuditString() + "\n");
         }
+        p("auditStr "+auditStr.toString());
+        //save print date/time to prescription table
+        if (p != null) {
+            p.Print();
+        }
 
+        String comment = rxData.getScriptComment(script_no);
+        p("comment :"+comment);
+
+        request.getSession().setAttribute("tmpBeanRX", beanRX);
+        request.setAttribute("rePrint", "true");
+        request.setAttribute("comment", comment);
+        
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRINT, LogConst.CON_PRESCRIPTION, script_no, ip, "" + beanRX.getDemographicNo(), auditStr.toString());
+        System.out.println("==========================END reprint of RxRePrescribeAction.java====================");
+        return mapping.findForward("reprint");
+    }
+
+    public ActionForward reprint2(ActionMapping mapping,
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException, ServletException {
+        System.out.println("==========================in reprint2 of RxRePrescribeAction.java====================");
+        oscar.oscarRx.pageUtil.RxSessionBean sessionBeanRX =
+                (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (sessionBeanRX == null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+
+        oscar.oscarRx.pageUtil.RxSessionBean beanRX =
+                new oscar.oscarRx.pageUtil.RxSessionBean();
+        beanRX.setDemographicNo(sessionBeanRX.getDemographicNo());
+        beanRX.setProviderNo(sessionBeanRX.getProviderNo());
+
+       // RxDrugListForm frm = (RxDrugListForm) form;
+        String script_no = request.getParameter("scriptNo");
+        String ip = request.getRemoteAddr();
+        RxPrescriptionData rxData = new RxPrescriptionData();
+        ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
+        RxPrescriptionData.Prescription p = null;
+        StringBuffer auditStr = new StringBuffer();
+        for (int idx = 0; idx < list.size(); ++idx) {
+            p = list.get(idx);
+            beanRX.setStashIndex(beanRX.addStashItem(p));
+            auditStr.append(p.getAuditString() + "\n");
+        }
+        p("auditStr "+auditStr.toString());
         //save print date/time
         if (p != null) {
             p.Print();
         }
 
         String comment = rxData.getScriptComment(script_no);
-
-
+        p("comment :"+comment);
+        Enumeration en=request.getSession().getAttributeNames();
+        while(en.hasMoreElements())
+            p("before session attr :"+en.nextElement());
         request.getSession().setAttribute("tmpBeanRX", beanRX);
-        request.setAttribute("rePrint", "true");
-        request.setAttribute("comment", comment);
-
+        //request.setAttribute("rePrint", "true");
+        //request.setAttribute("comment", comment);
+        request.getSession().setAttribute("rePrint", "true");
+        request.getSession().setAttribute("comment", comment);
+        en=request.getSession().getAttributeNames();
+        while(en.hasMoreElements())
+            p("after session attr :"+en.nextElement());
+        p("provid no "+beanRX.getStashItem(0).getProviderNo());
+        p("stash size "+beanRX.getStashSize());
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRINT, LogConst.CON_PRESCRIPTION, script_no, ip, "" + beanRX.getDemographicNo(), auditStr.toString());
-        System.out.println("==========================END reprint of RxRePrescribeAction.java====================");
-        return mapping.findForward("reprint");
+        System.out.println("==========================END reprint2 of RxRePrescribeAction.java====================");
+        return mapping.findForward(null);
     }
 
     public ActionForward represcribe(ActionMapping mapping,
