@@ -54,6 +54,9 @@
 %>
 
 <%
+            String usefav=request.getParameter("usefav");
+            String favid=request.getParameter("favid");
+            System.out.println("usefav="+usefav);
             RxPharmacyData pharmacyData = new RxPharmacyData();
             RxPharmacyData.Pharmacy pharmacy;
             pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
@@ -368,7 +371,15 @@ function addEvent(elm, evType, fn, useCapture)
     alert("Handler could not be removed");
   }
 }
-
+function checkFav(){
+    //oscarLog("****** in checkFav");
+    var usefav='<%=usefav%>';
+    var favid='<%=favid%>';
+    if(usefav=="true"&&favid!=null){
+        //oscarLog("****** favid "+favid);
+        useFav2(favid);
+    }else{}
+}
 
 </script>
 
@@ -469,7 +480,7 @@ body {
 
     
 
-    <body  vlink="#0000FF" onload="<%-- initmb(); --%>load()" class="yui-skin-sam">
+    <body  vlink="#0000FF" onload="checkFav();<%-- initmb(); --%>load()" class="yui-skin-sam">
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
             <%@ include file="TopLinks2.jsp" %><!-- Row One included here-->
             <tr>
@@ -495,12 +506,12 @@ body {
                                             </td>
                                             <td >
                                                 <a href="javascript:void(0);" onclick="callTreatments('searchString','treatmentsMyD')"><bean:message key="SearchDrug.msgDrugOfChoice" /></a>
-                                                <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">  
+                                                <%-- <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">  --%>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
                                                 <div class="buttonrow">
-                                                    <input id="saveButton" type="button"  onclick="updateAllDrugs();return false;" value="Prescribe" />
+                                                    <input id="saveButton" type="button"  onclick="updateAllDrugs();saveData();" value="Save & Prescribe " />
                                                     <input id="customDrug" type="button"  onclick="customWarning2();" value="Custom Drug" />
                                                 </div>                                  
                                                
@@ -561,13 +572,13 @@ body {
                                                     %>
                                                     <br>
                                                     <div style="float: left; width: 24%; padding-left: 40px;">&nbsp;</div>
-                                                    <a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
+                                                    <a style="float: left;" href="javascript:void(0);" onclick="reprint2('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
                                                     <%
                             } else {
                                                     %>
                                                     <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getRxDate()%></div>
                                                     <div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div>
-                                                    <a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
+                                                    <a style="float: left;" href="javascript:void(0);" onclick="reprint2('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
                                                     <%
                             }
                             script_no = drug.getScript_no() == null ? "" : drug.getScript_no();
@@ -739,7 +750,7 @@ body {
         <a href="javascript:void(0);" class="expireInReference">Drug the is current but will expire within the reference range</a><br/>
         <a href="javascript:void(0);" class="expiredDrug">Drug that is expired</a><br/>
         <a href="javascript:void(0);" class="longTermMed">Long Term Med Drug</a><br/>
-        <a href="javascript:void(0);" class="discontinued">Discontinued Drug</a><br/>
+        <a href="javascript:void(0);" class="discontinued">Discontinued Drug</a><br/><br/><br/><br/>
         <a href="javascript:void(0);" onclick="$('themeLegend').hide()">Close</a>
     </div>
 
@@ -816,6 +827,17 @@ body {
                         }
 %>
 <script type="text/javascript">
+    function reprint2(scriptNo){
+        var data="scriptNo="+scriptNo;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=reprint2";
+       new Ajax.Request(url,
+        {method: 'post',postBody:data,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data "+url);
+                popForm2();
+            }}); 
+        return false;
+    }
 
 
     function deletePrescribe(randomId){
@@ -841,10 +863,11 @@ body {
         var randomId=Math.round(Math.random()*1000000);
         var data="favoriteId="+favoriteId+"&randomId="+randomId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/useFavorite.do?parameterValue=useFav2";
+        //oscarLog("---"+url);
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
     }
 //not used
-    function Delete(element){
+  /*  function Delete(element){
         oscarLog(document.forms[2].action);
 
         if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
@@ -852,7 +875,7 @@ body {
             document.forms[2].drugList.value = element.id;
             document.forms[2].submit();
         }
-    }
+    }*/
 
    function Delete2(element){
         oscarLog(element.id);
@@ -1021,7 +1044,6 @@ function popForm2(){
         try{
             oscarLog("popForm2 called");
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
-
                     oscarLog( "preview2 done");
                     myLightWindow.activateWindow({
                         href: url,
@@ -1287,6 +1309,7 @@ function updateQty(element){
         {method: 'post',postBody:data,
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
+                popForm2();
             }});
 
         return false;
@@ -1314,7 +1337,7 @@ function updateQty(element){
         {method: 'post',postBody:data,
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
-                popForm2();
+                //popForm2();
             }});
         return false;
     }
