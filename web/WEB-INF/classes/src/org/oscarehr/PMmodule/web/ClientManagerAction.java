@@ -1547,7 +1547,7 @@ public class ClientManagerAction extends BaseAction {
 				try {
 					ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 
-					List<Referral> referrals = referralWs.getReferralsFor(Integer.parseInt(demographicNo));
+					List<Referral> referrals = referralWs.getLinkedReferrals(Integer.parseInt(demographicNo));
 					if (referrals != null) {
 						ArrayList<ClientReferral> processedReferrals = new ArrayList<ClientReferral>();
 
