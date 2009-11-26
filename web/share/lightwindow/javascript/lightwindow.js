@@ -536,9 +536,9 @@ lightwindow.prototype = {
 		} else {
 			Event.observe(window, 'DOMMouseScroll', this._stopScrolling.bindAsEventListener(this), false);
 		}
-
-		Event.observe(overlay, 'click', this.deactivate.bindAsEventListener(this), false);
-		overlay.onclick = function() {return false;};
+                //comment out so iframe doesn't close if user click on overlay.
+		//Event.observe(overlay, 'click', this.deactivate.bindAsEventListener(this), false);
+		//overlay.onclick = function() {return false;};
 	},
 	//
 	//  Add loading window markup
