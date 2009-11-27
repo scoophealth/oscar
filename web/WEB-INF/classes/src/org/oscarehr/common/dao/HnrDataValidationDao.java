@@ -41,7 +41,7 @@ public class HnrDataValidationDao extends AbstractDao<HnrDataValidation> {
 	 */
 	public HnrDataValidation findMostCurrentByFacilityIdClientIdType(Integer facilityId, Integer clientId, HnrDataValidation.Type type) {
 		// build sql string
-		String sqlCommand="select * from HnrDataValidation where facilityId=?1 and clientId=?2 and validationType=?3 order by created desc limit 1";
+		String sqlCommand="select * from HnrDataValidation where facilityId=?1 and clientId=?2 and validationType=?3 order by x.created desc limit 1";
 
 		// set parameters
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
