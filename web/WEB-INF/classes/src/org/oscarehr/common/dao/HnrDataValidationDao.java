@@ -41,18 +41,15 @@ public class HnrDataValidationDao extends AbstractDao<HnrDataValidation> {
 	 */
 	public HnrDataValidation findMostCurrentByFacilityIdClientIdType(Integer facilityId, Integer clientId, HnrDataValidation.Type type) {
 		// build sql string
-		StringBuilder sqlCommand = new StringBuilder();
-		sqlCommand.append("select x from HnrDataValidation x where x.facilityId=?1 and x.clientId=?2 and x.validationType=?3 order by x.created desc");
+		String sqlCommand="select * from HnrDataValidation where facilityId=?1 and clientId=?2 and validationType=?3 order by created desc limit 1";
 
 		// set parameters
-		Query query = entityManager.createQuery(sqlCommand.toString());
+		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, clientId);
 		query.setParameter(3, type);
-		query.setMaxResults(1);
 		
 		// run query
-		HnrDataValidation result = getSingleResultOrNull(query);
-		return (result);
+		return (getSingleResultOrNull(query));
 	}
 }

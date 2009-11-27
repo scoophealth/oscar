@@ -37,10 +37,12 @@ public class IntegratorConsentDao extends AbstractDao<IntegratorConsent> {
      * results are ordered by newest first
      */
     public IntegratorConsent findLatestByFacilityDemographic(int facilityId, int demographicId) {
-    	Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 order by x.createdDate desc");
+
+    	String sqlCommand="select * from IntegratorConsent where facilityId=?1 and demographicId=?2 order by createdDate desc limit 1";
+    	
+    	Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, demographicId);
-		query.setMaxResults(1);
 
 		return(getSingleResultOrNull(query));
     }
