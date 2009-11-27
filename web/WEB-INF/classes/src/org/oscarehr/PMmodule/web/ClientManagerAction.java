@@ -136,10 +136,9 @@ public class ClientManagerAction extends BaseAction {
 	private RoomManager roomManager;
 	private IntegratorConsentDao integratorConsentDao;
 	private CdsClientFormDao cdsClientFormDao;
-	private static AdmissionDao admissionDao=(AdmissionDao)SpringUtils.getBean("admissionDao");
-	private static ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
+	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
-	
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
 		this.integratorConsentDao = integratorConsentDao;
 	}
@@ -149,8 +148,8 @@ public class ClientManagerAction extends BaseAction {
 	}
 
 	public void setCdsClientFormDao(CdsClientFormDao cdsClientFormDao) {
-    	this.cdsClientFormDao = cdsClientFormDao;
-    }
+		this.cdsClientFormDao = cdsClientFormDao;
+	}
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
@@ -320,9 +319,9 @@ public class ClientManagerAction extends BaseAction {
 
 	public ActionForward getGeneralFormsReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("generalIntakeNodes", genericIntakeManager.getIntakeNodesByType(3));
-	
+
 		return mapping.findForward("generalFormsReport");
-}
+	}
 
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
@@ -383,7 +382,7 @@ public class ClientManagerAction extends BaseAction {
 		ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
 		int clientId = Integer.parseInt(request.getParameter("id"));
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		Program p = (Program) clientForm.get("program");
 		int programId = p.getId();
@@ -670,7 +669,7 @@ public class ClientManagerAction extends BaseAction {
 		bedDemographic.setReservationStart(today);
 		bedDemographic.setRoomId(Integer.valueOf(roomId));
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		Integer bedId = bedDemographic.getBedId();
 		Integer demographicNo = bedDemographic.getId().getDemographicNo();
@@ -1101,7 +1100,7 @@ public class ClientManagerAction extends BaseAction {
 				}
 			}
 
-			if (criteria.isTransgender() && cachedProgram.getGender()!=Gender.T) {
+			if (criteria.isTransgender() && cachedProgram.getGender() != Gender.T) {
 				it.remove();
 				continue;
 			}
@@ -1169,8 +1168,8 @@ public class ClientManagerAction extends BaseAction {
 			boolean doRefer = true;
 			ProgramProvider program = (ProgramProvider) programDomain.get(0);
 			// refer/admin client to service program associated with this user
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-			
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
 			ClientReferral referral = new ClientReferral();
 			referral.setFacilityId(loggedInInfo.currentFacility.getId());
 			referral.setClientId(new Long(demographicNo));
@@ -1297,7 +1296,7 @@ public class ClientManagerAction extends BaseAction {
 
 	private void setEditAttributes(ActionForm form, HttpServletRequest request, String demographicNo) {
 		DynaActionForm clientForm = (DynaActionForm) form;
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		Integer facilityId = loggedInInfo.currentFacility.getId();
 		ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
 
@@ -1366,33 +1365,32 @@ public class ClientManagerAction extends BaseAction {
 			HealthSafety healthsafety = healthSafetyManager.getHealthSafetyByDemographic(Long.valueOf(demographicNo));
 			request.setAttribute("healthsafety", healthsafety);
 
-			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
+			request.setAttribute("referrals", getReferralsForSummary(Integer.parseInt(demographicNo), facilityId));
 		}
 
 		/* history */
 		if (tabBean.getTab().equals("History")) {
-			ArrayList<AdmissionForHistoryTabDisplay> allResults=new ArrayList<AdmissionForHistoryTabDisplay>();
+			ArrayList<AdmissionForHistoryTabDisplay> allResults = new ArrayList<AdmissionForHistoryTabDisplay>();
 
-			List<Admission> addLocalAdmissions=admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId);
-			for (Admission admission : addLocalAdmissions) allResults.add(new AdmissionForHistoryTabDisplay(admission));
-			
+			List<Admission> addLocalAdmissions = admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId);
+			for (Admission admission : addLocalAdmissions)
+				allResults.add(new AdmissionForHistoryTabDisplay(admission));
+
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-				
-				try
-				{
-					DemographicWs demographicWs=CaisiIntegratorManager.getDemographicWs();
-					List<CachedAdmission> cachedAdmissions=demographicWs.getLinkedCachedAdmissionsByDemographicId(Integer.parseInt(demographicNo));
-					
-					for (CachedAdmission cachedAdmission : cachedAdmissions) allResults.add(new AdmissionForHistoryTabDisplay(cachedAdmission));
-					
+
+				try {
+					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+					List<CachedAdmission> cachedAdmissions = demographicWs.getLinkedCachedAdmissionsByDemographicId(Integer.parseInt(demographicNo));
+
+					for (CachedAdmission cachedAdmission : cachedAdmissions)
+						allResults.add(new AdmissionForHistoryTabDisplay(cachedAdmission));
+
 					Collections.sort(allResults, AdmissionForHistoryTabDisplay.ADMISSION_DATE_COMPARATOR);
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
 					logger.error("Error retrieveing integrated admissions.", e);
 				}
 			}
-			
+
 			request.setAttribute("admissionHistory", allResults);
 			request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, facilityId));
 		}
@@ -1505,37 +1503,37 @@ public class ClientManagerAction extends BaseAction {
 		if (tabBean.getTab().equals("Forms")) {
 			request.setAttribute("regIntakes", genericIntakeManager.getRegIntakes(Integer.valueOf(demographicNo), facilityId));
 			request.setAttribute("quickIntakes", genericIntakeManager.getQuickIntakes(Integer.valueOf(demographicNo), facilityId));
-			//request.setAttribute("indepthIntakes", genericIntakeManager.getIndepthIntakes(Integer.valueOf(demographicNo), facilityId));
-			request.setAttribute("indepthIntakes", genericIntakeManager.getIntakesByType(Integer.valueOf(demographicNo), facilityId,2));
-			request.setAttribute("generalIntakes", genericIntakeManager.getIntakesByType(Integer.valueOf(demographicNo), facilityId,3));			
+			// request.setAttribute("indepthIntakes", genericIntakeManager.getIndepthIntakes(Integer.valueOf(demographicNo), facilityId));
+			request.setAttribute("indepthIntakes", genericIntakeManager.getIntakesByType(Integer.valueOf(demographicNo), facilityId, 2));
+			request.setAttribute("generalIntakes", genericIntakeManager.getIntakesByType(Integer.valueOf(demographicNo), facilityId, 3));
 			request.setAttribute("programIntakes", genericIntakeManager.getProgramIntakes(Integer.valueOf(demographicNo), facilityId));
 			request.setAttribute("programsWithIntake", genericIntakeManager.getProgramsWithIntake(Integer.valueOf(demographicNo)));
 
 			request.setAttribute("indepthIntakeNodes", genericIntakeManager.getIntakeNodesByType(2));
 			request.setAttribute("generalIntakeNodes", genericIntakeManager.getIntakeNodesByType(3));
-			
+
 			/* survey module */
 			request.setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility());
 			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(demographicNo));
-			
+
 			/* consent forms */
-			int clientId=Integer.parseInt(demographicNo);
+			int clientId = Integer.parseInt(demographicNo);
 			List<IntegratorConsent> consentTemp = integratorConsentDao.findByFacilityAndDemographic(facilityId, clientId);
-			TreeMap<Date, HashMap<String, Object>> consents = new TreeMap<Date,HashMap<String, Object>>(Collections.reverseOrder());
+			TreeMap<Date, HashMap<String, Object>> consents = new TreeMap<Date, HashMap<String, Object>>(Collections.reverseOrder());
 			for (IntegratorConsent x : consentTemp) {
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put("createdDate", DateFormatUtils.ISO_DATETIME_FORMAT.format(x.getCreatedDate()).replace('T', ' '));
 				Provider provider = providerDao.getProvider(x.getProviderNo());
 				map.put("provider", provider.getFormattedName());
 				map.put("consentId", x.getId());
-				
+
 				consents.put(x.getCreatedDate(), map);
 			}
 
 			request.setAttribute("consents", consents.values());
-			
+
 			// CDS forms
-			List<CdsClientForm> cdsForms=cdsClientFormDao.findByFacilityClient(facilityId, clientId);
+			List<CdsClientForm> cdsForms = cdsClientFormDao.findByFacilityClient(facilityId, clientId);
 			request.setAttribute("cdsForms", cdsForms);
 		}
 
@@ -1661,35 +1659,57 @@ public class ClientManagerAction extends BaseAction {
 		}
 	}
 
-	public static String getEscapedAdmissionSelectionDisplay(int admissionId)
-	{
-		Admission admission=admissionDao.getAdmission((long)admissionId);
-		
-		StringBuilder sb=new StringBuilder();
-		
+	private List<ReferralSummaryDisplay> getReferralsForSummary(int demographicNo, Integer facilityId) {
+		ArrayList<ReferralSummaryDisplay> allResults = new ArrayList<ReferralSummaryDisplay>();
+
+		List<ClientReferral> tempResults = clientManager.getActiveReferrals(String.valueOf(demographicNo), String.valueOf(facilityId));
+		for (ClientReferral clientReferral : tempResults) allResults.add(new ReferralSummaryDisplay(clientReferral));
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			try {
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
+
+				List<Referral> tempRemoteReferrals = referralWs.getLinkedReferrals(demographicNo);
+				for (Referral referral : tempRemoteReferrals) allResults.add(new ReferralSummaryDisplay(referral));
+				
+				Collections.sort(allResults, ReferralSummaryDisplay.REFERRAL_DATE_COMPARATOR);
+			}
+			catch (Exception e)
+			{
+				logger.error("Unexpected error.", e);
+			}
+		}
+				
+		return (allResults);
+	}
+
+	public static String getEscapedAdmissionSelectionDisplay(int admissionId) {
+		Admission admission = admissionDao.getAdmission((long) admissionId);
+
+		StringBuilder sb = new StringBuilder();
+
 		sb.append(admission.getProgramName());
 		sb.append(" ( ");
 		sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate()));
 		sb.append(" - ");
-		if (admission.getDischargeDate()==null) sb.append("current");
+		if (admission.getDischargeDate() == null) sb.append("current");
 		else sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getDischargeDate()));
 		sb.append(" )");
-		
-		return(StringEscapeUtils.escapeHtml(sb.toString()));
+
+		return (StringEscapeUtils.escapeHtml(sb.toString()));
 	}
 
-	public static String getEscapedProviderDisplay(String providerNo)
-	{
-		Provider provider=providerDao.getProvider(providerNo);
-		
-		return(StringEscapeUtils.escapeHtml(provider.getFormattedName()));
+	public static String getEscapedProviderDisplay(String providerNo) {
+		Provider provider = providerDao.getProvider(providerNo);
+
+		return (StringEscapeUtils.escapeHtml(provider.getFormattedName()));
 	}
 
-	public static String getEscapedDateDisplay(Date d)
-	{
-		String display=DateFormatUtils.ISO_DATE_FORMAT.format(d);
-		
-		return(StringEscapeUtils.escapeHtml(display));
+	public static String getEscapedDateDisplay(Date d) {
+		String display = DateFormatUtils.ISO_DATE_FORMAT.format(d);
+
+		return (StringEscapeUtils.escapeHtml(display));
 	}
 
 	@Required
