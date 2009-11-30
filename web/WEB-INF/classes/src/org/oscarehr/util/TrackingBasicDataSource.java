@@ -97,7 +97,11 @@ public class TrackingBasicDataSource extends BasicDataSource {
 			}
 			finally
 			{
-				super.close();
+				try {
+	                super.close();
+                } catch (Exception e) {
+                	logger.debug("Already closed.", e);
+                }
 			}
 	    }		
 	}
