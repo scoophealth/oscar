@@ -691,7 +691,7 @@ public static String getLastDocumentDesc() {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("docDesc="+docDesc);
+       // System.out.println("docDesc="+docDesc);
         return docDesc;
     }
 
@@ -779,14 +779,14 @@ public static String getLastDocumentDesc() {
        //get noteId from tableId
     public static Long getNoteIdFromDocId(Long docId){
         String getNoteIdSql = "select note_id from casemgmt_note_link where table_name=5 and table_id=" + docId;
-        System.out.println("getTableIdSql="+getNoteIdSql);
+     //   System.out.println("getTableIdSql="+getNoteIdSql);
         Long returnVal=0L;
         try {
             ResultSet rs = getSQL(getNoteIdSql);
             if (!rs.first()) {
                 return returnVal;
             } else {
-                System.out.println("rs.getstring="+rs.getString("note_id"));
+            //    System.out.println("rs.getstring="+rs.getString("note_id"));
                 returnVal = Long.parseLong(rs.getString("note_id"));
                 }
             }
@@ -799,16 +799,16 @@ public static String getLastDocumentDesc() {
 
     //get tableId from noteId
     public static Long getTableIdFromNoteId(Long noteId){
-        System.out.println("noteIdVal="+noteId);
+      //  System.out.println("noteIdVal="+noteId);
         String getTableIdSql = "select table_id from casemgmt_note_link where table_name=5 and note_id=" + noteId;
-        System.out.println("getTableIdSql="+getTableIdSql);
+      //  System.out.println("getTableIdSql="+getTableIdSql);
         Long returnVal=0L;
         try {
             ResultSet rs = getSQL(getTableIdSql);
             if (!rs.first()) {
                 return returnVal;
             } else {
-                System.out.println("rs.getstring="+rs.getString("table_id"));
+            //    System.out.println("rs.getstring="+rs.getString("table_id"));
                 returnVal = Long.parseLong(rs.getString("table_id"));
                 }
             }
@@ -822,7 +822,7 @@ public static String getLastDocumentDesc() {
     //get document from its note
     public static EDoc getDocFromNote(Long noteId) {
         String getDocIdSql = "select table_id from casemgmt_note_link where table_name=5 and note_id=" + noteId;
-        System.out.println("getDocIdSql="+getDocIdSql);
+     //   System.out.println("getDocIdSql="+getDocIdSql);
         EDoc doc = new EDoc();
         int counter=0;
         try {
@@ -830,7 +830,7 @@ public static String getLastDocumentDesc() {
             if (!rs.first()) {
                 return doc;
             } else {
-                System.out.println("rs.getstring="+rs.getString("table_id"));
+          //      System.out.println("rs.getstring="+rs.getString("table_id"));
                 Integer docId = Integer.parseInt(rs.getString("table_id"));
                 String getDocSql = "select document_no, docfilename, status from document where document_no=" + docId;
                 ResultSet rs2 = getSQL(getDocSql);
@@ -838,7 +838,7 @@ public static String getLastDocumentDesc() {
                     return doc;
                 } else {
                     counter++;
-                    System.out.println("counter="+counter);
+                //    System.out.println("counter="+counter);
                     doc.setDocId(rs2.getString("document_no"));
                     doc.setFileName(rs2.getString("docfilename"));
                     doc.setStatus(rs2.getString("status").charAt(0));
@@ -852,14 +852,14 @@ public static String getLastDocumentDesc() {
 
     public static String typeAnnotation(Long noteId){
         String getDocIdSql = "select annotation from casemgmt_note where note_id=" + noteId;
-        System.out.println("getDocIdSql="+getDocIdSql);
+      //  System.out.println("getDocIdSql="+getDocIdSql);
         String retStr="";
         try {
             ResultSet rs = getSQL(getDocIdSql);
             if (!rs.first()) {
                 return retStr;//if the noteId is not in casemgmt_note tale.
             } else{
-                System.out.println("rs.getstring="+rs.getString("annotation"));
+             //   System.out.println("rs.getstring="+rs.getString("annotation"));
                 retStr=rs.getString("annotation");
             }
         } catch (SQLException sqe) {

@@ -278,7 +278,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             if (note.getHistory() == null || note.getHistory().equals("")) {
                 // old note - we need to save the original in here
                 note.setHistory(note.getNote());
-                System.out.println("here savenotesimple1");
+                //System.out.println("here savenotesimple1");
                 caseManagementMgr.saveNoteSimple(note);
             }
 
@@ -814,15 +814,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (noteTxt == null || noteTxt.equals("")) return -1;
 
         String demo = getDemographicNo(request);
-        System.out.println("***demo="+demo);
+        //System.out.println("***demo="+demo);
         String sessionFrmName = "caseManagementEntryForm" + demo;
         CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);
 
         CaseManagementNote note = sessionFrm.getCaseNote();                
         note.setNote(noteTxt);
-        System.out.println("***noteId="+note.getId());
-         System.out.println("***noteTxt="+noteTxt);
-         System.out.println("***noteUuid="+note.getUuid());
+        //System.out.println("***noteId="+note.getId());
+         //System.out.println("***noteTxt="+noteTxt);
+         //System.out.println("***noteUuid="+note.getUuid());
         String providerNo = getProviderNo(request);
         Provider provider = getProvider(request);
         String userName = provider != null ? provider.getFullName() : "";
@@ -933,7 +933,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         // noteString = removeSignature(noteString);
         noteString = removeCurrentIssue(noteString);
         note.setNote(noteString);
-System.out.println("noteString="+noteString);
+//System.out.println("noteString="+noteString);
         /* add issues into notes */
         String includeIssue = (String) request.getParameter("includeIssue");
         if (includeIssue == null || !includeIssue.equals("on")) {
@@ -1085,7 +1085,7 @@ System.out.println("noteString="+noteString);
             logAction = LogConst.UPDATE;            
         }
         LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, ""+Long.valueOf(note.getId()).intValue(), request.getRemoteAddr(), demo, note.getAuditString());
-        System.out.println("id returned="+note.getId());
+        //System.out.println("id returned="+note.getId());
         return note.getId();
     }
 
@@ -1177,7 +1177,7 @@ System.out.println("noteString="+noteString);
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("=========IN save=========");
+        //System.out.println("=========IN save=========");
         HttpSession session = request.getSession();
         if (session == null || session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
@@ -1222,7 +1222,7 @@ System.out.println("noteString="+noteString);
             forward.setPath(path.toString());
             return forward;
         }
-        System.out.println("=========END in save=========");
+        //System.out.println("=========END in save=========");
         // this.caseManagementMgr.saveNote();
         return mapping.findForward("view");
     }
@@ -1365,13 +1365,13 @@ System.out.println("noteString="+noteString);
         if (note.getCreate_date() == null) note.setCreate_date(now);
        
         note.setEncounter_type(request.getParameter("encType"));
-        System.out.println("here savenotesimple2");
+        //System.out.println("here savenotesimple2");
         //check if previous note is doc note.
-        System.out.println("note id="+note.getId());
+        //System.out.println("note id="+note.getId());
         Long prevNoteId=note.getId();
         boolean docAnno=false;
         if (note.isDocumentNote()){//check if note is a document annotation
-            System.out.println(""+note.getId()+" is a document annotation"); //previous note is a document annotation.
+            //System.out.println(""+note.getId()+" is a document annotation"); //previous note is a document annotation.
             docAnno=true;
         }
 
@@ -1379,7 +1379,7 @@ System.out.println("noteString="+noteString);
         this.caseManagementMgr.getEditors(note);
 
         //save a casemanagement note link if previous note is document note.
-        System.out.println("note id="+note.getId());
+        //System.out.println("note id="+note.getId());
         if(docAnno){
                 //get table name=5 and doc id from preNote.
                 Long docId= EDocUtil.getTableIdFromNoteId(prevNoteId);
@@ -1438,7 +1438,7 @@ System.out.println("noteString="+noteString);
     }
 
     public ActionForward saveAndExit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("==========In saveAndExit==========");
+        //System.out.println("==========In saveAndExit==========");
         log.debug("saveandexit");
         String providerNo = getProviderNo(request);
         String demoNo = getDemographicNo(request);
@@ -1447,7 +1447,7 @@ System.out.println("noteString="+noteString);
         request.setAttribute("change_flag", "false");
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-        System.out.println("cform.getNoteId()"+cform.getNoteId());
+        //System.out.println("cform.getNoteId()"+cform.getNoteId());
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("note.saved"));
         saveMessages(request, messages);
@@ -1456,10 +1456,10 @@ System.out.println("noteString="+noteString);
         CaseManagementNote preNote=new CaseManagementNote();
         Long nId=Long.parseLong(cform.getNoteId());
         preNote.setId(nId);
-        System.out.println("nId value="+nId);
+        //System.out.println("nId value="+nId);
 
         if (preNote.isDocumentNote()){//check if note is a document annotation
-            System.out.println(""+nId+" is a document annotation"); //previous note is a document annotation.
+            //System.out.println(""+nId+" is a document annotation"); //previous note is a document annotation.
             docAnno=true;
         }
 
@@ -1468,7 +1468,7 @@ System.out.println("noteString="+noteString);
             return mapping.findForward("windowClose");
         }
 
-        System.out.println("noteId="+noteId);//new noteId
+        //System.out.println("noteId="+noteId);//new noteId
         if(docAnno){
                 //get table name=5 and doc id from preNote.
                 Long docId= EDocUtil.getTableIdFromNoteId(preNote.getId());
@@ -1561,7 +1561,7 @@ System.out.println("noteString="+noteString);
         	return fwd;
         }
 
-         System.out.println("==========END In saveAndExit==========");
+         //System.out.println("==========END In saveAndExit==========");
         return mapping.findForward("windowClose");
     }
 

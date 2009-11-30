@@ -101,7 +101,7 @@ public class RxSessionBean {
                 break;
             };
         }
-        System.out.println("in getIndexFromRx="+ret);
+    //    System.out.println("in getIndexFromRx="+ret);
         return ret;
     }
     public RxPrescriptionData.Prescription[] getStash() {
@@ -133,7 +133,7 @@ public class RxSessionBean {
     }
     
     public int addStashItem(RxPrescriptionData.Prescription item) {
-       System.out.println("=====in addStashItem(a,b)========");
+   //    System.out.println("=====in addStashItem(a,b)========");
         int ret = -1;
         
         int i;
@@ -165,16 +165,16 @@ public class RxSessionBean {
         }
         
         if(ret>-1) {
-            System.out.println("if="+ret);
-            System.out.println("=====end IF  addStashItem(a,b)========");
+        //    System.out.println("if="+ret);
+       //     System.out.println("=====end IF  addStashItem(a,b)========");
             return ret;
         }
         else {
             stash.add(item);
             preloadInteractions();
             preloadAllergyWarnings(item.getAtcCode());
-            System.out.println("else, this.getStashSize()-1="+(this.getStashSize()-1));
-            System.out.println("=====end Else addStashItem(a,b)========");
+         //   System.out.println("else, this.getStashSize()-1="+(this.getStashSize()-1));
+         //   System.out.println("=====end Else addStashItem(a,b)========");
             return this.getStashSize()-1;
         }
 
@@ -243,19 +243,19 @@ public class RxSessionBean {
       
       if (OscarProperties.getInstance().getBooleanProperty("RX_ALLERGY_CHECKING","yes") && atccode != null && !atccode.equals("") && !atccode.equals("null")){
           if (allergyWarnings.containsKey(atccode) ){
-             System.out.println("Allergy has Already been searched!");
+       //      System.out.println("Allergy has Already been searched!");
              allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
           }else if(workingAllergyWarnings.contains(atccode) ){
-             System.out.println("Allergy has Already been searched but not finished !");
+       //      System.out.println("Allergy has Already been searched but not finished !");
              RxAllergyWarningWorker worker = (RxAllergyWarningWorker) workingAllergyWarnings.get(atccode);
              if (worker != null){
                  try {
                     worker.join();
-                    System.out.println("Allergy has Already been searched now finished!");
+           //         System.out.println("Allergy has Already been searched now finished!");
                     // Finished
                  } catch (InterruptedException e) {
                     // Thread was interrupted
-                    System.out.println("Already been searched PROBLEM!");
+              //      System.out.println("Already been searched PROBLEM!");
                     e.printStackTrace();
                  }
 

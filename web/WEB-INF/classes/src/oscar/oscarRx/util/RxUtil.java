@@ -205,7 +205,7 @@ public class RxUtil {
         Pattern prnP = Pattern.compile("\\s(?i)prn");
         Matcher prnM = prnP.matcher(instructions);
         if (prnM.find()) {
-            p("prn is true");
+//            p("prn is true");
             prn = true;
         }
 
@@ -267,7 +267,7 @@ public class RxUtil {
 
                 Pattern p4 = Pattern.compile("\\s*\\d*\\.*\\d+-\\s*\\d*\\.*\\d+\\s+" + frequency); //use * after the first \s because "1 OD", 1 doesn't have a space in front.
                 Matcher m4 = p4.matcher(instructions);
-                p("here11", instructions);
+           //     p("here11", instructions);
                 //since "\\s+[0-9]+-[0-9]+\\s+" is a case in "\\s+[0-9]+\\s+", check the latter regex first.
                 if (m4.find()) {
                     String str2 = instructions.substring(m4.start(), m4.end());
@@ -275,7 +275,7 @@ public class RxUtil {
                     Matcher m5 = p5.matcher(str2);
                     if (m5.find()) {
                         String str3 = str2.substring(m5.start(), m5.end());
-                        p("here str3", str3);
+                 //       p("here str3", str3);
                         takeMinFrequency = str3.split("-")[0];
                         takeMaxFrequency = str3.split("-")[1];
                     }
@@ -283,7 +283,7 @@ public class RxUtil {
                     String str = instructions.substring(m2.start(), m2.end());
                     Pattern p3 = Pattern.compile("\\d*\\.*\\d+");
                     Matcher m3 = p3.matcher(str);
-                    p("here22", str);
+               //     p("here22", str);
                     if (m3.find()) {
                         amountFrequency = str.substring(m3.start(), m3.end());
                     }
@@ -309,36 +309,36 @@ public class RxUtil {
                 Matcher m4 = p4.matcher(instructions);
                 //since "\\s+[0-9]+-[0-9]+\\s+" is a case in "\\s+[0-9]+\\s+", check the latter regex first.
                 if (m4.find()) {
-                    p("else if 1");
+               //     p("else if 1");
                     String str2 = instructions.substring(m4.start(), m4.end());
                     Pattern p5 = Pattern.compile("\\d*\\.*\\d+-\\s*\\d*\\.*\\d+");
                     Matcher m5 = p5.matcher(str2);
                     if (m5.find()) {
                         String str3 = str2.substring(m5.start(), m5.end());
-                        p("str3", str3);
+             //           p("str3", str3);
                         takeMinMethod = str3.split("-")[0];
                         takeMaxMethod = str3.split("-")[1];
                     }
                 } else if (m2.find()) {
-                    p("if 1");
+                //    p("if 1");
                     String str = instructions.substring(m2.start(), m2.end());
-                    p("str1 ", str);
+                //    p("str1 ", str);
                     Pattern p3 = Pattern.compile("\\d*\\.*\\d+");
                     Matcher m3 = p3.matcher(str);
                     if (m3.find()) {
-                        p("found1");
+                 //       p("found1");
                         amountMethod = str.substring(m3.start(), m3.end());
-                        p("amountMethod", amountMethod);
+                  //      p("amountMethod", amountMethod);
                     }
                 } else;
 
                 break;
             }
         }
-        p(takeMinMethod);
+    /*    p(takeMinMethod);
         p(takeMaxMethod);
         p(takeMinFrequency);
-        p(takeMaxFrequency);
+        p(takeMaxFrequency);*/
         if (!takeMinMethod.equals("") && takeMinFrequency.equals("")) {
 
             takeMin = takeMinMethod;
@@ -374,18 +374,18 @@ public class RxUtil {
             Pattern p = Pattern.compile(s);
             Matcher m = p.matcher(instructions);
             if (m.find()) {
-                p(instructions);
-                p(s);
+            //    p(instructions);
+            //    p(s);
                 durationUnitSpec = (instructions.substring(m.start(), m.end())).trim();
-                p("durationUnitSpec", durationUnitSpec);
+            //    p("durationUnitSpec", durationUnitSpec);
                 //get the number before durationUnit
                 Pattern p1 = Pattern.compile("[0-9]+" + s);
                 Matcher m1 = p1.matcher(instructions);
                 if (m1.find()) {
-                    p("" + m1.start(), "" + m.start());
+           //         p("" + m1.start(), "" + m.start());
                     durationSpec = instructions.substring(m1.start(), m.start());
                     duration = durationSpec.trim();
-                    p("duration here1", duration);
+            //        p("duration here1", duration);
                 }
                 break;
             }
@@ -394,31 +394,31 @@ public class RxUtil {
             "\\s[0-9]+(?i)d\\s*", "\\s[0-9]+(?i)w\\s*", "\\s[0-9]+(?i)m\\s*"};
         //match the pattern when there is no space between number and durationUnit.
         if (durationUnitSpec.equals("")) {
-            System.out.println("no space between duration and duration unit.");
+        //    System.out.println("no space between duration and duration unit.");
             for (String s : durUnits2) {
                 Pattern p = Pattern.compile(s);
                 Matcher m = p.matcher(instructions);
                 if (m.find()) {
                     String str1 = instructions.substring(m.start(), m.end() - 1);
-                    System.out.println("str1=" + str1);
+             //       System.out.println("str1=" + str1);
                     //get numUnit out
                     Pattern p1 = Pattern.compile("[0-9]+");
                     Matcher m1 = p1.matcher(str1);
                     if (m1.find()) {
                         duration = str1.substring(m1.start(), m1.end());
                         durationUnitSpec = (str1.substring(m1.end())).trim();
-                        System.out.println("duration=" + duration);
-                        System.out.println("durationUnitSpec=" + durationUnitSpec);
+                //        System.out.println("duration=" + duration);
+               //         System.out.println("durationUnitSpec=" + durationUnitSpec);
                         break;
                     }
                 }
             }
         }
 
-        System.out.println("durationUnitSpec2=" + durationUnitSpec);
+     //   System.out.println("durationUnitSpec2=" + durationUnitSpec);
         //if durationUnit is not specified, deduce it
         if (durationUnitSpec.equals("")) {
-            p("here?? if");
+        //    p("here?? if");
             String[] freq1 = {"\\s*(?i)OD\\s*", "\\s*(?i)BID\\s*", "\\s*(?i)TID\\s*", "\\s*(?i)QID\\s*", "\\s*(?i)Q1H\\s*", "\\s*(?i)Q2H\\s*", "\\s*(?i)Q1-2H\\s*", "\\s*(?i)Q3-4H\\s*", "\\s*(?i)Q4H\\s*", "\\s*(?i)Q4-6H\\s*",
                 "\\s*(?i)Q6H\\s*", "\\s*(?i)Q8H\\s*", "\\s*(?i)Q12H\\s*", "\\s*(?i)QAM\\s*", "\\s*(?i)QPM\\s*", "\\s*(?i)QHS\\s*"};//QPM is once a day in the evening, qhs once a day at night.
             String[] freq2 = {"\\s*(?i)Q1Week\\s*", "\\s*(?i)Q2Week\\s*"};
@@ -474,7 +474,7 @@ public class RxUtil {
 
         //make sure min is smaller than max
         if (takeMax.compareTo(takeMin) < 0) {
-            p("max<min");
+      //      p("max<min");
             String swap = takeMin;
             takeMin = takeMax;
             takeMax = swap;
@@ -566,7 +566,7 @@ public class RxUtil {
         hm.put("durationUnit", rx.getDurationUnit());
         hm.put("prn", rx.getPrn());
         hm.put("quantity", rx.getQuantity());
-        p(instructions);
+    //    p(instructions);
         System.out.println(hm);
         return hm;
     }
@@ -631,11 +631,11 @@ public class RxUtil {
 
     }
     public static void printStashContent(oscar.oscarRx.pageUtil.RxSessionBean bean) {
-        p("***drugs in present stash,stash size", "" + bean.getStashSize());
+     //   p("***drugs in present stash,stash size", "" + bean.getStashSize());
         for (int j = 0; j < bean.getStashSize(); j++) {
             try {
                 RxPrescriptionData.Prescription rxTemp = bean.getStashItem(j);
-                p("stash index", "" + j);
+       /*         p("stash index", "" + j);
                 p("randomId", "" + rxTemp.getRandomId());
                 p("generic name", rxTemp.getGenericName());
                 p("special", rxTemp.getSpecial());
@@ -643,12 +643,12 @@ public class RxUtil {
                 p("repeat=" + rxTemp.getRepeat());
                 p("atccode", rxTemp.getAtcCode());
                 p("regional identifier", rxTemp.getRegionalIdentifier());
-                p("---");
+                p("---");*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        p("***done***");
+   //     p("***done***");
 
     }
     private static final Logger logger = MiscUtils.getLogger();
@@ -722,12 +722,12 @@ public class RxUtil {
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
     }
-
+/*
     public static void p(String str, String s) {
         System.out.println(str + "=" + s);
     }
 
     public static void p(String str) {
         System.out.println(str);
-    }
+    }*/
 }

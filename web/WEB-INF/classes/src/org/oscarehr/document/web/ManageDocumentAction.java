@@ -79,14 +79,14 @@ public class ManageDocumentAction extends DispatchAction {
     }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("AddEditDocumentAction - unspecified");
+        //System.out.println("AddEditDocumentAction - unspecified");
         return null;//execute2(mapping, form, request, response);
     }
 
     //public ActionForward multifast(
     //public ActionForward documentUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     public ActionForward documentUpdate(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) {
-        System.out.println("In here DocumentUpdate");
+        //System.out.println("In here DocumentUpdate");
         String ret = "";
 
 
@@ -119,12 +119,12 @@ public class ManageDocumentAction extends DispatchAction {
 
         Document d = documentDAO.getDocument(documentId);
 
-        System.out.println("aaa " + d);
+        //System.out.println("aaa " + d);
 
         d.setDocdesc(documentDescription);
         d.setDoctype(docType);
         Date obDate = UtilDateUtilities.StringToDate(observationDate);
-        System.out.println("Date util " + obDate);
+        //System.out.println("Date util " + obDate);
         if (obDate != null) {
             d.setObservationdate(obDate);
         }
@@ -133,23 +133,23 @@ public class ManageDocumentAction extends DispatchAction {
         
 
 
-        System.out.println("bbb " + d);
+        //System.out.println("bbb " + d);
         documentDAO.save(d);
-        System.out.println("Document " + d.getDocfilename() + " desc " + d.getDocdesc());
+        //System.out.println("Document " + d.getDocfilename() + " desc " + d.getDocdesc());
 
         try {
-            System.out.println("parse Int " + Integer.parseInt(demog));
+            //System.out.println("parse Int " + Integer.parseInt(demog));
 
 
             CtlDocument ctlDocument = documentDAO.getCtrlDocument(Integer.parseInt(documentId));
-            System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
+            //System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
             ctlDocument.setModuleId(Integer.parseInt(demog));
 
-            System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
+            //System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
 
-            System.out.println("1" + ctlDocument.toString());
+            //System.out.println("1" + ctlDocument.toString());
             documentDAO.saveCtlDocument(ctlDocument);
-            System.out.println("2" + ctlDocument.toString());
+            //System.out.println("2" + ctlDocument.toString());
         //ret = "{\"success\": \"yes\", \"docId\" : \""+documentId+"\"}";
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,7 +161,7 @@ public class ManageDocumentAction extends DispatchAction {
 
         if (flagproviders != null) {
             for (String str : flagproviders) {
-                System.out.println("str " + str);
+                //System.out.println("str " + str);
             }
         }
         if (ret != null && !ret.equals("")) {
@@ -250,7 +250,7 @@ public class ManageDocumentAction extends DispatchAction {
         if (outfile == null){
             System.out.println("No Cache Version");
            outfile = createCacheVersion( d);
-           System.out.println("outfile after create cache version "+outfile);
+           //System.out.println("outfile after create cache version "+outfile);
         }else{
             System.out.println("THERE WAS A CACHE Version "+outfile);
         }
@@ -368,7 +368,7 @@ public class ManageDocumentAction extends DispatchAction {
         if (contentType == null){
             contentType = "application/pdf";
         }
-        System.out.println("Content type was set tooo "+contentType);
+        //System.out.println("Content type was set tooo "+contentType);
         File file = new File(documentDir,d.getDocfilename());
         response.setContentType(contentType);
         response.setContentLength((int)file.length());

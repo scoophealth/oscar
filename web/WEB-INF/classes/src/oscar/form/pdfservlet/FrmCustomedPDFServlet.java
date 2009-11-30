@@ -79,7 +79,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
             java.io.IOException {
-        System.out.println("in doGet FrmCustomedPDFServlet.java");
+       // System.out.println("in doGet FrmCustomedPDFServlet.java");
         doPost(req, res);
     }
 
@@ -89,7 +89,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
             java.io.IOException {
-        System.out.println("***in doPost FrmCustomedPDFServlet.java");
+        //System.out.println("***in doPost FrmCustomedPDFServlet.java");
         DocumentException ex = null;
 
         ByteArrayOutputStream baosPDF = null;
@@ -119,7 +119,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             // selection
             //sbContentDispValue.append("; filename=");
             sbContentDispValue.append(sbFilename);
-            System.out.println("sbContentDispValue.toString()=" + sbContentDispValue.toString());
+            //System.out.println("sbContentDispValue.toString()=" + sbContentDispValue.toString());
             res.setHeader("Content-disposition", sbContentDispValue.toString());
 
             res.setContentLength(baosPDF.size());
@@ -149,7 +149,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
     // added by vic, hsfo
     private ByteArrayOutputStream generateHsfoRxPDF(HttpServletRequest req) {
-        System.out.println("in generateHsfoRxPDF CustomedFrmPDFServlet.java");
+        //System.out.println("in generateHsfoRxPDF CustomedFrmPDFServlet.java");
         HsfoRxDataHolder rx = (HsfoRxDataHolder) req.getSession().getAttribute(HSFO_RX_DATA_KEY);
 
         JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(rx.getOutlines());
@@ -183,14 +183,14 @@ public class FrmCustomedPDFServlet extends HttpServlet {
      *NOTE: When working on these forms in linux, it helps to load the PDF file into gimp, switch to pt. coordinate system and use the mouse to find the coordinates.
      *Prepare to be bored!
      */
-    public void p(String s) {
-        System.out.println(s);
+   /* public void p(String s) {
+       System.out.println(s);
     }
 
     public void p(String s, String s2) {
         System.out.println(s + "=" + s2);
     }
-
+*/
     class EndPage extends PdfPageEventHelper {
 
         private String clinicName;
@@ -248,7 +248,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
         public void renderPage(PdfWriter writer, Document document) {
             Rectangle page = document.getPageSize();
-            p("page to string", page.toString());
+//            p("page to string", page.toString());
             PdfContentByte cb = writer.getDirectContent();
 
             try {
@@ -264,8 +264,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                  */
 
                 //head.setTotalWidth(page.width()-document.leftMargin()-document.rightMargin());
-                p("topmargin: " + document.topMargin());
-                p("page height: " + page.height());
+//                p("topmargin: " + document.topMargin());
+         //       p("page height: " + page.height());
                 float height = page.height();
                 //head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
 
@@ -287,12 +287,12 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
                 //render clinicName;
                 bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                p("render clinicName");
+//                p("render clinicName");
                 int fontFlags = Font.NORMAL;
                 Font font = new Font(bf, 10, fontFlags);
                 ColumnText ct = new ColumnText(cb);
                 ct.setSimpleColumn(80, (page.height() - 15), 280, (page.height() - 100), 11, Element.ALIGN_LEFT);
-                p("value of clinic name", this.clinicName);
+          //      p("value of clinic name", this.clinicName);
                 ct.setText(new Phrase(12, this.clinicName, font));
                 ct.go();
                 //render clnicaTel;
@@ -436,11 +436,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String listElem = "";
         //parse rx and put into a list of rx;
         for (String s : rxA) {
-            p("splitted", s);
-            p("s length=" + s.length());
+//            p("splitted", s);
+        //    p("s length=" + s.length());
 
             if (s.equals("") || s.equals(newline) || s.length() == 1) {
-                p("s if");
+          //      p("s if");
                 listRx.add(listElem);
                 listElem = "";
             } else {
@@ -449,31 +449,31 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             }
 
         }
-        for (String s : listRx) {
-            p("each list element", s);
-        }
+    //    for (String s : listRx) {
+        //    p("each list element", s);
+    //    }
 
         // get the print prop values
         Properties props = new Properties();
         StringBuffer temp = new StringBuffer("");
         for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
             temp = new StringBuffer(e.nextElement().toString());
-            p("temp", temp.toString());
-            p("temp para", req.getParameter(temp.toString()));
+       //     p("temp", temp.toString());
+      //      p("temp para", req.getParameter(temp.toString()));
             props.setProperty(temp.toString(), req.getParameter(temp.toString()));
         }
 
         for (Enumeration e = req.getAttributeNames(); e.hasMoreElements();) {
             temp = new StringBuffer(e.nextElement().toString());
-            p("temp", temp.toString());
-            p("temp attr", req.getAttribute(temp.toString()).toString());
+       //     p("temp", temp.toString());
+       //     p("temp attr", req.getAttribute(temp.toString()).toString());
             props.setProperty(temp.toString(), req.getAttribute(temp.toString()).toString());
         }
         Document document = new Document();
 
         try {
             String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
-            p("title", title);
+       //     p("title", title);
           //  String[] cfgFile = req.getParameterValues("__cfgfile");
         //    for (String s : cfgFile) {
         //        p("cfgFile", s);
@@ -485,17 +485,17 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             String[] cfgGraphicFile = req.getParameterValues("__cfgGraphicFile");
             int cfgGraphicFileNo = cfgGraphicFile == null ? 0 : cfgGraphicFile.length;
             if (cfgGraphicFile != null) {
-                for (String s : cfgGraphicFile) {
-                    p("cfgGraphicFile", s);
-                }
+          //      for (String s : cfgGraphicFile) {
+         //           p("cfgGraphicFile", s);
+          //      }
             }
 
             String[] graphicPage = req.getParameterValues("__graphicPage");
             ArrayList graphicPageArray = new ArrayList();
             if (graphicPage != null) {
-                for (String s : graphicPage) {
-                    p("graphicPage", s);
-                }
+             //   for (String s : graphicPage) {
+            //        p("graphicPage", s);
+             //   }
                 graphicPageArray = new ArrayList(Arrays.asList(graphicPage));
             }
 
@@ -510,7 +510,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             } else if ("PageSize.A4".equals(props.getProperty(PAGESIZE))) {
                 pageSize = PageSize.A4;
             }
-            p("size of page ", props.getProperty(PAGESIZE));
+       //     p("size of page ", props.getProperty(PAGESIZE));
 
             document.setPageSize(pageSize);
             //285=left margin+width of box, 5f is space for looking nice
@@ -527,19 +527,19 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
             document.open();
             int n = document.getPageNumber();
-            p("number of pages before: ", "" + n);
+         //   p("number of pages before: ", "" + n);
             document.newPage();
             n = document.getPageNumber();
-            p("number of pages after: ", "" + n);
+        //    p("number of pages after: ", "" + n);
             Rectangle pSize = document.getPageSize();
             float width = pSize.width();
             float height = pSize.height();
 
             PdfContentByte cb = writer.getDirectContent();
-            p("here2");
+         //   p("here2");
             BaseFont bf; // = normFont;
 
-            p("here3");
+         //   p("here3");
             cb.setRGBColorStroke(0, 0, 255);
             //render prescriptions
             for (String rxStr : listRx) {
@@ -551,7 +551,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             }
             //render additional notes
             if (!additNotes.equals("")) {
-                p("additional notes not null");
+          //      p("additional notes not null");
                 bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 Paragraph p = new Paragraph(new Phrase(additNotes, new Font(bf, 10)));
                 p.setKeepTogether(true);

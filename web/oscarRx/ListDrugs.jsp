@@ -111,7 +111,7 @@ if (heading != null){
                 CaseManagementNote p_cmn = null;
                 if (cml!=null) {p_cmn = cmm.getNote(cml.getNoteId().toString());}
                 if (p_cmn!=null){isPrevAnnotation=true;}
-                System.out.println("in list drugs.jsp: "+Long.parseLong(prescriptDrug.getId().toString())+"--"+tableName+"--"+p_cmn+"--"+cml);
+              //  System.out.println("in list drugs.jsp: "+Long.parseLong(prescriptDrug.getId().toString())+"--"+tableName+"--"+p_cmn+"--"+cml);
 
                 if (request.getParameter("status") != null) { //TODO: Redo this in a better way
                     String stat = request.getParameter("status");

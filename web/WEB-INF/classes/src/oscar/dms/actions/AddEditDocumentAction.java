@@ -169,7 +169,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
     //returns true if successful
     private boolean addDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
-        System.out.println("=============in addDocument============");
+      //  System.out.println("=============in addDocument============");
         Hashtable errors = new Hashtable();
         try {
             if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
@@ -187,7 +187,7 @@ public class AddEditDocumentAction extends DispatchAction {
             }
             //original file name
             String fileName1 = docFile.getFileName();
-            System.out.println("fileName1: "+fileName1);
+        //    System.out.println("fileName1: "+fileName1);
             EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName1, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
             newDoc.setDocPublic(fm.getDocPublic());
             //new file name with date attached
@@ -227,16 +227,16 @@ public class AddEditDocumentAction extends DispatchAction {
             WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
             CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
             cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
-            System.out.println("here");
+         //   System.out.println("here");
 
-            System.out.println("here33 "+fm.getDocCreator());
+       //     System.out.println("here33 "+fm.getDocCreator());
 
             String provFirstName=EDocUtil.getProviderInfo("first_name", fm.getDocCreator());
             String provLastName=EDocUtil.getProviderInfo("last_name", fm.getDocCreator());
-            System.out.println("here22");
+         //   System.out.println("here22");
             String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
 
-            System.out.println("here0 "+strNote);
+        //    System.out.println("here0 "+strNote);
             cmn.setNote(strNote);
             cmn.setSigned(true);
             cmn.setSigning_provider_no("-1");
@@ -256,8 +256,8 @@ public class AddEditDocumentAction extends DispatchAction {
             cmnl.setTableName(cmnl.DOCUMENT);
             cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
             cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
-            System.out.println("ValuesSavedInCaseManagementNoteLink: ");
-            System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
+         //   System.out.println("ValuesSavedInCaseManagementNoteLink: ");
+         //   System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
             EDocUtil.addCaseMgmtNoteLink(cmnl);
 
         } catch (Exception e) {
@@ -266,7 +266,7 @@ public class AddEditDocumentAction extends DispatchAction {
             request.setAttribute("completedForm", fm);
             return false;
         }
-        System.out.println("=============End in addDocument============");
+    //    System.out.println("=============End in addDocument============");
         return true;
     }
 

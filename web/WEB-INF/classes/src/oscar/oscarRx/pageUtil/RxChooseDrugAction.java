@@ -69,8 +69,8 @@ public final class RxChooseDrugAction extends Action {
                 String BN     = request.getParameter("BN");
                 String drugId = request.getParameter("drugId"); 
                 
-                System.out.println("drugID "+drugId);
-                System.out.println("BRAND = "+BN);
+            //    System.out.println("drugID "+drugId);
+           //     System.out.println("BRAND = "+BN);
              //   p("GN="+GN);
                     rx.setBrandName(BN);
                 try{

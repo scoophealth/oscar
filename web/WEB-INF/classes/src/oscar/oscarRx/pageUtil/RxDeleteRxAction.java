@@ -67,7 +67,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
         
-        System.out.println("===========================RxDeleteRxAction========================");        
+      //  System.out.println("===========================RxDeleteRxAction========================");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);        
@@ -82,7 +82,7 @@ public final class RxDeleteRxAction extends DispatchAction {
 
             
             String drugList = ((RxDrugListForm)form).getDrugList();
-            System.out.println("drugList="+drugList);
+       //     System.out.println("drugList="+drugList);
             String[] drugArr = drugList.split(",");
             int drugId;
             int i;
@@ -90,7 +90,7 @@ public final class RxDeleteRxAction extends DispatchAction {
             for(i=0;i<drugArr.length;i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
-                    System.out.println("drugId="+drugId);
+               //     System.out.println("drugId="+drugId);
                 } catch (Exception e) { break; }                
                 // get original drug
                 Drug drug = drugDao.find(drugId);
@@ -102,7 +102,7 @@ public final class RxDeleteRxAction extends DispatchAction {
         catch (Exception e) {
             e.printStackTrace(System.out);
         }        
-              System.out.println("===========================END RxDeleteRxAction========================");
+           //   System.out.println("===========================END RxDeleteRxAction========================");
          return (mapping.findForward("success"));
     }
 
@@ -115,7 +115,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     public ActionForward Delete2(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException, ServletException {
 
-        System.out.println("===========================Delete2 RxDeleteRxAction========================");
+      //  System.out.println("===========================Delete2 RxDeleteRxAction========================");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -128,7 +128,7 @@ public final class RxDeleteRxAction extends DispatchAction {
         String ip = request.getRemoteAddr();
         try{
             String deleteRxId=(request.getParameter("deleteRxId").split("_"))[1];
-            System.out.println("drugId="+ deleteRxId);
+         //   System.out.println("drugId="+ deleteRxId);
             Drug drug = drugDao.find(Integer.parseInt(deleteRxId));
             setDrugDelete(drug);
             drugDao.merge(drug);
@@ -137,7 +137,7 @@ public final class RxDeleteRxAction extends DispatchAction {
         catch (Exception e) {
             e.printStackTrace(System.out);
         }
-              System.out.println("===========================END Delete2 RxDeleteRxAction========================");
+        //      System.out.println("===========================END Delete2 RxDeleteRxAction========================");
          return null;
     }
 
@@ -235,8 +235,8 @@ public final class RxDeleteRxAction extends DispatchAction {
         cmnl.setTableName(cmnl.DRUGS);
         cmnl.setTableId(Long.parseLong(idStr));//drug id
         cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
-        System.out.println("ValuesSavedInCaseManagementNoteLink: ");
-        System.out.println(" last note id="+EDocUtil.getLastNoteId());
+      //  System.out.println("ValuesSavedInCaseManagementNoteLink: ");
+      //  System.out.println(" last note id="+EDocUtil.getLastNoteId());
         EDocUtil.addCaseMgmtNoteLink(cmnl);
 
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);

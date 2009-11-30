@@ -145,7 +145,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			// EncounterWindow ectWin = caseForm.getEctWin();
 			String providerNo = getProviderNo(request);
 			caseManagementMgr.saveCPP(cpp, providerNo);
-                        System.out.println("Saved cpp for " + cpp.getDemographic_no());
+                       // System.out.println("Saved cpp for " + cpp.getDemographic_no());
 			// caseManagementMgr.saveEctWin(ectWin);
 		}
 		else

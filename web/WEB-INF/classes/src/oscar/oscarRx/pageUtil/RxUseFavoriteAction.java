@@ -93,7 +93,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-       System.out.println("==========***###IN RxUseFavoriteAction.java=============");
+     //  System.out.println("==========***###IN RxUseFavoriteAction.java=============");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -109,8 +109,8 @@ public final class RxUseFavoriteAction extends DispatchAction {
         try {
             int favoriteId = Integer.parseInt(request.getParameter("favoriteId"));
             String randomId=request.getParameter("randomId");
-            System.out.println("favoriteId ="+favoriteId);
-            System.out.println("randomId ="+randomId);
+        //    System.out.println("favoriteId ="+favoriteId);
+         //   System.out.println("randomId ="+randomId);
             RxPrescriptionData rxData =
             new RxPrescriptionData();
 
@@ -125,7 +125,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
             if(rx!=null){
                 String spec=RxUtil.trimSpecial(rx);
                 rx.setSpecial(spec);
-                System.out.println(rx.getBrandName()+" rx.getspeiclia="+rx.getSpecial());
+         //       System.out.println(rx.getBrandName()+" rx.getspeiclia="+rx.getSpecial());
             }
             else{
                 System.out.println("rx is null!");
@@ -145,7 +145,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
         }
 
         RxUtil.printStashContent(bean);
-        System.out.println("==========***###END RxUseFavoriteAction.java=============");
+      //  System.out.println("==========***###END RxUseFavoriteAction.java=============");
         return (mapping.findForward("useFav2"));
     }
 }

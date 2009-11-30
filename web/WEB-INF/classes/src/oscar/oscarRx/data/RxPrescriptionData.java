@@ -1033,8 +1033,8 @@ public class RxPrescriptionData {
         }
         
         public void checkDiscontinued() {            
-            System.out.println("in checkDiscontinued()");
-            System.out.println("this.BN, genericName, demotraphicNo: " + this.atcCode+ "--" + this.regionalIdentifier + "--" + this.demographicNo);
+          //  System.out.println("in checkDiscontinued()");
+          //  System.out.println("this.BN, genericName, demotraphicNo: " + this.atcCode+ "--" + this.regionalIdentifier + "--" + this.demographicNo);
             //String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by written_date desc";
             //the query will fail to check if a drug A is prescribed, and drug A is prescribed again, and then the first drug A is discontinued,when the second drug A is represcribed
             //or a third drug A is added, no warning will be given.
@@ -1044,20 +1044,20 @@ public class RxPrescriptionData {
                 ResultSet rs;
                 rs = db.GetSQL(sql);
                 if (rs.next()) {//get the first result which has the largest drugid and hence the most recent result.
-                    System.out.println("in if ");
+                   // System.out.println("in if ");
                     int drugId=rs.getInt("drugid");
-                    System.out.println("drugId from first query: "+drugId);
+                  //  System.out.println("drugId from first query: "+drugId);
                     boolean isLastPrescribed=checkLastPrescribed(drugId);//check if this drug was saved after discontinued.
                     if (isLastPrescribed) {
-                        System.out.println("it's the last drug ");
+                   //     System.out.println("it's the last drug ");
                         //get date discontinued
                         //get reason for discontinued
                         Date archivedDate = rs.getDate("archived_date");
                        // String archDate = rs.getString("archived_date");
                         String archDate = RxUtil.DateToString(archivedDate);
                         String archReason = db.getString(rs, "archived_reason");
-                        System.out.println("archDate=" + archDate);
-                        System.out.println("archReason=" + archReason);
+                     //   System.out.println("archDate=" + archDate);
+                     //   System.out.println("archReason=" + archReason);
                         this.lastArchDate = archDate;
                         this.lastArchReason = archReason;
                         this.setLastArchDate(archDate);
@@ -1067,7 +1067,7 @@ public class RxPrescriptionData {
                         System.out.println("not last drug ");
                     }
                 } else {
-                    System.out.println("in else ");
+                  //  System.out.println("in else ");
                     this.setDiscontinued(false);
                 }
             } catch (SQLException e) {
@@ -1075,7 +1075,7 @@ public class RxPrescriptionData {
             } finally {
                 DbConnectionFilter.releaseThreadLocalDbConnection();
             }
-            System.out.println("end of checkDiscontinued()");
+         //   System.out.println("end of checkDiscontinued()");
             return;
         }
 
@@ -1781,7 +1781,7 @@ public class RxPrescriptionData {
 
                 // if drugid = 0 this is an add, else update
                 if (this.getDrugId() == 0) {
-                     System.out.println("drugid=0 1");
+                  //   System.out.println("drugid=0 1");
                     // check to see if there is an identitical prescription in
                     // the database. If there is we'll return that drugid instead
                     // of adding a new prescription.
@@ -1810,10 +1810,10 @@ public class RxPrescriptionData {
 
                     // if it doesn't already exist add it.
                     if (this.getDrugId() == 0) {
-                         System.out.println("drugid=0 2");
+                      //   System.out.println("if it doesn't already exist add it");
                         sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, past_med, patient_compliance) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", " + this.getPastMed() + ", " + this.getPatientCompliance() + ")";
-                        //  System.out.println("sql="+sql);
-                        System.out.println(sql);
+                          System.out.println("sql="+sql);
+                       
                         db.RunSQL(sql);
 
                         // it's added, so get the top (most recent) drugid
@@ -1831,10 +1831,10 @@ public class RxPrescriptionData {
                     }
 
                 } else { // update the database
-                    System.out.println("drugid not equal 0");
+                  //  System.out.println("update the database");
                     //create_date is not updated
                     sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " + "past_med = " + this.getPastMed() + ", " + "patient_compliance = " + this.getPatientCompliance() + " " + "WHERE drugid = " + this.getDrugId();
-                    System.out.println(sql);
+                    System.out.println("sql="+sql);
                     db.RunSQL(sql);
 
                     b = true;

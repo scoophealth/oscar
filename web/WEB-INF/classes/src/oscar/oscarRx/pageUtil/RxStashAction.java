@@ -46,7 +46,7 @@ public final class RxStashAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-                System.out.println("===========start in rxstatshaction.java===========");
+            //    System.out.println("===========start in rxstatshaction.java===========");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -77,10 +77,10 @@ public final class RxStashAction extends DispatchAction {
                 }
             }
         }
-        System.out.println("bean.getStashIndex()="+bean.getStashIndex());
+   /*     System.out.println("bean.getStashIndex()="+bean.getStashIndex());
          System.out.println("bean.getStashSize()="+bean.getStashSize());
         System.out.println("===========end in rxstatshaction.java===========");
-        return mapping.findForward("success");
+     */   return mapping.findForward("success");
     }
 
     public ActionForward setStashIndex(ActionMapping mapping,
@@ -88,7 +88,7 @@ public final class RxStashAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-                System.out.println("===========start in setStashIndex rxstatshaction.java===========");
+       //         System.out.println("===========start in setStashIndex rxstatshaction.java===========");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -100,11 +100,11 @@ public final class RxStashAction extends DispatchAction {
         
             
         if(wp!=null && !wp.equals("null")){
-            System.out.println("in if wp="+wp);
+         //   System.out.println("in if wp="+wp);
             randomId=Integer.parseInt(wp);
-            System.out.println("in setStashIndex randomId="+""+randomId);
+         //   System.out.println("in setStashIndex randomId="+""+randomId);
         }else{
-            System.out.println("in else wp="+wp);
+         //   System.out.println("in else wp="+wp);
             randomId=-1;
         }
 
@@ -116,17 +116,17 @@ public final class RxStashAction extends DispatchAction {
             response.sendRedirect("error.html");
             return null;
         }
-        System.out.println("bean.getStashSize()="+bean.getStashSize());
-        System.out.println("bean.getStashIndex() before setting="+bean.getStashIndex());
+      //  System.out.println("bean.getStashSize()="+bean.getStashSize());
+      //  System.out.println("bean.getStashIndex() before setting="+bean.getStashIndex());
         //find the stashIndex corresponding to the random number
         int stashId=bean.getIndexFromRx(randomId);
         if(stashId >=0 && stashId  < bean.getStashSize()) {
             bean.setStashIndex(stashId);
         }
-        System.out.println("set the stash index to="+bean.getStashIndex());
-         System.out.println("the stash size becomes="+bean.getStashSize());
+     //   System.out.println("set the stash index to="+bean.getStashIndex());
+     //    System.out.println("the stash size becomes="+bean.getStashSize());
         }catch(Exception e){e.printStackTrace();}
-        System.out.println("===========end in setStashIndex rxstatshaction.java===========");
+      //  System.out.println("===========end in setStashIndex rxstatshaction.java===========");
         return mapping.findForward("success");
     }
 
@@ -135,7 +135,7 @@ public final class RxStashAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-                System.out.println("===========start in deletePrescribe ===========");
+       //         System.out.println("===========start in deletePrescribe ===========");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -148,13 +148,13 @@ public final class RxStashAction extends DispatchAction {
         }
 
         int randomId=Integer.parseInt(request.getParameter("randomId"));
-        System.out.println("randomId="+randomId);
+    //    System.out.println("randomId="+randomId);
                 bean.removeStashItem(bean.getIndexFromRx(randomId));
                 if(bean.getStashIndex() >= bean.getStashSize()) {
                     bean.setStashIndex(bean.getStashSize() - 1);
                 }
         RxUtil.printStashContent(bean);
-        System.out.println("===========end in deletePrescribe===========");
+    //    System.out.println("===========end in deletePrescribe===========");
         return mapping.findForward("success");
     }
 }

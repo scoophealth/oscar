@@ -447,7 +447,7 @@ public class CaseManagementNote extends BaseObject {
 
          public boolean isDocumentNote() {
         String sql = "select id from casemgmt_note_link where note_id=" + this.id + " and table_name=5";
-        System.out.println("isDocNote query: "+sql);
+        //System.out.println("isDocNote query: "+sql);
         ResultSet rs = null;
         rs = getSQL(sql);
         boolean bool = false;
@@ -461,56 +461,13 @@ public class CaseManagementNote extends BaseObject {
         return bool;
     }
 
-    //check if note is a document annotation.
-   /* public boolean isDocumentAnnotation(){
-        boolean bool=false;
 
-        Long tableId=EDocUtil.getTableIdFromNoteId(this.id);
-        System.out.println("tableId="+tableId);
-        if (tableId==0L) {
-            bool=false; //false if no tableId is related to this.id
-        }
-        else {
-            CaseManagementNote cmn=new CaseManagementNote();
-            cmn.setId(tableId);
-            if (cmn.isDocumentNote()){
-                Long tableId2=EDocUtil.getTableIdFromNoteId(tableId);
-                //System.out.println("tableId2="+tableId2);
-                EDoc doc = EDocUtil.getDoc(tableId2.toString());
-                if(doc==null){
-                    bool=false;
-                }
-                else{//double check if the document has corresponding document note.
-                    Long docId=Long.parseLong(doc.getDocId());
-                    //System.out.println("it's a doc");
-                    //get the noteId corresponding to docId in casemgmt_note_link table.
-                    Long noteId=EDocUtil.getNoteIdFromDocId(docId);
-                    //System.out.println("noteIdFromDoc="+noteId);
-                    if(noteId==0){bool=false;}
-                    else{
-                        System.out.println("noteId="+noteId);
-                        System.out.println("tableId="+tableId);
-                        //true if the noteId is same as the tableId;
-                        if(noteId.equals(tableId)){
-                            System.out.println("this is true");
-                            bool=true;
-                        }
-                    }
-                }
-            }
-            else{
-                bool=false;//false if the noteId is not a document note
-            }
-        }
-        return bool;
-    }
-*/
 
      public boolean isDocumentAnnotation(){
         boolean bool=false;        
         //check if annotation field in casemgmt_note table is set to DOC.
         String annotationType=EDocUtil.typeAnnotation(this.id);
-        System.out.println("tableId="+annotationType);
+       // System.out.println("tableId="+annotationType);
         if (annotationType.equals("DOC")) {
             bool=true;
         }
