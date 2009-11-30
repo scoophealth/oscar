@@ -158,8 +158,8 @@ lightwindow.prototype = {
 			EOLASFix : 'swf,wmv,fla,flv',
 			overlay : {
 				opacity : 0.7,
-				image : 'images/black.png',
-				presetImage : 'images/black-70.png'
+				image : '../share/lightwindow/images/black.png',
+				presetImage : '../share/lightwindow/images/black-70.png'
 			},
 			skin : 	{
 				main : 	'<div id="lightwindow_container" >'+
@@ -255,7 +255,7 @@ lightwindow.prototype = {
 	//	Activate the lightwindow.
 	//
 	activate : function(e, link){
-            //oscarLog("activate");
+            oscarLog("activate");
 		// Clear out the window Contents
 		this._clearWindowContents(true);
 
@@ -279,7 +279,8 @@ lightwindow.prototype = {
 	//
 	//	Turn off the window
 	//
-	deactivate : function(){//oscarLog("deactivate");
+	deactivate : function(){
+            oscarLog("deactivate");
 		// The window is not active
 		this.windowActive = false;
 
@@ -319,7 +320,9 @@ lightwindow.prototype = {
 	//
 	//  Open a Window from a hash of attributes
 	//
-	activateWindow : function(options) {oscarLog("activateWindow");
+	activateWindow : function(options) {
+            oscarLog("activateWindow");
+            //oscarLog("before this.element.href "+this.element.href);
 		this.element = Object.extend({
 			href : null,
 			title : null,
@@ -336,7 +339,7 @@ lightwindow.prototype = {
 			iframeEmbed : null,
 			form : null
 		}, options || {});
-                oscarLog("this.element.href "+this.element.href);
+             oscarLog("this.element.href "+this.element.href);
 		// Set the window type
 		this.contentToFetch = this.element.href;
 		this.windowType = this.element.type ? this.element.type : this._fileType(this.element.href);
@@ -371,7 +374,7 @@ lightwindow.prototype = {
 	//
 	//	Reload the window with another location
 	//
-	openWindow : function(element) {//oscarLog("openWindow");
+	openWindow : function(element) {oscarLog("openWindow");
 		var element = $(element);
 
 		// The window is active
@@ -487,23 +490,39 @@ lightwindow.prototype = {
 	//
 	//	Add the markup to the page.
 	//
-	_addLightWindowMarkup : function(rebuild) {oscarLog("&&&&&&&&&&&&&&&&&&&& _addLightWindowMarkup");
+	_addLightWindowMarkup : function(rebuild) {
+            oscarLog("&&&&&&&&&&&&&&&&&&&& _addLightWindowMarkup");
+           
+            
 		var overlay = Element.extend(document.createElement('div'));
 		overlay.setAttribute('id', 'lightwindow_overlay');
+                //var h=this._viewportHeight();
+                //h=(document.height !== undefined) ? document.height : document.body.offsetHeight;
+//var height_array = $$('body');
+//h = height_array[0].getHeight();
+//h=window.innerHeight;
+//oscarLog(document.scrollHeight);oscarLog(document.body.scrollHeight);oscarLog(document.clientHeight);oscarLog(document.body.offsetHeight);
+//oscarLog(document.getElementById('AutoNumber1').height);oscarLog(document.getElementById('AutoNumber1'));
+//h=document.getElementById('AutoNumber1').scrollHeight;
+                var h='10000';
 		// FF Mac has a problem with putting Flash above a layer without a 100% opacity background, so we need to use a pre-made
 		if (Prototype.Browser.Gecko) {
                     oscarLog("overlay presetImage :"+this.options.overlay.presetImage);
 			overlay.setStyle({
 				backgroundImage: 'url('+ this.options.overlay.presetImage+')',
 				backgroundRepeat: 'repeat',
-				height: this.pageDimensions.height+'px'
+				//height: this.pageDimensions.height+'px'
+                                height: h+'px'
 			});
-		} else {oscarLog("overlay image :"+this.options.overlay.image);
+                        
+		} else {
+                    oscarLog("overlay image :"+this.options.overlay.image);
 			overlay.setStyle({
 				opacity: this.options.overlay.opacity,
 				backgroundImage: 'url('+this.options.overlay.image+')',
 				backgroundRepeat: 'repeat',
-				height: this.pageDimensions.height+'px'
+				//height: this.pageDimensions.height+'px'
+                                height: h+'px'
 			});
 		}
 
@@ -556,7 +575,8 @@ lightwindow.prototype = {
 	//
 	//  Setup the window elements
 	//
-	_setupWindowElements : function(link) {//oscarLog("_setupWindowElements ");
+	_setupWindowElements : function(link) {
+            oscarLog("_setupWindowElements ");
 		this.element = link;
 		this.element.title = null ? '' : link.getAttribute('title');
 		this.element.author = null ? '' : link.getAttribute('author');
@@ -818,16 +838,19 @@ lightwindow.prototype = {
 	//
 	//	Display the lightWindow.
 	//
-	_displayLightWindow : function(display, visibility) {//oscarLog("_displayLightWindow");
+	_displayLightWindow : function(display, visibility) {
+            oscarLog("_displayLightWindow");
 		$('lightwindow_overlay').style.display = $('lightwindow').style.display = $('lightwindow_container').style.display = display;
 		$('lightwindow_overlay').style.visibility = $('lightwindow').style.visibility = $('lightwindow_container').style.visibility = visibility;
+                oscarLog($('lightwindow_overlay').style.display);
+                oscarLog($('lightwindow_overlay').style.visibility);
 	},
 	//
 	//	Setup Dimensions of lightwindow.
 
 	//
 	_setupDimensions : function() {
-//oscarLog("_setupDimensions");
+oscarLog("_setupDimensions");
 		var originalHeight, originalWidth;
 		switch (this.windowType) {
 			case 'page' :
@@ -886,7 +909,8 @@ lightwindow.prototype = {
 	//
 	//	Get the type of file.
 	//
-	_fileType : function(url) {//oscarLog("&&&&&&&&&&&&&&&&&&&&&& _fileType");
+	_fileType : function(url) {
+            oscarLog("&&&&&&&&&&&&&&&&&&&&&& _fileType");
             oscarLog("&&&&&&&&&&&&&&&&&&&&&& url "+url);
 		var image = new RegExp("[^\.]\.("+this.options.fileTypes.image.join('|')+")\s*$", "i");
 		if (image.test(url)) return 'image';
@@ -901,10 +925,15 @@ lightwindow.prototype = {
 	  	if (page.test(url) || url.substr((url.length-1), url.length) == '/') type = 'page';
 		return type;
 	},
+          _viewportHeight: function() {//new method added
+    return self.innerHeight || (document.documentElement.clientHeight || document.body.clientHeight);
+  },
+
 	//
 	//  Get file Extension
 	//
-	_fileExtension : function(url) {//oscarLog("&&&&&&&&&&&&&&&&&&&&& _fileExtension");
+	_fileExtension : function(url) {
+            oscarLog("&&&&&&&&&&&&&&&&&&&&& _fileExtension");
 		if (url.indexOf('?') > -1) {
 			url = url.substring(0, url.indexOf('?'));
 		}
@@ -1952,6 +1981,7 @@ lightwindow.prototype = {
 			});
 		}
 	},
+
 	//
 	//  Wrap everything up
 	//
@@ -2018,6 +2048,6 @@ Event.observe(window, 'load', lightwindowInit, false);
 //
 var myLightWindow = null;
 function lightwindowInit() {
-    //oscarLog("in lightwindowInit");
+    oscarLog("in lightwindowInit");
 	myLightWindow = new lightwindow();
 }
