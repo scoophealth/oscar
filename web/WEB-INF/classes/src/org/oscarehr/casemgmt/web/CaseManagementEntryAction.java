@@ -755,7 +755,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String val = request.getParameter(names[i]);
 		if (filled(val)) {
 		    cme.setKeyVal(keys[i]);
-		    if (i<2) {
+		    if (i<=2) {
 			cme.setDateValue(val);
 		    } else {
 			if (cme.getDateValue()!=null) cme.setDateValue("");
