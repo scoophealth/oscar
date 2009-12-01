@@ -49,7 +49,7 @@
 				class="org.oscarehr.casemgmt.model.CaseManagementIssue" />
 		</set>
                 <set name="extend" table="casemgmt_note_ext" lazy="false">
-                        <key column="note_id" />
+                        <key column="note_id" update="false" />
                         <one-to-many class="org.oscarehr.casemgmt.model.CaseManagementNoteExt"/>
                 </set>
 		<property name="roleName" type="string"
