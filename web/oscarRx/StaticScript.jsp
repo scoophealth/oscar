@@ -180,7 +180,7 @@
 											<html:hidden property="drugList" value="<%=drug.localDrugId.toString()%>" />
 											<input type="hidden" name="method" value="represcribe">
 											<html:submit style="width:100px" styleClass="ControlPushButton" value="Re-prescribe" />
-										</html:form> <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite(<%=drug.localDrugId%>, '<%=drug.customName!=null?drug.customName:drug.brandName%>');" />
+										</html:form> <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite(<%=drug.localDrugId%>, '<%=(drug.customName!=null&&(!drug.customName.equalsIgnoreCase("null")))?drug.customName:drug.brandName%>');" />
 									<%
 								}
 								else
