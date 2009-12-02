@@ -262,7 +262,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		for (CaseManagementNote note : notes)
 		{
 			CaseManagementNote existingNote=uniqueForUuid.get(note.getUuid());
-			if (existingNote==null || note.getObservation_date().after(existingNote.getObservation_date())) uniqueForUuid.put(note.getUuid(), note);
+			if (existingNote==null || note.getUpdate_date().after(existingNote.getUpdate_date())) uniqueForUuid.put(note.getUuid(), note);
 		}
 		
 		// sort by observationdate
