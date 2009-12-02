@@ -56,7 +56,9 @@
 <%
             String usefav=request.getParameter("usefav");
             String favid=request.getParameter("favid");
-            System.out.println("usefav="+usefav);
+            String reRxDrugId=request.getParameter("reRxDrugId");
+            //System.out.println("usefav="+usefav);
+            //System.out.println("reRxDrugId="+reRxDrugId);
             RxPharmacyData pharmacyData = new RxPharmacyData();
             RxPharmacyData.Pharmacy pharmacy;
             pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
@@ -121,6 +123,7 @@
         <!--link rel="stylesheet" type="text/css" href="modaldbox.css"  /-->
         <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/rx.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/scriptaculous.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/effects.js"/>"></script>
@@ -375,12 +378,26 @@ function checkFav(){
     //oscarLog("****** in checkFav");
     var usefav='<%=usefav%>';
     var favid='<%=favid%>';
-    if(usefav=="true"&&favid!=null){
+    if(usefav=="true" && favid!=null && favid!='null'){
         //oscarLog("****** favid "+favid);
         useFav2(favid);
     }else{}
 }
+function checkRePrescribe(){
+    var drugId='<%=reRxDrugId%>';
+    oscarLog("drugId in checkrePrescribe: "+drugId);
+    if(drugId!=null && (drugId!='null')){
+              represcribeOnLoad(drugId);
+    }else{}
+}
 
+     //represcribe a drug
+    function represcribeOnLoad(drugId){
+        var data="drugId="+drugId;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom});
+
+    }
 </script>
 
 
@@ -480,7 +497,7 @@ body {
 
     
 
-    <body  vlink="#0000FF" onload="checkFav();<%-- initmb(); --%>load()" class="yui-skin-sam">
+    <body  vlink="#0000FF" onload="checkFav();checkRePrescribe();<%-- initmb(); --%>load()" class="yui-skin-sam">
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
             <%@ include file="TopLinks2.jsp" %><!-- Row One included here-->
             <tr>
@@ -1185,7 +1202,8 @@ function addFav(randomId,brandName){
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/addFavorite2.do?parameterValue=addFav2";
         var data="randomId="+randomId+"&favoriteName="+favoriteName;
         new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
-            }});
+              window.location.href="SearchDrug3.jsp";
+        }})
    }
 }
 
@@ -1204,7 +1222,9 @@ function setSearchedDrug(drugId,name){
 }
  //represcribe a drug
     function represcribe(element){
-        var drugId=element.id;
+        var elemId=element.id;
+        var ar=elemId.split("_");
+        var drugId=ar[1];
         var data="drugId="+drugId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom});
