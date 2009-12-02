@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
 import org.jboss.logging.Logger;
 import org.oscarehr.casemgmt.model.Issue;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -38,15 +37,7 @@ public class IssueDAO extends HibernateDaoSupport {
 	private Logger log = Logger.getLogger(this.getClass());
 	
     public Issue getIssue(Long id) {
-    	Session session=getSession();
-    	try
-    	{
-    		return (Issue)this.getHibernateTemplate().get(Issue.class, id);
-    	}
-    	finally
-    	{
-    		session.close();
-    	}
+        return (Issue)this.getHibernateTemplate().get(Issue.class, id);
     }
 
     public List getIssues() {
