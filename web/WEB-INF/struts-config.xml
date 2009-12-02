@@ -629,7 +629,7 @@
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
             <forward name="useFav2" path="/oscarRx/prescribe.jsp" />
         </action>
-        <action input="/oscarRx/StaticScript.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavoriteStaticScript" scope="request" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
+        <action input="/oscarRx/StaticScript.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavoriteStaticScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
             <forward name="success" path="/oscarRx/StaticScript.jsp" />
         </action>
         <action input="/oscarRx/ViewScript.jsp" name="RxAddFavoriteForm" path="/oscarRx/addFavoriteViewScript" scope="request" type="oscar.oscarRx.pageUtil.RxAddFavoriteAction">
