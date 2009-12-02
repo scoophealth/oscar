@@ -715,10 +715,13 @@ div.demographicWrapper {
 			</tr>
 			<% if (!vLocale.getCountry().equals("BR")) { %>
 			<tr>
-				<td><a
-					href="javascript: function myFunction() {return false; }"
-					onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message
-					key="global.prescriptions" /></a>
+				<td>
+                                    <oscar:oscarPropertiesCheck property="RX3" value="no">
+                                          <a href="javascript: function myFunction() {return false; }" onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message	key="global.prescriptions" /></a>
+                                    </oscar:oscarPropertiesCheck>
+                                    <oscar:oscarPropertiesCheck property="RX3" value="yes">
+                                          <a href="javascript: function myFunction() {return false; }" onClick="popupOscarRx(700,960,'../oscarRx/choosePatient3.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message key="global.prescriptions"/></a>
+                                    </oscar:oscarPropertiesCheck>
 				</th>
 				</td>
 			</tr>
