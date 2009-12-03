@@ -416,7 +416,7 @@
         </td>
         <td><label>Postal Code<br><html:text property="client.postal" size="9" maxlength="9"/></label></td>
     </tr>
-
+<!--  
 <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
     <tr>
         <td>
@@ -427,6 +427,7 @@
         </td>
     </tr>
 </c:if>
+-->
 </caisi:isModuleLoad>
 </table>
 </div>
