@@ -243,8 +243,12 @@
 </c:if> <!--    <div>
         <span><a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a></span>
     </div>
---></div>
-
+-->
+<div><span>Information</span>
+		<div><span><a target='_blank'
+			href='http://www.oscarcanada.org/caisi/social_support_services/hospitals-agencies-and-shelters/participating-agencies-1/participating-agencies'>List of Integrating CAISI Agencies</a></span></div>
+		</div>
+</div>
 <div id="admintools" class="toolgroup">
 <%
     if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
