@@ -369,12 +369,42 @@ public class RxPrescriptionData {
 
         return arr;
     }
-
+    //do not return customed drugs
     public Prescription[] getPrescriptionScriptsByPatientRegionalIdentifier(int demographicNo, String regionalIdentifier) {
         Prescription[] arr = {};
         ArrayList lst = new ArrayList();
 
-        String sql = "SELECT d.*FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.regional_identifier = '" + regionalIdentifier + "' " + "ORDER BY rx_date DESC, drugId DESC";
+        String sql = "SELECT d.* FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.regional_identifier = '" + regionalIdentifier + "' " + "ORDER BY rx_date DESC, drugId DESC";
+
+        try {
+            // Get Prescription from database
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+
+            Prescription p;
+
+            rs = db.GetSQL(sql);
+
+            while (rs.next()) {
+                lst.add(getPrescriptionFromRS(rs, demographicNo));
+            }
+            rs.close();
+            db.getConnection().close();
+
+            arr = (Prescription[]) lst.toArray(arr);
+        } catch (SQLException e) {
+            logger.error(sql, e);
+        }
+
+        return arr;
+    }
+
+    //maybe needed later.
+    public Prescription[] getPrescriptionScriptsByPatientDrugId(int demographicNo, String drugId) {
+        Prescription[] arr = {};
+        ArrayList lst = new ArrayList();
+
+        String sql = "SELECT d.* FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.drugId = '" + drugId + "' " + "ORDER BY rx_date DESC, drugId DESC";
 
         try {
             // Get Prescription from database
@@ -981,7 +1011,15 @@ public class RxPrescriptionData {
         private boolean discontinued = false;//indicate if the rx has isDisontinued before.
         private String lastArchDate = null;
         private String lastArchReason = null;
+        private Date archivedDate;
+        private boolean discontinuedLatest=false;
 
+        public boolean isDiscontinuedLatest(){
+            return this.discontinuedLatest;
+        }
+        public void setDiscontinuedLatest(boolean dl){
+            this.discontinuedLatest=dl;
+        }
         public String getLastArchDate() {
             return this.lastArchDate;
         }
@@ -1002,81 +1040,15 @@ public class RxPrescriptionData {
             return this.discontinued;
         }
 
-        private void setDiscontinued(boolean discon) {
+        public void setDiscontinued(boolean discon) {
             this.discontinued = discon;
         }
-        private boolean checkLastPrescribed(int drugId){
-            //make a another query to get the latest drug with same name but archived not equals one and arhived reason equals to deleted.
-            //check if drugId is greater than that compare id
-            //if yes, return true;
-            //if not, return false;
-            boolean lastPrescribed=true;
-            //need the max drugId
-            String sql="SELECT max(drugid) FROM drugs WHERE archived=0 AND archived_reason='deleted' AND BN='" + this.BN + "' AND GN='" + this.genericName + "' AND demographic_no=" + this.demographicNo;
 
-            try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                ResultSet rs;
-                rs = db.GetSQL(sql);
-                if (rs.next()) {
-                    int compareId=rs.getInt("max(drugid)");
-                    System.out.println("compareId: "+compareId);
-                    if(drugId>compareId) lastPrescribed=true;
-                    else lastPrescribed=false;
-                }else{
-                    lastPrescribed=true;
-                }
-           }catch(SQLException e) {
-                logger.error(sql, e);
-            } 
-            return lastPrescribed;
+        public void setArchivedDate(Date ad){
+            this.archivedDate=ad;
         }
-        
-        public void checkDiscontinued() {            
-          //  System.out.println("in checkDiscontinued()");
-          //  System.out.println("this.BN, genericName, demotraphicNo: " + this.atcCode+ "--" + this.regionalIdentifier + "--" + this.demographicNo);
-            //String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by written_date desc";
-            //the query will fail to check if a drug A is prescribed, and drug A is prescribed again, and then the first drug A is discontinued,when the second drug A is represcribed
-            //or a third drug A is added, no warning will be given.
-            String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by drugid desc";
-            try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                ResultSet rs;
-                rs = db.GetSQL(sql);
-                if (rs.next()) {//get the first result which has the largest drugid and hence the most recent result.
-                   // System.out.println("in if ");
-                    int drugId=rs.getInt("drugid");
-                  //  System.out.println("drugId from first query: "+drugId);
-                    boolean isLastPrescribed=checkLastPrescribed(drugId);//check if this drug was saved after discontinued.
-                    if (isLastPrescribed) {
-                   //     System.out.println("it's the last drug ");
-                        //get date discontinued
-                        //get reason for discontinued
-                        Date archivedDate = rs.getDate("archived_date");
-                       // String archDate = rs.getString("archived_date");
-                        String archDate = RxUtil.DateToString(archivedDate);
-                        String archReason = db.getString(rs, "archived_reason");
-                     //   System.out.println("archDate=" + archDate);
-                     //   System.out.println("archReason=" + archReason);
-                        this.lastArchDate = archDate;
-                        this.lastArchReason = archReason;
-                        this.setLastArchDate(archDate);
-                        this.setLastArchReason(archReason);
-                        this.setDiscontinued(true);
-                    } else {
-                        System.out.println("not last drug ");
-                    }
-                } else {
-                  //  System.out.println("in else ");
-                    this.setDiscontinued(false);
-                }
-            } catch (SQLException e) {
-                logger.error(sql, e);
-            } finally {
-                DbConnectionFilter.releaseThreadLocalDbConnection();
-            }
-         //   System.out.println("end of checkDiscontinued()");
-            return;
+        public Date getArchivedDate(){
+            return this.archivedDate;
         }
 
         // RxDrugData.GCN gcn = null;
@@ -1175,7 +1147,8 @@ public class RxPrescriptionData {
         }
 
         public java.util.Date getEndDate() {
-            return this.endDate;
+            if(this.isDiscontinued()) return this.archivedDate;
+                else return this.endDate;
         }
 
         public void setEndDate(java.util.Date RHS) {
@@ -1475,7 +1448,8 @@ public class RxPrescriptionData {
 
         public String getSpecial() {
 
-            if (special == null || special.length() < 6) {
+            //if (special == null || special.length() < 6) {
+            if (special == null || special.length() < 4) {
                 logger.error("Some one is retrieving the drug special but it appears to be blank : " + special, new IllegalStateException());
             }
 
@@ -1499,8 +1473,10 @@ public class RxPrescriptionData {
         }
 
         public void setSpecial(String RHS) {
-            if (RHS == null || RHS.length() < 6) {
-                logger.error("Some one is setting the drug special but it appears to be blank : " + special, new IllegalStateException());
+            //System.out.println("in setSpecial, RHS.length() :"+RHS.length());
+            //if (RHS == null || RHS.length() < 6) {
+              if (RHS == null || RHS.length() < 4) {
+                  logger.error("Some one is setting the drug special but it appears to be blank : " + special, new IllegalStateException());
             }
 
             if (RHS != null) {
@@ -1512,9 +1488,10 @@ public class RxPrescriptionData {
             } else {
                 special = null;
             }
-
-            if (special == null || special.length() < 6) {
-                logger.error("after processing the drug special but it appears to be blank : " + special, new IllegalStateException());
+            //System.out.println("in setSpecial, special.length() :"+special.length());
+            //if (special == null || special.length() < 6) {
+              if (special == null || special.length() < 4) {
+                  logger.error("after processing the drug special but it appears to be blank : " + special, new IllegalStateException());
             }
         }
 
@@ -2262,12 +2239,13 @@ public class RxPrescriptionData {
             if (this.takeMin > this.takeMax) {
                 this.takeMax = this.takeMin;
             }
-
-            if (getSpecial() == null || getSpecial().length() < 6) {
+if (getSpecial() == null || getSpecial().length() < 4) {
+            //if (getSpecial() == null || getSpecial().length() < 6) {
                 logger.error("drug special appears to be null or empty : " + getSpecial(), new IllegalStateException("Drug special is invalid."));
             }
             String parsedSpecial = RxUtil.replace(this.getSpecial(), "'", "");
-            if (parsedSpecial == null || parsedSpecial.length() < 6) {
+            //if (parsedSpecial == null || parsedSpecial.length() < 6) {
+                if (parsedSpecial == null || parsedSpecial.length() < 4) {
                 logger.error("drug special after parsing appears to be null or empty : " + parsedSpecial, new IllegalStateException("Drug special is invalid after parsing."));
             }
 
