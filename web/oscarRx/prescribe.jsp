@@ -28,7 +28,8 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          String durationUnit    = rx.getDurationUnit();
          boolean prn            = rx.getPrn();
          String repeats         = Integer.toString(rx.getRepeat());
-         String amount          = rx.getTakeMinString();
+         String takeMin          = rx.getTakeMinString();
+         String takeMax         =rx.getTakeMaxString();
          boolean longTerm       = rx.getLongTerm();
          String outsideProvOhip = rx.getOutsideProviderOhip();
          String brandName        = rx.getBrandName();
@@ -47,19 +48,19 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          String duration        = rx.getDuration();
          String method          = rx.getMethod();
          String outsideProvName = rx.getOutsideProviderName();
-         boolean isDiscontinued = rx.isDiscontinued();
+         boolean isDiscontinuedLatest = rx.isDiscontinuedLatest();
          String archivedDate="";
          String archivedReason="";
          boolean isOutsideProvider ;
          System.out.println("---"+outsideProvOhip+"--");System.out.println("---"+outsideProvName+"--");
-         if(isDiscontinued){
-                System.out.println("isDiscontinued true");
+         if(isDiscontinuedLatest){
+                System.out.println("isDiscontinuedLatest true");
                 archivedReason=rx.getLastArchReason();
                 archivedDate=rx.getLastArchDate();
                 System.out.println("---"+archivedDate +"--"+archivedReason);
          }
          else{
-             System.out.println("isDiscontinued false");
+             System.out.println("isDiscontinuedLatest false");
          }
           if((outsideProvOhip!=null && !outsideProvOhip.equals("")) || (outsideProvName!=null && !outsideProvName.equals(""))){
              isOutsideProvider=true;
@@ -70,8 +71,20 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
              //System.out.println("isOutsideProvider false");
          }
          System.out.println("instructions from repscbAllLongTerm="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
-         if(drugName==null){System.out.println("null meta");}
-             else if(drugName.equals("null")){System.out.println("null phys");}
+        // if(drugName==null){System.out.println("null meta");}
+         //    else if(drugName.equals("null")){System.out.println("null phys");}
+        /* if(route!=null){
+             System.out.println("length of route "+route.length());System.out.println("then route is "+route);
+            if(route.equalsIgnoreCase("null")) {
+                System.out.println("lllllllllll");
+                route=" ";
+            }
+         }
+         else if(route==null)System.out.println("route ==null ");*/
+         if(route==null || route.equalsIgnoreCase("null")) route="";
+         String rxString="Method:"+method+"; Route:"+route+"; Frequency:"+frequency+"; Min:"+takeMin+"; Max:"
+                    +takeMax+"; Duration:"+duration+"; DurationUnit:"+durationUnit+"; Quantity:"+quantity;
+         //System.out.println("*************** rxString="+rxString);
 %>
 
 <fieldset style="margin-top:2px;width:600px;" id="set_<%=rand%>">
@@ -79,7 +92,7 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
     <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
 
     <label style="float:left;width:80px;">Name:</label>
-    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"   value="<%=drugName%>"  size="30" <%if(gcn==0){%> onchange="saveCustomName(this);" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span><span id="inactive_<%=rand%>" style="color:red;"></span><br>
+    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     size="30" <%if(gcn==0){%> onchange="saveCustomName(this);" <%} else{%> value="<%=drugName%>" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span><span id="inactive_<%=rand%>" style="color:red;"></span><br>
     <label style="float:left;width:80px;">Instructions:</label>
        <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="<%=instructions%>" size="60" onblur="parseIntr(this);" /> <br>
     <label style="float:left;width:80px;">Quantity:</label>
@@ -87,7 +100,7 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
     <label style="">Repeats:</label>                            
        <input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />       
        <input type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
-       <div id="rxString_<%=rand%>"> </div>
+       <div id="rxString_<%=rand%>"><%=rxString%> </div>
        <div id="quantityWarning_<%=rand%>"> </div>
        <div id="rx_more_<%=rand%>" style="display:none;padding:2px;">
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
@@ -158,10 +171,10 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
             <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
             getRenalDosingInformation('renalDosing_<%=rand%>','<%=rx.getAtcCode()%>');
             </oscar:oscarPropertiesCheck>
-            var isDiscontinued=<%=isDiscontinued%>;
-            oscarLog("isDiscon "+isDiscontinued);
+            var isDiscontinuedLatest=<%=isDiscontinuedLatest%>;
+            oscarLog("isDiscon "+isDiscontinuedLatest);
             //pause(1000);
-            if(isDiscontinued){            
+            if(isDiscontinuedLatest){
                var archD='<%=archivedDate%>';
                var archR='<%=archivedReason%>';
                oscarLog("in js discon "+archR+"--"+archD);
