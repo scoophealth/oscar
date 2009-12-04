@@ -179,16 +179,98 @@ public class RxUtil {
 
         return (int) Math.round(Clcr);
     }
+    public static double findNDays(String durationUnit){
+        double nDays=0d;
+        if(durationUnit.equalsIgnoreCase("D"))
+                        nDays=1;
+        else if(durationUnit.equalsIgnoreCase("W"))
+                        nDays=7;
+        else if(durationUnit.equalsIgnoreCase("M"))
+                       nDays=30;
+        return nDays;
+    }
 
-    public static HashMap instrucParser(String instructions, RxPrescriptionData.Prescription rx) {
+    public static Double findNPerDay(String frequency){
+        double nPerDay=0d;
+        if(frequency.equalsIgnoreCase("od"))
+            nPerDay=1;
+        else if(frequency.equalsIgnoreCase("bid"))
+            nPerDay=2;
+        else if(frequency.equalsIgnoreCase("tid"))
+            nPerDay=3;
+        else if(frequency.equalsIgnoreCase("qid"))
+            nPerDay=4;
+        else if(frequency.equalsIgnoreCase("Q1H"))
+            nPerDay=24;
+        else if(frequency.equalsIgnoreCase("Q2H"))
+            nPerDay=12;
+        else if(frequency.equalsIgnoreCase("Q1-2H"))
+            nPerDay=24;
+        else if(frequency.equalsIgnoreCase("Q3-4H"))
+            nPerDay=8;
+        else if(frequency.equalsIgnoreCase("Q4H"))
+            nPerDay=6;
+        else if(frequency.equalsIgnoreCase("Q4-6H"))
+            nPerDay=6;
+        else if(frequency.equalsIgnoreCase("Q6H"))
+            nPerDay=4;
+        else if(frequency.equalsIgnoreCase("Q8H"))
+            nPerDay=3;
+        else if(frequency.equalsIgnoreCase("Q12H"))
+            nPerDay=2;
+        else if(frequency.equalsIgnoreCase("QAM"))
+            nPerDay=1;
+        else if(frequency.equalsIgnoreCase("QPM"))
+            nPerDay=1;
+        else if(frequency.equalsIgnoreCase("QHS"))
+            nPerDay=1;
+        else if(frequency.equalsIgnoreCase("Q1Week"))
+            nPerDay=0.14285714285714285;
+        else if(frequency.equalsIgnoreCase("Q2Week"))
+            nPerDay=0.07142857142857142;
+        else if(frequency.equalsIgnoreCase("Q1Month"))
+            nPerDay=0.03333333333333333;
+        else if(frequency.equalsIgnoreCase("Q3Month"))
+            nPerDay=0.011111111111111112;
+        return nPerDay;
+    }
 
+    public static String findDuration(RxPrescriptionData.Prescription rx){//calculate duration based on quantity, takemax,takemin,frequency,durationUnit.
+       //get frequency,takemax,takemin,durationUnit by parsing special.
+        instrucParser(rx.getSpecial(),rx);
+        double qtyD=Double.parseDouble(rx.getQuantity());
+        double takeMax=(double)rx.getTakeMax();
+        double nPerDay=findNPerDay(rx.getFrequencyCode());
+        double nDays=findNDays(rx.getDurationUnit());
+        p("qtyD--takeMax--nPerDay--nDays--"+qtyD+" "+takeMax+" "+nPerDay+" "+nDays);
+        if(takeMax!=0d){
+            double durD=qtyD/(takeMax) * nPerDay * nDays;
+            int durInt=(int)durD;
+            p("durInt",Integer.toString(durInt));
+            return Integer.toString(durInt);
+        }else{
+            return "0";
+        }
+
+    }
+
+    public static void instrucParser(String instructions, RxPrescriptionData.Prescription rx) {
+        if(rx==null) return;
+        if(instructions==null) instructions="";
         String amount = "0";
         String route = "";
-        String frequency = "";
+        //String frequency = "";
+        String frequency;
+        if(rx.getFrequencyCode()==null) frequency="";
+        else  frequency =rx.getFrequencyCode();
         String form = "";
-        String duration = "0";
+        String duration;
+        if(rx.getDuration()==null) duration="0";
+        else duration=rx.getDuration();
         String method = "";
-        String durationUnit = "";
+        String durationUnit;
+        if(rx.getDurationUnit()==null) durationUnit="";
+        else durationUnit = rx.getDurationUnit();
         String durationUnitSpec = "";
         boolean prn = false;
         String amountFrequency = "";
@@ -197,8 +279,14 @@ public class RxUtil {
         String takeMaxFrequency = "";
         String takeMinMethod = "";
         String takeMaxMethod = "";
-        String takeMin = "0";
-        String takeMax = "0";
+        //String takeMin = "0";
+       //String takeMax = "0";
+        String takeMin;
+        String takeMax;
+        if(rx.getTakeMinString()==null) takeMin = "0";
+        else takeMin = rx.getTakeMinString();
+        if(rx.getTakeMaxString()==null) takeMax = "0";
+        else takeMax = rx.getTakeMaxString();
         String durationSpec = "";
         int quantity = 0;
 
@@ -225,24 +313,35 @@ public class RxUtil {
             if (matcher.find()) {
                 route = (instructions.substring(matcher.start(), matcher.end())).trim();
                 if (route.equalsIgnoreCase("OD")) {
+                    p("route is OD");
+
                     //remove OD from instructions
                     String part = instructions.substring(0, matcher.start()) + " " + instructions.substring(matcher.end());
                     //if route =od,check if there is a valid frequency, there is one, then route is od.
                     //if not , set the route="",keep looping. then set frequency to be od;
-
-                    for (String f : frequences) {
+                    p("part is "+part);
+                   /* for (String f : frequences) {
                         Pattern fPattern = Pattern.compile(f);
                         Matcher fMatcher = fPattern.matcher(part);
                         if (fMatcher.find()) {
+                            p("frequency is "+f);
                             frequency = part.substring(fMatcher.start(), fMatcher.end());
                             break;
                         }
+                    }*/
+                    Pattern fPattern = Pattern.compile("\\s(?i)OD\\s*");
+                    Matcher fMatcher = fPattern.matcher(part);
+                    String frequencyStr="";
+                    if (fMatcher.find()) {
+                         frequencyStr = part.substring(fMatcher.start(), fMatcher.end());
+                         break;
                     }
-                    if (frequency.equals("")) {
+                    if (frequencyStr.equals("") ) {
                         frequency = "OD";
                         route = "";
                         continue;
                     } else {
+                        frequency=frequencyStr;
                         break;
                     }
                 } else {
@@ -487,55 +586,9 @@ public class RxUtil {
         //calculate quantity based on duration, frequency, duration unit, takeMin , takeMax
         if (duration.equals("0") || durationUnit.equals("") || takeMin.equals("0") || takeMax.equals("0") || frequency.equals("")) {
         } else {
-            if (frequency.equalsIgnoreCase("od")) {
-                nPerDay = 1;
-            } else if (frequency.equalsIgnoreCase("bid")) {
-                nPerDay = 2;
-            } else if (frequency.equalsIgnoreCase("tid")) {
-                nPerDay = 3;
-            } else if (frequency.equalsIgnoreCase("qid")) {
-                nPerDay = 4;
-            } else if (frequency.equalsIgnoreCase("Q1H")) {
-                nPerDay = 24;
-            } else if (frequency.equalsIgnoreCase("Q2H")) {
-                nPerDay = 12;
-            } else if (frequency.equalsIgnoreCase("Q1-2H")) {
-                nPerDay = 24;
-            } else if (frequency.equalsIgnoreCase("Q3-4H")) {
-                nPerDay = 8;
-            } else if (frequency.equalsIgnoreCase("Q4H")) {
-                nPerDay = 6;
-            } else if (frequency.equalsIgnoreCase("Q4-6H")) {
-                nPerDay = 6;
-            } else if (frequency.equalsIgnoreCase("Q6H")) {
-                nPerDay = 4;
-            } else if (frequency.equalsIgnoreCase("Q8H")) {
-                nPerDay = 3;
-            } else if (frequency.equalsIgnoreCase("Q12H")) {
-                nPerDay = 2;
-            } else if (frequency.equalsIgnoreCase("QAM")) {
-                nPerDay = 1;
-            } else if (frequency.equalsIgnoreCase("QPM")) {
-                nPerDay = 1;
-            } else if (frequency.equalsIgnoreCase("QHS")) {
-                nPerDay = 1;
-            } else if (frequency.equalsIgnoreCase("Q1Week")) {
-                nPerDay = 0.14285714285714285;
-            } else if (frequency.equalsIgnoreCase("Q2Week")) {
-                nPerDay = 0.07142857142857142;
-            } else if (frequency.equalsIgnoreCase("Q1Month")) {
-                nPerDay = 0.03333333333333333;
-            } else if (frequency.equalsIgnoreCase("Q3Month")) {
-                nPerDay = 0.011111111111111112;
-            }
 
-            if (durationUnit.equalsIgnoreCase("D")) {
-                nDays = 1;
-            } else if (durationUnit.equalsIgnoreCase("W")) {
-                nDays = 7;
-            } else if (durationUnit.equalsIgnoreCase("M")) {
-                nDays = 30;
-            }
+            nPerDay=findNPerDay(frequency);
+            nDays=findNDays(durationUnit);
 
             //quantity=takeMax * nDays * duration * nPerDay
             double quantityD = (Double.parseDouble(takeMax)) * nPerDay * nDays * (Double.parseDouble(duration));
@@ -551,10 +604,14 @@ public class RxUtil {
         rx.setTakeMin(Float.parseFloat(takeMin));
         rx.setMethod(method);
         rx.setFrequencyCode(frequency);
-        rx.setDuration(duration);
+        if(!duration.equals("0")){
+            rx.setDuration(duration);
+        }
         rx.setDurationUnit(durationUnit);
         rx.setPrn(prn);
-        rx.setQuantity(Integer.toString(quantity));
+        if(quantity!=0){
+            rx.setQuantity(Integer.toString(quantity));
+        }
         rx.setSpecial(instructions);
         HashMap hm = new HashMap();
         hm.put("takeMin", rx.getTakeMin());
@@ -567,8 +624,8 @@ public class RxUtil {
         hm.put("prn", rx.getPrn());
         hm.put("quantity", rx.getQuantity());
     //    p(instructions);
-        System.out.println(hm);
-        return hm;
+        System.out.println("in parse instruction: "+hm);
+        return ;
     }
 
     public static String trimSpecial(RxPrescriptionData.Prescription rx) {
@@ -599,11 +656,12 @@ public class RxUtil {
         }
         //remove custom name
         String regex5 = rx.getCustomName();
+        System.out.println("regex5="+regex5);
         if (regex5 != null) {
             p = Pattern.compile(regex5);
             m = p.matcher(special);
             special = m.replaceAll("");
-        }
+        }System.out.println("special="+special);
         //assume drug name is before method and drug name is the first part of the instruction.
         if (special.indexOf("Take") != -1) {
             special = special.substring(special.indexOf("Take"));
@@ -673,7 +731,7 @@ public class RxUtil {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            if (rx.getRegionalIdentifier() != null) {
+            if (rx.getRegionalIdentifier() != null && rx.getRegionalIdentifier().length()>1) {p("if1");p(rx.getRegionalIdentifier());
                 //query the database to see if there is a rx with same din as this rx.
                // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
                 String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by drugid desc"; //most recent is the first.
@@ -684,8 +742,8 @@ public class RxUtil {
                     //else, set to special to "1 OD", quantity to "30", repeat to "0".
                     setDefaultSpecialQuantityRepeat(rx);
                 }
-            } else {
-                if (rx.getBrandName() != null) {
+            } else {p("else2");
+                if (rx.getBrandName() != null && rx.getBrandName().length()>1) {p("if2");
                     //String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by written_date desc"; //most recent is the first.
                     String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by drugid desc"; //most recent is the first.
                     //if none, query database to see if there is rx with same brandname.
@@ -697,8 +755,9 @@ public class RxUtil {
                         //else, set to special to "1 OD", quantity to "30", repeat to "0".
                         setDefaultSpecialQuantityRepeat(rx);
                     }
-                } else {
-                    if (rx.getCustomName() != null) {
+                } else {p("if3");
+                    if (rx.getCustomName() != null && rx.getCustomName().length()>1) {
+                        p("customName is not null");
                         //String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by written_date desc"; //most recent is the first.
                         String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by drugid desc"; //most recent is the first.
                         //if none, query database to see if there is rx with same customName.
@@ -722,12 +781,86 @@ public class RxUtil {
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
     }
-/*
+
+   private static boolean checkLastPrescribed(RxPrescriptionData.Prescription rx,int drugId){
+            //make a another query to get the latest drug with same name but archived not equals one and arhived reason equals to deleted.
+            //check if drugId is greater than that compare id
+            //if yes, return true;
+            //if not, return false;
+            boolean lastPrescribed=true;
+            //need the max drugId, not using DIN because it doesn't work with customed drugs.
+            String sql="SELECT max(drugid) FROM drugs WHERE archived=0 AND archived_reason='deleted' AND BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND GN='" + StringEscapeUtils.escapeSql(rx.getGenericName()) + "' AND demographic_no=" + rx.getDemographicNo();
+
+            try{
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs;
+                rs = db.GetSQL(sql);
+                if (rs.next()) {
+                    int compareId=rs.getInt("max(drugid)");
+                    System.out.println("compareId: "+compareId);
+                    if(drugId>compareId) lastPrescribed=true;
+                    else lastPrescribed=false;
+                }else{
+                    lastPrescribed=true;
+                }
+           }catch(SQLException e) {
+                logger.error(sql, e);
+            }
+            return lastPrescribed;
+        }
+
+   public static boolean checkDiscontinuedBefore (RxPrescriptionData.Prescription rx) {//check if this drug was discontinued before
+          //  System.out.println("in checkDiscontinued()");
+          //  System.out.println("this.BN, genericName, demotraphicNo: " + this.atcCode+ "--" + this.regionalIdentifier + "--" + this.demographicNo);
+            //String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by written_date desc";
+            //the query will fail to check if a drug A is prescribed, and drug A is prescribed again, and then the first drug A is discontinued,when the second drug A is represcribed
+            //or a third drug A is added, no warning will be given.
+            boolean discontinuedLatest=false;
+            String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + rx.getAtcCode() + "' AND regional_identifier='" + rx.getRegionalIdentifier() + "' AND demographic_no=" + rx.getDemographicNo()+" order by drugid desc";
+            try {
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs;
+                rs = db.GetSQL(sql);
+                if (rs.next()) {//get the first result which has the largest drugid and hence the most recent result.
+                   // System.out.println("in if ");
+                    int drugId=rs.getInt("drugid");
+                  //  System.out.println("drugId from first query: "+drugId);
+                    boolean isLastPrescribed=checkLastPrescribed(rx,drugId);//check if this drug was saved after discontinued.
+                    if (isLastPrescribed) {
+                   //     System.out.println("it's the last drug ");
+                        //get date discontinued
+                        //get reason for discontinued
+                        Date archivedDate = rs.getDate("archived_date");
+                       // String archDate = rs.getString("archived_date");
+                        String archDate = RxUtil.DateToString(archivedDate);
+                        String archReason = db.getString(rs, "archived_reason");
+                     //   System.out.println("archDate=" + archDate);
+                     //   System.out.println("archReason=" + archReason);
+                        rx.setLastArchDate(archDate);
+                        rx.setLastArchReason(archReason);                        
+                        discontinuedLatest=true;
+                    } else {                        
+                        discontinuedLatest=false;
+                        System.out.println("not last drug ");
+                    }
+                } else {
+                  //  System.out.println("in else ");                    
+                    discontinuedLatest=false;
+                }
+            } catch (SQLException e) {
+                logger.error(sql, e);
+            } finally {
+                DbConnectionFilter.releaseThreadLocalDbConnection();
+            }
+         //   System.out.println("end of checkDiscontinued()");
+            return discontinuedLatest;
+        }
+
     public static void p(String str, String s) {
         System.out.println(str + "=" + s);
     }
 
     public static void p(String str) {
         System.out.println(str);
-    }*/
+    }
 }
