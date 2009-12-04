@@ -23,7 +23,9 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -74,7 +76,7 @@ import org.oscarehr.util.TimeClearedHashMap;
 public class CaisiIntegratorManager {
 
 	/** only non-audited data should be cached in here */
-	private static TimeClearedHashMap<String, Object> basicDataCache=new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	private static Map<String, Object> basicDataCache=Collections.synchronizedMap(new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR));
 	
 	public static boolean isEnableIntegratedReferrals() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;

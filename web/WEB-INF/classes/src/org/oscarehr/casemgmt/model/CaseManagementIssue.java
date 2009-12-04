@@ -22,6 +22,7 @@
 
 package org.oscarehr.casemgmt.model;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.caisi.model.BaseObject;
-import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.ProgramAccess;
@@ -47,7 +47,7 @@ public class CaseManagementIssue extends BaseObject {
 
 	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
-	private static TimeClearedHashMap<String, Boolean> writeAccessCache=new TimeClearedHashMap<String, Boolean>(DateUtils.MILLIS_PER_MINUTE, DateUtils.MILLIS_PER_MINUTE);
+	private static Map<String, Boolean> writeAccessCache=Collections.synchronizedMap(new TimeClearedHashMap<String, Boolean>(DateUtils.MILLIS_PER_MINUTE, DateUtils.MILLIS_PER_MINUTE));
 	
 	protected Long id;
 	protected String demographic_no;

@@ -22,8 +22,10 @@
 
 package org.oscarehr.casemgmt.dao;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.LogManager;
@@ -42,7 +44,7 @@ public class ClientImageDAO extends HibernateDaoSupport {
 	/**
 	 * This is a simple cache for image data because the images are excessively large (relatively speaking). The Integer key is the demographic_no.
 	 */
-	private static final TimeClearedHashMap<Integer, ClientImage> dataCache = new TimeClearedHashMap<Integer, ClientImage>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_MINUTE * 5);
+	private static final Map<Integer, ClientImage> dataCache = Collections.synchronizedMap(new TimeClearedHashMap<Integer, ClientImage>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_MINUTE * 5));
 
 	public void saveClientImage(ClientImage clientImage) {
 		ClientImage existing = getClientImage(clientImage.getDemographic_no());
@@ -68,7 +70,7 @@ public class ClientImageDAO extends HibernateDaoSupport {
 			@SuppressWarnings("unchecked")
 			List<ClientImage> results = getHibernateTemplate().find("from ClientImage i where i.demographic_no=? order by update_date desc", clientId);
 			if (results.size() > 0) {
-				clientImage = (ClientImage) results.get(0);
+				clientImage = results.get(0);
 
 				// add to cache
 				dataCache.put(clientId, clientImage);

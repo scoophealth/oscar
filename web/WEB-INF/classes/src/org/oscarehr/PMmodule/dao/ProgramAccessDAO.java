@@ -22,7 +22,9 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
@@ -36,7 +38,7 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
 
     private static Log log = LogFactory.getLog(ProgramAccessDAO.class);
 
-	private static TimeClearedHashMap<Long, List<ProgramAccess>> programAccessListByProgramIdCache=new TimeClearedHashMap<Long, List<ProgramAccess>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	private static Map<Long, List<ProgramAccess>> programAccessListByProgramIdCache=Collections.synchronizedMap(new TimeClearedHashMap<Long, List<ProgramAccess>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR));
 
     @SuppressWarnings("unchecked")
     public List<ProgramAccess> getAccessListByProgramId(Long programId) {
