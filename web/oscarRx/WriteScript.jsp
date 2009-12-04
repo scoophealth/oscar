@@ -771,7 +771,7 @@ String annotation_attrib = "";// = "anno"+now;
         var ran_number=Math.round(Math.random()*1000000);
         var params = "resId="+resourceId+"&updatedat="+updated+"&rand="+ran_number;  //hack to get around ie caching the page
         
-        console.log("params: "+params);
+        //console.log("params: "+params);
         new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true}); 
          
     }
