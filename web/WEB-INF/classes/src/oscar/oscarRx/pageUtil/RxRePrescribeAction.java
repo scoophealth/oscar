@@ -267,7 +267,8 @@ public final class RxRePrescribeAction extends DispatchAction {
 
         RxPrescriptionData rxData = new RxPrescriptionData();
         int i;
-        String strId = (request.getParameter("drugId").split("_"))[1];
+        //String strId = (request.getParameter("drugId").split("_"))[1];
+        String strId = request.getParameter("drugId");
   //      p("!!!!!!!!!s", strId);
 try{
 
@@ -287,7 +288,7 @@ try{
        rx.setSpecial(spec);
 
         List<RxPrescriptionData.Prescription> listReRx=new ArrayList();
-        rx.checkDiscontinued();
+        rx.setDiscontinuedLatest(RxUtil.checkDiscontinuedBefore(rx));
         //add rx to rx list
         if(isUnique(beanRX,rx)){
             listReRx.add(rx);
