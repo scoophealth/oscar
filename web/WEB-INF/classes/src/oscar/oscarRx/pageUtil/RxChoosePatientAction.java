@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.data.RxPatientData;
 
 
@@ -102,7 +103,10 @@ public final class RxChoosePatientAction extends Action {
         
         if(patient!=null) {
             request.getSession().setAttribute("Patient", patient);
-            return (mapping.findForward("success"));
+            if(OscarProperties.getInstance().getBooleanProperty("RX3", "yes")){//if rx3 is set to yes.
+                System.out.println("successRX3");
+                    return (mapping.findForward("successRX3"));
+            }else   return (mapping.findForward("success"));
             
         } else //no records found
         {
