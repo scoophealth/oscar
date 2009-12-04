@@ -1042,7 +1042,7 @@ public class CaseManagementManager {
 
 		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
 			Secrole accessRole = (Secrole) iter.next();
-			if (role.getId() == accessRole.getId()) {
+			if (role.getId().longValue() == accessRole.getId().longValue()) {
 				return true;
 			}
 		}
