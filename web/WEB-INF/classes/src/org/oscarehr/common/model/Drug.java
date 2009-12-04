@@ -173,7 +173,8 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	}
 
 	public Date getEndDate() {
-		return endDate;
+            if(this.isDiscontinued()) return archivedDate;
+            else return endDate;
 	}
 
 	public void setEndDate(Date endDate) {
