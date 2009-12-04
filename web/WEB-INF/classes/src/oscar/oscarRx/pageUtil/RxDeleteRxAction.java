@@ -165,7 +165,7 @@ public final class RxDeleteRxAction extends DispatchAction {
         int id = Integer.parseInt(idStr);
 
         String reason = request.getParameter("reason");
-        String comment = request.getParameter("comment"); //TODO: PUT this in a note
+        //String comment = request.getParameter("comment"); //TODO: PUT this in a note
 
         String ip = request.getRemoteAddr();
 
@@ -174,7 +174,7 @@ public final class RxDeleteRxAction extends DispatchAction {
         Date date = new Date();
         String logStatement = drug+" Changing end date to :"+date;
         drug.setArchivedDate(date);
-        drug.setEndDate(drug.getArchivedDate());
+        //drug.setEndDate(drug.getArchivedDate());
         drug.setArchived(true);
         drug.setArchivedReason(reason);
         //System.out.println("");
@@ -198,14 +198,30 @@ public final class RxDeleteRxAction extends DispatchAction {
             System.out.println("value="+request.getSession().getAttribute(s));
         }*/
         
-        //create a note and store this info in casemanagement_note table
+        createDiscontinueNote(request);
+
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);
+       
+        Hashtable d = new Hashtable();
+        d.put("id",""+id);
+        d.put("reason",reason);
+        response.setContentType("text/x-json");
+        JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d );
+        jsonArray.write(response.getWriter());
+
+        return null;
+    }
+
+    private void createDiscontinueNote(HttpServletRequest request){
+         //create a note and store this info in casemanagement_note table
         //note_id,update_date,observation_date,demographic_no,provider_no,note: ,signed,include_issue_innote,archived,position, uuid
         //signing_provider_no,encounter_type:  billing_code:  program_no,reporter_caisi_role,reporter_program_team,history, password, locked
         CaseManagementNote cmn=new CaseManagementNote();
         //get parameter values
         Date now=EDocUtil.getDmsDateTimeAsDate();
         String demoNo=request.getParameter("demoNo");
-        String user=request.getSession().getAttribute("user").toString();        
+        String idStr = request.getParameter("drugId");
+        String user=request.getSession().getAttribute("user").toString();
         String strNote="Discontinued reason: "+request.getParameter("reason")+ "\nDiscontinued comment: "+request.getParameter("comment") ;
         HttpSession se = request.getSession();
         String prog_no = new EctProgram(se).getProgram(user);
@@ -238,17 +254,6 @@ public final class RxDeleteRxAction extends DispatchAction {
       //  System.out.println("ValuesSavedInCaseManagementNoteLink: ");
       //  System.out.println(" last note id="+EDocUtil.getLastNoteId());
         EDocUtil.addCaseMgmtNoteLink(cmnl);
-
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);
-       
-        Hashtable d = new Hashtable();
-        d.put("id",""+id);
-        d.put("reason",reason);
-        response.setContentType("text/x-json");
-        JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d );
-        jsonArray.write(response.getWriter());
-
-        return null;
     }
 
 }
