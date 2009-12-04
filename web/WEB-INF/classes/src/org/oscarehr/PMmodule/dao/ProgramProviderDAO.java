@@ -49,12 +49,23 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     public List<ProgramProvider> getProgramProviderByProviderProgramId(String providerNo, Long programId) {
     	String cacheKey=makeCacheKey(providerNo, programId);
     	
-    	List<ProgramProvider> results=programProviderByProviderProgramIdCache.get(cacheKey);
+		List<ProgramProvider> results = null;
+		synchronized (programProviderByProviderProgramIdCache)
+		{
+			results = programProviderByProviderProgramIdCache.get(cacheKey);
+		}
+
     	if (results==null)
     	{
     		String q = "select pp from ProgramProvider pp where pp.ProgramId=? and pp.ProviderNo=?";
     		results=getHibernateTemplate().find(q, new Object[] {programId, providerNo});
-    		if (results!=null) programProviderByProviderProgramIdCache.put(cacheKey, results);
+			if (results != null)
+			{
+				synchronized (programProviderByProviderProgramIdCache)
+				{
+					programProviderByProviderProgramIdCache.put(cacheKey, results);
+				}
+			}
     	}
     		
         return results;
