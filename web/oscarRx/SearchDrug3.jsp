@@ -517,7 +517,7 @@ body {
                                             <td style="width:350px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
                                                 <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off"  />
                                                 <div id="autocomplete_choices"></div>
-                                                <span id="indicator1" style="display: none"><img src="/images/spinner.gif" alt="Working..." ></span>                                      
+                                                <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
 
 
                                             </td>
@@ -528,7 +528,7 @@ body {
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
                                                 <div class="buttonrow">
-                                                    <input id="saveButton" type="button"  onclick="updateAllDrugs();saveData();" value="Save & Prescribe " />
+                                                    <input id="saveButton" type="button"  onclick="updateSaveAllDrugs();" value="Save & Prescribe " />
                                                     <input id="customDrug" type="button"  onclick="customWarning2();" value="Custom Drug" />
                                                 </div>                                  
                                                
@@ -618,9 +618,9 @@ body {
 
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');"><bean:message key="SearchDrug.msgShowAll"/></a>
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
+                                                                          <%--  <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
+                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a> --%>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')">Longterm /Acute</a>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')">Longterm /Acute/Inactive</a>
 
@@ -1094,9 +1094,10 @@ function popForm2(){
                new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true,evalScripts:true});
          }
           //callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
-          <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
+      <%--    <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
           callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
           </oscar:oscarPropertiesCheck>
+      --%>
           callReplacementWebService("ListDrugs.jsp",'drugProfile');
 
     <%--
@@ -1206,6 +1207,32 @@ function addFav(randomId,brandName){
         }})
    }
 }
+    var resHidden2 = 0;
+    function showHiddenRes(){
+        var list = $$('div.hiddenResource');
+
+        if(resHidden2 == 0){
+          list.invoke('show');
+          resHidden2 = 1;
+          $('showHiddenResWord').update('hide');
+        }else{
+          $('showHiddenResWord').update('show');
+          list.invoke('hide');
+          resHidden2 = 0;
+        }
+    }
+    
+   function HideW(id,resourceId,updated){
+        var url = 'GetmyDrugrefInfo.do?method=setWarningToHide';
+        //callReplacementWebService("GetmyDrugrefInfo.do?method=setWarningToHide",'interactionsRxMyD');function callReplacementWebService(url,id){
+        var ran_number=Math.round(Math.random()*1000000);
+        var params = "resId="+resourceId+"&updatedat="+updated+"&rand="+ran_number;  //hack to get around ie caching the page
+
+        //console.log("params: "+params);
+        new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true});
+
+    }
+
 
 function setSearchedDrug(drugId,name){
 
@@ -1322,7 +1349,7 @@ function updateQty(element){
         return true;
     }
 
-    function saveData(){
+  /*  function saveData(){
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=saveDrug";
         new Ajax.Request(url,
@@ -1333,7 +1360,7 @@ function updateQty(element){
             }});
 
         return false;
-    }
+    }*/
 
     function addLuCode(eleId,luCode){
         $(eleId).value = $(eleId).value +" LU Code: "+luCode;
@@ -1350,7 +1377,7 @@ function updateQty(element){
         
 
 //Called onclick for prescribe button. serilaizes the form and passes to WriteScruipt/updateAllDrugs Action
-    function updateAllDrugs(){
+ /*   function updateAllDrugs(){
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateAllDrugs";
         new Ajax.Request(url,
@@ -1358,6 +1385,18 @@ function updateQty(element){
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
                 //popForm2();
+            }});
+        return false;
+    }*/
+
+    function updateSaveAllDrugs(){
+        var data=Form.serialize($('drugForm'));
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs";
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data "+url);
+                popForm2();
             }});
         return false;
     }
