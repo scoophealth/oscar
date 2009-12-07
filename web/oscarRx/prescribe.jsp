@@ -92,7 +92,7 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
     <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
 
     <label style="float:left;width:80px;">Name:</label>
-    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     size="30" <%if(gcn==0){%> onchange="saveCustomName(this);" <%} else{%> value="<%=drugName%>" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span><span id="inactive_<%=rand%>" style="color:red;"></span><br>
+    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     size="30" <%if(gcn==0 && (drugName==null || drugName.equalsIgnoreCase("null") || drugName.equals(""))){%> onchange="saveCustomName(this);" <%} else{%> value="<%=drugName%>" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span><span id="inactive_<%=rand%>" style="color:red;"></span><br>
     <label style="float:left;width:80px;">Instructions:</label>
        <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="<%=instructions%>" size="60" onblur="parseIntr(this);" /> <br>
     <label style="float:left;width:80px;">Quantity:</label>
