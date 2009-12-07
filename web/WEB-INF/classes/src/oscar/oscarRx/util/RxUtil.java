@@ -298,13 +298,27 @@ public class RxUtil {
         }
 
 
-        String[] routes = {"(?i)PO", "(?i)SL", "(?i)IM", "(?i)SC", "(?i)PATCH", "(?i)TOP.", "(?i)INH",
-            "(?i)SUPP", "(?i)O.D.", "(?i)O.S.", "(?i)O.U.", "(?i)OD", "(?i)OS", "(?i)OU"};
+ /*       String[] routes = {"\\s(?i)PO$", "(?i)SL$", "(?i)IM$", "(?i)SC$", "(?i)PATCH$", "(?i)TOP\\.$", "(?i)INH$",
+            "(?i)SUPP$", "(?i)O\\.D\\.$", "(?i)O\\.S\\.$", "(?i)O\\.U\\.$", "(?i)OD$", "(?i)OS$", "(?i)OU$"};
         String[] frequences = {"\\s(?i)OD\\s*", "\\s(?i)BID\\s*", "\\s(?i)TID\\s*", "\\s(?i)QID\\s*", "\\s(?i)Q1H\\s*", "\\s(?i)Q2H\\s*", "\\s(?i)Q1-2H\\s*", "\\s(?i)Q3-4H\\s*", "\\s(?i)Q4H\\s*", "\\s(?i)Q4-6H\\s*",
             "\\s(?i)Q6H\\s*", "\\s(?i)Q8H\\s*", "\\s(?i)Q12H\\s*", "\\s(?i)QAM\\s*", "\\s(?i)QPM\\s*", "\\s(?i)QHS\\s*", "\\s(?i)Q1Week\\s*", "\\s(?i)Q2Week\\s*", "\\s(?i)Q1Month\\s*", "\\s(?i)Q3Month\\s*"};
         String[] methods = {"(?i)Take", "(?i)Apply", "(?i)Rub well in"};
         String[] durationUnits = {"\\s+(?i)days\\s*", "\\s+(?i)weeks\\s*", "\\s+(?i)months\\s*", "\\s+(?i)day\\s*", "\\s+(?i)week\\s*", "\\s+(?i)month\\s*",
             "\\s+(?i)d\\s*", "\\s+(?i)w\\s*", "\\s+(?i)m\\s*"};
+*/
+        String[] routes = {"\\s(?i)PO$", "(?i)SL$", "(?i)IM$", "(?i)SC$", "(?i)PATCH$", "(?i)TOP\\.$", "(?i)INH$",
+            "(?i)SUPP$", "(?i)O.D.$", "(?i)O.S.$", "(?i)O.U.$", "(?i)OD$", "(?i)OS$", "(?i)OU$","\\s(?i)PO\\s", "(?i)SL\\s", "(?i)IM\\s", "(?i)SC\\s", "(?i)PATCH\\s", "(?i)TOP\\.\\s", "(?i)INH\\s",
+            "(?i)SUPP\\s", "(?i)O.D.\\s", "(?i)O.S.\\s", "(?i)O.U.\\s", "(?i)OD\\s", "(?i)OS\\s", "(?i)OU\\s"};
+        String[] frequences = {"\\s(?i)OD\\s", "\\s(?i)BID\\s", "\\s(?i)TID\\s", "\\s(?i)QID\\s", "\\s(?i)Q1H\\s", "\\s(?i)Q2H\\s", "\\s(?i)Q1-2H\\s", "\\s(?i)Q3-4H\\s",
+        "\\s(?i)Q4H\\s", "\\s(?i)Q4-6H\\s","\\s(?i)Q6H\\s", "\\s(?i)Q8H\\s", "\\s(?i)Q12H\\s", "\\s(?i)QAM\\s", "\\s(?i)QPM\\s", "\\s(?i)QHS\\s", "\\s(?i)Q1Week\\s",
+        "\\s(?i)Q2Week\\s", "\\s(?i)Q1Month\\s", "\\s(?i)Q3Month\\s",
+        "\\s(?i)OD$", "\\s(?i)BID$", "\\s(?i)TID$", "\\s(?i)QID$", "\\s(?i)Q1H$", "\\s(?i)Q2H$", "\\s(?i)Q1-2H$", "\\s(?i)Q3-4H$", "\\s(?i)Q4H$",
+        "\\s(?i)Q4-6H$","\\s(?i)Q6H$", "\\s(?i)Q8H$", "\\s(?i)Q12H$", "\\s(?i)QAM$", "\\s(?i)QPM$", "\\s(?i)QHS$", "\\s(?i)Q1Week$", "\\s(?i)Q2Week$",
+            "\\s(?i)Q1Month$", "\\s(?i)Q3Month$"};
+        String[] methods = {"(?i)Take", "(?i)Apply", "(?i)Rub well in"};
+        String[] durationUnits = {"\\s+(?i)days\\s", "\\s+(?i)weeks\\s", "\\s+(?i)months\\s", "\\s+(?i)day\\s", "\\s+(?i)week\\s", "\\s+(?i)month\\s",
+            "\\s+(?i)d\\s", "\\s+(?i)w\\s", "\\s+(?i)m\\s","\\s+(?i)days$", "\\s+(?i)weeks$", "\\s+(?i)months$", "\\s+(?i)day$", "\\s+(?i)week$", "\\s+(?i)month$",
+            "\\s+(?i)d$", "\\s+(?i)w$", "\\s+(?i)m$"};
 
 
         for (String s : routes) {
@@ -350,6 +364,8 @@ public class RxUtil {
 
             }
         }
+
+        p("route",route);
         if (route.equals("")) {
             System.out.println("route is not set");
         }
