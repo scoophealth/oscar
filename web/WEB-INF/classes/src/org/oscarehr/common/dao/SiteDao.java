@@ -126,5 +126,14 @@ public class SiteDao extends HibernateDaoSupport {
 	public Site getById(Integer id) {
 		return (Site) getHibernateTemplate().get(Site.class, id);
 	}
+	
+	public Site getByLocation(String location) {
+		List<Site> rs = getHibernateTemplate().find(
+				"from Site s where s.name=?", location);
+		if (rs.size()>0)
+			return rs.get(0);
+		else
+			return null;
+	}
 
 }

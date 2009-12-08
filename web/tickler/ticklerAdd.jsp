@@ -148,7 +148,7 @@ alert("<bean:message key="tickler.ticklerAdd.msgMissingDate"/>");
 	return false;
  }
 <% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
- else if (document.serviceform.sites.value=="none"){
+ else if (document.serviceform.site.value=="none"){
 alert("Must assign task to a provider.");
 	return false;
  } 
@@ -320,22 +320,33 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 <% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
 { // multisite start ==========================================
         	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-          	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no); 
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo(user_no);
+          	String appNo = (String) session.getAttribute("cur_appointment_no");
+          	String location = null;
+          	if (appNo != null) {
+          		ResultSet rs = apptMainBean.queryResults(appNo, "get_appt_location");
+          		if(rs.next()) location=apptMainBean.getString(rs,1);
+          		apptMainBean.closePstmtConn();
+          	}
       %> 
       <script>
 var _providers = [];
-<%	for (int i=0; i<sites.size(); i++) { %>
+<%	
+Site site = null;
+for (int i=0; i<sites.size(); i++) { %>
 	_providers["<%= sites.get(i).getSiteId() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
 	while (iter.hasNext()) {
 		Provider p=iter.next();
 		if ("1".equals(p.getStatus())) {
 	%><option value='<%= p.getProviderNo() %>'><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
-<% } %>
+<%	if (sites.get(i).getName().equals(location))
+		site = sites.get(i);
+	} %>
 function changeSite(sel) {
 	sel.form.task_assigned_to.innerHTML=sel.value=="none"?"":_providers[sel.value];
 }
       </script>
-      	<select name="site" onchange="changeSite(this)">
+      	<select id="site" name="site" onchange="changeSite(this)">
       		<option value="none">---select clinic---</option>
       	<%
       	for (int i=0; i<sites.size(); i++) {
@@ -344,6 +355,10 @@ function changeSite(sel) {
       	<% } %>
       	</select>
       	<select name="task_assigned_to" style="width:140px"></select>
+      	<script>
+      		document.getElementById("site").value = '<%= site==null?"none":site.getSiteId() %>';
+      		changeSite(document.getElementById("site"));
+      	</script>
 <% // multisite end ==========================================
 } else {
 %>
