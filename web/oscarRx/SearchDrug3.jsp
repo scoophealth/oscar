@@ -178,6 +178,28 @@
 
            }
 
+           var highlightMatch = function(full, snippet, matchindex) {
+            return full.substring(0, matchindex) +
+                "<span class=match>" +
+                full.substr(matchindex, snippet.length) +
+                "</span>" +
+                full.substring(matchindex + snippet.length);
+           };
+
+           var resultFormatter = function(oResultData, sQuery, sResultMatch) {
+               var query = sQuery.toUpperCase();
+               var drugName = oResultData[0];
+               
+               var mIndex = drugName.toUpperCase().indexOf(query);
+               var display = '';
+
+               if(mIndex > -1){
+                   display = highlightMatch(drugName,query,mIndex);
+               }else{
+                   display = drugName;
+               }
+               return  display;
+           };
         </script>
 
         <script type="text/javascript">
@@ -413,6 +435,9 @@ function checkRePrescribe(){
                </style>
 
         <style type="text/css">
+            .match{
+                font-weight:bold;
+            }
 #myAutoComplete {
     width:25em; /* set width here or else widget will expand to fit its container */
     padding-bottom:2em;
@@ -1148,11 +1173,20 @@ YAHOO.example.BasicRemote = function() {
     };
     // Enable caching
     oDS.maxCacheEntries = 500;
+
+    oDS.connXhrMode ="cancelStaleRequests";
+                        /*  Not sure which one of these to use
+                        cancelStaleRequests
+                            If a request is already in progress, cancel it before sending the next request.
+                        ignoreStaleResponses
+                            Send all requests, but handle only the response for the most recently sent request.
+                        */
     // Instantiate the AutoComplete
     var oAC = new YAHOO.widget.AutoComplete("searchString", "autocomplete_choices", oDS);
     oAC.queryMatchSubset = true;
     oAC.minQueryLength = 3;
     oAC.maxResultsDisplayed = 25;
+     oAC.formatResult = resultFormatter;
     //oAC.typeAhead = true;
     //oAC.queryMatchContains = true;
     oAC.itemSelectEvent.subscribe(function(type, args) {
