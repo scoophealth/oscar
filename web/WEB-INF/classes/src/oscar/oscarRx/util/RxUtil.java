@@ -805,7 +805,7 @@ public class RxUtil {
             //if not, return false;
             boolean lastPrescribed=true;
             //need the max drugId, not using DIN because it doesn't work with customed drugs.
-            String sql="SELECT max(drugid) FROM drugs WHERE archived=0 AND archived_reason='deleted' AND BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND GN='" + StringEscapeUtils.escapeSql(rx.getGenericName()) + "' AND demographic_no=" + rx.getDemographicNo();
+            String sql="SELECT max(drugid) FROM drugs WHERE archived=0 AND archived_reason='' AND BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND GN='" + StringEscapeUtils.escapeSql(rx.getGenericName()) + "' AND demographic_no=" + rx.getDemographicNo();
 
             try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -828,11 +828,11 @@ public class RxUtil {
    public static boolean checkDiscontinuedBefore (RxPrescriptionData.Prescription rx) {//check if this drug was discontinued before
           //  System.out.println("in checkDiscontinued()");
           //  System.out.println("this.BN, genericName, demotraphicNo: " + this.atcCode+ "--" + this.regionalIdentifier + "--" + this.demographicNo);
-            //String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by written_date desc";
+            //String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'' OR archived_reason<'' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by written_date desc";
             //the query will fail to check if a drug A is prescribed, and drug A is prescribed again, and then the first drug A is discontinued,when the second drug A is represcribed
             //or a third drug A is added, no warning will be given.
             boolean discontinuedLatest=false;
-            String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'deleted' OR archived_reason<'deleted' ) AND ATC='" + rx.getAtcCode() + "' AND regional_identifier='" + rx.getRegionalIdentifier() + "' AND demographic_no=" + rx.getDemographicNo()+" order by drugid desc";
+            String sql="SELECT * FROM drugs WHERE archived=1 AND archived_reason<>'' AND ATC='" + rx.getAtcCode() + "' AND regional_identifier='" + rx.getRegionalIdentifier() + "' AND demographic_no=" + rx.getDemographicNo()+" order by drugid desc";
             try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs;
