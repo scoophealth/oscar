@@ -47,7 +47,7 @@ public class ManageHnrClient {
 		List<ClientLink> temp = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, true, ClientLink.Type.HNR);
 		if (temp.size() > 0) clientLink = temp.get(0);
 
-		if (CaisiIntegratorManager.isEnableHealthNumberRegistry() && clientLink != null) {
+		if (loggedInInfo.currentFacility.isEnableHealthNumberRegistry() && loggedInInfo.currentFacility.isIntegratorEnabled() && clientLink != null) {
 			try {
 				hnrClient = CaisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
 			} catch (ConnectException_Exception e) {

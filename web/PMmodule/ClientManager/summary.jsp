@@ -20,6 +20,7 @@
 <%
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 %>
 
 
@@ -141,7 +142,8 @@ function openSurvey() {
 			<td>
 				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />
 				<%
-					if (CaisiIntegratorManager.isEnableHealthNumberRegistry())
+					// show the button even if integrator is disabled, this is to allow people to validate local data with integrator disabled.
+					if (loggedInInfo.currentFacility.isEnableHealthNumberRegistry())
 					{
 						%>
 							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr_client.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />

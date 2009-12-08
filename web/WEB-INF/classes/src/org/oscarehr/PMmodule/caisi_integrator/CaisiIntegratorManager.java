@@ -83,11 +83,6 @@ public class CaisiIntegratorManager {
 		return(facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals());
 	}
 
-	public static boolean isEnableHealthNumberRegistry() {
-		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
-		return(facility.isIntegratorEnabled() && facility.isEnableHealthNumberRegistry());
-	}
-
 	private static void addAuthenticationInterceptor(Facility facility, Object wsPort) {
 		CxfClientUtils.addWSS4JAuthentication(facility.getIntegratorUser(), facility.getIntegratorPassword(), wsPort);
 	}
