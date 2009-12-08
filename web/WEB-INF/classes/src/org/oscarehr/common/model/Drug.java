@@ -87,7 +87,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	private boolean customInstructions;
 	private String unitName = null;
 	@Column(name = "long_term")
-	private Boolean longTerm;
+	private Boolean longTerm = false;
 	@Column(name = "past_med")
 	private Boolean pastMed;
 	@Column(name = "patient_compliance")
