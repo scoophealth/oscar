@@ -114,7 +114,7 @@ function submitStatus(ctrl) {
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="no">
 			<a
-				href='providercontrol.jsp?infirmaryView_isOscar=true&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|
+				href='providercontrol.jsp?infirmaryView_isOscar=true&GoToCaisiViewFromOscarView=false&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|
 			Oscar View</a>
 		</caisi:ProgramExclusiveView>
 	</caisi:isModuleLoad>
@@ -123,7 +123,7 @@ function submitStatus(ctrl) {
 <logic:equal name="infirmaryView_isOscar" value="true">
 	<caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="no">
 		<div align="right"><a
-			href='providercontrol.jsp?infirmaryView_isOscar=false&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|
+			href='providercontrol.jsp?infirmaryView_isOscar=false&GoToCaisiViewFromOscarView=true&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|
 		Case Management View</a></div>
 	</caisi:ProgramExclusiveView>
 </logic:equal>

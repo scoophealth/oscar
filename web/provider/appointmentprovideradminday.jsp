@@ -107,11 +107,16 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
     response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.providerCookie));
 
-    String mygroupno = (String) session.getAttribute("groupno");
+    String mygroupno = (String) session.getAttribute("groupno");  
+    String caisiView = null;
+    caisiView = (String)request.getParameter("GoToCaisiViewFromOscarView");
+    if(caisiView!=null && "true".equals(caisiView)) {
+    	mygroupno = ".default";
+    }
     String userfirstname = (String) session.getAttribute("userfirstname");
     String userlastname = (String) session.getAttribute("userlastname");
     String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
-
+   
 	boolean bShortcutForm = oscarVariables.getProperty("appt_formview", "").equalsIgnoreCase("on") ? true : false;
 	String formName = bShortcutForm ? oscarVariables.getProperty("appt_formview_name") : "";
 	String formNameShort = formName.length() > 3 ? (formName.substring(0,2)+".") : formName;
@@ -952,7 +957,9 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
          
 <!-- caisi infirmary view extension add fffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
+	
 	<%@ include file="infirmaryviewprogramlist.jsp" %>	
+	
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end fffffffffffff-->
 
