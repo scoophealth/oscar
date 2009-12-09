@@ -70,7 +70,7 @@ public class Cds4ReportUIBean {
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages, String[] serviceDeliveryLhins, boolean measureServiceRecipientSatisfaction, boolean measureServiceRecipientFamiltySatisfaction, boolean qualityImprovementStrategies, boolean participateInAccreditation) {
+	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages, String[] serviceDeliveryLhins, HashMap<String,CdsManualLineEntry> manualSections, boolean measureServiceRecipientSatisfaction, boolean measureServiceRecipientFamiltySatisfaction, boolean qualityImprovementStrategies, boolean participateInAccreditation) {
 
 		GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, 1);
 		GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, 1);
@@ -83,16 +83,37 @@ public class Cds4ReportUIBean {
 
 		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4")) {
 			String dataLine=null;
+			String dataCategory=cdsFormOption.getCdsDataCategory();
 			
-			if (cdsFormOption.getCdsDataCategory().startsWith("006-")) dataLine=get006DataLine(cdsFormOption, serviceLanguages);
-			else if (cdsFormOption.getCdsDataCategory().startsWith("10b-")) dataLine=get10bDataLine(cdsFormOption, serviceDeliveryLhins);
-			else if (cdsFormOption.getCdsDataCategory().startsWith("032-")) dataLine=get032DataLine(cdsFormOption, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
+			if (dataCategory.startsWith("006-")) dataLine=get006DataLine(cdsFormOption, serviceLanguages);
+			else if (dataCategory.startsWith("10b-")) dataLine=get10bDataLine(cdsFormOption, serviceDeliveryLhins);
+			else if (dataCategory.startsWith("032-")) dataLine=get032DataLine(cdsFormOption, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
+			else if (manualSections.get(dataCategory)!=null) dataLine=getManualSectionDataLine(manualSections.get(cdsFormOption.getCdsDataCategory()));
 			else dataLine=getAdmissionDataLine(cdsFormOption, singleMultiAdmissions);
 			
-			if (dataLine!=null) asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + dataLine + ROW_TERMINATOR);
+			if (dataLine!=null) asciiTextFileRows.add(dataCategory + dataLine + ROW_TERMINATOR);
 		}
 
 		return (asciiTextFileRows);
+	}
+
+	private static String getManualSectionDataLine(CdsManualLineEntry cdsManualLineEntry) {
+		StringBuilder sb=new StringBuilder();
+		
+		sb.append(padTo6(cdsManualLineEntry.multipleAdmissions));
+		sb.append(padTo6(cdsManualLineEntry.cohort0));
+		sb.append(padTo6(cdsManualLineEntry.cohort1));
+		sb.append(padTo6(cdsManualLineEntry.cohort2));
+		sb.append(padTo6(cdsManualLineEntry.cohort3));
+		sb.append(padTo6(cdsManualLineEntry.cohort4));
+		sb.append(padTo6(cdsManualLineEntry.cohort5));
+		sb.append(padTo6(cdsManualLineEntry.cohort6));
+		sb.append(padTo6(cdsManualLineEntry.cohort7));
+		sb.append(padTo6(cdsManualLineEntry.cohort8));
+		sb.append(padTo6(cdsManualLineEntry.cohort9));
+		sb.append(padTo6(cdsManualLineEntry.cohort10));
+		
+		return(sb.toString());
 	}
 
 	private static SingleMultiAdmissions sortSingleMultiAdmission(int[] caisiProgramIds, GregorianCalendar startDate, GregorianCalendar endDate) {
@@ -607,11 +628,11 @@ public class Cds4ReportUIBean {
 	private static String padTo6(int i) {
 		StringBuilder sb = new StringBuilder();
 
-		if (i < 9) sb.append("0");
-		if (i < 99) sb.append("0");
-		if (i < 999) sb.append("0");
-		if (i < 9999) sb.append("0");
-		if (i < 99999) sb.append("0");
+		if (i < 10) sb.append("0");
+		if (i < 100) sb.append("0");
+		if (i < 1000) sb.append("0");
+		if (i < 10000) sb.append("0");
+		if (i < 100000) sb.append("0");
 
 		sb.append(i);
 

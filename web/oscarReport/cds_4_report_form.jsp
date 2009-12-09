@@ -44,10 +44,11 @@
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 
-<h1>CDS Reports</h1>
+
+<%@page import="org.oscarehr.web.CdsManualLineEntry"%><h1>CDS Reports</h1>
 
 <form method="post" action="cds_4_report_export.jsp">
-	<table>
+	<table class="borderedTableAndCells">
 		<tr>
 			<td>CDS version</td>
 			<td>CDS-MH 4.x</td>
@@ -157,6 +158,12 @@
 				<input type="checkbox" name="serviceLanguages" value="en" /> English<br />
 				<input type="checkbox" name="serviceLanguages" value="fr" /> French<br />
 				<input type="checkbox" name="serviceLanguages" value="other" /> Other
+			</td>
+		</tr>
+		<tr>
+			<td>7-02. Unique individuals - pre-admission</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("007-02")%>
 			</td>
 		</tr>
 		<tr>

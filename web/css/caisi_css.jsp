@@ -40,3 +40,8 @@
 		border: 1px solid black;
 		padding: 4px 4px 4px 4px;
 	}
+	
+	.borderedTableAndCells, .borderedTableAndCells td
+	{
+		border: solid silver 1px;
+	}

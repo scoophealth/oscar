@@ -1,4 +1,6 @@
 
+<%@page import="java.util.HashMap"%>
+<%@page import="org.oscarehr.web.CdsManualLineEntry"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="java.io.PrintWriter"%>
 <%@page import="java.util.ArrayList"%>
@@ -49,7 +51,11 @@
 	boolean qualityImprovementStrategies=WebUtils.isChecked(request, "qualityImprovementStrategies");
 	boolean participateInAccreditation=WebUtils.isChecked(request, "participateInAccreditation");
 	
-	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
+	HashMap<String,CdsManualLineEntry> manualSections=new HashMap<String,CdsManualLineEntry>();
+	CdsManualLineEntry section7_02=CdsManualLineEntry.getCdsManualLineEntry(request, "007-02");
+	manualSections.put("007-02", section7_02);
+	
+	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins, manualSections, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
 	
 	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode));
 	PrintWriter responseWriter=response.getWriter();
