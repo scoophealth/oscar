@@ -57,6 +57,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
+import java.util.HashMap;
 import java.util.List;
 import oscar.OscarProperties;
 
@@ -183,14 +184,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
      *NOTE: When working on these forms in linux, it helps to load the PDF file into gimp, switch to pt. coordinate system and use the mouse to find the coordinates.
      *Prepare to be bored!
      */
-   /* public void p(String s) {
-       System.out.println(s);
-    }
 
-    public void p(String s, String s2) {
-        System.out.println(s + "=" + s2);
-    }
-*/
+
     class EndPage extends PdfPageEventHelper {
 
         private String clinicName;
@@ -367,7 +362,27 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             }
         }
     }
+    private HashMap parseSCAddress(String s){
+        HashMap hm=new HashMap();
+        String[] ar=s.split("</b>");
+        String[] ar2 =ar[1].split("<br>");
+        ArrayList<String> lst=new ArrayList(Arrays.asList(ar2));
+        lst.remove(0);
+        String tel=lst.get(3);
+        tel=tel.replace("Tel: ", "");
+        String fax=lst.get(4);
+        fax=fax.replace("Fax: ", "");
+        String clinicName=lst.get(0)+"\n"+lst.get(1)+"\n"+lst.get(2);
+            System.out.println(tel);
+            System.out.println(fax);
+            System.out.println(clinicName);
+            hm.put("clinicName", clinicName);
+            hm.put("clinicTel", tel);
+            hm.put("clinicFax", fax);
 
+        return hm;
+
+    }
     protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx)
             throws DocumentException, java.io.IOException {
         System.out.println("***in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
@@ -414,11 +429,26 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         }
 
         System.out.println("method in generatePDFDocumentBytes "+method);
-                
-        //parameters need to be passed to header and footer
-        String clinicName = req.getParameter("clinicName");
-        String clinicTel = req.getParameter("clinicPhone");
-        String clinicFax = req.getParameter("clinicFax");
+String clinicName;
+String clinicTel;
+String clinicFax;
+        //check if satellite clinic is used
+        String useSatelliteClinic=(String)req.getParameter("useSC");
+        p(useSatelliteClinic);
+        if(useSatelliteClinic!=null && useSatelliteClinic.equalsIgnoreCase("true")){
+            String scAddress=(String)req.getParameter("scAddress");
+            p("clinic detail",scAddress);
+                HashMap hm=parseSCAddress(scAddress);
+                clinicName=(String)hm.get("clinicName");
+                clinicTel=(String)hm.get("clinicTel");
+                clinicFax=(String)hm.get("clinicFax");
+        }else{
+            //parameters need to be passed to header and footer
+             clinicName = req.getParameter("clinicName");
+             p("clinicName",clinicName);
+             clinicTel = req.getParameter("clinicPhone");
+             clinicFax = req.getParameter("clinicFax");
+        }
         String patientPhone = req.getParameter("patientPhone");
         String patientCityPostal = req.getParameter("patientCityPostal");
         String patientAddress = req.getParameter("patientAddress");
@@ -430,6 +460,15 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         if (rx == null) {
             rx = "";
         }
+        System.out.println("1");
+        Enumeration eee=req.getParameterNames();
+        while(eee.hasMoreElements())
+            System.out.println(eee.nextElement());
+        Enumeration fff=req.getAttributeNames();
+        p("-------------");
+        while(fff.hasMoreElements())
+            System.out.println(fff.nextElement());
+        
         String additNotes = req.getParameter("additNotes");
         String[] rxA = rx.split(newline);
         List<String> listRx = new ArrayList();
@@ -503,13 +542,23 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             // and FLSE
             // the following shows a temp way to get a print page size
             Rectangle pageSize = PageSize.LETTER;
-            if ("PageSize.HALFLETTER".equals(props.getProperty(PAGESIZE))) {
+            String pageSizeParameter=req.getParameter("rxPageSize");
+            if(pageSizeParameter!=null){
+                  if ("PageSize.HALFLETTER".equals(pageSizeParameter)) {
+                        pageSize = PageSize.HALFLETTER;
+                    } else if ("PageSize.A6".equals(pageSizeParameter)) {
+                        pageSize = PageSize.A6;
+                    } else if ("PageSize.A4".equals(pageSizeParameter)) {
+                        pageSize = PageSize.A4;
+                    }
+            }
+            /*  if ("PageSize.HALFLETTER".equals(props.getProperty(PAGESIZE))) {
                 pageSize = PageSize.HALFLETTER;
             } else if ("PageSize.A6".equals(props.getProperty(PAGESIZE))) {
                 pageSize = PageSize.A6;
             } else if ("PageSize.A4".equals(props.getProperty(PAGESIZE))) {
                 pageSize = PageSize.A4;
-            }
+            }*/
        //     p("size of page ", props.getProperty(PAGESIZE));
 
             document.setPageSize(pageSize);
@@ -550,7 +599,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 document.add(p);
             }
             //render additional notes
-            if (!additNotes.equals("")) {
+        //    p("addtNotes",additNotes);
+            if (additNotes!=null && !additNotes.equals("")) {
           //      p("additional notes not null");
                 bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 Paragraph p = new Paragraph(new Phrase(additNotes, new Font(bf, 10)));
@@ -564,7 +614,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         catch (DocumentException dex) {
             baosPDF.reset();
             throw dex;
-        } finally {
+        } 
+        catch(Exception e){
+            e.printStackTrace();
+        }finally {
             if (document != null) {
                 document.close();
             }
@@ -574,5 +627,12 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         }
         System.out.println("***END in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
         return baosPDF;
+    }
+        public void p(String s) {
+       System.out.println(s);
+    }
+
+    public void p(String s, String s2) {
+        System.out.println(s + "=" + s2);
     }
 }
