@@ -522,7 +522,7 @@ body {
 
     
 
-    <body  vlink="#0000FF" onload="checkFav();checkRePrescribe();<%-- initmb(); --%>load()" class="yui-skin-sam">
+    <body  vlink="#0000FF" onload="checkFav();checkRePrescribe();rxPageSizeSelect();<%-- initmb(); --%>load()" class="yui-skin-sam">
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
             <%@ include file="TopLinks2.jsp" %><!-- Row One included here-->
             <tr>
@@ -869,6 +869,12 @@ body {
                         }
 %>
 <script type="text/javascript">
+    function rxPageSizeSelect(){
+               var ran_number=Math.round(Math.random()*1000000);
+               var url="GetRxPageSizeInfo.do?method=view";
+               var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
+               new Ajax.Request(url, {method: 'post',parameters:params});
+    }
     function reprint2(scriptNo){
         var data="scriptNo="+scriptNo;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=reprint2";
@@ -1085,11 +1091,12 @@ function saveCustomName(element){
 function popForm2(){
         try{
             oscarLog("popForm2 called");
-            var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
+           // var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
+            var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp";
                     oscarLog( "preview2 done");
                     myLightWindow.activateWindow({
                         href: url,
-                        width: 420
+                        width: 660                        
                     });
 
         }
@@ -1339,7 +1346,7 @@ function updateQty(element){
 
         new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
-                str="Method: "+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
+                str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
                 oscarLog("json.duration="+json.duration);
  
@@ -1371,7 +1378,7 @@ function updateQty(element){
 
         new Ajax.Request(url, {method: 'get',parameters:instruction, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
-                str="Method: "+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
+                str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
                 oscarLog("json.duration="+json.duration);
                 if(json.prn){
@@ -1382,19 +1389,6 @@ function updateQty(element){
             }});
         return true;
     }
-
-  /*  function saveData(){
-        var data=Form.serialize($('drugForm'));
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=saveDrug";
-        new Ajax.Request(url,
-        {method: 'post',postBody:data,
-            onSuccess:function(transport){
-                oscarLog("successfully sent data "+url);
-                popForm2();
-            }});
-
-        return false;
-    }*/
 
     function addLuCode(eleId,luCode){
         $(eleId).value = $(eleId).value +" LU Code: "+luCode;
@@ -1408,20 +1402,7 @@ function updateQty(element){
                new Ajax.Updater(divId,url, {method:'get',parameters:params,asynchronous:true});
                //alert(origRequest.responseText);
          }
-        
 
-//Called onclick for prescribe button. serilaizes the form and passes to WriteScruipt/updateAllDrugs Action
- /*   function updateAllDrugs(){
-        var data=Form.serialize($('drugForm'));
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateAllDrugs";
-        new Ajax.Request(url,
-        {method: 'post',postBody:data,
-            onSuccess:function(transport){
-                oscarLog("successfully sent data "+url);
-                //popForm2();
-            }});
-        return false;
-    }*/
 
     function updateSaveAllDrugs(){
         var data=Form.serialize($('drugForm'));
