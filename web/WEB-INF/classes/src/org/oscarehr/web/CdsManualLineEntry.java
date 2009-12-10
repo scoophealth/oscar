@@ -2,7 +2,13 @@ package org.oscarehr.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 public class CdsManualLineEntry {
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	public int multipleAdmissions;
 	public int cohort0;
 	public int cohort1;
@@ -26,20 +32,35 @@ public class CdsManualLineEntry {
 	{
 		CdsManualLineEntry cdsManualLineEntry=new CdsManualLineEntry();
 		
-		cdsManualLineEntry.multipleAdmissions=Integer.parseInt(request.getParameter(section+".ma"));
-		cdsManualLineEntry.cohort0=Integer.parseInt(request.getParameter(section+".c0"));
-		cdsManualLineEntry.cohort1=Integer.parseInt(request.getParameter(section+".c1"));
-		cdsManualLineEntry.cohort2=Integer.parseInt(request.getParameter(section+".c2"));
-		cdsManualLineEntry.cohort3=Integer.parseInt(request.getParameter(section+".c3"));
-		cdsManualLineEntry.cohort4=Integer.parseInt(request.getParameter(section+".c4"));
-		cdsManualLineEntry.cohort5=Integer.parseInt(request.getParameter(section+".c5"));
-		cdsManualLineEntry.cohort6=Integer.parseInt(request.getParameter(section+".c6"));
-		cdsManualLineEntry.cohort7=Integer.parseInt(request.getParameter(section+".c7"));
-		cdsManualLineEntry.cohort8=Integer.parseInt(request.getParameter(section+".c8"));
-		cdsManualLineEntry.cohort9=Integer.parseInt(request.getParameter(section+".c9"));
-		cdsManualLineEntry.cohort10=Integer.parseInt(request.getParameter(section+".c10"));
+		cdsManualLineEntry.multipleAdmissions=getParameterDefault0(request, section+".ma");
+		cdsManualLineEntry.cohort0=getParameterDefault0(request, section+".c0");
+		cdsManualLineEntry.cohort1=getParameterDefault0(request, section+".c1");
+		cdsManualLineEntry.cohort2=getParameterDefault0(request, section+".c2");
+		cdsManualLineEntry.cohort3=getParameterDefault0(request, section+".c3");
+		cdsManualLineEntry.cohort4=getParameterDefault0(request, section+".c4");
+		cdsManualLineEntry.cohort5=getParameterDefault0(request, section+".c5");
+		cdsManualLineEntry.cohort6=getParameterDefault0(request, section+".c6");
+		cdsManualLineEntry.cohort7=getParameterDefault0(request, section+".c7");
+		cdsManualLineEntry.cohort8=getParameterDefault0(request, section+".c8");
+		cdsManualLineEntry.cohort9=getParameterDefault0(request, section+".c9");
+		cdsManualLineEntry.cohort10=getParameterDefault0(request, section+".c10");
 		
 		return(cdsManualLineEntry);
+	}
+	
+	private static int getParameterDefault0(HttpServletRequest request, String parameterName)
+	{
+		String temp=request.getParameter(parameterName);
+		temp=StringUtils.trimToNull(temp);
+		
+		try
+		{
+			return(Integer.parseInt(temp));
+		}
+		catch (Exception e){
+			logger.warn("Error in cds parameter entry, defaulting to 0", e);
+			return(0);
+		}
 	}
 	
 	public static String outputCdsManualLineEntryTable(String section)
