@@ -608,7 +608,7 @@ public final class RxWriteScriptAction extends DispatchAction {
       
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
    
-        request.getSession().setAttribute("rePrint", "false");//set to print.
+        request.getSession().setAttribute("rePrint", null);//set to print.
     //    p("**## print out fields in bean==========");
    //     p(bean.getProviderNo());
     //    p(Integer.toString(bean.getDemographicNo()));
@@ -832,7 +832,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         return null;
         }
 
-    public void saveDrug(HttpServletRequest request)
+    public void saveDrug(final HttpServletRequest request)
             throws IOException, ServletException, Exception {
         System.out.println("==========***### start save drug RxWriteScriptAction.java");
         // Enumeration emm = request.getSession().getAttributeNames();
