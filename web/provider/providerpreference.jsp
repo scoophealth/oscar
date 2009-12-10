@@ -333,6 +333,9 @@ function showHideBillPref() {
           <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a></td>
       </tr>
       <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxPageSize');return false;"><bean:message key="provider.btnSetRxPageSize"/></a></td>
+      </tr>
+      <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a></td>
       </tr>
       <tr>
