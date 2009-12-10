@@ -5,7 +5,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ page import="oscar.oscarProvider.data.*, oscar.log.*"%>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils, java.util.Enumeration"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="oscar.*,java.lang.*,java.util.Date"%>
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -55,129 +55,60 @@
 </logic:present>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
-<style type="text/css" media="print">
-                   .noprint{
-                       display:none;
-                   }
-                   .justforprint{
-                       float:left;
-                   }
-               </style>
 <script type="text/javascript" language="Javascript">
 
     function onPrint2(method) {
-     
+
             document.getElementById("preview2Form").action = "../form/createcustomedpdf?__title=Rx&__method=" + method;
             document.getElementById("preview2Form").target="_blank";
             document.getElementById("preview2Form").submit();
        return true;
     }
-
-     function printIframe(){
-   window.focus();
-   window.print();
-}
-
-
-function printPaste2Parent(){
-
-   try{
-      //text = ""****doctor oscardoc********************************************************************************";
-      //text = text.substring(0, 82) + "\n";
-      text = "";
-      //var previewForm = $('preview2Form');
-
-      if (document.all){
-         text += document.getElementById('rx_no_newlines').value
-      } else {
-         text += document.getElementById('rx_no_newlines').value + "\n";
-      }
-      //text += "**********************************************************************************\n";
-      
-      //we support pasting into orig encounter and new casemanagement
-      if( window.parent.opener.document.forms["caseManagementEntryForm"] != undefined ) {
-        window.parent.opener.pasteToEncounterNote(text);
-      }
-      else if( window.parent.opener.document.encForm != undefined )
-        window.parent.opener.document.encForm.enTextarea.value = window.parent.opener.document.encForm.enTextarea.value + text;
-
-   }catch (e){
-      alert ("ERROR: could not paste to EMR"+e);
-   }
-   printIframe();
-}
-
-
-function addNotes(){
-
-
-    var url = "AddRxComment.jsp";
-    var ran_number=Math.round(Math.random()*1000000);
-    var comment = encodeURIComponent(document.getElementById('additionalNotes').value);
-    var params = "scriptNo=60&comment="+comment+"&rand="+ran_number;  //]
-    //new Ajax.Request(url, {method: 'post',parameters:params});
-    document.getElementById('additNotes').innerHTML =  document.getElementById('additionalNotes').value;
-    document.getElementsByName('additNotes')[0].value=  document.getElementById('additionalNotes').value;
-}
-
-
-
-
 </script>
 
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
 <%
-//System.out.println("==========================IN Preview2.jsp=======================");
+System.out.println("==========================IN Preview2.jsp2=======================");
 
 Date rxDate = oscar.oscarRx.util.RxUtil.Today();
 //String rePrint = request.getParameter("rePrint");
-//String rePrint=(String)request.getAttribute("rePrint");
-String rePrint=(String)request.getSession().getAttribute("rePrint");
-//System.out.println("rePrint="+rePrint);
-//Enumeration en=request.getSession().getAttributeNames();
-  //      while(en.hasMoreElements())
-    //       System.out.println("session attr :"+en.nextElement());
+String rePrint = (String)request.getSession().getAttribute("rePrint");
+//String rePrint = (String)request.getSession().getAttribute("rePrint");
+System.out.println("rePrint"+rePrint);
 oscar.oscarRx.pageUtil.RxSessionBean bean;
 oscar.oscarRx.data.RxProviderData.Provider provider;
 String signingProvider;
-if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
+if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {
     bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");
-   // System.out.println("stash size "+bean);
     signingProvider = bean.getStashItem(0).getProviderNo();
-   // System.out.println("in if, signingProvider="+signingProvider);
+    System.out.println("in if, signingProvider="+signingProvider);
     rxDate = bean.getStashItem(0).getRxDate();
- //   System.out.println("RX DATE " + rxDate);
+    System.out.println("RX DATE " + rxDate);
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(signingProvider);
-  //  System.out.println("in if, provider no="+provider.getProviderNo());
+    System.out.println("in if, provider no="+provider.getProviderNo());
     session.setAttribute("tmpBeanRX", null);
-    String ip = request.getRemoteAddr();
-    //System.out.println("in if, ip="+ip);
+    String ip = request.getRemoteAddr();System.out.println("in if, ip="+ip);
     //LogAction.addLog((String) session.getAttribute("user"), LogConst.UPDATE, LogConst.CON_PRESCRIPTION, String.valueOf(bean.getDemographicNo()), ip);
 }
 else {
     bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
-    
+
     //set Date to latest in stash
     Date tmp;
-  //  System.out.println("bean.getStashSize()="+bean.getStashSize());
-  //  System.out.println("bean.getStashSize()="+bean.getStashSize());
- try{
-     System.out.println(bean.getStashItem(0).getAtcCode());
- } catch(Exception e){e.printStackTrace();}
+    System.out.println("bean.getStashSize()="+bean.getStashSize());
+
     for( int idx = 0; idx < bean.getStashSize(); ++idx ) {
-        tmp = bean.getStashItem(idx).getRxDate();
-        //System.out.println("in else, tmp="+tmp);
-        if( tmp.after(rxDate) ) { //this is wrong
+        tmp = bean.getStashItem(idx).getRxDate();System.out.println("in else, tmp="+tmp);
+        if( tmp.after(rxDate) ) {
             rxDate = tmp;
         }
     }
-    rePrint = "";    
-    signingProvider = bean.getProviderNo();
-    //System.out.println("in else , signingProvider="+signingProvider);
+    rePrint = "";
+    signingProvider = bean.getProviderNo();System.out.println("in else , signingProvider="+signingProvider);
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
-    //System.out.println("in else, provider no="+provider.getProviderNo());
+    System.out.println("in else, provider no="+provider.getProviderNo());
 }
 
 
@@ -189,28 +120,22 @@ ProSignatureData sig = new ProSignatureData();
 boolean hasSig = sig.hasSignature(signingProvider);
 String doctorName = "";
 if (hasSig){
-   doctorName = sig.getSignature(signingProvider);
-   //System.out.println("in if doctorName="+doctorName);
+   doctorName = sig.getSignature(signingProvider);System.out.println("in if doctorName="+doctorName);
 }else{
-   doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
-   //System.out.println("in else doctorName="+doctorName);
+   doctorName = (provider.getFirstName() + ' ' + provider.getSurname());System.out.println("in else doctorName="+doctorName);
 }
 
-
-
 doctorName = doctorName.replaceAll("\\d{6}","");
-doctorName = doctorName.replaceAll("\\-","");
-//System.out.println("doctorName="+doctorName);
+doctorName = doctorName.replaceAll("\\-","");System.out.println("doctorName="+doctorName);
+
 OscarProperties props = OscarProperties.getInstance();
 
 String pracNo = provider.getPractitionerNo();
-//System.out.println("pracNo="+pracNo);
-String strUser = (String)session.getAttribute("user");
-//System.out.println("strUser="+strUser);
-ProviderData user = new ProviderData(strUser);
-//System.out.println("user="+user);
-
-//System.out.println("==========================done first java part Preview2.jsp=======================");
+System.out.println("pracNo="+pracNo);
+String strUser = (String)session.getAttribute("user");System.out.println("strUser="+strUser);
+ProviderData user = new ProviderData(strUser);System.out.println("user="+user);
+System.out.println(provider.getClinicName().replaceAll("\\(\\d{6}\\)",""));
+System.out.println("==========================done first java part Preview2.jsp=======================");
 %>
 <html:form action="/form/formname" styleId="preview2Form">
 
@@ -218,12 +143,10 @@ ProviderData user = new ProviderData(strUser);
 		border=2>
 		<tr>
 			<td valign=top height="100px"><input type="image"
-				src="img/rx.gif" border="0" value="submit" alt="[Submit]"
+				src="img/rx.gif" border="0" alt="[Submit]"
 				name="submit" title="Print in a half letter size paper"
-				onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');" %>"
-                                >
-			<!--input type="hidden" name="printPageSize" value="PageSize.A6" /-->
-                        <% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
+				onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');"  %>">
+			<!--input type="hidden" name="printPageSize" value="PageSize.A6" /--> <% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
 			 	clinicTitle += provider.getClinicAddress() + "<br>" ;
 			 	clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
 			%> <input type="hidden" name="doctorName"
@@ -258,7 +181,7 @@ ProviderData user = new ProviderData(strUser);
 			<input type="hidden" name="sigDoctorName"
 				value="<%= StringEscapeUtils.escapeHtml(doctorName) %>" /> <!--img src="img/rx.gif" border="0"-->
 			</td>
-			<td valign=top height="100px" id="clinicAddress"><b><%=doctorName %></b><br>
+                        <td valign=top height="100px" id="clinicAddress"><b><%=doctorName%></b><br>
 			<c:choose>
 				<c:when test="${empty infirmaryView_programAddress}">
 					<%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
@@ -307,7 +230,7 @@ ProviderData user = new ProviderData(strUser);
                         {
                         rx = bean.getStashItem(i);
 						String fullOutLine=rx.getFullOutLine().replaceAll(";","<br />");
-						
+
 						if (fullOutLine==null || fullOutLine.length()<=6)
 						{
 							Logger.getLogger("preview_jsp").error("drug full outline was null");
@@ -322,17 +245,16 @@ ProviderData user = new ProviderData(strUser);
                         }
                         %> <input type="hidden" name="rx"
 						value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>" />
-					<input type="hidden" name="rx_no_newlines" id="rx_no_newlines"
-						value="<%= strRxNoNewLines.toString() %>" />
-                                        </td>
+					<input type="hidden" name="rx_no_newlines"
+						value="<%= strRxNoNewLines.toString() %>" /></td>
 				</tr>
-                                
+
                                 <tr valign="bottom">
 					<td colspan="2" id="additNotes"></td>
                                         <input type="hidden" name="additNotes" value="">
                                 </tr>
-                                
-		
+
+
 				<% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
 
 
@@ -344,8 +266,8 @@ ProviderData user = new ProviderData(strUser);
 				</tr>
 				<tr valign=bottom>
 					<td height=25px></td>
-					<td height=25px>&nbsp; <%= doctorName%> <% if ( pracNo == null || pracNo.equals("") ) { %>
-					<% } else { %> Pract. No. <%= pracNo%> <% } %>
+                                        <td height=25px>&nbsp; <%= doctorName%> <% if ( pracNo != null && ! pracNo.equals("") && !pracNo.equalsIgnoreCase("null")) { %>
+                                            Pract. No. <%= pracNo%> <% } %>
 					</td>
 
 
@@ -356,7 +278,7 @@ ProviderData user = new ProviderData(strUser);
                                     <td height=25px colspan="2"><bean:message key="RxPreview.msgReprintBy"/> <%=user.getProviderName(strUser)%><span style="float: left;">
 					<bean:message key="RxPreview.msgOrigPrinted"/>:&nbsp;<%=rx.getPrintDate()%></span> <span
 						style="float: right;"><bean:message key="RxPreview.msgTimesPrinted"/>:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
-					</td>                                        
+					</td>
 					<input type="hidden" name="origPrintDate"
 						value="<%=rx.getPrintDate()%>">
 					<input type="hidden" name="numPrints"
@@ -374,31 +296,8 @@ ProviderData user = new ProviderData(strUser);
 				<%}%>
 			</table>
 			</td>
-		</tr>                
+		</tr>
 	</table>
-        <table border="0">
-            <tr>
-                <th>Size of Print PDF :</th>
-                <th><select name="printPageSize">
-                        <option value="PageSize.A4">A4 page</option>
-                        <option value="PageSize.A6">A6 page</option>                        
-                    </select>
-                </th>
-            </tr>
-        </table> 
-        
 </html:form>
-<div align="center" class="noprint">
-<button onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');" %>">Print PDF</button>
-<button onclick="window.print();" >Print</button>
-<button onclick="printPaste2Parent();">Print and paste</button>
-<button onclick="parent.window.close()">Back to Oscar</button>
-<br>
-<textarea id="additionalNotes" style="width: 200px" onchange="javascript:addNotes();" ></textarea>
-<input type="button" value="Add to Rx" onclick="javascript:addNotes();"/>
-
-
-
-</div>
 </body>
 </html:html>
