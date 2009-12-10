@@ -155,8 +155,68 @@ public class ProviderPropertyAction extends DispatchAction {
          frm.set("dateProperty", prop);
          return actionmapping.findForward("gen");
      }
+    public ActionForward viewRxPageSize(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
-    
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         System.out.println("provider # "+provider);
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_PAGE_SIZE);
+
+
+         if (prop == null){
+             prop = new UserProperty();
+         }
+
+         //request.setAttribute("propert",propertyToSet);
+         request.setAttribute("dateProperty",prop);
+
+
+         request.setAttribute("providertitle","provider.setRxPageSize.title"); //=Set Rx Script Page Size
+         request.setAttribute("providermsgPrefs","provider.setRxPageSize.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setRxPageSize.msgPageSize"); //=Rx Script Page Size
+         request.setAttribute("providermsgEdit","provider.setRxPageSize.msgEdit"); //=Select your desired page size
+         request.setAttribute("providerbtnSubmit","provider.setRxPageSize.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setRxPageSize.msgSuccess"); //=Rx Script Page Size saved
+         request.setAttribute("method","saveRxPageSize");
+
+         frm.set("rxPageSizeProperty", prop);System.out.println("Finish in viewRxPageSize");
+         return actionmapping.findForward("genRxPageSize");
+     }
+
+   public ActionForward saveRxPageSize(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+        
+        String provider=(String) request.getSession().getAttribute("user");
+        
+        DynaActionForm frm=(DynaActionForm)actionform;
+        UserProperty UPageSize=(UserProperty)frm.get("rxPageSizeProperty");
+        String rxPageSize="";
+        if(UPageSize!=null)
+            rxPageSize=UPageSize.getValue();
+        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_PAGE_SIZE);
+        if(prop==null){
+            prop=new UserProperty();
+            prop.setName(UserProperty.RX_PAGE_SIZE);
+            prop.setProviderNo(provider);
+        }
+        prop.setValue(rxPageSize);
+        this.userPropertyDAO.saveProp(prop);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("rxPageSizeProperty",prop);
+         request.setAttribute("providertitle","provider.setRxPageSize.title"); //=Set Rx Script Page Size
+         request.setAttribute("providermsgPrefs","provider.setRxPageSize.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setRxPageSize.msgPageSize"); //=Rx Script Page Size
+         request.setAttribute("providermsgEdit","provider.setRxPageSize.msgEdit"); //=Select your desired page size
+         request.setAttribute("providerbtnSubmit","provider.setRxPageSize.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setRxPageSize.msgSuccess"); //=Rx Script Page Size saved
+         request.setAttribute("method","saveRxPageSize");
+         System.out.println("Finish in saveRxPageSize");
+         return actionmapping.findForward("genRxPageSize");
+
+    }
     public ActionForward saveMyDrugrefId(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
