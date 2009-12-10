@@ -9,6 +9,8 @@
 
 <%
 String questr=(String)session.getAttribute("infirmaryView_OscarQue"); 
+
+
 //remove "infirmaryView_programId" from querystring
 questr=oscar.caisi.CaisiUtil.removeAttr(questr,"infirmaryView_programId=");
 questr=oscar.caisi.CaisiUtil.removeAttr(questr,"infirmaryView_clientStatusId=");
@@ -16,8 +18,15 @@ questr=oscar.caisi.CaisiUtil.removeAttr(questr,"viewall");
 questr += "&viewall=1";
 
 String providerurlString="providercontrol.jsp?"+questr;
+
 //remove "infirmaryView_isOscar" from querystring
-session.setAttribute("infirmaryView_OscarQue",oscar.caisi.CaisiUtil.removeAttr(questr,"infirmaryView_isOscar="));
+questr=oscar.caisi.CaisiUtil.removeAttr(questr,"infirmaryView_isOscar=");
+
+//remove "GoToCaisiViewFromOscarView" from querystring
+questr=oscar.caisi.CaisiUtil.removeAttr(questr,"GoToCaisiViewFromOscarView=");
+
+session.setAttribute("infirmaryView_OscarQue",questr);
+
 %>
 
 <script>

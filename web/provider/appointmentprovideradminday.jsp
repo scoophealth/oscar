@@ -164,7 +164,9 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     if (provNum != null) {
         isWeekView = true;
     } 
-
+    if(caisiView!=null && "true".equals(caisiView)) {
+    	isWeekView = false;
+    }
 int nProvider;
 
 GregorianCalendar cal = new GregorianCalendar();
