@@ -236,7 +236,7 @@
 		objectName="_pmm.caseManagement" rights="r">
 		<div><span>Case Management</span>
 		<div><span><a
-			href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Case
+			href='<c:out value="${ctx}"/>/provider/providercontrol.jsp?infirmaryView_isOscar=false&GoToCaisiViewFromOscarView=true'>Case
 		Management</a></span></div>
 		</div>
 	</security:oscarSec>
