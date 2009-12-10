@@ -694,7 +694,7 @@ lightwindow.prototype = {
                                //    this.customedHeight=window.frames['lightwindow_iframe'].document.getElementById('pwTable').clientHeight+200;
 
                                     //oscarLog("222 222 pwTable's height="+document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('pwTable').clientHeight);
-                                    this.customedHeight=document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('pwTable').clientHeight+250;
+                                    this.customedHeight=document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('preview').contentWindow.document.getElementById('pwTable').clientHeight+150;
                                //oscarLog("contentWindow scrollHeight: "+document.getElementById('lightwindow_iframe').contentWindow.document.body.scrollHeight);
                                 //oscarLog("$$$ $$$ this.customedHeight="+this.customedHeight);
                                 $('lightwindow_contents').setStyle({
