@@ -1360,19 +1360,19 @@ function updateQty(element){
 }
     function parseIntr(element){
         var instruction="instruction="+element.value+"&action=parseInstructions";
-        oscarLog(instruction);
+        //oscarLog(instruction);
         var elemId=element.id;
         var ar=elemId.split("_");
         var rand=ar[1];
         var instruction="instruction="+element.value+"&action=parseInstructions&randomId="+rand;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/UpdateScript.do?parameterValue=updateDrug";
-        var rxMethod="rxMethod_"+rand;
+        /*var rxMethod="rxMethod_"+rand;
         var rxRoute="rxRoute_"+rand;
         var rxFreq="rxFreq_"+rand;
         var rxDrugForm="rxDrugForm_"+rand;
         var rxDuration="rxDuration_"+rand;
-        var rxDurationUnit="rxDurationUnit_"+rand;
-        var rxAmt="rxAmount_"+rand;
+        var rxDurationUnit="rxDurationUnit_"+rand;*/
+        var quantity="quantity_"+rand;
         var str;
         var rxString="rxString_"+rand;
 
@@ -1386,6 +1386,7 @@ function updateQty(element){
                 } else{ }
                 oscarLog("str="+str);
                 $(rxString).innerHTML=str;//display parsed string below instruction.
+                $(quantity).value=json.calQuantity;
             }});
         return true;
     }
