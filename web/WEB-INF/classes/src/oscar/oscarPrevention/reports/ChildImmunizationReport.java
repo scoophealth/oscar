@@ -73,7 +73,7 @@ public class ChildImmunizationReport implements PreventionReport{
              log.debug("fieldList "+fieldList.size());
 
              //search   prevention_date prevention_type  deleted   refused 
-             ArrayList  prevs1 = pd.getPreventionData("DTaP-IPV",demo);                                                                             
+             ArrayList  prevs1 = pd.getPreventionData("DTaP-IPV-Hib",demo);
              ArrayList  prevs2 = pd.getPreventionData("Hib",demo);              
              ArrayList  prevs4 = pd.getPreventionData("MMR",demo);              
              
