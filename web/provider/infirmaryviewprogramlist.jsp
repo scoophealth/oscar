@@ -31,12 +31,12 @@ session.setAttribute("infirmaryView_OscarQue",questr);
 
 <script>
 function submitProgram(ctrl) {
-	var url = "<%=providerurlString%>"+"&infirmaryView_programId="+ctrl.value;	
+	var url = "<%=providerurlString%>"+"&infirmaryView_programId="+ctrl.value+"&GoToCaisiViewFromOscarView=true";	
 	document.location.href = url;
 }
 function submitStatus(ctrl) {
 	var programCtrl = document.getElementById("bedprogram_no");
-	document.location.href = "<%=providerurlString%>"+"&infirmaryView_programId="+programCtrl.value+"&infirmaryView_clientStatusId="+ctrl.value;
+	document.location.href = "<%=providerurlString%>"+"&infirmaryView_programId="+programCtrl.value+"&infirmaryView_clientStatusId="+ctrl.value+"&GoToCaisiViewFromOscarView=true";
 }
 </script>
 
