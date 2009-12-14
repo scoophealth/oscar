@@ -228,12 +228,102 @@
 			</td>
 		</tr>
 		<tr>
+			<td>21-03. Total Number of Hospitalization Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-03")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-04. Unknown or Service Recipient Declined</td>
+			<td>  
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-04")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-05. Year 1 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-05")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-06. Year 2 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-06")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-07. Year 3 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-07")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-08. Year 4 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-08")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-09. Year 5 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-09")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-10. Year 6 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-10")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-11. Year 7 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-11")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-12. Year 8 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-12")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-13. Year 9 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-13")%>
+			</td>
+		</tr>
+		<tr>
+			<td>21-14. Year 10 Hospital Days</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("021-14")%>
+			</td>
+		</tr>
+		<tr>
 			<td>32. Formal Service Evaluation Process (check for 'yes')</td>
 			<td>
 				Does the function formally measure service recipient satisfaction? <input type="checkbox" name="measureServiceRecipientSatisfaction" /><br />
 				Does the function formally measure service recipient family satisfaction? <input type="checkbox" name="measureServiceRecipientFamiltySatisfaction" /><br />
 				Is the function involved in formal quality improvement strategies? <input type="checkbox" name="qualityImprovementStrategies" /><br />
 				Does the function participate in accreditation? <input type="checkbox" name="participateInAccreditation" /><br />
+			</td>
+		</tr>
+		<tr>
+			<td>37-01. </td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("036-01")%>
+			</td>
+		</tr>
+		<tr>
+			<td>37-02. </td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("036-02")%>
+			</td>
+		</tr>
+		<tr>
+			<td>37-03. </td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("036-03")%>
 			</td>
 		</tr>
 		<tr>

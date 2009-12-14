@@ -54,11 +54,29 @@
 	HashMap<String,CdsManualLineEntry> manualSections=new HashMap<String,CdsManualLineEntry>();
 	manualSections.put("007-02", CdsManualLineEntry.getCdsManualLineEntry(request, "007-02"));
 	manualSections.put("007-04", CdsManualLineEntry.getCdsManualLineEntry(request, "007-04"));
+
 	manualSections.put("07a-01", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-01"));
 	manualSections.put("07a-02", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-02"));
 	manualSections.put("07a-03", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-03"));
 	manualSections.put("07a-04", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-04"));
 	
+	manualSections.put("021-03", CdsManualLineEntry.getCdsManualLineEntry(request, "021-03"));
+	manualSections.put("021-04", CdsManualLineEntry.getCdsManualLineEntry(request, "021-04"));
+	manualSections.put("021-05", CdsManualLineEntry.getCdsManualLineEntry(request, "021-05"));
+	manualSections.put("021-06", CdsManualLineEntry.getCdsManualLineEntry(request, "021-06"));
+	manualSections.put("021-07", CdsManualLineEntry.getCdsManualLineEntry(request, "021-07"));
+	manualSections.put("021-08", CdsManualLineEntry.getCdsManualLineEntry(request, "021-08"));
+	manualSections.put("021-09", CdsManualLineEntry.getCdsManualLineEntry(request, "021-09"));
+	manualSections.put("021-10", CdsManualLineEntry.getCdsManualLineEntry(request, "021-10"));
+	manualSections.put("021-11", CdsManualLineEntry.getCdsManualLineEntry(request, "021-11"));
+	manualSections.put("021-12", CdsManualLineEntry.getCdsManualLineEntry(request, "021-12"));
+	manualSections.put("021-13", CdsManualLineEntry.getCdsManualLineEntry(request, "021-13"));
+	manualSections.put("021-14", CdsManualLineEntry.getCdsManualLineEntry(request, "021-14"));
+	
+	manualSections.put("036-01", CdsManualLineEntry.getCdsManualLineEntry(request, "036-01"));
+	manualSections.put("036-02", CdsManualLineEntry.getCdsManualLineEntry(request, "036-02"));
+	manualSections.put("036-03", CdsManualLineEntry.getCdsManualLineEntry(request, "036-03"));
+
 	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins, manualSections, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
 	
 	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode));
