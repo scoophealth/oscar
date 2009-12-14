@@ -47,7 +47,20 @@
 
 <%@page import="org.oscarehr.web.CdsManualLineEntry"%><h1>CDS Reports</h1>
 
-<form method="post" action="cds_4_report_export.jsp">
+<script type="text/javascript">
+	function validate(form)
+	{
+		var fields = form.elements;
+
+		if (fields.serviceDeliveryLhin.value==null||fields.serviceDeliveryLhin.value=="")
+		{
+			alert('10b. Service Delivery LHIN, is required.');
+			return(false);
+		}
+	}
+</script>
+				
+<form method="post" action="cds_4_report_export.jsp" onsubmit="return(validate(this))">
 	<table class="borderedTableAndCells">
 		<tr>
 			<td>CDS version</td>
@@ -164,6 +177,36 @@
 			<td>7-02. Unique individuals - pre-admission</td>
 			<td>
 				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("007-02")%>
+			</td>
+		</tr>
+		<tr>
+			<td>7-04. Multiple admissions for uniquely identified individuals</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("007-04")%>
+			</td>
+		</tr>
+		<tr>
+			<td>7a-01. Individuals Waiting for Initial Assessment</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("07a-01")%>
+			</td>
+		</tr>
+		<tr>
+			<td>7a-02. Days Waited for Initial Assessment</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("07a-02")%>
+			</td>
+		</tr>
+		<tr>
+			<td>7a-03. Individuals Waiting for Service Initiation</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("07a-03")%>
+			</td>
+		</tr>
+		<tr>
+			<td>7a-04. Days Waited for Service Initiation</td>
+			<td>
+				<%=CdsManualLineEntry.outputCdsManualLineEntryTable("07a-04")%>
 			</td>
 		</tr>
 		<tr>

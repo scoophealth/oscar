@@ -52,8 +52,12 @@
 	boolean participateInAccreditation=WebUtils.isChecked(request, "participateInAccreditation");
 	
 	HashMap<String,CdsManualLineEntry> manualSections=new HashMap<String,CdsManualLineEntry>();
-	CdsManualLineEntry section7_02=CdsManualLineEntry.getCdsManualLineEntry(request, "007-02");
-	manualSections.put("007-02", section7_02);
+	manualSections.put("007-02", CdsManualLineEntry.getCdsManualLineEntry(request, "007-02"));
+	manualSections.put("007-04", CdsManualLineEntry.getCdsManualLineEntry(request, "007-04"));
+	manualSections.put("07a-01", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-01"));
+	manualSections.put("07a-02", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-02"));
+	manualSections.put("07a-03", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-03"));
+	manualSections.put("07a-04", CdsManualLineEntry.getCdsManualLineEntry(request, "07a-04"));
 	
 	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins, manualSections, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
 	
