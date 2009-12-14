@@ -41,7 +41,15 @@ public class RxUtil {
 
     private static String defaultPattern = "yyyy/MM/dd";
     private static Locale locale = Locale.CANADA;
-
+    private static String defaultQuantity="30";
+    private static final Logger logger = MiscUtils.getLogger();
+    public static void setDefaultQuantity(String quantity){
+        defaultQuantity=quantity;
+    }
+    
+    public static String getDefaultQuantity(){
+        return defaultQuantity;
+    }
     public static Date StringToDate(String Expression) {
         return StringToDate(Expression, defaultPattern);
     }
@@ -725,10 +733,10 @@ public class RxUtil {
    //     p("***done***");
 
     }
-    private static final Logger logger = MiscUtils.getLogger();
-    private static void setDefaultSpecialQuantityRepeat(RxPrescriptionData.Prescription rx){
+    
+    public static void setDefaultSpecialQuantityRepeat(RxPrescriptionData.Prescription rx){
                     rx.setSpecial("1 OD");
-                    rx.setQuantity("30");
+                    rx.setQuantity(getDefaultQuantity());
                     rx.setRepeat(0);
     }
 
