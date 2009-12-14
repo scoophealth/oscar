@@ -50,6 +50,8 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -63,6 +65,7 @@ import oscar.oscarRx.util.RxUtil;
 public final class RxWriteScriptAction extends DispatchAction {
 
     private static final Logger logger = MiscUtils.getLogger();
+    private static UserPropertyDAO userPropertyDAO;
 
     public void p(String s) {
         System.out.println(s);
@@ -286,12 +289,27 @@ public final class RxWriteScriptAction extends DispatchAction {
        return null;
    }
 
+   private void setDefaultQuantity(final HttpServletRequest request){
+       try{
+           WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+           String provider = (String) request.getSession().getAttribute("user");
+           System.out.println("provider="+provider);
+           if(provider!=null){
+               userPropertyDAO =(UserPropertyDAO)ctx.getBean("UserPropertyDAO");
+               UserProperty prop=userPropertyDAO.getProp(provider, UserProperty.RX_DEFAULT_QUANTITY);
+               //System.out.println("prop="+prop);
+               RxUtil.setDefaultQuantity(prop.getValue());
+           }else logger.error("Provider is null",new NullPointerException());
+       }catch(Exception e){e.printStackTrace();}
+   }
    public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
      p("=============Start newCustomDrug RxWriteScriptAction.java===============");
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
      //   p("locale=" + locale.toString());
     //    p("message=" + messages.toString());
+        //set default quantity;
+        setDefaultQuantity(request);
 
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         if (bean == null) {
@@ -315,9 +333,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             rx.setGCN_SEQNO(0);
             rx.setRegionalIdentifier("");
             rx.setAtcCode("");
-            rx.setSpecial("1 OD");
-            rx.setRepeat(0);
-            rx.setQuantity("30");
+            RxUtil.setDefaultSpecialQuantityRepeat(rx);//1 OD, 20, 0;
             rx.setDuration(RxUtil.findDuration(rx));
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             bean.setStashIndex(bean.addStashItem(rx));
@@ -347,6 +363,8 @@ public final class RxWriteScriptAction extends DispatchAction {
     }
     public ActionForward createNewRx(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start createNewRx RxWriteScriptAction.java===============");
+        //set default quantity
+        setDefaultQuantity(request);
         //    System.out.println("***IN RxChooseDrugAction.java");
         // Extract attributes we will need
        // Locale locale = getLocale(request);
