@@ -42,6 +42,7 @@ public class UserProperty implements Serializable {
     public final static String WORKLOAD_MANAGEMENT = "workload_management";
     public final static String CONSULTATION_REQ_PASTE_FMT = "consultation_req_paste_fmt";
     public final static String RX_PAGE_SIZE = "rx_page_size";
+    public final static String RX_DEFAULT_QUANTITY = "rx_default_quantity";
    
     private long id;
     private String name;
