@@ -171,7 +171,7 @@ public class ProviderPropertyAction extends DispatchAction {
          }
 
          //request.setAttribute("propert",propertyToSet);
-         request.setAttribute("dateProperty",prop);
+         //request.setAttribute("dateProperty",prop);
 
 
          request.setAttribute("providertitle","provider.setRxPageSize.title"); //=Set Rx Script Page Size
@@ -215,6 +215,67 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("method","saveRxPageSize");
          System.out.println("Finish in saveRxPageSize");
          return actionmapping.findForward("genRxPageSize");
+    }
+       public ActionForward viewDefaultQuantity(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+          
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         System.out.println("provider # "+provider);
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_DEFAULT_QUANTITY);
+
+
+         if (prop == null){
+             prop = new UserProperty();
+         }
+
+         //request.setAttribute("propert",propertyToSet);
+         request.setAttribute("rxDefaultQuantityProperty",prop);
+         request.setAttribute("providertitle","provider.setRxDefaultQuantity.title"); //=Set Rx Default Quantity
+         request.setAttribute("providermsgPrefs","provider.setRxDefaultQuantity.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setRxDefaultQuantity.msgDefaultQuantity"); //=Rx Default Quantity
+         request.setAttribute("providermsgEdit","provider.setRxDefaultQuantity.msgEdit"); //=Enter your desired quantity
+         request.setAttribute("providerbtnSubmit","provider.setRxDefaultQuantity.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setRxDefaultQuantity.msgSuccess"); //=Rx Default Quantity saved
+         request.setAttribute("method","saveDefaultQuantity");
+
+         frm.set("rxDefaultQuantityProperty", prop);
+         
+         return actionmapping.findForward("genRxDefaultQuantity");
+     }
+
+   public ActionForward saveDefaultQuantity(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+
+        String provider=(String) request.getSession().getAttribute("user");
+
+        DynaActionForm frm=(DynaActionForm)actionform;
+        UserProperty UDefaultQuantity=(UserProperty)frm.get("rxDefaultQuantityProperty");
+        String rxDefaultQuantity="";
+        if(UDefaultQuantity!=null)
+            rxDefaultQuantity=UDefaultQuantity.getValue();
+        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_DEFAULT_QUANTITY);
+        if(prop==null){
+            prop=new UserProperty();
+            prop.setName(UserProperty.RX_DEFAULT_QUANTITY);
+            prop.setProviderNo(provider);
+        }
+        prop.setValue(rxDefaultQuantity);
+        this.userPropertyDAO.saveProp(prop);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("rxDefaultQuantityProperty",prop);
+         request.setAttribute("providertitle","provider.setRxDefaultQuantity.title"); //=Set Rx Default Quantity
+         request.setAttribute("providermsgPrefs","provider.setRxDefaultQuantity.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setRxDefaultQuantity.msgDefaultQuantity"); //=Rx Default Quantity
+         request.setAttribute("providermsgEdit","provider.setRxDefaultQuantity.msgEdit"); //=Enter your desired quantity
+         request.setAttribute("providerbtnSubmit","provider.setRxDefaultQuantity.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setRxDefaultQuantity.msgSuccess"); //=Rx Default Quantity saved
+         request.setAttribute("method","saveDefaultQuantity");
+         System.out.println("Finish in saveDefaultQuantity");
+         return actionmapping.findForward("genRxDefaultQuantity");
 
     }
     public ActionForward saveMyDrugrefId(ActionMapping actionmapping,
