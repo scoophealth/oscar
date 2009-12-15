@@ -24,6 +24,7 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -36,12 +37,16 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 import oscar.oscarRx.data.RxPatientData;
 
 
 public final class RxChoosePatientAction extends Action {
-    
+    private static UserPropertyDAO userPropertyDAO;
     public void p(String s){
         System.out.println(s);
     }
@@ -105,7 +110,24 @@ public final class RxChoosePatientAction extends Action {
             request.getSession().setAttribute("Patient", patient);
             if(OscarProperties.getInstance().getBooleanProperty("RX3", "yes")){//if rx3 is set to yes.
                 System.out.println("successRX3");
-                    return (mapping.findForward("successRX3"));
+                //set the profile view
+                String provider = (String) request.getSession().getAttribute("user");
+                WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+                userPropertyDAO =(UserPropertyDAO)ctx.getBean("UserPropertyDAO");
+                UserProperty prop=userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
+                String propValue=prop.getValue();
+                System.out.println("prop="+prop.getValue());
+                HashMap hm=new HashMap();
+                String [] va={" show_current "," show_all "," active "," inactive "," all "," longterm_acute "," longterm_acute_inactive "};
+                for(int i=0;i<va.length;i++){
+                    if(propValue.contains(va[i])){
+                        hm.put(va[i].trim(), true);
+                    }else
+                        hm.put(va[i].trim(), false);
+                }
+                System.out.println("hm="+hm);
+                request.getSession().setAttribute("profileViewSpec", hm);
+                return (mapping.findForward("successRX3"));
             }else   return (mapping.findForward("success"));
             
         } else //no records found

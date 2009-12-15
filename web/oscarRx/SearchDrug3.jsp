@@ -11,7 +11,7 @@
 <%@ page import="org.oscarehr.common.model.OscarAnnotation" %>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
 <%@page import="java.text.SimpleDateFormat" %>
-<%@page import="java.util.Calendar" %>
+<%@page import="java.util.*" %>
 <%@page import="java.util.Enumeration"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
@@ -57,6 +57,16 @@
             String usefav=request.getParameter("usefav");
             String favid=request.getParameter("favid");
             String reRxDrugId=request.getParameter("reRxDrugId");
+            HashMap hm=(HashMap)session.getAttribute("profileViewSpec");
+            if(hm==null) {System.out.println("hm is null");response.sendRedirect("../logout.jsp");}
+            boolean show_current=(Boolean)hm.get("show_current");
+            boolean show_all=(Boolean)hm.get("show_all");
+            boolean active=(Boolean)hm.get("active");
+            boolean inactive=(Boolean)hm.get("inactive");
+            boolean all=(Boolean)hm.get("all");
+            boolean longterm_acute=(Boolean)hm.get("longterm_acute");
+            boolean longterm_acute_inactive=(Boolean)hm.get("longterm_acute_inactive");
+
             //System.out.println("usefav="+usefav);
             //System.out.println("reRxDrugId="+reRxDrugId);
             RxPharmacyData pharmacyData = new RxPharmacyData();
@@ -638,16 +648,17 @@ body {
                                                                     <tr>
                                                                         <td align="left">
                                                                             <a href="javascript:void(0);" onclick="ThemeViewer();">Profile Legend</a>
-
-
+                                                                            <a href="javascript:void(0);" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');return false;" style="font-style:italic;font-family:times;color:#6699CC" ><bean:message key="provider.rxChangeProfileView"/></a>
+                                                                            <%if(show_current){%>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
+                                                                            <%}if(show_all){%>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?show=all','drugProfile');"><bean:message key="SearchDrug.msgShowAll"/></a>
-                                                                          <%--  <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a> --%>
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')">Longterm /Acute</a>
-                                                                            <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')">Longterm /Acute/Inactive</a>
-
+                                                                            <%}if(active){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
+                                                                            <%}if(inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
+                                                                            <%}if(all){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
+                                                                            <%}if(longterm_acute){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')">Longterm /Acute</a>
+                                                                            <%}if(longterm_acute_inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')">Longterm /Acute/Inactive</a>
+                                                                            <%}%>
                                                                         </td>
                                                                         <td align="right">
 

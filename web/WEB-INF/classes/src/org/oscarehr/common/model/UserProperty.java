@@ -43,12 +43,20 @@ public class UserProperty implements Serializable {
     public final static String CONSULTATION_REQ_PASTE_FMT = "consultation_req_paste_fmt";
     public final static String RX_PAGE_SIZE = "rx_page_size";
     public final static String RX_DEFAULT_QUANTITY = "rx_default_quantity";
-   
+    public final static String RX_PROFILE_VIEW = "rx_profile_view";
     private long id;
     private String name;
     private String value;
     private String providerNo;
-    
+    private String[] valueArray;
+
+    public String[] getValueArray(){
+        return this.valueArray;
+    }
+
+    public void setValueArray(String[] va){
+       this.valueArray=va;
+    }
     public String getProviderNo() {
         return this.providerNo;
     }

@@ -27,6 +27,7 @@ package org.oscarehr.provider.web;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -216,6 +217,92 @@ public class ProviderPropertyAction extends DispatchAction {
          System.out.println("Finish in saveRxPageSize");
          return actionmapping.findForward("genRxPageSize");
     }
+
+
+   public ActionForward viewRxProfileView(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        // System.out.println(" in viewProfileView");
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         //System.out.println("provider # "+provider);
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
+         
+         String propValue="";
+         if (prop == null){
+             prop = new UserProperty();
+         }else{
+            propValue=prop.getValue();
+         }
+
+         String [] propertyArray= new String[7];
+         String [] va={" show_current "," show_all "," active "," inactive "," all "," longterm_acute "," longterm_acute_inactive "};
+
+         for(int i=0;i<propertyArray.length;i++){
+             System.out.println(propValue +"--"+va[i]);
+             if(propValue.contains(va[i]))  { System.out.println("contains");  propertyArray[i]=va[i].trim();}//element of array has to match exactly with viewChoices values
+         }
+         prop.setValueArray(propertyArray);
+         Collection viewChoices=new ArrayList();
+         viewChoices.add(new LabelValueBean("Show Current","show_current"));
+         viewChoices.add(new LabelValueBean("Show All","show_all"));
+         viewChoices.add(new LabelValueBean("Show Active","active"));
+         viewChoices.add(new LabelValueBean("Show Inactive","inactive"));
+         viewChoices.add(new LabelValueBean("All","all"));
+         viewChoices.add(new LabelValueBean("Show Longterm/Acute","longterm_acute"));
+         viewChoices.add(new LabelValueBean("Show Longterm/Acute/Inactive","longterm_acute_inactive"));
+         request.setAttribute("viewChoices", viewChoices);
+         request.setAttribute("providertitle","provider.setRxProfileView.title"); //=Set Rx Profile View
+         request.setAttribute("providermsgPrefs","provider.setRxProfileView.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setRxProfileView.msgProfileView"); //=Rx Profile View
+         request.setAttribute("providermsgEdit","provider.setRxProfileView.msgEdit"); //=Select your desired display
+         request.setAttribute("providerbtnSubmit","provider.setRxProfileView.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setRxProfileView.msgSuccess"); //=Rx Profile View saved
+         request.setAttribute("method","saveRxProfileView");
+
+         frm.set("rxProfileViewProperty", prop);
+         //System.out.println("Finish in viewProfileView");
+         return actionmapping.findForward("genRxProfileView");
+     }
+
+   public ActionForward saveRxProfileView(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+        //System.out.println(" in saveProfileView");
+        String provider=(String) request.getSession().getAttribute("user");
+
+        DynaActionForm frm=(DynaActionForm)actionform;
+        UserProperty UProfileView=(UserProperty)frm.get("rxProfileViewProperty");
+        String[] va=new String[7];
+        if(UProfileView!=null)
+            va=UProfileView.getValueArray();
+        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
+        if(prop==null){
+            prop=new UserProperty();
+            prop.setName(UserProperty.RX_PROFILE_VIEW);
+            prop.setProviderNo(provider);
+        }
+
+        String rxProfileView="";
+        for(int i=0;i<va.length;i++){
+            rxProfileView+=" "+va[i]+" ";
+        }
+        System.out.println("rxProfileView="+rxProfileView);
+        prop.setValue(rxProfileView);
+        this.userPropertyDAO.saveProp(prop);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("rxProfileViewProperty",prop);
+         request.setAttribute("providertitle","provider.setRxProfileView.title"); //=Set Rx Profile View
+         request.setAttribute("providermsgPrefs","provider.setRxProfileView.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setRxProfileView.msgProfileView"); //=Rx Profile View
+         request.setAttribute("providermsgEdit","provider.setRxProfileView.msgEdit"); //=Select your desired display
+         request.setAttribute("providerbtnSubmit","provider.setRxProfileView.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setRxProfileView.msgSuccess"); //=Rx Profile View saved
+         request.setAttribute("method","saveRxProfileView");
+         //System.out.println("Finish in saveProfileView");
+         return actionmapping.findForward("genRxProfileView");
+    }
+
        public ActionForward viewDefaultQuantity(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
