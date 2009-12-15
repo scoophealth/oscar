@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 
@@ -53,6 +54,21 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class ChildImmunizationReport implements PreventionReport{
+
+    //Sort class for preventions used to sort final list of dtap preventions
+    class DtapComparator implements Comparator {
+
+        public int compare(Object x, Object y) {
+            Hashtable hX = (Hashtable)x;
+            Hashtable hY = (Hashtable)y;
+            
+            return ((String)hX.get("prevention_date")).compareTo(((String)hY.get("prevention_date")));
+        }
+
+    };
+
+
+
     private static Log log = LogFactory.getLog(ChildImmunizationReport.class);
     /** Creates a new instance of ChildImmunizationReport */
     public ChildImmunizationReport() {
@@ -72,17 +88,41 @@ public class ChildImmunizationReport implements PreventionReport{
              String demo = (String) fieldList.get(0);  
              log.debug("fieldList "+fieldList.size());
 
-             //search   prevention_date prevention_type  deleted   refused 
-             ArrayList  prevs1 = pd.getPreventionData("DTaP-IPV-Hib",demo);
+             //search   prevention_date prevention_type  deleted   refused
+             ArrayList  prevs1 = pd.getPreventionData("DTap-IPV", demo);
+             ArrayList  prevsDtapIPVHIB = pd.getPreventionData("DTaP-IPV-Hib",demo);
              ArrayList  prevs2 = pd.getPreventionData("Hib",demo);              
-             ArrayList  prevs4 = pd.getPreventionData("MMR",demo);              
+             ArrayList  prevs4 = pd.getPreventionData("MMR",demo);            
+
+             //need to compile accurate dtap numbers
+             Hashtable hDtapIpv, hDtapIpvHib;
+             boolean add;
+
+             for( int idx = 0; idx < prevsDtapIPVHIB.size(); ++idx ) {
+                 hDtapIpvHib = (Hashtable) prevsDtapIPVHIB.get(idx);
+                 add = true;
+                 for( int idx2 = 0; idx2 < prevs1.size(); ++idx2 ) {
+                     hDtapIpv = (Hashtable)prevs1.get(idx2);
+                     if( ((String)hDtapIpvHib.get("prevention_date")).equals(((String)hDtapIpv.get("prevention_date")))) {
+                         add = false;
+                         break;
+                     }
+                 }
+
+                 if( add ) {
+                     prevs1.add(hDtapIpvHib);
+                 }
+             }
+
+
+             Collections.sort(prevs1, new DtapComparator());
              
              int numDtap = prevs1.size();  //4
              int numHib  = prevs2.size();  //4             
              int numMMR  = prevs4.size();  //1   
              
-             log.debug("prev1 "+prevs1.size()+ " prevs2 "+ prevs2.size() +" prev4 "+prevs4.size());  
-             
+             log.debug("prev1 "+prevs1.size()+ " prevs2 "+ prevs2.size() +" prev4 "+prevs4.size());
+
              DemographicData dd = new DemographicData();
              DemographicData.Demographic demoData = dd.getDemographic(demo);
              // This a kludge to get by conformance testing in ontario -- needs to be done in a smarter way
