@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -267,7 +268,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             rx.setCustomName(customName);
             rx.setBrandName(null);
             rx.setGenericName(null);
-            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
+            //bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
           //  p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
             RxUtil.printStashContent(bean);
@@ -616,6 +617,20 @@ public final class RxWriteScriptAction extends DispatchAction {
         }else return null;
     }
 
+    public ActionForward iterateStash(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException, Exception {
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        //System.out.println("iterateStash");
+        //RxUtil.printStashContent(bean);
+        List<RxPrescriptionData.Prescription> listP=Arrays.asList(bean.getStash());
+        if(listP.size()==0) {return null;}
+        else{
+            //System.out.println("size "+listP.size()+" ; "+listP.get(0));
+            request.setAttribute("listRxDrugs", listP);
+            return (mapping.findForward("newRx"));
+        }
+
+    }
     public  ActionForward updateSaveAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
         System.out.println("==========***### start updaing drugs RxWriteScriptAction.java");
