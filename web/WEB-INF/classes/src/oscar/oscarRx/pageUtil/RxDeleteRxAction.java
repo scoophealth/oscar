@@ -140,7 +140,17 @@ public final class RxDeleteRxAction extends DispatchAction {
         //      System.out.println("===========================END Delete2 RxDeleteRxAction========================");
          return null;
     }
-
+    
+public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
+    throws IOException, ServletException {        
+        RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        if(bean==null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        bean.clearStash();
+        return mapping.findForward("successClearStash");
+    }
 
     /**
      * The action to discontinue a drug.
