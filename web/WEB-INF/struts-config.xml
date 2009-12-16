@@ -590,7 +590,7 @@
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
         </action>
         
-        <action input="/oscarRx/SearchDrug2.jsp" path="/oscarRx/WriteScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
+        <action input="/oscarRx/SearchDrug3.jsp" path="/oscarRx/WriteScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
             <forward name="newRx" path="/oscarRx/prescribe.jsp" />
         </action>
@@ -657,14 +657,15 @@
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
             <forward name="reprint" path="/oscarRx/ViewScript.jsp" />
         </action>
-        <action input="/oscarRx/SearchDrug2.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe2" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
-            <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
+        <action input="/oscarRx/SearchDrug3.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe2" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
+            <forward name="success" path="/oscarRx/SearchDrug3.jsp" />
             <forward name="repcbLongTerm" path="/oscarRx/prescribe.jsp" />
             <forward name="represcribe" path="/oscarRx/prescribe.jsp" />
         </action>
 
         <action input="/oscarRx/SearchDrug.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+            <forward name="successClearStash" path="/oscarRx/SearchDrug3.jsp" />
         </action>
         <action input="/oscarRx/ViewScript.jsp" name="RxClearPendingForm" path="/oscarRx/clearPending" scope="request" type="oscar.oscarRx.pageUtil.RxClearPendingAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
