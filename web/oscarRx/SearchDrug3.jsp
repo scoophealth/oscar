@@ -532,7 +532,7 @@ body {
 
     
 
-    <body  vlink="#0000FF" onload="checkFav();checkRePrescribe();rxPageSizeSelect();<%-- initmb(); --%>load()" class="yui-skin-sam">
+    <body  vlink="#0000FF" onload="checkFav();checkRePrescribe();iterateStash();rxPageSizeSelect();<%-- initmb(); --%>load()" class="yui-skin-sam">
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
             <%@ include file="TopLinks2.jsp" %><!-- Row One included here-->
             <tr>
@@ -556,14 +556,15 @@ body {
                                             </td>
                                             <td >
                                                 <a href="javascript:void(0);" onclick="callTreatments('searchString','treatmentsMyD')"><bean:message key="SearchDrug.msgDrugOfChoice" /></a>
-                                                <a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultQuantity');return false;" style="font-style:italic;font-family:times;color:#6699CC"><bean:message key="provider.SetDefaultPrescriptionQuantity"/></a>
+                                                <a href=#  title="Set most frequently used prescription quantity" onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultQuantity');return false;" style="font-style:italic;font-family:times;color:#6699CC"><bean:message key="provider.SetDefaultPrescriptionQuantity"/></a>
                                                 <%-- <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">  --%>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
                                                 <div class="buttonrow">
-                                                    <input id="saveButton" type="button"  onclick="updateSaveAllDrugs();" value="Save & Prescribe " />
-                                                    <input id="customDrug" type="button"  onclick="customWarning2();" value="Custom Drug" />
+                                                    <input id="saveButton" type="button"  onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveAndPrescribe"/>" />
+                                                    <input id="customDrug" type="button"  onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrug"/>" />
+                                                    <input id="reset" type="button"  onclick="resetStash();" value="<bean:message key="SearchDrug.msgReset"/>" />
                                                 </div>                                  
                                                
                                             </td>
@@ -647,8 +648,8 @@ body {
                                                                 <table width="100%" cellspacing="0" cellpadding="0">
                                                                     <tr>
                                                                         <td align="left">
-                                                                            <a href="javascript:void(0);" onclick="ThemeViewer();">Profile Legend</a>
-                                                                            <a href="javascript:void(0);" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');return false;" style="font-style:italic;font-family:times;color:#6699CC" ><bean:message key="provider.rxChangeProfileView"/></a>
+                                                                            <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:italic;font-family:times;color:#6699CC" ><bean:message key="SearchDrug.msgProfileLegend"/></a>
+                                                                            <a href="javascript:void(0);" title="Change what kind of drugs you see in this drug profile" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');return false;" style="font-style:italic;font-family:times;color:#6699CC" ><bean:message key="provider.rxChangeProfileView"/></a>
                                                                             <%if(show_current){%>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
                                                                             <%}if(show_all){%>
@@ -658,7 +659,7 @@ body {
                                                                             <%}if(all){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
                                                                             <%}if(longterm_acute){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')">Longterm /Acute</a>
                                                                             <%}if(longterm_acute_inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')">Longterm /Acute/Inactive</a>
-                                                                            <%}%>
+                                                                            <%}%>                                                                            
                                                                         </td>
                                                                         <td align="right">
 
@@ -686,7 +687,7 @@ body {
                         </tr>
 
 
-                        <logic:notEqual name="bean" property="stashSize" value="0">
+                       <%--  <logic:notEqual name="bean" property="stashSize" value="0">
                             <tr>
                                 <td> <html:form action="/oscarRx/stash">
                                         <html:hidden property="action" />
@@ -696,7 +697,7 @@ body {
                                     <div class="DivContentSectionHead"><bean:message key="WriteScript.section5Title" /></div>
                                 </td>
                             </tr>
-                            <tr>
+                           <tr>
                                 <td>
                             <element>
                                 <table cellspacing="0" cellpadding="5">
@@ -715,12 +716,12 @@ body {
 
                         <input type="button" class="ControlPushButton" onclick="javascript:window.location.href='viewScript.do';" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" /></td>
                 </tr>
-            </logic:notEqual>
+            </logic:notEqual> 
 
             
             <tr height="100%">
                 <td></td>
-            </tr>
+            </tr>--%>
         </table>
     </td>
 </tr>
@@ -879,6 +880,17 @@ body {
                         }
 %>
 <script type="text/javascript">
+    function resetStash(){
+               var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearStash";
+               var data = "";
+               new Ajax.Request(url, {method: 'post',parameters:data});
+               $('rxText').innerHTML="";//make pending prescriptions disappear.
+    }
+    function iterateStash(){
+                var url="<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=iterateStash";
+                var data="";
+                new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
+    }
     function rxPageSizeSelect(){
                var ran_number=Math.round(Math.random()*1000000);
                var url="GetRxPageSizeInfo.do?method=view";
