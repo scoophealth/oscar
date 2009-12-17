@@ -11,8 +11,8 @@ System.out.println("***### IN prescribe.jsp");
 List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("listRxDrugs");
 
 System.out.println("listRxDrugs="+listRxDrugs);
-
-for(RxPrescriptionData.Prescription rx : listRxDrugs ){
+if(listRxDrugs!=null){
+  for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          System.out.println("display prescribe :"+rx);
          String rand            = Long.toString(rx.getRandomId());
          String instructions    = rx.getSpecial();
@@ -198,5 +198,6 @@ for(RxPrescriptionData.Prescription rx : listRxDrugs ){
                 }
             }*/
         </script>
- <%}%>
+ <%}
+}%>
  
