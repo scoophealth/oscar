@@ -219,38 +219,7 @@ public final class RxRePrescribeAction extends DispatchAction {
     //    System.out.println("================END represcribe of RxRePrescribeAction.java=================");
         return (mapping.findForward("success"));
     }
-/*
-    public void p(String s) {
-        System.out.println(s);
-    }
 
-    public void p(String s, String s1) {
-        System.out.println(s + "=" + s1);
-    }
-*/
-
-    //check to see if a represcription of a med is clicked twice.
-    public boolean isUnique(oscar.oscarRx.pageUtil.RxSessionBean beanRx,RxPrescriptionData.Prescription rx){
-        boolean unique=true;
-
-        for (int j = 0; j < beanRx.getStashSize(); j++) {
-            try {
-                RxPrescriptionData.Prescription rxTemp = beanRx.getStashItem(j);
-           /*     p("BN rx  ",rx.getBrandName());
-                p("BN in stash",rxTemp.getBrandName());
-                p("GCN  ",""+rx.getGCN_SEQNO());
-                p("GCN in stash",""+rxTemp.getGCN_SEQNO());*/
-                if(rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO()==rxTemp.getGCN_SEQNO()) {
-                  //  p("unique turning false");
-                    unique=false;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-      //  if(unique) p("unique is true");
-        return unique;
-    }
     public ActionForward represcribe2(ActionMapping mapping,
             ActionForm form,
             HttpServletRequest request,
@@ -290,12 +259,13 @@ try{
         List<RxPrescriptionData.Prescription> listReRx=new ArrayList();
         rx.setDiscontinuedLatest(RxUtil.checkDiscontinuedBefore(rx));
         //add rx to rx list
-        if(isUnique(beanRX,rx)){
-            listReRx.add(rx);
+        if(RxUtil.isRxUniqueInStash(beanRX,rx)){
+          listReRx.add(rx);
         }
         //save rx to stash
-     //    p("stashIndex is", "" + beanRX.getStashIndex());
-        beanRX.setStashIndex(beanRX.addStashItem(rx));
+              int rxStashIndex=beanRX.addStashItem(rx);
+            beanRX.setStashIndex(rxStashIndex);           
+
         auditStr.append(rx.getAuditString() + "\n");
         beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
         String script_no = beanRX.getStashItem(beanRX.getStashIndex()).getScript_no();
@@ -372,24 +342,15 @@ try{
             rx.setSpecial(spec);
 
 
-       //     p("RxUtil.DateToString(rx.getRxDate(),", RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd"));
-
-            if(isUnique(beanRX,rx)){
-                //add rx to list
+            if(RxUtil.isRxUniqueInStash(beanRX,rx)){
                 listLongTerm.add(rx);
             }
-     //       p("stashIndex is", "" + beanRX.getStashIndex());
-            // System.out.println("***###addStathItem called44");
-            beanRX.setStashIndex(beanRX.addStashItem(rx));
+            int rxStashIndex=beanRX.addStashItem(rx);
+            beanRX.setStashIndex(rxStashIndex);            
             auditStr.append(rx.getAuditString() + "\n");
             // System.out.println("String.valueOf(beanRX.getStashIndex())="+String.valueOf(beanRX.getStashIndex()));
             //allocate space for annotation
-            beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
-        //    p("brandName saved", rx.getBrandName());
-        //    p("stashIndex becomes", "" + beanRX.getStashIndex());
-
-
-            
+            beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));            
         }
         RxUtil.printStashContent(beanRX);
         request.setAttribute("listRxDrugs", listLongTerm);
@@ -397,4 +358,14 @@ try{
      //   System.out.println("================END repcbAllLongTerm of RxRePrescribeAction.java=================");
         return (mapping.findForward("repcbLongTerm"));
     }
+
+    
+    public void p(String s) {
+        System.out.println(s);
+    }
+
+    public void p(String s, String s1) {
+        System.out.println(s + "=" + s1);
+    }
+
 }
