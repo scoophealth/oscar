@@ -58,14 +58,23 @@
             String favid=request.getParameter("favid");
             String reRxDrugId=request.getParameter("reRxDrugId");
             HashMap hm=(HashMap)session.getAttribute("profileViewSpec");
-            if(hm==null) {System.out.println("hm is null");response.sendRedirect("../logout.jsp");}
-            boolean show_current=(Boolean)hm.get("show_current");
-            boolean show_all=(Boolean)hm.get("show_all");
-            boolean active=(Boolean)hm.get("active");
-            boolean inactive=(Boolean)hm.get("inactive");
-            boolean all=(Boolean)hm.get("all");
-            boolean longterm_acute=(Boolean)hm.get("longterm_acute");
-            boolean longterm_acute_inactive=(Boolean)hm.get("longterm_acute_inactive");
+            boolean show_current=true;
+            boolean show_all=true;
+            boolean active=true;
+            boolean inactive=true;
+            boolean all=true;
+            boolean longterm_acute=true;
+            boolean longterm_acute_inactive=true;
+            if(hm==null) {System.out.println("hm is null");}
+            else{
+             show_current=(Boolean)hm.get("show_current");
+             show_all=(Boolean)hm.get("show_all");
+             active=(Boolean)hm.get("active");
+             inactive=(Boolean)hm.get("inactive");
+             all=(Boolean)hm.get("all");
+             longterm_acute=(Boolean)hm.get("longterm_acute");
+             longterm_acute_inactive=(Boolean)hm.get("longterm_acute_inactive");
+            }
 
             //System.out.println("usefav="+usefav);
             //System.out.println("reRxDrugId="+reRxDrugId);
@@ -885,6 +894,7 @@ body {
                var data = "";
                new Ajax.Request(url, {method: 'post',parameters:data});
                $('rxText').innerHTML="";//make pending prescriptions disappear.
+               $("searchString").focus();
     }
     function iterateStash(){
                 var url="<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=iterateStash";
