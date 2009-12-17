@@ -32,19 +32,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 
+import org.oscarehr.util.MiscUtils;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
 
 public final class RxUseFavoriteAction extends DispatchAction {
     
-    
+    private static final Logger logger = MiscUtils.getLogger();
     public ActionForward unspecified(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -94,10 +96,6 @@ public final class RxUseFavoriteAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
      //  System.out.println("==========***###IN RxUseFavoriteAction.java=============");
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
-
         // Setup variables
         oscar.oscarRx.pageUtil.RxSessionBean bean =
         (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -122,21 +120,20 @@ public final class RxUseFavoriteAction extends DispatchAction {
             RxPrescriptionData.Prescription rx =
             rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo(), fav);
             rx.setRandomId(Long.parseLong(randomId));
-            if(rx!=null){
+
                 String spec=RxUtil.trimSpecial(rx);
                 rx.setSpecial(spec);
-         //       System.out.println(rx.getBrandName()+" rx.getspeiclia="+rx.getSpecial());
-            }
-            else{
-                System.out.println("rx is null!");
-            }
-            
-            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
-          //   System.out.println("***###addStathItem called22");
-            bean.setStashIndex(bean.addStashItem(rx));
 
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+          
             List<RxPrescriptionData.Prescription> listRxDrugs=new ArrayList();
-            listRxDrugs.add(rx);
+            if(RxUtil.isRxUniqueInStash(bean, rx)){
+                listRxDrugs.add(rx);
+            }
+            int rxStashIndex=bean.addStashItem(rx);
+            bean.setStashIndex(rxStashIndex);         
+
+            
             request.setAttribute("listRxDrugs",listRxDrugs);
             request.setAttribute("BoxNoFillFirstLoad", "true");
         }
