@@ -582,7 +582,7 @@
         </action>
 
         <action name="RxChoosePatientForm" path="/oscarRx/choosePatient3" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
-            <forward name="successRX3" path="/oscarRx/SearchDrug3.jsp" />
+            <forward name="success" path="/oscarRx/SearchDrug3.jsp" />
         </action>
 
 
@@ -652,6 +652,9 @@
         </action>
         <action input="/oscarRx/EditFavorites2.jsp" name="RxDeleteFavoriteForm" path="/oscarRx/deleteFavorite2" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteFavoriteAction">
             <forward name="success" path="/oscarRx/EditFavorites2.jsp" />
+        </action>
+        <action input="/oscarRx/EditFavorites.jsp" name="RxDeleteFavoriteForm" path="/oscarRx/deleteFavorite" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteFavoriteAction">
+            <forward name="success" path="/oscarRx/EditFavorites.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
