@@ -8,7 +8,7 @@
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>">
+	objectName="_admin,_admin.userAdmin,_admin.schedule" rights="r" reverse="<%=true%>">
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
