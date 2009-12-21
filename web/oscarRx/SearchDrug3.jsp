@@ -946,16 +946,6 @@ body {
         //oscarLog("---"+url);
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
     }
-//not used
-  /*  function Delete(element){
-        oscarLog(document.forms[2].action);
-
-        if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
-            oscarLog(element.id);
-            document.forms[2].drugList.value = element.id;
-            document.forms[2].submit();
-        }
-    }*/
 
    function Delete2(element){
         oscarLog(element.id);
@@ -1149,13 +1139,13 @@ function popForm2(){
      function callAdditionWebService(url,id){
          var ran_number=Math.round(Math.random()*1000000);
          var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
-         new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true,insertion: Insertion.Bottom,evalScripts:true});
+         var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:false,insertion: Insertion.Bottom,evalScripts:true});
      }
 
      function callReplacementWebService(url,id){
                var ran_number=Math.round(Math.random()*1000000);
                var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
-               new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true,evalScripts:true});
+               var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:false,evalScripts:true});
          }
           //callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
       <%--    <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
@@ -1225,7 +1215,7 @@ YAHOO.example.BasicRemote = function() {
     oAC.queryMatchSubset = true;
     oAC.minQueryLength = 3;
     oAC.maxResultsDisplayed = 25;
-     oAC.formatResult = resultFormatter;
+    oAC.formatResult = resultFormatter;
     //oAC.typeAhead = true;
     //oAC.queryMatchContains = true;
     oAC.itemSelectEvent.subscribe(function(type, args) {
