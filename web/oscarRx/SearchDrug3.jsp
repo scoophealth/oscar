@@ -26,7 +26,7 @@
         if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
         String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" 
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
                    reverse="<%=true%>">
     <%
     //LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ,  LogConst.CON_PRESCRIPTION, demographic$, request.getRemoteAddr(),demographic$);
@@ -101,29 +101,29 @@
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -163,7 +163,7 @@
 
 
         <script type="text/javascript">
-            function onPrint(cfgPage) {                
+            function onPrint(cfgPage) {
                 var docF = $('printFormDD');
                 oscarLog('in onPrint'+docF);
 
@@ -174,7 +174,7 @@
             }
 
             function buildRoute() {
-        
+
                 pickRoute = "";
                 <oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
                 <%for (int i = 0; i < d_route.length; i++) {%>
@@ -208,7 +208,7 @@
            var resultFormatter = function(oResultData, sQuery, sResultMatch) {
                var query = sQuery.toUpperCase();
                var drugName = oResultData[0];
-               
+
                var mIndex = drugName.toUpperCase().indexOf(query);
                var display = '';
 
@@ -489,7 +489,7 @@ body {
      }
 
      .discontinued{
-         
+
      }
 
 --%>
@@ -539,7 +539,7 @@ body {
 		if (request.getParameter("show") != null) if (request.getParameter("show").equals("all")) showall = true;
     %>
 
-    
+
 
     <body  vlink="#0000FF" onload="checkFav();checkRePrescribe();iterateStash();rxPageSizeSelect();<%-- initmb(); --%>load()" class="yui-skin-sam">
         <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
@@ -554,18 +554,18 @@ body {
                                 <%-- div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title" /></div --%>
                                 <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" styleId="drugForm">
                                     <div id="rxText" style="float:left;"></div><div id="interactionsRxMyD" style="float:right;"></div><br style="clear:left;">
-                                
+
                                     <html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
                                     <table border="0">
                                         <tr valign="top">
                                             <td style="width:350px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
-                                                <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off"  />                                                
+                                                <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off"  />
                                                 <div id="autocomplete_choices"></div>
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
                                             <td >
                                                 <a href="javascript:void(0);" onclick="callTreatments('searchString','treatmentsMyD')"><bean:message key="SearchDrug.msgDrugOfChoice" /></a>
-                                                <a href=#  title="Set most frequently used prescription quantity" onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultQuantity');return false;" style="font-style:italic;font-family:times;color:#6699CC"><bean:message key="provider.SetDefaultPrescriptionQuantity"/></a>
+                                                <a href=#  title="Set most frequently used prescription quantity" onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultQuantity');return false;" style="font-style:normal;color:#6699CC"><bean:message key="provider.SetDefaultPrescriptionQuantity"/></a>
                                                 <%-- <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">  --%>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
@@ -573,9 +573,9 @@ body {
                                                 <div class="buttonrow">
                                                     <input id="saveButton" type="button"  onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveAndPrescribe"/>" />
                                                     <input id="customDrug" type="button"  onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrug"/>" />
-                                                    <input id="reset" type="button"  onclick="resetStash();" value="<bean:message key="SearchDrug.msgReset"/>" />
-                                                </div>                                  
-                                               
+                                                    <input id="reset" type="button" title="Clear pending prescriptions" onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescription"/>" />
+                                                </div>
+
                                             </td>
 
                                             <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
@@ -594,8 +594,8 @@ body {
                                         </tr>
                                     </table>
                                 </html:form>
-                                
-                                
+
+
 <div id="previewForm" style="display:none;"></div>
                             </td>
                         </tr>
@@ -625,7 +625,7 @@ body {
                                             <td>
                                                 <div style="height: 100px; overflow: auto; background-color: #DCDCDC; border: thin solid green; display: none;" id="reprint">
                                                     <%
-                       
+
 
                         for (int i = 0; i < prescribedDrugs.length; i++) {
                             oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
@@ -657,8 +657,8 @@ body {
                                                                 <table width="100%" cellspacing="0" cellpadding="0">
                                                                     <tr>
                                                                         <td align="left">
-                                                                            <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:italic;font-family:times;color:#6699CC" ><bean:message key="SearchDrug.msgProfileLegend"/></a>
-                                                                            <a href="javascript:void(0);" title="Change what kind of drugs you see in this drug profile" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');return false;" style="font-style:italic;font-family:times;color:#6699CC" ><bean:message key="provider.rxChangeProfileView"/></a>
+                                                                            <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" ><bean:message key="SearchDrug.msgProfileLegend"/></a>
+                                                                            <a href="javascript:void(0);" title="Change what kind of prescriptions to see in this drug profile" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');return false;" style="font-style:italic;color:#000000" ><bean:message key="provider.rxChangeProfileView"/></a>
                                                                             <%if(show_current){%>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
                                                                             <%}if(show_all){%>
@@ -668,7 +668,7 @@ body {
                                                                             <%}if(all){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
                                                                             <%}if(longterm_acute){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')">Longterm /Acute</a>
                                                                             <%}if(longterm_acute_inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')">Longterm /Acute/Inactive</a>
-                                                                            <%}%>                                                                            
+                                                                            <%}%>
                                                                         </td>
                                                                         <td align="right">
 
@@ -725,9 +725,9 @@ body {
 
                         <input type="button" class="ControlPushButton" onclick="javascript:window.location.href='viewScript.do';" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" /></td>
                 </tr>
-            </logic:notEqual> 
+            </logic:notEqual>
 
-            
+
             <tr height="100%">
                 <td></td>
             </tr>--%>
@@ -749,7 +749,7 @@ body {
             JAC-*REPRESCRIBE ALL long term meds
             JAC-Need delete to work
             -*discontinue!
-            
+
             JAC-format "more" section
             +Adjust search to have required info returned. (What is the required info?  ATC, DIN, Route Form??
             -*How to limit on Route and Form
@@ -764,7 +764,7 @@ body {
 
 <tr>
     <td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2">
-       
+
     </td>
 </tr>
 
@@ -915,7 +915,7 @@ body {
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
                 popForm2();
-            }}); 
+            }});
         return false;
     }
 
@@ -928,7 +928,7 @@ body {
     }
 
     function ThemeViewer(){
-       
+
        var xy = Position.page($('drugProfile'));
        var x = (xy[0]+200)+'px';
        var y = xy[1]+'px';
@@ -964,7 +964,7 @@ body {
            //  oscarLog(document.getElementById(id));
              var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=Delete2"  ;
              var data="deleteRxId="+element.id;
-            new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){  
+            new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
                   oscarLog("here");
                   $(rxDate).style.textDecoration='line-through';
                   $(reRx).style.textDecoration='line-through';
@@ -983,7 +983,7 @@ body {
          new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
                  oscarLog("here");
                  var json=transport.responseText.evalJSON();
-                  
+
                   oscarLog(json);
                   oscarLog("here2 -- " +$('alleg_'+json.id));
 
@@ -1033,7 +1033,7 @@ body {
        $('disDrug').innerHTML = drugName;
        $('discontinueUI').show();
        $('disDrugId').value=id;
-      
+
 
     }
 
@@ -1052,7 +1052,7 @@ body {
                   $('prescrip_'+json.id).style.textDecoration='line-through';
                   oscarLog("here2");
             }});
-    
+
     }
 
 
@@ -1076,7 +1076,7 @@ body {
         new Ajax.Request(url, {method: 'get',parameters:data})
         return false;
     }
-    
+
 function customWarning2(){
     if (confirm('This feature will allow you to manually enter a drug.'
 	+ '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
@@ -1118,14 +1118,14 @@ function popForm2(){
                     oscarLog( "preview2 done");
                     myLightWindow.activateWindow({
                         href: url,
-                        width: 660                        
+                        width: 660
                     });
 
         }
         catch(er){alert(er);}
         oscarLog("bottom of popForm");
     }
-    
+
      function callTreatments(textId,id){
          var ele = $(textId);
          var url = "TreatmentMyD.jsp"
@@ -1168,7 +1168,7 @@ function getSelectionId(text, li) {
     var params = "demographicNo=<%=bean.getDemographicNo()%>&id="+li.id+"&text="+text+"&rand="+ran_number;  //hack to get around ie caching the page
     new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom
 });
-    
+
 }
 
 function upElement(li){
@@ -1284,7 +1284,7 @@ function addFav(randomId,brandName){
           resHidden2 = 0;
         }
     }
-    
+
    function HideW(id,resourceId,updated){
         var url = 'GetmyDrugrefInfo.do?method=setWarningToHide';
         //callReplacementWebService("GetmyDrugrefInfo.do?method=setWarningToHide",'interactionsRxMyD');function callReplacementWebService(url,id){
@@ -1318,7 +1318,7 @@ function setSearchedDrug(drugId,name){
         var data="drugId="+drugId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom});
-        
+
     }
 
    //not used now.
@@ -1371,7 +1371,7 @@ function updateQty(element){
                 str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
                 oscarLog("json.duration="+json.duration);
- 
+
                 if(json.prn){
                     str=str+" prn";
                 } else{ }
@@ -1448,7 +1448,7 @@ function checkEnterSendRx(){
         popupRxSearchWindow();
         return false;
 }
-                                                
+
 
 
 $("searchString").focus();
