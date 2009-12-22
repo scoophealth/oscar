@@ -146,7 +146,7 @@ String allergyId = (String) request.getAttribute("allergyId");
 							<td colspan="2"><html:submit property="submit"
 								value="Add Allergy" styleClass="ControlPushButton" /> <input
 								type=button class="ControlPushButton"
-								onclick="javascript:document.forms.RxSearchAllergyForm.searchString.value='';document.forms.RxSearchAllergyForm.searchString.focus();"
+								onclick="javascript:document.forms.RxAddAllergyForm.reactionDescription.value='';document.forms.RxAddAllergyForm.startDate.value='';document.forms.RxAddAllergyForm.ageOfOnset.value='';document.forms.RxAddAllergyForm.reactionDescription.focus();"
 								value="Reset" /></td>
 						</tr>
 					</table>
