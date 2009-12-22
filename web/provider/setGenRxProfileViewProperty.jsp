@@ -133,7 +133,7 @@ if(session.getValue("user") == null)
                        <bean:write name="viewChoice" property="label"/>
                    </logic:iterate>
                    <br/>
-                   <input onclick="refreshRx3();" type="submit" value="<bean-el:message key="${providerbtnSubmit}" />" />
+                   <input type="submit" value="<bean-el:message key="${providerbtnSubmit}" />" />
 		</html:form> <%}else {%> <bean-el:message key="${providermsgSuccess}" /> <br>
 		<%}%>
 		</td>
