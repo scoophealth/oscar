@@ -700,6 +700,9 @@
         <action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/deleteAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteAllergyAction">
             <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
         </action>
+        <action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/deleteAllergy2" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteAllergyAction">
+            <forward name="success" path="/oscarRx/ShowAllergies2.jsp" />
+        </action>
         <action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/showAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxShowAllergyAction">
             <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
         </action>
