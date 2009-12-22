@@ -980,7 +980,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    	}
 	    	catch (Exception e)
 	    	{
-	    		log.error("Error, note is missing program_no, or program_no is invalid. ProgramNo="+localNote.getProgram_no());
+	    		log.error("Error, note is missing program_no, or program_no is invalid. ProgramNo="+localNote.getProgram_no(), e);
 	    		noteDisplay.program="Error, not available.";
 	    	}
 	    	
