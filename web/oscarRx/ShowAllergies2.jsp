@@ -163,7 +163,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 								name="patient" property="allergies">
 								<tr>
 									<td><a
-										href="deleteAllergy.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>">
+										href="deleteAllergy2.do?ID=<%= String.valueOf(allergy.getAllergyId()) %>">
 									Delete </a></td>
 									<td><bean:write name="allergy" property="entryDate" /></td>
 									<td><bean:write name="allergy"
