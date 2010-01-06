@@ -74,34 +74,39 @@ public class PGPEncrypt {
 	cmd[2] = this.src;
 	cmd[3] = this.key;
 	env[0] = this.env;
-	Process proc = rt.exec(cmd, env, dir);
-	int ecode = proc.waitFor();
-	if (ecode==0) {
-	    InputStream in = proc.getInputStream();
-	    OutputStream out = new FileOutputStream(dir.getPath()+"/done.tmp");
-	    byte[] buf = new byte[1024];
-	    int len;
-	    while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-	    in.close();
-	    out.close();	    
-	    
-	    //Remove source file & "done.tmp" - useless by-product of PGP encryption
-	    if (!Util.cleanFile(dir.getPath()+"/done.tmp"))
-                throw new Exception("Error! Cannot remove \"done.tmp\".");
-	    if (!Util.cleanFile(dir.getPath()+"/"+this.src))
-                throw new Exception("Error! Cannot remove source file!");
-	    
-	    return true;
-	} else {	    
-	    System.out.println("PGP Encryption Error: " + ecode);
-	    InputStream err = proc.getErrorStream();
-	    BufferedReader erdr = new BufferedReader(new InputStreamReader(err));
-	    String line = null;
-	    while ((line = erdr.readLine()) != null) System.out.println(line);
-	    erdr.close();
-	    err.close();
-	    
-	    return false;
-	}
+        try {
+            Process proc = rt.exec(cmd, env, dir);
+            int ecode = proc.waitFor();
+            if (ecode==0) {
+                InputStream in = proc.getInputStream();
+                OutputStream out = new FileOutputStream(dir.getPath()+"/done.tmp");
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len=in.read(buf)) > 0) out.write(buf,0,len);
+                in.close();
+                out.close();
+
+                //Remove source file & "done.tmp"(useless by-product of PGP encryption)
+                if (!Util.cleanFile(dir.getPath()+"/done.tmp"))
+                    throw new Exception("Error! Cannot remove \"done.tmp\".");
+                if (!Util.cleanFile(dir.getPath()+"/"+this.src))
+                    throw new Exception("Error! Cannot remove source file!");
+
+                return true;
+            } else {
+                System.out.println("PGP Encryption Error: " + ecode);
+                InputStream err = proc.getErrorStream();
+                BufferedReader erdr = new BufferedReader(new InputStreamReader(err));
+                String line = null;
+                while ((line = erdr.readLine()) != null) System.out.println(line);
+                erdr.close();
+                err.close();
+
+                return false;
+            }
+        } catch (java.io.IOException ix) {
+            ix.printStackTrace();
+        }
+        return false;
     }
 }

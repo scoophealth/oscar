@@ -1608,7 +1608,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		try{
 		    File directory = new File(tmpDir);
 		    if(!directory.exists()){
-			throw new Exception("Temporary Export Directory (as set in oscar.properties) does not exist!");
+			throw new Exception("Temporary Export Directory does not exist!");
 		    }
 		    String inFile = this.demographicNo+"-"+demoName+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
 		    files[i] = new File(directory,inFile);
@@ -1636,34 +1636,52 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    throw new Exception("Error! Failed zipping export files");
 	}
 	
-	//PGP encrypt zip file (source zip file will be deleted)
+	//PGP encrypt zip file
 	PGPEncrypt pet = new PGPEncrypt(zipName, tmpDir);
-	if (!pet.doEncrypt()) throw new Exception("Error encrypting export files!");
+	if (pet.doEncrypt()) {
+            downloadEncrypted(zipName, tmpDir, response);
+        } else {
+            System.out.println("Problem encrypting - download unencrypted export files!");
+            downloadRaw(zipName, tmpDir, response);
+        }
 	
-	//Remove export files from temp dir
-	for (int i=0; i<exportFiles.length; i++) {
-	    exportFiles[i].delete();
-	}
-	
-	//Download .pgp file
-	String pgpFile = zipName+".pgp";
-	response.setContentType("application/octet-stream");
-	response.setHeader("Content-Disposition", "attachment; filename=\""+pgpFile+"\"" );
-	
-	InputStream in = new FileInputStream(tmpDir+pgpFile);
-	OutputStream out = response.getOutputStream();
+	//Remove zip & export files from temp dir
+        if (!Util.cleanFile(tmpDir+zipName)) System.out.println("Error! Cannot delete zip file: "+zipName);
+        Util.cleanFiles(exportFiles);
+    }
+    return null;
+}
+
+    void downloadEncrypted(String fileName, String dirName, HttpServletResponse rsp) throws FileNotFoundException, IOException {
+	String pgpFilename = fileName+".pgp";
+	rsp.setContentType("application/octet-stream");
+	rsp.setHeader("Content-Disposition", "attachment; filename=\""+pgpFilename+"\"" );
+
+	InputStream in = new FileInputStream(dirName+pgpFilename);
+	OutputStream out = rsp.getOutputStream();
 	byte[] buf = new byte[1024];
 	int len;
 	while ((len=in.read(buf)) > 0) out.write(buf,0,len);
 	in.close();
 	out.close();
-	
+
         //Remove .pgp file from temp dir
-	if (!Util.cleanFile(tmpDir+pgpFile))
-            throw new Exception("Error! Cannot remove .pgp file from temporary directory");
+	if (!Util.cleanFile(dirName+pgpFilename))
+            System.out.println("Error! Cannot remove .pgp file from temporary directory");
     }
-    return null;
-}
+
+    void downloadRaw(String fileName, String dirName, HttpServletResponse rsp) throws FileNotFoundException, IOException {
+	rsp.setContentType("application/octet-stream");
+	rsp.setHeader("Content-Disposition", "attachment; filename=\""+fileName+"\"" );
+
+	InputStream in = new FileInputStream(dirName+fileName);
+	OutputStream out = rsp.getOutputStream();
+	byte[] buf = new byte[1024];
+	int len;
+	while ((len=in.read(buf)) > 0) out.write(buf,0,len);
+	in.close();
+	out.close();
+    }
 
     File makeReadMe(File[] f, Vector error, String mediaType, String noOfMedia) throws IOException {
         OscarProperties props = oscar.OscarProperties.getInstance();
