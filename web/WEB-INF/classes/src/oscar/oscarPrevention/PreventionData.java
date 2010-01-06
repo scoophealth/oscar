@@ -224,6 +224,36 @@ public class PreventionData {
 		return list;
 	}
 
+        /*
+         * Fetch one extended prevention key
+         * Requires prevention id and keyval to return
+         */
+        public String getExtValue(String id, String keyval) {
+            String sql = "select val from preventionsExt where prevention_id = ? and keyval = ?";
+           
+            String key = "";
+		try {           
+
+                    PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(sql);
+                    pstmt.setString(1, id);
+                    pstmt.setString(2, keyval);
+                    ResultSet rs = pstmt.executeQuery();
+
+                    if( rs.next() ) {
+                        key = rs.getString(1);
+                    }
+
+                    rs.close();
+                    pstmt.close();
+                }
+                catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                    log.error(sql);
+		}
+
+            return key;
+        }
+
 	// //////
 	/**
 	 *Method to get a list of (demographic #, prevention dates, and key values) of a certain type <injectionTppe> from a start Date to an end Date with a Ext key value EG get all
@@ -234,10 +264,9 @@ public class PreventionData {
 		String sql = "select preventions.id as preventions_id, demographic_no, prevention_date ,val from preventions, preventionsExt where preventions.id = preventionsExt.prevention_id  and prevention_type = ? and prevention_date >= ? and prevention_date <= ? and preventionsExt.keyval = ? and preventions.deleted = '0' and preventions.refused = '0' order by prevention_date";
 
 		ArrayList list = new ArrayList();
-		DBHandler dbhandler = null;
+		
 		try {
-			// log.debug("e-DATE: "+date);
-			dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+			// log.debug("e-DATE: "+date);		
 
 			PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(sql);
 			pstmt.setString(1, injectionType);
