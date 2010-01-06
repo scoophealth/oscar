@@ -68,11 +68,27 @@ public class Util {
 	return calDate(dateTime);
     }
     
-    static boolean cleanFile(String filename) {
-	File f = new File(filename);
-	return f.delete();
+    static void cleanFiles(String[] filenames) {
+        for (String filename : filenames) {
+            if (!cleanFile(filename)) System.out.println("Error! Cannot delete file: "+filename);
+        }
     }
     
+    static void cleanFiles(File[] files) {
+        for (File file : files) {
+            if (!cleanFile(file)) System.out.println("Error! Cannot delete file: "+file.getPath());
+        }
+    }
+
+    static boolean cleanFile(String filename) {
+	File f = new File(filename);
+	return cleanFile(f);
+    }
+    
+    static boolean cleanFile(File file) {
+	return file.delete();
+    }
+
     static public boolean convert10toboolean(String s){
 	Boolean ret = false;
 	if ( s!= null && s.trim().equals("1") ){
