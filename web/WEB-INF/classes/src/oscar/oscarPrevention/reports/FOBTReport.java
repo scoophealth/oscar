@@ -124,7 +124,9 @@ public class FOBTReport implements PreventionReport{
                 log.debug("\n\n\n prevDate "+prevDate);
                 log.debug("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
                 log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
-                if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
+                String result = pd.getExtValue((String)h.get("id"), "result");
+
+                if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate) && !result.equalsIgnoreCase("pending") ){
                    prd.bonusStatus = "Y";
                    done++;
                 }
@@ -163,6 +165,13 @@ public class FOBTReport implements PreventionReport{
                    prd.state = "Refused";
                    prd.numMonths = numMonths;
                    prd.color = "orange"; //FF9933
+                } else if( dueDate.before(prevDate) && result.equalsIgnoreCase("pending") ) {
+                    prd.rank = 4;
+                    prd.lastDate = prevDateStr;
+                    prd.state = "Pending";
+                    prd.numMonths = numMonths;
+                    prd.color = "pink";
+
                 } else if (dueDate.before(prevDate)  ){  // recorded done
                    prd.rank = 4;
                    prd.lastDate = prevDateStr;                
@@ -265,6 +274,7 @@ public class FOBTReport implements PreventionReport{
    String LETTER1 = "L1";
    String LETTER2 = "L2";
    String PHONE1 = "P1";
+   String CALLFU = "Follow Up";
   
    private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate){
        if (prd != null){
@@ -333,8 +343,10 @@ public class FOBTReport implements PreventionReport{
               prd.nextSuggestedProcedure = "----";
                 //prd.numMonths ;
           }else if(prd.state.equals("Ineligible")){
-                // Do nothing   
-                prd.nextSuggestedProcedure = "----"; 
+                // Do nothing
+                prd.nextSuggestedProcedure = "----";
+          }else if(prd.state.equals("Pending")){
+                prd.nextSuggestedProcedure = this.CALLFU;
           }else if(prd.state.equals("Up to date")){
                 //Do nothing
               prd.nextSuggestedProcedure = "----";
