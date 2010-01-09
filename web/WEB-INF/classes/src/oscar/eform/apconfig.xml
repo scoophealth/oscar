@@ -197,6 +197,16 @@
 		<ap-output>${age}</ap-output>
 	</databaseap>
 	<databaseap>
+		<ap-name>ageComplex</ap-name>
+		<ap-sql>SELECT (IF ( (YEAR(CURRENT_DATE) - YEAR(@bdate))&lt; 3, 
+(IF ( (((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2))&lt; 3, 
+(IF ( FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7)&lt; 5, 
+(IF ( (TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))&lt; 2, 
+'newborn', CONCAT((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate)),' day old'))), CONCAT(FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7),' week old'))), CONCAT((((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2)),' month old'))), CONCAT((YEAR(CURRENT_DATE) - YEAR(@bdate)) - (MID(CURRENT_DATE, 6, 5) &lt;  MID(CURRENT_DATE, 6, 5)),' year old'))) as ageComplex from (SELECT @bdate:=
+DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d') AS birthdate FROM demographic WHERE demographic_no=${demographic}) as t</ap-sql>
+		<ap-output>${ageComplex}</ap-output>
+	</databaseap>
+	<databaseap>
 		<ap-name>sex</ap-name>
 		<ap-sql>SELECT sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${sex}</ap-output>
@@ -239,29 +249,29 @@
         <databaseap>
                 <ap-name>referral_name</ap-name>
                 <ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
-                        FROM billingreferral, demographic
-                        WHERE demographic_no=${demographic} AND SUBSTRING(demographic.family_doctor,9,6)=billingreferral.referral_no</ap-sql>
+                        FROM billingreferral, demographic 
+                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
                 <ap-output>${last_name}, ${first_name}</ap-output>
         </databaseap>
         <databaseap>
                 <ap-name>referral_address</ap-name>
-                <ap-sql>SELECT CONCAT(billingreferral.address1,billingreferral.address2,billingreferral.city,billingreferral.province,billingreferral.country,billingreferral.postal) AS raddress
-                        FROM billingreferral, demographic
-                        WHERE demographic_no=${demographic} AND SUBSTRING(demographic.family_doctor,9,6)=billingreferral.referral_no</ap-sql>
+                <ap-sql>SELECT CONCAT(billingreferral.address1,', ',billingreferral.address2,', ',billingreferral.city,', ',billingreferral.province,', ',billingreferral.country,', ',billingreferral.postal) AS raddress
+                        FROM billingreferral, demographic 
+                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
                 <ap-output>${raddress}</ap-output>
         </databaseap>
         <databaseap>
                 <ap-name>referral_phone</ap-name>
                 <ap-sql>SELECT billingreferral.phone
-                        FROM billingreferral, demographic
-                        WHERE demographic_no=${demographic} AND SUBSTRING(demographic.family_doctor,9,6)=billingreferral.referral_no</ap-sql>
+                        FROM billingreferral, demographic 
+                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
                 <ap-output>${phone}</ap-output>
         </databaseap>
         <databaseap>
                 <ap-name>referral_fax</ap-name>
                 <ap-sql>SELECT billingreferral.fax
-                        FROM billingreferral, demographic
-                        WHERE demographic_no=${demographic} AND SUBSTRING(demographic.family_doctor,9,6)=billingreferral.referral_no</ap-sql>
+                        FROM billingreferral, demographic 
+                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
                 <ap-output>${fax}</ap-output>
         </databaseap>
         <databaseap>
@@ -271,6 +281,10 @@
                         WHERE demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no</ap-sql>
                 <ap-output>${allergies}</ap-output>
         </databaseap>
-        
+        <databaseap>
+                <ap-name>recent_rx</ap-name>
+                <ap-sql>SELECT date_prescribed, SUBSTRING_INDEX(p.textView, '\n\n', -1) AS rx FROM prescription p WHERE demographic_no=${demographic} ORDER BY p.date_prescribed DESC </ap-sql>
+                <ap-output>${date_prescribed} ${rx}</ap-output>
+        </databaseap>        
 
 </eformap-config>
