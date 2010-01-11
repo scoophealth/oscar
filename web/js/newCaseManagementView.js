@@ -2169,8 +2169,10 @@ function newNote(e) {
         passwd = "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
     }
 
+    // the extra BR NBSP at the ends are for IE fix for selection box is out of scrolling pane view.
     var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><input type='hidden' id='editWarn" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'><input type='hidden' id='full" + newNoteIdx + "' value='true'>" +
-              "<input type='hidden' id='bgColour" + newNoteIdx + "' value='color:#000000;background-color:#CCCCFF;'>" + input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
+              "<input type='hidden' id='bgColour" + newNoteIdx + "' value='color:#000000;background-color:#CCCCFF;'>" + input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div><br \/>&nbsp;<br \/>&nbsp;<br \/>&nbsp;<br \/>";
+   
 
     if( changeToView(caseNote) ) {
 

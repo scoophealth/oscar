@@ -1032,7 +1032,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 }
                 %>
 	<%-- The BRs are here because the drop down list is not in the scrolling pane view so we need some padding at the end so when the drop down occurs it's in the view--%>            
-	<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />
+	<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />
 	
 	</div>
 	<div id='save'
