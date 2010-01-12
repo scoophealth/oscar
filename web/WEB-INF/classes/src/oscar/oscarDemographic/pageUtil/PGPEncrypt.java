@@ -27,13 +27,8 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-
+import java.io.IOException;
 import oscar.OscarProperties;
 
 /**
@@ -41,71 +36,78 @@ import oscar.OscarProperties;
  * @author Ronnie Cheng
  */
 public class PGPEncrypt {
-    String dir;
     String bin;
     String cmd;
     String key;
     String env;
-    String src;
 
-    public PGPEncrypt(String src, String dir) throws Exception {
+    public PGPEncrypt() {
 	OscarProperties op = OscarProperties.getInstance();
-	this.dir = dir;
-	if (!Util.filled(this.dir)) throw new Exception("Working directory does not exist!");
-	this.bin = op.getProperty("PGP_BIN");
-	if (!Util.filled(this.bin)) throw new Exception("PGP binary executable (PGP_BIN) not set in oscar.properties!");
-	this.cmd = op.getProperty("PGP_CMD");
-	if (!Util.filled(this.cmd)) throw new Exception("PGP encryption command (PGP_CMD) not set in oscar.properties!");
-	this.key = op.getProperty("PGP_KEY");
-	if (!Util.filled(this.key)) throw new Exception("PGP encryption key (PGP_KEY) not set in oscar.properties!");
-	this.env = op.getProperty("PGP_ENV");
-	if (!Util.filled(this.env)) throw new Exception("PGP environment variable (PGP_ENV) not set in oscar.properties!");
-	this.src = src;
-	if (!Util.filled(this.src)) throw new Exception("Source file not given. Nothing to encrypt!");
+	this.bin = Util.noNull(op.getProperty("PGP_BIN"));
+	if (!Util.filled(this.bin)) System.out.println("Warning: PGP binary executable (PGP_BIN) not set!");
+	this.cmd = Util.noNull(op.getProperty("PGP_CMD"));
+	if (!Util.filled(this.cmd)) System.out.println("Warning: PGP encryption command (PGP_CMD) not set!");
+	this.key = Util.noNull(op.getProperty("PGP_KEY"));
+	if (!Util.filled(this.key)) System.out.println("Warning: PGP encryption key (PGP_KEY) not set!");
+	this.env = Util.noNull(op.getProperty("PGP_ENV"));
+	if (!Util.filled(this.env)) System.out.println("Warning: PGP environment variable (PGP_ENV) not set!");
     }
-    
-    boolean doEncrypt() throws Exception {
+
+    public boolean check(String dirName) throws Exception {
+        if (!Util.checkDir(dirName)) {
+            System.out.println("Error! Cannot write to directory ["+dirName+"]");
+            return false;
+        }
+        Runtime rt = Runtime.getRuntime();
+        String[] env = {""};
+        File dir = new File(dirName);
+
+        boolean rtrn = false;
+        try {
+            Process proc = rt.exec("touch null.tmp", env, dir);
+            int ecode = proc.waitFor();
+            if (ecode==0) {
+                String[] cmd = {this.bin, this.cmd, "null.tmp", this.key};
+                env[0] = this.env;
+                proc = rt.exec(cmd, env, dir);
+                ecode = proc.waitFor();
+                if (ecode==0) {
+                    Util.cleanFile("null.tmp.pgp", dirName);
+                    rtrn = true;
+                }
+                Util.cleanFile("null.tmp", dirName);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return rtrn;
+    }
+
+    boolean encrypt(String srcFile, String workDir) throws Exception {
+        if (!Util.checkDir(workDir)) {
+            System.out.println("Error! Cannot write to directory ["+workDir+"]");
+            return false;
+        }
+        if (!Util.filled(srcFile)) {
+            System.out.println("Error! Source file not given; nothing to encrypt!");
+            return false;
+        }
 	Runtime rt = Runtime.getRuntime();
+	String[] env = {this.env};
 	String[] cmd = new String[4];
-	String[] env = new String[1];
-	File dir = new File(this.dir);
 	cmd[0] = this.bin;
 	cmd[1] = this.cmd;
-	cmd[2] = this.src;
+	cmd[2] = srcFile;
 	cmd[3] = this.key;
-	env[0] = this.env;
+        File dir = new File(workDir);
+
         try {
             Process proc = rt.exec(cmd, env, dir);
             int ecode = proc.waitFor();
-            if (ecode==0) {
-                InputStream in = proc.getInputStream();
-                OutputStream out = new FileOutputStream(dir.getPath()+"/done.tmp");
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-                in.close();
-                out.close();
+            if (ecode==0) return true;
 
-                //Remove source file & "done.tmp"(useless by-product of PGP encryption)
-                if (!Util.cleanFile(dir.getPath()+"/done.tmp"))
-                    throw new Exception("Error! Cannot remove \"done.tmp\".");
-                if (!Util.cleanFile(dir.getPath()+"/"+this.src))
-                    throw new Exception("Error! Cannot remove source file!");
-
-                return true;
-            } else {
-                System.out.println("PGP Encryption Error: " + ecode);
-                InputStream err = proc.getErrorStream();
-                BufferedReader erdr = new BufferedReader(new InputStreamReader(err));
-                String line = null;
-                while ((line = erdr.readLine()) != null) System.out.println(line);
-                erdr.close();
-                err.close();
-
-                return false;
-            }
-        } catch (java.io.IOException ix) {
-            ix.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         return false;
     }
