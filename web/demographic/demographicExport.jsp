@@ -24,16 +24,27 @@
  */
 -->
 <%@page
-	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*"%>
+	import="java.util.*,oscar.oscarDemographic.data.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,oscar.oscarDemographic.pageUtil.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
-  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
-  String demographic_no = request.getParameter("demographic_no"); 
-  
+
+  oscar.OscarProperties op = oscar.OscarProperties.getInstance();
+  String tmp_dir = op.getProperty("TMP_DIR");
+  boolean tmp_dir_ready = Util.checkDir(tmp_dir);
+
+  String pgp_ready = (String)session.getAttribute("pgp_ready");
+  if (pgp_ready==null || pgp_ready.equals("No")) {
+      PGPEncrypt pgp = new PGPEncrypt();
+      if (pgp.check(tmp_dir)) pgp_ready = "Yes";
+      else pgp_ready = "No";
+  }
+  session.setAttribute("pgp_ready", pgp_ready);
+
+  String demographicNo = request.getParameter("demographicNo");
   DemographicSets  ds = new DemographicSets();
   ArrayList sets = ds.getDemographicSets();
   
@@ -153,7 +164,12 @@ function checkAll(all) {
 if (!userRole.toLowerCase().contains("admin")) { %>
 <p>
 <h2>Sorry! Only administrators can export demographics.</h2>
-</p>
+
+<%
+} else if (!tmp_dir_ready) { %>
+<p>
+<h2>Error! Cannot perform demographic export. Please contact support.</h2>
+
 <%
 } else {
 %>
@@ -161,11 +177,11 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn" width="100">
-		demographicExport</td>
+		Demographic Export</td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td>Demographic Export</td>
+				<td>Export Demographic(s)</td>
 				<td>&nbsp;</td>
 				<td style="text-align: right"><a
 					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
@@ -180,14 +196,15 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">
-		    <% if (demographic_no== null) { %>
+		    <% if (demographicNo== null) { %>
 		    <a href="diabetesExport.jsp">Diabetes Export</a></td>
 		    <%} %>
 		<td valign="top" class="MainTableRightColumn">
 		    <html:form action="/demographic/DemographicExport3" method="get" onsubmit="return checkSelect(patientSet.value);">
 		    <div>
-		    <% if (demographic_no!= null) { %>
-			    <input type="hidden" name="demographicNo" value="<%=demographic_no%>" /> Exporting :
+		    <% if (demographicNo!= null) { %>
+                            <html:hidden property="demographicNo" value="<%=demographicNo%>" />
+                            Exporting Demographic No. <%=demographicNo%>
 		    <%} else {%>
 			    Patient Set: <html:select property="patientSet">
 				    <html:option value="-1">--Select Set--</html:option>
@@ -240,8 +257,13 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 			   <input type="button" value="Check None" onclick="checkAll(false);"/>
 		       </td></tr></table>
 		   </td></tr></table>
-		   
-		    <p><input type="submit" value="Export (CMS spec 3.0)" />
+                       <html:hidden property="pgpReady" value="<%=pgp_ready%>" />
+                       
+		    <p>&nbsp;</p>
+<%  if (pgp_ready.equals("No")) { %>
+                    WARNING: PGP Encryption NOT available - unencrypted file will be exported!<br>
+<%  }%>
+                    <input type="submit" value="Export (CMS spec 3.0)" />
 		</html:form></td>
 	</tr>
 	<tr>
