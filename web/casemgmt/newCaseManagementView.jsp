@@ -112,7 +112,7 @@
 </script>
 <%
     current = System.currentTimeMillis();
-    System.out.println("NEW CASEMANAGEMENT VIEW jscode loaded " + String.valueOf(current-start));
+    //System.out.println("NEW CASEMANAGEMENT VIEW jscode loaded " + String.valueOf(current-start));
     start = current;
 %>
 <%-- <div class="tabs" id="tabs">
@@ -648,7 +648,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 
                     for(pos = noteSize-1; pos >= 0; --pos) {
                         CaseManagementNote cmNote = (CaseManagementNote)noteList.get(pos);
-
+                        
                         isCPP = false;
                         bgColour = "color:#000000;background-color:#CCCCFF;";
                         //bgColour = "color:#000000;background-color:#D2B9D3;";//set background colour to thistle
@@ -656,11 +656,11 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         Iterator iterator = nIssues.iterator();
                         while( iterator.hasNext() ) {
                             CaseManagementIssue issue = (CaseManagementIssue)iterator.next();
-                            System.out.println("CaseManagementIssue="+issue);
+                            //System.out.println("CaseManagementIssue="+issue);
                             for( int cppIdx = 0; cppIdx < cppCodes.length; ++cppIdx ) {
                                 //sets the note's lower bar brown.
-                                System.out.println("cppCodes[cppIdx]="+cppCodes[cppIdx]);
-                                System.out.println("issue.getIssue().getCode()="+issue.getIssue().getCode());
+                                //System.out.println("cppCodes[cppIdx]="+cppCodes[cppIdx]);
+                                //System.out.println("issue.getIssue().getCode()="+issue.getIssue().getCode());
                                 if(issue.getIssue().getCode().equals(cppCodes[cppIdx])) {
                                     bgColour = "color:#FFFFFF;background-color:#996633;";
                                     isCPP = true;
@@ -678,7 +678,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         if(cmNote.isDocumentNote()) {
                             //if(cmNote.isDocumentAnnotation());
                            // else{
-                                System.out.println("nId value inside if="+nId);
+                                //System.out.println("nId value inside if="+nId);
                                 bgColour = documentColour;
                             //    }
                         }
@@ -724,7 +724,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     boolean fulltxt;
                     pos = noteSize - 1;
 		    for( idx = 0; idx < noteSize; ++idx ) {
-                     System.out.println("in loop");
+                     //System.out.println("in loop");
                     CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
                     noteStr = note.getNote();
                     Long noteId=note.getId();
@@ -742,8 +742,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                          if(status=='A') {
                            dispStatus="active";
                           }
-                        System.out.println("dispDocNo :: dispFilename :: dispStatus" );
-                        System.out.println( dispDocNo+" "+dispFilename+" "+dispStatus);
+                        //System.out.println("dispDocNo :: dispFilename :: dispStatus" );
+                        //System.out.println( dispDocNo+" "+dispFilename+" "+dispStatus);
                         //find docname, docno and docstatus
                     }
                     noteStr = StringEscapeUtils.escapeHtml(noteStr);
@@ -847,7 +847,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                 url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document="
                                         + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
                                 url= url+"return false;";
-                                System.out.println("url=" + url);
+                                //System.out.println("url=" + url);
                                 //System.out.println("Notes="+ request.getAttribute("Notes"));
         %>              <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float:right; margin-right:5px; font-size:8px;"><bean:message key="oscarEncounter.edit.msgEdit"/></a>
                         <a class="links" title="<bean:message key="oscarEncounter.view.docView"/>"
@@ -858,7 +858,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         <% }
 
                             else {  //document note
-                                System.out.println("history="+note.getHistory()+"whats between");
+                                //System.out.println("history="+note.getHistory()+"whats between");
                                 String url;
 
                                 Enumeration em= request.getAttributeNames();
@@ -873,7 +873,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                 url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document="
                                         + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
                                 url= url+"return false;";
-                                System.out.println("url=" + url);
+                                //System.out.println("url=" + url);
                                 //System.out.println("Notes="+ request.getAttribute("Notes"));
         %>
                         <a class="links" title="<bean:message key="oscarEncounter.view.docView"/>"
@@ -998,7 +998,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     %>
 		<%
     current = System.currentTimeMillis();
-    System.out.println("NEW CASEMANAGEMENT VIEW display notes " + String.valueOf(current-start));
+    //System.out.println("NEW CASEMANAGEMENT VIEW display notes " + String.valueOf(current-start));
     start = current;
 %>
 	</c:if> <%
@@ -1181,7 +1181,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 
 <%
     current = System.currentTimeMillis();
-    System.out.println("NEW CASEMANAGEMENT VIEW total " + String.valueOf(current-beginning));
+    //System.out.println("NEW CASEMANAGEMENT VIEW total " + String.valueOf(current-beginning));
 %>
 <%!
 

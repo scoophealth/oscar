@@ -680,6 +680,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    log.debug("Apply sorting to notes " + (System.currentTimeMillis()-startTime));
     }
 
+    /**
+     * New CME
+     */
 	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException,
 	        IllegalAccessException, Exception {
 	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
@@ -772,19 +775,26 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		startTime = System.currentTimeMillis();
 		String noteSort = caseForm.getNote_sort();
 		if (noteSort != null && noteSort.length() > 0) {
-			request.setAttribute("Notes", sortNotes(notes, noteSort));
+			notes=sortNotes(notes, noteSort);
 		} else {
 			oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 			noteSort = p.getProperty("CMESort", "");
-			if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sortNotes(notes, "observation_date_asc"));
-			else request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
+			if (noteSort.trim().equalsIgnoreCase("UP")) notes=sortNotes(notes, "observation_date_asc");
+			else notes=sortNotes(notes, "observation_date_desc");
 		}
 		log.debug("Apply sorting to notes " + (System.currentTimeMillis() - startTime));
 
+		request.setAttribute("Notes", notes);
+
+		ArrayList<NoteDisplay> notesToDisplay=new ArrayList<NoteDisplay>();
+	    addLocalNotes(notesToDisplay, notes);
+		request.setAttribute("notesToDisplay", notesToDisplay);
+
+		
 		// request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 	}
 	
-	private List sortNotes(List notes, String field) throws Exception {
+	private List<CaseManagementNote> sortNotes(List<CaseManagementNote> notes, String field) throws Exception {
 		log.debug("Sorting notes by field: " + field);
 		if (field == null || field.equals("") || field.equals("update_date")) {
 			return notes;
