@@ -35,10 +35,12 @@ import org.apache.struts.action.ActionForm;
  * @author Jay Gallagher
  */
 public class DemographicExportForm extends ActionForm {
-         
+
+    String demographicNo;
     String patientSet;
     String mediaType;
     String noOfMedia;
+    String pgpReady;
     
     boolean exPersonalHistory;
     boolean exFamilyHistory;
@@ -62,6 +64,9 @@ public class DemographicExportForm extends ActionForm {
     * Getter for properties.
     * @return Value of properties.
     */
+    public String getDemographicNo() {
+        return demographicNo;
+    }
     public String getPatientSet() {
         return patientSet;
     }
@@ -70,6 +75,9 @@ public class DemographicExportForm extends ActionForm {
     }
     public String getNoOfMedia() {
         return noOfMedia;
+    }
+    public String getPgpReady() {
+        return pgpReady;
     }
     public boolean getExPersonalHistory() {
         return exPersonalHistory;
@@ -118,6 +126,9 @@ public class DemographicExportForm extends ActionForm {
     * Setter for properties
     * @param patientSet New value of properties.
     */
+    public void setDemographicNo(String demographicNo) {
+        this.demographicNo = demographicNo;
+    }
     public void setPatientSet(String patientSet) {
         this.patientSet = patientSet;
     }
@@ -127,6 +138,9 @@ public class DemographicExportForm extends ActionForm {
     public void setNoOfMedia(String noOfMedia) {
         if (isInteger(noOfMedia)) this.noOfMedia = noOfMedia;
         else this.noOfMedia = "1";
+    }
+    public void setPgpReady(String pgpReady) {
+        this.pgpReady = pgpReady;
     }
     public void setExPersonalHistory(boolean rhs) {
         this.exPersonalHistory = rhs;
