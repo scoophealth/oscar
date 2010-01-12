@@ -454,7 +454,6 @@ function addToPatientSet(demoNo, patientSet) {
 
 <style type="text/css">
 div.demographicSection{
-   //width:49%;
    width:100%;
    margin-top: 2px;
    margin-left:3px;
@@ -2134,7 +2133,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 									value="<bean:message key="global.btnCancel" />"
 									onclick=self.close();>
 								<br><input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
-									onclick="window.open('demographicExport.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>');">
+									onclick="window.open('demographicExport.jsp?demographicNo=<%=apptMainBean.getString(rs,"demographic_no")%>');">
 								</td>
 								<td width="30%" align='center' valign="top"><input
 									type="hidden" name="displaymode" value="Update Record">
