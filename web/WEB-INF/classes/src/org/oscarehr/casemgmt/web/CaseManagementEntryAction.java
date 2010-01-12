@@ -1454,10 +1454,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         boolean docAnno=false;
 
         CaseManagementNote preNote=new CaseManagementNote();
-        Long nId=Long.parseLong(cform.getNoteId());
-        preNote.setId(nId);
-        //System.out.println("nId value="+nId);
-
+        if(cform.getNoteId()!=null) {
+        	Long nId=Long.parseLong(cform.getNoteId());
+	        preNote.setId(nId);
+	        //System.out.println("nId value="+nId);
+        }
         if (preNote.isDocumentNote()){//check if note is a document annotation
             //System.out.println(""+nId+" is a document annotation"); //previous note is a document annotation.
             docAnno=true;
