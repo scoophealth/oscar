@@ -29,29 +29,25 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO"%>
-<%@page	import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.Enumeration, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException" %>
+<%@page	import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.Enumeration, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page	import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*"%>
+<%@page import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*"%>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="oscar.dms.EDocUtil"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.model.Role"%>
 <%@page import="org.oscarehr.casemgmt.common.Colour"%>
 <%@page import="oscar.dms.EDoc"%>
-<%@page	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="com.quatro.dao.security.*,com.quatro.model.security.Secrole"%>
+<%@page import="org.oscarehr.util.EncounterUtil"%>
 
-<%@page import="java.lang.Character"%>
-
-<%@page import="org.oscarehr.util.EncounterUtil"%><jsp:useBean
-	id="oscarVariables" class="java.util.Properties" scope="session" />
-
-<c:set var="ctx" value="${pageContext.request.contextPath}"
-	scope="request" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 
 <%
@@ -115,160 +111,7 @@
     //System.out.println("NEW CASEMANAGEMENT VIEW jscode loaded " + String.valueOf(current-start));
     start = current;
 %>
-<%-- <div class="tabs" id="tabs">
 
-<%
-	String selectedTab = request.getParameter("tab");
-	if(selectedTab==null || selectedTab.trim().equals("")) {
-		selectedTab=CaseManagementViewFormBean.tabs[0];
-	}
-	pageContext.setAttribute("selectedTab",selectedTab);
-
-	java.util.List aList=(java.util.List)request.getAttribute("Allergies");
-	boolean allergies=false;
-	if (aList!=null){
-		allergies = aList.size() > 0;
-	}
-
-	boolean reminders = false;
-	CaseManagementCPP cpp = (CaseManagementCPP)request.getAttribute("cpp");
-	if(cpp!=null){
-		reminders = cpp.getReminders().length() > 0;
-	}
-	//get programId
-	String pId=(String)session.getAttribute("case_program_id");
-	if (pId==null) pId="";
-        System.out.println("case_program_id " + pId);
-        System.out.println("Demo No " + request.getParameter("demographicNo"));
-        System.out.println("Provider " + request.getParameter("providerNo"));
-%>
-<table>
-<tr>
-<th width="8%"></th><th style="font-size: 20" colspan="2" width="80%"><b>Case Management Encounter</b></th>
-<%
-WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-%>
-<th width="12%" align="right" nowrap></th>
-</tr>
-
-</table>
-<table cellpadding="0" cellspacing="0" border="0">
-
-	<tr>
-		<% for(int x=0;x<CaseManagementViewFormBean.tabs.length;x++) {%>
-			<%
-				String extra = "";
-				if((allergies && CaseManagementViewFormBean.tabs[x].equals("Allergies"))||(reminders && CaseManagementViewFormBean.tabs[x].equals("Reminders")) ) {
-					extra="color:red;";
-				}
-
-			%>
-			<%if (CaseManagementViewFormBean.tabs[x].equals("Allergies") || CaseManagementViewFormBean.tabs[x].equals("Prescriptions")){%>
-			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
-			<%if(CaseManagementViewFormBean.tabs[x].equals(selectedTab)) { %>
-				<td style="background-color: #555;<%=extra%>"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>'); return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<%} else { %>
-				<td><a style="<%=extra %>" href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>');return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<% } %>
-			</caisirole:SecurityAccess>
-			<%}else{ %>
-			<%if(CaseManagementViewFormBean.tabs[x].equals(selectedTab)) { %>
-				<td style="background-color: #555;<%=extra%>"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>'); return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<%} else { %>
-				<td><a style="<%=extra %>" href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>');return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<% } %>
-			<%} %>
-		<% } %>
-	</tr>
-</table>
-</div>
-<br/>
-
-<table width="100%">
-<tr>
-<td width="75%">
-<table cellspacing="1" cellpadding="1">
-<tr>
-	<td align="right" valign="top" nowrap><b>Client Name:</b></td><td><c:out value="${requestScope.casemgmt_demoName}" /></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>Age:</b></td><td><c:out value="${requestScope.casemgmt_demoAge}" /></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>DOB:</b></td><td><c:out value="${requestScope.casemgmt_demoDOB}" /></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>Team:</b></td><td><c:out value="${requestScope.teamName}" /></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap></td>
-	<td><c:forEach var="tm" items="${teamMembers}">
-		<c:out value="${tm}" />&nbsp;&nbsp;&nbsp;
-	</c:forEach></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>Primary Health Care Provider:</b></td><td><c:out value="${requestScope.cpp.primaryPhysician}" /></td>
-</tr>
-<tr>
-	<td align="right" valign="top" nowrap><b>Primary Counsellor/Caseworker:</b></td><td><c:out value="${requestScope.cpp.primaryCounsellor}" /></td>
-</tr>
-</table>
-</td>
-<td>
-
-	<%String demo=request.getParameter("demographicNo");%>
-	<c:choose>
-		<c:when test="${not empty requestScope.image_filename}">
-			<img style="cursor: pointer;" id="ci" src="<c:out value="${ctx}"/>/images/default_img.jpg" alt="id_photo"  height="100" title="Click to upload new photo." OnMouseOver="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/<c:out value="${requestScope.image_filename}"/>'" OnMouseOut="delay(5000)" window.status='Click to upload new photo'; return true;" onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;"/>
-		</c:when>
-		<c:otherwise>
-			<img style="cursor: pointer;" src="<c:out value="${ctx}"/>/images/defaultR_img.jpg" alt="No_Id_Photo" height="100" title="Click to upload new photo." OnMouseOver="window.status='Click to upload new photo';return true" onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;"/>
-		</c:otherwise>
-	</c:choose>
-
-</td>
-
-</tr>
-</table>
-
-<jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
---%>
-	<!--Row One Headers -->
-
-	<%-- <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
-                <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
-                    <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
-                    out.print(oscarVariables.getProperty("otherMedications", ""));
-                    %>
-                    <% } else { %>
-                    <bean:message key="oscarEncounter.Index.otherMed"/>:
-                    <% } %>
-                </div>
-                <div style="float:left; width:15%; margin-right:-4px; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
-                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
-                    out.print(oscarVariables.getProperty("medicalHistory", ""));
-                    %>
-                    <% } else { %>
-                    <bean:message key="oscarEncounter.Index.medHist"/>:
-                    <% } %>
-                </div>
-
-                <div class="RowTop" style="clear:right; float:right; width:18%; text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
-                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-                    <bean:message key="oscarEncounter.Index.x"/></a> |
-                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-                    <bean:message key="oscarEncounter.Index.s"/></a> |
-                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowOneNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-                    <bean:message key="oscarEncounter.Index.n"/></a> |
-                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowOneLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-                    <bean:message key="oscarEncounter.Index.l"/></a> |
-                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowOneFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-                    <bean:message key="oscarEncounter.Index.f"/></a> |
-                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-                    <bean:message key="oscarEncounter.Index.r"/></a>
-                </div>
-
-            <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->--%>
 	<div
 		style="width: 100%; height: 75px; margin: 0px; background-color: #FFFFFF;">
 	<div id="divR1I1" class="topBox"
@@ -280,35 +123,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		style="float: right; width: 49%; margin-right: 3px;"><%--<html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>--%>
 	</div>
 	</div>
-	<!--2nd row headers -->
-	<%--
-            <div style="float:left; width:50%; background-color:#CCCCFF;" class="RowTop" >
-                &nbsp;
-                <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
-                out.print(oscarVariables.getProperty("ongoingConcerns", ""));
-                %>
-                <% } else { %>
-                <bean:message key="oscarEncounter.Index.msgConcerns"/>:
-                <% } %>
-            </div><input type="hidden" name="ocInput"/>
 
-            <div style="float:left; width:32%; margin-right:-4px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>
-
-            <div class="RowTop" style="clear:right; float:right; width:18%; text-align:right; vertical-align:bottom; background-color:#CCCCFF;">
-                <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-                <bean:message key="oscarEncounter.Index.x"/></a> |
-                <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-                <bean:message key="oscarEncounter.Index.s"/></a> |
-                <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowTwoNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-                <bean:message key="oscarEncounter.Index.n"/></a> |
-                <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowTwoLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-                <bean:message key="oscarEncounter.Index.l"/></a> |
-                <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowTwoFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-                <bean:message key="oscarEncounter.Index.f"/></a> |
-                <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-                <bean:message key="oscarEncounter.Index.r"/></a>
-            </div>
-            --%>
 	<div
 		style="width: 100%; height: 75px; margin-top: 0px; background-color: #FFFFFF;">
 	<!--Ongoing Concerns cell -->
@@ -494,7 +309,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 </html:form>
 <%
     current = System.currentTimeMillis();
-    System.out.println("NEW CASEMANAGEMENT VIEW page filters loaded " + String.valueOf(current-start));
+    //System.out.println("NEW CASEMANAGEMENT VIEW page filters loaded " + String.valueOf(current-start));
     start = current;
 %>
 <nested:form action="/CaseManagementEntry"
@@ -578,7 +393,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 
 	<%
 
-                System.out.println("Notes Size " + noteList.size());
+                //System.out.println("Notes Size " + noteList.size());
                 %> <c:if test="${not empty Notes}">
 		<%
                     //java.util.List noteList=(java.util.List)request.getAttribute("Notes");
@@ -592,7 +407,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     if( cform.getCaseNote().getId() != null ) {
                     savedId = cform.getCaseNote().getId();
                     }
-                    System.out.println("savedId " + savedId);
+                    //System.out.println("savedId " + savedId);
 
                     //Check user property for stale date and show appropriately
                     UserProperty uProp = (UserProperty)request.getAttribute(UserProperty.STALE_NOTEDATE);
@@ -617,7 +432,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     }
 
                     dStaleDate = cal.getTime();
-                    System.out.println("STALE DATE " + dStaleDate);
+                    //System.out.println("STALE DATE " + dStaleDate);
                     long time1,time2;
 		    String noteStr;
 		    int length;
@@ -1024,12 +839,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			property="caseNote.password" /></p>
 	</c:if></div>
 	</div>
-	<%--
-    current = System.currentTimeMillis();
-    System.out.println("NEW CASEMANAGEMENT VIEW new note set up " + String.valueOf(current-start));
-    start = current;
---%> <%
-                }
+	 <%
+             }
                 %>
 	<%-- The BRs are here because the drop down list is not in the scrolling pane view so we need some padding at the end so when the drop down occurs it's in the view--%>            
 	<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />
@@ -1181,7 +992,6 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 
 <%
     current = System.currentTimeMillis();
-    //System.out.println("NEW CASEMANAGEMENT VIEW total " + String.valueOf(current-beginning));
 %>
 <%!
 
@@ -1194,17 +1004,9 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             String apptDate = convertDateFmt(bean.appointmentDate);
             if(bean.eChartTimeStamp==null){
                   encounterText ="\n["+oscar.util.UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy",request.getLocale())+" .: "+bean.reason+"] \n";
-                  //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
-            }else { //if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
-                   //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
-                  //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+            }else { 
                    encounterText ="\n["+("".equals(bean.appointmentDate)?oscar.util.UtilDateUtilities.getToday("dd-MMM-yyyy"):apptDate)+" .: "+bean.reason+"]\n";
-            }/*else {//if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
-                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
-                   encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n";
-            }*/
-           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
-
+            }
         }
         encounterText = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(encounterText);
         return encounterText;
