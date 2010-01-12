@@ -37,7 +37,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -118,14 +117,15 @@ public class DemographicExportAction3 extends Action {
     String demographicNo=null;
 
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    OscarProperties props = OscarProperties.getInstance();
-    String strEditable = props.getProperty("ENABLE_EDIT_APPT_STATUS");
-    this.demographicNo = request.getParameter("demographicNo");
+    OscarProperties oscarp = OscarProperties.getInstance();
+    String strEditable = oscarp.getProperty("ENABLE_EDIT_APPT_STATUS");
     
     DemographicExportForm defrm = (DemographicExportForm)form;
+    this.demographicNo = defrm.getDemographicNo();
     String setName = defrm.getPatientSet();
     String mediaType = defrm.getMediaType();
     String noOfMedia = defrm.getNoOfMedia();
+    String pgpReady = defrm.getPgpReady();
     boolean exPersonalHistory = defrm.getExPersonalHistory();
     boolean exFamilyHistory = defrm.getExFamilyHistory();
     boolean exPastHealth = defrm.getExPastHealth();
@@ -140,7 +140,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     boolean exReportsReceived = defrm.getExReportsReceived();
     boolean exAuditInformation = defrm.getExAuditInformation();
     boolean exCareElements = defrm.getExCareElements();
-    
+
     ArrayList list = new ArrayList();
     if (this.demographicNo==null) {
 	list = new DemographicSets().getDemographicSet(setName);
@@ -187,12 +187,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     PreventionData pd = new PreventionData();
     DemographicExt ext = new DemographicExt();
 
-    String tmpDir = props.getProperty("TMP_DIR");
-    if (!Util.filled(tmpDir)) {
-	throw new Exception("Temporary Export Directory not set! Check oscar.properties.");
+    String ffwd = "fail";
+    String tmpDir = oscarp.getProperty("TMP_DIR");
+    if (!Util.checkDir(tmpDir)) {
+        System.out.println("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
     } else {
-	if (tmpDir.charAt(tmpDir.length()-1)!='/') tmpDir = tmpDir + '/';
-	
 	XmlOptions options = new XmlOptions();
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
 	options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
@@ -1603,7 +1602,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    }
 		}
 	    }
-		
+
+
 		//export file to temp directory
 		try{
 		    File directory = new File(tmpDir);
@@ -1632,66 +1632,44 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	
 	//zip all export files
 	String zipName = "export-"+setName.replace(" ","")+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
-	if (!Util.zipFiles(exportFiles, zipName)) {
-	    throw new Exception("Error! Failed zipping export files");
+	if (!Util.zipFiles(exportFiles, zipName, tmpDir)) {
+            System.out.println("Error! Failed to zip export files");
 	}
-	
-	//PGP encrypt zip file
-	PGPEncrypt pet = new PGPEncrypt(zipName, tmpDir);
-	if (pet.doEncrypt()) {
-            downloadEncrypted(zipName, tmpDir, response);
+
+        if (pgpReady.equals("Yes")) {
+            //PGP encrypt zip file
+            PGPEncrypt pgp = new PGPEncrypt();
+            if (pgp.encrypt(zipName, tmpDir)) {
+                Util.downloadFile(zipName+".pgp", tmpDir, response);
+                Util.cleanFile(zipName+".pgp", tmpDir);
+                ffwd = "success";
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("pgp_ready", "No");
+            }
         } else {
-            System.out.println("Problem encrypting - download unencrypted export files!");
-            downloadRaw(zipName, tmpDir, response);
+            System.out.println("Warning: PGP Encryption NOT available - unencrypted file exported!");
+            Util.downloadFile(zipName, tmpDir, response);
+            ffwd = "success";
         }
-	
-	//Remove zip & export files from temp dir
-        if (!Util.cleanFile(tmpDir+zipName)) System.out.println("Error! Cannot delete zip file: "+zipName);
+
+        //Remove zip & export files from temp dir
+        Util.cleanFile(zipName, tmpDir);
         Util.cleanFiles(exportFiles);
     }
-    return null;
+
+    return mapping.findForward(ffwd);
 }
 
-    void downloadEncrypted(String fileName, String dirName, HttpServletResponse rsp) throws FileNotFoundException, IOException {
-	String pgpFilename = fileName+".pgp";
-	rsp.setContentType("application/octet-stream");
-	rsp.setHeader("Content-Disposition", "attachment; filename=\""+pgpFilename+"\"" );
-
-	InputStream in = new FileInputStream(dirName+pgpFilename);
-	OutputStream out = rsp.getOutputStream();
-	byte[] buf = new byte[1024];
-	int len;
-	while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-	in.close();
-	out.close();
-
-        //Remove .pgp file from temp dir
-	if (!Util.cleanFile(dirName+pgpFilename))
-            System.out.println("Error! Cannot remove .pgp file from temporary directory");
-    }
-
-    void downloadRaw(String fileName, String dirName, HttpServletResponse rsp) throws FileNotFoundException, IOException {
-	rsp.setContentType("application/octet-stream");
-	rsp.setHeader("Content-Disposition", "attachment; filename=\""+fileName+"\"" );
-
-	InputStream in = new FileInputStream(dirName+fileName);
-	OutputStream out = rsp.getOutputStream();
-	byte[] buf = new byte[1024];
-	int len;
-	while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-	in.close();
-	out.close();
-    }
-
     File makeReadMe(File[] f, Vector error, String mediaType, String noOfMedia) throws IOException {
-        OscarProperties props = oscar.OscarProperties.getInstance();
+        OscarProperties oscarp = oscar.OscarProperties.getInstance();
 	File readMe = new File(f[0].getParentFile(), "ReadMe.txt");
 	BufferedWriter out = new BufferedWriter(new FileWriter(readMe));
 	out.write("Physician Group                    : ");
 	out.write(new ClinicData().getClinicName());
 	out.newLine();
 	out.write("CMS Vendor, Product & Version      : ");
-	String vendor = props.getProperty("Vendor_Product");
+	String vendor = oscarp.getProperty("Vendor_Product");
 	if (!Util.filled(vendor)) {
 	    error.add("Error! Vendor_Product not defined in oscar.properties");
 	} else {
@@ -1699,7 +1677,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
 	out.newLine();
 	out.write("Application Support Contact        : ");
-	String support = props.getProperty("Support_Contact");
+	String support = oscarp.getProperty("Support_Contact");
 	if (!Util.filled(support)) {
 	    error.add("Error! Support_Contact not defined in oscar.properties");
 	} else {
