@@ -120,10 +120,10 @@ public class ImportDemographicDataAction3 extends Action {
 	this.providerNo = (String) request.getSession().getAttribute("user");
 	String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
 	File importLog = null;
-	if (!Util.filled(tmpDir)) {
-	    throw new Exception("Temporary Import Directory not set! Check oscar.properties.");
+        if (!Util.checkDir(tmpDir)) {
+            System.out.println("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
 	} else {
-	    if (tmpDir.charAt(tmpDir.length()-1)!='/') tmpDir = tmpDir + '/';
+	    tmpDir = Util.fixDirName(tmpDir);
 	}
         ImportDemographicDataForm frm = (ImportDemographicDataForm) form; 
         FormFile imp = frm.getImportFile();

@@ -104,11 +104,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     //Create export files
     String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
-    if (!Util.filled(tmpDir)) throw new Exception("Temporary Export Directory not set! Check oscar.properties.");
+    if (!Util.checkDir(tmpDir)) {
+        System.out.println("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+    } else {
+        tmpDir = Util.fixDirName(tmpDir);
+    }
     File[] exportFiles = this.make(patientList, tmpDir);
     
     //Create & put error.log into the file list
-    File errorLog = makeErrorLog(tmpDir+"error.log");
+    File errorLog = makeErrorLog("error.log", tmpDir);
     if (errorLog!=null) {
 	File[] tmp_f = new File[exportFiles.length+1];
 	for (int i=0; i<exportFiles.length; i++) tmp_f[i]=exportFiles[i];
@@ -117,28 +121,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     //Zip export files
-    String zipFile = "omd_diabetes-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
-    if (!Util.zipFiles(exportFiles, zipFile)) throw new Exception("Error! Failed zipping export files");
+    String zipName = "omd_diabetes-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
+    if (!Util.zipFiles(exportFiles, zipName, tmpDir)) System.out.println("Error! Failed zipping export files");
     
-    //Remove export files from temp dir
-    for (File f : exportFiles) {
-        f.delete();
-    }
     //Download zip file
-    response.setContentType("application/octet-stream");
-    response.setHeader("Content-Disposition", "attachment; filename=\""+zipFile+"\"" );
+    Util.downloadFile(zipName, tmpDir, response);
 
-    InputStream in = new FileInputStream(tmpDir+zipFile);
-    OutputStream out = response.getOutputStream();
-    byte[] buf = new byte[1024];
-    int len;
-    while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-    in.close();
-    out.close();
-
-    //Remove zip file from temp dir
-    if (!Util.cleanFile(tmpDir+zipFile))
-        throw new Exception("Note: Cannot remove zip file from temporary directory");
+    //Remove zip & export files from temp dir
+    Util.cleanFile(zipName, tmpDir);
+    Util.cleanFiles(exportFiles);
     
     return null;
 }
@@ -199,10 +190,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         return files;
     }
     
-    File makeErrorLog(String errorLogName) throws IOException {
+    File makeErrorLog(String errorLogName, String dirName) throws IOException {
 	if (this.errors.isEmpty()) return null;
-	
-	File errorLog = new File(errorLogName);
+
+        dirName = Util.fixDirName(dirName);
+	File errorLog = new File(dirName+errorLogName);
 	BufferedWriter out = new BufferedWriter(new FileWriter(errorLog));
 	
 	for (String err : errors) {
