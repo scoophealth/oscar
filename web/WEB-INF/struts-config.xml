@@ -1393,6 +1393,7 @@
         <action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport2" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction2">
         </action>
         <action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport3" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction3">
+            <forward name="fail" path="/demographic/demographicExport.jsp" />
         </action>
         <action input="/demographic/diabetesExport.jsp" name="DiabetesExportForm" path="/demographic/DiabetesExport" scope="request" type="oscar.oscarDemographic.pageUtil.DiabetesExportAction">
         </action>
