@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty, org.springframework.web.context.support.WebApplicationContextUtils" %>
 
 <%
     if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
@@ -86,34 +87,19 @@ ArrayList tickerList = new ArrayList();
 
 <style type="text/css">
 td.stat1 {
-
 background-color: #eeeeFF;
-color : black;
-
-
 }
 
 th,td.stat2 {
-
 background-color: #ccccFF;
-color : black;
-
-
 }
 
 td.stat3 {
-
 background-color: #B8B8FF;
-color : black;
-
-
 }
 
 td.stat4 {
-
 background-color: #eeeeff;
-color : black;
-
 }
 
 th.VCRheads {
@@ -291,6 +277,13 @@ function setOrder(val){
                             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;                            
                             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();                            
                             theRequests.estConsultationVecByTeam(team,includeCompleted,startDate,endDate,orderby,desc,searchDate);                                                        
+                            boolean overdue;
+                            UserProperty up;
+                            UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("UserPropertyDAO");
+                            String user = (String)session.getAttribute("user");
+                            
+                            String timeperiod = null;
+                            int countback;                            
 
                             for (int i = 0; i < theRequests.ids.size(); i++){
                             String id      = (String) theRequests.ids.elementAt(i);
@@ -304,11 +297,31 @@ function setOrder(val){
                             String patBook = (String) theRequests.patientWillBook.elementAt(i);
                             String urgency = (String) theRequests.urgency.elementAt(i);
                             
-                            if(status.equals("1") && dateGreaterThanWeek(date)){
+                            if(status.equals("1") && dateGreaterThan(date, Calendar.WEEK_OF_YEAR, -1)){
                                 tickerList.add(demo);
                             }
+
+                            overdue = false;
+                            up = pref.getProp(user, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
+                            timeperiod = null;
+                            if ( up != null && up.getValue() != null && !up.getValue().trim().equals("")){
+                                timeperiod = up.getValue();
+                            }
+
+                            
+                            countback = -1;
+                            if (timeperiod != null){ 
+                               countback = Integer.parseInt(timeperiod);
+                               countback = countback * -1;
+                            }
+                           
+                            if( (status.equals("1") || status.equals("2") || status.equals("3")) && dateGreaterThan(date, Calendar.MONTH, countback) ) {
+                                overdue = true;
+                            }
+
+
                         %>
-                            <tr>
+                        <tr <%=overdue?"style='color:red;'":""%>>
                                 <td class="stat<%=status%>">
                                     <% if (status.equals("1")){ %>
                                     <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgND"/>      
@@ -393,7 +406,7 @@ function setOrder(val){
 </html:html>
 <%!
 
-boolean dateGreaterThanWeek(String dateStr){
+boolean dateGreaterThan(String dateStr, int unit, int period){
     DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");    
     Date prevDate = null;
     try{
@@ -403,7 +416,7 @@ boolean dateGreaterThanWeek(String dateStr){
     }         
          
     Calendar bonusEl = Calendar.getInstance();                     
-    bonusEl.add(Calendar.WEEK_OF_YEAR,-1);
+    bonusEl.add(unit,period);
     Date bonusStartDate = bonusEl.getTime();                                          
     
     return bonusStartDate.after(prevDate);
