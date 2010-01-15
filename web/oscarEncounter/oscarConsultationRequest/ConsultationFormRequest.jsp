@@ -85,7 +85,7 @@ else if(requestId==null){
 
 }
 if (demo != null) consultUtil.estPatient(demo);
-consultUtil.estTeams();
+consultUtil.estActiveTeams();
 
 if (request.getParameter("error") != null){
     %>
@@ -679,7 +679,9 @@ function fetchAttached() {
                 thisForm.setUrgency(consultUtil.urgency);
                 thisForm.setPatientWillBook(consultUtil.pwb);
 
-
+                if( !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
+                    consultUtil.teamVec.add(consultUtil.sendTo);
+                }
                 // System.out.println("this is from in the form setter "+ consultUtil.patientName);
 
 
@@ -693,9 +695,12 @@ function fetchAttached() {
 			} else {
                             thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
 			}
+
+                        team = consultUtil.getProviderTeam(consultUtil.mrp);
             }
 
                 thisForm.setStatus("1");
+                
                 thisForm.setSendTo(team);
                 //thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
         	thisForm.setAppointmentYear(year);
