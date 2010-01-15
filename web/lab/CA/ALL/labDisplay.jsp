@@ -60,6 +60,7 @@ MessageHandler handler = f.getHandler(segmentID);
 Hl7textResultsData data = new Hl7textResultsData();
 String multiLabId = data.getMatchingLabs(segmentID);
 
+String hl7 = f.getHL7Body(segmentID);
 
 // check for errors printing
 if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){
@@ -632,8 +633,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 
                                 boolean obrFlag = false;
                                 int obxCount = handler.getOBXCount(j);
+                                //System.out.println("OBR Count "+OBRCount+" J "+j+" obx count "+obxCount);
                                 for (k=0; k < obxCount; k++){ 
                                     String obxName = handler.getOBXName(j, k);
+                                    //System.out.println("OBX NAME "+obxName+"  -> "+handler.getObservationHeader(j, k).equals(headers.get(i))+" obsHeader "+ handler.getObservationHeader(j, k) +" header "+ headers.get(i));
                                     if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !obxName.equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
                                         String obrName = handler.getOBRName(j);
                                         if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){%>
@@ -646,20 +649,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         
                                         String lineClass = "NormalRes";
                                         String abnormal = handler.getOBXAbnormalFlag(j, k);
-                                        if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
-                                            lineClass = "AbnormalRes";
-                                        }else if ( abnormal != null && abnormal.startsWith("L")){
+                                        if ( abnormal != null && abnormal.startsWith("L")){
                                             lineClass = "HiLoRes";
+                                        } else if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H") || handler.isOBXAbnormal( j, k) ) ){
+                                            lineClass = "AbnormalRes";
                                         }%>
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
                                             <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>                                         
                                             <td align="right"><%= handler.getOBXResult( j, k) %></td>
                                             <td align="center">
-                                                <%if (handler.isOBXAbnormal( j, k)) {%>
                                                     <%= handler.getOBXAbnormalFlag(j, k)%>
-                                                <%}else{%>
-                                                    <%= "N"%>
-                                                <%}%>
                                             </td>
                                             <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
                                             <td align="left"><%=handler.getOBXUnits( j, k) %></td>
@@ -675,7 +674,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     }
                                 }                                                             
                             //}                             
-                                                        
+                                                    
                             //for ( j=0; j< OBRCount; j++){    
                                 if (handler.getObservationHeader(j, 0).equals(headers.get(i))) {%>
                                 <%for (k=0; k < handler.getOBRCommentCount(j); k++){
@@ -692,7 +691,16 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                     <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
                                 </tr>
-                            <%}
+                                <% if(handler.getOBXName(j,k).equals("")){
+                                       String result = handler.getOBXResult(j, k);%>
+                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
+                                                <td colspan="7" valign="top"  align="left"><%=result%></td>        
+                                        </tr>
+                                            <%
+                                    }
+                                
+                                
+                                }
                             }
                             }%>
                         </table>
@@ -728,6 +736,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             </table>
             
         </form>
-        
+        <!-- a style="color:white;" href="labDebug.jsp?segmentID=<%=segmentID%>" >debug</a -->
+        <a style="color:white;" href="javascript: void();" onclick="showHideItem('rawhl7');" >show</a> 
+        <pre id="rawhl7"><%=hl7%></pre>
     </body>
 </html>
