@@ -64,7 +64,16 @@
 <script type="text/javascript">
 <!--
 
-
+function popupPageNew(vheight,vwidth,varpage) {
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "demographicprofile", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self;
+    }
+  }
+}
   
 
 //-->
@@ -157,7 +166,7 @@
        
 %> 
 <tr bgcolor="<%=bodd?weakColor:"white"%>">
-      <td align="center"><a href=# onClick ="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&displaymode=edit&dboperation=search');return false;" ><%=apptMainBean.getString(rs,"appointment_date")%></a></td>
+      <td align="center"><a href=# onClick ="popupPageNew(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&displaymode=edit&dboperation=search');return false;" ><%=apptMainBean.getString(rs,"appointment_date")%></a></td>
       <td align="center"><%=apptMainBean.getString(rs,"start_time")%></td>
       <td align="center"><%=apptMainBean.getString(rs,"end_time")%></td>
       <td><%=apptMainBean.getString(rs,"reason")%></td>
