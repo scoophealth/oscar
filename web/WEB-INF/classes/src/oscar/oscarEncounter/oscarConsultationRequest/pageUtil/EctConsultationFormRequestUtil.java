@@ -58,6 +58,29 @@ public class EctConsultationFormRequestUtil {
                 patientChartNo = db.getString(rs, "chart_no");
                 patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), db.getString(rs, "month_of_birth"),
                         db.getString(rs, "date_of_birth")));
+                mrp = db.getString(rs, "provider_no");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
+
+    public boolean estActiveTeams() {
+        boolean verdict = true;
+        teamVec = new Vector();
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select distinct team from provider where status = '1' and team != '' order by team";
+            ResultSet rs = db.GetSQL(sql);
+
+            while (rs.next()) {
+                String teamName = db.getString(rs, "team");
+                if (!teamName.equals("")) {
+                    teamVec.add(teamName);
+                }
             }
             rs.close();
         } catch (SQLException e) {
@@ -208,6 +231,22 @@ public class EctConsultationFormRequestUtil {
         return retval;
     }
 
+    public String getProviderTeam(String id) {
+        String retval = new String();
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select team from provider where provider_no  = " + id;
+            ResultSet rs = db.GetSQL(sql);
+            if (rs.next()) {
+                retval = db.getString(rs, "team");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return retval;
+    }
+
     public String getProviderName(String id) {
         String retval = new String();
         try {
@@ -310,4 +349,5 @@ public class EctConsultationFormRequestUtil {
     public Vector teamVec;
     public String demoNo;
     public String pwb;
+    public String mrp = "";
 }
