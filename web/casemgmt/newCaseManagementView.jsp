@@ -158,7 +158,7 @@
 		style="float: left; width: 100%; margin-right: -2px; padding-bottom: 10px; background-color: #CCCCFF; font-size: 10px;">
 	<nested:notEmpty name="caseManagementViewForm"
 		property="filter_providers">
-		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u><bean:message key="oscarEncounter.providers.title"/>:</u><br>
+		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.providers.title"/>:</u><br>
 		<nested:iterate type="String" id="filter_provider"
 			property="filter_providers">
 			<c:choose>
@@ -176,7 +176,7 @@
 			</c:choose>
 		</nested:iterate></div>
 	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="filter_roles">
-		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u><bean:message key="oscarEncounter.roles.title"/>:</u><br>
+		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.roles.title"/>:</u><br>
 		<nested:iterate type="String" id="filter_role" property="filter_roles">
 			<c:choose>
 				<c:when test="${filter_role == 'a'}">
@@ -193,17 +193,17 @@
 			</c:choose>
 		</nested:iterate></div>
 	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="note_sort">
-		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u><bean:message key="oscarEncounter.sort.title"/>:</u><br>
+		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.sort.title"/>:</u><br>
 		<nested:write property="note_sort" /><br>
 		</div>
 	</nested:notEmpty>
 
 	<div id="filter" style="display: none;">
 	<div
-		style="clear: both; height: 150px; width: auto; overflow: auto; float: left; position: relative; left: 10%;">
+		style="clear: both; height: 150px; width: auto; overflow: auto; float: left; position: relative">
 	<bean:message key="oscarEncounter.providers.title"/>:
 	<ul
-		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
+		style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
 		<li><html:multibox property="filter_providers" value="a"
 			onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title"/></li>
 		<%
@@ -225,10 +225,10 @@
 	</div>
 
 	<div
-		style="height: 150px; width: auto; overflow: auto; float: left; position: relative; left: 20%;">
+		style="height: 150px; width: auto; overflow: auto; float: left; position: relative;">
 	Role:
 	<ul
-		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
+		style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
 		<li><html:multibox property="filter_roles" value="a"
 			onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title"/></li>
 		<%
@@ -245,9 +245,9 @@
 	</ul>
 	</div>
 
-	<div style="float: left; position: relative; left: 25%;"><bean:message key="oscarEncounter.sort.title"/>:
+	<div style="float: left; position: relative;"><bean:message key="oscarEncounter.sort.title"/>:
 	<ul
-		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
+		style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
 		<li><html:radio property="note_sort" value="observation_date_asc"><bean:message key="oscarEncounter.sortDateAsc.title"/></html:radio></li>
 		<li><html:radio property="note_sort"
 			value="observation_date_desc"><bean:message key="oscarEncounter.sortDateDesc.title"/></html:radio></li>
@@ -258,10 +258,10 @@
 	</div>
 
 	<div
-		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 10px;"
+		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;"
 		onclick="return filter(false);"><bean:message key="oscarEncounter.showView.title"/></div>
 	<div
-		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 10px;"
+		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;"
 		onclick="return filter(true);"><bean:message key="oscarEncounter.resetFilter.title"/></div>
 	</div>
 	<div
@@ -864,12 +864,14 @@
 		title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
 	<input tabindex="13" type='image'
 		src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>"
-		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');"
+		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('save', 'list');"
 		title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+		<%if(bean.source == null)  { %>
         <input tabindex="13" type='image'
 		src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>"
 		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');"
 		title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
+		 <%} %>
         <c:if test="${sessionScope.passwordEnabled=='true'}">
             <input tabindex="14" type='image'
 		src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>"

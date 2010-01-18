@@ -59,7 +59,7 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
         	
         if (list.size() == 1 ) return list.get(0);
         
-        throw(new NonUniqueResultException("Expected 1 result got more : "+list.size()));          
+        throw(new NonUniqueResultException("Expected 1 result got more : "+list.size() + "(" + demo + "," + issueCode + ")"));          
     }
 
     public void deleteIssueById(CaseManagementIssue issue) {

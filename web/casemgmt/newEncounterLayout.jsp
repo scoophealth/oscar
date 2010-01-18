@@ -367,6 +367,7 @@
         pastObservationDateError = "<bean:message key="oscarEncounter.pastObservationDateError.msg"/>";
         assignIssueError = "<bean:message key="oscarEncounter.assignIssueError.msg"/>";
         assignObservationDateError = "<bean:message key="oscarEncounter.assignObservationDateError.msg"/>";
+        assignEncTypeError = "<bean:message key="oscarEncounter.assignEncTypeError.msg"/>";
         savingNoteError = "<bean:message key="oscarEncounter.savingNoteError.msg"/>";
         changeIssueMsg = "<bean:message key="oscarEncounter.change.title"/>";
         closeWithoutSaveMsg = "<bean:message key="oscarEncounter.closeWithoutSave.msg"/>";
@@ -438,7 +439,22 @@ function init() {
         alert("<nested:write name="DateError"/>");
     </nested:notEmpty>
 
+    doscroll();
+
+    //if we're on a new note
+    setTimeout(scrollDownInnerBar,1500);
+    
 }
+
+function scrollDownInnerBar() {
+	$("encMainDiv").scrollTop= $("encMainDiv").scrollHeight;
+}
+
+function doscroll(){
+	x=document.body.scrollHeight;
+	x=x+99999
+	window.scrollTo(0,x);
+	}
 
 </script>
   </head> 

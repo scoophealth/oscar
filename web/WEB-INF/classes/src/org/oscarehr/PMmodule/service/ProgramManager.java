@@ -352,7 +352,9 @@ public class ProgramManager {
 
         for (Iterator<?> i = programProviderDAO.getProgramDomain(providerNo).iterator(); i.hasNext();) {
             ProgramProvider programProvider = (ProgramProvider) i.next();
-            programDomain.add(getProgram(programProvider.getProgramId()));
+            Program p = getProgram(programProvider.getProgramId());
+            if(p != null)
+            	programDomain.add(p);
         }
 
         return programDomain;
@@ -364,7 +366,9 @@ public class ProgramManager {
 
         for (Iterator<?> i = programProviderDAO.getActiveProgramDomain(providerNo).iterator(); i.hasNext();) {
             ProgramProvider programProvider = (ProgramProvider) i.next();
-            programDomain.add(getProgram(programProvider.getProgramId()));
+            Program p = getProgram(programProvider.getProgramId());
+            if(p!=null)
+            	programDomain.add(p);
         }
 
         return programDomain;
@@ -379,8 +383,10 @@ public class ProgramManager {
     	else programs=getProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
     	
     	List<Program> results = new ArrayList<Program>();
-    	for(Program program : programs) {
-    		if(program.getFacilityId()==loggedInInfo.currentFacility.getId().intValue()) results.add(program);
+    	for(Program program : programs) {    		
+    		if(program.getFacilityId()==loggedInInfo.currentFacility.getId().intValue()) { 
+    			results.add(program);
+    		}
     	}
     	return results;    	
     }

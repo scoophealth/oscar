@@ -28,6 +28,8 @@
 			not-null="false" length="1" />
 		<property name="element" column="element" type="string"
 			not-null="true" length="255" />
+		<property name="label" column="label" type="string"
+			 length="255" />
 
 		<many-to-one name="nodeTemplate" column="intake_node_template_id"
 			class="IntakeNodeTemplate" not-null="true" />

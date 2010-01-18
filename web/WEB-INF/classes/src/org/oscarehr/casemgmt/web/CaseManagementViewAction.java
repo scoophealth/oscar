@@ -882,10 +882,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	
     private static boolean hasRole(List<SecUserRole> roles, String role)
     {
-    	if (roles==null) return(false);
+    	log.info("hasRole: seeing if we have role " + role);
+    	if (roles==null){
+    		log.warn("hasRole: no roles");
+    		return(false);
+    	}
     	
     	for (SecUserRole roleTmp : roles)
     	{
+    		log.info("checking " + roleTmp);
     		if (roleTmp.getRoleName().equals(role)) return(true);
     	}
     	

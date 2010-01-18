@@ -301,7 +301,11 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
 	    out.write("<label>"+in.getLabelStr()+" <select>");
 	    for (int i=0; i<elements.length; i++) {
 		IntakeAnswerElement answerElement = (IntakeAnswerElement) elements[i];
-		out.write("<option>"+answerElement.getElement()+"</option>");
+			if(answerElement.getLabel()==null) {
+				out.write("<option>"+answerElement.getElement()+"</option>");
+			} else {
+				out.write("<option>"+answerElement.getLabel()+"</option>");
+			}
 	    }
 	    out.write("</select></label>");
 	    out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");

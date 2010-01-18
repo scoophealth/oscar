@@ -161,7 +161,7 @@
 
 
 <html:form action="/Tickler">
-	<input type="hidden" name="method" value="save" />
+	<input type="hidden" name="method" value="" />
 	<input type="hidden" name="order_tcr" value="asc"/>
 
 	<tr>

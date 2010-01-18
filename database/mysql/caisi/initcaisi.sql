@@ -1452,8 +1452,8 @@ CREATE TABLE `functional_user_type` (
 
 CREATE TABLE `intake_node_js` (
         `id` integer not null auto_increment,
-        `intake_node_id` integer,
-        `location` varchar(255),
+        `question_id` varchar(255) not null,
+        `location` varchar(255) not null,
         primary key(id)
 );
 
@@ -1508,6 +1508,7 @@ CREATE TABLE `intake_answer_element` (
   `intake_answer_validation_id` int(10) unsigned default NULL,
   `dflt` tinyint(1) default '0',
   `element` varchar(255) NOT NULL,
+  `label` varchar(255),
   PRIMARY KEY  (`intake_answer_element_id`),
   KEY `IDX_intake_answer_element_intake_node_template` (`intake_node_template_id`),
   KEY `IDX_intake_answer_element_intake_answer_validation` (`intake_answer_validation_id`),

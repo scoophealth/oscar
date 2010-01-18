@@ -75,6 +75,7 @@ public class EctSessionBean {
     public ArrayList appointmentsNamesArray;
     public ArrayList templateNames;
     public ArrayList measurementGroupNames;
+    public String source;
 
     public void resetAll() {
         eChartTimeStamp = null;

@@ -1051,7 +1051,7 @@ public class CaseManagementManager {
 
 	public Map convertProgramAccessListToMap(List paList) {
 		Map map = new HashMap();
-
+		if(paList==null) {return map;}
 		for (Iterator iter = paList.iterator(); iter.hasNext();) {
 			ProgramAccess pa = (ProgramAccess) iter.next();
 			map.put(pa.getAccessType().getName().toLowerCase(), pa);

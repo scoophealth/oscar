@@ -15,8 +15,8 @@
     } catch(NumberFormatException e) {}
     IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
     Integer frmVersion = (Integer) session.getAttribute("form_version");
-    String publisher = session.getAttribute("publisher").toString();
-    
+    //String publisher = session.getAttribute("publisher").toString();
+    String publisher = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().loggedInProvider.getFormattedName();
     String frmLabel = itn.getLabelStr();
     
     saveNodeLabels(itn, genericIntakeManager);

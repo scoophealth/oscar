@@ -256,7 +256,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		{
 			session.close();
 		}
-		
+
 		// make unique for uuid
 		HashMap<String,CaseManagementNote> uniqueForUuid=new HashMap<String,CaseManagementNote>();
 		for (CaseManagementNote note : notes)

@@ -8,7 +8,8 @@
 WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
 String s_choice = request.getParameter("s_choice");
-String s_entry = request.getParameter("s_entry");
+String s_label = request.getParameter("s_label");
+String s_value = request.getParameter("s_value");
 String submit_type = request.getParameter("submit_type");
 IntakeNodeTemplate intakeNodeTemplate = (IntakeNodeTemplate) session.getAttribute("intakeNodeTemplate_c");
 Integer lastTemplateId = (Integer) session.getAttribute("lastTemplateId");
@@ -31,7 +32,10 @@ if (submit_type==null) {
     
 } else if (submit_type.equals("add")) {
     IntakeAnswerElement intakeAnswerElement = new IntakeAnswerElement();
-    intakeAnswerElement.setElement(s_entry);
+    intakeAnswerElement.setElement(s_value);
+    if(s_label != null && s_label.length()>0) {
+    	intakeAnswerElement.setLabel(s_label);
+    }
     lastElementId = (lastElementId==null) ? -1 : --lastElementId;
     intakeAnswerElement.setId(lastElementId);
     session.setAttribute("lastElementId", lastElementId);
@@ -70,7 +74,7 @@ session.setAttribute("intakeNodeTemplate_c", intakeNodeTemplate);
 		if (idx>0) {
 		    val=document.makeDropboxFrm.s_choice[idx].text;
 		}
-		document.makeDropboxFrm.s_entry.value=val;
+		document.makeDropboxFrm.s_value.value=val;
 	    }
 	    
 	    function do_submit(s_type) {
@@ -85,21 +89,21 @@ session.setAttribute("intakeNodeTemplate_c", intakeNodeTemplate);
 <form name="makeDropboxFrm" method="post" action="MakeDropbox.jsp">
 <select name="s_choice" onchange="copy_s(selectedIndex);">
 	<option value="-1">- Type below to add new item -</option>
-	<%
-for (int i=0; i<items.size(); i++) {
-%>
-	<option value="<%=i%>"><%=items.get(i)%></option>
+	<% for (int i=0; i<items.size(); i++) { %>
+		<option value="<%=i%>"><%=items.get(i)%></option>
 	<% } %>
 </select>
 <p>&nbsp;</p>
-<input name="s_entry" type="text" size="20" /> <input type="button"
-	value="+" title="Add new item" onclick="do_submit('add');" /> <input
-	type="button" value="-" title="Remove selected item"
-	onclick="do_submit('remove');" />
+Label: <input name="s_label" type="text" size="20" /> <br/>
+Value: <input name="s_value" type="text" size="20" /> <br/>
+
+<input type="button" value="+" title="Add new item" onclick="do_submit('add');" /> 
+<input type="button" value="-" title="Remove selected item" onclick="do_submit('remove');" />
+
 <p>&nbsp;</p>
-<input type="button" value="Done" title="Save dropbox"
-	onclick="do_submit('save');" /> <input type="hidden"
-	name="submit_type" /></form>
+
+<input type="button" value="Done" title="Save dropbox" onclick="do_submit('save');" /> 
+<input type="hidden" name="submit_type" /></form>
 </body>
 </html>
 

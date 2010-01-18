@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -69,6 +70,7 @@ import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
@@ -1624,7 +1626,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String demono = request.getParameter("amp;demographicNo");
 
         // get current providerNo
-        String providerNo = request.getParameter("amp;providerNo");
+        //String providerNo = request.getParameter("amp;providerNo");
+		String providerNo = LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo();
 
         // get the issue list have search string
         String search = request.getParameter("issueSearch");
@@ -1826,9 +1829,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                     //should issue be automagically added to Dx? check config file
                     if(dxProps != null && dxProps.get(issueList[i].getIssue().getCode()) != null) {
                             String codingSystem = dxProps.getProperty("coding_system");
-                            log.info("adding to Dx");
-                            this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem,false);
-                            caseIssueList[oldList.length + k].getIssue().setMajor(true);
+                            if(caseIssueList[oldList.length+k].getIssue().isCertain()){ 
+	                            log.info("adding to Dx");
+    	                        this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem,false);
+        	                    caseIssueList[oldList.length + k].getIssue().setMajor(true);
+        	                }
                     }
 
                     k++;

@@ -49,9 +49,9 @@ import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
@@ -385,7 +385,12 @@ public class TicklerAction extends DispatchAction {
         filter.setEnd_date(null);
 		ticklerForm.set("filter", filter);
 		ticklerForm.set("tickler", new Tickler());
-        return filter(mapping, form, request, response);
+      //  return filter(mapping, form, request, response);
+        ActionForward af = new ActionForward();
+        af.setRedirect(true);
+        af.setPath("/Tickler.do?tickler.demographic_webName="+tickler.getDemographic_webName()+"&tickler.demographic_no="+tickler.getDemographic_no());
+        return af;
+        
     }
 
     /* get a list of prepared ticklers */

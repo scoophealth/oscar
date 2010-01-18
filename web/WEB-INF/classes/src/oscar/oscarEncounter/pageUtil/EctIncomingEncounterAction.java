@@ -112,6 +112,9 @@ public class EctIncomingEncounterAction extends Action {
                 bean.setUpEncounterPage();               
                 request.getSession().setAttribute("EctSessionBean",bean);
                 request.getSession().setAttribute("eChartID", bean.eChartId);
+                if(request.getParameter("source")!=null) {
+                	bean.source = request.getParameter("source");
+                }
             }
         }
         else{

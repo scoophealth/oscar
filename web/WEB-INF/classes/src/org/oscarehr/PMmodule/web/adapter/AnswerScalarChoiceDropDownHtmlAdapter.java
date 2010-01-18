@@ -79,6 +79,9 @@ public class AnswerScalarChoiceDropDownHtmlAdapter extends
 
 		for (IntakeAnswerElement answerElement : getAnswerElements()) {
 			String label = answerElement.getElement();
+			if(answerElement.getLabel()!=null) {
+				label=answerElement.getLabel();
+			}
 			String value = answerElement.getElement();
 	
 			preBuilder.append(createOptionR(label, value,answerValue));
@@ -101,6 +104,9 @@ public class AnswerScalarChoiceDropDownHtmlAdapter extends
 
 		for (IntakeAnswerElement answerElement : getAnswerElements()) {
 			String label = answerElement.getElement();
+			if(answerElement.getLabel()!=null) {
+				label=answerElement.getLabel();
+			}
 			String value = answerElement.getElement();
 	
 			preBuilder.append(createOption(label, value));

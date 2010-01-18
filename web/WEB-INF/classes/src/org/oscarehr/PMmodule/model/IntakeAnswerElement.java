@@ -30,6 +30,7 @@ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Se
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer id;// fields
     private boolean m_default;
+    private String label;
     private String element;// many to one
     private IntakeNodeTemplate nodeTemplate;
     private IntakeAnswerValidation validation;
@@ -138,6 +139,12 @@ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Se
         this.element = element;
     }
 
+    public String getLabel() {
+    	return label;
+    }
+    public void setLabel(String label) {
+    	this.label = label;
+    }
     /**
 	 * Return the value associated with the column: intake_node_template_id
      */

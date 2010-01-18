@@ -6,7 +6,7 @@
     var caisiEnabled = false;
     var passwordEnabled = false;
 
-    var X       = 10;
+       var X       = 10;
     var small   = 60;
     var normal  = 166;
     var medium  = 272;
@@ -1736,14 +1736,25 @@ function showIssues(e) {
     Element.toggle('noteIssues');
     showIssue = !showIssue;
 
-    if( showIssue )
+    if( showIssue ) {
         $("issueAutocomplete").focus();
-    else
+        scrollEncDown();
+    } else {
         $(caseNote).focus();
+    }
 
     return false;
 
 }
+
+function scrollEncDown() {
+	//$("encMainDiv").scrollTop= $("encMainDiv").scrollHeight;
+	$("noteIssues").scrollIntoView(false);
+	var x=document.body.scrollHeight;
+	x=x+99999
+	window.scrollTo(0,x);
+}
+
 
 function issueIsAssigned() {
     var prefix = "noteIssue";
@@ -1854,11 +1865,16 @@ function ajaxSaveNote(div,noteId,noteTxt) {
             alert(assignIssueError);
             return false;
         }
-
+/*
         if( $("observationDate").value.length == 0 ) {
             alert(assignObservationDateError);
             return false;
         }
+*/        
+        if($("encTypeSelect0") != null && $("encTypeSelect0").options[$("encTypeSelect0").selectedIndex].value.length == 0 ) {
+        	alert(assignEncTypeError);
+        	return false;
+        }        
     }
 
 
@@ -1917,11 +1933,16 @@ function savePage(method, chain) {
             alert(assignIssueError);
             return false;
         }
-
+/*
         if( $("observationDate").value.length == 0 ) {
             alert(assignObservationDateError);
             return false;
         }
+*/        
+        if($("encTypeSelect0") != null && $("encTypeSelect0").options[$("encTypeSelect0").selectedIndex].value.length == 0 ) {
+        	alert(assignEncTypeError);
+        	return false;
+        }       
     }
     document.forms["caseManagementEntryForm"].method.value = method;
     document.forms["caseManagementEntryForm"].ajax.value = false;
@@ -2212,7 +2233,14 @@ function newNote(e) {
     else
         $(caseNote).focus();
 
+    //need delay..something else going on
+    setTimeout(scrollDownInnerBar,1500);
+    
     return false;
+}
+
+function scrollDownInnerBar() {
+	$("encMainDiv").scrollTop= $("encMainDiv").scrollHeight;
 }
 
 function deleteAutoSave() {
