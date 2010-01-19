@@ -60,7 +60,7 @@ public class CaseManagementNote extends BaseObject {
 	private Provider provider;
 	private Set issues = new HashSet();
 	private Set extend = new HashSet();
-	private List editors = new ArrayList();
+	private List<Provider> editors = new ArrayList<Provider>();
 	private String roleName;
 	private String programName;
 	private String uuid;
@@ -243,8 +243,8 @@ public class CaseManagementNote extends BaseObject {
 		this.extend = extend;
 	}
 
-	public List getEditors() {
-		return this.editors;
+	public List<Provider> getEditors() {
+		return editors;
 	}
 
 	public void setEditors(List editors) {
