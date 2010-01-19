@@ -416,7 +416,7 @@
         </td>
         <td><label>Postal Code<br><html:text property="client.postal" size="9" maxlength="9"/></label></td>
     </tr>
-<!--  
+<oscar:oscarPropertiesCheck property="ENABLE_CME_ON_REG_INTAKE" value="true">
 <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
     <tr>
         <td>
@@ -427,7 +427,7 @@
         </td>
     </tr>
 </c:if>
--->
+</oscar:oscarPropertiesCheck>
 </caisi:isModuleLoad>
 </table>
 </div>
