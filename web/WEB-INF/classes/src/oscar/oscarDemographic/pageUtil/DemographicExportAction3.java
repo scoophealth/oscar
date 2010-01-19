@@ -209,7 +209,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		ArrayList l2 = (ArrayList) obj;
 		this.demographicNo = (String) l2.get(0);
 	    } 
-	    if (!Util.filled(this.demographicNo)) {
+	    if (Util.empty(this.demographicNo)) {
 		this.demographicNo="";
 		err.add("Error! No Demographic Number");
 	    } else {
@@ -248,7 +248,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		} else {
 		    err.add("Error! No Last Name for Patient "+this.demographicNo);
 		}
-		if (!Util.filled(setName)) setName = demoName;
+		if (Util.empty(setName)) setName = demoName;
 		
 		data = demographic.getTitle();
 		if (Util.filled(data)) {
@@ -289,7 +289,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 
 		data = Util.noNull(demographic.getRosterStatus());
-		if (!Util.filled(data)) {
+		if (Util.empty(data)) {
 		    data = "";
 		    err.add("Error! No Enrollment Status for Patient "+this.demographicNo);
 		}
@@ -297,7 +297,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		demo.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(data));
 		
 		data = Util.noNull(demographic.getPatientStatus());
-		if (!Util.filled(data)) {
+		if (Util.empty(data)) {
 		    data = "";
 		    err.add("Error! No Person Status Code for Patient "+this.demographicNo);
 		}
@@ -407,10 +407,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
 			Demographics.Contact contact = demo.addNewContact();
 			Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
-			if (!Util.filled(relDemo.getFirstName())) {
+			if (Util.empty(relDemo.getFirstName())) {
 			    err.add("Error! No First Name for contact ("+j+") for Patient "+this.demographicNo);
 			}
-			if (!Util.filled(relDemo.getLastName())) {
+			if (Util.empty(relDemo.getLastName())) {
 			    err.add("Error! No Last Name for contact ("+j+") for Patient "+this.demographicNo);
 			}
 
@@ -890,7 +890,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			aSummary = Util.appendLine(aSummary, "Notes: ", n.getNote());
 		    }
 		    
-		    if (!Util.filled(aSummary)) {
+		    if (Util.empty(aSummary)) {
 			err.add("Error! No Category Summary Line (Allergies & Adverse Reactions) for Patient "+this.demographicNo+" ("+(j+1)+")");
 		    }
 		    alr.setCategorySummaryLine(aSummary);
@@ -905,14 +905,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    if (a != null && inject.contains((String) a.get("type")) ){
 			Immunizations immu = patientRec.addNewImmunizations();
 			data = Util.noNull((String) a.get("type"));
-			if (!Util.filled(data)) {
+			if (Util.empty(data)) {
 			    err.add("Error! No Immunization Name for Patient "+this.demographicNo+" ("+(k+1)+")");
 			}
 			immu.setImmunizationName(data);
 			String imSummary = "Immunization Name: "+data;
 
 			data = (String) a.get("refused");
-			if (!Util.filled(data)) {
+			if (Util.empty(data)) {
 			    immu.addNewRefusedFlag();
 			    err.add("Error! No Refused Flag for Patient "+this.demographicNo+" ("+(k+1)+")");
 			} else {
@@ -941,7 +941,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			imSummary = Util.appendLine(imSummary, "Dose: ", immu.getDose());
 			imSummary = Util.appendLine(imSummary, "Notes: ", immu.getNotes());
 			
-			if (!Util.filled(imSummary)) {
+			if (Util.empty(imSummary)) {
 			    err.add("Error! No Category Summary Line (Immunization) for Patient "+this.demographicNo+" ("+(k+1)+")");
 			}
 			immu.setCategorySummaryLine(Util.noNull(imSummary));
@@ -977,7 +977,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			mSummary = Util.appendLine(mSummary, "DIN: ", data);
 		    }
 		    String drugName = Util.noNull(arr[p].getDrugName());
-		    if (!Util.filled(drugName)) {
+		    if (Util.empty(drugName)) {
 			err.add("Error! No Drug Name for Patient "+this.demographicNo+" ("+(p+1)+")");
 		    }
 		    medi.setDrugName(drugName);
@@ -1082,7 +1082,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			mSummary = Util.appendLine(mSummary, "Notes: ", n.getNote());
 		    }
 		    
-		    if (!Util.filled(mSummary)) err.add("Error! No Category Summary Line (Medications & Treatments) for Patient "+this.demographicNo+" ("+(p+1)+")");
+		    if (Util.empty(mSummary)) err.add("Error! No Category Summary Line (Medications & Treatments) for Patient "+this.demographicNo+" ("+(p+1)+")");
 		    medi.setCategorySummaryLine(mSummary);
 		}
 		arr = null;
@@ -1100,7 +1100,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    labResults.setTestNameReportedByLab(Util.noNull(labMea.getExtVal("name")));
                     
                     labResults.setLaboratoryName(Util.noNull(labMea.getExtVal("labname")));
-                    if (!Util.filled(labResults.getLaboratoryName())) {
+                    if (Util.empty(labResults.getLaboratoryName())) {
                         err.add("Error! No Laboratory Name for Lab Test "+labResults.getLabTestCode()+" for Patient "+this.demographicNo);
                     }
                     
@@ -1188,14 +1188,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    
 		    labr.setTestName((String) h.get("testName"));
 		    data = (String) h.get("abn");
-		    if (!Util.filled(data)) {
+		    if (Util.empty(data)) {
 			data = "U";
 			err.add("Error! No Result Normal/Abnormal Flag for Patient "+this.demographicNo+" ("+(l+1)+")");
 		    }
 		    labr.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Enum.forString(data));
 
 		    data = (String) h.get("location");
-		    if (!Util.filled(data)) {
+		    if (Util.empty(data)) {
 			data = "";
 			err.add("Error! No Laboratory Name for Patient "+this.demographicNo+" ("+(l+1)+")");
 		    }
@@ -1337,9 +1337,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    in.close();
 			    rpc.setMedia(b);
 
-			    data = Util.getFileExt(edoc.getContentType());
-			    if (!Util.filled(data)) data = cutExt(edoc.getFileName());
-			    if (!Util.filled(data)) err.add("Error! No File Extension&Version info for Document \""+edoc.getFileName()+"\"");
+			    data = Util.mimeToExt(edoc.getContentType());
+			    if (Util.empty(data)) data = cutExt(edoc.getFileName());
+			    if (Util.empty(data)) err.add("Error! No File Extension&Version info for Document \""+edoc.getFileName()+"\"");
 			    rpr.setFileExtensionAndVersion(data);
 
 			    data = edoc.getType();
@@ -1408,7 +1408,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    }
 		    audSummary = audReport;
 		    AuditInformation audInf = patientRec.addNewAuditInformation();
-		    if (!Util.filled(audSummary)) {
+		    if (Util.empty(audSummary)) {
 			err.add("Error! No Category Summary Line (Audit Information) for Patient "+this.demographicNo);
 		    } else {
 			audInf.setCategorySummaryLine(audSummary);
@@ -1670,7 +1670,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	out.newLine();
 	out.write("CMS Vendor, Product & Version      : ");
 	String vendor = oscarp.getProperty("Vendor_Product");
-	if (!Util.filled(vendor)) {
+	if (Util.empty(vendor)) {
 	    error.add("Error! Vendor_Product not defined in oscar.properties");
 	} else {
 	    out.write(vendor);
@@ -1678,7 +1678,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	out.newLine();
 	out.write("Application Support Contact        : ");
 	String support = oscarp.getProperty("Support_Contact");
-	if (!Util.filled(support)) {
+	if (Util.empty(support)) {
 	    error.add("Error! Support_Contact not defined in oscar.properties");
 	} else {
 	    out.write(support);
@@ -1856,7 +1856,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     String cutExt(String filename) {
-	if (!Util.filled(filename)) return "";
+	if (Util.empty(filename)) return "";
 	String[] parts = filename.split(".");
 	if (parts.length>1) return "."+parts[parts.length-1];
 	else return "";
