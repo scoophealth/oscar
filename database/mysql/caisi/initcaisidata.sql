@@ -189,14 +189,14 @@ INSERT INTO `intake_answer_validation` VALUES
 -- Populate intake answer element
 --
 INSERT INTO `intake_answer_element` VALUES
-	(1, 7, NULL, 0, 'T'),
-	(2, 7, NULL, 1, 'F'),
-	(3, 8, NULL, 0, ''),
-	(4, 9, 1, 0, ''),
-	(5, 10, 2, 0, ''),
-	(6, 11, 3, 0, ''),
-	(7, 12, 4, 0, ''),
-	(8, 13, NULL, 0, '');
+	(1, 7, NULL, 0, 'T', ''),
+	(2, 7, NULL, 1, 'F', ''),
+	(3, 8, NULL, 0, '', ''),
+	(4, 9, 1, 0, '', ''),
+	(5, 10, 2, 0, '', ''),
+	(6, 11, 3, 0, '', ''),
+	(7, 12, 4, 0, '', ''),
+	(8, 13, NULL, 0, '', '');
 
 --
 -- Populate intake node
