@@ -27,8 +27,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.caisi.model.Role;
-import org.hibernate.Session;
 import org.jboss.logging.Logger;
 import org.oscarehr.casemgmt.model.Issue;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -42,7 +40,7 @@ public class IssueDAO extends HibernateDaoSupport {
 		return (Issue)getHibernateTemplate().get(Issue.class, id);
     }
 
-    public List getIssues() {
+    public List<Issue> getIssues() {
         return this.getHibernateTemplate().find("from Issue");
     }
 
@@ -53,6 +51,14 @@ public class IssueDAO extends HibernateDaoSupport {
     
     public Issue findIssueByCode(String code) {        
         List<Issue>list = this.getHibernateTemplate().find("from Issue i where i.code = ?", new Object[] {code});
+        if( list.size() > 0 )
+            return list.get(0);
+        
+        return null;
+    }
+
+    public Issue findIssueByTypeAndCode(String type, String code) {        
+        List<Issue>list = this.getHibernateTemplate().find("from Issue i where i.type=? and i.code = ?", new Object[] {type,code});
         if( list.size() > 0 )
             return list.get(0);
         
