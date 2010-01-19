@@ -900,7 +900,7 @@ public class DemographicData {
                  ret.addWarning("Patient "+last_name+", "+first_name+" DOB ("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+") exists in database. Record not added");
               }else{//add without HIN
                  //System.out.println("ADDING without him because of same hin");
-                 ret.addWarning("Patient "+last_name+", "+first_name+" DOB ("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+") was added without a HIN because it is already in use");                 
+                 ret.addWarning("Patient "+last_name+", "+first_name+" DOB ("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+") added without HIN - HIN already in use");
                  hin = "";
               }             
            }
