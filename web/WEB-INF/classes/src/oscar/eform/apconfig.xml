@@ -97,6 +97,11 @@
 		<ap-sql>SELECT ver FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${ver}</ap-output>
 	</databaseap>
+        <databaseap>
+		<ap-name>chartno</ap-name>
+		<ap-sql>SELECT chart_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+		<ap-output>${chart_no}</ap-output>
+	</databaseap>
 	<databaseap>
 		<ap-name>phone</ap-name>
 		<ap-sql>SELECT phone FROM demographic WHERE demographic_no=${demographic}</ap-sql>
