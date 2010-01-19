@@ -46,29 +46,37 @@ import oscar.oscarDB.DBHandler;
  * Used to access data in provider table
  */
 public class ProviderData {
-/*+-------------------+-------------+------+-----+---------+-------+
- | Field             | Type        | Null | Key | Default | Extra |
- +-------------------+-------------+------+-----+---------+-------+
- | provider_no       | varchar(6)  |      | PRI |         |       |
- | last_name         | varchar(30) |      |     |         |       |
- | first_name        | varchar(30) |      |     |         |       |
- | provider_type     | varchar(15) |      |     |         |       |
- | specialty         | varchar(20) |      |     |         |       |
- | team              | varchar(20) | YES  |     |         |       |
- | sex               | char(1)     |      |     |         |       |
- | dob               | date        | YES  |     | NULL    |       |
- | address           | varchar(40) | YES  |     | NULL    |       |
- | phone             | varchar(20) | YES  |     | NULL    |       |
- | work_phone        | varchar(50) | YES  |     | NULL    |       |
- | ohip_no           | varchar(20) | YES  |     | NULL    |       |
- | rma_no            | varchar(20) | YES  |     | NULL    |       |
- | billing_no        | varchar(20) | YES  |     | NULL    |       |
- | hso_no            | varchar(10) | YES  |     | NULL    |       |
- | status            | char(1)     | YES  |     | NULL    |       |
- | comments          | text        | YES  |     | NULL    |       |
- | provider_activity | char(3)     | YES  |     | NULL    |       |
- | practitionerNo    | varchar(20) | YES  |     | NULL    |       |
- +-------------------+-------------+------+-----+---------+-------+
+/*
++------------------------+--------------+------+-----+------------+-------+
+| Field                  | Type         | Null | Key | Default    | Extra |
++------------------------+--------------+------+-----+------------+-------+
+| provider_no            | varchar(6)   | NO   | PRI |            |       |
+| last_name              | varchar(30)  | NO   |     |            |       |
+| first_name             | varchar(30)  | NO   |     |            |       |
+| provider_type          | varchar(15)  | NO   |     |            |       |
+| specialty              | varchar(40)  | NO   |     |            |       |
+| team                   | varchar(20)  | YES  |     |            |       |
+| sex                    | char(1)      | NO   |     |            |       |
+| dob                    | date         | YES  |     | NULL       |       |
+| address                | varchar(40)  | YES  |     | NULL       |       |
+| phone                  | varchar(20)  | YES  |     | NULL       |       |
+| work_phone             | varchar(50)  | YES  |     | NULL       |       |
+| ohip_no                | varchar(20)  | YES  |     | NULL       |       |
+| rma_no                 | varchar(20)  | YES  |     | NULL       |       |
+| billing_no             | varchar(20)  | YES  |     | NULL       |       |
+| hso_no                 | varchar(10)  | YES  |     | NULL       |       |
+| status                 | char(1)      | YES  |     | NULL       |       |
+| comments               | text         | YES  |     | NULL       |       |
+| provider_activity      | char(3)      | YES  |     | NULL       |       |
+| practitionerNo         | varchar(20)  | YES  |     | NULL       |       |
+| init                   | varchar(10)  | YES  |     | NULL       |       |
+| job_title              | varchar(100) | YES  |     | NULL       |       |
+| email                  | varchar(60)  | YES  |     | NULL       |       |
+| title                  | varchar(20)  | YES  |     | NULL       |       |
+| lastUpdateUser         | varchar(6)   | YES  |     | NULL       |       |
+| lastUpdateDate         | date         | YES  |     | NULL       |       |
+| signed_confidentiality | date         | YES  |     | 0001-01-01 |       |
++------------------------+--------------+------+-----+------------+-------+
 */
    
    String provider_no;
@@ -90,6 +98,14 @@ public class ProviderData {
    String comments;
    String provider_activity;
    String practitionerNo;
+   String init;
+   String job_title;
+   String email;
+   String title;
+   String lastUpdateUser;
+   String lastUpdateDate;
+   String signed_confidentiality;
+
    
    /** Creates a new instance of ProviderData */
    public ProviderData() {            
@@ -98,7 +114,7 @@ public class ProviderData {
    public ProviderData(String providerNo) {            
       getProvider(providerNo);
    }
-   
+
    public List getProviderListWithInsuranceNo(){
        return getProviderListWithInsuranceNo("%");
    }
@@ -134,24 +150,32 @@ public class ProviderData {
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
-                   this.provider_no = db.getString(rs,"provider_no");
-                   this.last_name = db.getString(rs,"last_name");
-                   this.first_name = db.getString(rs,"first_name");
-                   this.provider_type = db.getString(rs,"provider_type"); 
-                   this.specialty = db.getString(rs,"specialty");
-                   this.team = db.getString(rs,"team");   String sex;
-                   this.dob= db.getString(rs,"dob");
-                   this.address= db.getString(rs,"address");
-                   this.phone= db.getString(rs,"phone");
-                   this.work_phone= db.getString(rs,"work_phone");
-                   this.ohip_no= db.getString(rs,"ohip_no");
-                   this.rma_no= db.getString(rs,"rma_no");
-                   this.billing_no= db.getString(rs,"billing_no");
-                   this.hso_no= db.getString(rs,"hso_no");
-                   this.status= db.getString(rs,"status");
-                   this.comments= db.getString(rs,"comments");
-                   this.provider_activity= db.getString(rs,"provider_activity");
-                   this.practitionerNo= db.getString(rs,"practitionerNo");
+                   this.provider_no = db.getString(rs, "provider_no");
+                   this.last_name = db.getString(rs, "last_name");
+                   this.first_name = db.getString(rs, "first_name");
+                   this.provider_type = db.getString(rs, "provider_type");
+                   this.specialty = db.getString(rs, "specialty");
+                   this.team = db.getString(rs, "team");
+                   this.sex= db.getString(rs, "sex");
+                   this.dob= db.getString(rs, "dob");
+                   this.address= db.getString(rs, "address");
+                   this.phone= db.getString(rs, "phone");
+                   this.work_phone= db.getString(rs, "work_phone");
+                   this.ohip_no= db.getString(rs, "ohip_no");
+                   this.rma_no= db.getString(rs, "rma_no");
+                   this.billing_no= db.getString(rs, "billing_no");
+                   this.hso_no= db.getString(rs, "hso_no");
+                   this.status= db.getString(rs, "status");
+                   this.comments= db.getString(rs, "comments");
+                   this.provider_activity= db.getString(rs, "provider_activity");
+                   this.practitionerNo= db.getString(rs, "practitionerNo");
+                   this.init= db.getString(rs, "init");
+                   this.job_title= db.getString(rs, "job_title");
+                   this.email= db.getString(rs, "email");
+                   this.title= db.getString(rs, "title");
+                   this.lastUpdateUser= db.getString(rs, "lastUpdateUser");
+                   this.lastUpdateDate= db.getString(rs, "lastUpdateDate");
+                   this.signed_confidentiality= db.getString(rs, "signed_confidentiality");
                 }
 
                 rs.close();
@@ -161,7 +185,7 @@ public class ProviderData {
             }            
       
    }
-   
+
    /**
     * Getter for property provider_no.
     * @return Value of property provider_no.
@@ -451,20 +475,73 @@ public class ProviderData {
    }
 
    /**
-   * getter for practitionerNo.
+   * getters && setters
    **/
 
    public java.lang.String getPractitionerNo() {
         return practitionerNo;
    }
 
-   /**
-   * Setter for property practitioner_no.
-   **/
-
    public void setPractitionerNo(java.lang.String practitionerNo) {
 	this.practitionerNo = practitionerNo;
    }
+
+   public java.lang.String getInit() {
+       return init;
+   }
+
+   public void setInit(java.lang.String init) {
+       this.init = init;
+   }
+
+   public java.lang.String getJob_title() {
+       return job_title;
+   }
+
+   public void setJob_title(java.lang.String job_title) {
+       this.job_title = job_title;
+   }
+
+   public java.lang.String getEmail() {
+       return email;
+   }
+
+   public void setEmail(java.lang.String email) {
+       this.email = email;
+   }
+
+   public java.lang.String getTitle() {
+       return title;
+   }
+
+   public void setTitle(java.lang.String title) {
+       this.title = title;
+   }
+
+   public java.lang.String getLastUpdateUser() {
+       return lastUpdateUser;
+   }
+
+   public void setLastUpdateUser(java.lang.String lastUpdateUser) {
+       this.lastUpdateUser = lastUpdateUser;
+   }
+
+   public java.lang.String getLastUpdateDate() {
+       return lastUpdateDate;
+   }
+
+   public void setLastUpdateDate(java.lang.String lastUpdateDate) {
+       this.lastUpdateDate = lastUpdateDate;
+   }
+
+   public java.lang.String getSigned_confidentiality() {
+       return signed_confidentiality;
+   }
+
+   public void setSigned_confidentiality(java.lang.String signed_confidentiality) {
+       this.signed_confidentiality = signed_confidentiality;
+   }
+
 
 
    //TODO: Add a cache of providers
@@ -542,55 +619,155 @@ public class ProviderData {
          }
          return defaultView;
     }
-    
-    public int addProvider(String providerNo, String firstName, String lastName, String ohipNo) throws SQLException {
-	String add_record_string = "insert into provider (provider_no,last_name,first_name,ohip_no,provider_type,status)values (?,?,?,?,'doctor','1')";
-	int key = 0;
-	
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	Connection conn = DBHandler.getConnection();
-	PreparedStatement add_record = conn.prepareStatement(add_record_string);
-	
-	add_record.setString(1, providerNo);
-	add_record.setString(2, lastName);
-	add_record.setString(3, firstName);
-	add_record.setString(4, ohipNo);
-	
-	add_record.executeUpdate();
-	ResultSet rs = add_record.getGeneratedKeys();
-	if(rs.next()) key = rs.getInt(1);
-	add_record.close();
-	rs.close();
-	return key;
-    }
-    
-    public String getNewExtProviderNo() throws SQLException {
-	String providerNo = null;
-	
+
+
+
+   public void getProviderWithOHIP(String ohipNo) {
+       if (filled(ohipNo)) {
+           String sql = "select provider_no from provider where ohip_no = '" + ohipNo + "'";
+           getProvider(selectProviderNo(sql));
+       }
+   }
+
+   public void getProviderWithNames(String firstName, String lastName) {
+       if (filled(firstName) && filled(lastName)) {
+           String sql = "select provider_no from provider where first_name='"+firstName+"' and last_name='"+lastName+"'";
+           String noOHIP = " (ohip_no='' or ohip_no is null)";
+           String extPvd = " provider_no < -1000";
+           String not = " not";
+           String and = " and";
+
+           String providerNo = selectProviderNo(sql+and+noOHIP+and+extPvd);
+           if (!filled(providerNo)) providerNo = selectProviderNo(sql+and+not+noOHIP+and+extPvd);
+           if (!filled(providerNo)) providerNo = selectProviderNo(sql+and+noOHIP+and+not+extPvd);
+           if (!filled(providerNo)) providerNo = selectProviderNo(sql+and+not+noOHIP+and+not+extPvd);
+           getProvider(providerNo);
+       }
+   }
+
+   public void getExternalProviderWithNames(String firstName, String lastName) {
+       if (filled(firstName) && filled(lastName)) {
+           String sql = "select provider_no from provider where first_name='"+firstName+"' and last_name='"+lastName+"'";
+           String noOHIP = " (ohip_no='' or ohip_no is null)";
+           String extPvd = " provider_no < -1000";
+           String not = " not";
+           String and = " and";
+
+           String providerNo = selectProviderNo(sql+and+noOHIP+and+extPvd);
+           if (!filled(providerNo)) providerNo = selectProviderNo(sql+and+not+noOHIP+and+extPvd);
+           getProvider(providerNo);
+       }
+   }
+
+    public void addExternalProvider(String firstName, String lastName, String ohipNo) {
+        if (!filled(firstName) && !filled(lastName) && !filled(ohipNo)) return; //no information at all!
+
+        //get latest external provider no
 	String sql = "select max(provider_no) from provider where provider_no like '-%'";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	ResultSet rs = db.GetSQL(sql);
-	if (rs.next()) providerNo = db.getString(rs,1);
-	rs.close();
-	if (providerNo!=null && !providerNo.trim().equals("")) {
-	    int lastPN = Integer.valueOf(providerNo);
-	    lastPN = lastPN<-100 ? lastPN-1 : -101;
-	    providerNo = String.valueOf(lastPN);
-	} else {
-	    providerNo = "-101";
-	}
-	return providerNo;
+        String providerNo = selectProviderNo(sql);
+
+        //assign new external provider no
+        if (filled(providerNo)) {
+            int lastPN = Integer.valueOf(providerNo);
+            lastPN = lastPN<-1000 ? lastPN-1 : -1001;
+            this.provider_no = String.valueOf(lastPN);
+        } else {
+            this.provider_no = "-1001";
+        }
+        
+        //create new external provider
+        this.first_name = filled(firstName) ? firstName : "";
+        this.last_name = filled(lastName) ? lastName : "";
+        this.ohip_no = filled(ohipNo) ? ohipNo : "";
+        this.provider_type = "doctor";
+        this.status = "1";
+        this.specialty = "";
+        this.sex = "";
+        addUpdateProvider(false);
     }
-    
-    public String getProviderNoByOhip(String OhipNO) throws SQLException {
-	String providerNo = null;
-	if (OhipNO!=null) {
-	    String sql = "select provider_no from provider where ohip_no = '" + OhipNO + "'";
-	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	    ResultSet rs = db.GetSQL(sql);
-	    if (rs.next()) providerNo = db.getString(rs,"provider_no");
-	    rs.close();
-	}
-	return providerNo;
+
+   private String selectProviderNo(String sql) {
+        String providerNo = "";
+        if (!filled(sql) && !sql.trim().toLowerCase().startsWith("select")) {
+            return null;
+        }
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs = db.GetSQL(sql);
+            if (rs.next()) {
+                providerNo = db.getString(rs, 1);
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return providerNo;
+   }
+
+    public Integer addUpdateProvider(boolean update) {
+            Integer key = 0;
+        try {
+            String sql = "insert into provider values (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?)";
+            if (update) {
+                sql = "update provider set last_name=?      and first_name=?        and provider_type=? " + 
+                                      "and specialty=?      and team=?              and sex=? " + 
+                                      "and dob=?            and address=?           and phone=? " + 
+                                      "and work_phone=?     and ohip_no=?           and rma_no=? " + 
+                                      "and billing_no=?     and hso_no=?            and status=? " + 
+                                      "and comments=?       and provider_activity=? and practitionerNo=? " + 
+                                      "and init=?           and job_title=?         and email=? " + 
+                                      "and title=?          and lastUpdateUser=?    and lastUpdateDate=? " + 
+                                      "and signed_confidentiality=?     where provider_no=?";
+            }
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            Connection conn = DBHandler.getConnection();
+            PreparedStatement write_rec = conn.prepareStatement(sql);
+            
+            Integer i = update ? 1 : 2;
+            write_rec.setString(i, last_name);
+            write_rec.setString(i + 1, first_name);
+            write_rec.setString(i + 2, provider_type);
+            write_rec.setString(i + 3, specialty);
+            write_rec.setString(i + 4, team);
+            write_rec.setString(i + 5, sex);
+            write_rec.setString(i + 6, dob);
+            write_rec.setString(i + 7, address);
+            write_rec.setString(i + 8, phone);
+            write_rec.setString(i + 9, work_phone);
+            write_rec.setString(i + 10, ohip_no);
+            write_rec.setString(i + 11, rma_no);
+            write_rec.setString(i + 12, billing_no);
+            write_rec.setString(i + 13, hso_no);
+            write_rec.setString(i + 14, status);
+            write_rec.setString(i + 15, comments);
+            write_rec.setString(i + 16, provider_activity);
+            write_rec.setString(i + 17, practitionerNo);
+            write_rec.setString(i + 18, init);
+            write_rec.setString(i + 19, job_title);
+            write_rec.setString(i + 20, email);
+            write_rec.setString(i + 21, title);
+            write_rec.setString(i + 22, lastUpdateUser);
+            write_rec.setString(i + 23, lastUpdateDate);
+            write_rec.setString(i + 24, signed_confidentiality);
+            if (update) {
+                write_rec.setString(i + 25, provider_no);
+            } else {
+                write_rec.setString(1, provider_no);
+            }
+            write_rec.executeUpdate();
+            ResultSet rs = write_rec.getGeneratedKeys();
+            if (rs.next()) {
+                key = rs.getInt(1);
+            }
+            write_rec.close();
+            rs.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return key;
+    }
+
+    boolean filled(String s) {
+        return (s!=null && !s.trim().equals(""));
     }
 }
