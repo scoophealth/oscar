@@ -148,9 +148,18 @@
 			recordCount++;
 		}
 	}
+
+    String billingDate = request.getParameter("billDate");
+	String [] tempDate = billingDate.split("\\s");
+
+    for( int idx = 0; idx < tempDate.length; ++idx ) {
+        System.out.println("BILLING DATE " + tempDate[idx]);
+    }
+
 	for(int i=0; i<recordCount; i++) {
 		sql = "select service_code, description, value, percentage from billingservice where service_code='"
-			+ billrec[i] + "'";
+			+ billrec[i] + "' and billingservice_date in (select max(b.billingservice_date) from billingservice b where b.service_code='" + billrec[i] + "' and b.billingservice_date <= '" + request.getParameter("billDate") + "')";
+        System.out.println(sql);
 		rs = dbObj.searchDBRecord(sql);
 		while (rs.next()) {
 			billrecdesc[i] = rs.getString("description");
@@ -260,9 +269,7 @@
     content += "<hctype>" + demoHCTYPE + "</hctype>" ;
     content += "<demosex>" + demoSex + "</demosex>" ;
 
-    if(request.getParameter("addition")!=null && "Confirm".equals(request.getParameter("addition"))) {
-	    String billingDate = request.getParameter("billDate");
-	    String [] tempDate = billingDate.split("\\s");
+    if(request.getParameter("addition")!=null && "Confirm".equals(request.getParameter("addition"))) {	    
 
 	    for(int k=0; k<tempDate.length; k++) {
 	    	if(tempDate[k].trim().length()!=10) continue;
