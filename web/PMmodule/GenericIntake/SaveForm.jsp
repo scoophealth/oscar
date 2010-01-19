@@ -132,6 +132,7 @@ void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
     cpy.setFormType(org.getFormType());
     cpy.setQuestionId(org.getQuestionId());
     cpy.setRepeating(org.getRepeating());
+    cpy.setCommonList(org.getCommonList());
     cpy.setValidations(org.getValidations());
     if (!org.isIntake() && !org.isPage() && !org.isSection() && !org.isAnswerCompound()) {
         cpy.setEq_to_id(org.getEq_to_id());

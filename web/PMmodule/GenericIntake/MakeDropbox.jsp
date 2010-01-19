@@ -2,7 +2,7 @@
 <%@page pageEncoding="UTF-8"%>
 <%@page import="java.sql.*,oscar.oscarDB.*"%>
 <%@page
-	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
+	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*,com.Ostermiller.util.NameValuePair"%>
 <%@ include file="/taglibs.jsp"%>
 <%
 WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -16,6 +16,12 @@ Integer lastTemplateId = (Integer) session.getAttribute("lastTemplateId");
 Integer lastElementId = (Integer) session.getAttribute("lastElementId");
 ArrayList<String> items = new ArrayList();
 
+
+/* use a common list? */
+List<NameValuePair> lists = new ArrayList<NameValuePair>();
+IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
+this.fillCommonLists(itn,lists); 
+
 if (submit_type==null) {
     intakeNodeTemplate = new IntakeNodeTemplate();
     IntakeNodeType intakeNodeType = new IntakeNodeType();
@@ -25,7 +31,8 @@ if (submit_type==null) {
     lastTemplateId = (lastTemplateId==null) ? -1 : --lastTemplateId;
     session.setAttribute("lastTemplateId", lastTemplateId);
     intakeNodeTemplate.setId(lastTemplateId);
-
+    
+    
 } else if (submit_type.equals("save")) {
     response.sendRedirect("close.jsp");
     return;
@@ -56,6 +63,10 @@ if (submit_type==null) {
 	}
     }
     insertItems(items, intakeAnswerElements);
+} else if(submit_type.equals("copy_common_list")) {
+	copyCommonElements(itn,Integer.valueOf(request.getParameter("select_common_list")),lastElementId,session,intakeNodeTemplate);
+	Set intakeAnswerElements = intakeNodeTemplate.getAnswerElements();
+    insertItems(items, intakeAnswerElements);
 }
 session.setAttribute("intakeNodeTemplate_c", intakeNodeTemplate);
 
@@ -81,6 +92,16 @@ session.setAttribute("intakeNodeTemplate_c", intakeNodeTemplate);
 		document.makeDropboxFrm.submit_type.value=s_type;
 		document.makeDropboxFrm.submit();
 	    }
+
+	    function copy_common_list() {
+			var sel = document.getElementById("select_common_list")
+			var val = sel.options[sel.selectedIndex].value;
+			if(val.length == 0) {return;}
+
+			document.makeDropboxFrm.submit_type.value='copy_common_list';
+			document.makeDropboxFrm.submit();
+	    	
+	    }
 	</script>
 <script language="javascript" type="text/javascript"
 	src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
@@ -102,6 +123,17 @@ Value: <input name="s_value" type="text" size="20" /> <br/>
 
 <p>&nbsp;</p>
 
+-or-
+<br/>
+Copy Common List:
+<br/>
+<select id="select_common_list" name="select_common_list" onchange="copy_common_list()">
+	<option value=""></option>
+	<%for(NameValuePair nvp:lists) { %>
+		<option value="<%=nvp.getValue()%>"><%=nvp.getName() %></option>
+	<% } %>
+</select>
+<br/><br/>
 <input type="button" value="Done" title="Save dropbox" onclick="do_submit('save');" /> 
 <input type="hidden" name="submit_type" /></form>
 </body>
@@ -117,4 +149,44 @@ void insertItems(ArrayList<String> itemList, Set elementSet) {
     }
 }
 
+void fillCommonLists(IntakeNode org,List<NameValuePair> lists) {
+    if(org.getCommonList()) {
+    	NameValuePair nvp = new NameValuePair(org.getLabelStr(),org.getIdStr());
+    	lists.add(nvp);
+    	
+    }
+    
+    ArrayList children = new ArrayList();
+    for (IntakeNode iN : org.getChildren()) {	
+	fillCommonLists(iN,lists);
+    }
+   
+}
+
+void copyCommonElements(IntakeNode org, Integer nodeId,Integer lastElementId,HttpSession session,IntakeNodeTemplate intakeNodeTemplate) {
+	if(org.getId().equals(nodeId)) {
+		//found it
+		
+		for(IntakeAnswerElement iae:org.getNodeTemplate().getAnswerElements()) {
+			//make a copy, and add to current.
+			   IntakeAnswerElement intakeAnswerElement = new IntakeAnswerElement();
+			   intakeAnswerElement.setElement(iae.getElement());
+			   intakeAnswerElement.setLabel(iae.getLabel());
+			   lastElementId = (lastElementId==null) ? -1 : --lastElementId;
+			   intakeAnswerElement.setId(lastElementId);
+			   intakeAnswerElement.setNodeTemplate(intakeNodeTemplate);
+			   
+			   Set intakeAnswerElements = intakeNodeTemplate.getAnswerElements();
+			   intakeAnswerElements.add(intakeAnswerElement);				   
+		}
+		session.setAttribute("lastElementId", lastElementId);		   		
+	    
+	    
+	} else {
+		ArrayList children = new ArrayList();
+	    for (IntakeNode iN : org.getChildren()) {	
+	    	copyCommonElements(iN,nodeId,lastElementId,session,intakeNodeTemplate);
+	    }
+	}
+}
 %>

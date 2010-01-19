@@ -1527,6 +1527,7 @@ CREATE TABLE `intake_node` (
   `parent_intake_node_id` int(10) unsigned default NULL,
   `mandatory` boolean NOT NULL default false,
   `repeating` boolean NOT NULL default false,
+  `common_list` boolean NOT NULL default false,
   `eq_to_id` int(10) default NULL,
   `form_version` int(10) unsigned default NULL,
   `publish_date` date default NULL,

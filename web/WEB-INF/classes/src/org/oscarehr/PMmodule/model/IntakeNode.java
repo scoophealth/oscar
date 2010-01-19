@@ -42,6 +42,7 @@ public class IntakeNode implements Serializable {
     private Integer pos;
     private boolean mandatory;
     private boolean repeating;
+    private boolean commonList;
     private Integer eq_to_id;
     private Integer form_version;
     private Calendar publish_date;
@@ -395,6 +396,15 @@ public class IntakeNode implements Serializable {
    
     public void setRepeating(boolean repeating) {
         this.repeating = repeating;
+    }
+    
+    public boolean getCommonList() {
+        return commonList;
+    }
+
+   
+    public void setCommonList(boolean commonList) {
+        this.commonList = commonList;
     }    
     
     

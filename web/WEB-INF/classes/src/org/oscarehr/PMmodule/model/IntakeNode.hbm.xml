@@ -38,6 +38,8 @@
 		<property name="mandatory" column="mandatory" type="boolean" />
 		
 		<property name="repeating" column="repeating" type="boolean" />
+		
+		<property name="commonList" column="common_list" type="boolean" />
 
 		<property name="eq_to_id" column="eq_to_id" type="integer" />
 

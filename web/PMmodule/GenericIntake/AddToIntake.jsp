@@ -21,6 +21,7 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     String mandatory			 = request.getParameter("mandatory") ;
     String questionId			 = request.getParameter("question_id");
     String repeating			 = request.getParameter("repeating") ;
+    String common				 = request.getParameter("common_list") ;
     String[] validations		 = request.getParameterValues("validations");    
     
     IntakeNodeLabel intakeNodeLabel = new IntakeNodeLabel();
@@ -61,6 +62,9 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     }
     if (questionId !=null) {
     	intakeNode.setQuestionId(questionId);
+    }
+    if(common != null) {
+    	intakeNode.setCommonList(true);
     }
     if(validations != null) {
     	String validationString="";
@@ -120,7 +124,14 @@ String pSize        = request.getParameter("pSize");
 				//repeating off
 				$("input[name='repeating']").attr("checked","");
 				$("#repeating").hide();			
-			}			
+			}
+			/*	
+			if($(this).val() == 15) {
+				$("#common").show();
+			} else {
+				$("#common").hide();
+			}
+			*/
 		});
 
 		$("input[name='elementType']").change(function(){
@@ -162,7 +173,7 @@ String pSize        = request.getParameter("pSize");
 	    
 	    function makeDropbox() {
 		var eURL = "MakeDropbox.jsp";
-		popup('200','300',eURL,'mkdrpbx');
+		popup('500','450',eURL,'mkdrpbx');
 	    }
 </script>	
 <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
@@ -221,8 +232,11 @@ Label Text (Leave blank for no text): <input type="text" name="intake_node_label
 	<input type="checkbox" name="repeating" onclick=""/>Repeating
 </div>		
 <%}%>
-
 <br/>
+<input type="checkbox" name="common_list" onclick=""/>Common List
+	
+<br/>
+
 <input type="text" name="question_id"/>Internal Id (optional) <br/>
 
 <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
