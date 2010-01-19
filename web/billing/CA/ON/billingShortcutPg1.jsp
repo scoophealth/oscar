@@ -203,7 +203,7 @@
     propT.setProperty("first_name",rs.getString("first_name"));
     propT.setProperty("proOHIP",rs.getString("provider_no"));
     vecProvider.add(propT);
-  }
+  } 
   // clinic location
   Vector vecLocation = new Vector();
   sql = "select * from clinic_location where clinic_no = 1 order by clinic_location_no";
@@ -264,7 +264,7 @@
   //int CountService = 0;
   //int Count2 = 0;
   sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-   + ctlBillForm + "' and c.service_group ='" + "Group1" + "' order by c.service_order";
+   + ctlBillForm + "' and c.service_group ='" + "Group1" + "' and billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= now() and b2.service_code = b.service_code) order by c.service_order";
   rs = dbObj.searchDBRecord(sql);
   while (rs.next()) {
     propT = new Properties();
@@ -294,7 +294,7 @@
   }
 
   sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-   + ctlBillForm + "' and c.service_group ='" + "Group2" + "' order by c.service_order";
+   + ctlBillForm + "' and c.service_group ='" + "Group2" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= now() and b2.service_code = b.service_code) order by c.service_order";
   rs = dbObj.searchDBRecord(sql);
   while (rs.next()) {
     propT = new Properties();
@@ -315,7 +315,7 @@
   }
 
   sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-   + ctlBillForm + "' and c.service_group ='" + "Group3" + "' order by c.service_order";
+   + ctlBillForm + "' and c.service_group ='" + "Group3" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= now() and b2.service_code = b.service_code) order by c.service_order";
   rs = dbObj.searchDBRecord(sql);
   while (rs.next()) {
     propT = new Properties();
