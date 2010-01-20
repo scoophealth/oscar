@@ -36,16 +36,27 @@ import org.apache.struts.upload.FormFile;
  * @author Jay Gallagher
  */
 public class ImportDemographicDataForm extends ActionForm {
-   
-   private FormFile importFile = null;
+   FormFile importFile = null;
+   boolean matchProviderNames = true;
+
    public ImportDemographicDataForm() {
    }
-   
+
+
+
    public FormFile getImportFile(){
       return importFile;
    }
    
    public void setImportFile(FormFile file){
       this.importFile = file;
+   }
+
+   public boolean getMatchProviderNames() {
+       return matchProviderNames;
+   }
+
+   public void setMatchProviderNames(boolean matchProviderNames) {
+       this.matchProviderNames = matchProviderNames;
    }
 }
