@@ -901,8 +901,8 @@ public class ImportDemographicDataAction2 extends Action {
 				    }
 				}
 				if (!providerFound) {
-				    docCreator = provData.getNewExtProviderNo();
-				    provData.addProvider(docCreator, personName[0], personName[1], "");
+				    provData.addExternalProvider(personName[0], personName[1], "");
+				    docCreator = provData.getProviderNo();
 				}
 			    }
 			    EDocUtil.addDocument(demoNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator,""/*responsible*/);
@@ -1092,12 +1092,11 @@ public class ImportDemographicDataAction2 extends Action {
     String writeProviderData(String[] name, String ohip) throws SQLException {
 	String providerNo = "";
 	ProviderData pd = new ProviderData();
-	if (filled(ohip)) providerNo = filledOrEmpty(pd.getProviderNoByOhip(ohip));
-	if (!filled(providerNo)) {   //this is a new provider
-	    providerNo = pd.getNewExtProviderNo();
-	    pd.addProvider(providerNo, name[0], name[1], filledOrEmpty(ohip));
+        pd.getProviderWithOHIP(ohip);
+	if (!filled(pd.getProviderNo())) {   //this is a new provider
+	    pd.addExternalProvider(name[0], name[1], filledOrEmpty(ohip));
 	}
-	return providerNo;
+	return pd.getProviderNo();
     }
     
     String getCode(cdsDt.Code dCode, String dTitle) {
