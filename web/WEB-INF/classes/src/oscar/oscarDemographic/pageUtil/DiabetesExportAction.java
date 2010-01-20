@@ -483,20 +483,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	firstName.setPart(data);
 	firstName.setPartType(cdsDt.PersonNamePartTypeCode.GIV);
 	firstName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
-        if (!Util.filled(data)) {
+        if (Util.empty(data)) {
             errors.add("Error! No First Name for Patient "+demoNo);
         }
         data = Util.noNull(demographic.getLastName());
 	lastName.setPart(data);
 	lastName.setPartType(cdsDt.PersonNamePartTypeCode.FAMC);
 	lastName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
-        if (!Util.filled(data)) {
+        if (Util.empty(data)) {
             errors.add("Error! No Last Name for Patient "+demoNo);
         }
 
         data = Util.noNull(demographic.getSex());
 	demo.setGender(cdsDt.Gender.Enum.forString(data));
-        if (!Util.filled(data)) {
+        if (Util.empty(data)) {
             errors.add("Error! No Gender for Patient "+demoNo);
         }
         
@@ -505,14 +505,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             ProviderData provider = new ProviderData(data);
             data = Util.noNull(provider.getOhip_no());
 	    demo.setOHIPPhysicianId(data);
-            if (!Util.filled(data))
+            if (Util.empty(data))
 	      errors.add("Error! No OHIP Physician ID for Patient "+demoNo);
         }
         
         data = Util.noNull(demographic.getJustHIN());
 	cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 	healthCard.setNumber(data);
-	if (!Util.filled(data)) errors.add("Error! No Health Card Number for Patient "+demoNo);
+	if (Util.empty(data)) errors.add("Error! No Health Card Number for Patient "+demoNo);
 	healthCard.setProvinceCode(Util.setProvinceCode(demographic.getProvince()));
 	if (healthCard.getProvinceCode()==null) {
 	    errors.add("Error! No Health Card Province Code for Patient "+demoNo);
@@ -598,7 +598,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 }
                 data = (String) h.get("refused");
                 cdsDt.YnIndicator refused = immunizations.addNewRefusedFlag();
-                if (!Util.filled(data)) {
+                if (Util.empty(data)) {
                     errors.add("Error! No Refused Flag for Patient "+demoNo+" ("+immunizations.getImmunizationName()+")");
 		    refused.setYnIndicatorsimple(null);
                 } else {
@@ -635,18 +635,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    data = labMea.getMeasure().getDataField();
 	    LaboratoryResults.Result result = labResults.addNewResult();
 	    result.setValue(data);
-	    if (!Util.filled(data)) {
+	    if (Util.empty(data)) {
 		errors.add("Error! No Result Value for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    data = labMea.getExtVal("unit");
 	    result.setUnitOfMeasure(data);
-	    if (!Util.filled(data)) {
+	    if (Util.empty(data)) {
 		errors.add("Error! No Unit for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    labResults.setLaboratoryName(Util.noNull(labMea.getExtVal("labname")));
-	    if (!Util.filled(labResults.getLaboratoryName())) {
+	    if (Util.empty(labResults.getLaboratoryName())) {
 		errors.add("Error! No Laboratory Name for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
