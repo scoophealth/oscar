@@ -675,8 +675,25 @@
  %>
 		<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
 		<div id="sumary<%=note.getNoteId()%>">
-		<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;"><i>Date:&nbsp;<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;<bean:message
-			key="oscarEncounter.noteRev.title" /><a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev==null?"n/a":rev%></a></i></div>
+		<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
+			<i>Date:&nbsp;<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
+				<bean:message key="oscarEncounter.noteRev.title" />
+				<%
+					if (rev!=null)
+					{
+						%>
+							<a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
+						<%
+					}
+					else
+					{
+						%>
+							N/A
+						<%
+					}
+				%>
+			</i>
+		</div>
 		<div><span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
 		<ul style="list-style: none inside none; margin: 0px;">
 			<%
