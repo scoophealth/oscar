@@ -76,9 +76,9 @@
 	long savedId = 0;
 	boolean found = false;
 	String bgColour = "color:#000000;background-color:#CCCCFF;";
-	ArrayList lockedNotes = new ArrayList();
-	ArrayList unLockedNotes = new ArrayList();
-	ArrayList unEditableNotes = new ArrayList();
+	ArrayList<Integer> lockedNotes = new ArrayList<Integer>();
+	ArrayList<Integer> unLockedNotes = new ArrayList<Integer>();
+	ArrayList<Integer> unEditableNotes = new ArrayList<Integer>();
 
 	@SuppressWarnings("unchecked")
 	ArrayList<NoteDisplay> notesToDisplay = (ArrayList<NoteDisplay>)request.getAttribute("notesToDisplay");
@@ -851,18 +851,18 @@
     setupNotes();
     Element.observe(caseNote, "keyup", monitorCaseNote);
     Element.observe(caseNote, 'click', getActiveText);
-    <%Long num;
-			Iterator iterator = lockedNotes.iterator();
+    <%Integer num;
+			Iterator<Integer> iterator = lockedNotes.iterator();
 			while (iterator.hasNext())
 			{
-				num = (Long)iterator.next();%>
+				num = iterator.next();%>
             Element.observe('n<%=num%>', 'click', unlockNote);
     <%}
 
 			iterator = unLockedNotes.iterator();
 			while (iterator.hasNext())
 			{
-				num = (Long)iterator.next();%>
+				num = iterator.next();%>
             Element.observe('n<%=num%>', 'click', fullView);
     <%}%>
 
