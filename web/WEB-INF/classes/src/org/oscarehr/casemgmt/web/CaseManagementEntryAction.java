@@ -1601,8 +1601,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         request.setAttribute("change_flag", "true");
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-
         String demono = getDemographicNo(request);
+        String sessionFrmName = "caseManagementEntryForm" + demono;
+        CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);
+        CaseManagementNote note = sessionFrm.getCaseNote();
+        String noteTxt = cform.getCaseNote_note();        
+        noteTxt = org.apache.commons.lang.StringUtils.trimToNull(noteTxt);
+        note.setNote(noteTxt);
+        
+        
         request.setAttribute("demoName", getDemoName(demono));
         request.setAttribute("demoAge", getDemoAge(demono));
         request.setAttribute("demoDOB", getDemoDOB(demono));
