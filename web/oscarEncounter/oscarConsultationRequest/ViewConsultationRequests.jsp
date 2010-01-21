@@ -277,13 +277,16 @@ function setOrder(val){
                             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;                            
                             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();                            
                             theRequests.estConsultationVecByTeam(team,includeCompleted,startDate,endDate,orderby,desc,searchDate);                                                        
-                            boolean overdue;
-                            UserProperty up;
+                            boolean overdue;                            
                             UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("UserPropertyDAO");
                             String user = (String)session.getAttribute("user");
-                            
+                            UserProperty up = pref.getProp(user, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
                             String timeperiod = null;
-                            int countback;                            
+                            int countback;
+
+                            if ( up != null && up.getValue() != null && !up.getValue().trim().equals("")){
+                                timeperiod = up.getValue();
+                            }
 
                             for (int i = 0; i < theRequests.ids.size(); i++){
                             String id      = (String) theRequests.ids.elementAt(i);
@@ -302,21 +305,26 @@ function setOrder(val){
                             }
 
                             overdue = false;
-                            up = pref.getProp(user, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);
-                            timeperiod = null;
-                            if ( up != null && up.getValue() != null && !up.getValue().trim().equals("")){
-                                timeperiod = up.getValue();
-                            }
-
-                            
-                            countback = -1;
+                                                                                                                
                             if (timeperiod != null){ 
                                countback = Integer.parseInt(timeperiod);
                                countback = countback * -1;
-                            }
+                            
                            
-                            if( (status.equals("1") || status.equals("2") || status.equals("3")) && dateGreaterThan(date, Calendar.MONTH, countback) ) {
-                                overdue = true;
+                                if( (status.equals("1") || status.equals("2") || status.equals("3")) && dateGreaterThan(date, Calendar.MONTH, countback) ) {
+                                    overdue = true;
+                                }
+                            }
+                            else {
+                                countback = -7;  //7 days
+                                if( (status.equals("1") || status.equals("3")) && dateGreaterThan(date, Calendar.DAY_OF_YEAR, countback) ) {
+                                    overdue = true;
+                                }
+
+                                countback = -30;  //30 days
+                                if( status.equals("2") && dateGreaterThan(date, Calendar.DAY_OF_YEAR, countback) ) {
+                                    overdue = true;
+                                }
                             }
 
 
