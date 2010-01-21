@@ -2074,7 +2074,7 @@
         </action>    
                 
     </action-mappings>
-    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="10M"/>
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M"/>
     <message-resources parameter="oscarResources" />
     <message-resources parameter="HelpResources" key="help" />
     <message-resources parameter="MessageResources_program" key="pmm" />
