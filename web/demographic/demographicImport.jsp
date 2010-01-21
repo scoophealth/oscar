@@ -94,12 +94,12 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
 			enctype="multipart/form-data" onsubmit="displayAndDisable()">
                         <p><html:file property="importFile" value=""/></p>
 
-                        If providers do not have OHIP numbers -<br>
+                        If patient's providers do not have OHIP numbers:<br>
                         <html:radio property="matchProviderNames" value="true">
-                            Match providers in database by first and last names
+                            Match providers in database by first and last names (Recommended)
                         </html:radio><br>
                         <html:radio property="matchProviderNames" value="false">
-                            Import as new providers - no further matching
+                            Import as new - same provider may have multiple entries
                         </html:radio><br>
                         <p><input type="submit" name="Submit" value="Import (CMS spec 3.0)"></p>
 		</html:form>
