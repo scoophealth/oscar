@@ -143,14 +143,19 @@ public class ImportDemographicDataAction3 extends Action {
 	    is.close();
 	    os.close();
 	    
-	    if (fileExtMatch(ifile, "zip")) {
+	    if (matchFileExt(ifile, "zip")) {
 		ZipInputStream in = new ZipInputStream(new FileInputStream(ifile));
 		boolean noXML = true;
 		ZipEntry entry = in.getNextEntry();
+                String entryDir = "";
 		
 		while (entry!=null) {
-		    String ofile = tmpDir + entry.getName();
-		    if (fileExtMatch(ofile, "xml")) {
+                    String entryName = entry.getName();
+                    if (entry.isDirectory()) entryDir = entryName;
+                    if (entryName.startsWith(entryDir)) entryName = entryName.substring(entryDir.length());
+
+		    String ofile = tmpDir + entryName;
+		    if (matchFileExt(ofile, "xml")) {
 			noXML = false;
 			OutputStream out = new FileOutputStream(ofile);
 			while ((len=in.read(buf)) > 0) out.write(buf,0,len);
@@ -168,7 +173,7 @@ public class ImportDemographicDataAction3 extends Action {
 		in.close();
 		Util.cleanFile(ifile);
 
-	    } else if (fileExtMatch(ifile, "xml")) {
+	    } else if (matchFileExt(ifile, "xml")) {
                 logs.add(importXML(ifile, warnings, request));
 		importLog = makeImportLog(logs, tmpDir);
 	    } else {
@@ -1489,7 +1494,7 @@ public class ImportDemographicDataAction3 extends Action {
 	return importLog;
     }
 
-    boolean fileExtMatch(String filename, String ext) {
+    boolean matchFileExt(String filename, String ext) {
         if (Util.empty(filename) || Util.empty(ext)) return false;
         if (filename.length()<ext.length()+2) return false;
         if (filename.charAt(filename.length()-ext.length()-1)!='.') return false;
@@ -1736,7 +1741,7 @@ public class ImportDemographicDataAction3 extends Action {
     }
 
     String[] packMsgs(ArrayList err_demo, ArrayList err_data, ArrayList err_summ, ArrayList err_othe, ArrayList err_note, ArrayList warnings) {
-        if (err_demo.isEmpty() && !(err_data.isEmpty() && err_summ.isEmpty() && err_othe.isEmpty() && err_note.isEmpty())) {
+        if (!(err_demo.isEmpty() && err_data.isEmpty() && err_summ.isEmpty() && err_othe.isEmpty() && err_note.isEmpty())) {
             warnings.add(fillUp("", '-', 20)+" Demographic no. "+demographicNo+fillUp(" ", '-', 20));
         }
         warnings.addAll(err_demo);
