@@ -612,31 +612,48 @@
  %> <img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)"
 			style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> <%
  	if (!note.isDocument())
- 						{
- %> <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message
-			key="oscarEncounter.edit.msgEdit" /></a> <%
+ 	{
+		if (note.getNoteId()!=null)
+		{
+	 		%>
+	 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" 
+	 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+	 		<bean:message key="oscarEncounter.edit.msgEdit" />
+	 		</a> 
+			<%
+		}
  	}
- 						else if (note.isDocument() && !note.getProviderNo().equals("-1"))
- 						{ //document annotation
+	else if (note.isDocument() && !note.getProviderNo().equals("-1"))
+	{ //document annotation
 
- 							String url;
+		String url;
 
- 							Enumeration em = request.getAttributeNames();
- 							/*System.out.println("all attribute names ===");
- 							while(em.hasMoreElements())
- 							         System.out.println((String)em.nextElement());
- 							System.out.println("end ===");*/
- 							String winName = "docs" + demographicNo;
- 							int hash = Math.abs(winName.hashCode());
+		Enumeration em = request.getAttributeNames();
+		/*System.out.println("all attribute names ===");
+		while(em.hasMoreElements())
+		         System.out.println((String)em.nextElement());
+		System.out.println("end ===");*/
+		String winName = "docs" + demographicNo;
+		int hash = Math.abs(winName.hashCode());
 
- 							//System.out.println("request.getContextPath()="+request.getContextPath());
- 							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
- 							url = url + "return false;";
- 							//System.out.println("url=" + url);
- 							//System.out.println("Notes="+ request.getAttribute("Notes"));
- %> <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message
-			key="oscarEncounter.edit.msgEdit" /></a> <a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message
-			key="oscarEncounter.view.docView" /> </a> <%
+		//System.out.println("request.getContextPath()="+request.getContextPath());
+		url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
+		url = url + "return false;";
+		//System.out.println("url=" + url);
+		//System.out.println("Notes="+ request.getAttribute("Notes"));
+
+		if (note.getNoteId()!=null)
+		{
+			%> 
+	 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
+	 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+	 		<bean:message key="oscarEncounter.edit.msgEdit" />
+	 		</a>
+	 		<%
+		}
+ 		%>
+ 		
+ 		<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.docView" /> </a> <%
  	}
 
  						else
