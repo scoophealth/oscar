@@ -663,7 +663,7 @@ public class ProviderData {
         if (!filled(firstName) && !filled(lastName) && !filled(ohipNo)) return; //no information at all!
 
         //get latest external provider no
-	String sql = "select max(provider_no) from provider where provider_no like '-%'";
+	String sql = "select min(cast(provider_no as signed)) from provider";
         String providerNo = selectProviderNo(sql);
 
         //assign new external provider no
