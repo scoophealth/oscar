@@ -1210,7 +1210,7 @@ public class ImportDemographicDataAction3 extends Action {
                         err_othe.add("Error! No report file in xml ("+(i+1)+")");
                     } else {
                         String docFileName = "ImportReport"+(i+1)+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
-                        String docType=null, contentType=null, observationDate=null, updateDateTime=null, docCreator=admProviderNo;
+                        String docType=null, contentType="", observationDate=null, updateDateTime=null, docCreator=admProviderNo;
                         String reviewer=null, reviewDateTime=null, source=null;
 
                         if (Util.filled(repR[i].getFileExtensionAndVersion())) {
