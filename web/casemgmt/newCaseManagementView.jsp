@@ -378,7 +378,6 @@
 		{
 			savedId = cform.getCaseNote().getId();
 		}
-		//System.out.println("savedId " + savedId);
 
 		//Check user property for stale date and show appropriately
 		UserProperty uProp = (UserProperty)request.getAttribute(UserProperty.STALE_NOTEDATE);
@@ -407,7 +406,7 @@
 		}
 
 		dStaleDate = cal.getTime();
-		//System.out.println("STALE DATE " + dStaleDate);
+
 		long time1, time2;
 		String noteStr;
 		int length;
@@ -512,7 +511,6 @@
 		pos = noteSize - 1;
 		for (idx = 0; idx < noteSize; ++idx)
 		{
-			//System.out.println("in loop");
 			NoteDisplay note = notesToDisplay.get(idx);
 			noteStr = note.getNote();
 			Integer noteId = note.getNoteId();
@@ -646,22 +644,14 @@
 
  						else
  						{ //document note
- 							//System.out.println("history="+note.getHistory()+"whats between");
  							String url;
 
  							Enumeration em = request.getAttributeNames();
- 							/*System.out.println("all attribute names ===");
- 							while(em.hasMoreElements())
- 							         System.out.println((String)em.nextElement());
- 							System.out.println("end ===");*/
  							String winName = "docs" + demographicNo;
  							int hash = Math.abs(winName.hashCode());
 
- 							//System.out.println("request.getContextPath()="+request.getContextPath());
  							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
  							url = url + "return false;";
- 							//System.out.println("url=" + url);
- 							//System.out.println("Notes="+ request.getAttribute("Notes"));
  %> <a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message
 			key="oscarEncounter.view.docView" /> </a> <%
  	}
@@ -674,9 +664,6 @@
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> <%
  	}
 
- 						//time2 = System.currentTimeMillis();
- 						//System.out.println("largeNote() " + String.valueOf(time2 - time1));
- 						//time1 = time2;
  %>
 		<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
 		<div id="sumary<%=note.getNoteId()%>">
