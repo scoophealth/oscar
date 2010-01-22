@@ -535,7 +535,8 @@
 				}
 			}
 			noteStr = StringEscapeUtils.escapeHtml(noteStr);
-			fulltxt = fullTxtFormat.get(pos);
+			// for remote notes, the full text is always shown.
+			fulltxt = fullTxtFormat.get(pos) || note.getRemoteFacilityId()!=null;
 			bgColour = colourStyle.get(pos--);
 			if (fulltxt)
 			{
@@ -585,20 +586,23 @@
 			else
 			{
 				String rev = note.getRevision();
-				if (fulltxt)
+				if (note.getRemoteFacilityId()==null) // always display full note for remote notes
 				{
- 				%> 
- 					<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)"
-					style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> 
-				<%
- 				}
-				else
-				{
-				%> 
-					<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'> 
-				<%
+					if (fulltxt)
+					{
+	 				%> 
+	 					<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)"
+						style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> 
+					<%
+	 				}
+					else
+					{
+					%> 
+						<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'> 
+					<%
+					}
 				}
-
+				
 				if (note.getRemoteFacilityId()==null) // only allow printing for local notes
 				{
 				 	%> 
