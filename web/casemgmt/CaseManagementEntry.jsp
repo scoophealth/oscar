@@ -41,6 +41,7 @@
     {
     	// do nothing it's okay to not have this parameter
     }
+    int count_issues_display=0;
 %>
 <html>
 <head>
@@ -104,8 +105,8 @@
 			return true;
 		}
 	}
-	function validateIssuecheck(){
-		var i=0;
+	function validateIssuecheck(issueSize){
+		var i=0; 
 		for (i=0;i<issueSize;i++)
 		{
 			//alert("checked="+document.caseManagementEntryForm.elements["issueCheckList["+i+"].checked"].checked);
@@ -163,7 +164,7 @@
 		if (!validateEnounter()){
 			alert(str3); return false;
 		}
-		if (!validateIssuecheck()){
+		if (!validateIssuecheck(count_issues_display)){ 
 			alert(str1); return false;
 		}
 		if (!validateSignStatus()){
@@ -336,6 +337,7 @@ if (pId==null) pId="";
 			
 			if (!resolved || showResolved)
 			{
+				count_issues_display++;
 				counter++;
 			%>
 
@@ -508,9 +510,9 @@ if (pId==null) pId="";
 		<tr>
 			<td class="fieldValue" colspan="2">
 			<input type="submit" value="Save"
-				onclick="this.form.method.value='save';return validateSave();"> 
+				onclick="this.form.method.value='save';return validateSave(<%=count_issues_display%>);"> 
 			<input type="submit"
-				value="Save and Exit" onclick="this.form.method.value='saveAndExit';if (validateSave()) {return true;}else return false;">
+				value="Save and Exit" onclick="this.form.method.value='saveAndExit';if (validateSave(<%=count_issues_display%>)) {return true;}else return false;">
 			<input type="submit" 
 			    value="cancel" onclick = "this.form.method.value='cancel';return true;">
 			</td>
