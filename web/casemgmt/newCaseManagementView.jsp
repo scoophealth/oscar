@@ -289,11 +289,7 @@
 	</div>
 	</div>
 </html:form>
-<%
-	current = System.currentTimeMillis();
-	//System.out.println("NEW CASEMANAGEMENT VIEW page filters loaded " + String.valueOf(current-start));
-	start = current;
-%>
+
 <nested:form action="/CaseManagementEntry"
 	style="display:inline; margin-top:0; margin-bottom:0;">
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
@@ -368,9 +364,7 @@
 		</tr>
 	</table>
 	</div>
-	<div id="encMainDiv" style="width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;"><%
-		//System.out.println("Notes Size " + noteList.size());
-	%> 
+	<div id="encMainDiv" style="width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;">
 	<c:if test="${not empty notesToDisplay}">
 	<%
 		int idx = 0;
@@ -539,8 +533,6 @@
 					{
 						dispStatus = "active";
 					}
-					//System.out.println("dispDocNo :: dispFilename :: dispStatus" );
-					//System.out.println( dispDocNo+" "+dispFilename+" "+dispStatus);
 					//find docname, docno and docstatus
 				}
 			}
@@ -557,7 +549,6 @@
 				noteStr = noteStr.substring(0, length);
 			}
 
-			//System.out.println("Starting " + note.getId());
 			time1 = System.currentTimeMillis();
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
 	%>
@@ -629,10 +620,7 @@
 		String url;
 
 		Enumeration em = request.getAttributeNames();
-		/*System.out.println("all attribute names ===");
-		while(em.hasMoreElements())
-		         System.out.println((String)em.nextElement());
-		System.out.println("end ===");*/
+
 		String winName = "docs" + demographicNo;
 		int hash = Math.abs(winName.hashCode());
 
@@ -740,35 +728,29 @@
 		
 		
 		<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
+		<div style="display: block;">
+		<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
 		<%
 			ArrayList<String> issueDescriptions = note.getIssueDescriptions();
-			if (issueDescriptions.isEmpty())
-			{
-				%>
-					<div>&nbsp;</div>
-				<%
-			}
 			
 			if (issueDescriptions.size() > 0)
 			{
 				%>
-					<div style="display: block;">
-						<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
-						<ul style="float: left; list-style: circle inside none; margin: 0px;">
-							<%
-								for (String issueDescription : issueDescriptions)
-								{
-									%>
-										<li><%=issueDescription.trim()%></li>
-									<%
-								}
-							%>
-						</ul>
-						<br style="clear: both;">
-					</div>
+					<ul style="float: left; list-style: circle inside none; margin: 0px;">
+						<%
+							for (String issueDescription : issueDescriptions)
+							{
+								%>
+									<li><%=issueDescription.trim()%></li>
+								<%
+							}
+						%>
+					</ul>
 				<%
 			}
 		%>
+		<br style="clear: both;">
+		</div>
 		</div>
 		
 		</div>
@@ -780,31 +762,21 @@
 		</div>
 		<%
 			//if we are not editing note, remember note ids for setting event listeners
-						//Internet Explorer does not play nice with inserting javascript between divs
-						//so we store the ids here and list the event listeners at the end of this script
-						if (note.getNoteId()!=null && note.getNoteId() != savedId)
-						{
+			//Internet Explorer does not play nice with inserting javascript between divs
+			//so we store the ids here and list the event listeners at the end of this script
+			if (note.getNoteId()!=null && note.getNoteId() != savedId)
+			{
+				if (note.isLocked())
+				{
+					lockedNotes.add(note.getNoteId());
+				}
+				else if (!fulltxt)
+				{
+					unLockedNotes.add(note.getNoteId());
+				}
+			}
 
-							//if( note.isSigned() || (!note.isSigned() && note.getProviderNo().equals(provNo))) {
-							if (note.isLocked())
-							{
-								lockedNotes.add(note.getNoteId());
-							}
-							else if (!fulltxt)
-							{
-								unLockedNotes.add(note.getNoteId());
-							}
-							//}
-						}
-
-						//current = System.currentTimeMillis();
-						//System.out.println("NEW CASEMANAGEMENT VIEW display note " + note.getId() + " :  " + String.valueOf(current-start));
-						//start = current;
-					} //end for */
-
-					current = System.currentTimeMillis();
-					//System.out.println("NEW CASEMANAGEMENT VIEW display notes " + String.valueOf(current-start));
-					start = current;
+		} //end for */
 		%>
 	</c:if> <%
  	if (!found)
