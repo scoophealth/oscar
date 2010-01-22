@@ -598,8 +598,14 @@
   alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'> <%
  	}
- %> <img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)"
-			style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> <%
+
+	if (note.getNoteId()!=null)
+	{
+	 	%> 
+	 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> 
+		<%
+	}
+	
  	if (!note.isDocument())
  	{
 		if (note.getNoteId()!=null)
@@ -641,19 +647,21 @@
  		
  		<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.docView" /> </a> <%
  	}
+	else
+	{ //document note
+		String url;
 
- 						else
- 						{ //document note
- 							String url;
+		Enumeration em = request.getAttributeNames();
+		String winName = "docs" + demographicNo;
+		int hash = Math.abs(winName.hashCode());
 
- 							Enumeration em = request.getAttributeNames();
- 							String winName = "docs" + demographicNo;
- 							int hash = Math.abs(winName.hashCode());
-
- 							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
- 							url = url + "return false;";
- %> <a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message
-			key="oscarEncounter.view.docView" /> </a> <%
+		url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
+		url = url + "return false;";
+ 	%> 
+ 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> 
+ 	<bean:message key="oscarEncounter.view.docView" /> 
+	</a> 
+	<%
  	}
  %>
   <span id="txt<%=note.getNoteId()%>"><%=noteStr%></span> 
