@@ -603,6 +603,13 @@
 					}
 				}
 				
+				if (note.getRemoteFacilityId()!=null) // if it's a remote note, say where if came from on the top of the note
+				{
+				 	%> 
+				 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" /> <%=note.getLocation()%></div>
+					<%
+				}
+
 				if (note.getRemoteFacilityId()==null) // only allow printing for local notes
 				{
 				 	%> 
@@ -632,11 +639,8 @@
 					String winName = "docs" + demographicNo;
 					int hash = Math.abs(winName.hashCode());
 			
-					//System.out.println("request.getContextPath()="+request.getContextPath());
 					url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
 					url = url + "return false;";
-					//System.out.println("url=" + url);
-					//System.out.println("Notes="+ request.getAttribute("Notes"));
 			
 					if (note.getRemoteFacilityId()==null) // only allow editing for local notes
 					{

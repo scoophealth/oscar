@@ -23,7 +23,7 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	private IssueDAO issueDao=(IssueDAO) SpringUtils.getBean("IssueDAO");
 	
 	private CachedDemographicNote cachedDemographicNote;
-	private String location="remote: details n/a";
+	private String location="Integrated Facility : details n/a";
 	private String programName="Unavailable";
 	private String providerName="Unavailable";
 	private ArrayList<String> issueDescriptions=new ArrayList<String>();
@@ -35,7 +35,7 @@ public class NoteDisplayIntegrator implements NoteDisplay {
     	try {
     		// note location
 	        CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
-	        if (cachedFacility!=null) location="remote: "+cachedFacility.getName();
+	        if (cachedFacility!=null) location="Integrated Facility : "+cachedFacility.getName();
 	        
 	        // program name
 	    	FacilityIdIntegerCompositePk programPk=new FacilityIdIntegerCompositePk();
