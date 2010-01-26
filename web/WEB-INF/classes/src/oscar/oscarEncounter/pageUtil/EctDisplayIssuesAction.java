@@ -73,6 +73,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
             
             CaseManagementIssue issue = (CaseManagementIssue)issues.get(idx);
             String tmp = issue.getIssue().getDescription();
+System.err.println("----- "+tmp);
             String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             
             item.setTitle(strTitle);

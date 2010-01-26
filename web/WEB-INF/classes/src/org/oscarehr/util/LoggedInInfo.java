@@ -1,5 +1,7 @@
 package org.oscarehr.util;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Facility;
@@ -17,11 +19,13 @@ public class LoggedInInfo
 	private static Logger logger=MiscUtils.getLogger();
 	public static final ThreadLocal<LoggedInInfo> loggedInInfo = new ThreadLocal<LoggedInInfo>();
 
+	public HttpSession session=null;
 	public Facility currentFacility=null;
 	public Provider loggedInProvider=null;
 	public String initiatingCode=null;
 		
-	public String toString()
+	@Override
+    public String toString()
 	{
 		return(ReflectionToStringBuilder.toString(this));
 	}

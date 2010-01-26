@@ -64,19 +64,18 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
 import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.apache.commons.httpclient.HttpClientError;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory;
+import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.sun.net.ssl.SSLContext;
-import com.sun.net.ssl.TrustManager; 
-
-import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
-import org.apache.commons.logging.Log; 
-import org.apache.commons.logging.LogFactory;
+import com.sun.net.ssl.TrustManager;
 
 /**
  * <p>
