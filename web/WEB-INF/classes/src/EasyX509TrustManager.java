@@ -28,15 +28,11 @@
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import com.sun.net.ssl.TrustManagerFactory;
 import com.sun.net.ssl.TrustManager;
+import com.sun.net.ssl.TrustManagerFactory;
 import com.sun.net.ssl.X509TrustManager;
-import java.security.cert.*;
-import org.apache.commons.logging.Log; 
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -63,9 +59,6 @@ import org.apache.commons.logging.LogFactory;
 public class EasyX509TrustManager implements X509TrustManager
 {
     private X509TrustManager standardTrustManager = null;
-
-    /** Log object for this class. */
-    private static final Log LOG = LogFactory.getLog(EasyX509TrustManager.class);
 
     /**
      * Constructor for EasyX509TrustManager.
