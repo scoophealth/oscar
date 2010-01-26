@@ -106,12 +106,12 @@ public class CaisiIntegratorManager {
     public static List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
 		
     	@SuppressWarnings("unchecked")
-		List<CachedFacility> results=(List<CachedFacility>) basicDataCache.get("ALL FACILITIES");
+		List<CachedFacility> results=(List<CachedFacility>) basicDataCache.get("ALL_FACILITIES");
     	
     	if (results==null)
     	{
 			FacilityWs facilityWs = getFacilityWs();
-			results = facilityWs.getAllFacility();
+			results = Collections.unmodifiableList(facilityWs.getAllFacility());
 			basicDataCache.put("ALL_FACILITIES", results);
     	}
     	
@@ -152,6 +152,20 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
+    public static List<CachedProgram> getAllPrograms() throws MalformedURLException
+	{
+    	@SuppressWarnings("unchecked")
+		List<CachedProgram> allPrograms=(List<CachedProgram>) basicDataCache.get("ALL_PROGRAMS");
+		
+		if (allPrograms==null)
+		{
+			allPrograms=Collections.unmodifiableList(getProgramWs().getAllPrograms());
+			basicDataCache.put("ALL_PROGRAMS", allPrograms);
+		}
+		
+		return(allPrograms);			
+	}
+	
 	/**
 	 * @param type should not be null
 	 * @return a list of cached programs matching the program type
@@ -159,7 +173,7 @@ public class CaisiIntegratorManager {
 	public static ArrayList<CachedProgram> getRemotePrograms(String type) throws MalformedURLException {
 		ArrayList<CachedProgram> results = new ArrayList<CachedProgram>();
 
-		for (CachedProgram cachedProgram : getProgramWs().getAllPrograms()) {
+		for (CachedProgram cachedProgram : getAllPrograms()) {
 			if (type.equals(cachedProgram.getType())) results.add(cachedProgram);
 		}
 
@@ -167,7 +181,7 @@ public class CaisiIntegratorManager {
 	}
 
 	public static CachedProgram getRemoteProgram(FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
-		List<CachedProgram> programs = getProgramWs().getAllPrograms();
+		List<CachedProgram> programs = getAllPrograms();
 
 		for (CachedProgram cachedProgram : programs) {
 			if (facilityIdIntegerPkEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
@@ -222,7 +236,7 @@ public class CaisiIntegratorManager {
     	if (results==null)
     	{
 			ProviderWs providerWs = getProviderWs();
-			results = providerWs.getAllProviders();
+			results = Collections.unmodifiableList(providerWs.getAllProviders());
 			basicDataCache.put("ALL_PROVIDERS", results);
     	}
     	
