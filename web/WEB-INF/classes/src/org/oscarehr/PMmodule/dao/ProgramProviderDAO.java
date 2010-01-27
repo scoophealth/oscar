@@ -88,7 +88,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     }
 
     public List getProgramProvidersByProvider(String providerNo) {
-        if (providerNo == null || Integer.valueOf(providerNo) < 0) {
+        if (providerNo == null) {
             throw new IllegalArgumentException();
         }
 
@@ -101,7 +101,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     }
 
     public List getProgramProvidersByProviderAndFacility(String providerNo, Integer facilityId) {
-        if (providerNo == null || Integer.valueOf(providerNo) < 0) {
+        if (providerNo == null) {
             throw new IllegalArgumentException();
         }
 
@@ -130,7 +130,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     }
 
     public ProgramProvider getProgramProvider(String providerNo, Long programId) {
-        if (providerNo == null || Integer.parseInt(providerNo) < 0) {
+        if (providerNo == null) {
             throw new IllegalArgumentException();
         }
         if (programId == null || programId.intValue() <= 0) {
