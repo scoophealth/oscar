@@ -22,7 +22,8 @@
  * Hamilton
  * Ontario, Canada
 --%>
-<%@page import="java.util.*,net.sf.json.*,java.io.*,org.apache.xmlrpc.*,oscar.oscarRx.util.*,oscar.oscarRx.data.*"  %><%
+<%@page import="java.util.*,net.sf.json.*,java.lang.reflect.*,java.io.*,org.apache.xmlrpc.*,oscar.oscarRx.util.*,oscar.oscarRx.data.*"  %>
+<%
 System.out.println("In getAllerfyData");
 String atcCode =  request.getParameter("atcCode");
 String id = request.getParameter("id");
@@ -33,18 +34,29 @@ oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = new oscar.oscarRx
 oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;
                 RxDrugData drugData = new RxDrugData();
                 allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies);
-                System.out.println("allg size"+allergyWarnings.length);
-                
+                System.out.println("allg size="+allergyWarnings.length);
 
-    Hashtable d = new Hashtable();
 
-    d.put("id",id);
+   // Hashtable d = new Hashtable();
+    Hashtable d2=new Hashtable();
+
+  //  d.put("id",id);
+    d2.put("id",id);
     for(oscar.oscarRx.data.RxPatientData.Patient.Allergy allg:allergyWarnings){
                     System.out.println(">>>>>>>>>>>> "+allg.getAllergy().getDESCRIPTION());
-                     d.put("alleg",allg.getAllergy());
+                    System.out.println(">>>--- "+allg.getAllergy().getReaction());
+                    // d.put("alleg",allg.getAllergy());
+                     d2.put("DESCRIPTION", allg.getAllergy().getDESCRIPTION());
+                     d2.put("reaction", allg.getAllergy().getReaction());
                  }
-   
+
+   try{
     response.setContentType("text/x-json");
-    JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d );
+    JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d2 );
     jsonArray.write(out);
+    }
+   catch(Exception e){
+        e.getCause().printStackTrace();
+    }
+
 %>
