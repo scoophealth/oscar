@@ -1144,11 +1144,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				}
 			}
                                 
-           	issuelist.add(caseManagementIssue);
+			if (!containsIssue(issuelist, caseManagementIssue)) issuelist.add(caseManagementIssue);
         }
 	    return ongoing;
     }
 
+	private boolean containsIssue(List<CaseManagementIssue> issuelist, CaseManagementIssue issue)
+	{
+		for (CaseManagementIssue tempIssue : issuelist)
+		{
+			if (tempIssue.getId()!=null && tempIssue.getId().equals(issue.getId())) return(true);
+		}
+		
+		return(false);
+	}
+	
 	private void copyIssueDisplayToCaseManagementIssue(CaseManagementIssue caseManagementIssue, IssueDisplay issueDisplay) {
 		caseManagementIssue.setAcute("acute".equals(issueDisplay.acute));
 		caseManagementIssue.setCertain("certain".equals(issueDisplay.certain));
