@@ -257,7 +257,7 @@ function ts_makeSortable(table) {
         var txt = ts_getInnerText(cell);
         cell.innerHTML = '<a href="#"  class="sortheader" '+
         'onclick="ts_resortTable(this, '+i+');return false;">' +
-        txt+'<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a>';
+        txt+'<span class="sortarrow"></span></a>';
     }
 }
 
@@ -331,7 +331,7 @@ function ts_resortTable(lnk,clid) {
     for (var ci=0;ci<allspans.length;ci++) {
         if (allspans[ci].className == 'sortarrow') {
             if (getParent(allspans[ci],"table") == getParent(lnk,"table")) { // in the same table as us?
-                allspans[ci].innerHTML = '&nbsp;&nbsp;&nbsp;';
+                allspans[ci].innerHTML = '';
             }
         }
     }
@@ -546,27 +546,31 @@ body {
             <%@ include file="TopLinks2.jsp" %><!-- Row One included here-->
             <tr>
                 <%@ include file="SideLinksEditFavorites2.jsp"%><%-- <td></td>Side Bar File --%>
-                <td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
-                    <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+                <td width="70%" style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
 
-                        <tr>
-                            <td>
+
+                    <table cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+
+
+                        <tr><!--put this left-->
+                            <td valign="top" align="left">
                                 <%-- div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title" /></div --%>
-                                <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" styleId="drugForm">
-                                    <div id="rxText" style="float:left;"></div><div id="interactionsRxMyD" style="float:right;"></div><br style="clear:left;">
+
+                                <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" style="display: inline; margin-bottom:0;" styleId="drugForm">
+                                    <div id="rxText" style="float:left;"></div><br style="clear:left;">
 
                                     <html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
                                     <table border="0">
                                         <tr valign="top">
-                                            <td style="width:350px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
+                                            <td style="width:320px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
                                                 <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off"  />
                                                 <div id="autocomplete_choices"></div>
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
-                                            <td >
+                                            <td>
+                                                <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">
                                                 <a href="javascript:void(0);" onclick="callTreatments('searchString','treatmentsMyD')"><bean:message key="SearchDrug.msgDrugOfChoice" /></a>
                                                 <a href=#  title="Set most frequently used prescription quantity" onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultQuantity');return false;" style="font-style:normal;color:#6699CC"><bean:message key="provider.SetDefaultPrescriptionQuantity"/></a>
-                                                <%-- <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">  --%>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
@@ -574,10 +578,9 @@ body {
                                                     <input id="saveButton" type="button"  onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveAndPrescribe"/>" />
                                                     <input id="customDrug" type="button"  onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrug"/>" />
                                                     <input id="reset" type="button" title="Clear pending prescriptions" onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescription"/>" />
+                                                    <!--input id="testEvalJS" type="button"   onclick="functionOne();" value="testEvalJS" /-->
                                                 </div>
-
                                             </td>
-
                                             <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
                                                     <bean:message key="SearchDrug.drugSearchRouteLabel" />
                                                     <br>
@@ -594,15 +597,13 @@ body {
                                         </tr>
                                     </table>
                                 </html:form>
-
-
 <div id="previewForm" style="display:none;"></div>
                             </td>
                         </tr>
-                        <tr>
-                            <td>
+                        <tr><!--put this left-->
+                            <td align="right" valign="top">
                                 <div>
-                                    <table width="100%">
+                                    <table width="100%"><!--drug profile, view and listdrugs.jsp-->
                                         <tr>
                                             <td>
                                                 <div class="DivContentSectionHead">
@@ -648,11 +649,11 @@ body {
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr><!--move this left-->
                                             <td>
                                                 <table border="0">
                                                     <tr>
-                                                        <td >
+                                                        <td>
                                                             <div style="margin-top: 10px;  width: 100%">
                                                                 <table width="100%" cellspacing="0" cellpadding="0">
                                                                     <tr>
@@ -666,8 +667,8 @@ body {
                                                                             <%}if(active){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=active','drugProfile');"><bean:message key="SearchDrug.msgActive"/></a>
                                                                             <%}if(inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
                                                                             <%}if(all){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
-                                                                            <%}if(longterm_acute){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')">Longterm /Acute</a>
-                                                                            <%}if(longterm_acute_inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')">Longterm /Acute/Inactive</a>
+                                                                            <%}if(longterm_acute){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
+                                                                            <%}if(longterm_acute_inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcuteInactive"/></a>
                                                                             <%}%>
                                                                         </td>
                                                                         <td align="right">
@@ -694,45 +695,11 @@ body {
                                 </div>
                             </td>
                         </tr>
-
-
-                       <%--  <logic:notEqual name="bean" property="stashSize" value="0">
-                            <tr>
-                                <td> <html:form action="/oscarRx/stash">
-                                        <html:hidden property="action" />
-                                        <html:hidden property="stashId" />
-                                    </html:form>
-
-                                    <div class="DivContentSectionHead"><bean:message key="WriteScript.section5Title" /></div>
-                                </td>
-                            </tr>
-                           <tr>
-                                <td>
-                            <element>
-                                <table cellspacing="0" cellpadding="5">
-                                    <%int i = 0;%>
-                                    <logic:iterate id="rx" name="bean" property="stash" length="stashSize">
-                                        <tr>
-                                            <td><a href="javascript:submitPending(<%=i%>, 'edit');"><bean:message key="SearchDrug.msgEdit"/></a></td>
-                                            <td><a href="javascript:submitPending(<%=i%>, 'delete');"><bean:message key="SearchDrug.msgDelete"/></a></td>
-                                            <td><a href="javascript:submitPending(<%=i%>, 'edit');"> <bean:write name="rx" property="rxDisplay" /> </a></td>
-                                            <td><a href="javascript:ShowDrugInfo('<%=((oscar.oscarRx.data.RxPrescriptionData.Prescription) rx).getGenericName()%>');"><bean:message key="SearchDrug.msgInfo"/></a></td>
-                                        </tr>
-                                        <% i++;%>
-                                    </logic:iterate>
-                                </table></element>
-                            <br>
-
-                        <input type="button" class="ControlPushButton" onclick="javascript:window.location.href='viewScript.do';" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" /></td>
-                </tr>
-            </logic:notEqual>
-
-
-            <tr height="100%">
-                <td></td>
-            </tr>--%>
         </table>
     </td>
+                <td width="15%" valign="top">
+                    <div id="interactionsRxMyD" style="float:right;"></div>
+                </td>
 </tr>
 
 <tr>
@@ -800,7 +767,7 @@ body {
 
         <br/>
         Comment:<br/>
-        <textarea id="disComment" rows="3" cols="60"></textarea><br/>
+        <textarea id="disComment" rows="3" cols="45"></textarea><br/>
         <input type="button" onclick="$('discontinueUI').hide();" value="Cancel"/>
         <input type="button" onclick="Discontinue2($('disDrugId').value,$('disReason').value,$('disComment').value);" value="Discontinue"/>
 
@@ -923,8 +890,22 @@ body {
     function deletePrescribe(randomId){
         var data="randomId="+randomId;
         var url="<c:out value="${ctx}"/>" + "/oscarRx/rxStashDelete.do?parameterValue=deletePrescribe";
-        new Ajax.Request(url, {method: 'get',parameters:data});
+        new Ajax.Request(url, {method: 'get',parameters:data,onSuccess:function(transport){
+                oscarLog("in deletePrescribe success");
+            new Ajax.Request("UpdateInteractingDrugs.jsp", {method:'get',onSuccess:function(transport){
+                    var str=transport.responseText;
+                    str=str.replace('<script type="text/javascript">','');
+                    str=str.replace(/<\/script>/,'');
+                    eval(str);
+                    //oscarLog("str="+str);
+                    //console.log(transport.responseText);
+                    oscarLog("in asdfadf");
+                    <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
+                      callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
+                     </oscar:oscarPropertiesCheck>
+                }});
 
+    }});
     }
 
     function ThemeViewer(){
@@ -992,9 +973,12 @@ body {
                 //<%=severityOfReaction(allerg[i].getAllergy().getSeverityOfReaction())%>
 		//			<b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getAllergy().getOnSetOfReaction())%>
                 --%>
-                  var str = "Allergy: "+ json.alleg.DESCRIPTION + " Reaction: "+json.alleg.reaction;
+                 // var str = "Allergy: "+ json.alleg.DESCRIPTION + " Reaction: "+json.alleg.reaction;
+                 if(json.DESCRIPTION!=null&&json.reaction!=null){
+                      var str = "Allergy: "+ json.DESCRIPTION + " Reaction: "+json.reaction;
                   $('alleg_'+json.id).innerHTML = str;
                   oscarLog("-- "+ $('alleg_'+json.id).innerHTML);
+                 }
             }});
    }
    function checkIfInactive(id,dinNumber){
@@ -1148,10 +1132,9 @@ function popForm2(){
                var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:false,evalScripts:true});
          }
           //callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
-      <%--    <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
+          <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
           callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
           </oscar:oscarPropertiesCheck>
-      --%>
           callReplacementWebService("ListDrugs.jsp",'drugProfile');
 
     <%--
@@ -1187,7 +1170,7 @@ function upElement(li){
         oscarLog('In selection id');
         var url1=  "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
         var data1="randomId="+ran_number+"&drugId="+li.id+"&text="+text;
-        new Ajax.Updater('rxText',url1, {method:'get',parameters:data1,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
+        new Ajax.Updater('rxText',url1, {method:'get',parameters:data1,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
     }
 
 YAHOO.example.BasicRemote = function() {
@@ -1270,30 +1253,121 @@ function addFav(randomId,brandName){
         }})
    }
 }
-    var resHidden2 = 0;
+    var resHidden2 = 0;//not used
+    //not used
     function showHiddenRes(){
         var list = $$('div.hiddenResource');
-
+        oscarLog("list="+list);
         if(resHidden2 == 0){
+          oscarLog("resHidden2 is 0");
           list.invoke('show');
           resHidden2 = 1;
           $('showHiddenResWord').update('hide');
+          var url = "updateHiddenResources.jsp";
+          var params="hiddenResources=";
+          new Ajax.Request(url, {method: 'post',parameters:params});
         }else{
+            oscarLog("resHidden2 is not 0");
           $('showHiddenResWord').update('show');
           list.invoke('hide');
           resHidden2 = 0;
         }
     }
+    var showOrHide=0;
+    function showOrHideRes(hiddenRes){
+        oscarLog("hiddenRes="+hiddenRes);
+
+        hiddenRes=hiddenRes.replace(/\{/g,"");
+        hiddenRes=hiddenRes.replace(/\}/g,"");
+        hiddenRes=hiddenRes.replace(/\s/g,"");
+        var arr=hiddenRes.split(",");
+        oscarLog(arr);
+        var numberOfHiddenResources=0;
+        if(showOrHide==0){
+            numberOfHiddenResources=0;
+            for(var i=0;i<arr.length;i++){
+                var element=arr[i];
+                element=element.replace("mydrugref","");
+                var elementArr=element.split("=");
+                var resId=elementArr[0];
+                var resUpdated=elementArr[1];
+                var id=resId+"."+resUpdated;
+                oscarLog("id="+id);
+                $(id).show();
+                $('show_'+id).hide();
+                $('showHideWord').update('hide');
+
+                showOrHide=1;
+                numberOfHiddenResources++;
+            }
+        }else{
+            numberOfHiddenResources=0
+            for(var i=0;i<arr.length;i++){
+                var element=arr[i];
+                element=element.replace("mydrugref","");
+                var elementArr=element.split("=");
+                var resId=elementArr[0];
+                var resUpdated=elementArr[1];
+                var id=resId+"."+resUpdated;
+                oscarLog("id="+id);
+                $(id).hide();
+                $('show_'+id).show();
+                $('showHideWord').update('show');
+                showOrHide=0;
+                numberOfHiddenResources++;
+            }
+        }
+        $('showHideNumber').update(numberOfHiddenResources);
+
+    }
+   // var totalHiddenResources=0;
+
+
+    var addTextView=0;
+    function showAddText(randId){
+        var addTextId="addText_"+randId;
+        var addTextWordId="addTextWord_"+randId;
+        oscarLog("randId="+randId);
+        if(addTextView==0){
+            $(addTextId).show();
+            addTextView=1;
+            $(addTextWordId).update("less")
+        }
+        else{
+            $(addTextId).hide();
+            addTextView=0;
+            $(addTextWordId).update("more")
+        }
+    }
+
+    function ShowW(id,resourceId,updated){
+
+        var params = "resId="+resourceId+"&updatedat="+updated
+        var url='GetmyDrugrefInfo.do?method=setWarningToShow';
+        new Ajax.Updater('showHideTotal',url,{method:'get',parameters:params,asynchronous:true,evalScripts:true,onSuccess:function(transport){
+
+                //oscarLog("successfully sent data "+url);
+                $(id).show();
+                $('show_'+id).hide();
+
+            }});
+    }
 
    function HideW(id,resourceId,updated){
         var url = 'GetmyDrugrefInfo.do?method=setWarningToHide';
+        //oscarLog("hidew in searchdrug3");
         //callReplacementWebService("GetmyDrugrefInfo.do?method=setWarningToHide",'interactionsRxMyD');function callReplacementWebService(url,id){
         var ran_number=Math.round(Math.random()*1000000);
         var params = "resId="+resourceId+"&updatedat="+updated+"&rand="+ran_number;  //hack to get around ie caching the page
-
+        //totalHiddenResources++;
         //console.log("params: "+params);
-        new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true});
+        new Ajax.Updater('showHideTotal',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,onSuccess:function(transport){
 
+                //oscarLog("successfully sent data "+url);
+                $(id).hide();
+                $("show_"+id).show();
+
+            }});
     }
 
 
@@ -1371,7 +1445,9 @@ function updateQty(element){
                 str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
                 oscarLog("json.duration="+json.duration);
-
+                if(json.unitName!=null && json.unitName!="null"){
+                    str+=" "+json.unitName;
+                }
                 if(json.prn){
                     str=str+" prn";
                 } else{ }
@@ -1403,12 +1479,20 @@ function updateQty(element){
                 str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
                 oscarLog("json.duration="+json.duration);
+                if(json.unitName!=null && json.unitName!="null"){
+                    str+=" "+json.unitName;
+                }
                 if(json.prn){
                     str=str+" prn";
                 } else{ }
                 oscarLog("str="+str);
                 $(rxString).innerHTML=str;//display parsed string below instruction.
-                $(quantity).value=json.calQuantity;
+                var quantityText;
+                if(json.unitName!=null && json.unitName!="null"){
+                    quantityText=json.calQuantity+" "+json.unitName;
+                }else
+                    quantityText=json.calQuantity;
+                $(quantity).value=quantityText;
             }});
         return true;
     }
