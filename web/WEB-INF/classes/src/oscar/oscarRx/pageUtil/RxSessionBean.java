@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarRx.pageUtil;
 
@@ -37,33 +37,45 @@ import oscar.oscarRx.data.RxPrescriptionData;
 public class RxSessionBean {
     private String providerNo = null;
     private int demographicNo = 0;
-    
+
     private ArrayList<RxPrescriptionData.Prescription> stash = new ArrayList();
    // private ArrayList stash=new ArrayList();
     private int stashIndex = -1;
     private Hashtable allergyWarnings = new Hashtable();
     private Hashtable workingAllergyWarnings = new Hashtable();
     private ArrayList attributeNames = new ArrayList();
-    
-    
-    
-    
+    private Vector interactingDrugList=new Vector();//contains hash tables, each hashtable has the a
+
+
+
+
+
     //--------------------------------------------------------------------------
-    
+
+
+    public Vector getInteractingDrugList(){
+        return interactingDrugList;
+    }
+    public void setInteractingDrugList(Vector v){
+        interactingDrugList=v;
+    }
+    public void addInteractingDrugList(Hashtable ht){
+        interactingDrugList.add(ht);
+    }
     public String getProviderNo() {
         return this.providerNo;
     }
     public void setProviderNo(String RHS) {
         this.providerNo = RHS;
     }
-    
+
     public int getDemographicNo() {
         return this.demographicNo;
     }
     public void setDemographicNo(int RHS) {
         this.demographicNo = RHS;
     }
-    
+
     public ArrayList getAttributeNames() {
 	return this.attributeNames;
     }
@@ -77,9 +89,9 @@ public class RxSessionBean {
     public void addAttributeName(String RHS, int index) {
         this.attributeNames.set(index, RHS);
     }
-    
+
     //--------------------------------------------------------------------------
-    
+
     public int getStashIndex() {
         return this.stashIndex;
     }
@@ -88,7 +100,7 @@ public class RxSessionBean {
             this.stashIndex = RHS;
         }
     }
-    
+
     public int getStashSize() {
         return this.stash.size();
     }
@@ -106,16 +118,17 @@ public class RxSessionBean {
     }
     public RxPrescriptionData.Prescription[] getStash() {
         RxPrescriptionData.Prescription[] arr = {};
-        
+
         arr = (RxPrescriptionData.Prescription[])stash.toArray(arr);
-        
+
         return arr;
     }
-    
+
     public RxPrescriptionData.Prescription getStashItem(int index) {
         return (RxPrescriptionData.Prescription)stash.get(index);
     }
 
+    //return rx from its random id
     public RxPrescriptionData.Prescription getStashItem2(int randomId) {;
         RxPrescriptionData.Prescription psp=null;
         for (RxPrescriptionData.Prescription rx:stash){
@@ -131,20 +144,20 @@ public class RxSessionBean {
         //this.clearDDI();
         stash.set(index, item);
     }
-    
+
     public int addStashItem(RxPrescriptionData.Prescription item) {
    //    System.out.println("=====in addStashItem(a,b)========");
         int ret = -1;
-        
+
         int i;
         RxPrescriptionData.Prescription rx;
-        
+
         //check to see if the item already exists
         //by checking for duplicate brandname and gcn seq no
         //if it exists, return it, else add it.
         for(i=0;i<this.getStashSize(); i++) {
             rx = this.getStashItem(i);
-            
+
             if(item.isCustom()) {
                 if(rx.isCustom() && rx.getCustomName() !=null && item.getCustomName() != null) {
                     if(rx.getCustomName().equals(item.getCustomName())) {
@@ -163,7 +176,7 @@ public class RxSessionBean {
                 }
             }
         }
-        
+
         if(ret>-1) {
         //    System.out.println("if="+ret);
        //     System.out.println("=====end IF  addStashItem(a,b)========");
@@ -179,22 +192,22 @@ public class RxSessionBean {
         }
 
     }
-    
+
     public void removeStashItem(int index) {
     //    this.clearDDI();
     //    this.clearDAM();
         stash.remove(index);
     }
-    
+
     public void clearStash() {
     //    this.clearDDI();
     //    this.clearDAM();
         stash = new ArrayList();
     }
-    
-    
+
+
     //--------------------------------------------------------------------------
-    
+
     public boolean isValid() {
         if(this.demographicNo > 0
         && this.providerNo != null
@@ -203,7 +216,7 @@ public class RxSessionBean {
         }
         return false;
     }
-    
+
     private void preloadInteractions(){
        RxInteractionData interact = RxInteractionData.getInstance();
        interact.preloadInteraction(this.getAtcCodes());
@@ -212,35 +225,35 @@ public class RxSessionBean {
     public void clearAllergyWarnings(){
        allergyWarnings =null;
        allergyWarnings = new Hashtable();
-    }    
-    
-    
+    }
+
+
     private void preloadAllergyWarnings(String atccode){
        try{
          oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
          RxAllergyWarningWorker worker = new RxAllergyWarningWorker(this,atccode,allergies);
-         addToWorkingAllergyWarnings(atccode,worker);       
-         worker.start();         
+         addToWorkingAllergyWarnings(atccode,worker);
+         worker.start();
        }catch( Exception e ){e.printStackTrace();}
     }
-    
+
     public void addAllergyWarnings(String atc,oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergy){
        allergyWarnings.put(atc, allergy);
     }
-    
+
     public void addToWorkingAllergyWarnings(String atc,RxAllergyWarningWorker worker){
        workingAllergyWarnings.put(atc,worker);
     }
     public void removeFromWorkingAllergyWarnings(String atc){
        workingAllergyWarnings.remove(atc);
     }
-    
-    
+
+
     public oscar.oscarRx.data.RxPatientData.Patient.Allergy[] getAllergyWarnings(String atccode){
-      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;      
-      
+      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;
+
       //Check to see if Allergy checking property is on and if atccode is not null and if atccode is not "" or "null"
-      
+
       if (OscarProperties.getInstance().getBooleanProperty("RX_ALLERGY_CHECKING","yes") && atccode != null && !atccode.equals("") && !atccode.equals("null")){
           if (allergyWarnings.containsKey(atccode) ){
        //      System.out.println("Allergy has Already been searched!");
@@ -265,34 +278,34 @@ public class RxSessionBean {
 
           }else{
              System.out.println("NEW ATC CODE for allergy");
-             try{                                
+             try{
                 RxDrugData drugData = new RxDrugData();
                 oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
-                allergies = drugData.getAllergyWarnings(atccode,allAllergies);                 
-                    if (allergies != null){                   
-                       addAllergyWarnings(atccode,allergies);            
+                allergies = drugData.getAllergyWarnings(atccode,allAllergies);
+                    if (allergies != null){
+                       addAllergyWarnings(atccode,allergies);
                     }
              }catch(Exception e){
                  e.printStackTrace();
-             }         
+             }
           }
       }
       return allergies;
    }
-    
-    
-    
+
+
+
     public Vector getAtcCodes(){
-       RxPrescriptionData rxData = new RxPrescriptionData();                    
-       Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());      
-       RxPrescriptionData.Prescription rx;                
+       RxPrescriptionData rxData = new RxPrescriptionData();
+       Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
+       RxPrescriptionData.Prescription rx;
        for(int i=0;i<this.getStashSize(); i++) {
           rx = this.getStashItem(i);
           atcCodes.add(rx.getAtcCode());
        }
        return atcCodes;
     }
-    
+
     public RxDrugData.Interaction[] getInteractions(){
        RxDrugData.Interaction[] interactions = null;
        long start = System.currentTimeMillis();
@@ -305,17 +318,17 @@ public class RxSessionBean {
           RxInteractionData rxInteract =  RxInteractionData.getInstance();
           Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
 
-          System.out.println("atccode "+atcCodes.hashCode());
-          RxPrescriptionData.Prescription rx;                
+          System.out.println("atccode "+atcCodes);
+          RxPrescriptionData.Prescription rx;
           for(int i=0;i<this.getStashSize(); i++) {
              rx = this.getStashItem(i);
              if (rx.isValidAtcCode()){
                 atcCodes.add(rx.getAtcCode());
              }
           }
-          System.out.println("atccode 2"+atcCodes.hashCode());
+          System.out.println("atccode 2"+atcCodes);
           if (atcCodes != null && atcCodes.size() > 1){
-             try{        
+             try{
                 interactions = rxInteract.getInteractions(atcCodes);
                 System.out.println("interactions "+interactions.length);
                  for(int i =0 ; i < interactions.length;i++){
@@ -326,12 +339,12 @@ public class RxSessionBean {
                  e.printStackTrace();
               }
           }
-          
-       end2 = System.currentTimeMillis() - start2;         
-       }catch(Exception e2){}                 
-       long end = System.currentTimeMillis() - start;      
-       
-       
+
+       end2 = System.currentTimeMillis() - start2;
+       }catch(Exception e2){}
+       long end = System.currentTimeMillis() - start;
+
+
        System.out.println("took "+end+ "milliseconds vs "+end2);
        return interactions;
     }
