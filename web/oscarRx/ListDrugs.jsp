@@ -81,10 +81,10 @@ if (heading != null){
             <th align="left"><b>Days to Exp</b></th>
             <th align="left"><b>LT Med</b></th>
             <th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
-            <th align="center" width="75px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
-            <th align="center" width="75px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
-            <th align="center" width="75px"><b>Discontinue</b></th>
-            <th align="center" width="20px">&nbsp;</th>
+            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
+            <th align="center" width="35px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
+            <th align="center" width="35px"><b>Discontinue</b></th>
+            <th align="center" width="15px">&nbsp;</th>
             <th align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></th>
         </tr>
 
@@ -98,7 +98,7 @@ if (heading != null){
 
             long now = System.currentTimeMillis();
             long month = 1000L * 60L * 60L * 24L * 30L;
-            
+
             for (Drug prescriptDrug : prescriptDrugs) {
                 boolean isPrevAnnotation=false;
                 String styleColor = "";
@@ -139,11 +139,11 @@ if (heading != null){
             <td valign="top"><a id="rxDate_<%=prescriptDrug.getId()%>"   <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a></td>
             <td valign="top"><%=prescriptDrug.daysToExpire()%></td>
             <td valign="top"><%if(prescriptDrug.isLongTerm()){%>*<%}%> </td>
-            
+
             <td><a id="prescrip_<%=prescriptDrug.getId()%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
-            <td width="75px" align="center" valign="top">
+            <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                <a name="rePrescribe" id="reRx_<%=prescriptDrug.getId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)"> <%="Represcribe"%></a>
+                <a name="rePrescribe" id="reRx_<%=prescriptDrug.getId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)">ReRx</a>
                 <%} else {%> <%--TODO: redo this part for rx3--%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
                     <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
@@ -152,25 +152,25 @@ if (heading != null){
                 </form>
                 <%}%>
             </td>
-            <td width="75px" align="center" valign="top">
+            <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                   <a id="del_<%=prescriptDrug.getId()%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);"><%="Delete"%></a>
+                   <a id="del_<%=prescriptDrug.getId()%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">Del</a>
                 <%}%>
             </td>
-            <td width="75px" align="center" valign="top">
+            <td width="20px" align="center" valign="top">
                 <%if(!prescriptDrug.isDiscontinued()){%>
-                <a id="discont_<%=prescriptDrug.getId()%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discontinue</a>
+                <a id="discont_<%=prescriptDrug.getId()%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discon</a>
                 <%}else{%>
                   <%=prescriptDrug.getArchivedReason()%>
                 <%}%>
             </td>
 
-            <td width="20px" align="center" valign="top">
-                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> 
+            <td width="10px" align="center" valign="top">
+                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
                     <%if(!isPrevAnnotation){%> <img src="../images/notes.gif" alt="rxAnnotation" border="0"><%} else{%><img src="../images/filledNotes.gif" alt="rxFilledNotes" border="0"> <%}%></a>
             </td>
-            
-            <td align="center" valign="top">
+
+            <td width="10px" align="center" valign="top">
                 <%
                 if (prescriptDrug.getRemoteFacilityName() != null){ %>
                     <%=prescriptDrug.getRemoteFacilityName()%>
@@ -182,7 +182,7 @@ if (heading != null){
 
 
             </td>
-            
+
         </tr>
         <%}%>
     </table>
@@ -214,7 +214,7 @@ String getName(Drug prescriptDrug){
         if (!drug.isExpired() && (drug.getEndDate().getTime() - referenceTime <= durationToSoon)) {  // ref = now and duration will be a month
             sb.append("expireInReference ");
         }
-        
+
         if (!drug.isExpired() && !drug.isArchived()) {
             sb.append("currentDrug ");
         }
@@ -247,7 +247,7 @@ String getName(Drug prescriptDrug){
 
 
 
-        
+
 
         return retval.substring(0,retval.length())+"\"";
 
