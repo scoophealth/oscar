@@ -251,7 +251,14 @@ try{
         rx.setRandomId(rand);
 
         request.setAttribute("BoxNoFillFirstLoad", "true");
-
+        String qText=rx.getQuantity();
+        System.out.println("qText in represcribe2="+qText);
+        if(RxUtil.isStringToNumber(qText)){}
+        else{
+            rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
+            rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
+        }
+        System.out.println("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
         //trim Special
        String spec=RxUtil.trimSpecial(rx);
        rx.setSpecial(spec);
@@ -274,7 +281,7 @@ try{
         
         //   System.out.println("script_no ="+script_no);
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(), "" + beanRX.getDemographicNo(), auditStr.toString());
-        RxUtil.printStashContent(beanRX);
+        //RxUtil.printStashContent(beanRX);
         request.setAttribute("listRxDrugs", listReRx);
 }catch(Exception e){e.printStackTrace();}
       //  System.out.println("================END represcribe2 of RxRePrescribeAction.java=================");
@@ -312,7 +319,7 @@ try{
                        //     p("id of drug returned",""+prescriptDrug.getId());
                                 //add all long term med drugIds to an array.
                                 if (prescriptDrug.isLongTerm()) {
-                                    System.out.println("long term med's prescriptDrug.getLocalDrugId()=" + prescriptDrug.getId());
+                                    //System.out.println("long term med's prescriptDrug.getLocalDrugId()=" + prescriptDrug.getId());
                                     listLongTermMed.add(prescriptDrug.getId());
                                 }
                         }
@@ -337,7 +344,14 @@ try{
 
             //give rx a random id.
             rx.setRandomId(rand);
-
+            String qText=rx.getQuantity();
+            System.out.println("qText in represcribe2="+qText);
+            if(RxUtil.isStringToNumber(qText)){}
+            else{
+                rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
+                rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
+            }
+            System.out.println("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
             String spec=RxUtil.trimSpecial(rx);
             rx.setSpecial(spec);
 
@@ -352,7 +366,7 @@ try{
             //allocate space for annotation
             beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));            
         }
-        RxUtil.printStashContent(beanRX);
+        //RxUtil.printStashContent(beanRX);
         request.setAttribute("listRxDrugs", listLongTerm);
         
      //   System.out.println("================END repcbAllLongTerm of RxRePrescribeAction.java=================");
