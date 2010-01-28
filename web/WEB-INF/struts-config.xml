@@ -237,6 +237,7 @@
             <form-property name="rxPageSizeProperty" type="org.oscarehr.common.model.UserProperty" />
             <form-property name="rxDefaultQuantityProperty" type="org.oscarehr.common.model.UserProperty" />
             <form-property name="rxProfileViewProperty" type="org.oscarehr.common.model.UserProperty" />
+            <form-property name="rxUseRx3Property" type="org.oscarehr.common.model.UserProperty" />
         </form-bean>
         <form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
             <form-property name="myOscarLoginId" type="java.lang.String" />
@@ -619,6 +620,7 @@
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug3.jsp"  path="/oscarRx/rxStashDelete" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxStashAction">
+            <forward name="success" path="/oscarRx/SearchDrug3.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug3.jsp"  path="/oscarRx/UpdateScript" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
         </action>
@@ -699,6 +701,7 @@
         </action>
         <action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/deleteAllergy" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteAllergyAction">
             <forward name="success" path="/oscarRx/ShowAllergies.jsp" />
+            <forward name="successRx3" path="/oscarRx/ShowAllergies2.jsp" />
         </action>
         <action input="/oscarRx/ChooseAllergy.jsp" path="/oscarRx/deleteAllergy2" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteAllergyAction">
             <forward name="success" path="/oscarRx/ShowAllergies2.jsp" />
@@ -726,6 +729,8 @@
         </action>
         <action input="/oscarRx/MyDrugrefDisplay.jsp" name="FrmForm" path="/oscarRx/GetmyDrugrefInfo" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction">
             <forward name="success" path="/oscarRx/MyDrugrefDisplay.jsp"></forward>
+            <forward name="updateInteractions" path="/oscarRx/InteractionDisplay2.jsp"></forward>
+            <forward name="updateResources" path="/oscarRx/updateMyDrugrefResource.jsp"></forward>
         </action>
         <action input="/oscarRx/ViewScript2.jsp"  path="/oscarRx/GetRxPageSizeInfo" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRxPageSizeInfoAction">
             <forward name="success" path="/oscarRx/ViewScript2.jsp"></forward>
@@ -1178,6 +1183,7 @@
             <forward name="genRxPageSize"   path="/provider/setGenRxPageSizeProperty.jsp"/>
             <forward name="genRxDefaultQuantity"     path="/provider/setGenRxDefaultQuantityProperty.jsp"/>
             <forward name="genRxProfileView"     path="/provider/setGenRxProfileViewProperty.jsp"/>
+            <forward name="genRxUseRx3"     path="/provider/setToUseRx3.jsp"/>
         </action>
         <action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
             <forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
