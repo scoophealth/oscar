@@ -159,7 +159,10 @@ function searchAll() {
 			name="search_mode" value="search_hin"
 			<%=request.getParameter("search_mode").equals("search_hin")?"checked":""%>>
 		<bean:message key="demographic.demographicsearch2apptresults.optHIN" /></td>
-		<td></td>
+		<td class="blueText" nowrap>
+                    <input type="radio" name="search_mode" value="search_chart_no" <%=request.getParameter("search_mode").equals("search_chart_no")?"checked":""%>>
+                    <bean:message key="demographic.demographicsearch2apptresults.optChart"/>
+                </td>
 	</tr>
 	<%
   String temp=null;
