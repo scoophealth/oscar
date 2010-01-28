@@ -291,10 +291,19 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 ct.setText(new Phrase(12, this.clinicName, font));
                 ct.go();
                 //render clnicaTel;
-                bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 190, (page.height() - 70), 0);
-                //render clinicFax;
-                writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 190, (page.height() - 80), 0);
+                //bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                if(this.clinicTel.length()<=13){
+                    writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + this.clinicTel, 188, (page.height() - 70), 0);
+                    //render clinicFax;
+                    writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.height() - 80), 0);
+                }else{
+                    String str1=this.clinicTel.substring(0, 13);
+                    String str2=this.clinicTel.substring(13);
+                    writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Tel:" + str1, 188, (page.height() - 70), 0);
+                    writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, str2, 188, (page.height() - 80), 0);
+                    writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.height() - 88), 0);
+                }
                 //render line after header
                 //cb.setRGBColorStrokeF(0f, 0f, 0f);
                 //cb.setLineWidth(0.8f);
@@ -468,7 +477,7 @@ String clinicFax;
         p("-------------");
         while(fff.hasMoreElements())
             System.out.println(fff.nextElement());
-        
+
         String additNotes = req.getParameter("additNotes");
         String[] rxA = rx.split(newline);
         List<String> listRx = new ArrayList();
@@ -614,7 +623,7 @@ String clinicFax;
         catch (DocumentException dex) {
             baosPDF.reset();
             throw dex;
-        } 
+        }
         catch(Exception e){
             e.printStackTrace();
         }finally {
