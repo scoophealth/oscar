@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarRx.util;
 
@@ -33,6 +33,7 @@ import oscar.oscarRx.data.RxPrescriptionData;
 import java.util.regex.*;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import oscar.oscarDB.DBHandler;
@@ -167,7 +168,7 @@ public class RxUtil {
     }
 
     /**
-     * Method for calculating creatinine clearance takes age, weight in kg and CREATININE values an returns Clcr 
+     * Method for calculating creatinine clearance takes age, weight in kg and CREATININE values an returns Clcr
      * age must be greater than zero.
      * weight must be greater than zero
      */
@@ -247,22 +248,66 @@ public class RxUtil {
         }
         return nPerDay;
     }
-
+    public static String getUnitNameFromQuantityText(String qStr){
+            Pattern p1 = Pattern.compile("\\d+");
+            Matcher m1 = p1.matcher(qStr);
+            if (m1.find()) {
+                String qNum = qStr.substring(m1.start(), m1.end());
+                //get the quantity unit
+                String qUnit = qStr.replace(qNum, "").trim();
+                if (qUnit != null && qUnit.length() > 0) {
+                    return qUnit;
+                }
+            }
+            return null;
+    }
+        public static String getQuantityFromQuantityText(String qStr){
+            Pattern p1 = Pattern.compile("\\d+");
+            Matcher m1 = p1.matcher(qStr);
+            if (m1.find()) {
+                String qNum = qStr.substring(m1.start(), m1.end());
+                return qNum;
+            }
+            return null;
+    }
     public static String findDuration(RxPrescriptionData.Prescription rx) {//calculate duration based on quantity, takemax,takemin,frequency,durationUnit.
         //get frequency,takemax,takemin,durationUnit by parsing special.
-        instrucParser(rx.getSpecial(), rx);
-        double qtyD = Double.parseDouble(rx.getQuantity());
-        double takeMax = (double) rx.getTakeMax();
-        double nPerDay = findNPerDay(rx.getFrequencyCode());
-        double nDays = findNDays(rx.getDurationUnit());
-        p("qtyD--takeMax--nPerDay--nDays--" + qtyD + " " + takeMax + " " + nPerDay + " " + nDays);
-        if (takeMax != 0d) {
-            double durD = qtyD / (takeMax) * nPerDay * nDays;
-            int durInt = (int) durD;
-            p("durInt", Integer.toString(durInt));
-            return Integer.toString(durInt);
+        instrucParser(rx);
+        System.out.println("after  instrucParser,quantity="+rx.getQuantity());
+        String qStr = rx.getQuantity();
+        if (rx.getUnitName() == null) {
+            qStr = qStr.trim();
+            double qtyD;
+            Pattern p1 = Pattern.compile("\\d+");
+            Matcher m1 = p1.matcher(qStr);
+            if (m1.find()) {
+                String qNum = qStr.substring(m1.start(), m1.end());
+                qtyD = Double.parseDouble(qNum);
+                //get the quantity unit
+                String qUnit = qStr.replace(qNum, "").trim();
+                if (qUnit != null && qUnit.length() > 0) {
+                    rx.setUnitName(qUnit);
+                    return null; //if a quantity unit is specified, can't calculate duration.
+                } else {
+                    double takeMax = (double) rx.getTakeMax();
+                    double nPerDay = findNPerDay(rx.getFrequencyCode());
+                    double nDays = findNDays(rx.getDurationUnit());
+                    p("qtyD--takeMax--nPerDay--nDays--" + qtyD + " " + takeMax + " " + nPerDay + " " + nDays);
+                    if (takeMax != 0d) {
+                        double durD = qtyD / (takeMax) * nPerDay * nDays;
+                        int durInt = (int) durD;
+                        p("durInt", Integer.toString(durInt));
+                        return Integer.toString(durInt);
+                    } else {
+                        return null;
+                    }
+                }
+            } else {
+                logger.error("quantity is not specified");
+                return null;
+            }
         } else {
-            return "0";
+            return null;
         }
     }
 
@@ -279,10 +324,11 @@ public class RxUtil {
         rx.setSpecial("");
     }
 
-    public static void instrucParser(String instructions, RxPrescriptionData.Prescription rx) {
+    public static void instrucParser(RxPrescriptionData.Prescription rx) {
         if (rx == null) {
             return;
         }
+        String instructions = rx.getSpecial();
         if (instructions == null) {
             instructions = "";
         }
@@ -337,14 +383,15 @@ public class RxUtil {
         if (instructions.trim().length() == 0) {
             setEmptyValues(rx);
         } else {
-            String[] prns={"\\s(?i)prn$","^(?i)prn\\s+","\\s+(?i)prn\\s+"};
-            for(String s:prns){
-            Pattern prnP = Pattern.compile(s);
-            Matcher prnM = prnP.matcher(instructions);
-            if (prnM.find()) {
-//            p("prn is true");
-                prn = true;
-            }}
+            String[] prns = {"\\s(?i)prn$", "^(?i)prn\\s+", "\\s+(?i)prn\\s+"};
+            for (String s : prns) {
+                Pattern prnP = Pattern.compile(s);
+                Matcher prnM = prnP.matcher(instructions);
+                if (prnM.find()) {
+                    //            p("prn is true");
+                    prn = true;
+                }
+            }
 
             /*       String[] routes = {"\\s(?i)PO$", "(?i)SL$", "(?i)IM$", "(?i)SC$", "(?i)PATCH$", "(?i)TOP\\.$", "(?i)INH$",
             "(?i)SUPP$", "(?i)O\\.D\\.$", "(?i)O\\.S\\.$", "(?i)O\\.U\\.$", "(?i)OD$", "(?i)OS$", "(?i)OU$"};
@@ -646,10 +693,20 @@ public class RxUtil {
             double nPerDay = 0d;//number of drugs per day
             double nDays = 0d;//number of days per duration unit
 
-
+            System.out.println("in instrucParser,unitName="+rx.getUnitName());
+            boolean isUnitNameUsed=true;
+            if(rx.getUnitName()==null)
+                isUnitNameUsed=false;
+            else if(rx.getUnitName().equalsIgnoreCase("null"))
+                isUnitNameUsed=false;
+            else
+                isUnitNameUsed=true;
             //calculate quantity based on duration, frequency, duration unit, takeMin , takeMax
-            if (duration.equals("0") || durationUnit.equals("") || takeMin.equals("0") || takeMax.equals("0") || frequency.equals("")) {
+            //if unitName is used, don't calculate quantity or duration
+            if (isUnitNameUsed || duration.equals("0") || durationUnit.equals("") || takeMin.equals("0") || takeMax.equals("0") || frequency.equals("")) {
+                System.out.println("in instrucParser,if="+rx.getUnitName()+"--"+duration+" --"+durationUnit+"-- "+ takeMin+"-- "+ takeMax+"--"+frequency);
             } else {
+
 
                 nPerDay = findNPerDay(frequency);
                 nDays = findNDays(durationUnit);
@@ -657,6 +714,7 @@ public class RxUtil {
                 //quantity=takeMax * nDays * duration * nPerDay
                 double quantityD = (Double.parseDouble(takeMax)) * nPerDay * nDays * (Double.parseDouble(duration));
                 quantity = (int) quantityD;
+                System.out.println("in instrucParser,else="+quantity+"-- "+takeMax+" --"+nPerDay+"-- "+ nDays+"-- "+ duration);
             }
 
             //if drug route is in rx is different from specified, set it to specified.
@@ -673,6 +731,7 @@ public class RxUtil {
             }
             rx.setDurationUnit(durationUnit);
             rx.setPrn(prn);
+            System.out.println("in instrucParser,quantity="+quantity +" ; unitName="+rx.getUnitName());
             if (quantity != 0) {
                 rx.setQuantity(Integer.toString(quantity));
             }
@@ -694,6 +753,22 @@ public class RxUtil {
         return;
     }
 
+    public static boolean isStringToNumber(String s){
+        boolean retBool=false;
+        Pattern p1=Pattern.compile("\\d+");
+        Matcher m1=p1.matcher(s);
+        if(m1.find()){
+            String numStr=s.substring(m1.start(), m1.end());
+            String restStr=s.replace(numStr, "").trim();
+            if(restStr!=null&&restStr.length()>0)
+                retBool=false;
+            else
+                retBool=true;
+        }else
+            retBool=false;
+
+        return retBool;
+    }
     public static String trimSpecial(RxPrescriptionData.Prescription rx) {
         String special = rx.getSpecial();
         //remove Qty:num
@@ -752,16 +827,19 @@ public class RxUtil {
             special = special.substring(special.indexOf("Rub Well In"));
         }
 
+        String unitName=rx.getUnitName();
+        if(unitName!=null && special.indexOf(unitName)!=-1)
+            special=special.replace(unitName, "");
         return special.trim();
 
     }
 
     public static void printStashContent(oscar.oscarRx.pageUtil.RxSessionBean bean) {
-           p("***drugs in present stash,stash size", "" + bean.getStashSize());
+        p("***drugs in present stash,stash size", "" + bean.getStashSize());
         for (int j = 0; j < bean.getStashSize(); j++) {
             try {
                 RxPrescriptionData.Prescription rxTemp = bean.getStashItem(j);
-                        p("stash index", "" + j);
+                p("stash index", "" + j);
                 p("randomId", "" + rxTemp.getRandomId());
                 p("generic name", rxTemp.getGenericName());
                 p("special", rxTemp.getSpecial());
@@ -774,24 +852,40 @@ public class RxUtil {
                 e.printStackTrace();
             }
         }
-             p("***done***");
+        p("***done***");
 
     }
 
     public static void setDefaultSpecialQuantityRepeat(RxPrescriptionData.Prescription rx) {
-        
-            rx.setSpecial("1 OD");
-            rx.setQuantity(getDefaultQuantity());
-            rx.setRepeat(0);
-        
+
+        rx.setSpecial("1 OD");
+        rx.setQuantity(getDefaultQuantity());
+        rx.setRepeat(0);
+
     }
 
     private static void setResultSpecialQuantityRepeat(RxPrescriptionData.Prescription rx, ResultSet rs) {
         try {
+            String qStr=rs.getString("quantity");
+            Pattern p1=Pattern.compile("\\d+");
+            Matcher m1=p1.matcher(qStr);
+            if(m1.find()){
+                String qNum=qStr.substring(m1.start(), m1.end());
+                rx.setQuantity(qNum);
+                //get the quantity unit
+                String qUnit=qStr.replace(qNum, "").trim();
+                if(qUnit!=null && qUnit.length()>0){
+                    System.out.println("changing unitName in setResultSpecialQuantityRepeat ");
+                    rx.setUnitName(qUnit);
+                }
+            }
+            rx.setUnitName(rs.getString("unitName"));
+
+            rx.setRepeat(rs.getInt("repeat"));
             rx.setSpecial(rs.getString("special"));
             rx.setSpecial(trimSpecial(rx));
-            rx.setQuantity(rs.getString("quantity"));
-            rx.setRepeat(rs.getInt("repeat"));
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -936,25 +1030,27 @@ public class RxUtil {
     }
 
     //check to see if a represcription of a med is clicked twice.
-    public static boolean isRxUniqueInStash(final oscar.oscarRx.pageUtil.RxSessionBean beanRx,final RxPrescriptionData.Prescription rx){
-        boolean unique=true;
+    public static boolean isRxUniqueInStash(final oscar.oscarRx.pageUtil.RxSessionBean beanRx, final RxPrescriptionData.Prescription rx) {
+        boolean unique = true;
 
         for (int j = 0; j < beanRx.getStashSize(); j++) {
             try {
                 RxPrescriptionData.Prescription rxTemp = beanRx.getStashItem(j);
-                p("BN rx  ",rx.getBrandName());
-                p("BN in stash",rxTemp.getBrandName());
-                p("GCN  ",""+rx.getGCN_SEQNO());
-                p("GCN in stash",""+rxTemp.getGCN_SEQNO());
-                if(rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO()==rxTemp.getGCN_SEQNO()) {
-                    p("unique turning false");
-                    unique=false;
+                //p("BN rx  ",rx.getBrandName());
+                //p("BN in stash",rxTemp.getBrandName());
+                //p("GCN  ",""+rx.getGCN_SEQNO());
+                //p("GCN in stash",""+rxTemp.getGCN_SEQNO());
+                if (rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO() == rxTemp.getGCN_SEQNO()) {
+                    //p("unique turning false");
+                    unique = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(unique) p("unique is true");
+        if (unique) {
+            p("unique is true");
+        }
         return unique;
     }
 
