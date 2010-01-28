@@ -1,28 +1,28 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
+ *
+ * This software was written for the
+ * Department of Family Medicine
  * McMaster Unviersity test2
- * Hamilton 
- * Ontario, Canada 
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 <%
@@ -127,23 +127,23 @@
         <title><bean:message key="dms.documentReport.title" /></title>
         <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
         <meta http-equiv="Cache-Control" content="no-cache">
-        
+
         <link rel="stylesheet" type="text/css"
               href="../share/css/OscarStandardLayout.css" />
         <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
         <script type="text/javascript" src="../share/javascript/prototype.js"></script>
         <script type="text/javascript" src="../share/javascript/effects.js"></script>
         <script type="text/javascript" src="../share/javascript/controls.js"></script>
-        
+
         <link rel="stylesheet" type="text/css"
               href="../share/css/niftyCorners.css" />
         <link rel="stylesheet" type="text/css" href="dms.css" />
         <link rel="stylesheet" type="text/css"
               href="../share/css/niftyPrint.css" media="print" />
-        
+
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-        
-        
+
+
         <script type="text/javascript" src="../share/javascript/nifty.js"></script>
         <script type="text/javascript" src="../phr/phr.js"></script>
         <script type="text/javascript">
@@ -200,7 +200,7 @@
         }
 
         function submitForm(actionPath) {
-    
+
             var form = document.forms[2];
             if(verifyChecks(form)) {
                 form.action = actionPath;
@@ -212,7 +212,7 @@
         }
 
         function submitPhrForm(actionPath, windowName) {
-    
+
             var form = document.forms[2];
             if(verifyChecks(form)) {
                 form.onsubmit = phrActionPopup(actionPath, windowName);
@@ -226,8 +226,8 @@
         }
 
         function verifyChecks(t){
-   
-            if ( t.docNo == null ){ 
+
+            if ( t.docNo == null ){
                 alert("No documents selected");
                 return false;
             }else{
@@ -240,28 +240,28 @@
                         }
                     }
                 }
-                else 
+                else
                     oneChecked = t.docNo.checked ? 1 : 0;
-        
+
                 if ( oneChecked == 0 ){
                     alert("No documents selected");
-                    return false;            
+                    return false;
                 }
             }
             return true;
         }
 
-        function popup1(height, width, url, windowName){   
-            var page = url;  
-            windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";  
-            var popup=window.open(url, windowName, windowprops);  
-            if (popup != null){  
-                if (popup.opener == null){  
-                    popup.opener = self;  
-                }  
-            }  
-            popup.focus();  
-  
+        function popup1(height, width, url, windowName){
+            var page = url;
+            windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+            var popup=window.open(url, windowName, windowprops);
+            if (popup != null){
+                if (popup.opener == null){
+                    popup.opener = self;
+                }
+            }
+            popup.focus();
+
         }
 
 
@@ -269,86 +269,86 @@
             var update = "<%=updateParent%>";
             var parentId = "<%=parentAjaxId%>";
             var Url = window.opener.URLs;
-    
+
             if( update == "true" && !window.opener.closed )
                 window.opener.popLeftColumn(Url[parentId], parentId, parentId);
         }
-    
-    
-    
+
+
+
         function saveDemoId(text, li){
-            console.log("saveDemoId "+li.id+" "+text.id);
+            //console.log("saveDemoId "+li.id+" "+text.id);
             var str = text.id.replace("autocompletedemo","demofind");
-            console.log("str "+str);
+            //console.log("str "+str);
             $(str).value = li.id;
         }
-    
+
         function saveProvId(text, li){
-            console.log("saveProvId "+li.id+" "+text.id+" "+text.value);
+            //console.log("saveProvId "+li.id+" "+text.id+" "+text.value);
             var provName = text.value;
             var str = text.id.replace("autocompletedemo","demofind");
-            console.log("str "+str);
+            //console.log("str "+str);
             $(str).value = li.id;
-       
+
             var bdoc = document.createElement('a');
             bdoc.setAttribute("onclick", "removeProv(this);");
             bdoc.appendChild(document.createTextNode(" -remove- "));
-       
+
             var adoc = document.createElement('div');
             adoc.appendChild(document.createTextNode(provName));
-       
+
             var idoc = document.createElement('input');
             idoc.setAttribute("type", "hidden");
             idoc.setAttribute("name","flagproviders");
             idoc.setAttribute("value",li.id);
             adoc.appendChild(idoc);
-        
+
             adoc.appendChild(bdoc);
-        
+
             providerList.appendChild(adoc);
             text.value = '';
         }
-    
+
         function removeProv(th){
             var ele = th.up();
             ele.remove();
-        
+
         }
-    
+
         function sendToServer(formId){
             var toSend = $(formId).serialize(true);
             var url = "ManageDocument.do";//"send.jsp";
             Effect.SlideUp('document'+toSend.documentId);
             new Ajax.Request(url, { method: 'post', parameters: toSend, onSuccess: successAdjusting });
-  
+
             //Effect.SlideUp('document'+toSend.documentId);
-            return false; 
+            return false;
         }
-    
+
         function successAdjusting(transport){
             var jason = transport.responseText.evalJSON(true);
-            console.log("successlog"+jason.success+"   "+jason.docId);                
+            //console.log("successlog"+jason.success+"   "+jason.docId);
         }
         /*
          * $('document'+jason.docId).remove();
- 
+
          */
 
-    
+
         function autoCompleteShowMenu(){
-            console.log("autoCompleteShowMenu");
+            //console.log("autoCompleteShowMenu");
         }
-    
+
         function autoCompleteHideMenu(){
-            console.log("autoCompleteHideMenu"); 
+            //console.log("autoCompleteHideMenu");
         }
-    
+
         </script>
-        
-       
+
+
     </head>
     <body class="bodystyle">
-        
+
         <table class="MainTable" id="scrollNumber1" name="encounterTable"
                style="margin: 0px;">
             <tr class="MainTableRowTop">
@@ -368,7 +368,7 @@
                 </td>
             </tr>
             <tr>
-               
+
                 <td class="MainTableRightColumn" colspan="2" valign="top">
                     <ul>
                         <li>- way to send to a provider (using lab system)</li>
@@ -378,9 +378,9 @@
                         <li>- clicking on the graphic should pop up the viewer</li>
                         <li>- The idea of a queue (EG sfhc will have way to many common documents)</li>
                         <li>- Need a way to show if the document is currently linked with a provider</li>
-                        
+
                     </ul> <!--html:form action="/dms/combinePDFs" -->
-                    <input type="hidden" name="curUser" value="<%=curUser%>"> 
+                    <input type="hidden" name="curUser" value="<%=curUser%>">
                     <input type="hidden" name="demoId" value="<%=moduleid%>">
                     <div class="documentLists"><%-- STUFF TO DISPLAY --%> <%
             ArrayList categories = new ArrayList();
@@ -415,11 +415,11 @@
                         <div class="doclist">
                             <div class="headerline">
                                 <div class="docHeading">
-                                    <a id="plusminus<%=i%>" href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">-- <%= currentkey%> </a> 
-                                    <span class="tabs"> View: <a href="?function=<%=module%>&functionid=<%=moduleid%>">All</a> 
+                                    <a id="plusminus<%=i%>" href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">-- <%= currentkey%> </a>
+                                    <span class="tabs"> View: <a href="?function=<%=module%>&functionid=<%=moduleid%>">All</a>
                                     <% for (int i3 = 0; i3 < doctypes.size(); i3++) {%>
                                         | <a href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
-                                    <%}%> 
+                                    <%}%>
                                     </span>
                                 </div>
                             </div>
@@ -445,14 +445,14 @@
                                 <div id="document<%=curdoc.getDocId()%>">
                                     <table class="docTable">
                                         <tr>
-                                            
-                                            
+
+
                                             <td colspan="8"><img src="<%=url%>" /></td>
-                                            
+
                                             <td align="left" valign="top">
                                                 <fieldset><legend>Document Uploaded :<%=curdoc.getDateTimeStamp()%> - Content Type: <%=contentType%> <%=curdoc.getFileName() %></legend>
                                                     <form id="forms<%=curdoc.getDocId()%>" action="undocumentReport.jsp" onsubmit="return sendToServer('forms<%=curdoc.getDocId()%>');">
-                                                        <input type="hidden" name="method" value="documentUpdate" /> 
+                                                        <input type="hidden" name="method" value="documentUpdate" />
                                                         <input type="hidden" name="documentId" value="<%=curdoc.getDocId()%>" />
                                                         <table>
                                                             <tr>
@@ -482,47 +482,47 @@
                                                                 <td>Demographic: <% if (request.getParameter("demo_linked_Id") != null && request.getParameter("demo_linked_Id").equals(curdoc.getDocId())) {%>
                                                                     <%=request.getParameter("name")%> <% }%>
                                                                 </td>
-                                                                <td><input type="hidden" name="demog" id="demofind<%=curdoc.getDocId()%>" /> 
+                                                                <td><input type="hidden" name="demog" id="demofind<%=curdoc.getDocId()%>" />
                                                                     <input tabindex="<%=tabindex++%>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" name="demographicKeyword" />
                                                                     <div id="autocomplete_choices<%=curdoc.getDocId()%>"class="autocomplete"></div>
-                                                                    
+
                                                                     <script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
                                                                     new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "../demographic/SearchDemographic.do", {minChars: 3, afterUpdateElement: saveDemoId});
 
                                                                     </script>
-                                                                    <input type="checkbox" name="demoLink" >Send to MRP</input> 
+                                                                    <input type="checkbox" name="demoLink" >Send to MRP</input>
                                                                 </td>
                                                             </tr>
-                                                            
-                                                            
+
+
                                                             <tr>
                                                                 <td valign="top">Flag Provider: </td>
-                                                                <td> 
+                                                                <td>
                                                                     <input tabindex="<%=tabindex++%>" type="text" id="autocompleteprov<%=curdoc.getDocId()%>" name="demographicKeyword"/>
                                                                     <div id="autocomplete_choicesprov<%=curdoc.getDocId()%>" class="autocomplete"></div>
-                                                                    
+
                                                                     <script type="text/javascript">
                                                                     new Ajax.Autocompleter("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", "testProvcomp.jsp", {minChars: 3, afterUpdateElement: saveProvId});
                                                                     </script>
                                                                     <div id="providerList"></div>
                                                                 </td>
                                                             </tr>
-                                                            
-                                                            
-                                                            
+
+
+
                                                             <tr>
                                                                 <td><bean:message key="dms.documentReport.msgCreator"/>:</td>
                                                                 <td><%=curdoc.getCreatorName()%></td>
                                                             </tr>
-                                                            
+
                                                             <tr>
                                                                 <td colspan="2" align="right"><input tabindex="<%=tabindex++%>" type="submit" name="save" value="Save" /></td>
-                                                            </tr>   
+                                                            </tr>
                                                         </table>
-                                                        
+
                                                     </form>
-                                                </fieldset>      
-                                                
+                                                </fieldset>
+
                                             </td>
                                         </tr>
                                     </table>
@@ -549,7 +549,7 @@
                 <td colspan="2" class="MainTableBottomRowRightColumn"></td>
             </tr>
         </table>
-        
-        
+
+
     </body>
 </html:html>

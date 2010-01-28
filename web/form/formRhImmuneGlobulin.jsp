@@ -607,11 +607,11 @@ sample drawn?</label></fieldset>
                 
             <%if (h != null) { %>  
             function getInjectionInformation(origRequest){
-               console.log("calling get renal dosing information");
+               //console.log("calling get renal dosing information");
                var url = "../form/RhInjectionDisplay.jsp";
                var ran_number=Math.round(Math.random()*1000000);
                var params = "demographicNo=<%=demographicNo%>&id=<%=h.get("ID")%>&date=<%=(Date) h.get("completion_date")%>&rand="+ran_number;  //hack to get around ie caching the page
-               console.log("params" + params);
+               //console.log("params" + params);
                new Ajax.Updater('injectionInfo',url, {method:'get',parameters:params,asynchronous:true}); 
                //alert(origRequest.responseText);
             }
@@ -635,7 +635,7 @@ sample drawn?</label></fieldset>
             function deleteInjection(idval){
                var delId = document.getElementById('deleteId');
                delId.value = idval;
-               console.log("calling deleteInjection "+idval);
+               //console.log("calling deleteInjection "+idval);
                
                deleteCall();
                

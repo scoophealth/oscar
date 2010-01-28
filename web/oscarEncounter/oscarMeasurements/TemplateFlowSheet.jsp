@@ -243,16 +243,16 @@ div.headPrevention p {
     
     
    function loadDifferentElements(){
-       console.log("hapy");
+       //console.log("hapy");
         var numEle = $('numEle').value;
         var sdate = $('flowsheetStartDate').value;
         var edate = $('flowsheetEndDate').value;
         if( !numEle.blank()){
             window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+numEle;
-            console.log("one");
+            //console.log("one");
         }else if (!sdate.blank() && !edate.blank()){
             window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
-            console.log("two");
+            //console.log("two");
         }else{
             window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';  
         }

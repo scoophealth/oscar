@@ -113,7 +113,7 @@
                                     
                                     <script type="text/javascript">
                                         new Ajax.Autocompleter("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", "testProvcomp.jsp", {minChars: 1, afterUpdateElement: saveProvId});
-                                        console.log("autocompleteprov<%=curdoc.getDocId()%>");
+                                        //console.log("autocompleteprov<%=curdoc.getDocId()%>");
                                 </script>
                                     <div id="providerList<%=curdoc.getDocId()%>"></div>
                                 </td>
