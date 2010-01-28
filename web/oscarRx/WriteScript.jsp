@@ -10,29 +10,29 @@
 
 <%long start = System.currentTimeMillis();%>
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -87,6 +87,23 @@ String annotation_attrib = "";// = "anno"+now;
 
 <script language=javascript>
 
+    var addTextView=0;
+    function showAddText(randId){
+        var addTextId="addText_"+randId;
+        var addTextWordId="addTextWord_"+randId;
+        oscarLog("randId="+randId);
+        if(addTextView==0){
+            $(addTextId).show();
+            addTextView=1;
+            $(addTextWordId).update("less")
+        }
+        else{
+            $(addTextId).hide();
+            addTextView=0;
+            $(addTextWordId).update("more")
+        }
+    }
+
     var frm = document.forms.RxWriteScriptForm;
     oscarLog("frm="+frm+"$(frm)"+$(frm));
     var freqMin;
@@ -94,7 +111,7 @@ String annotation_attrib = "";// = "anno"+now;
     var orig = null;
     var first = true;
     var warningArray = new Array ();
-    
+
     var calcQtyflag = true;
 
     function takeChg(){
@@ -104,12 +121,12 @@ String annotation_attrib = "";// = "anno"+now;
         }else{
             frm.takeOther.style.display = '';
         }
-        
-        
+
+
         if (frm.take.value == '1/2'){
            frm.takeOther.value = 0.5;
         }
-        
+
         if (frm.take.value == '1/4'){
            frm.takeOther.value = 0.25;
         }
@@ -125,7 +142,7 @@ String annotation_attrib = "";// = "anno"+now;
             sMin = s[0];
             sMax = s[1];
         }
-        
+
         if(isNaN(parseFloat(sMin))){
             sMin = '';
         }
@@ -160,39 +177,39 @@ String annotation_attrib = "";// = "anno"+now;
             frm.submit();
         }
     }
-    
+
     function changeDuration(){
        var freqId = frm.frequencyCode.selectedIndex;
-       
+
        var dailyMin = freqMin[freqId];
-       
+
        if (dailyMin < 1){
           var minDays = 1/dailyMin;
           var bySeven = minDays / 7;
           var byThirty = minDays / 30;
           var currentDur = frm.cmbDuration.value;
-          
+
           if  (Math.floor(bySeven) == bySeven ){  //no remainder
-             frm.durationUnit.value = 'W';  
+             frm.durationUnit.value = 'W';
              if (currentDur < bySeven){
                 frm.cmbDuration.value = bySeven;
              }
              //alert (bySeven);
           }else {
              if (Math.floor(byThirty) == byThirty ){  //no remainder
-                frm.durationUnit.value = 'M';  
+                frm.durationUnit.value = 'M';
                 if (currentDur < byThirty){
                    frm.cmbDuration.value = byThirty;
                 }
                 //alert (byThirty);
              }
           }
-          
+
        }
        return true;
     }
-    
-    
+
+
     function calculateDuration(durUnit,durValue){
        var dur = 1;
        switch(durUnit){
@@ -212,25 +229,25 @@ String annotation_attrib = "";// = "anno"+now;
         return dur;
     }
 
-    function calcQuantity(){       
+    function calcQuantity(){
         var takeMax = frm.takeMax.value;
-        
+
         var dailyMax = freqMax[frm.frequencyCode.selectedIndex];
         var dur = 1;
-               
-        // calculate duration units        
+
+        // calculate duration units
         dur = calculateDuration(frm.durationUnit.value,frm.duration.value);
-                                        
+
         var maxQty = (takeMax * dailyMax * dur);
-                
+
         if(isNaN(maxQty)){
-            
-        }else{                        
-            maxQty = Math.ceil(maxQty);                        
+
+        }else{
+            maxQty = Math.ceil(maxQty);
             return maxQty;
         }
     }
-    
+
     function calcQty(){
         var takeMin = frm.takeMin.value;
         var takeMax = frm.takeMax.value;
@@ -250,15 +267,15 @@ String annotation_attrib = "";// = "anno"+now;
 
         // calculate duration units
         dur = calculateDuration(frm.durationUnit.value,frm.duration.value);
-                        
+
         // calculate quantity
         var minQty = (takeMin * dailyMin * dur);
         var maxQty = (takeMax * dailyMax * dur);
-                
+
         if(isNaN(minQty) || isNaN(maxQty)){
             alert('The value entered is invalid.');
         }else{
-            
+
             minQty = Math.ceil(minQty);
             maxQty = Math.ceil(maxQty);
             frm.sugQtyMin.value = minQty;
@@ -277,7 +294,7 @@ String annotation_attrib = "";// = "anno"+now;
             frm.txtRepeat.value = frm.cmbRepeat.value;
         }
 
-        frm.repeat.value = frm.txtRepeat.value;  
+        frm.repeat.value = frm.txtRepeat.value;
 //alert ("q"+calcQtyflag);
     //alert(frm.autoQty.checked);
         if (frm.autoQty.checked == true){
@@ -290,21 +307,21 @@ String annotation_attrib = "";// = "anno"+now;
 
     function useQtyMax(){
         frm.quantity.value = frm.sugQtyMax.value;
-        
+
         writeScriptDisplay();
     }
     function regexDebug(regRet){
        alert(regRet.input+"\n"+regRet.index+" " +(regRet.index+regRet[0].length)+" "+regRet[0]);
     }
-    
+
     function replaceScriptDisplay(){
-       var orig = frm.special.value;       
+       var orig = frm.special.value;
        var nameRegExp = /.*\n/i;
        var a = nameRegExp.exec(orig);
-       
+
        clearWarning();
        if (a){  //Find the title and shorten the string
-          //regexDebug(a);   
+          //regexDebug(a);
           origMinusName = orig.substring(a.index+a[0].length);
           origMinusName = origMinusName.replace(/Q12H/,"OD");   //KLUDGE the 2 get picked up as the second digit
           origMinusName = origMinusName.replace(/Q1-2H/,"OD");   //KLUDGE the 2 get picked up as the second digit
@@ -312,74 +329,74 @@ String annotation_attrib = "";// = "anno"+now;
           origMinusName = origMinusName.replace(/Q4-6H/,"OD");   //KLUDGE the 2 get picked up as the second digit
           origMinusName = removePRNifNeeded(origMinusName);
           origMinusName = removeNoSubsifNeeded(origMinusName);
-          
-          if ( frm.brandName){        
+
+          if ( frm.brandName){
              drugName = orig.substring(0,a.index+a[0].length);
-          }else{        
+          }else{
              drugName = frm.customName.value + "\n";
           }
-          
+
           var beforeFirstDigit = "";
-          
+
           //find first digit
           var firstDigitRegExp = /[0-9][0-9,\/,-]*/;
           var b = firstDigitRegExp.exec(origMinusName);
-          if (b) {                        
-             //regexDebug(b);                          
+          if (b) {
+             //regexDebug(b);
              if(b.index == 0){  //frequency is at the start of the line
                 //TODO should I add method if it is not there??
                 addWarning(frm.method.options[frm.method.selectedIndex].text+ " Not Added");
-             }else{ // frequency is not at the start of the line words come before             
+             }else{ // frequency is not at the start of the line words come before
                 var beforeFirstDigit = origMinusName.substring(0,b.index);
                 var findMethodRegExp = /(Take|Apply|Rub well in)/;
                 var c = findMethodRegExp.exec(beforeFirstDigit);
-                if (c){                  
+                if (c){
                    //regexDebug(c);
-                   beforeFirstDigit = beforeFirstDigit.replace(/(Take|Apply|Rub well in)/,frm.method.options[frm.method.selectedIndex].text);  
-                }else{                                   
+                   beforeFirstDigit = beforeFirstDigit.replace(/(Take|Apply|Rub well in)/,frm.method.options[frm.method.selectedIndex].text);
+                }else{
                    if (frm.method.options[frm.method.selectedIndex].text != ""){
                       addWarning("Could not replace word for "+frm.method.options[frm.method.selectedIndex].text);
                    }
-                }               
-             }             
+                }
+             }
              var firstDigitStringLen = b.index+b[0].length;
-             
-             if(origMinusName.substring(b.index+b[0].length,b.index+b[0].length+1) == '.'){   //Another Kludge, \. does not seem to work correctly t get values 0.5                
+
+             if(origMinusName.substring(b.index+b[0].length,b.index+b[0].length+1) == '.'){   //Another Kludge, \. does not seem to work correctly t get values 0.5
                 firstDigitStringLen++;
                 var afterDot = /[0-9][0-9]*/;
                 var afterDotResult = afterDot.exec(origMinusName.substring(firstDigitStringLen));
                 if (afterDotResult){
-                  
+
                   //regexDebug(afterDotResult);
                   if(afterDotResult.index == 0){
                      firstDigitStringLen = firstDigitStringLen + afterDotResult.index+afterDotResult[0].length;
                   }
-                }                
+                }
              }
-             
+
              var afterFirstDigit = origMinusName.substring(firstDigitStringLen);
-             
+
              //Find Next Digit
              var secondDigitRegExp = /[^Q,-,0-9][0-9][0-9,\/,-]*/;   //This will ignore digits starting with Q and - need for frequencies like Q3-4H
              var d = secondDigitRegExp.exec(afterFirstDigit);
              if(d){
                 //regexDebug(d);
-                var betweenFirstAndSecondDigit = afterFirstDigit.substring(0,d.index+1);                
+                var betweenFirstAndSecondDigit = afterFirstDigit.substring(0,d.index+1);
                 var afterSecondDigit = afterFirstDigit.substring(d.index+d[0].length);
-                                
+
                 //Replace units and frequency Unit  //TODO Pull this from Database
-                
+
                 var findUnitRegExp = /(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/;
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
-                }else{                   
+                }else{
                    if (frm.unit.options[frm.unit.selectedIndex].text != ""){
                       addWarning("Could not find place to put "+frm.unit.options[frm.unit.selectedIndex].text);
                    }
                 }
-                
-                var findUnitRegExp = /(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/;                
+
+                var findUnitRegExp = /(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/;
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
@@ -388,38 +405,38 @@ String annotation_attrib = "";// = "anno"+now;
                       addWarning("Could not find place to put "+frm.route.options[frm.route.selectedIndex].text);
                    }
                 }
-                                                
+
                 var findFreqRegExp = /(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/;
                 var findFreq = findFreqRegExp.exec(betweenFirstAndSecondDigit);
                 if (findFreq){
                   //todo make it like !findFreq
-                }else{                   
+                }else{
                    addWarning("Could not find place to put "+frm.frequencyCode.value);
                 }
-                
+
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/,frm.unit.options[frm.unit.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/,frm.route.options[frm.route.selectedIndex].text);
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);                                    
-                                                                
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);
+
                 //Replace Days Weeks or Months
-                
+
                 afterSecondDigit = afterSecondDigit.replace(/(Days|Weeks|Months)/,getDurationUnit());
-                                
+
                 var findDurationRegExp = /(Days|Weeks|Months)/;
                 var e = findDurationRegExp.exec(afterSecondDigit);
                 if (e){
                   //todo make it like !e
-                }else{                   
+                }else{
                    addWarning("Could not find place to put "+getDurationUnit());
                 }
-                                                                   
+
                 //Replace Qty
                 var f = firstDigitRegExp.exec(afterSecondDigit);
 
                 if(f){
                    //regexDebug(f)
                    var betweenSecondDigitandQuantity = afterSecondDigit.substring(0,f.index);
-                   var afterQuantity = afterSecondDigit.substring(f.index+f[0].length);                   
+                   var afterQuantity = afterSecondDigit.substring(f.index+f[0].length);
                    var g = firstDigitRegExp.exec(afterQuantity);
                    if(g){
                       //regexDebug(g);
@@ -435,38 +452,38 @@ String annotation_attrib = "";// = "anno"+now;
                    }
                 }else{
                    addWarning("Could not find value to replace Qty Value");
-                }                                                   
-             }else{ 
+                }
+             }else{
                 addWarning("Could not find value to replace Duration Value");
-             }             
+             }
           }else{
                 addWarning("Could not find value frequency value");
-          }       
+          }
        }else{
          addWarning("Name of Drug could not be found");
-       }        
+       }
        fillWarnings();
     }
-    
+
     function removePRNifNeeded(str){
        var retval = str;
        if (frm.prn.checked == false){
           retval = str.replace(/PRN /,"");
        }
        return retval;
-    }   
-    
+    }
+
     function removeNoSubsifNeeded(str){
        var retval = str;
        if (frm.nosubs.checked == false){
           retval = str.replace(/No Subs/,"");
        }
        return retval;
-    }   
+    }
     function getPRN(str){
        var retval = "";
        if (frm.prn.checked){//is PRN CHECKED?
-          var prnFindRegExp = /PRN/; 
+          var prnFindRegExp = /PRN/;
           var p = prnFindRegExp.exec(str);
           if(!p){//PRN not found
              retval = "PRN ";
@@ -478,7 +495,7 @@ String annotation_attrib = "";// = "anno"+now;
     function getNoSubs(str){
        var retval = "";
        if (frm.nosubs.checked){//is NOSUB CHECKED?
-          var noSubFindRegExp = /No Subs/; 
+          var noSubFindRegExp = /No Subs/;
           var p = noSubFindRegExp.exec(str);
           if(!p){//NOSUB not found
              retval = " No Subs ";
@@ -486,7 +503,7 @@ String annotation_attrib = "";// = "anno"+now;
        }
        return retval;
     }
-    
+
     function getTakeValue(){
        var retval = "";
        if(frm.take.value != 'Other'){
@@ -496,17 +513,17 @@ String annotation_attrib = "";// = "anno"+now;
        }
        return retval;
     }
-    
+
     function getDurationValue(){
        var retval = "";
        if(frm.cmbDuration.value == 'Other'){
-          retval = frm.txtDuration.value;            
-       }else{            
+          retval = frm.txtDuration.value;
+       }else{
           retval = frm.cmbDuration.value;
        }
        return retval;
     }
-    
+
     function getDurationUnit(){
        var retval = "";
        switch(frm.durationUnit.value){
@@ -525,7 +542,7 @@ String annotation_attrib = "";// = "anno"+now;
        }
        return retval;
     }
-    
+
     function checkPatientCompliance(pc) {
 	if (pc=="Y") {
 	    if (frm.patientComplianceY.checked) frm.patientComplianceN.checked = false;
@@ -534,40 +551,40 @@ String annotation_attrib = "";// = "anno"+now;
 	}
 	writeScriptDisplay();
     }
-    
-    function writeScriptDisplay(){  
+
+    function writeScriptDisplay(){
        //alert ("f"+first);
-  
+
     var disabled = frm.customInstr.checked;
-    
+
     if( !disabled ) {
-        if (first == false){      
-            
+        if (first == false){
+
             var frm2 = document.forms.RxWriteScriptForm;
 
             var orig2 = frm.special.value;
             var preStr = "";
 
-            if ( frm2.brandName){        
-                preStr = frm2.brandName.value + "\n";        
-            }else{        
+            if ( frm2.brandName){
+                preStr = frm2.brandName.value + "\n";
+            }else{
                 preStr = frm2.customName.value + "\n";
             }
 
-            preStr = preStr + frm2.method.options[frm2.method.selectedIndex].text +" ";            
-            
+            preStr = preStr + frm2.method.options[frm2.method.selectedIndex].text +" ";
+
             if(frm2.take.value != 'Other'){
                 preStr = preStr+frm2.take.value;
             }else{
                 preStr = preStr+frm2.takeOther.value;
             }
-                                    
-            preStr = preStr +" "+ frm2.unit.options[frm2.unit.selectedIndex].text;            
-            
-            preStr = preStr +" "+ frm2.route.options[frm2.route.selectedIndex].text;            
-            
+
+            preStr = preStr +" "+ frm2.unit.options[frm2.unit.selectedIndex].text;
+
+            preStr = preStr +" "+ frm2.route.options[frm2.route.selectedIndex].text;
+
             preStr = preStr +" "+ frm2.frequencyCode.value+" ";
-                        
+
             if (frm2.prn.checked){
                 preStr = preStr +"PRN ";
             }
@@ -575,8 +592,8 @@ String annotation_attrib = "";// = "anno"+now;
             /////////////////////
             preStr = preStr + "for ";
             if(frm2.cmbDuration.value == 'Other'){
-                preStr = preStr + frm2.txtDuration.value;            
-            }else{            
+                preStr = preStr + frm2.txtDuration.value;
+            }else{
                 preStr = preStr + frm2.cmbDuration.value;
             }
 
@@ -594,16 +611,16 @@ String annotation_attrib = "";// = "anno"+now;
                     preStr = preStr + " Months";
                     break;
                 }
-            } 
+            }
            */
            preStr = preStr + getDurationUnit();
-            
-            if ( "" == frm2.quantity.value ){              
+
+            if ( "" == frm2.quantity.value ){
               frm2.quantity.value = "0";
             }
             /////////////////////
             preStr = preStr + "\n";
-            preStr = preStr + "Qty:"+frm2.quantity.value+" " +frm2.unitName.value+"\n"+"Repeats:"+frm2.txtRepeat.value;   
+            preStr = preStr + "Qty:"+frm2.quantity.value+" " +frm2.unitName.value+"\n"+"Repeats:"+frm2.txtRepeat.value;
             if (frm2.nosubs.checked){
                 preStr = preStr +" No Subs";
             }
@@ -617,82 +634,82 @@ String annotation_attrib = "";// = "anno"+now;
           //first = false;
         }
     }
-    
+
     function addLuCode(codeToAdd){
         var txt = frm.special.value;
         frm.special.value =  txt  + "LU Code: " +codeToAdd;
     }
-    
+
     function clearWarning(){
-       warningArray = new Array(); 
-    }    
+       warningArray = new Array();
+    }
     function addWarning(addit){
        warningArray[warningArray.length] = addit;
     }
-    
+
     function fillWarnings(){
      //warningDiv
      // warningList
-     
+
      var warningDiv  = document.getElementById("warningDiv");
      var warningList = document.getElementById("warningList");
-     
+
      while (warningList.hasChildNodes()){
         warningList.removeChild(warningList.firstChild);
-     }                          
+     }
      for(i=0;i<warningArray.length;i++){
 			var newText = document.createTextNode(warningArray[i]);
 			var newNode = document.createElement("li");
 			newNode.appendChild(newText);
 			warningList.appendChild(newNode);
 		}
-		
+
 		if(warningArray.length == 0){
 		   warningDiv.style.display = 'None';
 		}else{
 		   warningDiv.style.display = '';
 		}
-		
+
     }
-    
+
     function validNum(e) {
         var keynum;
-        
-        if( window.event ) 
+
+        if( window.event )
             keynum = e.keyCode;
         else if( e.which )
-            keynum = e.which;                    
-                        
+            keynum = e.which;
+
         if( keynum == undefined )
             return true;
-            
+
         var keychar = String.fromCharCode(keynum);
         var numcheck = /(\d|\x08)/;
-        
+
         return numcheck.test(keychar)
     }
-    
+
     function chkQty(val) {
         if( val.match(/\D/) )
             return false;
-      
+
         return true;
     }
-    
+
     function pageLoad() {
         calcQty();
         var txtQty = frm.quantity;
         if( txtQty.restrict ) alert("YES");
         txtQty.restrict = "0-9";
-	
+
 	prepareOutsideProvider();
     }
-    
+
     function prepareOutsideProvider() {
 	if (frm.outsideProviderName.value.length>0) $('ocheck').checked=true;
 	showHideOutsideProvider();
     }
-    
+
     function showHideOutsideProvider() {
 	if ($('ocheck').checked) {
 	    $('otext').show();
@@ -711,7 +728,7 @@ String annotation_attrib = "";// = "anno"+now;
     function showpic(picture){
        if (document.getElementById){ // Netscape 6 and IE 5+
 
-          var targetElement = document.getElementById(picture);                
+          var targetElement = document.getElementById(picture);
           var bal = document.getElementById("Calcs");
 
           var offsetTrail = document.getElementById("Calcs");
@@ -722,15 +739,15 @@ String annotation_attrib = "";// = "anno"+now;
              offsetTop += offsetTrail.offsetTop;
              offsetTrail = offsetTrail.offsetParent;
           }
-          if (navigator.userAgent.indexOf("Mac") != -1 && 
+          if (navigator.userAgent.indexOf("Mac") != -1 &&
              typeof document.body.leftMargin != "undefined") {
              offsetLeft += document.body.leftMargin;
              offsetTop += document.body.topMargin;
           }
 
-          targetElement.style.left = offsetLeft +bal.offsetWidth;        
-          targetElement.style.top = offsetTop;	
-          targetElement.style.visibility = 'visible';        
+          targetElement.style.left = offsetLeft +bal.offsetWidth;
+          targetElement.style.top = offsetTop;
+          targetElement.style.visibility = 'visible';
        }
     }
 
@@ -748,11 +765,11 @@ String annotation_attrib = "";// = "anno"+now;
           popup.opener = self;
       popup.focus();
     }
-    
+
     var resHidden = 0;
     function showUntrustedRes(){
         var list = $$('div.untrustedResource');
-        
+
         if(resHidden == 0){
           $('showUntrustedResWord').update('hide');
           list.invoke('show');
@@ -760,27 +777,27 @@ String annotation_attrib = "";// = "anno"+now;
         }else{
           $('showUntrustedResWord').update('show');
           list.invoke('hide');
-          resHidden = 0;  
+          resHidden = 0;
         }
     }
-    
-    
+
+
     function HideW(id,resourceId,updated){
         var url = 'GetmyDrugrefInfo.do?method=setWarningToHide';
         //callReplacementWebService("GetmyDrugrefInfo.do?method=setWarningToHide",'interactionsRxMyD');function callReplacementWebService(url,id){
         var ran_number=Math.round(Math.random()*1000000);
         var params = "resId="+resourceId+"&updatedat="+updated+"&rand="+ran_number;  //hack to get around ie caching the page
-        
+
         //console.log("params: "+params);
-        new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true}); 
-         
+        new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true});
+
     }
-    
-    
+
+
     var resHidden2 = 0;
     function showHiddenRes(){
         var list = $$('div.hiddenResource');
-        
+
         if(resHidden2 == 0){
           list.invoke('show');
           resHidden2 = 1;
@@ -788,7 +805,7 @@ String annotation_attrib = "";// = "anno"+now;
         }else{
           $('showHiddenResWord').update('show');
           list.invoke('hide');
-          resHidden2 = 0;  
+          resHidden2 = 0;
         }
     }
 </script>
@@ -804,8 +821,8 @@ String annotation_attrib = "";// = "anno"+now;
 <html:form action="/oscarRx/writeScript">
 
 	<html:hidden property="action" />
-	
-	<%        
+
+	<%
 
 
 // define current form
@@ -826,7 +843,7 @@ if(bean.getStashIndex() > -1){ //new way
         System.out.println(RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
     }catch(Exception e){ e.printStackTrace(); }
     if(! rx.isCustom()){
-        thisForm.setGenericName(rx.getGenericName());        
+        thisForm.setGenericName(rx.getGenericName());
         thisForm.setBrandName(rx.getBrandName() );
         thisForm.setGCN_SEQNO(rx.getGCN_SEQNO());
         thisForm.setCustomName("");
@@ -851,9 +868,9 @@ if(bean.getStashIndex() > -1){ //new way
     if (isEmpty(thisForm.getLastRefillDate())) thisForm.setLastRefillDate("yyyy-mm-dd");
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
-    
+
     if (rx.getSpecial()==null || rx.getSpecial().length()<6) MiscUtils.getLogger().error("The drug special passed to the display of the user was already blank :"+rx.getSpecial());
-    
+
     thisForm.setSpecial(rx.getSpecial());
     thisForm.setLongTerm(rx.getLongTerm());
     thisForm.setPastMed(rx.getPastMed());
@@ -868,7 +885,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setCustomInstr(rx.getCustomInstr());
     thisForm.setOutsideProviderName(rx.getOutsideProviderName());
     thisForm.setOutsideProviderOhip(rx.getOutsideProviderOhip());
-    
+
     System.out.println("SETTING FROM STASH " + rx.getCustomInstr());
     atcCode= rx.getAtcCode();
     System.out.println("route "+rx.getRoute());
@@ -920,7 +937,7 @@ RxDrugData drug = new RxDrugData();
 java.util.ArrayList brands = null;
 java.util.ArrayList forms  = null;
 java.util.ArrayList routes = null;
-java.util.Hashtable dosage = null; 
+java.util.Hashtable dosage = null;
 try{
     specialStringLen = thisForm.getSpecial().length();
 }catch(Exception strLenEx){
@@ -932,9 +949,9 @@ Vector comps = (Vector) request.getAttribute("components");
       if (comps != null){
         compString = new String();
         for (int c = 0; c < comps.size();c++){
-            RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) comps.get(c); 
-            compString = compString + dc.name+" "+dc.strength+ " "+dc.unit+"\n";              
-        }          
+            RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) comps.get(c);
+            compString = compString + dc.name+" "+dc.strength+ " "+dc.unit+"\n";
+        }
       }
 
 RxCodesData codesData = new RxCodesData();
@@ -952,7 +969,7 @@ int i;
     freqMin = new Array(<%= freq.length%>);
     freqMax = new Array(<%= freq.length%>);
 
-    <%for(i=0;i<freq.length;i++){%> 
+    <%for(i=0;i<freq.length;i++){%>
         freqMin[<%=i%>] = <%= freq[i].getDailyMin()%>;
         freqMax[<%=i%>] = <%= freq[i].getDailyMax()%>;
     <%}%>
@@ -962,7 +979,7 @@ int i;
 <html:hidden property="GCN_SEQNO" />
 <html:hidden property="atcCode" />
 <html:hidden property="regionalIdentifier" />
-<html:hidden property="dosage" /> 
+<html:hidden property="dosage" />
 
 
 
@@ -1010,7 +1027,7 @@ int i;
                                     <b><%= thisForm.getGenericName() %></b>
                                     <%if ( compString != null ){%>
                                     <a href="javascript: function myFunction() {return false; }" title="<%=compString%>" ><bean:message key="WriteScript.msgComponents"/></a>
-                                    <%}%>   
+                                    <%}%>
                                 </td>
                                  <td valign=top rowspan=9>
                                                 <select size=20 name="selSpecial" ondblclick="javascript:cmdSpecial_click();">
@@ -1027,12 +1044,12 @@ int i;
                                 <td colspan=2>
                                     <bean:message key="WriteScript.brandNameText"/>:
                                 </td>
-                                <td colspan=2>                                                                        
+                                <td colspan=2>
                                             <html:hidden property="brandName" />
                                             <b  title="<%=thisForm.getRegionalIdentifier()%>"  ><%= thisForm.getBrandName() %></b>
-                                            <oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">                          
-                                            <!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->                             
-                                            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(725,690,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB info</a> 
+                                            <oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">
+                                            <!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->
+                                            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(725,690,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB info</a>
                                             </oscar:oscarPropertiesCheck>
                                 </td>
                                 <!--<td >
@@ -1134,23 +1151,23 @@ int i;
 								property="takeMax" /> <script language=javascript>
                                         var frm = document.forms.RxWriteScriptForm;
 
-                                        
+
                                         if(frm.takeMin.value == frm.takeMax.value){
                                             frm.takeOther.value = frm.takeMin.value;
                                         }else{
                                             frm.takeOther.value = (frm.takeMin.value + '-' + frm.takeMax.value);
                                         }
-                                        
+
                                         if(frm.takeOther.value == '0.5'){
                                            frm.takeOther.value = '1/2';
                                         }
-                                        
+
                                         if(frm.takeOther.value == '0.25'){
-                                           frm.takeOther.value == '1/4';                                        
-                                        }                                        
-                                        frm.take.value = frm.takeOther.value;                                        
+                                           frm.takeOther.value == '1/4';
+                                        }
+                                        frm.take.value = frm.takeOther.value;
                                         if(frm.take.value != frm.takeOther.value){
-                                            frm.take.value = 'Other'; 
+                                            frm.take.value = 'Other';
                                             frm.takeOther.style.display = '';
                                         }
                                     </script> <bean:message key="WriteScript.prn"/><html:checkbox property="prn"
@@ -1215,11 +1232,11 @@ int i;
                                             var sugQtyLbl = document.getElementById('lblSugQty');
                                             while (sugQtyLbl.hasChildNodes()){
                                                 sugQtyLbl.removeChild(sugQtyLbl.firstChild);
-                                            }                          
+                                            }
                                             var newSugQty = frm.sugQtyMin.value;
-                                            if (frm.sugQtyMin.value != frm.sugQtyMax.value){                                                                                
+                                            if (frm.sugQtyMin.value != frm.sugQtyMax.value){
                                                 newSugQty = frm.sugQtyMin.value + ' - ' + frm.sugQtyMax.value;
-                                            }             
+                                            }
                                             sugQtyLbl.appendChild(document.createTextNode(newSugQty));
                                         }
 
@@ -1254,12 +1271,12 @@ int i;
 				    &nbsp;
 				    <bean:message key="WriteScript.msgLastRefillDate"/>:<html:text property="lastRefillDate" onfocus="javascript:lastRefillDate.value='';" />
                                 </td>
-                            </tr>                          
+                            </tr>
 			    <tr>
 				<td colspan=4>
 				    <bean:message key="WriteScript.msgLongTermMedication"/>:<html:checkbox property="longTerm" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
 				    <bean:message key="WriteScript.msgPastMedication"/>:<html:checkbox property="pastMed" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
-				    <bean:message key="WriteScript.msgPatientCompliance"/>: 
+				    <bean:message key="WriteScript.msgPatientCompliance"/>:
                                                 <bean:message key="WriteScript.msgYes"/><html:checkbox property="patientComplianceY" onchange="javascript:checkPatientCompliance('Y');" />
                                                 <bean:message key="WriteScript.msgNo"/><html:checkbox property="patientComplianceN" onchange="javascript:checkPatientCompliance('N');" />
 				</td>
@@ -1325,7 +1342,7 @@ int i;
 						</tr>
 						<tr>
 						    <td colspan="5">
-							<bean:message key="WriteScript.msgPrescribedByOutsideProvider"/> 
+							<bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
 							<input type="checkbox" id="ocheck" onclick="javascript:showHideOutsideProvider();" /> &nbsp;
 							<span id="otext">
 							    <b><bean:message key="WriteScript.msgName"/>:</b> <html:text property="outsideProviderName" /> &nbsp;
@@ -1341,11 +1358,11 @@ int i;
 				<tr>
 					<td><!--3a--> </html:form>
 					    <table width="100%"><tr><td>
-						<input type=button class="ControlPushButton" style="width: 55px" onclick="javascript:submitForm('update');"	
-						    value="<bean:message key="WriteScript.msgUpdate"/>" /> 
-						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAddAnother');" 
-						    value="<bean:message key="WriteScript.msgUpdateAndGetNewDrug"/>" /> 
-						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAndPrint');" 
+						<input type=button class="ControlPushButton" style="width: 55px" onclick="javascript:submitForm('update');"
+						    value="<bean:message key="WriteScript.msgUpdate"/>" />
+						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAddAnother');"
+						    value="<bean:message key="WriteScript.msgUpdateAndGetNewDrug"/>" />
+						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAndPrint');"
 						    value="<bean:message key="WriteScript.msgUpdatePrintAndSave"/>" />
 					    </td>
 					    <td align="right">
@@ -1356,9 +1373,9 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:fillWarnings();" value="RunWarning" /
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /-->
 					<br>
-					<!-- peice Went Here --> <%//RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
+					<!-- peice Went Here --> <%//RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES");
                           RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
-                          if (allerg != null && allerg.length > 0){ 
+                          if (allerg != null && allerg.length > 0){
                             for (int i = 0 ; i < allerg.length; i++){  %>
 					<div
 						style="background-color:<%=severityOfReactionColor(allerg[i].getAllergy().getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
@@ -1382,7 +1399,7 @@ int i;
                             function submitPending(stashId, action){ //calls stash action
                                 var path="<c:out value="${ctx}"/>";
                                 oscarLog("path in submitPending:"+path);
-                                var frm = document.getElementsByName("RxStashForm");                                                              
+                                var frm = document.getElementsByName("RxStashForm");
                                 frm[0].elements["stashId"].value = stashId;
                                 frm[0].elements["action"].value = action;
                                 frm[0].submit();
@@ -1429,15 +1446,15 @@ int i;
                             RxPrescriptionData.Prescription rx2
                                 = ((RxPrescriptionData.Prescription)rx);
 
-                            if(i==bean.getStashIndex()){ 
+                            if(i==bean.getStashIndex()){
                                 %>
 									<tr class=tblRowSelected>
-										<% 
-                            }else{ 
+										<%
+                            }else{
                                 %>
-									
+
 									<tr>
-										<% 
+										<%
                             }
                             %>
 										<td><a href="javascript:submitPending(<%= i%>, 'edit');"><bean:message key="WriteScript.msgEdit"/></a></td>
@@ -1450,7 +1467,7 @@ int i;
 								</logic:iterate>
 							</table>
 							</td>
-							<td width="40%"><%-- 
+							<td width="40%"><%--
                                 <div id="interactionsRx"></div>
                                 <div id="renalDosing"></div>
                                 --%>
@@ -1488,47 +1505,50 @@ int i;
 			<td width="100%" height="0%" style="padding: 5px;" bgcolor="#DCDCDC"
 				colspan="2"><script language=javascript>
         <%if ( specialStringLen == 0 ){
-                out.write("first=false;"); 
-          }else{  
-                //out.write("calcQtyflag=false;"); 
+                out.write("first=false;");
+          }else{
+                //out.write("calcQtyflag=false;");
           }
 
         if (isEmpty(quan)){ quan = "null"; }
         %>
-         
-         function customQty(quan) {           
+
+         function customQty(quan) {
             if (calcQuantity() == quan || quan == null ){
                 document.forms.RxWriteScriptForm.autoQty.checked = true;
             }else{
                 document.forms.RxWriteScriptForm.autoQty.checked = false;
             }
          }
-         
-         customQty(<%=quan%>);         
+
+         customQty(<%=quan%>);
           writeScriptDisplay();
          <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
- 
+
          function getRenalDosingInformation(origRequest){
-               var url = "RenalDosing.jsp";
+             var dummie="";
+               var url="RenalDosing.jsp" ;
                var ran_number=Math.round(Math.random()*1000000);
                var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
                //alert(params);
-               new Ajax.Updater('renalDosing',url, {method:'get',parameters:params,asynchronous:true}); 
+               new Ajax.Updater('renalDosing',url, {method:'get',parameters:params,asynchronous:true});
                //alert(origRequest.responseText);
          }
-         getRenalDosingInformation(); 
+         getRenalDosingInformation();
          </oscar:oscarPropertiesCheck>
-         
+
          function callReplacementWebService(url,id){
+             oscarLog("in callReplacementWebService writescript.jsp: "+url+"--"+id);
                var ran_number=Math.round(Math.random()*1000000);
                var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
-               new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true}); 
-         } 
-          callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
+               new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true});
+         }
+         // callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
+          callReplacementWebService("GetmyDrugrefInfo.do?method=view&target=interactionsRx",'interactionsRx');
           <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
           callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
           </oscar:oscarPropertiesCheck>
-         
+
           <%--  OLD CALLS TO THE WEB SERVICES
           callReplacementWebService("InteractionDisplayMyD.jsp",'interactionsRxMyD');
           callReplacementWebService("WarningDisplayMyD.jsp",'warningsRxMyD');
@@ -1543,40 +1563,40 @@ int i;
 <%long end  = System.currentTimeMillis() -start; System.out.println("millis "+end);%>
 
 <%!
- 
+
    String severityOfReaction(String s){
        Hashtable h = new Hashtable();
        h.put("1","Mild");
        h.put("2","Moderate");
        h.put("3","Severe");
-       
+
        String retval = (String) h.get(s);
        if (retval == null) {retval = "Unknown";}
        return retval;
    }
-    
+
    String severityOfReactionColor(String s){
        Hashtable h = new Hashtable();
        h.put("1","yellow");
        h.put("2","orange");
        h.put("3","red");
-       
+
        String retval = (String) h.get(s);
        if (retval == null) {retval = "red";}
        return retval;
    }
-                        
+
    String onSetOfReaction(String s){
        Hashtable h = new Hashtable();
        h.put("1","Immediate");
        h.put("2","Gradual");
        h.put("3","Slow");
-       
+
        String retval = (String) h.get(s);
        if (retval == null) {retval = "Unknown";}
        return retval;
    }
-   
+
    boolean isEmpty(String s) {
        return (s==null || s.length()==0);
    }
