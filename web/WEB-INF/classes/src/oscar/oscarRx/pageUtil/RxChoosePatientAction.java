@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarRx.pageUtil;
 
@@ -67,7 +67,7 @@ public final class RxChoosePatientAction extends Action {
         MessageResources messages = getResources(request);
         //   p("locale",locale.toString());
         //     p("messages",messages.toString());
-        // Setup variables       
+        // Setup variables
 
         if (request.getSession().getAttribute("user") == null) {
             return (mapping.findForward("Logout"));
@@ -84,14 +84,12 @@ public final class RxChoosePatientAction extends Action {
         if (request.getSession().getAttribute("RxSessionBean") != null) {
             bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 
-            if ((bean.getProviderNo() != frm.getProviderNo()) || (bean.getDemographicNo() != Integer.parseInt(frm.getDemographicNo()))) {
+            if ((bean.getProviderNo().trim().equals(frm.getProviderNo().trim())) || (bean.getDemographicNo() != Integer.parseInt(frm.getDemographicNo()))) {
                 bean = new RxSessionBean();
             }
         } else {
             bean = new RxSessionBean();
         }
-
-
         bean.setProviderNo(user_no);
         bean.setDemographicNo(Integer.parseInt(frm.getDemographicNo()));
 
@@ -105,15 +103,18 @@ public final class RxChoosePatientAction extends Action {
         } catch (java.sql.SQLException ex) {
             throw new ServletException(ex);
         }
-
+        String provider = (String) request.getSession().getAttribute("user");
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+        userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+        boolean providerUseRx3=false;
+        UserProperty propUseRx3 = userPropertyDAO.getProp(provider, UserProperty.RX_USE_RX3);
+        if(propUseRx3!=null && propUseRx3.getValue().equalsIgnoreCase("yes"))
+                providerUseRx3=true;
         if(patient!=null) {
             request.getSession().setAttribute("Patient", patient);
-            if(OscarProperties.getInstance().getBooleanProperty("RX3", "yes")){//if rx3 is set to yes.
+            if(OscarProperties.getInstance().getBooleanProperty("RX3", "yes")||providerUseRx3){//if rx3 is set to yes.
                 System.out.println("successRX3");
                 //set the profile view
-                String provider = (String) request.getSession().getAttribute("user");
-                WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-                userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
                 UserProperty prop = userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
                 if (prop != null) {
                     try {
@@ -138,7 +139,7 @@ public final class RxChoosePatientAction extends Action {
                     return (mapping.findForward("successRX3"));
                 }
             } else {
-                return (mapping.findForward("success"));
+                    return (mapping.findForward("success"));
             }
 
         } else //no records found
