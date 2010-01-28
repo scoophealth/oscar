@@ -33,9 +33,9 @@ import java.util.Date;
  * @author rjonasz
  */
 public class UserDSMessagePrefs implements Serializable {
-    
+
     public final static String MYDRUGREF = "mydrugref";
-   
+
     private long id;
     private String resourceType;
     private String resourceId;
@@ -43,18 +43,18 @@ public class UserDSMessagePrefs implements Serializable {
     private String providerNo;
     private Date recordCreated;
     private Boolean archived;
-        
-    
-    
+
+
+
     public long getId() {
         return this.id;
     }
-    
+
     public void setId(long id) {
         this.id = id;
     }
-    
-    
+
+
     /** Creates a new instance of UserProperty */
     public UserDSMessagePrefs() {
     }
@@ -99,12 +99,12 @@ public class UserDSMessagePrefs implements Serializable {
         this.recordCreated = recordCreated;
     }
 
-    public Boolean getArchived() {
+    public Boolean isArchived() {
         return archived;
     }
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
     }
-    
+
 }
