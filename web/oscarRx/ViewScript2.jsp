@@ -173,7 +173,7 @@ String comment = (String) request.getSession().getAttribute("comment");
         var useSC=false;
         var scAddress="";
         var rxPageSize=$('printPageSize').value;
-        console.log("rxPagesize  "+rxPageSize);
+        //console.log("rxPagesize  "+rxPageSize);
 
 
   <% if(vecAddressName != null) {
@@ -200,7 +200,7 @@ function setDefaultAddr(){
     var url = "setDefaultAddr.jsp";
     var ran_number=Math.round(Math.random()*1000000);
     var addr = encodeURIComponent(document.getElementById('addressSel').value);
-    var params = "addr="+addr+"&rand="+ran_number;  //]
+    var params = "addr="+addr+"&rand="+ran_number;
     new Ajax.Request(url, {method: 'post',parameters:params});
 }
 
@@ -366,7 +366,7 @@ function toggleView(form) {
 				<td><span style="color: #FFFFFF"> <b> <bean:message key="ViewScript.msgRightClick"/></b> </span></td>
 				<%-- right click on prescription<br>
 				and select "print" from the menu.
-                                
+
 			</tr>
 		</table>
 		</td>
