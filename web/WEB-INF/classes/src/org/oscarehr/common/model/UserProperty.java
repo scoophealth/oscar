@@ -44,11 +44,22 @@ public class UserProperty implements Serializable {
     public final static String RX_PAGE_SIZE = "rx_page_size";
     public final static String RX_DEFAULT_QUANTITY = "rx_default_quantity";
     public final static String RX_PROFILE_VIEW = "rx_profile_view";
+    public final static String RX_USE_RX3 = "rx_use_rx3";
     private long id;
     private String name;
     private String value;
     private String providerNo;
     private String[] valueArray;
+    private boolean checked;
+
+    public boolean isChecked(){
+        //System.out.println("ischecked called");
+        return this.checked;
+    }
+    public void setChecked(boolean checked){
+        //System.out.println("setchecked called");
+        this.checked=checked;
+    }
 
     public String[] getValueArray(){
         return this.valueArray;
