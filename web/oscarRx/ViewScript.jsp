@@ -6,29 +6,29 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -82,7 +82,7 @@ if(bMultisites) {
 		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search", new Object[] {appt_no});
 		if (resultList!=null) location = (String) resultList.get(0).get("location");
 	}
-	
+
     oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
     ProSignatureData sig = new ProSignatureData();
     boolean hasSig = sig.hasSignature(bean.getProviderNo());
@@ -101,7 +101,7 @@ if(bMultisites) {
     vecAddressFax = new Vector();
 
     java.util.ResourceBundle rb = java.util.ResourceBundle.getBundle("oscarResources",request.getLocale());
- 
+
 	SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
 	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
 
@@ -112,8 +112,8 @@ if(bMultisites) {
         if (s.getName().equals(location))
         	session.setAttribute("RX_ADDR",String.valueOf(i));
 	}
-    
-	
+
+
 } else
 if(props.getProperty("clinicSatelliteName") != null) {
     oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
@@ -139,7 +139,7 @@ if(props.getProperty("clinicSatelliteName") != null) {
     String[] temp5 = props.getProperty("clinicSatellitePhone", "").split("\\|");
     String[] temp6 = props.getProperty("clinicSatelliteFax", "").split("\\|");
     java.util.ResourceBundle rb = java.util.ResourceBundle.getBundle("oscarResources",request.getLocale());
- 
+
     for(int i=0; i<temp0.length; i++) {
         vecAddressName.add(temp0[i]);
         vecAddress.add("<b>"+doctorName+"</b><br>"+temp0[i]+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>"+rb.getString("RxPreview.msgTel")+": " + temp5[i] + "<br>"+rb.getString("RxPreview.msgFax")+": " + temp6[i]);
@@ -159,18 +159,18 @@ function setComment(){
 
 function setDefaultAddr(){
     var url = "setDefaultAddr.jsp";
-    var ran_number=Math.round(Math.random()*1000000);    
+    var ran_number=Math.round(Math.random()*1000000);
     var addr = encodeURIComponent(document.getElementById('addressSel').value);
-    var params = "addr="+addr+"&rand="+ran_number;  //]
+    var params = "addr="+addr+"&rand="+ran_number;
     new Ajax.Request(url, {method: 'post',parameters:params});
 }
 
-    
+
 
 
 function addNotes(){
-    
-    
+
+
     var url = "AddRxComment.jsp";
     var ran_number=Math.round(Math.random()*1000000);
     var comment = encodeURIComponent(document.getElementById('additionalNotes').value);
@@ -187,7 +187,7 @@ function printIframe(){
 
 
 function printPaste2Parent(){
-    
+
    try{
       text = "****<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
       text = text.substring(0, 82) + "\n";
@@ -197,14 +197,14 @@ function printPaste2Parent(){
          text += preview.document.forms[0].rx_no_newlines.value + "\n";
       }
       text += "**********************************************************************************\n";
-      
+
       //we support pasting into orig encounter and new casemanagement
-      if( opener.document.forms["caseManagementEntryForm"] != undefined ) {        
+      if( opener.document.forms["caseManagementEntryForm"] != undefined ) {
         opener.pasteToEncounterNote(text);
       }
       else if( opener.document.encForm != undefined )
         opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
-        
+
    }catch (e){
       alert ("ERROR: could not paste to EMR");
    }
@@ -213,16 +213,16 @@ function printPaste2Parent(){
 
 
 
-function addressSelect() {    
+function addressSelect() {
    <% if(vecAddressName != null) { %>
         setDefaultAddr();
    <%      for(int i=0; i<vecAddressName.size(); i++) {%>
 	    if(document.getElementById("addressSel").value=="<%=i%>") {
     	       frames['preview'].document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
-            } 
-<%       } 
+            }
+<%       }
       }%>
-    
+
     <%if (comment != null){ %>
        setComment();
     <%}%>
@@ -251,7 +251,7 @@ function toggleView(form) {
   // send dx code to HsfoPreview.jsp so that it will be displayed and persisted there
   document.getElementById("hsfoPop").style.display="none";
   document.getElementById("bodyView").style.display="block";
-  document.getElementById("preview").src="HsfoPreview.jsp?dxCode="+dxCode;  
+  document.getElementById("preview").src="HsfoPreview.jsp?dxCode="+dxCode;
 }
 </script>
 <div id="hsfoPop"
@@ -295,8 +295,8 @@ function toggleView(form) {
 			style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
 			height="0%" colspan="2">
 		<p class="HelpAboutLogout">
-                    <span class="FakeLink"><a href="Help.htm"><bean:message key="ViewScript.msgHelp"/></a></span> 
-                    <span> | </span> 
+                    <span class="FakeLink"><a href="Help.htm"><bean:message key="ViewScript.msgHelp"/></a></span>
+                    <span> | </span>
                     <span class="FakeLink"><a href="About.htm"><bean:message key="ViewScript.msgAbout"/></a></span>
                     <span> | </span>
                     <span class="FakeLink"><a href="Disclaimer.htm"><bean:message key="ViewScript.msgDisclaimer"/></a></span>
@@ -403,9 +403,9 @@ function toggleView(form) {
 							class="ControlPushButton" style="width: 200px"
 							onClick="javascript:printPaste2Parent();" /></span></td>
 					</tr>
-                                        
+
                                         <%if (request.getAttribute("rePrint") == null ){%>
-                                        
+
                                         <tr>
 						<td colspan=2 style="font-weight: bold"><span><bean:message key="ViewScript.msgAddNotesRx"/></span></td>
 					</tr>
@@ -413,10 +413,10 @@ function toggleView(form) {
                                                 <td width=10px></td>
                                                 <td>
                                                     <textarea id="additionalNotes" style="width: 200px" onchange="javascript:addNotes();" ></textarea>
-                                                    <input type="button" value="<bean:message key="ViewScript.msgAddToRx"/>" onclick="javascript:addNotes();"/>			
+                                                    <input type="button" value="<bean:message key="ViewScript.msgAddToRx"/>" onclick="javascript:addNotes();"/>
                                                 </td>
                                         </tr>
-                                        
+
                                         <%}%>
 					<tr>
 						<td colspan=2 style="font-weight: bold"><span><bean:message key="ViewScript.msgDrugInfo"/></span></td>
