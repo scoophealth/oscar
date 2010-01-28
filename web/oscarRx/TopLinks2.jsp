@@ -48,7 +48,7 @@
 
 <tr>
 	<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-	<td width="100%" valign="bottom"  bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
+        <td width="100%" valign="bottom"  bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%" colspan="2">
             <table width="100%" border="0" height="100%">
                 <tr>
                     <td valign="bottom" style="color:white;" >
