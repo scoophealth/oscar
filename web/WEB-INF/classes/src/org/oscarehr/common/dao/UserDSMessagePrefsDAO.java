@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -36,36 +37,51 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author Jason Gallagher
  */
 public class UserDSMessagePrefsDAO extends HibernateDaoSupport {
-    
+
     /** Creates a new instance of UserPropertyDAO */
     public UserDSMessagePrefsDAO() {
     }
-    
+
     public void saveProp(UserDSMessagePrefs prop) {
         this.getHibernateTemplate().saveOrUpdate(prop);
     }
-    
+
+    public void updateProp(UserDSMessagePrefs prop) {
+        this.getHibernateTemplate().update(prop);
+    }
+
     public UserDSMessagePrefs getMessagePrefsOnType(String prov, String name) {
-        List list = this.getHibernateTemplate().find("from UserDSMessagePrefs p where p.providerNo = ? and p.resourceType = ? and p.archived = false ", new Object[] {prov,name});
+        List list = this.getHibernateTemplate().find("from UserDSMessagePrefs p where p.providerNo = ? and p.resourceType = ? and p.archived = true ", new Object[] {prov,name});
         if( list != null && list.size() > 0 ) {
             UserDSMessagePrefs prop = (UserDSMessagePrefs)list.get(0);
             return prop;
         }
         else
-            return null;            
+            return null;
     }
-    
-    
-    
+
+
+
     public Hashtable getHashofMessages(String providerNo,String name){
         Hashtable retHash = new Hashtable();
-        List<UserDSMessagePrefs> list = this.getHibernateTemplate().find("from UserDSMessagePrefs p where p.providerNo = ? and p.resourceType = ? and p.archived = false", new Object[] {providerNo,name});
+        List<UserDSMessagePrefs> list = this.getHibernateTemplate().find("from UserDSMessagePrefs p where p.providerNo = ? and p.resourceType = ? and p.archived = true", new Object[] {providerNo,name});
+        //System.out.println("UserDSMessagePrefs list size="+list.size());
         if( list != null && list.size() > 0 ) {
             for(UserDSMessagePrefs pref: list){
+                //System.out.println("pref.getResourceUpdatedDate()="+pref.getResourceUpdatedDate());
                 retHash.put(pref.getResourceType()+pref.getResourceId(),pref.getResourceUpdatedDate().getTime());
             }
         }
         return retHash;
     }
-    
+
+    public UserDSMessagePrefs getDsMessage(String providerNo,String resourceType,String resourceId, boolean archived){
+        UserDSMessagePrefs pref=new UserDSMessagePrefs();
+        List<UserDSMessagePrefs> list = this.getHibernateTemplate().find("from UserDSMessagePrefs p where p.providerNo = ? and p.resourceType = ? and p.resourceId=?   and p.archived = ? order by p.id desc", new Object[] {providerNo,resourceType,resourceId, archived});
+        //System.out.println("UserDSMessagePrefs list size="+list.size());
+        if( list != null && list.size() > 0 ) {
+            pref=list.get(0);// since it's desc order, most recent result = first one
+        }
+        return pref;
+    }
 }
