@@ -64,7 +64,7 @@ function fileDialogComplete(numFilesSelected, numFilesQueued) {
 		if (numFilesSelected > 0) {
 			document.getElementById(this.customSettings.cancelButtonId).disabled = false;
 		}
-		
+
 		/* I want auto start the upload and I can do that here */
 		this.startUpload();
 	} catch (ex)  {
@@ -84,12 +84,12 @@ function uploadStart(file) {
 		progress.toggleCancel(true, this);
 	}
 	catch (ex) {}
-	
+
 	return true;
 }
 
 function uploadProgress(file, bytesLoaded, bytesTotal) {
-        console.log("INHERE");
+        //console.log("INHERE");
 	try {
 		var percent = Math.ceil((bytesLoaded / bytesTotal) * 100);
 
@@ -97,7 +97,7 @@ function uploadProgress(file, bytesLoaded, bytesTotal) {
 		progress.setProgress(percent);
 		progress.setStatus("Uploading...");
 	} catch (ex) {
-            console.log("aND IN HERE");
+            //console.log("aND IN HERE");
 		this.debug(ex);
 	}
 }

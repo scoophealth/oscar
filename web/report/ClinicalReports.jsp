@@ -163,18 +163,18 @@
                 }
                 try{
                     var fields_to_turn_on = denom_xtras[currentDenom];
-                    console.log("fields to turn on " + fields_to_turn_on[0]);
+                    //console.log("fields to turn on " + fields_to_turn_on[0]);
                     //get list of extra 
                     for (  i = 0 ; i < fields_to_turn_on.length; i++) {
-                        console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
+                        //console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
                         document.getElementById(fields_to_turn_on[i]).style.display = ''; 
-                        console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
+                        //console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
                     }
                 }catch(e){
                     //e.printStackTrace();
                 }
           
-                console.log("going out");
+                //console.log("going out");
             }
             
             
@@ -186,25 +186,25 @@
             
             function processExtraFieldsNumerator(t){
                 var currentDenom = t.options[t.selectedIndex].value; 
-                console.log(currentDenom);
+                //console.log(currentDenom);
                 //Hide all extra denom fields
                 for (  i = 0 ; i < numerator_fields.length; i++) {
                     document.getElementById(numerator_fields[i]).style.display = 'none'; 
                 }
                 try{
                     var fields_to_turn_on = numer_xtras[currentDenom];
-                    console.log("fields to turn on " + fields_to_turn_on[0]);
+                    //console.log("fields to turn on " + fields_to_turn_on[0]);
                     //get list of extra 
                     for (  i = 0 ; i < fields_to_turn_on.length; i++) {
-                        console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
+                        //console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
                         document.getElementById(fields_to_turn_on[i]).style.display = ''; 
-                        console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
+                        //console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
                     }
                 }catch(e){
                     //e.printStackTrace();
                 }
           
-                console.log("going out");
+                //console.log("going out");
             }
             
             
