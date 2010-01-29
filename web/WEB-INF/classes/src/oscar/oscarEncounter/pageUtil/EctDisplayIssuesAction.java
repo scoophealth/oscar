@@ -135,8 +135,10 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 					
 					item.setLinkTitle(issueDescription);
 					
-					url = "$('check_issue').value=" + issueId + ";return filter();";
-					item.setURL(url);
+					// no link for now, will make this work later ... maybe
+					// url = "$('check_issue').value=" + issueId + ";return filter();";
+					// item.setURL(url);
+					
 					navBarDisplayDAO.addItem(item);					
 				}
 			} catch (MalformedURLException e) {
