@@ -786,14 +786,19 @@
  		{
  			savedId = 0;
  %>
-	<div id="nc<%=savedId%>" class="note"><input type="hidden" id="signed<%=savedId%>" value="false"> <input type="hidden" id="full<%=savedId%>" value="true"> <input type="hidden" id="bgColour<%=savedId%>"
-		value="color:#000000;background-color:#CCCCFF;"> <input type="hidden" id="editWarn<%=savedId%>" value="false">
-	<div id="n<%=savedId%>" style="line-height: 1.1em;"><textarea tabindex="7" cols="84" rows="10" class="txtArea" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note" /></textarea>
-	<div class="sig" id="sig0"><%@ include file="noteIssueList.jsp"%></div>
+	<div id="nc<%=savedId%>" class="note">
+		<input type="hidden" id="signed<%=savedId%>" value="false"> 
+		<input type="hidden" id="full<%=savedId%>" value="true"> 
+		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;"> 
+		<input type="hidden" id="editWarn<%=savedId%>" value="false">
+		<div id="n<%=savedId%>" style="line-height: 1.1em;">
+			<textarea tabindex="7" cols="84" rows="10" class="txtArea" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note" /></textarea>
+			<div class="sig" id="sig0"><%@ include file="noteIssueList.jsp"%></div>
 
-	<c:if test="${sessionScope.passwordEnabled=='true'}">
-		<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password" /></p>
-	</c:if></div>
+			<c:if test="${sessionScope.passwordEnabled=='true'}">
+				<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password" /></p>
+			</c:if>
+		</div>
 	</div>
 	<%
 		}
@@ -805,25 +810,35 @@
 	&nbsp;<br />
 
 	</div>
-	<div id='save' style="width: 99%; background-color: #CCCCFF; padding-top: 5px; margin-left: 2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;"><span style="float: right; margin-right: 5px;">
-	<input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return savePage('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp; <input
-		tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp; <input tabindex="12"
-		type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');"
-		title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp; 
-	<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>"
-		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
-	<%if(bean.source == null)  { %>
-	<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>"
-		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
-	<%} %>
-	<c:if test="${sessionScope.passwordEnabled=='true'}">
-		<input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
-        </c:if> <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp; <input tabindex="16" type='image'
-		src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'> </span> <input type='image' id='toggleIssue' onclick="return showIssues(event);"
-		src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp; <input tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;"
-		onkeypress="return submitIssue(event);" size="25">&nbsp; <input tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>"> <span id="busy" style="display: none"><img
-		style="position: absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking" />"></span></div>
-	</div>
+	
+	<div id='save' style="width: 99%; background-color: #CCCCFF; padding-top: 5px; margin-left: 2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">
+		<span style="float: right; margin-right: 5px;">
+			<input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return savePage('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp; 
+			<input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;
+			<input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp; 
+			<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+			<%
+				if(bean.source == null)  { 
+				%>
+					<input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
+				<%
+				}
+			%>
+			
+			<c:if test="${sessionScope.passwordEnabled=='true'}">
+				<input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
+	    	</c:if>
+	    	
+	    	<input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp; 
+	    	<input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'> 
+    	</span> 
+    	<input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp; 
+    	<input tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp; <input tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>"> 
+    	<span id="busy" style="display: none">
+    		<img style="position: absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking" />">
+    	</span>
+    </div>
+</div>
 </nested:form>
 </div>
 
@@ -910,9 +925,6 @@
     reason = "<%=insertReason(request, bean)%>";    //function defined bottom of file
    </script>
 
-<%
-	current = System.currentTimeMillis();
-%>
 <%!/*
 																						 *Insert encounter reason for new note
 																						 */
