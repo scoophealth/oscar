@@ -270,7 +270,7 @@
     content += "<demosex>" + demoSex + "</demosex>" ;
 
     if(request.getParameter("addition")!=null && "Confirm".equals(request.getParameter("addition"))) {	    
-
+            Boolean bServicePerc = false;
 	    for(int k=0; k<tempDate.length; k++) {
 	    	if(tempDate[k].trim().length()!=10) continue;
 			String[] param =new String[23];
@@ -309,7 +309,8 @@
 			if(props.getProperty("isNewONbilling", "").equals("true")) {
 				BillingSavePrep saveObj = new BillingSavePrep();
 				// combine two vecs into one
-				if(vecServiceCodePerc.size()>1) {
+				if(!bServicePerc && vecServiceCodePerc.size()>1) {
+                                        bServicePerc = true;
 					vecServiceCodePrice.add( "" + bdPerc); //vecServiceCodePerc.get(1) );
 					vecServiceCodeUnit.add( vecServiceCodePerc.get(2) );
 					vecServiceCode.add( vecServiceCodePerc.get(0) );
