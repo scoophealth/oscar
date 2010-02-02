@@ -29,6 +29,7 @@
             if (session.getValue("user") == null) {
                 response.sendRedirect("../logout.htm");
             }
+            System.out.println("1");
             String user_no = (String) session.getAttribute("user");
             String userfirstname = (String) session.getAttribute("userfirstname");
             String userlastname = (String) session.getAttribute("userlastname");
@@ -46,6 +47,7 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="oscar.oscarProvider.data.*"%>
 
 <%
             for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
@@ -144,9 +146,180 @@
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 
+         <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
+        <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
+        <script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"/></script>
+        <script type="text/javascript" src="../share/yui/js/connection-min.js"/></script>
+        <script type="text/javascript" src="../share/yui/js/animation-min.js"/></script>
+        <script type="text/javascript" src="../share/yui/js/datasource-min.js"/></script>
+        <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"/></script>
+        <style type="text/css">
+#myAutoComplete {
+    width:15em; /* set width here or else widget will expand to fit its container */
+    padding-bottom:2em;
+}
+.match {
+    font-weight:bold;
+}
+
+
+
+        .yui-ac {
+	    position:relative;font-family:arial;font-size:100%;
+	}
+
+	/* styles for input field */
+	.yui-ac-input {
+	    position:relative;width:100%;
+	}
+
+	/* styles for results container */
+	.yui-ac-container {
+	    position:absolute;top:0em;width:100%;
+	}
+
+	/* styles for header/body/footer wrapper within container */
+	.yui-ac-content {
+	    position:absolute;width:100%;border:1px solid #808080;background:#fff;overflow:hidden;z-index:9050;
+	}
+
+	/* styles for container shadow */
+	.yui-ac-shadow {
+	    position:absolute;margin:.0em;width:100%;background:#000;-moz-opacity: 0.10;opacity:.10;filter:alpha(opacity=10);z-index:9049;
+	}
+
+	/* styles for results list */
+	.yui-ac-content ul{
+	    margin:0;padding:0;width:100%;
+	}
+
+	/* styles for result item */
+	.yui-ac-content li {
+	    margin:0;padding:0px 0px;cursor:default;white-space:nowrap;
+	}
+
+	/* styles for prehighlighted result item */
+	.yui-ac-content li.yui-ac-prehighlight {
+	    background:#B3D4FF;
+	}
+
+	/* styles for highlighted result item */
+	.yui-ac-content li.yui-ac-highlight {
+	    background:#426FD9;color:#FFF;
+	}
+	
+</style>
+
         <script type="text/javascript" src="../share/javascript/nifty.js"></script>
         <script type="text/javascript" src="../phr/phr.js"></script>
         <script type="text/javascript">
+
+       var myContacts = [
+       <%ArrayList providers = ProviderData.getProviderList();
+        for (int i = 0; i < providers.size(); i++) {
+           Hashtable h = (Hashtable) providers.get(i);%>
+           {providerno: "<%= h.get("providerNo")%>", lname: "<%= h.get("lastName")%>", fname:"<%= h.get("firstName")%>"},
+       <%}%>
+           { providerno: "-1",lname: "none", fname:"none"}
+
+    ];
+
+// Define a custom search function for the DataSource
+    var matchNames = function(sQuery) {
+        // Case insensitive matching
+        var query = sQuery.toLowerCase(),
+            contact,
+            i=0,
+            l=myContacts.length,
+            matches = [];
+            //console.log(l);
+
+        // Match against each name of each contact
+        for(; i<l; i++) {
+            contact = myContacts[i];
+            if((contact.fname.toLowerCase().indexOf(query) > -1) || (contact.lname.toLowerCase().indexOf(query) > -1) ) {
+                matches[matches.length] = contact;
+            }
+        }
+
+        return matches;
+    };
+
+    var oDS = new YAHOO.util.FunctionDataSource(matchNames);
+    oDS.responseSchema = {fields: ["id", "fname", "lname"]}
+
+
+	// Helper function for the formatter
+    var highlightMatch = function(full, snippet, matchindex) {
+        return full.substring(0, matchindex) +
+                "<span class='match'>" +
+                full.substr(matchindex, snippet.length) +
+                "</span>" +
+                full.substring(matchindex + snippet.length);
+    };
+
+
+	var resultFormatter = function(oResultData, sQuery, sResultMatch) {
+        var query = sQuery.toLowerCase(),
+            fname = oResultData.fname,
+            lname = oResultData.lname,
+                        query = sQuery.toLowerCase(),
+            fnameMatchIndex = fname.toLowerCase().indexOf(query),
+            lnameMatchIndex = lname.toLowerCase().indexOf(query),
+
+            displayfname, displaylname ;
+
+        if(fnameMatchIndex > -1) {
+            displayfname = highlightMatch(fname, query, fnameMatchIndex);
+        }
+        else {
+            displayfname = fname;
+        }
+
+        if(lnameMatchIndex > -1) {
+            displaylname = highlightMatch(lname, query, lnameMatchIndex);
+        }
+        else {
+            displaylname = lname;
+        }
+
+
+        return displayfname + " " + displaylname ;
+
+    };
+
+
+var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
+        var query = sQuery.toLowerCase();
+           console.log(oResultData);
+            fname = oResultData[1];
+            dob = oResultData[0];
+            
+            fnameMatchIndex = fname.toLowerCase().indexOf(query),
+            
+            displayfname= '';
+
+        if(fnameMatchIndex > -1) {
+            displayfname = highlightMatch(fname, query, fnameMatchIndex);
+        }
+        else {
+            displayfname = fname;
+        }
+
+       
+
+
+        return displayfname + " (" + dob+ ")" ;
+
+    };
+
+
+
+
+
+
+
+      
             window.onload=function(){
                 if(!NiftyCheck())
                     return;
@@ -268,10 +441,13 @@
         function setup() {
             var update = "<%=updateParent%>";
             var parentId = "<%=parentAjaxId%>";
-            var Url = window.opener.URLs;
+            if(window.opener){
+                var Url = window.opener.URLs;
 
-            if( update == "true" && !window.opener.closed )
-                window.opener.popLeftColumn(Url[parentId], parentId, parentId);
+                if( update == "true" && !window.opener.closed )
+                    window.opener.popLeftColumn(Url[parentId], parentId, parentId);
+            }
+
         }
 
 
@@ -347,7 +523,9 @@
 
 
     </head>
-    <body class="bodystyle">
+
+    <body class="yui-skin-sam2"> <%-- class="bodystyle" --%>
+        
 
         <table class="MainTable" id="scrollNumber1" name="encounterTable"
                style="margin: 0px;">
@@ -426,6 +604,7 @@
                             <div id="documentsInnerDiv<%=i%>" style="background-color: #f2f7ff;">
                                 <%-- <table id="privateDocs" class="docTable" --%> <%
                             int tabindex = 1;
+
                             for (int i2 = 0; i2 < category.size(); i2++) {
                                 EDoc curdoc = (EDoc) category.get(i2);
                                 //content type (take everything following '/')
@@ -487,7 +666,46 @@
                                                                     <div id="autocomplete_choices<%=curdoc.getDocId()%>"class="autocomplete"></div>
 
                                                                     <script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
-                                                                    new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "../demographic/SearchDemographic.do", {minChars: 3, afterUpdateElement: saveDemoId});
+                                                                    //new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "../demographic/SearchDemographic.do", {minChars: 3, afterUpdateElement: saveDemoId});
+
+
+                                                                    YAHOO.example.BasicRemote = function() {
+                                                                            //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
+                                                                            var url = "../demographic/SearchDemographic.do";//"<c:out value="${ctx}"/>" + "/oscarRx/searchDrug.do?method=jsonSearch";
+                                                                            var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleRequests'});
+                                                                            oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
+                                                                            // Define the schema of the delimited results
+                                                                            oDS.responseSchema = {
+                                                                                resultsList : "results",
+                                                                                fields : ["fomattedDob","formattedName", "demographicNo"]
+                                                                            };
+                                                                            // Enable caching
+                                                                            oDS.maxCacheEntries = 500;
+
+                                                                            //oDS.connXhrMode ="cancelStaleRequests";
+
+                                                                            // Instantiate the AutoComplete
+                                                                            var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", oDS);
+                                                                            oAC.queryMatchSubset = true;
+                                                                            oAC.minQueryLength = 3;
+                                                                            oAC.maxResultsDisplayed = 25;
+                                                                             oAC.formatResult = resultFormatter2;
+                                                                            //oAC.typeAhead = true;
+                                                                            oAC.queryMatchContains = true;
+                                                                            oAC.itemSelectEvent.subscribe(function(type, args) {
+                                                                               var str = args[0].getInputEl().id.replace("autocompletedemo","demofind");
+                                                                               $(str).value = args[2][2];//li.id;
+                                                                               args[0].getInputEl().value = args[2][1]+ "("+args[2][0]+")";
+                                                                            });
+
+
+                                                                            return {
+                                                                                oDS: oDS,
+                                                                                oAC: oAC
+                                                                            };
+                                                                        }();
+
+
 
                                                                     </script>
                                                                     <input type="checkbox" name="demoLink" >Send to MRP</input>
@@ -497,14 +715,70 @@
 
                                                             <tr>
                                                                 <td valign="top">Flag Provider: </td>
+
                                                                 <td>
-                                                                    <input tabindex="<%=tabindex++%>" type="text" id="autocompleteprov<%=curdoc.getDocId()%>" name="demographicKeyword"/>
-                                                                    <div id="autocomplete_choicesprov<%=curdoc.getDocId()%>" class="autocomplete"></div>
+                                                                    <div class="myAutoComplete">
+                                                                        <input tabindex="<%=tabindex++%>" type="text" id="autocompleteprov<%=curdoc.getDocId()%>" name="demographicKeyword"/>
+                                                                        <div id="autocomplete_choicesprov<%=curdoc.getDocId()%>" class="autocomplete"></div>
+                                                                    </div>
 
                                                                     <script type="text/javascript">
-                                                                    new Ajax.Autocompleter("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", "testProvcomp.jsp", {minChars: 3, afterUpdateElement: saveProvId});
+                                                                    //new Ajax.Autocompleter("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", "testProvcomp.jsp", {minChars: 3, afterUpdateElement: saveProvId});
+
+                                                                    YAHOO.example.FnMultipleFields = function(){
+
+                                                                        // Instantiate AutoComplete
+                                                                        var oAC = new YAHOO.widget.AutoComplete("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", oDS);
+                                                                        oAC.useShadow = true;
+                                                                        oAC.resultTypeList = false;
+
+                                                                        // Custom formatter to highlight the matching letters
+                                                                        oAC.formatResult = resultFormatter;
+
+
+                                                                        // Define an event handler to populate a hidden form field
+                                                                        // when an item gets selected and populate the input field
+                                                                        //var myHiddenField = YAHOO.util.Dom.get("myHidden");
+                                                                        var myHandler = function(sType, aArgs) {
+                                                                            var myAC = aArgs[0]; // reference back to the AC instance
+                                                                            var elLI = aArgs[1]; // reference to the selected LI element
+                                                                            var oData = aArgs[2]; // object literal of selected item's result data
+
+                                                                            // update hidden form field with the selected item's ID
+                                                                            //myHiddenField.value = oData.id;
+
+                                                                            //console.log('IN HERE');
+                                                                            var bdoc = document.createElement('a');
+                                                                            bdoc.setAttribute("onclick", "removeProv(this);");
+                                                                            bdoc.appendChild(document.createTextNode(" -remove- "));
+
+                                                                            var adoc = document.createElement('div');
+                                                                            adoc.appendChild(document.createTextNode(oData.fname + " " + oData.lname));
+
+                                                                            var idoc = document.createElement('input');
+                                                                            idoc.setAttribute("type", "hidden");
+                                                                            idoc.setAttribute("name","flagproviders");
+                                                                            idoc.setAttribute("value",oData.id);
+                                                                            adoc.appendChild(idoc);
+
+                                                                            adoc.appendChild(bdoc);
+                                                                            var providerList = $('providerList<%=curdoc.getDocId()%>');
+                                                                            //console.log('Now HERE'+providerList);
+                                                                            providerList.appendChild(adoc);
+                                                        
+                                                                            myAC.getInputEl().value = '';//;oData.fname + " " + oData.lname ;
+                                                                        };
+                                                                        oAC.itemSelectEvent.subscribe(myHandler);
+
+                                                                        return {
+                                                                            oDS: oDS,
+                                                                            oAC: oAC
+                                                                        };
+                                                                    }();
+
+                                                                   
                                                                     </script>
-                                                                    <div id="providerList"></div>
+                                                                    <div id="providerList<%=curdoc.getDocId()%>"></div>
                                                                 </td>
                                                             </tr>
 
