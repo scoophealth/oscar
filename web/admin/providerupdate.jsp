@@ -50,7 +50,7 @@
   ProviderBillCenter billCenter = new ProviderBillCenter();
   billCenter.updateBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
   
-  DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[19];
+  DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[20];
   param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
   param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
   param[2]=new DBPreparedHandlerParam(request.getParameter("provider_type"));
@@ -67,15 +67,16 @@
   param[7]=new DBPreparedHandlerParam(request.getParameter("address"));
   param[8]=new DBPreparedHandlerParam(request.getParameter("phone"));
   param[9]=new DBPreparedHandlerParam(request.getParameter("workphone"));
-  param[10]=new DBPreparedHandlerParam(request.getParameter("ohip_no"));
-  param[11]=new DBPreparedHandlerParam(request.getParameter("rma_no"));
-  param[12]=new DBPreparedHandlerParam(request.getParameter("billing_no"));
-  param[13]=new DBPreparedHandlerParam(request.getParameter("hso_no"));
-  param[14]=new DBPreparedHandlerParam(request.getParameter("status"));
-  param[15]=new DBPreparedHandlerParam(SxmlMisc.createXmlDataString(request,"xml_p"));
-  param[16]=new DBPreparedHandlerParam(request.getParameter("provider_activity"));
-  param[17]=new DBPreparedHandlerParam(request.getParameter("practitionerNo"));
-  param[18]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
+  param[10]=new DBPreparedHandlerParam(request.getParameter("email"));
+  param[11]=new DBPreparedHandlerParam(request.getParameter("ohip_no"));
+  param[12]=new DBPreparedHandlerParam(request.getParameter("rma_no"));
+  param[13]=new DBPreparedHandlerParam(request.getParameter("billing_no"));
+  param[14]=new DBPreparedHandlerParam(request.getParameter("hso_no"));
+  param[15]=new DBPreparedHandlerParam(request.getParameter("status"));
+  param[16]=new DBPreparedHandlerParam(SxmlMisc.createXmlDataString(request,"xml_p"));
+  param[17]=new DBPreparedHandlerParam(request.getParameter("provider_activity"));
+  param[18]=new DBPreparedHandlerParam(request.getParameter("practitionerNo"));
+  param[19]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
   
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
