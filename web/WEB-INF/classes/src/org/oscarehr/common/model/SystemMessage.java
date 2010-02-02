@@ -30,6 +30,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class SystemMessage extends AbstractModel<Integer> {
@@ -38,7 +40,11 @@ public class SystemMessage extends AbstractModel<Integer> {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id = 0;
 	private String message = null;
+
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate = new Date();
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date expiryDate = new Date();
 
 	public String getMessage() {
@@ -65,7 +71,8 @@ public class SystemMessage extends AbstractModel<Integer> {
 		this.expiryDate = expiryDate;
 	}
 
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 

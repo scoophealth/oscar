@@ -21,7 +21,8 @@ public class SecRole extends AbstractModel<Integer> implements Serializable {
 	private String name;
 	private String description;
 
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 
@@ -39,21 +40,6 @@ public class SecRole extends AbstractModel<Integer> implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public boolean equals(Object o) {
-		try {
-			SecRole sc1 = (SecRole) o;
-			return (sc1.id.equals(id));
-		} catch (Exception e) {
-			// do nothing let it fall through.
-		}
-
-		return (false);
-	}
-
-	public int hashCode() {
-		return (id != null ? id.hashCode() : 0);
 	}
 
 }

@@ -48,7 +48,8 @@ public class DigitalSignature extends AbstractModel<Integer>{
 	/** Image of the signature as a jpg */
 	private byte[] signatureImage = null;
 
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 
@@ -92,18 +93,4 @@ public class DigitalSignature extends AbstractModel<Integer>{
 		this.signatureImage = signatureImage;
 	}
 
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		DigitalSignature redirectLink = (DigitalSignature) o;
-
-		if (id != null ? !id.equals(redirectLink.id) : redirectLink.id != null) return false;
-
-		return true;
-	}
-
-	public int hashCode() {
-		return (id != null ? id.hashCode() : 0);
-	}
 }

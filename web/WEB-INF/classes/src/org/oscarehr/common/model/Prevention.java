@@ -121,26 +121,12 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 		this.creatorProviderNo = creatorProviderNo;
 	}
 
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 
 	public Date getCreationDate() {
 		return creationDate;
-	}
-
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Prevention prevention = (Prevention) o;
-
-		if (id != null ? !id.equals(prevention.id) : prevention.id != null) return false;
-
-		return true;
-	}
-
-	public int hashCode() {
-		return (id != null ? id.hashCode() : 0);
 	}
 }

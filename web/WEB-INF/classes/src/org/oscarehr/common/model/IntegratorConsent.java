@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CollectionOfElements;
@@ -34,6 +36,8 @@ public class IntegratorConsent extends AbstractModel<Integer> {
 	private Integer facilityId = -1;
 	private Integer demographicId = -1;
 	private String providerNo = null;
+
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate = new Date();
 
 	/**
@@ -83,7 +87,8 @@ public class IntegratorConsent extends AbstractModel<Integer> {
 		this.createdDate = createdDate;
 	}
 
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 

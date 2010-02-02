@@ -21,7 +21,8 @@ public class IntegratorConsentComplexExitInterview extends AbstractModel<Facilit
 	private String reAskConsentComments = null;
 	private String additionalComments = null;
 
-	public FacilityDemographicPrimaryKey getId() {
+	@Override
+    public FacilityDemographicPrimaryKey getId() {
 		return id;
 	}
 

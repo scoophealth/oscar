@@ -112,7 +112,8 @@ public class HnrDataValidation extends AbstractModel<Integer> {
 		this.valid = valid;
 	}
 
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 

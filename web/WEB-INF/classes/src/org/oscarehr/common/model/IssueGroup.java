@@ -15,7 +15,8 @@ public class IssueGroup extends AbstractModel<Integer> implements Comparable<Iss
 	private Integer id=null;
 	private String name=null;
 
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 
