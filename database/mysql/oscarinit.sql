@@ -597,6 +597,7 @@ CREATE TABLE drugs (
   nosubs tinyint(1) NOT NULL default '0',
   prn tinyint(1) NOT NULL default '0',
   special text,
+  special_instruction TEXT default NULL,
   archived tinyint(1) NOT NULL default '0',
   GN varchar(255) default NULL,
   ATC varchar(20) default NULL,
