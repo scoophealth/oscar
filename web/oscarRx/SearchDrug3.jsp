@@ -19,7 +19,7 @@
 <%@page import="org.oscarehr.casemgmt.web.PrescriptDrug"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.ArrayList,oscar.oscarRx.data.RxPrescriptionData"%>
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <%
@@ -597,7 +597,7 @@ body {
                                         </tr>
                                     </table>
                                 </html:form>
-<div id="previewForm" style="display:none;"></div>
+                                <div id="previewForm" style="display:none;"></div>
                             </td>
                         </tr>
                         <tr><!--put this left-->
@@ -695,12 +695,12 @@ body {
                                 </div>
                             </td>
                         </tr>
-        </table>
-    </td>
+                    </table>
+                </td>
                 <td width="15%" valign="top">
                     <div id="interactionsRxMyD" style="float:right;"></div>
                 </td>
-</tr>
+            </tr>
 
 <tr>
     <td height="0%" style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
@@ -856,6 +856,55 @@ body {
                         }
 %>
 <script type="text/javascript">
+     function updateSpecialInstruction(elementId){
+         var randomId=elementId.split("_")[1];
+         var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=updateSpecialInstruction";
+         var data="randomId="+randomId+"&specialInstruction="+$(elementId).value;
+         new Ajax.Request(url, {method: 'post',parameters:data});
+     }
+
+    function changeText(elementId){
+        oscarLog("in clearText");
+        oscarLog("text value="+$(elementId).value);
+        if($(elementId).value=='Enter Special Instruction'){
+            $(elementId).value="";
+            $(elementId).setStyle({color:'black'});
+        }else if ($(elementId).value==''){
+            $(elementId).value='Enter Special Instruction';
+            $(elementId).setStyle({color:'gray'});
+        }
+
+    }
+    function updateMoreLess(elementId){
+        oscarLog(elementId);
+        oscarLog($(elementId).innerHTML);
+        if($(elementId).innerHTML=='more')
+            $(elementId).innerHTML='less';
+        else
+            $(elementId).innerHTML='more';
+    }
+
+    function changeDrugName(randomId){
+            if (confirm('If you change the drug name and write your own drug, you will lose the following functionality:'
+            + '\n  *  Known Dosage Forms / Routes'
+            + '\n  *  Drug Allergy Information'
+            + '\n  *  Drug-Drug Interaction Information'
+            + '\n  *  Drug Information'
+            + '\n\nAre you sure you wish to use this feature?')==true) {
+
+            //call another function to bring up prescribe.jsp
+            var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=normalDrugSetCustom";
+            var customDrugName=$("drugName_"+randomId).getValue();
+            oscarLog("customDrugName="+customDrugName);
+            var data="randomId="+randomId+"&customDrugName="+customDrugName;
+            new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,insertion: Insertion.Bottom,onSuccess:function(transport){
+                    $('set_'+randomId).remove();
+                    <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
+                      callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
+                     </oscar:oscarPropertiesCheck>
+                }});
+        }
+    }
     function resetStash(){
                var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearStash";
                var data = "";
@@ -976,8 +1025,8 @@ body {
                  // var str = "Allergy: "+ json.alleg.DESCRIPTION + " Reaction: "+json.alleg.reaction;
                  if(json.DESCRIPTION!=null&&json.reaction!=null){
                       var str = "Allergy: "+ json.DESCRIPTION + " Reaction: "+json.reaction;
-                  $('alleg_'+json.id).innerHTML = str;
-                  oscarLog("-- "+ $('alleg_'+json.id).innerHTML);
+                      $('alleg_'+json.id).innerHTML = str;
+                      oscarLog("-- "+ $('alleg_'+json.id).innerHTML);
                  }
             }});
    }
@@ -1127,9 +1176,9 @@ function popForm2(){
      }
 
      function callReplacementWebService(url,id){
-               var ran_number=Math.round(Math.random()*1000000);
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
-               var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:false,evalScripts:true});
+              var ran_number=Math.round(Math.random()*1000000);
+              var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
+              var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:false,evalScripts:true});
          }
           //callReplacementWebService("InteractionDisplay.jsp",'interactionsRx');
           <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
@@ -1268,9 +1317,9 @@ function addFav(randomId,brandName){
           new Ajax.Request(url, {method: 'post',parameters:params});
         }else{
             oscarLog("resHidden2 is not 0");
-          $('showHiddenResWord').update('show');
-          list.invoke('hide');
-          resHidden2 = 0;
+            $('showHiddenResWord').update('show');
+            list.invoke('hide');
+            resHidden2 = 0;
         }
     }
     var showOrHide=0;
@@ -1443,7 +1492,12 @@ function updateQty(element){
         new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
                 str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
-                    +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                    +json.takeMax +"; Duration:";
+                    if(json.duration==null || json.duration=="null"){
+                        str+=  "; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                    }else{
+                        str+= json.duration+ "; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                    }
                 oscarLog("json.duration="+json.duration);
                 if(json.unitName!=null && json.unitName!="null"){
                     str+=" "+json.unitName;
@@ -1477,7 +1531,12 @@ function updateQty(element){
         new Ajax.Request(url, {method: 'get',parameters:instruction, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
                 str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
-                    +json.takeMax +"; Duration:"+json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                    +json.takeMax +"; Duration:";
+                if(json.duration==null || json.duration=="null"){
+                        str+="; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                }else{
+                        str+=json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
+                }
                 oscarLog("json.duration="+json.duration);
                 if(json.unitName!=null && json.unitName!="null"){
                     str+=" "+json.unitName;
@@ -1518,6 +1577,7 @@ function updateQty(element){
         {method: 'post',postBody:data,
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
+                callReplacementWebService("ListDrugs.jsp",'drugProfile');
                 popForm2();
             }});
         return false;
