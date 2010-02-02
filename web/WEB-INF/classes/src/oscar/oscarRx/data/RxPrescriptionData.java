@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarRx.data;
 
@@ -90,7 +90,10 @@ public class RxPrescriptionData {
                 prescription.setTakeMin(rs.getFloat("takemin"));
                 prescription.setTakeMax(rs.getFloat("takemax"));
                 prescription.setFrequencyCode(db.getString(rs, "freqcode"));
-                prescription.setDuration(db.getString(rs, "duration"));
+                String dur=db.getString(rs, "duration");
+                if(dur.equalsIgnoreCase("null"))
+                    dur="";
+                prescription.setDuration(dur);
                 prescription.setDurationUnit(db.getString(rs, "durunit"));
                 prescription.setQuantity(db.getString(rs, "quantity"));
                 prescription.setRepeat(rs.getInt("repeat"));
@@ -114,6 +117,7 @@ public class RxPrescriptionData {
                 prescription.setPatientCompliance(rs.getInt("patient_compliance"));
                 prescription.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
                 prescription.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
+                prescription.setSpecialInstruction(db.getString(rs, "special_instruction"));
 
                 if (prescription.getSpecial() == null || prescription.getSpecial().length() <= 6) {
                     logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId=" + drugId + ", drug.special=" + prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
@@ -210,6 +214,7 @@ public class RxPrescriptionData {
         prescription.setPatientCompliance(rePrescribe.getPatientCompliance());
         prescription.setOutsideProviderName(rePrescribe.getOutsideProviderName());
         prescription.setOutsideProviderOhip(rePrescribe.getOutsideProviderOhip());
+        prescription.setSpecialInstruction(rePrescribe.getSpecialInstruction());
 
         return prescription;
     }
@@ -1013,6 +1018,14 @@ public class RxPrescriptionData {
         private String lastArchReason = null;
         private Date archivedDate;
         private boolean discontinuedLatest=false;
+        String special_instruction=null;
+
+        public String getSpecialInstruction(){
+            return special_instruction;
+        }
+        public void setSpecialInstruction(String s){
+            special_instruction=s;
+        }
 
         public boolean isDiscontinuedLatest(){
             return this.discontinuedLatest;
@@ -1195,7 +1208,7 @@ public class RxPrescriptionData {
             //          p("this.getRxDate()",this.getRxDate().toString());
             cal.setTime(this.getRxDate());
 
-            if (this.getDuration().length() > 0) {
+            if (this.getDuration()!=null && this.getDuration().length() > 0) {
                 if (Integer.parseInt(this.getDuration()) > 0) {
                     int i = Integer.parseInt(this.getDuration());
                     //      p("i",Integer.toString(i));
@@ -1590,7 +1603,7 @@ public class RxPrescriptionData {
 
                 if (this.getDuration().equals("")) {
                 } else {
-                    if (Integer.parseInt(this.getDuration()) > 1) {
+                    if (this.getDuration()!=null && !this.getDuration().equalsIgnoreCase("null") && Integer.parseInt(this.getDuration()) > 1) {
                         ret += "s";
                     }
                 }
@@ -1762,8 +1775,8 @@ public class RxPrescriptionData {
                     // check to see if there is an identitical prescription in
                     // the database. If there is we'll return that drugid instead
                     // of adding a new prescription.
-                    
-                    sql = "SELECT drugid FROM drugs WHERE archived = 0 AND " + "provider_no = '" + this.getProviderNo() + "' AND " + "demographic_no = " + 
+
+                    sql = "SELECT drugid FROM drugs WHERE archived = 0 AND " + "provider_no = '" + this.getProviderNo() + "' AND " + "demographic_no = " +
                             this.getDemographicNo() + " AND " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "' AND " + "end_date = '" +
                             RxUtil.DateToString(this.getEndDate()) + "' AND " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "' AND " + "BN = '" +
                             StringEscapeUtils.escapeSql(this.getBrandName()) + "' AND " + "GCN_SEQNO = " + this.getGCN_SEQNO() + " AND " + "customName = '" + this.getCustomName() +
@@ -1773,7 +1786,8 @@ public class RxPrescriptionData {
                             RxUtil.DateToString(this.getLastRefillDate()) + "' AND " + "nosubs = " + this.getNosubsInt() + " AND " + "prn = " + this.getPrnInt() + " AND " +
                             "special = '" +escapedSpecial+ "' AND " + "outside_provider_name = '" + this.getOutsideProviderName() + "' AND " +
                             "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "' AND " + "custom_instructions = " + this.getCustomInstr() + " AND " + "long_term = " +
-                            this.getLongTerm() + " AND " + "past_med = " + this.getPastMed() + " AND " + "patient_compliance = " + this.getPatientCompliance();
+                            this.getLongTerm() + " AND " + "past_med = " + this.getPastMed() + " AND " + "patient_compliance = " + this.getPatientCompliance()
+                            +" AND "+" special_instruction = '"+this.getSpecialInstruction()+"'";
                     System.out.println(sql);
                     rs = db.GetSQL(sql);
 
@@ -1788,9 +1802,9 @@ public class RxPrescriptionData {
                     // if it doesn't already exist add it.
                     if (this.getDrugId() == 0) {
                       //   System.out.println("if it doesn't already exist add it");
-                        sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, past_med, patient_compliance) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", " + this.getPastMed() + ", " + this.getPatientCompliance() + ")";
+                        sql = "INSERT INTO drugs (provider_no, demographic_no, " + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, " + "takemin, takemax, freqcode, duration, durunit, quantity, " + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, " + "regional_identifier, unit, method, route, drug_form, create_date, " + "outside_provider_name, outside_provider_ohip, custom_instructions, " + "dosage, unitName, long_term, past_med, special_instruction,patient_compliance) " + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '" + RxUtil.DateToString(this.getRxDate()) + "', '" + RxUtil.DateToString(this.getEndDate()) + "', '" + RxUtil.DateToString(this.getWrittenDate()) + "', '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO() + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + this.getTakeMin() + ", " + this.getTakeMax() + ", '" + this.getFrequencyCode() + "', '" + this.getDuration() + "', '" + this.getDurationUnit() + "', '" + this.getQuantity() + "', " + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + this.getNosubsInt() + ", " + this.getPrnInt() + ", '" + escapedSpecial + "','" + StringEscapeUtils.escapeSql(this.getGenericName()) + "','" + scriptId + "', '" + this.getAtcCode() + "', '" + this.getRegionalIdentifier() + "','" + this.getUnit() + "','" + this.getMethod() + "','" + this.getRoute() + "','" + this.getDrugForm() + "',now(),'" + this.getOutsideProviderName() + "','" + this.getOutsideProviderOhip() + "', " + this.getCustomInstr() + ",'" + this.getDosage() + "', '" + this.getUnitName() + "', " + this.getLongTerm() + ", " + this.getPastMed() + ", '" +this.special_instruction+"', "+ this.getPatientCompliance() + ")";
                           System.out.println("sql="+sql);
-                       
+
                         db.RunSQL(sql);
 
                         // it's added, so get the top (most recent) drugid
@@ -1810,7 +1824,7 @@ public class RxPrescriptionData {
                 } else { // update the database
                   //  System.out.println("update the database");
                     //create_date is not updated
-                    sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " + "past_med = " + this.getPastMed() + ", " + "patient_compliance = " + this.getPatientCompliance() + " " + "WHERE drugid = " + this.getDrugId();
+                    sql = "UPDATE drugs SET " + "provider_no = '" + this.getProviderNo() + "', " + "demographic_no = " + this.getDemographicNo() + ", " + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', " + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '" + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + escapedSpecial + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', " + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " + "past_med = " + this.getPastMed() + ", " +"special_instruction = '"+this.getSpecialInstruction()+"', " + "patient_compliance = " + this.getPatientCompliance() + " " + "WHERE drugid = " + this.getDrugId();
                     System.out.println("sql="+sql);
                     db.RunSQL(sql);
 
