@@ -26,17 +26,23 @@ package oscar.oscarRx.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import oscar.oscarRx.data.RxPrescriptionData;
 import java.util.regex.*;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
-import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarRx.data.RxCodesData;
 
 public class RxUtil {
 
@@ -703,14 +709,14 @@ public class RxUtil {
                 isUnitNameUsed=true;
             //calculate quantity based on duration, frequency, duration unit, takeMin , takeMax
             //if unitName is used, don't calculate quantity or duration
-            if (isUnitNameUsed || duration.equals("0") || durationUnit.equals("") || takeMin.equals("0") || takeMax.equals("0") || frequency.equals("")) {
+            if (isUnitNameUsed || duration.equals("0")||duration.length()==0 || durationUnit.equals("") || takeMin.equals("0") || takeMax.equals("0") || frequency.equals("")) {
                 System.out.println("in instrucParser,if="+rx.getUnitName()+"--"+duration+" --"+durationUnit+"-- "+ takeMin+"-- "+ takeMax+"--"+frequency);
             } else {
 
 
                 nPerDay = findNPerDay(frequency);
                 nDays = findNDays(durationUnit);
-
+                System.out.println("in instrucParser duration="+duration);
                 //quantity=takeMax * nDays * duration * nPerDay
                 double quantityD = (Double.parseDouble(takeMax)) * nPerDay * nDays * (Double.parseDouble(duration));
                 quantity = (int) quantityD;
@@ -771,6 +777,10 @@ public class RxUtil {
     }
     public static String trimSpecial(RxPrescriptionData.Prescription rx) {
         String special = rx.getSpecial();
+        //if rx has special instruction, remove it from special
+        if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null")&&rx.getSpecialInstruction().trim().length()>0){
+            special=special.replace(rx.getSpecialInstruction(), "");
+        }
         //remove Qty:num
         String regex1 = "Qty:\\s*[0-9]*\\.?[0-9]*\\s*";
         Pattern p = Pattern.compile(regex1);
@@ -1040,7 +1050,7 @@ public class RxUtil {
                 //p("BN in stash",rxTemp.getBrandName());
                 //p("GCN  ",""+rx.getGCN_SEQNO());
                 //p("GCN in stash",""+rxTemp.getGCN_SEQNO());
-                if (rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO() == rxTemp.getGCN_SEQNO()) {
+                if (rx.getBrandName()!=null && rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO() == rxTemp.getGCN_SEQNO()) {
                     //p("unique turning false");
                     unique = false;
                 }
@@ -1053,7 +1063,37 @@ public class RxUtil {
         }
         return unique;
     }
+    public static String getSpecialInstructions(){
+        String retStr="";
+        RxCodesData codesData = new RxCodesData();
+        String[] specArr = codesData.getSpecialInstructions();
+        List<String> specList=Arrays.asList(specArr);
+        // get all past record spec inst from drugs table
+        String sql ="SELECT distinct special_instruction from drugs where special_instruction!='NULL'";
+        List<String> resultSpecInst=new ArrayList<String>();
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            rs = db.GetSQL(sql);
+            while(rs.next()){
+                resultSpecInst.add(rs.getString("special_instruction"));
+            }
+        } catch (SQLException e) {
+            logger.error(sql, e);
+        } finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+        resultSpecInst.addAll(specList);
+        Set<String> specIntSet=new HashSet<String>(resultSpecInst);//remove duplicates
+        specArr=specIntSet.toArray(specArr);
+        for(int i=0;i<specArr.length;i++){
+            retStr+=specArr[i];
+            if(i<specArr.length-1)
+                retStr+="*"; //use * as a delimiter
+        }
+        return retStr;
 
+    }
     public static void p(String str, String s) {
         System.out.println(str + "=" + s);
     }
