@@ -220,6 +220,11 @@ for (int i=0; i<sites.size(); i++) {
 			</td>
 		</tr>
 		<tr>
+			<td align="right"><bean:message key="admin.provider.formEmail" />:
+			</td>
+			<td><input type="text" name="email" value=""></td>
+		</tr>
+		<tr>
 			<td align="right"><bean:message key="admin.provider.formPager" />:
 			</td>
 			<td><input type="text" name="xml_p_pager" value=""></td>

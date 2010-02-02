@@ -241,6 +241,12 @@ for (int i=0; i<sites.size(); i++) {
 				maxlength="50"></td>
 		</tr>
 		<tr>
+			<td align="right"><bean:message key="admin.provider.formEmail" />:</td>
+			<td><input type="text" name="email"
+				value="<%= apptMainBean.getString(rs,"email") == null?"":(apptMainBean.getString(rs,"email")) %>"
+				maxlength="50"></td>
+		</tr>
+		<tr>
 			<td align="right"><bean:message key="admin.provider.formPager" />:
 			</td>
 			<td><input type="text" name="xml_p_pager"
