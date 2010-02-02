@@ -17,7 +17,6 @@ create table Facility (
 	enableHealthNumberRegistry tinyint(1) not null,
 	allowSims tinyint(1) unsigned NOT NULL default 1,
 	enableDigitalSignatures tinyint(1) not null,
-	enableCdsForms tinyint(1) not null,
 	lastUpdated datetime not null
 );
 

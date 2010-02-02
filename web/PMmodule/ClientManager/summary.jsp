@@ -273,20 +273,14 @@ function openSurvey() {
 				 	<td><input type="button" <%=isIntegratorContactable?"":"disabled=\"disabled\""%> value="Manage Linked Clients" onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /></td>
 				</tr>
 			<%
-		}
-	
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableCdsForms())
-		{
-			%>
-				<tr>
-					<th>CDS Data</th>
-					<td>
-						<input type="button" value="CDS Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-					</td>
-				</tr>
-			<%
-		}
+		}	
 	%>
+	<tr>
+		<th>CDS Data</th>
+		<td>
+			<input type="button" value="CDS Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+		</td>
+	</tr>
 </table>
 
 <br />
