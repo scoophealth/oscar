@@ -3,9 +3,9 @@
 <%@page import="oscar.oscarRx.data.RxDrugData,java.util.*" %>
 <%@page import="java.text.SimpleDateFormat" %>
 <%@page import="java.util.Calendar" %>
-<%@page import="oscar.oscarRx.data.RxPrescriptionData" %>
+<%@page import="oscar.oscarRx.data.*" %>
 <%@page import="oscar.oscarRx.util.*" %>
-<%
+    <%
 System.out.println("***### IN prescribe.jsp");
 
 List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("listRxDrugs");
@@ -14,10 +14,13 @@ Vector interactingDrugList=bean.getInteractingDrugList();
 int interactingDrugListSize=interactingDrugList.size();
 System.out.println("listRxDrugs="+listRxDrugs);
 if(listRxDrugs!=null){
+            String specStr=RxUtil.getSpecialInstructions();
+
   for(RxPrescriptionData.Prescription rx : listRxDrugs ){
          System.out.println("display prescribe :"+rx);
          String rand            = Long.toString(rx.getRandomId());
          String instructions    = rx.getSpecial();
+         String specialInstruction=rx.getSpecialInstruction();
          String drugForm        = rx.getDrugForm();
          String startDate       = RxUtil.DateToString(rx.getRxDate(), "yyyy-MM-dd");
          String writtenDate     = RxUtil.DateToString(rx.getWrittenDate(), "yyyy-MM-dd");
@@ -36,11 +39,17 @@ if(listRxDrugs!=null){
          String outsideProvOhip = rx.getOutsideProviderOhip();
          String brandName        = rx.getBrandName();
          String drugName;
+         boolean isSpecInstPresent=false;
          if(gcn==0){//it's a custom drug
             drugName=customName;
          }else{
             drugName=brandName;
          }
+         if(specialInstruction!=null&&!specialInstruction.equalsIgnoreCase("null")&&specialInstruction.trim().length()>0){
+            isSpecInstPresent=true;
+         }
+      //   System.out.println("customName="+customName);
+      //   System.out.println("drugName="+drugName);
          //for display
          if(drugName==null || drugName.equalsIgnoreCase("null"))
              drugName="" ;
@@ -85,24 +94,33 @@ if(listRxDrugs!=null){
          if(route==null || route.equalsIgnoreCase("null")) route="";
          String rxString="Method:"+method+"; Route:"+route+"; Frequency:"+frequency+"; Min:"+takeMin+"; Max:"
                     +takeMax+"; Duration:"+duration+"; DurationUnit:"+durationUnit+"; Quantity:"+quantityText;
-         //System.out.println("*************** rxString="+rxString);
+       // System.out.println("is spec inst present ="+isSpecInstPresent+";spec="+specialInstruction);
 %>
 
 <fieldset style="margin-top:2px;width:580px;" id="set_<%=rand%>">
-    <a href="javascript:void(0);" style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');">X</a>
-    <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">more</a>
+    <a href="javascript:void(0);"  style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');">X</a>
+    <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
 
     <label style="float:left;width:80px;">Name:</label>
-    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"     size="30" <%if(gcn==0 && (drugName==null || drugName.equalsIgnoreCase("null") || drugName.equals(""))){%> onchange="saveCustomName(this);" <%} else{%> value="<%=drugName%>" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span>&nbsp;&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span><br>
-    <label style="float:left;width:80px;">Instructions:</label>
-    <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" value="<%=instructions%>" size="60" onblur="parseIntr(this);" /> <a id="major_<%=rand%>" style="display:none;background-color:red"></a>&nbsp;<a id="moderate_<%=rand%>" style="display:none;background-color:orange"></a>&nbsp;<a id='minor_<%=rand%>' style="display:none;background-color:yellow;"></a>&nbsp;<a id='unknown_<%=rand%>' style="display:none;background-color:#B1FB17"></a>
+    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"  size="30" <%if(gcn==0){%> onchange="saveCustomName(this);" value="<%=drugName%>"<%} else{%> value="<%=drugName%>" onchange="changeDrugName('<%=rand%>');" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span>&nbsp;&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span><br>
+    <a href="javascript:void(0);" onclick="showHideSpecInst('siAutoComplete_<%=rand%>')" style="float:left;width:80px;">Instructions:</a>
+    <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" onkeypress="handleEnter(this,event);" value="<%=instructions%>" size="60" onblur="parseIntr(this);" /> <a id="major_<%=rand%>" style="display:none;background-color:red"></a>&nbsp;<a id="moderate_<%=rand%>" style="display:none;background-color:orange"></a>&nbsp;<a id='minor_<%=rand%>' style="display:none;background-color:yellow;"></a>&nbsp;<a id='unknown_<%=rand%>' style="display:none;background-color:#B1FB17"></a>
        <br>
+       <label for="specialInstr_<%=rand%>" ></label>
+       <div id="siAutoComplete_<%=rand%>" <%if(isSpecInstPresent){%> style="overflow:visible;"<%} else{%> style="overflow:visible;display:none;"<%}%> >
+           <label style="float:left;width:80px;">&nbsp;&nbsp;</label>
+           <input id="siInput_<%=rand%>" type="text" <%if(!isSpecInstPresent) {%>style="color:gray; width:auto" value="Enter Special Instruction" <%} else {%> style="color:black; width:auto" value="<%=specialInstruction%>" <%}%> onblur="changeText('siInput_<%=rand%>');updateSpecialInstruction('siInput_<%=rand%>');" onfocus="changeText('siInput_<%=rand%>');" >
+           <div id="siContainer_<%=rand%>" style="float:right" >
+           </div>
+                       <br><br>
+        </div>
     <label style="float:left;width:80px;">Quantity:</label>
     <input type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
     <label style="">Repeats:</label>
        <input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />
        <input type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
        <div id="rxString_<%=rand%>"><%=rxString%> </div>
+
        <div id="quantityWarning_<%=rand%>"> </div>
        <div id="rx_more_<%=rand%>" style="display:none;padding:2px;">
           <bean:message key="WriteScript.msgPrescribedByOutsideProvider"/>
@@ -162,6 +180,49 @@ if(listRxDrugs!=null){
 </fieldset>
 
         <script type="text/javascript">
+
+            handleEnter=function handleEnter(inField, ev){
+                var charCode;
+                if(ev && ev.which)
+                    charCode=ev.which;
+                else if(window.event){
+                    ev=window.event;
+                    charCode=ev.keyCode;
+                }
+                var id=inField.id.split("_")[1];
+                if(charCode==13)
+                    showHideSpecInst('siAutoComplete_'+id);
+            }
+            showHideSpecInst=function showHideSpecInst(elementId){
+                oscarLog("in show hide spec inst="+elementId);
+              if($(elementId).getStyle('display')=='none'){
+                  Effect.BlindDown(elementId);
+              }else{
+                  Effect.BlindUp(elementId);
+              }
+            }
+
+            var specArr=new Array();
+            var specStr='<%=specStr%>';
+            specArr=specStr.split("*");// * is used as delimiter
+            oscarLog("specArr="+specArr);
+            YAHOO.example.BasicLocal = function() {
+                // Use a LocalDataSource
+                var oDS = new YAHOO.util.LocalDataSource(specArr);
+                // Optional to define fields for single-dimensional array
+                oDS.responseSchema = {fields : ["state"]};
+
+                // Instantiate the AutoComplete
+                var oAC = new YAHOO.widget.AutoComplete("siInput_<%=rand%>", "siContainer_<%=rand%>", oDS);
+                oAC.prehighlightClassName = "yui-ac-prehighlight";
+                oAC.useShadow = true;
+
+                return {
+                    oDS: oDS,
+                    oAC: oAC
+                };
+            }();
+
 
             callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');
             var gcn_val=<%=gcn%>;
@@ -353,6 +414,6 @@ if(listRxDrugs!=null){
                 }
             }
         </script>
- <%}
+                <%}
 }%>
 
