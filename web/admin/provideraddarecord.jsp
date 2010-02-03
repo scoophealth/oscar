@@ -88,7 +88,7 @@ String [] param = new String[20];
   param[18]=request.getParameter("provider_activity");
   param[19]=request.getParameter("practitionerNo");
 }
-for(int i=0; i< 18; i++) 
+for(int i=0; i< param.length; i++)
 {
 	if (param[i] == null) param[i] = "";
 }
@@ -119,7 +119,7 @@ while ((!isOk) && retry < 3) {
 	sql += "'" + param[16] + "',";
 	sql += "'" + param[17] + "',";
 	sql += "'" + param[18] + "',";
-	sql += "'" + param[18] + "')";
+	sql += "'" + param[19] + "')";
 	DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
 	param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
 	isOk = (dbObj.queryExecuteUpdate(sql, param2)>0);
