@@ -90,6 +90,8 @@ public class BillingCorrectionPrep {
 					"user"));
 			
 			ch1Obj.setClinic((String)requestData.getParameter("site"));
+                        
+                        ch1Obj.setProvince((String)requestData.getParameter("hc_type"));
 
 			ret = dbObj.updateBillingClaimHeader(ch1Obj);
 		}
@@ -258,7 +260,9 @@ public class BillingCorrectionPrep {
 						request.getParameter("comment"))
 				|| !existObj.getProviderNo().equals(
 						request.getParameter("provider_no"))
-				|| !StringUtils.nullSafeEquals(existObj.getClinic(), request.getParameter("site"))) {
+				|| !StringUtils.nullSafeEquals(existObj.getClinic(), request.getParameter("site"))
+                                || !existObj.getProvince().equals(
+						request.getParameter("hc_type"))) {
 			ret = true;
 		}
 		return ret;
