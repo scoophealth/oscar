@@ -906,12 +906,12 @@ public class RxUtil {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            if (rx.getRegionalIdentifier() != null && rx.getRegionalIdentifier().length() > 1) {
+            if (rx.getRegionalIdentifier() != null && rx.getRegionalIdentifier().length() > 1) {//normal drug
                 p("if1");
                 p(rx.getRegionalIdentifier());
                 //query the database to see if there is a rx with same din as this rx.
                 // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
-                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by drugid desc"; //most recent is the first.
+                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' order by drugid desc"; //most recent is the first.
                 rs = db.GetSQL(sql);
                 if (rs.first()) {//use the first result if there are multiple.
                     setResultSpecialQuantityRepeat(rx, rs);
@@ -919,7 +919,7 @@ public class RxUtil {
                     //else, set to special to "1 OD", quantity to "30", repeat to "0".
                     setDefaultSpecialQuantityRepeat(rx);
                 }
-            } else {
+            } else {//custom drug
                 p("else2");
                 if (rx.getBrandName() != null && rx.getBrandName().length() > 1) {
                     p("if2");
