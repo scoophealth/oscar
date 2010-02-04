@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import org.oscarehr.common.model.ProviderInboxItem;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import oscar.oscarDB.DBHandler;
 
@@ -46,9 +47,8 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
     
     public boolean hasProviderBeenLinkedWithDocument(String docType,String docId,String providerNo){
         int dId = Integer.parseInt(docId);
-        int count = (Integer)  this.getHibernateTemplate().find("from ProviderInboxItem where labType = ? and labNo = ?",new Object[] {docType,dId,providerNo}).get(0);       
-        System.out.println("Number of provider links for prov "+providerNo+" id "+docId+" count "+count);
         
+        int count = DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from ProviderInboxItem where labType = ? and labNo = ? and provider_no = ?",new Object[] {docType,dId,providerNo}));
         if (count > 0){
             return true;
         }
