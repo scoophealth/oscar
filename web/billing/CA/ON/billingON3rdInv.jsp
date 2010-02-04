@@ -28,6 +28,7 @@ String percent = gstProp.getProperty("gstPercent", "");
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@ page
 	import="java.util.*, oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.* ,oscar.oscarBilling.ca.on.administration.*"%>
+
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -88,7 +89,15 @@ String percent = gstProp.getProperty("gstPercent", "");
 	<tr align="center">
 		<td><%=ch1Obj.getBilling_date() %></td>
 		<td><%=(new ProviderData()).getProviderName(ch1Obj.getProviderNo()) %></td>
-		<td><%=(new ProviderData()).getProviderName(ch1Obj.getProviderNo()) %></td>
+<% Properties prop = oscar.OscarProperties.getInstance();
+   String payee = prop.getProperty("PAYEE", "");
+   payee = payee.trim();
+   if( payee.length() > 0 ) {
+%>
+    <td><%=payee%></td>
+<% } else { %>
+    <td><%=(new ProviderData()).getProviderName(ch1Obj.getProviderNo()) %></td>
+<% } %>
 		<td><%=ch1Obj.getRef_num() %></td>
 	</tr>
 </table>
