@@ -21,6 +21,7 @@
 
 	<bean name="/dms/ManageDocument" class="org.oscarehr.document.web.ManageDocumentAction">
 		<property name="documentDAO" ref="documentDAO" />
+                <property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
 	</bean>
 
         <bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction">
