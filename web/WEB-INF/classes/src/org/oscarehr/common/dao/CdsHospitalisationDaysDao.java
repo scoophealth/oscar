@@ -19,6 +19,10 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.CdsHospitalisationDays;
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +31,18 @@ public class CdsHospitalisationDaysDao extends AbstractDao<CdsHospitalisationDay
 
 	public CdsHospitalisationDaysDao() {
 		super(CdsHospitalisationDays.class);
+	}
+	
+	public List<CdsHospitalisationDays> findByClientId(Integer clientId)
+	{
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.clientId=?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, clientId);
+
+		@SuppressWarnings("unchecked")
+		List<CdsHospitalisationDays> results=query.getResultList();
+		
+		return (results);		
 	}
 }

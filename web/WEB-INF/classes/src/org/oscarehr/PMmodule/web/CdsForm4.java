@@ -10,10 +10,12 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
+import org.oscarehr.common.dao.CdsHospitalisationDaysDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;
+import org.oscarehr.common.model.CdsHospitalisationDays;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -26,6 +28,7 @@ public class CdsForm4 {
 	private static CdsFormOptionDao cdsFormOptionDao = (CdsFormOptionDao) SpringUtils.getBean("cdsFormOptionDao");
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
+	private static CdsHospitalisationDaysDao cdsHospitalisationDaysDao = (CdsHospitalisationDaysDao) SpringUtils.getBean("cdsHospitalisationDaysDao");
 
 	private static final int MAX_DISPLAY_NAME_LENGTH=60;
 
@@ -185,5 +188,10 @@ public class CdsForm4 {
 		if (cdsClientFormId==null) return(new ArrayList<CdsClientFormData>()); 
 			
 		return(cdsClientFormDataDao.findByQuestion(cdsClientFormId, question));
+	}
+	
+	public static List<CdsHospitalisationDays> getHospitalisationDays(Integer clientId)
+	{
+		return(cdsHospitalisationDaysDao.findByClientId(clientId));
 	}
 }

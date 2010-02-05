@@ -35,7 +35,7 @@ public class CdsClientFormDataDao extends AbstractDao<CdsClientFormData> {
 
 	public List<CdsClientFormData> findByQuestion(Integer cdsClientFormId, String question) {
 
-		String sqlCommand = "select x from CdsClientFormData x where x.cdsClientFormId=?1 and x.question=?2";
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.cdsClientFormId=?1 and x.question=?2";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, cdsClientFormId);
@@ -55,7 +55,7 @@ public class CdsClientFormDataDao extends AbstractDao<CdsClientFormData> {
      */
     public CdsClientFormData findByAnswer(Integer cdsClientFormId, String answer) {
 
-		String sqlCommand = "select x from CdsClientFormData x where x.cdsClientFormId=?1 and x.answer=?2";
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.cdsClientFormId=?1 and x.answer=?2";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, cdsClientFormId);
