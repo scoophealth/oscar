@@ -24,8 +24,7 @@
 			};
 		</script>
 	    
-		<script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />">
-		</script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/dojoAjax/dojo.js"></script>
 		
 		<script type="text/javascript" language="JavaScript">
             dojo.require("dojo.date.format");
@@ -33,7 +32,9 @@
 			dojo.require("dojo.validate.*");
 		</script>
 		
-		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>		
+    	<script src="<%=request.getContextPath()%>/share/javascript/prototype.js" type="text/javascript"></script>
+
+		<script type="text/javascript" src="<%=request.getContextPath()%>/js/genericIntake.js.jsp"></script>		
 	</head>
 	<body>
 		<div class="composite">

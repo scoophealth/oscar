@@ -177,32 +177,30 @@
 		<tr>
 			<td class="genericTableHeader">21. Current Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
-				<table>
-					<tr>
-						<td>Total number of episodes</td>
-						<td>
-							<select name="currentTotalNumberOfEpisodes">
-								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "currentTotalNumberOfEpisodes", 999)%>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>Total number of episodes</td>
-						<td>
-							<select name="currentTotalNumberOfEpisodes">
-								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "currentTotalNumberOfEpisodes", 999)%>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>Total number of hospitalised days</td>
-						<td>
-							<select name="currentTotalNumberOfHospitalisedDays">
-								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "currentTotalNumberOfHospitalisedDays", 999)%>
-							</select>
-						</td>
-					</tr>
-				</table>
+				<span id="hospitalisedDaysList">
+					Hospitalised Days List
+				</span>
+				
+				<script type="text/javascript">
+					function updateHospitalisedListDisplay()
+					{
+						var ajaxArgs =
+						{
+							method:'get',
+							parameters: {clientId : <%=currentDemographicId%>, preventCache: (new Date()).getMilliseconds()},
+							onFailure: function(transport)
+							{
+								alert('Error retrieving hospital days : '+transport) 
+							}
+						}
+			        
+						new Ajax.Updater('hospitalisedDaysList', 'cds_form_4_current_hospitalisations.jsp', ajaxArgs);
+					}
+
+					updateHospitalisedListDisplay();
+				</script>
+				
+				<input type="button" value="Add" />
 			</td>
 		</tr>
 		<tr>
