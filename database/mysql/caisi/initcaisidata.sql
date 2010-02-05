@@ -202,8 +202,8 @@ INSERT INTO `intake_answer_element` VALUES
 -- Populate intake node
 --
 INSERT INTO `intake_node` VALUES
-	(1, 1, NULL, 0, NULL, false, 1, 0, 1, NULL, NULL,1,NULL,0,NULL),
-	(2, 2, NULL, 0, NULL, false, 2, 0, 1, NULL, NULL,2,NULL,0,NULL);
+	(1, 1, NULL, 0, NULL, false, 1, 0, 1, NULL, NULL, NULL,1,0,NULL),
+	(2, 2, NULL, 0, NULL, false, 2, 0, 1, NULL, NULL, NULL,2,0,NULL);
 
 --
 -- Cookie Revolver Init
