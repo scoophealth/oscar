@@ -12,10 +12,18 @@
 	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/displaytag.css" />' />
 	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />' />
 
+		<%--
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
-				
+		--%>
+
+		<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+		<script type="text/javascript" src="<%=request.getContextPath()%>/share/calendar/calendar.js"></script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+		<script type="text/javascript" src="<%=request.getContextPath()%>/share/calendar/calendar-setup.js"></script>
+		
+			 	
 		<script type="text/javascript">
 			var djConfig = {
 				isDebug: false,
@@ -33,6 +41,10 @@
 		</script>
 		
     	<script src="<%=request.getContextPath()%>/share/javascript/prototype.js" type="text/javascript"></script>
+    	<script src="<%=request.getContextPath()%>/share/javascript/scriptaculous.js" type="text/javascript"></script>
+		<%--
+		<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+    	 --%>
 
 		<script type="text/javascript" src="<%=request.getContextPath()%>/js/genericIntake.js.jsp"></script>		
 	</head>

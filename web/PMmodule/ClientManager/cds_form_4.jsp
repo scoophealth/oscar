@@ -177,30 +177,55 @@
 		<tr>
 			<td class="genericTableHeader">21. Current Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
-				<span id="hospitalisedDaysList">
-					Hospitalised Days List
-				</span>
-				
-				<script type="text/javascript">
-					function updateHospitalisedListDisplay()
-					{
-						var ajaxArgs =
-						{
-							method:'get',
-							parameters: {clientId : <%=currentDemographicId%>, preventCache: (new Date()).getMilliseconds()},
-							onFailure: function(transport)
-							{
-								alert('Error retrieving hospital days : '+transport) 
-							}
-						}
-			        
-						new Ajax.Updater('hospitalisedDaysList', 'cds_form_4_current_hospitalisations.jsp', ajaxArgs);
-					}
-
-					updateHospitalisedListDisplay();
-				</script>
-				
-				<input type="button" value="Add" />
+				<table>
+					<tr>
+						<td>
+							<span id="hospitalisedDaysList">
+								Hospitalised Days List
+							</span>
+							
+							<script type="text/javascript">
+								function updateHospitalisedListDisplay()
+								{
+									var ajaxArgs =
+									{
+										method:'get',
+										parameters: {clientId : <%=currentDemographicId%>, preventCache: (new Date()).getMilliseconds()},
+										onFailure: function(transport)
+										{
+											alert('Error retrieving hospital days : '+transport) 
+										}
+									}
+						        
+									new Ajax.Updater('hospitalisedDaysList', 'cds_form_4_current_hospitalisations.jsp', ajaxArgs);
+								}
+			
+								updateHospitalisedListDisplay();
+							</script>
+						</td>
+						<td>
+							<table>
+								<tr>
+									<td>Admission Date</td>
+									<td><input type="text" name="admissionDate" id="admissionDate" value="" size="10" readonly> <img src="<%=request.getContextPath()%>/images/cal.gif" id="admissionDate_cal"></td>
+								</tr>
+								<tr>
+									<td>Discharge Date</td>
+									<td><input type="text" name="dischargeDate" id="dischargeDate" value="" size="10" readonly> <img src="<%=request.getContextPath()%>/images/cal.gif" id="dischargeDate_cal"></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><input type="button" value="Add" /></td>
+								</tr>
+							</table>
+							
+							<script type="text/javascript">
+								Calendar.setup({ inputField : "admissionDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "admissionDate_cal", singleClick : true, step : 1 });
+								Calendar.setup({ inputField : "dischargeDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "dischargeDate_cal", singleClick : true, step : 1 });
+							</script>				
+						</td>
+					</tr>
+				</table>				
 			</td>
 		</tr>
 		<tr>
