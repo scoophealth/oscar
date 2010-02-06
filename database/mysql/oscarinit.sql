@@ -1,8 +1,3 @@
--- MySQL dump 9.09
---
--- Host: localhost    Database: oscar_mcmaster
--- ------------------------------------------------------
--- Server version	4.0.16-standard
 
 --
 -- Table structure for table `FaxClientLog`
@@ -711,43 +706,6 @@ CREATE TABLE eform_data (
   KEY `idx_eform_data_form_provider` (`form_provider`)
 ) ;
 
---
--- Table structure for table `eforms`
---
-
-CREATE TABLE eforms (
-  fid int(8) NOT NULL auto_increment,
-  form_name text,
-  file_name text,
-  subject text,
-  form_date date default NULL,
-  form_time time default NULL,
-  form_creator text,
-  status int(1) NOT NULL default '0',
-  form_html mediumtext,
-  PRIMARY KEY  (fid),
-  UNIQUE KEY id (fid)
-) ;
-
---
--- Table structure for table `eforms_data`
---
-
-CREATE TABLE eforms_data (
-  fdid int(8) NOT NULL auto_increment,
-  fid int(8) NOT NULL default '0',
-  form_name text,
-  subject text,
-  demographic_no int(8) NOT NULL default '0',
-  status int(1) NOT NULL default '0',
-  form_date date default NULL,
-  form_time time default NULL,
-  form_provider text,
-  form_data mediumtext,
-  form_fields mediumtext,
-  PRIMARY KEY  (fdid),
-  UNIQUE KEY id (fdid)
-) ;
 
 --
 -- Table structure for table `eform_values`
