@@ -45,6 +45,7 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
 import oscar.oscarBilling.ca.bc.data.BillingPreference;
 import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
+import oscar.oscarDemographic.data.DemographicData;
 
 public final class BillingViewAction
     extends Action {
@@ -66,11 +67,9 @@ public final class BillingViewAction
     }
     else {
       BillingViewForm frm = (BillingViewForm) form;
-      oscar.oscarBilling.ca.bc.pageUtil.BillingViewBean bean = new oscar.
-          oscarBilling.ca.bc.pageUtil.BillingViewBean();
+      BillingViewBean bean = new BillingViewBean();
       bean.loadBilling(request.getParameter("billing_no"));
-      oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager bmanager = new
-          BillingBillingManager();
+      BillingBillingManager bmanager = new BillingBillingManager();
       ArrayList billItem = new ArrayList();
       String[] billingN = request.getParameterValues("billing_no");
       
@@ -83,15 +82,12 @@ public final class BillingViewAction
       log.debug("Calling getGrandTotal");
       bean.setBillItem(billItem);
 
-      // bean.setSubTotal(bmanager.getSubTotal(billItem));
       bean.calculateSubtotal();
       log.debug("GrandTotal" + bmanager.getGrandTotal(billItem));
-      oscar.oscarDemographic.data.DemographicData demoData = new oscar.
-          oscarDemographic.data.DemographicData();
+      DemographicData demoData = new DemographicData();
       log.debug("Calling Demo");
 
-      oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.
-          getDemographic(bean.getPatientNo());
+      DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
       bean.setPatientLastName(demo.getLastName());
       bean.setPatientFirstName(demo.getFirstName());
       bean.setPatientDoB(demo.getDateOfBirth());
