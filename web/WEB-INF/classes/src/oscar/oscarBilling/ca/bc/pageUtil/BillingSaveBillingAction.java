@@ -124,6 +124,14 @@ public class BillingSaveBillingAction extends Action {
         //REALLY should be able to get rid of this since every claim will go thru here.
 ////        if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri") || bean.getBillingType().equals("WCB")) {  
         for (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem bItem: billItem){
+            
+            if(request.getParameter("dispPrice+"+bItem.getServiceCode())!= null){
+                String updatedPrice = request.getParameter("dispPrice+"+bItem.getServiceCode());
+                bItem.price = Double.parseDouble(updatedPrice);
+                bItem.getLineTotal();
+            }
+
+            billing.setBillingNo(0);
             billingmasterDAO.save(billing);
             billingid = ""+billing.getBillingNo(); //getInsertIdFromBilling(billingSQL);
             //log.debug("billing id " + billingid + "   sql " + billingSQL);
@@ -145,7 +153,8 @@ public class BillingSaveBillingAction extends Action {
             billingMasterId = "" + billingmaster.getBillingmasterNo();
             this.createBillArchive(billingMasterId);
         }
-        if (bean.getCorrespondenceCode().equals("") || bean.getCorrespondenceCode().equals("B")) {
+
+        if (bean.getCorrespondenceCode().equals("N") || bean.getCorrespondenceCode().equals("B")) {
             try {
                 MSPBillingNote n = new MSPBillingNote();
                 n.addNote(billingMasterId, bean.getCreator(), bean.getNotes());
