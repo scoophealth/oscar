@@ -22,7 +22,7 @@
 <hibernate-mapping>
 	<class name="org.caisi.model.Tickler" table="tickler">
 		<id name="tickler_no" column="tickler_no" unsaved-value="0">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="demographic_no" />
 		<property name="program_id" />
