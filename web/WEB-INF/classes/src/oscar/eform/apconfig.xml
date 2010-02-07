@@ -283,13 +283,13 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
                 <ap-name>allergies_des</ap-name>
                 <ap-sql>SELECT allergies.DESCRIPTION
                         FROM allergies, demographic
-                        WHERE demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no</ap-sql>
+                        WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no</ap-sql>
                 <ap-output>${allergies}</ap-output>
         </databaseap>
         <databaseap>
                 <ap-name>recent_rx</ap-name>
-                <ap-sql>SELECT date_prescribed, SUBSTRING_INDEX(p.textView, '\n\n', -1) AS rx FROM prescription p WHERE demographic_no=${demographic} ORDER BY p.date_prescribed DESC </ap-sql>
-                <ap-output>${date_prescribed} ${rx}</ap-output>
+                <ap-sql>SELECT GROUP_CONCAT(CONCAT(date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),'\n' SEPARATOR '') AS rx FROM prescription p WHERE demographic_no=1408 ORDER BY p.date_prescribed DESC </ap-sql>
+                <ap-output>${rx}</ap-output>
         </databaseap>        
 
 </eformap-config>
