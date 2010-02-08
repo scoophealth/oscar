@@ -2,6 +2,7 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -193,7 +194,10 @@ public class CdsForm4 {
 	
 	public static List<CdsHospitalisationDays> getHospitalisationDays(Integer clientId)
 	{
-		return(cdsHospitalisationDaysDao.findByClientId(clientId));
+		List<CdsHospitalisationDays> results=cdsHospitalisationDaysDao.findByClientId(clientId);
+		Collections.sort(results, CdsHospitalisationDays.ADMISSION_DATE_COMPARATOR);
+		
+		return(results);
 	}
 	
 	public static void addHospitalisationDay(Integer clientId, Calendar admissionDate, Calendar dischargeDate)
