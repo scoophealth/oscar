@@ -12,6 +12,7 @@
 	<tr>
 		<td class="genericTableHeader" style="border:solid black 1px">Admission</td>
 		<td class="genericTableHeader" style="border:solid black 1px">Discharge</td>
+		<td class="genericTableHeader" style="border:solid black 1px"></td>
 	</tr>
 	<%
 		for (CdsHospitalisationDays entry : hospitalisationDays)
@@ -20,6 +21,7 @@
 				<tr>
 					<td style="border:solid black 1px"><%=DateFormatUtils.ISO_DATE_FORMAT.format(entry.getAdmitted())%></td>
 					<td style="border:solid black 1px"><%=entry.getDischarged()!=null?DateFormatUtils.ISO_DATE_FORMAT.format(entry.getDischarged()):"-"%></td>
+					<td style="border:solid black 1px"><image src="<%=request.getContextPath()%>/images/delete.png" onclick="deleteHospitalisationDay(<%=entry.getId()%>)" /></td>
 				</tr>
 			<%
 		}

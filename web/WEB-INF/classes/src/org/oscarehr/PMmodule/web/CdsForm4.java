@@ -204,4 +204,9 @@ public class CdsForm4 {
 		cdsHospitalisationDays.setDischarged(dischargeDate);
 		cdsHospitalisationDaysDao.persist(cdsHospitalisationDays);
 	}
+	
+	public static void deleteHospitalisationDay(Integer hospitalisationDayId)
+	{
+		cdsHospitalisationDaysDao.remove(hospitalisationDayId);		
+	}
 }

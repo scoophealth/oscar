@@ -175,7 +175,12 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">21. Current Psychiatric Hospitalizations</td>
+			<td class="genericTableHeader">
+				21. Psychiatric Hospitalizations
+				<div style="font-weight:normal;font-size:smaller">
+					(This shows all historical hospitalisations, the correct ones for the report will be automatically calculated.)
+				</div>
+			</td>
 			<td class="genericTableData">
 				<table>
 					<tr>
@@ -185,6 +190,22 @@
 							</span>
 							
 							<script type="text/javascript">
+								function deleteHospitalisationDay(hospitalisationId)
+								{
+									var ajaxArgs =
+									{
+										method:'post',
+										parameters: {hospitalisationId : hospitalisationId},
+										onSuccess: updateHospitalisedListDisplay,
+										onFailure: function(transport)
+										{
+											alert('Error deleting hospital day : '+transport) 
+										}
+									}
+						        
+									new Ajax.Request('cds_form_4_delete_hospitalisations.jsp', ajaxArgs);
+								}
+												
 								function updateHospitalisedListDisplay()
 								{
 									var ajaxArgs =
@@ -204,7 +225,10 @@
 							</script>
 						</td>
 						<td>
-							<table>
+							<table style="border-collapse:collapse;border:solid black 1px">
+								<tr>
+									<td class="genericTableHeader" style="border:solid black 1px;text-align:center" colspan="2">Add</td>
+								</tr>
 								<tr>
 									<td>Admission Date</td>
 									<td><input type="text" name="hospitalAdmission" id="hospitalAdmission" value="" size="10" readonly> <img src="<%=request.getContextPath()%>/images/cal.gif" id="hospitalAdmission_cal"></td>
@@ -230,14 +254,14 @@
 										method:'post',
 										parameters: {clientId : <%=currentDemographicId%>, hospitalAdmission: $(hospitalAdmission).value, hospitalDischarge : $(hospitalDischarge).value },
 										asynchronous : false,
+										onSuccess: updateHospitalisedListDisplay,
 										onFailure: function(transport)
 										{
 											alert('Error updating hospital days : '+transport) 
 										}
 									}
 						        
-									new Ajax.Updater('hospitalisedDaysList', 'cds_form_4_add_hospitalisations.jsp', ajaxArgs);
-									updateHospitalisedListDisplay();
+									new Ajax.Request('cds_form_4_add_hospitalisations.jsp', ajaxArgs);
 								}
 							</script>				
 						</td>
