@@ -178,7 +178,9 @@
 			<td class="genericTableHeader">
 				21. Psychiatric Hospitalizations
 				<div style="font-weight:normal;font-size:smaller">
-					(This shows all historical hospitalisations, the correct ones for the report will be automatically calculated.)
+					This shows all historical hospitalisations, the correct ones for the report will be automatically calculated.
+					<br /><br />
+					To update a hospitalisation date, create a new entry then delete the old one.
 				</div>
 			</td>
 			<td class="genericTableData">
@@ -231,11 +233,11 @@
 								</tr>
 								<tr>
 									<td>Admission Date</td>
-									<td><input type="text" name="hospitalAdmission" id="hospitalAdmission" value="" size="10" readonly> <img src="<%=request.getContextPath()%>/images/cal.gif" id="hospitalAdmission_cal"></td>
+									<td><input type="text" name="hospitalAdmission" id="hospitalAdmission" value="" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="hospitalAdmission_cal"></td>
 								</tr>
 								<tr>
 									<td>Discharge Date</td>
-									<td><input type="text" name="hospitalDischarge" id="hospitalDischarge" value="" size="10" readonly> <img src="<%=request.getContextPath()%>/images/cal.gif" id="hospitalDischarge_cal"></td>
+									<td><input type="text" name="hospitalDischarge" id="hospitalDischarge" value="" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="hospitalDischarge_cal"></td>
 								</tr>
 								<tr>
 									<td></td>
