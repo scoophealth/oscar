@@ -1,6 +1,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -193,5 +194,14 @@ public class CdsForm4 {
 	public static List<CdsHospitalisationDays> getHospitalisationDays(Integer clientId)
 	{
 		return(cdsHospitalisationDaysDao.findByClientId(clientId));
+	}
+	
+	public static void addHospitalisationDay(Integer clientId, Calendar admissionDate, Calendar dischargeDate)
+	{
+		CdsHospitalisationDays cdsHospitalisationDays=new CdsHospitalisationDays();
+		cdsHospitalisationDays.setClientId(clientId);
+		cdsHospitalisationDays.setAdmitted(admissionDate);
+		cdsHospitalisationDays.setDischarged(dischargeDate);
+		cdsHospitalisationDaysDao.persist(cdsHospitalisationDays);
 	}
 }
