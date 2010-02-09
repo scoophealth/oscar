@@ -14,7 +14,7 @@ AnswerScalarChoiceHtmlAdapter {
 	public StringBuilder getPreBuilder() {			
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 		
-		indent(preBuilder).append(startLabel(false)).append(createCheckBox(IntakeAnswerElement.TRUE)).append(endLabel(true)).append(EOL);
+		indent(preBuilder).append(startLabel(false)).append(createCheckBox(IntakeAnswerElement.TRUE)).append(endLabel(true)).append("<br/>").append(EOL);
 		String mquest = "mquests";
 		if (getNoOfSibling()>1) mquest = "mquestm";
 		String pId = "_" + getParent().getId();

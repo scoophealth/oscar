@@ -18,6 +18,7 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     String parent_intake_node_id = request.getParameter("parent_intake_node_id") ;
     String eleType               = request.getParameter("elementType") ;
     String intNodeLabel          = request.getParameter("intake_node_label") ;
+    String intNodeValue          = request.getParameter("intake_node_value") ;
     String mandatory			 = request.getParameter("mandatory") ;
     String questionId			 = request.getParameter("question_id");
     String repeating			 = request.getParameter("repeating") ;
@@ -220,7 +221,11 @@ String pSize        = request.getParameter("pSize");
 <%}%> 
 
 <br>
-Label Text (Leave blank for no text): <input type="text" name="intake_node_label" /> 
+Label Text (Leave blank for no text): <br/><input type="text" name="intake_node_label" />
+<br/><br/>
+Value (If Applicable):<br/>
+ <input type="text" name="intake_node_value" />
+  
 <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
 	<br/>
 	<input type="checkbox" name="mandatory" onclick="doMandatory();">Mandatory</input>

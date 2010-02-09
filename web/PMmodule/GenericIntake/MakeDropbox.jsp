@@ -166,8 +166,17 @@ void fillCommonLists(IntakeNode org,List<NameValuePair> lists) {
 void copyCommonElements(IntakeNode org, Integer nodeId,Integer lastElementId,HttpSession session,IntakeNodeTemplate intakeNodeTemplate) {
 	if(org.getId().equals(nodeId)) {
 		//found it
-		
+		List<IntakeAnswerElement> iaeList = new ArrayList<IntakeAnswerElement>();
 		for(IntakeAnswerElement iae:org.getNodeTemplate().getAnswerElements()) {
+			iaeList.add(iae);	
+		}
+				
+		ListIterator<IntakeAnswerElement> listIterator = iaeList.listIterator(iaeList.size());
+		//listIterator.
+		
+		while(listIterator.hasPrevious()) {
+			System.out.println("iterating");
+			IntakeAnswerElement iae = listIterator.previous();
 			//make a copy, and add to current.
 			   IntakeAnswerElement intakeAnswerElement = new IntakeAnswerElement();
 			   intakeAnswerElement.setElement(iae.getElement());
@@ -179,6 +188,7 @@ void copyCommonElements(IntakeNode org, Integer nodeId,Integer lastElementId,Htt
 			   Set intakeAnswerElements = intakeNodeTemplate.getAnswerElements();
 			   intakeAnswerElements.add(intakeAnswerElement);				   
 		}
+		
 		session.setAttribute("lastElementId", lastElementId);		   		
 	    
 	    

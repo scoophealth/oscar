@@ -34,6 +34,9 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean enableHealthNumberRegistry = true;
 	private boolean allowSims = true;
 	private boolean enableDigitalSignatures = false;
+	private boolean enableOcanForms = false;
+	private String ocanServiceOrgNumber;
+
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
@@ -200,8 +203,41 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 		return lastUpdated;
 	}
 
+	public boolean isEnableOcanForms() {
+    	return enableOcanForms;
+    }
+
+	public void setEnableOcanForms(boolean enableOcanForms) {
+    	this.enableOcanForms = enableOcanForms;
+    }
+	
+	
+	public String getOcanServiceOrgNumber() {
+		return ocanServiceOrgNumber;
+	}
+
+	public void setOcanServiceOrgNumber(String ocanServiceOrgNumber) {
+		this.ocanServiceOrgNumber = ocanServiceOrgNumber;
+	}
+
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {
 		lastUpdated = new Date();
 	}
+
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Facility facility = (Facility) o;
+
+		if (id != null ? !id.equals(facility.id) : facility.id != null) return false;
+
+		return true;
+	}
+
+	public int hashCode() {
+		return (id != null ? id.hashCode() : 0);
+	}
+
 }

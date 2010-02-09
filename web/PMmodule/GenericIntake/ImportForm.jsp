@@ -22,7 +22,7 @@
 	    		ObjectInputStream ois = new ObjectInputStream(item.getInputStream());
 				IntakeNode itn = (IntakeNode)ois.readObject();    					
 				IntakeNode nwItn = new IntakeNode();
-			    copyIntakeNode(itn, nwItn);
+			    copyIntakeNode(itn, nwItn,genericIntakeManager);
 			    nwItn.setForm_version(1);
 			    genericIntakeManager.saveIntakeNode(nwItn);
 			    session.removeAttribute("intakeNode");
@@ -55,14 +55,28 @@
 
 <%!
 
-void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
+void copyIntakeNode(IntakeNode org, IntakeNode cpy, GenericIntakeManager genericIntakeManager) {
     cpy.setLabel(org.getLabel());
     if(cpy.getLabel()!= null) {
     	cpy.getLabel().setId(null);
     }
-    cpy.setNodeTemplate(org.getNodeTemplate());
+    //need to check if template exists!
+    IntakeNodeTemplate templ = genericIntakeManager.getIntakeNodeTemplate(org.getNodeTemplate().getId());
+ 	if(templ == null) {
+ 		org.getNodeTemplate().setId(null);
+ 		IntakeNodeType type = org.getNodeTemplate().getType(); 	
+ 		IntakeNodeTemplate tmplCpy = new IntakeNodeTemplate(null,new IntakeNodeType(type.getId(),type.getType()));
+ 		copyIntakeNodeTemplate(org.getNodeTemplate(),tmplCpy);
+ 		genericIntakeManager.saveIntakeNodeTemplate(tmplCpy);
+ 		cpy.setNodeTemplate(tmplCpy);
+ 	} else {
+ 		cpy.setNodeTemplate(org.getNodeTemplate());
+ 	}
+ 	
     cpy.setPos(org.getPos());
     cpy.setMandatory(org.getMandatory());
+   	cpy.setValidations(org.getValidations());
+   	
     if (!org.isIntake() && !org.isPage() && !org.isSection() && !org.isAnswerCompound()) {
         cpy.setEq_to_id(org.getEq_to_id());
     }
@@ -71,10 +85,39 @@ void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
     for (IntakeNode iN : org.getChildren()) {
 	IntakeNode child = new IntakeNode();
 	child.setParent(org);
-	copyIntakeNode(iN, child);
+	copyIntakeNode(iN, child,genericIntakeManager);
 	children.add(child);
     }
     if (!children.isEmpty()) cpy.setChildren(children);
 }
 
+void copyIntakeNodeTemplate(IntakeNodeTemplate org, IntakeNodeTemplate cpy) {
+	//cpy.setAnswerElements()
+	Set<IntakeAnswerElement> answers = new TreeSet<IntakeAnswerElement>();
+	for(IntakeAnswerElement e:org.getAnswerElements()) {
+		IntakeAnswerElement n = new IntakeAnswerElement();
+		n.setDefault(e.isDefault());
+		n.setElement(e.getElement());
+		n.setLabel(e.getLabel());
+		n.setValidation(e.getValidation());
+		n.setNodeTemplate(cpy);	
+		answers.add(n);
+	}
+	cpy.setAnswerElements(answers);
+	
+	if(org.getLabel() != null) {
+		IntakeNodeLabel label=new IntakeNodeLabel();
+		label.setLabel(org.getLabel().getLabel());
+		cpy.setLabel(label);
+	}
+	
+	cpy.setRemoteId(org.getRemoteId());
+
+	if(org.getType() != null) {
+		IntakeNodeType type = new IntakeNodeType(org.getType().getId(),org.getType().getType());
+		type.setType(org.getType().getType());
+		cpy.setType(type);
+	}
+	
+}
 %>

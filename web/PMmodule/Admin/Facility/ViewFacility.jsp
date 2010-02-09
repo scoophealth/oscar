@@ -34,6 +34,10 @@
 			<td><c:out value="${facilityManagerForm.facility.hic}" /></td>
 		</tr>
 		<tr class="b">
+			<td width="20%">OCAN Service Org Number:</td>
+			<td><c:out value="${facilityManagerForm.facility.ocanServiceOrgNumber}" /></td>
+		</tr>
+		<tr class="b">
 			<td width="20%">Primary Contact Name:</td>
 			<td><c:out value="${facilityManagerForm.facility.contactName}" /></td>
 		</tr>

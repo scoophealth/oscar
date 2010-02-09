@@ -62,6 +62,13 @@ function validIntakeLocation() {
 }
 
 function validateEdit() {
+	
+	if(document.getElementById('skip_validate').value == 'true') {
+		return true;
+	}
+	
+	//$("form").validate({meta: "validate"});
+	
 	var programIdEl = getElement('bedCommunityProgramId');
 	var programId = 0;
 	if(programIdEl != null) {
@@ -171,6 +178,10 @@ function save() {
 	}
 	
 	setMethod('save');
+}
+
+function save_draft() {
+	setMethod('draft');
 }
 
 function save_temp() {

@@ -432,6 +432,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				intake.setIntakeStatus("Signed");
 				intake.setId(null);
 				saveIntake(intake, client.getDemographicNo());
+			} else if("draft".equals(saveWhich)) {
+				intake.setIntakeStatus("Draft");
+				intake.setId(null);
+				saveIntake(intake, client.getDemographicNo());
 			}
 			else {
 				// RFQ intake saving...
@@ -569,6 +573,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return save_all(mapping, form, request, response, "normal");
+	}
+	
+	public ActionForward save_draft(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		return save_all(mapping, form, request, response, "draft");
 	}
 
 	public ActionForward save_temp(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

@@ -24,6 +24,10 @@
     boolean hasRepeating = (theNode.isQuestion()|| theNode.isAnswerCompound()||theNode.isAnswerScalar());
     boolean hasCutPast = (!theNode.isIntake() && !theNode.isPage() && !theNode.isSection() && !theNode.isAnswerCompound() && theNode.getEq_to_id()!=null);
     boolean isDropbox = (theNode.isAnswerChoice() && !theNode.isAnswerBoolean());
+    int typeId = theNode.getNodeTemplate().getType().getId();
+  //  String validations = theNode.getValidations();
+  	String[] validations = request.getParameterValues("validations");    
+    
     if (isDropbox) {
 	session.setAttribute("dropboxNode", theNode);
     }
@@ -46,6 +50,18 @@
 	if(questionIdEdit != null) {
 		writeQuestionId(questionIdEdit,theNode);
 	}
+	
+    if(validations != null) {
+    	String validationString="";
+    	for(int x=0;x<validations.length;x++) {
+    		if(x>0) {
+    			validationString += ",";
+    		}
+    		validationString += validations[x];
+    		validationString += ":true";    		
+    	}
+    	theNode.setValidations(validationString);
+    }	
 	
         response.sendRedirect("close.jsp");
         return;
@@ -101,6 +117,15 @@ related to past forms</input> <%	} %> <%	if (isDropbox) { %> <br>
 <input type="button" value="Edit Dropbox Items..." onclick="editDropbox();" /> 
 <%	} %>
 <br/>
+
+<%if (typeId >= 4 && typeId <=9) {%>
+<br/><br/>
+Validations:
+<br/>
+<input type="checkbox" name="validations" value="required"/>Required<br/>
+<input type="checkbox" name="validations" value="digits"/>Digits<br/>
+<%}%>
+
 <input type="submit" value="update" /> 
 </form>
 

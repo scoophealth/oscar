@@ -55,12 +55,7 @@
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.metadata.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.validate.min.js"></script>
 	
-	<%if(intakeEditForm.getJsLocation() != null) {
-		for(IntakeNodeJavascript js:intakeEditForm.getJsLocation()) {
-	%>
-			<script type="text/javascript" src="<%= request.getContextPath() %><%=js.getLocation()%>"></script>
-	<%}}%>
-			
+	
     <title>Generic Intake Edit</title>
     <style type="text/css">
         @import "<html:rewrite page="/css/genericIntake.css" />";
@@ -125,6 +120,21 @@
 	    }
 	    return false;
 	}
+
+	function saveDraft() {	
+		document.getElementById('skip_validate').value='true';
+		$("form[onsubmit]").each(function(idx, form) {
+		      var onsubmit = $(form).attr("onsubmit");
+		      //alert(onsubmit);
+		      $(form)
+		        .removeAttr("onsubmit")
+		        .submit(new Function(onsubmit));
+				      
+		});
+
+				
+		return save_draft();
+	}	
 	
 	function check_mandatory() {
 	    var mquestSingle = new Array();
@@ -269,10 +279,19 @@
 	});
 
 	$("document").ready(function() {	
-		$("form").validate({meta: "validate"});
+		//$("form").validate({meta: "validate"});
+		
 	});
-
+	
     </script>
+    
+    <%if(intakeEditForm.getJsLocation() != null) {
+		for(IntakeNodeJavascript js:intakeEditForm.getJsLocation()) {
+	%>
+			<script type="text/javascript" src="<%= request.getContextPath() %><%=js.getLocation()%>"></script>
+	<%}}%>
+			
+			
     <style>
     .repeat_remove 
 	{
@@ -295,6 +314,9 @@
 <input type="hidden" name="intakeType" value="<%=intakeType %>" />
 <input type="hidden" name="remoteFacilityId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%>" />
 <input type="hidden" name="remoteDemographicId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%>" />
+<input type="hidden" name="skip_validate" id="skip_validate" value="false"/>
+<input type="hidden" id="facility_name" name="facility_name" value="<%=org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getName()%>"/>
+<input type="hidden" id="ocan_service_org_number" name="ocan_service_org_number" value="<%=org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber()%>"/>
 
 <div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 <div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
@@ -573,6 +595,9 @@
             <td>
                 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
                     <html:submit onclick="return saveForm();">Save</html:submit>&nbsp;
+                </caisi:isModuleLoad>
+                 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+                    <html:submit onclick="return saveDraft();">Save As Draft</html:submit>&nbsp;
                 </caisi:isModuleLoad>
                 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
                     <!--
