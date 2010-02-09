@@ -120,6 +120,7 @@
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>
 <bean:message key="oscarMDS.index.title"/> Page <%=pageNum%>
 </title>
@@ -389,6 +390,7 @@ function wrapUp() {
                                 <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')" style="color: #FFFFFF;"><bean:message key="global.help"/></a>
                                 | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" style="color: #FFFFFF;" ><bean:message key="global.about"/></a>
                                 | <a href="javascript:popupStart(800,1000,'../lab/CA/ALL/testUploader.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.hl7LabUpload"/></a>
+                                | <a href="javascript:popupStart(800,1000,'../dms/addDocuments.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.uploadDocument"/></a>
                             </td>
                         </tr>
                     </table>                        
@@ -520,6 +522,7 @@ function wrapUp() {
                                 <% } %>                                
                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
                                 <input type="button" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
+                                
                                 <% if (request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                             
