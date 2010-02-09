@@ -35,6 +35,7 @@
 		<property name="maxAllowed" />
 		<property name="type" />
 		<property name="description" />
+		<property name="functionalCentreId" />
 		<property name="address" />
 		<property name="phone" />
 		<property name="fax" />

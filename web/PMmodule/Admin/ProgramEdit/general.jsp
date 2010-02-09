@@ -125,6 +125,18 @@ Program p = (Program)request.getAttribute("oldProgram");
 			maxlength="255" /></td>
 	</tr>
 	<tr class="b">
+		<td width="20%">Functional Centre:</td>
+		<td>
+			<html:select property="program.functionalCentreId">
+				<option value="">&nbsp;</option>
+				
+				<c:forEach var="functionalCentre" items="${functionalCentres}">
+					<option value="<c:out value="${functionalCentre.accountId}" />" <c:if test="${program.functionalCentreId == functionalCentre.accountId}">selected</c:if> ><c:out value="${functionalCentre.accountId}" />, <c:out value="${functionalCentre.description}" /></option>
+				</c:forEach>
+			</html:select>
+		</td>
+	</tr>
+	<tr class="b">
 		<td width="20%">HIC:</td>
 		<td><html:checkbox property="program.hic" /></td>
 	</tr>

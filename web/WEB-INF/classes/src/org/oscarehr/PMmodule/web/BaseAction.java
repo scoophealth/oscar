@@ -23,7 +23,6 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +36,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.RedirectingActionForward;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.ClientManager;
@@ -49,12 +47,12 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RatePageManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.util.SessionConstants;
 import org.oscarehr.PMmodule.utility.Utility;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SessionConstants;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import com.quatro.service.security.*;
 
 import oscar.OscarProperties;
 

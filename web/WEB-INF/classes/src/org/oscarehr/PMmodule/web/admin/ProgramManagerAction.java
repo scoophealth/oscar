@@ -24,6 +24,7 @@ package org.oscarehr.PMmodule.web.admin;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -67,6 +68,8 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.dao.FunctionalCentreDao;
+import org.oscarehr.common.model.FunctionalCentre;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.quatro.service.security.RolesManager;
@@ -85,10 +88,15 @@ public class ProgramManagerAction extends BaseAction {
 	private ProgramQueueManager programQueueManager;
 	//private RoleManager roleManager;
 	private RolesManager roleManager;
+	private FunctionalCentreDao functionalCentreDao;
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
 	}
+
+	public void setFunctionalCentreDao(FunctionalCentreDao functionalCentreDao) {
+    	this.functionalCentreDao = functionalCentreDao;
+    }
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return list(mapping, form, request, response);
@@ -153,6 +161,10 @@ public class ProgramManagerAction extends BaseAction {
 
 			programForm.set("program", program);
 			request.setAttribute("oldProgram", program);
+
+			List<FunctionalCentre> functionalCentres=functionalCentreDao.findAll();
+			Collections.sort(functionalCentres, FunctionalCentre.ACCOUNT_ID_COMPARATOR);
+			request.setAttribute("functionalCentres", functionalCentres);
 
 			// request.setAttribute("programFirstSignature",programManager.getProgramFirstSignature(Integer.valueOf(id)));
 			programForm.set("bedCheckTimes", bedCheckTimeManager.getBedCheckTimesByProgram(Integer.valueOf(id)));
