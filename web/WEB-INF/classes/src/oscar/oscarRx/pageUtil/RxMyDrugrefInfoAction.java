@@ -166,6 +166,10 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         }
         //if hideResources are not in warnings, remove them from hiddenResource and set them to archived=0 in database;
         Hashtable hiddenResAttribute=(Hashtable)request.getSession().getAttribute("hideResources");
+        if(hiddenResAttribute==null){
+            Hashtable emptyHiddenRes=new Hashtable();
+            request.getSession().setAttribute("hideResources", emptyHiddenRes);
+        }else{
         Enumeration hiddenResKeys=hiddenResAttribute.keys();
         while(hiddenResKeys.hasMoreElements()){
             String key=(String)hiddenResKeys.nextElement();
@@ -181,6 +185,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             }
         }
         request.getSession().setAttribute("hideResources", hiddenResAttribute);
+        }
         request.setAttribute("warnings",allRetVec);
         log2.debug("MyDrugref return time " + (System.currentTimeMillis() - start) );
         if(target!=null && target.equals("interactionsRx")) return mapping.findForward("updateInteractions");

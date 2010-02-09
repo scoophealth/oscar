@@ -7,6 +7,7 @@
 <%@page import="oscar.oscarRx.util.*" %>
 <%
          Hashtable hiddenResources = (Hashtable) request.getSession().getAttribute("hideResources");
+         if(hiddenResources!=null){
          int numHidden=hiddenResources.size();
          if(numHidden>0){
              %>  <script type="text/javascript">
@@ -16,4 +17,6 @@
 <div id="">
     <a href="javascript:void(0);" style="font-size: 9pt;" onclick="showOrHideRes('<%=hiddenResources%>');"> <span id="showHideWord">show</span> <span id="showHideNumber"><%=numHidden%></span> hidden resources</a>
 </div>
-<%}%>
+            <%                      }
+         }
+         %>
