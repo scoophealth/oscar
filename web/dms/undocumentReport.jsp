@@ -48,7 +48,7 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="oscar.oscarProvider.data.*"%>
-
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
             for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
                 String name = (String) e.nextElement();
@@ -153,6 +153,7 @@
         <script type="text/javascript" src="../share/yui/js/animation-min.js"/></script>
         <script type="text/javascript" src="../share/yui/js/datasource-min.js"/></script>
         <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"/></script>
+        <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>
         <style type="text/css">
 #myAutoComplete {
     width:15em; /* set width here or else widget will expand to fit its container */
@@ -218,9 +219,9 @@
        <%ArrayList providers = ProviderData.getProviderList();
         for (int i = 0; i < providers.size(); i++) {
            Hashtable h = (Hashtable) providers.get(i);%>
-           {providerno: "<%= h.get("providerNo")%>", lname: "<%= h.get("lastName")%>", fname:"<%= h.get("firstName")%>"},
+           {id: "<%= h.get("providerNo")%>", lname: "<%= h.get("lastName")%>", fname:"<%= h.get("firstName")%>"},
        <%}%>
-           { providerno: "-1",lname: "none", fname:"none"}
+           { id: "-1",lname: "none", fname:"none"}
 
     ];
 
@@ -247,7 +248,10 @@
 
     var oDS = new YAHOO.util.FunctionDataSource(matchNames);
     oDS.responseSchema = {fields: ["id", "fname", "lname"]}
-
+ //   console.log("oDS="+oDS);
+//    console.log("oDS.id="+oDS.id);
+  //  console.log("oDS.fname="+oDS.fname);
+  //  console.log("oDS.lname="+oDS.lname);
 
 	// Helper function for the formatter
     var highlightMatch = function(full, snippet, matchindex) {
@@ -460,7 +464,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
         }
 
         function saveProvId(text, li){
-            //console.log("saveProvId "+li.id+" "+text.id+" "+text.value);
+         //   console.log("saveProvId "+li.id+" "+text.id+" "+text.value);
             var provName = text.value;
             var str = text.id.replace("autocompletedemo","demofind");
             //console.log("str "+str);
@@ -492,9 +496,12 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
         }
 
         function sendToServer(formId){
+        //    console.log("in sendToServer");
+       //     console.log(formId);
             var toSend = $(formId).serialize(true);
             var url = "ManageDocument.do";//"send.jsp";
             Effect.SlideUp('document'+toSend.documentId);
+        //    console.log(toSend.documentId);
             new Ajax.Request(url, { method: 'post', parameters: toSend, onSuccess: successAdjusting });
 
             //Effect.SlideUp('document'+toSend.documentId);
@@ -517,6 +524,11 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
 
         function autoCompleteHideMenu(){
             //console.log("autoCompleteHideMenu");
+        }
+
+        function enableSaveButton(elementId){
+       //     console.log("enablesavebutton");
+            $('save'+elementId).disable();
         }
 
         </script>
@@ -619,14 +631,20 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                 } else if ((curdoc.getStatus() + "").compareTo("H") == 0) {
                                     dStatus = "html";
                                 }
-                                String url = "ManageDocument.do?method=view&doc_no=" + curdoc.getDocId();
+                                String curDocId=curdoc.getDocId();
+                                String url = "ManageDocument.do?method=view&doc_no=" + curDocId;
+                                String docUrl=request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no="+curDocId;
                                 %>
                                 <div id="document<%=curdoc.getDocId()%>">
                                     <table class="docTable">
                                         <tr>
 
 
-                                            <td colspan="8"><img src="<%=url%>" /></td>
+                                            <td colspan="8">
+                                                <a href="javascript:void(0);">
+                                                    <img src="<%=url%>" onclick="popupPage(500,600,'name_<%=curDocId%>','<%=docUrl%>')"  title="Click to Download File" />
+                                                </a>
+                                            </td>
 
                                             <td align="left" valign="top">
                                                 <fieldset><legend>Document Uploaded :<%=curdoc.getDateTimeStamp()%> - Content Type: <%=contentType%> <%=curdoc.getFileName() %></legend>
@@ -662,19 +680,19 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                                     <%=request.getParameter("name")%> <% }%>
                                                                 </td>
                                                                 <td><input type="hidden" name="demog" id="demofind<%=curdoc.getDocId()%>" />
-                                                                    <input tabindex="<%=tabindex++%>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" name="demographicKeyword" />
+                                                                    <input tabindex="<%=tabindex++%>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" onchange="enableSaveButton('<%=curdoc.getDocId()%>')" name="demographicKeyword"  />
                                                                     <div id="autocomplete_choices<%=curdoc.getDocId()%>"class="autocomplete"></div>
 
                                                                     <script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
                                                                     //new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "../demographic/SearchDemographic.do", {minChars: 3, afterUpdateElement: saveDemoId});
 
-
+                                                                    
                                                                     YAHOO.example.BasicRemote = function() {
                                                                             //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
-                                                                            var url = "../demographic/SearchDemographic.do";//"<c:out value="${ctx}"/>" + "/oscarRx/searchDrug.do?method=jsonSearch";
+                                                                            var url = "../demographic/SearchDemographic.do";
                                                                             var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleRequests'});
                                                                             oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
-                                                                            // Define the schema of the delimited results
+                                                                            // Define the schema of the delimited resultsTEST, PATIENT(1985-06-15)
                                                                             oDS.responseSchema = {
                                                                                 resultsList : "results",
                                                                                 fields : ["fomattedDob","formattedName", "demographicNo"]
@@ -693,9 +711,19 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                                             //oAC.typeAhead = true;
                                                                             oAC.queryMatchContains = true;
                                                                             oAC.itemSelectEvent.subscribe(function(type, args) {
+                                                                               // console.log("before replace:");
+                                                                               // console.log(args);
+                                                                              //  console.log(args[0].getInputEl());
+                                                                               // console.log(args[0].getInputEl().id);
                                                                                var str = args[0].getInputEl().id.replace("autocompletedemo","demofind");
+
                                                                                $(str).value = args[2][2];//li.id;
+                                                                              // console.log(str+"--"+$(str).value+"--"+args);
                                                                                args[0].getInputEl().value = args[2][1]+ "("+args[2][0]+")";
+                                                                               //enable Save button whenever a selection is made
+                                                                               $('save<%=curdoc.getDocId()%>').enable();
+                                                                             //  console.log($("autocomplete_choices<%=curdoc.getDocId()%>").innerHTML);
+                                                                               
                                                                             });
 
 
@@ -746,8 +774,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
 
                                                                             // update hidden form field with the selected item's ID
                                                                             //myHiddenField.value = oData.id;
-
-                                                                            //console.log('IN HERE');
+                                                                           // console.log('IN HERE myHandler');
                                                                             var bdoc = document.createElement('a');
                                                                             bdoc.setAttribute("onclick", "removeProv(this);");
                                                                             bdoc.appendChild(document.createTextNode(" -remove- "));
@@ -759,11 +786,17 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                                             idoc.setAttribute("type", "hidden");
                                                                             idoc.setAttribute("name","flagproviders");
                                                                             idoc.setAttribute("value",oData.id);
+                                                                         //   console.log(oData.id);
+                                                                         //   console.log(myAC);
+                                                                         //   console.log(elLI);
+                                                                         //   console.log(oData);
+                                                                         //   console.log(aArgs);
+                                                                         //   console.log(sType);
                                                                             adoc.appendChild(idoc);
 
                                                                             adoc.appendChild(bdoc);
                                                                             var providerList = $('providerList<%=curdoc.getDocId()%>');
-                                                                            //console.log('Now HERE'+providerList);
+                                                                        //    console.log('Now HERE'+providerList);
                                                                             providerList.appendChild(adoc);
                                                         
                                                                             myAC.getInputEl().value = '';//;oData.fname + " " + oData.lname ;
@@ -790,7 +823,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                             </tr>
 
                                                             <tr>
-                                                                <td colspan="2" align="right"><input tabindex="<%=tabindex++%>" type="submit" name="save" value="Save" /></td>
+                                                                <td colspan="2" align="right"><input id="save<%=curdoc.getDocId()%>" tabindex="<%=tabindex++%>" type="submit" name="save" value="Save"  disabled/></td>
                                                             </tr>
                                                         </table>
 
