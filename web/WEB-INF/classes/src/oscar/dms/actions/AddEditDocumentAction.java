@@ -27,13 +27,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.oscarehr.common.model.Provider;
 import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -41,7 +40,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -169,7 +167,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
     //returns true if successful
     private boolean addDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
-      //  System.out.println("=============in addDocument============");
+       System.out.println("=============in addDocument============");
         Hashtable errors = new Hashtable();
         try {
             if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
@@ -205,60 +203,67 @@ public class AddEditDocumentAction extends DispatchAction {
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
             System.out.println("DEMOGRAPHIC NO: "+request.getSession().getAttribute("casemgmt_DemoNo").toString());
             System.out.println("USER: "+request.getSession().getAttribute("user").toString());
+            //add note if document is added under a patient
+            String module=fm.getFunction().trim();
+            String moduleId=fm.getFunctionId().trim();
+            if(module.equals("demographic")){//doc is uploaded under a patient,moduleId become demo no.
+                        //save casemanagementnote
+                                    //add a note to the newly added document.
+                   //     Locale locale = getLocale(request);
+                    //ResourceBundle props=ResourceBundle.getBundle("oscarResources", locale);
+                    System.out.println("module is demographic");
+                    Date now=EDocUtil.getDmsDateTimeAsDate();
+                    //System.out.println("here11");
+                    String docDesc=EDocUtil.getLastDocumentDesc();
 
-            Locale locale = getLocale(request);
-            
-            ResourceBundle props=ResourceBundle.getBundle("oscarResources", locale);
-            
-            //add a note to the newly added document.
-            Date now=EDocUtil.getDmsDateTimeAsDate();
-            //System.out.println("here11");
-            String docDesc=EDocUtil.getLastDocumentDesc();
-                       
-            CaseManagementNote cmn=new CaseManagementNote();
-            cmn.setUpdate_date(now);
-            //java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
-            cmn.setObservation_date(now);
-            String demoNo=request.getSession().getAttribute("casemgmt_DemoNo").toString();
-            cmn.setDemographic_no(demoNo);
-            HttpSession se = request.getSession();
-            String user_no = (String) se.getAttribute("user");
-            String prog_no = new EctProgram(se).getProgram(user_no);
-            WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
-            CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-            cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
-         //   System.out.println("here");
+                    CaseManagementNote cmn=new CaseManagementNote();
+                    cmn.setUpdate_date(now);
+                    //java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
+                    cmn.setObservation_date(now);
+                    //String demoNo=request.getSession().getAttribute("casemgmt_DemoNo").toString();
+                    //System.out.println("casemgmt_DemoNo session attri="+demoNo);
+                  //  Enumeration em=request.getParameterNames();
+                  //  while(em.hasMoreElements())
+                 //       System.out.println("para val="+em.nextElement());
+                  //  em=request.getAttributeNames();
+                   // while(em.hasMoreElements())
+                  //      System.out.println("attr val="+em.nextElement());
+                    cmn.setDemographic_no(moduleId);
+                    HttpSession se = request.getSession();
+                    String user_no = (String) se.getAttribute("user");
+                    String prog_no = new EctProgram(se).getProgram(user_no);
+                    WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+                    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+                    cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
+                 //   System.out.println("here");
+               //     System.out.println("here33 "+fm.getDocCreator());
 
-       //     System.out.println("here33 "+fm.getDocCreator());
+                    String provFirstName=EDocUtil.getProviderInfo("first_name", fm.getDocCreator());
+                    String provLastName=EDocUtil.getProviderInfo("last_name", fm.getDocCreator());
+                 //   System.out.println("here22");
+                    String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
 
-            String provFirstName=EDocUtil.getProviderInfo("first_name", fm.getDocCreator());
-            String provLastName=EDocUtil.getProviderInfo("last_name", fm.getDocCreator());
-         //   System.out.println("here22");
-            String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
-
-        //    System.out.println("here0 "+strNote);
-            cmn.setNote(strNote);
-            cmn.setSigned(true);
-            cmn.setSigning_provider_no("-1");
-            cmn.setProgram_no(prog_no);
-            cmn.setReporter_caisi_role("1");
-            cmn.setReporter_program_team("0");
-            cmn.setPassword("NULL");
-            cmn.setLocked(false);
-            cmn.setHistory(strNote);
-            cmn.setPosition(0);
-
-           
-           cmm.saveNoteSimple(cmn);
-
-            //Add a noteLink to casemgmt_note_link
-            CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
-            cmnl.setTableName(cmnl.DOCUMENT);
-            cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
-            cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
-         //   System.out.println("ValuesSavedInCaseManagementNoteLink: ");
-         //   System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
-            EDocUtil.addCaseMgmtNoteLink(cmnl);
+                    System.out.println("here0 "+strNote);
+                    cmn.setNote(strNote);
+                    cmn.setSigned(true);
+                    cmn.setSigning_provider_no("-1");
+                    cmn.setProgram_no(prog_no);
+                    cmn.setReporter_caisi_role("1");
+                    cmn.setReporter_program_team("0");
+                    cmn.setPassword("NULL");
+                    cmn.setLocked(false);
+                    cmn.setHistory(strNote);
+                    cmn.setPosition(0);
+                    cmm.saveNoteSimple(cmn);
+                    //Add a noteLink to casemgmt_note_link
+                    CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
+                    cmnl.setTableName(cmnl.DOCUMENT);
+                    cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
+                    cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+                    System.out.println("ValuesSavedInCaseManagementNoteLink: ");
+                    System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
+                    EDocUtil.addCaseMgmtNoteLink(cmnl);
+            } 
 
         } catch (Exception e) {
             //ActionRedirect redirect = new ActionRedirect(mapping.findForward("failAdd"));
