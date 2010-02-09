@@ -5,8 +5,8 @@ create table FunctionalCentre
 );
 
 insert into FunctionalCentre values ('7* 5 09 76','COM Case Management Mental Health');
-insert into FunctionalCentre values ('7* 5 09 78 11','COM Case Management – Substance Abuse');
-insert into FunctionalCentre values ('7* 5 09 78 12','COM Case Management – Problem Gambling');
+insert into FunctionalCentre values ('7* 5 09 78 11','COM Case Management - Substance Abuse');
+insert into FunctionalCentre values ('7* 5 09 78 12','COM Case Management - Problem Gambling');
 
 alter table program add column functionalCentreId varchar(64) after description;
 
