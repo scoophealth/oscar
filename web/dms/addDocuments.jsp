@@ -52,8 +52,8 @@ window.onload = function() {
 				button_width: "65",
 				button_height: "29",
 				button_placeholder_id: "spanButtonPlaceHolder",
-				button_text: '<span class="theFont">Hello</span>',
-                                button_text_style: ".theFont { font-size: 16; margin-left:5px; border: 1px solid black; }",
+				button_text: '<span class="theFont">Upload</span>',
+                                button_text_style: ".theFont { font-size: 14; margin-left:5px; border: 2px solid black; }",
 				button_text_left_padding: 12,
 				button_text_top_padding: 5,
 
@@ -192,7 +192,7 @@ window.onload = function() {
                 <div>
                     <span id="spanButtonPlaceHolder"></span>
                     <input id="btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="font-size: 8pt;" />
-                    <input type="button" onclick="window.location = 'undocumentReport.jsp'" />
+                    <input type="button" onclick="window.location = 'undocumentReport.jsp'" value="Add document description"/>
                 </div>
                 
             </form>
