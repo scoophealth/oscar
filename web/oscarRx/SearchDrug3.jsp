@@ -884,7 +884,7 @@ body {
             $(elementId).innerHTML='more';
     }
 
-    function changeDrugName(randomId){
+    function changeDrugName(randomId,origDrugName){
             if (confirm('If you change the drug name and write your own drug, you will lose the following functionality:'
             + '\n  *  Known Dosage Forms / Routes'
             + '\n  *  Drug Allergy Information'
@@ -903,6 +903,8 @@ body {
                       callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
                      </oscar:oscarPropertiesCheck>
                 }});
+        }else{
+            $("drugName_"+randomId).value=origDrugName;
         }
     }
     function resetStash(){
@@ -1254,7 +1256,8 @@ YAHOO.example.BasicRemote = function() {
  		oscarLog(type+" :: "+args);
                 oscarLog(args[2]);
                 arr = args[2];
-                oscarLog('In yahoo----'+arr[1]);oscarLog('In yahoo----'+arr[0]);
+                oscarLog('In yahoo----'+arr[1]);
+                oscarLog('In yahoo----'+arr[0]);
                 var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                 var ran_number=Math.round(Math.random()*1000000);
                 var name=encodeURIComponent(arr[0]);
