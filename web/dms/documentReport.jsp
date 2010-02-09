@@ -469,12 +469,12 @@ function popup1(height, width, url, windowName){
 					<img height="15px" width="15px"
 					     src="<c:out value="${ctx}/images/notepad.gif"/>"
 					     title="<bean:message key="dms.documentReport.btnEdit"/>"></a>
-		    <%	} %>
+		    <%	} if(module.equals("demographic")){%>
 					    <a href="#" title="Annotation"
-					       onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=demographicNo%>','anwin','width=400,height=250');">
+					       onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=moduleid%>','anwin','width=400,height=250');">
 					      <img src="../images/notes.gif" border="0">
 					    </a>
-                          <% if(!moduleid.equals((String)session.getAttribute("user"))) {%>
+                          <%} if(!moduleid.equals((String)session.getAttribute("user"))) {%>
                                             &nbsp;<a href="javascript:void(0);" title="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=curdoc.getDocId()%>&demographic_no=<%=moduleid%>','tickler')">T</a>
                           <%}%>
                                             </td>
