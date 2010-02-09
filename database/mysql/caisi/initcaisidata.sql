@@ -829,3 +829,4 @@ INSERT INTO encounterForm VALUES("Mental Health Form14","../form/formMentalHealt
 insert into encounterForm values("Mental Health Form42","../form/formMentalHealthForm42.jsp?demographic_no=","formMentalHealthForm42",0);
 
 source init_cds_form_4_options.sql;
+source init_functional_centres.sql;

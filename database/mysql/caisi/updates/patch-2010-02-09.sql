@@ -1,3 +1,14 @@
+create table FunctionalCentre
+(
+	accountId varchar(64) primary key,
+	description varchar(255) not null
+);
+
+insert into FunctionalCentre values ('7* 5 09 76','COM Case Management Mental Health');
+insert into FunctionalCentre values ('7* 5 09 78 11','COM Case Management – Substance Abuse');
+insert into FunctionalCentre values ('7* 5 09 78 12','COM Case Management – Problem Gambling');
+
+alter table program add column functionalCentreId varchar(64) after description;
 alter table Facility add `ocanServiceOrgNumber` int(10) not null default '0';
 alter table Facility add enableOcanForms tinyint(1) not null;
 
@@ -49,4 +60,16 @@ create table OcanStaffFormData
         index(question),
         answer varchar(16) not null
 );
+
+create table FunctionalCentre
+(
+	accountId varchar(64) primary key,
+	description varchar(255) not null
+);
+
+insert into FunctionalCentre values ('7* 5 09 76','COM Case Management Mental Health');
+insert into FunctionalCentre values ('7* 5 09 78 11','COM Case Management – Substance Abuse');
+insert into FunctionalCentre values ('7* 5 09 78 12','COM Case Management – Problem Gambling');
+
+alter table program add column functionalCentreId varchar(64) after description;
 

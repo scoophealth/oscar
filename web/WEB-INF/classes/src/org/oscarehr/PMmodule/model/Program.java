@@ -52,6 +52,7 @@ public class Program implements Serializable {
     private Integer maxAllowed;
     private String type;
     private String description;
+    private String functionalCentreId;
     private String address;
     private String phone;
     private String fax;
@@ -106,6 +107,14 @@ public class Program implements Serializable {
 	public String getLastUpdateUser() {
 		return lastUpdateUser;
 	}
+
+	public String getFunctionalCentreId() {
+    	return functionalCentreId;
+    }
+
+	public void setFunctionalCentreId(String functionalCentreId) {
+    	this.functionalCentreId = functionalCentreId;
+    }
 
 	public void setLastUpdateUser(String lastUpdateUser) {
 		this.lastUpdateUser = lastUpdateUser;

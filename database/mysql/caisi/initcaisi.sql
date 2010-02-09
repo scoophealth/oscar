@@ -1610,6 +1610,7 @@ CREATE TABLE `program` (
 	intakeProgram int,
   `name` varchar(70) NOT NULL default '',
 	description varchar(255),
+	functionalCentreId varchar(64),
   `address` varchar(255) NOT NULL default '',
   `phone` varchar(255) NOT NULL default '',
   `fax` varchar(255) NOT NULL default '',
@@ -2683,4 +2684,10 @@ create table CdsHospitalisationDays
 	clientId int not null,
 	admitted date not null,
 	discharged date
+);
+
+create table FunctionalCentre
+(
+	accountId varchar(64) primary key,
+	description varchar(255) not null
 );
