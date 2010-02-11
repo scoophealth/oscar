@@ -24,7 +24,7 @@
 
 	String assessmentStatus = parameters.get("assessment_status")[0];
 	
-	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(null, clientId, signed);
+	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(admissionId, clientId, signed);
 	ocanStaffForm.setLastName(request.getParameter("lastName"));
 	ocanStaffForm.setFirstName(request.getParameter("firstName"));
 	ocanStaffForm.setAddressLine1(request.getParameter("addressLine1"));

@@ -1152,7 +1152,7 @@ function changeNumberOfReferrals() {
 					<!-- results from adding/removing medication will go into this block -->
 				</div>
 			</td>
-
+		</tr>
 		<tr>
 			<td colspan="2">7. Psychotic Symptoms</td>
 		</tr>			

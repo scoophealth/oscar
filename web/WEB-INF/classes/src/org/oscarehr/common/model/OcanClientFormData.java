@@ -11,20 +11,20 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
 /**
- * This entity represents key value pairs associated with the OcanStafftForm object.
+ * This entity represents key value pairs associated with the OcanClientForm object.
  * Generally speaking the key is the question asked and is specified by us, the answer
  * is generally the CDS category like "010-4" or something like that. There
  * are a few exceptions where the value maybe a number like "number of days hospitalised"
  * we are not able to use the cds category.
  */
 @Entity
-public class OcanStaffFormData extends AbstractModel<Integer> implements Serializable {
+public class OcanClientFormData extends AbstractModel<Integer> implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	private Integer ocanStaffFormId = null;
+	private Integer ocanClientFormId = null;
 	private String question = null;
 	private String answer = null;
 
@@ -32,12 +32,12 @@ public class OcanStaffFormData extends AbstractModel<Integer> implements Seriali
 		return id;
 	}
 
-	public Integer getOcanStaffFormId() {
-		return ocanStaffFormId;
+	public Integer getOcanClientFormId() {
+		return ocanClientFormId;
 	}
 
-	public void setOcanStaffFormId(Integer ocanStaffFormId) {
-		this.ocanStaffFormId = ocanStaffFormId;
+	public void setOcanClientFormId(Integer ocanClientFormId) {
+		this.ocanClientFormId = ocanClientFormId;
 	}
 
 	public String getQuestion() {
@@ -56,7 +56,7 @@ public class OcanStaffFormData extends AbstractModel<Integer> implements Seriali
 		this.answer = answer;
 	}
 
-	public boolean equals(OcanStaffFormData o) {
+	public boolean equals(OcanClientFormData o) {
 		try {
 			return (id != null && id.intValue() == o.id.intValue());
 		} catch (Exception e) {
@@ -81,11 +81,11 @@ public class OcanStaffFormData extends AbstractModel<Integer> implements Seriali
 	/**
 	 * @return true if the list of cdsClientFormData contains the answer specified. 
 	 */
-	public static boolean containsAnswer(List<OcanStaffFormData> answers, String answer)
+	public static boolean containsAnswer(List<OcanClientFormData> answers, String answer)
 	{
 		if (answer==null) return(false);
 		
-		for (OcanStaffFormData data : answers)
+		for (OcanClientFormData data : answers)
 		{
 			if (answer.equals(data.getAnswer())) return(true);
 		}

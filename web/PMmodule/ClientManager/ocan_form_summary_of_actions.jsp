@@ -9,7 +9,10 @@
 
 	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId);		
 
-	int size = Integer.parseInt(request.getParameter("size"));
+	int size=0;
+	try {
+		size = Integer.parseInt(request.getParameter("size"));
+	}catch(NumberFormatException e){}
 	
 	String domains = request.getParameter("domains");
 

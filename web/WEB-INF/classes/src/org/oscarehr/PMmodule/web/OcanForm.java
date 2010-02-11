@@ -8,12 +8,14 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.OcanClientFormDao;
+import org.oscarehr.common.dao.OcanClientFormDataDao;
 import org.oscarehr.common.dao.OcanFormOptionDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
-import org.oscarehr.common.model.CdsClientFormData;
-import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.OcanClientForm;
+import org.oscarehr.common.model.OcanClientFormData;
 import org.oscarehr.common.model.OcanFormOption;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
@@ -27,7 +29,10 @@ public class OcanForm {
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static OcanFormOptionDao ocanFormOptionDao = (OcanFormOptionDao) SpringUtils.getBean("ocanFormOptionDao");
 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
-	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");
+	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
+	private static OcanClientFormDao ocanClientFormDao = (OcanClientFormDao) SpringUtils.getBean("ocanClientFormDao");
+	private static OcanClientFormDataDao ocanClientFormDataDao = (OcanClientFormDataDao) SpringUtils.getBean("ocanClientFormDataDao");
+	
 	
 	public static Demographic getDemographic(String demographicId)
 	{
@@ -75,28 +80,50 @@ public class OcanForm {
 		return(results);
 	}
 	
-	private static List<OcanStaffFormData> getAnswers(Integer ocanStaffFormId, String question)
+	private static List<OcanStaffFormData> getStaffAnswers(Integer ocanStaffFormId, String question)
 	{
 		if (ocanStaffFormId==null) return(new ArrayList<OcanStaffFormData>()); 
 			
 		return(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question));
 	}
 	
+	private static List<OcanClientFormData> getClientAnswers(Integer ocanClientFormId, String question)
+	{
+		if (ocanClientFormId==null) return(new ArrayList<OcanClientFormData>()); 
+			
+		return(ocanClientFormDataDao.findByQuestion(ocanClientFormId, question));
+	}
+	
+	public static String renderAsDate(Integer ocanStaffFormId, String question, boolean required)
+	{
+		return renderAsDate(ocanStaffFormId,question,required, false);
+	}
+	
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
 	 */
-	public static String renderAsDate(Integer ocanStaffFormId, String question, boolean required)
+	public static String renderAsDate(Integer ocanStaffFormId, String question, boolean required, boolean clientForm)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
 		String value="", className="";
-		if(existingAnswers.size()>0) {value = existingAnswers.get(0).getAnswer();}
+		if(!clientForm) {
+			List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
+			if(existingAnswers.size()>0) {value = existingAnswers.get(0).getAnswer();}
+		} else {
+			List<OcanClientFormData> existingAnswers=getClientAnswers(ocanStaffFormId, question);
+			if(existingAnswers.size()>0) {value = existingAnswers.get(0).getAnswer();}
+		}
 		if(required) {className="{validate: {required:true}}";}
 		return "<input type=\"text\" value=\"" + value + "\" id=\""+question+"\" name=\""+question+"\" onfocus=\"this.blur()\" readonly=\"readonly\" class=\""+className+"\"/> <img title=\"Calendar\" id=\"cal_"+question+"\" src=\"../../images/cal.gif\" alt=\"Calendar\" border=\"0\"><script type=\"text/javascript\">Calendar.setup({inputField:'"+question+"',ifFormat :'%Y-%m-%d',button :'cal_"+question+"',align :'cr',singleClick :true,firstDay :1});</script>";
 	}
 	
 	public static String renderAsDate(Integer ocanStaffFormId, String question, boolean required, String defaultValue)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		return renderAsDate(ocanStaffFormId, question, required, defaultValue,false);
+	}
+	
+	public static String renderAsDate(Integer ocanStaffFormId, String question, boolean required, String defaultValue, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
 		String value="", className="";
 		if(existingAnswers.size()>0) {value = existingAnswers.get(0).getAnswer();}
 		if(value.equals("")) {value =defaultValue;}
@@ -125,12 +152,22 @@ public class OcanForm {
 		return(StringEscapeUtils.escapeHtml(sb.toString()));
 	}
 	
+	
+	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options)
+	{
+		return renderAsSelectOptions(ocanStaffFormId,question, options, false);
+	}
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
 	 */
-	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options)
+	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, boolean clientForm)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		List<OcanStaffFormData> existingStaffAnswers=null;
+		List<OcanClientFormData> existingClientAnswers=null;
+		if(!clientForm)
+			existingStaffAnswers = getStaffAnswers(ocanStaffFormId, question);
+		else
+			existingClientAnswers = getClientAnswers(ocanStaffFormId, question);
 
 		StringBuilder sb=new StringBuilder();
 
@@ -139,8 +176,12 @@ public class OcanForm {
 		{
 			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOcanDataCategoryName());
 			//String lengthLimitedEscapedName=limitLengthAndEscape(option.getOcanDataCategoryName());
-			String selected=(OcanStaffFormData.containsAnswer(existingAnswers, option.getOcanDataCategoryValue())?"selected=\"selected\"":"");
-
+			String selected=null;
+			if(!clientForm)
+				selected=(OcanStaffFormData.containsAnswer(existingStaffAnswers, option.getOcanDataCategoryValue())?"selected=\"selected\"":"");
+			else
+				selected=(OcanClientFormData.containsAnswer(existingClientAnswers, option.getOcanDataCategoryValue())?"selected=\"selected\"":"");
+			
 			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
 		}
 		
@@ -168,7 +209,7 @@ public class OcanForm {
 	}
 	public static String renderAsDomainSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String[] valuesToInclude)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
 
 		StringBuilder sb=new StringBuilder();
 
@@ -197,12 +238,16 @@ public class OcanForm {
 		return(sb.toString());
 	}
 	
+	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String defaultValue)
+	{
+		return renderAsSelectOptions(ocanStaffFormId, question, options, defaultValue, false);
+	}
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
 	 */
-	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String defaultValue)
+	public static String renderAsSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String defaultValue, boolean clientForm)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
 		boolean useDefaultValue=false;
 		if(existingAnswers.size()==0) {
 			useDefaultValue=true;
@@ -230,21 +275,38 @@ public class OcanForm {
 	
 	public static String renderAsTextArea(Integer ocanStaffFormId, String question, int rows, int cols)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		return renderAsTextArea(ocanStaffFormId, question, rows, cols, false);
+	}
+	
+	public static String renderAsTextArea(Integer ocanStaffFormId, String question, int rows, int cols, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingAnswers= null;
+		List<OcanClientFormData> existingClientAnswers=null;
 
 		StringBuilder sb=new StringBuilder();
 
 		sb.append("<textarea name=\""+question+"\" id=\""+question+"\" rows=\"" + rows + "\" cols=\"" + cols + "\">");
-		if(existingAnswers.size()>0) {
-			sb.append(existingAnswers.get(0).getAnswer());
+
+		if(!clientForm) {
+			existingAnswers=getStaffAnswers(ocanStaffFormId, question);
+			if(existingAnswers.size()>0) {
+				sb.append(existingAnswers.get(0).getAnswer());
+			}	
+		} else { 
+			existingClientAnswers=getClientAnswers(ocanStaffFormId, question);
+			if(existingClientAnswers.size()>0) {
+				sb.append(existingClientAnswers.get(0).getAnswer());
+			}	
 		}
+		
+		
 		sb.append("</textarea>");
 		return(sb.toString());
 	}
 	
 	public static String renderAsSoATextArea(Integer ocanStaffFormId, String question, int rows, int cols)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
 
 		StringBuilder sb=new StringBuilder();
 
@@ -258,7 +320,12 @@ public class OcanForm {
 	
 	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		return renderAsTextField(ocanStaffFormId, question, size, false);
+	}
+	
+	public static String renderAsTextField(Integer ocanStaffFormId, String question, int size, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
 
 		String value = "";
 		if(existingAnswers.size()>0) {
@@ -273,7 +340,12 @@ public class OcanForm {
 	
 	public static String renderAsCheckBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		return renderAsCheckBoxOptions(ocanStaffFormId, question,options,false);
+	}
+	
+	public static String renderAsCheckBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
  
 		StringBuilder sb=new StringBuilder();
 
@@ -291,7 +363,12 @@ public class OcanForm {
 	
 	public static String renderAsHiddenField(Integer ocanStaffFormId, String question)
 	{
-		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
+		return renderAsHiddenField(ocanStaffFormId, question, false);
+	}
+	
+	public static String renderAsHiddenField(Integer ocanStaffFormId, String question, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question);
 
 		String value = "";
 		if(existingAnswers.size()>0) {
@@ -302,5 +379,30 @@ public class OcanForm {
 		sb.append("<input type=\"hidden\" name=\""+question+"\" id=\""+question+"\" value=\""+value+"\"/>");
 		
 		return(sb.toString());
+	}
+	
+	
+	
+	
+	///client form//////
+	
+	public static OcanClientForm getOcanClientForm(Integer clientId)
+	{
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		OcanClientForm ocanClientForm=ocanClientFormDao.findLatestByFacilityClient(loggedInInfo.currentFacility.getId(), clientId);
+
+		if (ocanClientForm==null)
+		{
+			ocanClientForm=new OcanClientForm();
+			
+			Demographic demographic=demographicDao.getDemographicById(clientId);
+			
+			ocanClientForm.setLastName(demographic.getLastName());
+			ocanClientForm.setFirstName(demographic.getFirstName());				
+			ocanClientForm.setDateOfBirth(demographic.getFormattedDob());				             
+		}
+		
+		return(ocanClientForm);
 	}
 }
