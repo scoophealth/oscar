@@ -13,21 +13,24 @@ public class OcanFormAction {
 	private static OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");
 
-	public static OcanStaffForm createOcanStaffForm(Integer admissionId, Integer clientAge, Integer clientId, boolean signed)
+	public static OcanStaffForm createOcanStaffForm(Integer admissionId, Integer clientId, boolean signed)
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
 		OcanStaffForm ocanStaffForm=new OcanStaffForm();
 		ocanStaffForm.setAdmissionId(admissionId);
-		ocanStaffForm.setOcanFormVersion("12");
-		ocanStaffForm.setClientAge(clientAge);
+		ocanStaffForm.setOcanFormVersion("1.2");		
 		ocanStaffForm.setClientId(clientId);
 		ocanStaffForm.setFacilityId(loggedInInfo.currentFacility.getId());
 		ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 		ocanStaffForm.setSigned(signed);
-		ocanStaffFormDao.persist(ocanStaffForm);
+		
 		
 		return(ocanStaffForm);
+	}
+	
+	public static void saveOcanStaffForm(OcanStaffForm ocanStaffForm) {
+		ocanStaffFormDao.persist(ocanStaffForm);
 	}
 	
 	public static void addOcanStaffFormData(Integer ocanStaffFormId, String question, String answer)

@@ -2650,7 +2650,9 @@ create table OcanStaffForm
         email varchar(100),
         hcNumber varchar(100),
         hcVersion varchar(100),
-        dateOfBirth varchar(100)
+        dateOfBirth varchar(100),
+	assessmentStatus varchar(40),
+	index(assessmentStatus)
 );
 
 create table OcanStaffFormData

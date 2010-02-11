@@ -14,11 +14,21 @@
 	
 %>
 
-<script>
 
+<script type="text/javascript" src="<%=request.getContextPath()%>/PMmodule/ClientManager/ocan_staff_form_validation.js"></script>
+		
+
+<script>
+//setup validation plugin
 $("document").ready(function() {	
-	$("#ocan_staff_form").validate({meta: "validate"});	
+	$("#ocan_staff_form").validate({meta: "validate"});
+		
+	$.validator.addMethod('postalCode', function (value) { 
+	    return /^((\d{5}-\d{4})|(\d{5})|()|([A-Z]\d[A-Z]\s\d[A-Z]\d))$/.test(value); 
+	}, 'Please enter a valid US or Canadian postal code.');
+	
 });
+
 
 </script>
 
@@ -37,22 +47,7 @@ $('document').ready(function(){
 
 </script>
 
-
 <script>
-
-function validateOcanForm() {
-	var method = document.getElementById('method').value;
-	if(method == 'save_draft') {
-		return saveDraft();
-	}
-	//alert('submit');
-	return true;
-}
-
-function saveDraft() {
-	alert('save draft');
-	return false;
-}
 
 function changeNumberOfMedications() {
 	var newCount = $("#medications_count").val(); 
@@ -169,9 +164,8 @@ function changeNumberOfReferrals() {
 </style>
 
 
-
-<form id="ocan_staff_form" action="ocan_form_action.jsp">
-	<input type="hidden" id="method" name="method" value=""/>
+<form id="ocan_staff_form" action="ocan_form_action.jsp" onsubmit="return submitOcanForm()">
+	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
 	<h3>OCAN form (v1.2)</h3>
 
 	<br />
@@ -226,7 +220,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Function (MIS Functional Centre)</td>
 			<td class="genericTableData">
-				<select name="function">
+				<select name="function" class="{validate: {required:true}}">					
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "function", OcanForm.getOcanFormOptions("MIS Functional Centre List"))%>
 				</select>					
 			</td>
@@ -239,13 +233,13 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Last Name</td>
 			<td class="genericTableData">
-				<input type="text" name="lastName" id="lastName" value="<%=ocanStaffForm.getLastName()%>" />
+				<input type="text" name="lastName" id="lastName" value="<%=ocanStaffForm.getLastName()%>" class="{validate: {required:true}}"/>
 			</td>			
 		</tr>
 		<tr>
 			<td class="genericTableHeader">First Name</td>
 			<td class="genericTableData">
-				<input type="text" name="firstName" id="firstName" value="<%=ocanStaffForm.getFirstName()%>" />
+				<input type="text" name="firstName" id="firstName" value="<%=ocanStaffForm.getFirstName()%>" class="{validate: {required:true}}"/>
 			</td>
 		</tr>			
 		<tr>
@@ -270,8 +264,8 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Province</td>
 			<td class="genericTableData">
-				<select name="function">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "province", OcanForm.getOcanFormOptions("Province"),ocanStaffForm.getProvince())%>
+				<select name="province">
+					<%=OcanForm.renderAsProvinceSelectOptions(ocanStaffForm)%>
 				</select>					
 			</td>
 		</tr>
@@ -279,7 +273,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-				<input type="text" name="postalCode" id="postalCode" value="<%=ocanStaffForm.getPostalCode()%>" />
+				<input type="text" name="postalCode" id="postalCode" value="<%=ocanStaffForm.getPostalCode()%>" class="{validate: {postalCode:true}}"/>
 			</td>
 		</tr>	
 		
@@ -309,7 +303,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Reason for Assessment</td>
 			<td class="genericTableData">
-				<select name="reason_for_assessment">
+				<select name="reason_for_assessment" id="reason_for_assessment" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "reason_for_assessment", OcanForm.getOcanFormOptions("Reason for Assessment"))%>
 				</select>					
 			</td>
@@ -427,7 +421,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Service Recipient Location</td>
 			<td class="genericTableData">
-				<select name="service_recipient_location">
+				<select name="service_recipient_location" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_location", OcanForm.getOcanFormOptions("Recipient Location"))%>
 				</select>					
 			</td>
@@ -435,7 +429,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Service Recipient LHIN</td>
 			<td class="genericTableData">
-				<select name="service_recipient_lhin">
+				<select name="service_recipient_lhin" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_lhin", OcanForm.getOcanFormOptions("LHIN code"))%>
 				</select>					
 			</td>
@@ -443,7 +437,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Service Delivery LHIN</td>
 			<td class="genericTableData">
-				<select name="service_delivery_lhin">
+				<select name="service_delivery_lhin" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_delivery_lhin", OcanForm.getOcanFormOptions("LHIN code"))%>
 				</select>					
 			</td>
@@ -451,14 +445,14 @@ function changeNumberOfReferrals() {
 		
 		<tr>
 			<td class="genericTableHeader">Date of Birth</td>
-			<td class="genericTableData">
+			<td class="genericTableData" class="{validate: {required:true}}">
 				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",true,ocanStaffForm.getDateOfBirth())%>				
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Gender</td>
 			<td class="genericTableData">
-				<select name="gender">
+				<select name="gender" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "gender", OcanForm.getOcanFormOptions("Administrative Gender"))%>
 				</select>					
 			</td>
@@ -480,7 +474,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Does the client have power of attorney for property?</td>
 			<td class="genericTableData">
-				<select name="power_attorney_property">
+				<select name="power_attorney_property" id="power_attorney_property">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "power_attorney_property", OcanForm.getOcanFormOptions("Client Capacity"))%>
 				</select>					
 			</td>
@@ -494,7 +488,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Does the client have power of attorney or substitute decision maker for personal care?</td>
 			<td class="genericTableData">
-				<select name="power_attorney_personal_care">
+				<select name="power_attorney_personal_care" id="power_attorney_personal_care">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "power_attorney_personal_care", OcanForm.getOcanFormOptions("Client Capacity"))%>
 				</select>					
 			</td>
@@ -508,7 +502,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Does the client have a court appointed guardian?</td>
 			<td class="genericTableData">
-				<select name="court_appointed_guardian">
+				<select name="court_appointed_guardian" id="court_appointed_guardian">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "court_appointed_guardian", OcanForm.getOcanFormOptions("Client Capacity"))%>
 				</select>					
 			</td>
@@ -522,7 +516,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Who referred you to this service?</td>
 			<td class="genericTableData">
-				<select name="source_of_referral">
+				<select name="source_of_referral" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "source_of_referral", OcanForm.getOcanFormOptions("Referral Source"))%>
 				</select>					
 			</td>
@@ -539,7 +533,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Aboriginal Origin?</td>
 			<td class="genericTableData">
-				<select name="aboriginal">
+				<select name="aboriginal" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "aboriginal", OcanForm.getOcanFormOptions("Aboriginal Origin"))%>
 				</select>					
 			</td>
@@ -603,7 +597,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Service recipient preferred language?</td>
 			<td class="genericTableData">
-				<select name="preferred_language">
+				<select name="preferred_language" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "preferred_language", OcanForm.getOcanFormOptions("Language"))%>
 				</select>					
 			</td>
@@ -612,7 +606,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Language of Service Provision?</td>
 			<td class="genericTableData">
-				<select name="language_service_provision">
+				<select name="language_service_provision" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "language_service_provision", OcanForm.getOcanFormOptions("Language"))%>
 				</select>					
 			</td>
@@ -655,7 +649,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person lack a current place to stay?</td>
 			<td class="genericTableData">
-				<select name="1_1">
+				<select name="1_1" id="1_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -664,7 +658,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with accommodation does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="1_2">
+				<select name="1_2" id="1_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -673,7 +667,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with accommodation does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="1_3a">
+				<select name="1_3a" id="1_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -682,7 +676,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with accommodation does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="1_3b">
+				<select name="1_3b" id="1_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -719,7 +713,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Where do you live?</td>
 			<td class="genericTableData">
-				<select name="1_where_live">
+				<select name="1_where_live" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_where_live", OcanForm.getOcanFormOptions("Residence Type"))%>
 				</select>					
 			</td>
@@ -728,7 +722,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Do you receive any support?</td>
 			<td class="genericTableData">
-				<select name="1_any_support">
+				<select name="1_any_support" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_any_support", OcanForm.getOcanFormOptions("Residential Support"))%>
 				</select>					
 			</td>
@@ -737,7 +731,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Do you live with anyone?</td>
 			<td class="genericTableData">
-				<select name="1_live_with_anyone">
+				<select name="1_live_with_anyone" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_live_with_anyone", OcanForm.getOcanFormOptions("Living Arrangement Type"))%>
 				</select>					
 			</td>
@@ -750,7 +744,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have difficulty in getting enough to eat?</td>
 			<td class="genericTableData">
-				<select name="2_1">
+				<select name="2_1" id="2_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -759,7 +753,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with getting enough to eat does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="2_2">
+				<select name="2_2" id="2_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -768,7 +762,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with getting enough to eat does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="2_3a">
+				<select name="2_3a" id="2_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -777,7 +771,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with getting enough to eat does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="2_3b">
+				<select name="2_3b" id="2_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -818,7 +812,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have difficulty looking after the home?</td>
 			<td class="genericTableData">
-				<select name="3_1">
+				<select name="3_1" id="3_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -827,7 +821,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with looking after the home does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="3_2">
+				<select name="3_2" id="3_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -836,7 +830,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with looking after the home does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="3_3a">
+				<select name="3_3a" id="3_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -845,7 +839,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with looking after the home does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="3_3b">
+				<select name="3_3b" id="3_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -885,7 +879,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have difficulty with self-care?</td>
 			<td class="genericTableData">
-				<select name="4_1">
+				<select name="4_1" id="4_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -894,7 +888,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with self-care does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="4_2">
+				<select name="4_2" id="4_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -903,7 +897,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with self-care does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="4_3a">
+				<select name="4_3a" id="4_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -912,7 +906,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with self-care does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="4_3b">
+				<select name="4_3b" id="4_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -953,7 +947,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have difficulty with regular, appropriate daytime activities?</td>
 			<td class="genericTableData">
-				<select name="5_1">
+				<select name="5_1" id="5_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -962,7 +956,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in finding and keeping regular and appropriate daytime activities?</td>
 			<td class="genericTableData">
-				<select name="5_2">
+				<select name="5_2" id="5_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -971,7 +965,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in finding and keeping regular and appropriate daytime activities?</td>
 			<td class="genericTableData">
-				<select name="5_3a">
+				<select name="5_3a" id="5_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -980,7 +974,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services in finding and keeping regular and appropriate daytime activities?</td>
 			<td class="genericTableData">
-				<select name="5_3b">
+				<select name="5_3b" id="5_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1016,7 +1010,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">What is your current employment status?</td>
 			<td class="genericTableData">
-				<select name="5_current_employment_status">
+				<select name="5_current_employment_status" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_current_employment_status", OcanForm.getOcanFormOptions("Employment Status"))%>
 				</select>					
 			</td>
@@ -1025,7 +1019,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Are you currently in school?</td>
 			<td class="genericTableData">
-				<select name="5_education_program_status">
+				<select name="5_education_program_status" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_education_program_status", OcanForm.getOcanFormOptions("Education Program Status"))%>
 				</select>					
 			</td>
@@ -1046,7 +1040,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have any physical disability or any physical illness?</td>
 			<td class="genericTableData">
-				<select name="6_1">
+				<select name="6_1" id="6_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1055,7 +1049,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives for physical health problems?</td>
 			<td class="genericTableData">
-				<select name="6_2">
+				<select name="6_2" id="6_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1064,7 +1058,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for physical health problems?</td>
 			<td class="genericTableData">
-				<select name="6_3a">
+				<select name="6_3a" id="6_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1073,7 +1067,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services for physical health problems?</td>
 			<td class="genericTableData">
-				<select name="6_3b">
+				<select name="6_3b" id="6_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1166,7 +1160,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have any psychotic symptoms?</td>
 			<td class="genericTableData">
-				<select name="7_1">
+				<select name="7_1"  id="7_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1175,7 +1169,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2.  How much help does the person receive from friends or relatives for these psychotic symptoms?</td>
 			<td class="genericTableData">
-				<select name="7_2">
+				<select name="7_2" id="7_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1184,7 +1178,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for these psychotic symptoms?</td>
 			<td class="genericTableData">
-				<select name="7_3a">
+				<select name="7_3a" id="7_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1193,7 +1187,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b.  How much help does the person need from local services for these psychotic symptoms?</td>
 			<td class="genericTableData">
-				<select name="7_3b">
+				<select name="7_3b" id="7_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1233,7 +1227,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Have you been hospitalized due to your mental health during the past two years?</td>
 			<td class="genericTableData">
-				<select name="hospitalized_mental_illness">
+				<select name="hospitalized_mental_illness" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "hospitalized_mental_illness", OcanForm.getOcanFormOptions("Hospitalized Mental Illness"))%>
 				</select>					
 			</td>
@@ -1253,7 +1247,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Community Treatment Orders</td>
 			<td class="genericTableData">
-				<select name="community_treatment_orders">
+				<select name="community_treatment_orders" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "community_treatment_orders", OcanForm.getOcanFormOptions("Community Treatment Orders"))%>
 				</select>					
 			</td>
@@ -1286,7 +1280,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Has the person had clear verbal or written information about condition and treatment?</td>
 			<td class="genericTableData">
-				<select name="8_1">
+				<select name="8_1" id="8_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1295,7 +1289,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in obtaining such information?</td>
 			<td class="genericTableData">
-				<select name="8_2">
+				<select name="8_2" id="8_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1304,7 +1298,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in obtaining such information? </td>
 			<td class="genericTableData">
-				<select name="8_3a">
+				<select name="8_3a" id="8_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1313,7 +1307,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b.  How much help does the person need from local services in obtaining such information?</td>
 			<td class="genericTableData">
-				<select name="8_3b">
+				<select name="8_3b" id="8_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1369,7 +1363,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person suffer from current psychological distress?</td>
 			<td class="genericTableData">
-				<select name="9_1">
+				<select name="9_1"  id="9_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1378,7 +1372,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives for this distress?</td>
 			<td class="genericTableData">
-				<select name="9_2">
+				<select name="9_2" id="9_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1387,7 +1381,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for this distress?</td>
 			<td class="genericTableData">
-				<select name="9_3a">
+				<select name="9_3a" id="9_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1396,7 +1390,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services for this distress?</td>
 			<td class="genericTableData">
-				<select name="9_3b">
+				<select name="9_3b" id="9_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1438,7 +1432,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Is the person a danger to him- or herself?</td>
 			<td class="genericTableData">
-				<select name="10_1">
+				<select name="10_1" id="10_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1447,7 +1441,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2.  How much help does the person receive from friends or relatives to reduce the risk of self-harm?</td>
 			<td class="genericTableData">
-				<select name="10_2">
+				<select name="10_2" id="10_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1456,7 +1450,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services to reduce the risk of self-harm?</td>
 			<td class="genericTableData">
-				<select name="10_3a">
+				<select name="10_3a" id="10_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1465,7 +1459,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services to reduce the risk of self-harm?</td>
 			<td class="genericTableData">
-				<select name="10_3b">
+				<select name="10_3b" id="10_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1547,7 +1541,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Is the person a current or potential risk to other's people safety?</td>
 			<td class="genericTableData">
-				<select name="11_1">
+				<select name="11_1" id="11_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1556,7 +1550,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives to reduce the risk that he or she might harm someone else? </td>
 			<td class="genericTableData">
-				<select name="11_2">
+				<select name="11_2" id="11_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1565,7 +1559,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a.  How much help does the person receive from local services to reduce the risk that he or she might harm someone else?</td>
 			<td class="genericTableData">
-				<select name="11_3a">
+				<select name="11_3a" id="11_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1574,7 +1568,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services to reduce the risk that he or she might harm someone else?</td>
 			<td class="genericTableData">
-				<select name="11_3b">
+				<select name="11_3b" id="11_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1617,7 +1611,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1.  Does the person drink excessively, or have a problem controlling his or her drinking?</td>
 			<td class="genericTableData">
-				<select name="12_1">
+				<select name="12_1" id="12_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1626,7 +1620,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives for this drinking?</td>
 			<td class="genericTableData">
-				<select name="12_2">
+				<select name="12_2" id="12_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1635,7 +1629,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for this drinking?</td>
 			<td class="genericTableData">
-				<select name="12_3a">
+				<select name="12_3a" id="12_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1644,7 +1638,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services for this drinking?</td>
 			<td class="genericTableData">
-				<select name="12_3b">
+				<select name="12_3b" id="12_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1724,7 +1718,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have problems with drug misuse?</td>
 			<td class="genericTableData">
-				<select name="13_1">
+				<select name="13_1" id="13_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1733,7 +1727,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with drug misuse does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="13_2">
+				<select name="13_2" id="13_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1742,7 +1736,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with drug misuse does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="13_3a">
+				<select name="13_3a" id="13_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1751,7 +1745,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with drug misuse does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="13_3b">
+				<select name="13_3b" id="13_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1836,7 +1830,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have problems with addictions?</td>
 			<td class="genericTableData">
-				<select name="14_1">
+				<select name="14_1" id="14_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1845,7 +1839,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with addictions does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="14_2">
+				<select name="14_2" id="14_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1854,7 +1848,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a.How much help with addictions does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="14_3a">
+				<select name="14_3a"  id="14_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1863,7 +1857,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with addictions does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="14_3b">
+				<select name="14_3b" id="14_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1933,7 +1927,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1.  Does the person need help with social contact?</td>
 			<td class="genericTableData">
-				<select name="15_1">
+				<select name="15_1" id="15_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -1942,7 +1936,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with social contact does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="15_2">
+				<select name="15_2" id="15_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1951,7 +1945,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in organizing social contact?</td>
 			<td class="genericTableData">
-				<select name="15_3a">
+				<select name="15_3a" id="15_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -1960,7 +1954,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
-				<select name="15_3b">
+				<select name="15_3b" id="15_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2012,7 +2006,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1.  Does the person have any difficulty in finding a partner or in maintaining a close relationship?</td>
 			<td class="genericTableData">
-				<select name="16_1">
+				<select name="16_1" id="16_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2021,7 +2015,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with forming and maintaining close relationships does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="16_2">
+				<select name="16_2" id="16_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2030,7 +2024,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with forming and maintaining close relationships does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="16_3a">
+				<select name="16_3a" id="16_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2039,7 +2033,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with forming and maintaining close relationships does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
-				<select name="16_3b">
+				<select name="16_3b" id="16_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2080,7 +2074,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have problems with his or her sex life?</td>
 			<td class="genericTableData">
-				<select name="17_1">
+				<select name="17_1" id="17_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2089,7 +2083,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with problems in his or her sex life does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="17_2">
+				<select name="17_2" id="17_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2098,7 +2092,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with problems in his or her sex life does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="17_3a">
+				<select name="17_3a" id="17_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2107,7 +2101,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with problems in his or her sex life does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
-				<select name="17_3b">
+				<select name="17_3b" id="17_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2148,7 +2142,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have difficulty looking after his or her children?</td>
 			<td class="genericTableData">
-				<select name="18_1">
+				<select name="18_1" id="18_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2157,7 +2151,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with looking after the children does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="18_2">
+				<select name="18_2" id="18_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2166,7 +2160,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with looking after the children does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="18_3a">
+				<select name="18_3a" id="18_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2175,7 +2169,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with looking after the children does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="18_3b">
+				<select name="18_3b" id="18_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2216,7 +2210,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have difficulty looking after other dependents?</td>
 			<td class="genericTableData">
-				<select name="19_1">
+				<select name="19_1" id="19_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2225,7 +2219,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with looking after other dependants does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="19_2">
+				<select name="19_2" id="19_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2234,7 +2228,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with looking after other dependents does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="19_3a">
+				<select name="19_3a" id="19_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2243,7 +2237,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with looking after other dependents does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="19_3b">
+				<select name="19_3b" id="19_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2284,7 +2278,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person lack basic skills in numeracy and literacy?</td>
 			<td class="genericTableData">
-				<select name="20_1">
+				<select name="20_1" id="20_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2293,7 +2287,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with numeracy and literacy does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="20_2">
+				<select name="20_2" id="20_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2302,7 +2296,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with numeracy and literacy does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="20_3a">
+				<select name="20_3a" id="20_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2311,7 +2305,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with numeracy and literacy does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
-				<select name="20_3b">
+				<select name="20_3b" id="20_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2347,7 +2341,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">What is your highest level of education?</td>
 			<td class="genericTableData">
-				<select name="level_of_education">
+				<select name="level_of_education" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "level_of_education", OcanForm.getOcanFormOptions("Education Level"))%>
 				</select>					
 			</td>
@@ -2362,7 +2356,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person lack basic skills in getting access to or using a telephone?</td>
 			<td class="genericTableData">
-				<select name="21_1">
+				<select name="21_1" id="21_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2371,7 +2365,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives to make telephone calls?</td>
 			<td class="genericTableData">
-				<select name="21_2">
+				<select name="21_2" id="21_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2380,7 +2374,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services to make telephone calls?</td>
 			<td class="genericTableData">
-				<select name="21_3a">
+				<select name="21_3a" id="21_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2389,7 +2383,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services to make telephone calls?</td>
 			<td class="genericTableData">
-				<select name="21_3b">
+				<select name="21_3b" id="21_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2431,7 +2425,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have any problems using public transport?</td>
 			<td class="genericTableData">
-				<select name="22_1">
+				<select name="22_1" id="22_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2440,7 +2434,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help with traveling does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
-				<select name="22_2">
+				<select name="22_2" id="22_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2449,7 +2443,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help with traveling does the person receive from local services?</td>
 			<td class="genericTableData">
-				<select name="22_3a">
+				<select name="22_3a" id="22_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2458,7 +2452,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help with traveling does the person need from local services?</td>
 			<td class="genericTableData">
-				<select name="22_3b">
+				<select name="22_3b" id="22_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2500,7 +2494,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1. Does the person have problems budgeting his or her money?</td>
 			<td class="genericTableData">
-				<select name="23_1">
+				<select name="23_1" id="23_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2509,7 +2503,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in managing his or her money?</td>
 			<td class="genericTableData">
-				<select name="23_2">
+				<select name="23_2" id="23_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2518,7 +2512,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in managing his or her money?</td>
 			<td class="genericTableData">
-				<select name="23_3a">
+				<select name="23_3a" id="23_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2527,7 +2521,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services in managing his or her money?</td>
 			<td class="genericTableData">
-				<select name="23_3b">
+				<select name="23_3b" id="23_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2563,7 +2557,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">What is your primary source of income?</td>
 			<td class="genericTableData">
-				<select name="income_source_type">
+				<select name="income_source_type" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "income_source_type", OcanForm.getOcanFormOptions("Income Source Type"))%>
 				</select>					
 			</td>
@@ -2577,7 +2571,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">1.  Is the person definitely receiving all the benefits that he or she is entitled to?</td>
 			<td class="genericTableData">
-				<select name="24_1">
+				<select name="24_1" id="24_1" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
 				</select>					
 			</td>
@@ -2586,7 +2580,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in obtaining the full benefit entitlement?</td>
 			<td class="genericTableData">
-				<select name="24_2">
+				<select name="24_2" id="24_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2595,7 +2589,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in obtaining the full benefit entitlement?</td>
 			<td class="genericTableData">
-				<select name="24_3a">
+				<select name="24_3a" id="24_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2604,7 +2598,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">3b. How much help does the person need from local services in obtaining the full benefit entitlement?</td>
 			<td class="genericTableData">
-				<select name="24_3b">
+				<select name="24_3b" id="24_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
 				</select>					
 			</td>
@@ -2728,9 +2722,9 @@ function changeNumberOfReferrals() {
 				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
 				Sign <input type="checkbox" name="signed" />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="submit" name="submit" value="Submit"  onclick="document.getElementById('method').value='submit';"/>
+				<input type="submit" name="submit" value="Submit"  onclick="document.getElementById('assessment_status').value='Complete';"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('method').value='save_draft';"/>
+				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active';"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="button" value="Cancel" onclick="history.go(-1)" />
 			</td>

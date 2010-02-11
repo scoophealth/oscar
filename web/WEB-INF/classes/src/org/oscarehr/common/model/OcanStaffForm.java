@@ -53,6 +53,11 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	private String hcVersion;
 	private String dateOfBirth;
 	
+	private String assessmentStatus;
+	
+	public OcanStaffForm() {
+		province = "ON";
+	}
 	
 	public Integer getId() {
 		return id;
@@ -240,6 +245,14 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public String getAssessmentStatus() {
+		return assessmentStatus;
+	}
+
+	public void setAssessmentStatus(String assessmentStatus) {
+		this.assessmentStatus = assessmentStatus;
 	}
 
 }

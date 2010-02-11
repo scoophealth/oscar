@@ -134,6 +134,7 @@ public class OcanForm {
 
 		StringBuilder sb=new StringBuilder();
 
+		sb.append("<option value=\"\">Select an answer</option>");
 		for (OcanFormOption option : options)
 		{
 			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOcanDataCategoryName());
@@ -146,6 +147,25 @@ public class OcanForm {
 		return(sb.toString());
 	}
 	
+	public static String renderAsProvinceSelectOptions(OcanStaffForm ocanStaffForm)
+	{
+		String province = ocanStaffForm.getProvince();
+		if(province==null) province = "ON";
+		List<OcanFormOption> options = getOcanFormOptions("Province List");
+		
+		StringBuilder sb=new StringBuilder();
+
+		for (OcanFormOption option : options)
+		{
+			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOcanDataCategoryName());
+			//String lengthLimitedEscapedName=limitLengthAndEscape(option.getOcanDataCategoryName());
+			String selected=province.equals(option.getOcanDataCategoryValue())?"selected=\"selected\"":"";
+
+			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"\" title=\""+htmlEscapedName+"\">"+htmlEscapedName+"</option>");
+		}
+		
+		return(sb.toString());
+	}
 	public static String renderAsDomainSelectOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, String[] valuesToInclude)
 	{
 		List<OcanStaffFormData> existingAnswers=getAnswers(ocanStaffFormId, question);
