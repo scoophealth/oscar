@@ -1,12 +1,15 @@
 /*
     editControl - a WYSIWYG edit control using iFrames and designMode
     Copyright (C) 2009-2010 Peter Hutten-Czapski
-     Version 0.5 now about 400 lines of code
+     Version 1.2 now about 500 lines of code
         NEW in 0.2 button styles, links, select box
-        NEW in 0.3 help, date, rule, select all, and clean functions
+        NEW in 0.3 help, date, rule, select all, and clean functions 
         NEW in 0.4 code completely rewritten, more functions including images and 
-            now more modular and can support IE, including spelling for IE
-        NEW in 0.5 minor code cleanup and template loading 
+            now more modular and can support IE, including spelling for IE under 300 lines
+        NEW in 0.5 template loading with support for placeholder form letter fields
+        NEW in 0.8 minor code cleanup and bugfixes 
+        NEW in 1.1 first commit to cvs 
+        NEW in 1.2 bugfix for button style mouse behavior and 5 more buttons/functions
     * Requirements: DesignMode and other Dom 2 methods 
     * Mozilla 1.3+ IE 5.5+ Netscape 6+ Opera 9+ Konqueror 3.5.7+ Safari 1.3+ Chrome
     * designed for and tested on Firefox 2/3.  Tested on Opera 10, Chrome 4 and IE 6/7
@@ -38,6 +41,11 @@
 						// [bold] a button that toggles bold of the selected text
 						// [italic] a button that toggles emphasis text	
 						// [underlined] a button that toggles underlined text
+						// [strike] a button that toggles strike trough text
+						// [subscript] a button that toggles subscript text
+						// [superscript] a button that toggles superscript text
+						// [text-colour] a button that applies text colour
+						// [hilight] a button that applies text high lighting colour
 						// [left] a button that left justifies text
 						// [center] a button that center justifies text
 						// [full] a button that fully justifies text
@@ -47,10 +55,14 @@
 						// [rule]a button that creates a horizontal rule
 						// [undo]a button that undoes the last action(s)
 						// [redo]a button that redoes the last action(s)
+						// [heading1] inserts a heading IF select-block is not available
 						// [indent]a button that indents the text
 						// [outdent]a button that outdents the text
 						// [select-all]a button that selects all text
 						// [clean]a button that removes font formatting from all selected text
+						// [table]a button that inserts a table
+						// [link]a button that inserts a URL of a link
+						// [image]a button that inserts an image
 						// [date] a button that adds the current date to the form
 						// [clock] a button that adds the current time to the form
 						// [help] a button that loads a help window
@@ -68,10 +80,10 @@
 */
 //GLOBALS
 var cfg_layout = '[select-block]|[bold][italic]|[unordered][ordered][rule]|[undo][redo]|[indent][outdent][select-all][clean]|[clock][spell][help]<br />[edit-area]';
-var cfg_formatblock = '<option value="<p>">&mdash; format &mdash;</option>  <option value="<p>">Paragraph</option>  <option value="<h1>">Heading 1</option>  <option value="<h2>">Heading 2 <H2></option>  <option value="<h3>">Heading 3 <H3></option>  <option value="<h4>">Heading 4 <H4></option>  <option value="<h5>">Heading 5 <H5></option>  <option value="<h6>">Heading 6 <H6></option>  </select>';
+var cfg_formatblock = '<option value="">&mdash; format &mdash;</option>  <option value="<p>">Paragraph</option>  <option value="<h1>">Heading 1</option>  <option value="<h2>">Heading 2 <H2></option>  <option value="<h3>">Heading 3 <H3></option>  <option value="<h4>">Heading 4 <H4></option>  <option value="<h5>">Heading 5 <H5></option>  <option value="<h6>">Heading 6 <H6></option>  </select>';
 var cfg_formatface = '<option value="">&mdash; font face &mdash;</option>  <option value="Arial,Helvetica,sans-serif">Arial</option> <option value="Courier">Courier</option> <option value="Times New Roman">Times</option> </select>';
 var cfg_formatfontsize = '<option value="">&mdash; font size &mdash;</option>  <option value="1">1</option>  <option value="2">2</option> <option value="3">3</option> <option value="4">4</option> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> </select>';
-var cfg_formattemplate = '<option value="">&mdash; template &mdash;</option>  <option value="blank">blank</option>  <option value="letterhead">letterhead</option>  </select>';
+var cfg_formattemplate = '<option value="">&mdash; template &mdash;</option>  <option value="blank">blank</option>  </select>';
 var cfg_isrc = '';  				// path to icons degrades to text buttons if icons not found
 var cfg_filesrc = '';				// path to blank.html and editor_help.html
 var cfg_template = 'blank.html';		// style and content template of the editor's iframe itself. 
@@ -79,7 +91,7 @@ var cfg_width = '700';				// editor control width in pixels
 var cfg_height = '400';				// editor control height in pixels
 var cfg_editorname ="anEditControl";		// handle for the editor control itself
 var cfg_bstyle = 'width:24px;height:24px;border: solid 2px #ccccff; background-color: #ccccff;'; 	//the CSS of the button elements
-var cfg_boutstyle = 'solid 2px #ccccff;'; 	//the CSS of the button elements om mouse out
+var cfg_boutstyle = 'solid 2px #ccccff'; 	//the CSS of the button elements om mouse out
 var cfg_sstyle = 'vertical-align: top; height:24px;';//the CSS of the option select box.  Selects will take font and background but not border.
 var cfg_sepstyle = 'width:6px;height:24px;border: solid 2px #ccccff; background-color: #ccccff;';	//the CSS of the seperator icon  
 
@@ -89,15 +101,17 @@ function insertEditControl() {
 	
 	// FIRST BUILD BUTTONS WITH USEFUL ATTRIUBUTES
 	// Mozilla requires the title attribute for tool tips, and that works in IE as well
-	// alt or value in Mozilla will be the text of the button if the image is not found
 	// The ID matches a execCommand argument and carries the action associated with the button 
-	// when the action needs a value cmdValue="promptUser" will prompt the user with promptText="URL of image?"
+	// when the action needs a value cmdValue="promptUser" will prompt the user with the promptText attribute
 	// the class="editControlButton" identifies the elements that will have button function 
 	//   -these will change appearance on mouse events and will trigger on mouse click a default action
 
 	var boldButton = '<input type="image" src="' + cfg_isrc + 'b.png" value="Bold" alt="Bold" title="Bold"  name="' + cfg_editorname + '" class="editControlButton" id="bold" style="'+ cfg_bstyle+ '">';
 	var italicButton = '<input type="image" src="' + cfg_isrc + 'i.png" value="Italic" alt="Italic" title="Italic" name="' + cfg_editorname + '" class="editControlButton" id="italic" style="'+ cfg_bstyle+ '">';
 	var underlinedButton = '<input type="image" src="' + cfg_isrc + 'u.png" value="Underlined" alt="Underlined" title="Underline" name="' + cfg_editorname + '" class="editControlButton" id="underline" style="'+ cfg_bstyle+ '">';
+	var strikethroughButton = '<input type="image" src="' + cfg_isrc + 'strike_trough.png" value="Strike Through" alt="Strike Through" title="Strike Through" name="' + cfg_editorname + '" class="editControlButton" id="strikethrough" style="'+ cfg_bstyle+ '">';
+	var superscriptButton = '<input type="image" src="' + cfg_isrc + 'superscript.png" value="Superscript" alt="Superscript" title="Superscript" name="' + cfg_editorname + '" class="editControlButton" id="superscript" style="'+ cfg_bstyle+ '">';
+	var subscriptButton = '<input type="image" src="' + cfg_isrc + 'subscript.png" value="Subscript" alt="Subscript" title="Subscript" name="' + cfg_editorname + '" class="editControlButton" id="subscript" style="'+ cfg_bstyle+ '">';
 	var leftButton = '<input type="image" src="' + cfg_isrc + 'format-justify-left.png" value="Left" alt="Left" title="Left"  name="' + cfg_editorname + '" class="editControlButton" id="justifyleft" style="'+ cfg_bstyle+ '">';
 	var centerButton = '<input type="image" src="' + cfg_isrc + 'format-justify-center.png" value="Center" alt="Center" title="Center"  name="' + cfg_editorname + '" class="editControlButton" id="justifycenter" style="'+ cfg_bstyle+ '">';
 	var fullButton = '<input type="image" src="' + cfg_isrc + 'format-justify-full.png" value="Full" alt="Full" title="Full"  name="' + cfg_editorname + '" class="editControlButton" id="justifyfull" style="'+ cfg_bstyle+ '">';
@@ -111,6 +125,8 @@ function insertEditControl() {
 	var selectAllButton = '<input type="image" src="' + cfg_isrc + 'all.png" value="Select all" alt="Select all" title="Select All" name="' + cfg_editorname + '" id="selectall" class="editControlButton" style="'+ cfg_bstyle+ '">';
 	var insertImageButton = '<input type="image" src="' + cfg_isrc + 'img.png" value="Insert image" alt="Insert image" title="Insert Image" name="' + cfg_editorname + '" id="insertimage" class="editControlButton" cmdValue="promptUser" promptText="URL of image?" style="'+ cfg_bstyle+ '">';
 	var insertLinkButton = '<input type="image" src="' + cfg_isrc + 'a.png" value="Insert link" alt="Insert link" title="Insert Link" name="' + cfg_editorname + '" id="createlink" class="editControlButton" cmdValue="promptUser" promptText="URL of link?[http://www.srpc.ca]" style="'+ cfg_bstyle+ '">';
+	var textcolourButton = '<input type="image" src="' + cfg_isrc + 'text_color.png" value="Text Colour" alt="Text Colour" title="Text Colour" name="' + cfg_editorname + '" id="forecolor" class="editControlButton" cmdValue="promptUser" promptText="Text Colour?[red]" style="'+ cfg_bstyle+ '">';
+	var hilightcolourButton = '<input type="image" src="' + cfg_isrc + 'select_background_color.png" value="Hilight" alt="Hilight" title="Hilight" name="' + cfg_editorname + '" id="hilitecolor" class="editControlButton" cmdValue="promptUser" promptText="Hilight Colour?[yellow]" style="'+ cfg_bstyle+ '">';
 	var unorderedlistButton = '<input type="image" src="' + cfg_isrc + 'ul.png" value="Unordered" alt="Unordered List" title="Insert Bullet List" name="' + cfg_editorname + '" class="editControlButton" id="insertunorderedlist" style="'+ cfg_bstyle+ '">';
 	var orderedlistButton = '<input type="image" src="' + cfg_isrc + 'ol.png" value="Ordered" alt="Numbered List" title="Insert Numbered List" name="' + cfg_editorname + '" class="editControlButton" id="insertorderedlist" style="'+ cfg_bstyle+ '">';	
 	var ruleButton = '<input type="image" src="' + cfg_isrc + 'hr.png" value="Rule" alt="Horizontal Rule" title="Insert Horizontal Rule" name="' + cfg_editorname + '" class="editControlButton" id="inserthorizontalrule" style="'+ cfg_bstyle+ '">';
@@ -118,32 +134,36 @@ function insertEditControl() {
 	var indentButton = '<input type="image" src="' + cfg_isrc + 'indent.png" value="Indent" alt="Indent" title="Indent" name="' + cfg_editorname + '" class="editControlButton" id="indent" style="'+ cfg_bstyle+ '">';
 	var outdentButton = '<input type="image" src="' + cfg_isrc + 'outdent.png" value="Outdent" alt="Indent Less" title="Indent Less" name="' + cfg_editorname + '" class="editControlButton" id="outdent" style="'+ cfg_bstyle+ '">';
 	var insertHeading1Button = '<input type="image" src="' + cfg_isrc + 'h1.png" value="Heading" alt="Headings1" title="Heading 1" name="' + cfg_editorname + '" id="formatblock" class="editControlButton" cmdValue="<H1>" style="'+ cfg_bstyle+ '">';
-	var insertHeading2Button = '<input type="image" src="' + cfg_isrc + 'h2.png" value="Heading" alt="Headings2" title="Heading 2" name="' + cfg_editorname + '" id="formatblock" class="editControlButton" cmdValue="<H2>" style="'+ cfg_bstyle+ '">';
+	var tableButton = '<input type="image" src="' + cfg_isrc + 'table.png" value="Table" alt="Table" title="Insert Table" name="' + cfg_editorname + '" class="editControlButton" id="table" cmdValue="table" style="'+ cfg_bstyle+ '">';
 	var helpButton = '<input type="image" src="' + cfg_isrc + 'help.png" value="Help" alt="Help" title="Editor Help" name="' + cfg_editorname + '" class="editControlButton" id="help" cmdValue="help" style="'+ cfg_bstyle+ '">';
 	var clockButton = '<input type="image" src="' + cfg_isrc + 'clock.png" value="Clock" alt="Insert Time" title="Time" name="' + cfg_editorname + '" class="editControlButton" id="insertHTML" cmdValue="clock" style="'+ cfg_bstyle+ '">';
 	var dateButton = '<input type="image" src="' + cfg_isrc + 'office-calendar.png" value="Date" alt="Date" title="Date d/m/y" name="' + cfg_editorname + '" class="editControlButton" id="insertHTML" cmdValue="date" style="'+ cfg_bstyle+ '">';
 	var ieSpellButton='<input type="image" src="' + cfg_isrc + 'iespell.png" value="ieSpell" alt="Spell" title="Check Spelling" name="' + cfg_editorname + '" class="editControlButton" id="spell" cmdValue="spell" style="'+ cfg_bstyle+ '">';
 	var separator = '<input type="image" src="' + cfg_isrc + 'separator.png" value="|" name="' + cfg_editorname + '" style="'+ cfg_sepstyle+ '">';
-	var editControl =  '<iframe src="'+cfg_filesrc+cfg_template+'" id="' + cfg_editorname + '" \n style="width:' + cfg_width + 'px; height:' + cfg_height + 'px; border-style:inset; border-width:thin;" frameborder="0px"></iframe>'
+	var editControl =  '<iframe src="'+cfg_filesrc+cfg_template+'" id="' + cfg_editorname + '" \n style="width:' + cfg_width + 'px; height:' + cfg_height + 'px; border-style:inset; border-width:thin;" frameborder="0px"></iframe>';
 
 
 	// SECOND GET THE LAYOUT STRING PASSED AND REPLACE IT WITH THE BUTTONS AS REQUESTED
 	var editControlHTML = cfg_layout;
-	if (editControlHTML=="[all]"){editControlHTML = "<div id=control>[select-block][select-face][select-size][select-template]|[bold][italic][underlined][unordered][ordered][rule]|[undo][redo]|[left][center][full][right]|[indent][outdent][heading1][heading2][select-all][clean]|[image][link]|[clock][date][spell][help]</div>[edit-area]"};
-	
+	if (editControlHTML=="[all]"){editControlHTML = "<div id=control>[select-block][select-face][select-size][select-template]|[bold][italic][underlined][unordered][ordered][rule]|[undo][redo]|[left][center][full][right]|[indent][outdent][select-all][clean]|[image][link]|[clock][date][spell][help]</div>[edit-area]"};
+	if ((editControlHTML.indexOf("select-block")>-1)&&(editControlHTML.indexOf("heading1")>-1)){ editControlHTML = editControlHTML.replace("[heading1]", "");} //only one id=formatblock tolerated
 	editControlHTML = editControlHTML.replace("[bold]", boldButton);
 	editControlHTML = editControlHTML.replace("[italic]", italicButton);
 	editControlHTML = editControlHTML.replace("[underlined]", underlinedButton);
+	editControlHTML = editControlHTML.replace("[strike]", strikethroughButton);
+	editControlHTML = editControlHTML.replace("[superscript]", superscriptButton);
+	editControlHTML = editControlHTML.replace("[subscript]", subscriptButton);
 	editControlHTML = editControlHTML.replace("[left]", leftButton);
 	editControlHTML = editControlHTML.replace("[center]", centerButton);
 	editControlHTML = editControlHTML.replace("[full]", fullButton);
 	editControlHTML = editControlHTML.replace("[right]", rightButton);
-	editControlHTML = editControlHTML.replace("[select-block]", selectBlock);
 	editControlHTML = editControlHTML.replace("[select-face]", selectFace);
 	editControlHTML = editControlHTML.replace("[select-size]", selectSize);
 	editControlHTML = editControlHTML.replace("[undo]", undoButton);
 	editControlHTML = editControlHTML.replace("[redo]", redoButton);
 	editControlHTML = editControlHTML.replace("[select-all]", selectAllButton);
+	editControlHTML = editControlHTML.replace("[text-colour]", textcolourButton);
+	editControlHTML = editControlHTML.replace("[hilight]", hilightcolourButton);
 	editControlHTML = editControlHTML.replace("[image]", insertImageButton);
 	editControlHTML = editControlHTML.replace("[link]", insertLinkButton);
 	editControlHTML = editControlHTML.replace("[unordered]", unorderedlistButton);
@@ -152,8 +172,9 @@ function insertEditControl() {
 	editControlHTML = editControlHTML.replace("[clean]", cleanButton);
 	editControlHTML = editControlHTML.replace("[indent]", indentButton);
 	editControlHTML = editControlHTML.replace("[outdent]", outdentButton);
+	editControlHTML = editControlHTML.replace("[select-block]", selectBlock);
 	editControlHTML = editControlHTML.replace("[heading1]", insertHeading1Button);
-	editControlHTML = editControlHTML.replace("[heading2]", insertHeading2Button);	
+	editControlHTML = editControlHTML.replace("[table]", tableButton);
 	editControlHTML = editControlHTML.replace("[help]", helpButton);
    	editControlHTML = editControlHTML.replace("[clock]", clockButton);
    	editControlHTML = editControlHTML.replace("[date]", dateButton);
@@ -259,7 +280,8 @@ function tbuttonMouseUp() {
 }
 
 function Select(selectname){
-  	var cursel = document.getElementById(selectname).selectedIndex; 	
+  	var cursel = document.getElementById(selectname).selectedIndex; 
+alert(cursel);	
   	if (cursel != 0) { // First one is a label 
     	var selected = document.getElementById(selectname).options[cursel].value;
     	if (window[cfg_editorname]) { window[cfg_editorname].document.execCommand(selectname, false, selected); } //if browser supports M$ conventions
@@ -267,12 +289,12 @@ function Select(selectname){
     	document.getElementById(selectname).selectedIndex = 0;
   	document.getElementById(cfg_editorname).contentWindow.focus();
   	}
-
 }
 
 function loadTemplate(selectname){
 	//change the iframe src to that selected in the template select box  
-	//TODO fix the eventlistener! 
+	//TODO fix the eventlistener! in the meantime just set the dirty flag
+	 setDirtyFlag();
 	//TODO while IE can onload asign a template find some way for changing the iFrame in IE dynamically
   	var cursel = document.getElementById(selectname).selectedIndex; 	
   	if (cursel != 0) { // First one is a label 
@@ -294,7 +316,8 @@ function parseTemplate(){
 	var x;
 	for (x in temp) {
 		if ((x % 2)){ //odd numbered values contain placeholders
-			if(document.getElementById(temp[x])){ //known field placeholder
+			if((document.getElementById(temp[x]))&&(document.getElementById(temp[x]).value.length>0)){ 
+				//known field placeholder with a value so use it
 				temp[x]=document.getElementById(temp[x]).value;
 			} else {
 			//get the placeholder value from the user
@@ -366,8 +389,8 @@ function doTime() {
 	if (hours == 0) hours = 12;						//0 hour
 	if (minutes <= 9) minutes = "0" + minutes;		//pad with 0
 	if (seconds <= 9) seconds = "0" + seconds;		//pad with 0
-	var value =" " + hours + ":" + minutes + ":" + seconds + " " + amOrPm +" ";
-	return value;
+	var time =" " + hours + ":" + minutes + ":" + seconds + " " + amOrPm +" ";
+	return time;
 }
 
 function doDate() {
@@ -376,8 +399,28 @@ function doDate() {
 	var days = digital.getDate();
 	var months = digital.getMonth()*1 +1;
 	var years = digital.getFullYear();
-	var value =" " + days + "/" + months + "/" + years + " " ;
-	return value;
+	var date =" " + days + "/" + months + "/" + years + " " ;
+	return date;
+}
+
+function doTable() {
+	var rowstext = prompt("enter rows");
+	var colstext = prompt("enter cols");
+	var rows = parseInt(rowstext);
+	var cols = parseInt(colstext);
+	var table;
+	if ((rows > 0) && (cols > 0)) {
+		table = '<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2"><tbody>'
+		for (var i=0; i < rows; i++) {
+			table +='<tr>';
+			for (var j=0; j < cols; j++) {
+				table +='<td>&nbsp;</td>';
+			}
+			table +='</tr>';
+		}
+		table += '</tbody></table>';      
+    	}
+	return table;
 }
 
 function tbuttonOnClick() {
@@ -387,6 +430,7 @@ function tbuttonOnClick() {
   		case "spell" : spellCheck(); break;
   		case "clock" : doHtml(doTime()); break;
   		case "date" : doHtml(doDate()); break;
+  		case "table" : doHtml(doTable()); break;
   		case "help" : window.open (cfg_filesrc+"editor_help.html","mywindow","resizable=1,width=300,height=500"); break;
   		case "promptUser" : value = prompt(this.getAttribute('promptText')); 
   		default: if (window[this.name]) { window[this.name].document.execCommand(this.id, false, value); } else { document.getElementById(this.name).contentWindow.document.execCommand(this.id, false, value); }
@@ -425,6 +469,6 @@ function usecss(source) {
 		//if browser supports M$ conventions it may error on this execCommand
 		return;
 	}
-	// a Mozilla only feature needed to overcome some of Mozilla's non conforming default behavior
-	document.getElementById('edit').contentWindow.document.execCommand("useCSS", false, !(source));  
+	// a Mozilla only feature 
+	document.getElementById('edit').contentWindow.document.execCommand("styleWithCSS", false, (source));  
 }
