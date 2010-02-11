@@ -150,7 +150,7 @@ public class ProgramManagerAction extends BaseAction {
 
 		if (id != null) {
 			Program program = programManager.getProgram(id);
-
+			
 			if (program == null) {
 				ActionMessages messages = new ActionMessages();
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.missing"));
@@ -162,7 +162,7 @@ public class ProgramManagerAction extends BaseAction {
 			programForm.set("program", program);
 			request.setAttribute("oldProgram", program);
 
-			List<FunctionalCentre> functionalCentres=functionalCentreDao.findAll();
+			List<FunctionalCentre> functionalCentres = functionalCentreDao.findAll();
 			Collections.sort(functionalCentres, FunctionalCentre.ACCOUNT_ID_COMPARATOR);
 			request.setAttribute("functionalCentres", functionalCentres);
 
@@ -715,7 +715,7 @@ public class ProgramManagerAction extends BaseAction {
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
-		return mapping.findForward("edit");
+		return edit(mapping, form, request, response);
 	}
 
 	private void saveProgram(HttpServletRequest request, Program program) {

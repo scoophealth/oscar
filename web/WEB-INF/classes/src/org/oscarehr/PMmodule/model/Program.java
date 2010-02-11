@@ -30,8 +30,6 @@ import com.quatro.model.LookupCodeValue;
  * This is the object class that relates to the program table. Any customizations belong here.
  */
 public class Program implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
     
     public static final String EXTERNAL_TYPE = "external";

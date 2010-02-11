@@ -35,67 +35,34 @@
 Program p = (Program)request.getAttribute("oldProgram");
 
 %>
-<input type="hidden" name="old_maxAllowed" value=<%if(p!=null) { %>
-	"<%=p.getMaxAllowed() %>" <%}else{ %> "0" <%} %> />
-<input type="hidden" name="old_name" value=<%if(p!=null) { %>
-	"<%=p.getName()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_descr" value=<%if(p!=null) { %>
-	"<%=p.getDescription()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_type" value=<%if(p!=null) { %>
-	"<%=p.getType()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_address" value=<%if(p!=null) { %>
-	"<%=p.getAddress()%>"<%}else{ %> "" <%} %> />
-<input type="hidden" name="old_phone" value=<%if(p!=null) { %>
-	"<%=p.getPhone()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_fax" value=<%if(p!=null) { %>
-	"<%=p.getFax() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_url" value=<%if(p!=null) { %>
-	"<%=p.getUrl()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_email" value=<%if(p!=null) { %>
-	"<%=p.getEmail()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_emergencyNumber" value=<%if(p!=null) { %>
-	"<%=p.getEmergencyNumber()%>"<%}else{ %> "" <%} %> />
-<input type="hidden" name="old_location" value=<%if(p!=null) { %>
-	"<%=p.getLocation()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_programStatus" value=<%if(p!=null) { %>
-	"<%=p.getProgramStatus()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_bedProgramLinkId"
-	value=<%if(p!=null) { %>
-	"<%=p.getBedProgramLinkId()%>" <%}else{ %> "0" <%} %> />
-<input type="hidden" name="old_manOrWoman" value=<%if(p!=null) { %>
-	"<%=p.getManOrWoman() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_abstinenceSupport"
-	value=<%if(p!=null) { %>
-	"<%=p.getAbstinenceSupport() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_exclusiveView" value=<%if(p!=null) { %>
-	"<%=p.getExclusiveView() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_holdingTank" value=<%if(p!=null) { %>
-	"<%=p.isHoldingTank() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_allowBatchAdmission"
-	value=<%if(p!=null) { %>
-	"<%=p.isAllowBatchAdmission() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_allowBatchDischarge"
-	value=<%if(p!=null) { %>
-	"<%=p.isAllowBatchDischarge() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_hic" value=<%if(p!=null) { %>
-	"<%=p.isHic() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_transgender" value=<%if(p!=null) { %>
-	"<%=p.isTransgender() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_firstNation" value=<%if(p!=null) { %>
-	"<%=p.isFirstNation() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_bedProgramAffiliated"
-	value=<%if(p!=null) { %>
-	"<%=p.isBedProgramAffiliated() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_alcohol" value=<%if(p!=null) { %>
-	"<%=p.isAlcohol()%>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_physicalHealth" value=<%if(p!=null) { %>
-	"<%=p.isPhysicalHealth() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_mentalHealth" value=<%if(p!=null) { %>
-	"<%=p.isMentalHealth() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_housing" value=<%if(p!=null) { %>
-	"<%=p.isHousing() %>" <%}else{ %> "" <%} %> />
-<input type="hidden" name="old_facility_id" value=<%if(p!=null) { %>
-	"<%=p.getFacilityId() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_maxAllowed" value=<%if(p!=null) { %> "<%=p.getMaxAllowed() %>" <%}else{ %> "0" <%} %> />
+<input type="hidden" name="old_name" value=<%if(p!=null) { %> "<%=p.getName()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_descr" value=<%if(p!=null) { %> "<%=p.getDescription()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_type" value=<%if(p!=null) { %> "<%=p.getType()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_address" value=<%if(p!=null) { %> "<%=p.getAddress()%>"<%}else{ %> "" <%} %> />
+<input type="hidden" name="old_phone" value=<%if(p!=null) { %> "<%=p.getPhone()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_fax" value=<%if(p!=null) { %> "<%=p.getFax() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_url" value=<%if(p!=null) { %> "<%=p.getUrl()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_email" value=<%if(p!=null) { %> "<%=p.getEmail()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_emergencyNumber" value=<%if(p!=null) { %> "<%=p.getEmergencyNumber()%>"<%}else{ %> "" <%} %> />
+<input type="hidden" name="old_location" value=<%if(p!=null) { %> "<%=p.getLocation()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_programStatus" value=<%if(p!=null) { %> "<%=p.getProgramStatus()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_bedProgramLinkId" value=<%if(p!=null) { %> "<%=p.getBedProgramLinkId()%>" <%}else{ %> "0" <%} %> />
+<input type="hidden" name="old_manOrWoman" value=<%if(p!=null) { %> "<%=p.getManOrWoman() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_abstinenceSupport" value=<%if(p!=null) { %> "<%=p.getAbstinenceSupport() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_exclusiveView" value=<%if(p!=null) { %> "<%=p.getExclusiveView() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_holdingTank" value=<%if(p!=null) { %> "<%=p.isHoldingTank() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_allowBatchAdmission" value=<%if(p!=null) { %> "<%=p.isAllowBatchAdmission() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_allowBatchDischarge" value=<%if(p!=null) { %> "<%=p.isAllowBatchDischarge() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_hic" value=<%if(p!=null) { %> "<%=p.isHic() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_transgender" value=<%if(p!=null) { %> "<%=p.isTransgender() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_firstNation" value=<%if(p!=null) { %> "<%=p.isFirstNation() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_bedProgramAffiliated" value=<%if(p!=null) { %> "<%=p.isBedProgramAffiliated() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_alcohol" value=<%if(p!=null) { %> "<%=p.isAlcohol()%>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_physicalHealth" value=<%if(p!=null) { %> "<%=p.isPhysicalHealth() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_mentalHealth" value=<%if(p!=null) { %> "<%=p.isMentalHealth() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_housing" value=<%if(p!=null) { %> "<%=p.isHousing() %>" <%}else{ %> "" <%} %> />
+<input type="hidden" name="old_facility_id" value=<%if(p!=null) { %> "<%=p.getFacilityId() %>" <%}else{ %> "" <%} %> />
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -131,7 +98,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 				<option value="">&nbsp;</option>
 				
 				<c:forEach var="functionalCentre" items="${functionalCentres}">
-					<option value="<c:out value="${functionalCentre.accountId}" />" <c:if test="${program.functionalCentreId == functionalCentre.accountId}">selected</c:if> ><c:out value="${functionalCentre.accountId}" />, <c:out value="${functionalCentre.description}" /></option>
+					<option value="<c:out value="${functionalCentre.accountId}" />" <c:if test="${oldProgram.functionalCentreId == functionalCentre.accountId}">selected</c:if> ><c:out value="${functionalCentre.accountId}" />, <c:out value="${functionalCentre.description}" /></option>
 				</c:forEach>
 			</html:select>
 		</td>
@@ -281,8 +248,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 		<td><html:text property="program.ageMax" size="8" maxlength="8" /></td>
 	</tr>
 	<tr>
-		<td colspan="2"><input type="button" value="Save"
-			onclick="return save()" /> <html:cancel /></td>
+		<td colspan="2"><input type="button" value="Save" onclick="return save()" /> <html:cancel /></td>
 	</tr>
 </table>
 
