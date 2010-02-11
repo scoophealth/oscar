@@ -173,8 +173,8 @@ function submitOcanForm() {
 
 function validateStartAndCompletionDates()
 {
-	var start_date = $("#start_date").val();
-	var completion_date = $("#completion_date").val();
+	var start_date = $("#startDate").val();
+	var completion_date = $("#completionDate").val();
 	
 	sd = start_date.split("-");
 	cd = completion_date.split("-");

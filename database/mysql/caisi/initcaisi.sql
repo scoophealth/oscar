@@ -2652,7 +2652,11 @@ create table OcanStaffForm
         hcVersion varchar(100),
         dateOfBirth varchar(100),
 	assessmentStatus varchar(40),
-	index(assessmentStatus)
+	index(assessmentStatus),
+	startDate date NOT NULL,
+	completionDate date,
+	index(startDate),
+	index(completionDate)
 );
 
 create table OcanStaffFormData
@@ -2678,7 +2682,12 @@ create table OcanClientForm
         index(facilityId, clientId),
         lastName varchar(100),
         firstName varchar(100),
-        dateOfBirth varchar(100)
+        dateOfBirth varchar(100),
+	startDate date NOT NULL,
+	completionDate date,
+	index(startDate),
+	index(completionDate)
+
 );
 
 create table OcanClientFormData

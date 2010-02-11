@@ -290,9 +290,9 @@ function openSurvey() {
 				<tr>
 					<th>OCAN</th>
 					<td>
-						<input type="button" value="OCAN Staff Form" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+						<input type="button" value="Staff Assessment" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 						<br/>
-						<input type="button" value="OCAN Client Form" onclick="document.location='ClientManager/ocan_client_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+						<input type="button" value="Consumer Self-Assessment" onclick="document.location='ClientManager/ocan_client_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 					</td>
 				</tr>
 			<%

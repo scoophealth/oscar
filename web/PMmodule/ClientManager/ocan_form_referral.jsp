@@ -6,8 +6,9 @@
 
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
-
-	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId);		
+	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
+	
+	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel);		
 
 	int referralNumber = Integer.parseInt(request.getParameter("referral_num"));
 %>
@@ -17,7 +18,7 @@
 			<td class="genericTableHeader">Optimal Referral</td>
 			<td class="genericTableData">
 				<select name="<%=referralNumber%>_summary_of_referral_optimal">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_optimal", OcanForm.getOcanFormOptions("Action List"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_optimal", OcanForm.getOcanFormOptions("Action List"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -25,7 +26,7 @@
 		<tr>
 			<td class="genericTableHeader">Specify</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_optimal_spec",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_optimal_spec",5,30,prepopulationLevel)%>
 			</td>
 		</tr>		
 		
@@ -33,7 +34,7 @@
 			<td class="genericTableHeader">Actual Referral</td>
 			<td class="genericTableData">
 				<select name="<%=referralNumber%>_summary_of_referral_actual">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_actual", OcanForm.getOcanFormOptions("Action List"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_actual", OcanForm.getOcanFormOptions("Action List"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -41,14 +42,14 @@
 		<tr>
 			<td class="genericTableHeader">Specify</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_actual_spec",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_actual_spec",5,30,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Reason for Difference</td>
 			<td class="genericTableData">
 				<select name="1_summary_of_referral_diff">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_diff", OcanForm.getOcanFormOptions("Reason for Difference"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_diff", OcanForm.getOcanFormOptions("Reason for Difference"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
@@ -58,7 +59,7 @@
 			<td class="genericTableHeader">Referral Status</td>
 			<td class="genericTableData">
 				<select name="<%=referralNumber%>_summary_of_referral_status">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_status", OcanForm.getOcanFormOptions("Referral Status"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), referralNumber+"_summary_of_referral_status", OcanForm.getOcanFormOptions("Referral Status"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						

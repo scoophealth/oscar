@@ -11,17 +11,34 @@
 
 	Integer clientId=Integer.valueOf(parameters.get("clientId")[0]);	
 	parameters.remove("clientId");
+	
+	String startDate = parameters.get("startDate")[0];
+	String completionDate = parameters.get("completionDate")[0];
+	
 
 	OcanClientForm ocanClientForm=OcanFormAction.createOcanClientForm(clientId);
 	ocanClientForm.setLastName(request.getParameter("lastName"));
 	ocanClientForm.setFirstName(request.getParameter("firstName"));	
 	ocanClientForm.setDateOfBirth(request.getParameter("dateOfBirth"));	
+
+	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
+	
+	try {
+		ocanClientForm.setStartDate(formatter.parse(startDate));
+	}catch(java.text.ParseException e){}
+	try {
+		ocanClientForm.setCompletionDate(formatter.parse(completionDate));
+	}catch(java.text.ParseException e){}
+	
 	
 	OcanFormAction.saveOcanClientForm(ocanClientForm);
 	
 	parameters.remove("lastName");
 	parameters.remove("firstName");	
 	parameters.remove("dateOfBirth");
+	parameters.remove("startDate");
+	parameters.remove("completionDate");
+	
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{

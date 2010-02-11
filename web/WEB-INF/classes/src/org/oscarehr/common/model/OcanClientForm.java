@@ -1,6 +1,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -41,6 +42,10 @@ public class OcanClientForm extends AbstractModel<Integer> implements Serializab
 	private String firstName;
 	
 	private String dateOfBirth;
+	
+	private Date startDate;
+	private Date completionDate;
+	
 	
 	public OcanClientForm() {		
 	}
@@ -139,5 +144,34 @@ public class OcanClientForm extends AbstractModel<Integer> implements Serializab
 		this.created = created;
 	}
 
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getCompletionDate() {
+		return completionDate;
+	}
+
+	public void setCompletionDate(Date completionDate) {
+		this.completionDate = completionDate;
+	}
+
+	public String getFormattedStartDate() {
+		Date d = getStartDate();
+		if(d==null) {return "";}
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(d);
+	}
+	
+	public String getFormattedCompletionDate() {
+		Date d = getCompletionDate();
+		if(d==null) {return "";}
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(d);
+	}
 
 }

@@ -23,6 +23,10 @@
 	parameters.remove("signed");
 
 	String assessmentStatus = parameters.get("assessment_status")[0];
+	String startDate = parameters.get("startDate")[0];
+	String completionDate = parameters.get("completionDate")[0];
+	String reasonForAssessment = parameters.get("reasonForAssessment")[0];
+	
 	
 	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(admissionId, clientId, signed);
 	ocanStaffForm.setLastName(request.getParameter("lastName"));
@@ -39,6 +43,16 @@
 	ocanStaffForm.setDateOfBirth(request.getParameter("dateOfBirth"));	
 	ocanStaffForm.setAdmissionId(admissionId);
 	ocanStaffForm.setAssessmentStatus(assessmentStatus);
+	ocanStaffForm.setReasonForAssessment(reasonForAssessment);
+	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
+	
+	try {
+		ocanStaffForm.setStartDate(formatter.parse(startDate));
+	}catch(java.text.ParseException e){}
+	try {
+		ocanStaffForm.setCompletionDate(formatter.parse(completionDate));
+	}catch(java.text.ParseException e){}
+	
 	OcanFormAction.saveOcanStaffForm(ocanStaffForm);
 	
 	parameters.remove("lastName");
@@ -53,6 +67,9 @@
 	parameters.remove("hcNumber");
 	parameters.remove("hcVersion");
 	parameters.remove("dateOfBirth");
+	parameters.remove("startDate");
+	parameters.remove("completionDate");
+	parameters.remove("reasonForAssessment");
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{

@@ -9,8 +9,9 @@
 
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
-
-	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId);		
+	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
+	
+	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel);		
 	
 %>
 
@@ -166,7 +167,7 @@ function changeNumberOfReferrals() {
 
 <form id="ocan_staff_form" action="ocan_form_action.jsp" onsubmit="return submitOcanForm()">
 	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
-	<h3>OCAN form (v1.2)</h3>
+	<h3>OCAN Staff Assessment (v1.2)</h3>
 
 	<br />
 	
@@ -174,13 +175,13 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Start Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "start_date",true)%>				
+				<input id="startDate" name="startDate" onfocus="this.blur()" readonly="readonly" class="{validate: {required:true}}" type="text" value="<%=ocanStaffForm.getFormattedStartDate()%>"> <img title="Calendar" id="cal_startDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'startDate',ifFormat :'%Y-%m-%d',button :'cal_startDate',align :'cr',singleClick :true,firstDay :1});</script>		
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Completion Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "completion_date",true)%>			
+				<input id="completionDate" name="completionDate" onfocus="this.blur()" readonly="readonly" class="{validate: {required:true}}" type="text" value="<%=ocanStaffForm.getFormattedCompletionDate()%>"> <img title="Calendar" id="cal_completionDate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'completionDate',ifFormat :'%Y-%m-%d',button :'cal_completionDate',align :'cr',singleClick :true,firstDay :1});</script>					
 			</td>
 		</tr>
 		<tr>
@@ -221,7 +222,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Function (MIS Functional Centre)</td>
 			<td class="genericTableData">
 				<select name="function" class="{validate: {required:true}}">					
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "function", OcanForm.getOcanFormOptions("MIS Functional Centre List"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "function", OcanForm.getOcanFormOptions("MIS Functional Centre List"), prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -303,15 +304,28 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Reason for Assessment</td>
 			<td class="genericTableData">
-				<select name="reason_for_assessment" id="reason_for_assessment" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "reason_for_assessment", OcanForm.getOcanFormOptions("Reason for Assessment"))%>
+				<select name="reasonForAssessment" id="reasonForAssessment" class="{validate: {required:true}}">
+					<option value="">Select an answer</option>
+					<%
+						for (org.oscarehr.common.model.OcanFormOption option : OcanForm.getOcanFormOptions("Reason for Assessment"))
+						{
+							String selected="";
+							
+							if (ocanStaffForm.getReasonForAssessment()!=null && ocanStaffForm.getReasonForAssessment().equals(option.getOcanDataCategoryValue())) selected="selected=\"selected\"";
+							
+							%>
+								<option <%=selected%> value="<%=option.getOcanDataCategoryValue()%>"><%=option.getOcanDataCategoryName()%></option>
+							<%
+						}
+					%>
+										
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">If Other, Specify</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"reason_for_assessment_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"reason_for_assessment_other",5,30, prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -321,21 +335,21 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Doctor</td>
 			<td class="genericTableData">
 				<select name="doctor">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "doctor", OcanForm.getOcanFormOptions("Doctor Psychiatrist"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "doctor", OcanForm.getOcanFormOptions("Doctor Psychiatrist"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Contact Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"doctor_contact_information",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"doctor_contact_information",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Last Seen</td>
 			<td class="genericTableData">
 				<select name="doctor_last_seen">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "doctor_last_seen", OcanForm.getOcanFormOptions("Last Seen"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "doctor_last_seen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -347,21 +361,21 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Psychiatrist</td>
 			<td class="genericTableData">
 				<select name="psychiatrist">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "psychiatrist", OcanForm.getOcanFormOptions("Doctor Psychiatrist"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "psychiatrist", OcanForm.getOcanFormOptions("Doctor Psychiatrist"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Contact Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatrist_contact_information",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"psychiatrist_contact_information",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Last Seen</td>
 			<td class="genericTableData">
 				<select name="psychiatrist_last_seen">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "psychiatrist_last_seen", OcanForm.getOcanFormOptions("Last Seen"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "psychiatrist_last_seen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -373,21 +387,21 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Other Contact</td>
 			<td class="genericTableData">
 				<select name="other_contact">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "other_contact", OcanForm.getOcanFormOptions("Practioner List"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "other_contact", OcanForm.getOcanFormOptions("Practioner List"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Contact Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"other_contact_contact_information",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"other_contact_contact_information",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Last Seen</td>
 			<td class="genericTableData">
 				<select name="other_contact_last_seen">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "other_contact_last_seen", OcanForm.getOcanFormOptions("Last Seen"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "other_contact_last_seen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
@@ -397,20 +411,20 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Other Agency</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "other_agency", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "other_agency", 25,prepopulationLevel)%>						
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Contact Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"other_agency_contact_information",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"other_agency_contact_information",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Last Seen</td>
 			<td class="genericTableData">
 				<select name="other_agency_last_seen">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "other_agency_last_seen", OcanForm.getOcanFormOptions("Last Seen"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "other_agency_last_seen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>				
@@ -422,7 +436,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Service Recipient Location</td>
 			<td class="genericTableData">
 				<select name="service_recipient_location" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_location", OcanForm.getOcanFormOptions("Recipient Location"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_location", OcanForm.getOcanFormOptions("Recipient Location"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
@@ -430,7 +444,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Service Recipient LHIN</td>
 			<td class="genericTableData">
 				<select name="service_recipient_lhin" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_lhin", OcanForm.getOcanFormOptions("LHIN code"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_lhin", OcanForm.getOcanFormOptions("LHIN code"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -438,7 +452,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Service Delivery LHIN</td>
 			<td class="genericTableData">
 				<select name="service_delivery_lhin" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_delivery_lhin", OcanForm.getOcanFormOptions("LHIN code"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_delivery_lhin", OcanForm.getOcanFormOptions("LHIN code"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
@@ -446,14 +460,14 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Date of Birth</td>
 			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",true,ocanStaffForm.getDateOfBirth())%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",true,ocanStaffForm.getDateOfBirth(),prepopulationLevel)%>				
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Gender</td>
 			<td class="genericTableData">
 				<select name="gender" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "gender", OcanForm.getOcanFormOptions("Administrative Gender"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "gender", OcanForm.getOcanFormOptions("Administrative Gender"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
@@ -462,7 +476,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Marital Status</td>
 			<td class="genericTableData">
 				<select name="marital_status">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "marital_status", OcanForm.getOcanFormOptions("Marital Status"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "marital_status", OcanForm.getOcanFormOptions("Marital Status"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
@@ -475,49 +489,49 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Does the client have power of attorney for property?</td>
 			<td class="genericTableData">
 				<select name="power_attorney_property" id="power_attorney_property">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "power_attorney_property", OcanForm.getOcanFormOptions("Client Capacity"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "power_attorney_property", OcanForm.getOcanFormOptions("Client Capacity"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Additional Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_additional_information",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_property_additional_information",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Does the client have power of attorney or substitute decision maker for personal care?</td>
 			<td class="genericTableData">
 				<select name="power_attorney_personal_care" id="power_attorney_personal_care">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "power_attorney_personal_care", OcanForm.getOcanFormOptions("Client Capacity"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "power_attorney_personal_care", OcanForm.getOcanFormOptions("Client Capacity"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Additional Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_additional_information",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"power_attorney_personal_care_additional_information",5,30,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Does the client have a court appointed guardian?</td>
 			<td class="genericTableData">
 				<select name="court_appointed_guardian" id="court_appointed_guardian">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "court_appointed_guardian", OcanForm.getOcanFormOptions("Client Capacity"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "court_appointed_guardian", OcanForm.getOcanFormOptions("Client Capacity"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Additional Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"court_appointed_guardian_additional_information",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"court_appointed_guardian_additional_information",5,30,prepopulationLevel)%>
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Who referred you to this service?</td>
 			<td class="genericTableData">
 				<select name="source_of_referral" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "source_of_referral", OcanForm.getOcanFormOptions("Referral Source"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "source_of_referral", OcanForm.getOcanFormOptions("Referral Source"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
@@ -525,7 +539,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">What culture do you identify with?</td>
 			<td class="genericTableData">
 				<select name="culture">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "culture", OcanForm.getOcanFormOptions("Ethniticity"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "culture", OcanForm.getOcanFormOptions("Ethniticity"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -534,7 +548,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Aboriginal Origin?</td>
 			<td class="genericTableData">
 				<select name="aboriginal" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "aboriginal", OcanForm.getOcanFormOptions("Aboriginal Origin"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "aboriginal", OcanForm.getOcanFormOptions("Aboriginal Origin"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
@@ -543,7 +557,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Citizenship Status?</td>
 			<td class="genericTableData">
 				<select name="citizenship_status">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "citizenship_status", OcanForm.getOcanFormOptions("Citizenship Status"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "citizenship_status", OcanForm.getOcanFormOptions("Citizenship Status"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -553,44 +567,44 @@ function changeNumberOfReferrals() {
 			<td class="genericTableData">
 			Years: 
 				<select name="years_in_canada">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "years_in_canada", OcanForm.getOcanFormOptions("Years in Canada"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "years_in_canada", OcanForm.getOcanFormOptions("Years in Canada"),prepopulationLevel)%>
 				</select>
 			&nbsp;&nbsp;
 			Months:
 				<select name="months_in_canada">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "months_in_canada", OcanForm.getOcanFormOptions("Months in Canada"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "months_in_canada", OcanForm.getOcanFormOptions("Months in Canada"),prepopulationLevel)%>
 				</select>		
 			</td>
 		</tr>				
 		<tr>
 			<td class="genericTableHeader">Can you tell me about your immigration experience?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"immigration_experience",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"immigration_experience",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Do you have any issues with your immigration experience?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "immigration_issues", OcanForm.getOcanFormOptions("Immigration Experience"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "immigration_issues", OcanForm.getOcanFormOptions("Immigration Experience"),prepopulationLevel)%>						
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Immigration Issues - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"immigration_issues_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"immigration_issues_other",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		
 		<tr>
 			<td class="genericTableHeader">Do you have any experience of discrimination?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "discrimination", OcanForm.getOcanFormOptions("Discrimination Experience"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "discrimination", OcanForm.getOcanFormOptions("Discrimination Experience"),prepopulationLevel)%>						
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Discrimination - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"discrimination_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"discrimination_other",5,30,prepopulationLevel)%>
 			</td>
 		</tr>						
 		
@@ -598,7 +612,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Service recipient preferred language?</td>
 			<td class="genericTableData">
 				<select name="preferred_language" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "preferred_language", OcanForm.getOcanFormOptions("Language"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "preferred_language", OcanForm.getOcanFormOptions("Language"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -607,7 +621,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Language of Service Provision?</td>
 			<td class="genericTableData">
 				<select name="language_service_provision" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "language_service_provision", OcanForm.getOcanFormOptions("Language"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "language_service_provision", OcanForm.getOcanFormOptions("Language"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -616,14 +630,14 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Do you have any Legal issues?</td>
 			<td class="genericTableData">
 				<select name="legal_issues">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "legal_issues", OcanForm.getOcanFormOptions("Legal Issues"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "legal_issues", OcanForm.getOcanFormOptions("Legal Issues"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>													
 		<tr>
 			<td class="genericTableHeader">Legal Status?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "legal_status", OcanForm.getOcanFormOptions("Legal History Type"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "legal_status", OcanForm.getOcanFormOptions("Legal History Type"),prepopulationLevel)%>						
 			</td>
 		</tr>		
 
@@ -631,14 +645,14 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Exit Disposition?</td>
 			<td class="genericTableData">
 				<select name="exit_disposition">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "exit_disposition", OcanForm.getOcanFormOptions("Exit Disposition"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "exit_disposition", OcanForm.getOcanFormOptions("Exit Disposition"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"exit_disposition_commments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"exit_disposition_commments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>						
 		
@@ -650,7 +664,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person lack a current place to stay?</td>
 			<td class="genericTableData">
 				<select name="1_1" id="1_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -659,7 +673,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with accommodation does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="1_2" id="1_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -668,7 +682,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with accommodation does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="1_3a" id="1_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -677,7 +691,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with accommodation does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="1_3b" id="1_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
@@ -685,28 +699,28 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "1_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "1_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "1_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "1_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>
 		
@@ -714,7 +728,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Where do you live?</td>
 			<td class="genericTableData">
 				<select name="1_where_live" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_where_live", OcanForm.getOcanFormOptions("Residence Type"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_where_live", OcanForm.getOcanFormOptions("Residence Type"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
@@ -723,7 +737,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Do you receive any support?</td>
 			<td class="genericTableData">
 				<select name="1_any_support" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_any_support", OcanForm.getOcanFormOptions("Residential Support"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_any_support", OcanForm.getOcanFormOptions("Residential Support"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -732,7 +746,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Do you live with anyone?</td>
 			<td class="genericTableData">
 				<select name="1_live_with_anyone" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_live_with_anyone", OcanForm.getOcanFormOptions("Living Arrangement Type"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_live_with_anyone", OcanForm.getOcanFormOptions("Living Arrangement Type"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>				
@@ -745,7 +759,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have difficulty in getting enough to eat?</td>
 			<td class="genericTableData">
 				<select name="2_1" id="2_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -754,7 +768,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with getting enough to eat does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="2_2" id="2_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -763,7 +777,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with getting enough to eat does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="2_3a" id="2_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -772,35 +786,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with getting enough to eat does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="2_3b" id="2_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "2_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "2_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "2_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "2_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>							
 	
@@ -813,7 +827,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have difficulty looking after the home?</td>
 			<td class="genericTableData">
 				<select name="3_1" id="3_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -822,7 +836,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with looking after the home does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="3_2" id="3_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -831,7 +845,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with looking after the home does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="3_3a" id="3_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -840,35 +854,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with looking after the home does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="3_3b" id="3_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "3_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "3_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "3_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "3_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>			
 	
@@ -880,7 +894,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have difficulty with self-care?</td>
 			<td class="genericTableData">
 				<select name="4_1" id="4_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -889,7 +903,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with self-care does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="4_2" id="4_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -898,7 +912,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with self-care does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="4_3a" id="4_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -907,35 +921,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with self-care does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="4_3b" id="4_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "4_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"4_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "4_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "4_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "4_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "4_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>			
 		
@@ -948,7 +962,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have difficulty with regular, appropriate daytime activities?</td>
 			<td class="genericTableData">
 				<select name="5_1" id="5_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -957,7 +971,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in finding and keeping regular and appropriate daytime activities?</td>
 			<td class="genericTableData">
 				<select name="5_2" id="5_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -966,7 +980,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in finding and keeping regular and appropriate daytime activities?</td>
 			<td class="genericTableData">
 				<select name="5_3a" id="5_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -975,35 +989,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services in finding and keeping regular and appropriate daytime activities?</td>
 			<td class="genericTableData">
 				<select name="5_3b" id="5_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"5_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "5_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "5_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "5_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "5_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>		
 	
@@ -1011,7 +1025,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">What is your current employment status?</td>
 			<td class="genericTableData">
 				<select name="5_current_employment_status" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_current_employment_status", OcanForm.getOcanFormOptions("Employment Status"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_current_employment_status", OcanForm.getOcanFormOptions("Employment Status"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1020,7 +1034,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Are you currently in school?</td>
 			<td class="genericTableData">
 				<select name="5_education_program_status" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_education_program_status", OcanForm.getOcanFormOptions("Education Program Status"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "5_education_program_status", OcanForm.getOcanFormOptions("Education Program Status"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
@@ -1028,7 +1042,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">Are you at risk of unemployment or disrupted education?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "5_unemployment_risk", OcanForm.getOcanFormOptions("Unemployed Education Risk"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "5_unemployment_risk", OcanForm.getOcanFormOptions("Unemployed Education Risk"),prepopulationLevel)%>						
 			</td>
 		</tr>	
 	
@@ -1041,7 +1055,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have any physical disability or any physical illness?</td>
 			<td class="genericTableData">
 				<select name="6_1" id="6_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1050,7 +1064,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives for physical health problems?</td>
 			<td class="genericTableData">
 				<select name="6_2" id="6_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1059,7 +1073,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for physical health problems?</td>
 			<td class="genericTableData">
 				<select name="6_3a" id="6_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1068,73 +1082,73 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services for physical health problems?</td>
 			<td class="genericTableData">
 				<select name="6_3b" id="6_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "6_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "6_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "6_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "6_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>						
 				
 		<tr>
 			<td class="genericTableHeader">Medical Conditions?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_medical_conditions", OcanForm.getOcanFormOptions("Medical Conditions"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_medical_conditions", OcanForm.getOcanFormOptions("Medical Conditions"),prepopulationLevel)%>						
 			</td>
 		</tr>					
 		<tr>
 			<td class="genericTableHeader">Autism</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_autism",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_autism",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_medical_conditions_other",5,30,prepopulationLevel)%>
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Do you have any concerns about your physical health?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_physical_health_concerns", OcanForm.getOcanFormOptions("Physical Health Concerns"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_physical_health_concerns", OcanForm.getOcanFormOptions("Physical Health Concerns"),prepopulationLevel)%>						
 			</td>
 		</tr>			
 		<tr>
 			<td class="genericTableHeader">If Yes, please indicate the areas where you have concerns</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_physical_health_details", OcanForm.getOcanFormOptions("Concerns Detail"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_physical_health_details", OcanForm.getOcanFormOptions("Concerns Detail"),prepopulationLevel)%>						
 			</td>
 		</tr>	
 		
 		<tr>
 			<td class="genericTableHeader">If Yes, please indicate the areas where you have concerns - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_physical_health_details_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_physical_health_details_other",5,30,prepopulationLevel)%>
 			</td>
 		</tr>								
 
@@ -1142,7 +1156,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Number of Medications?</td>
 			<td class="genericTableData">
 				<select name="medications_count" id="medications_count" onchange="changeNumberOfMedications();">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "medications_count", OcanForm.getOcanFormOptions("Years in Canada"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "medications_count", OcanForm.getOcanFormOptions("Years in Canada"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1161,7 +1175,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have any psychotic symptoms?</td>
 			<td class="genericTableData">
 				<select name="7_1"  id="7_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1170,7 +1184,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2.  How much help does the person receive from friends or relatives for these psychotic symptoms?</td>
 			<td class="genericTableData">
 				<select name="7_2" id="7_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1179,7 +1193,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for these psychotic symptoms?</td>
 			<td class="genericTableData">
 				<select name="7_3a" id="7_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1188,35 +1202,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b.  How much help does the person need from local services for these psychotic symptoms?</td>
 			<td class="genericTableData">
 				<select name="7_3b" id="7_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "7_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"7_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "7_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "7_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "7_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "7_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 		
@@ -1228,46 +1242,46 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Have you been hospitalized due to your mental health during the past two years?</td>
 			<td class="genericTableData">
 				<select name="hospitalized_mental_illness" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "hospitalized_mental_illness", OcanForm.getOcanFormOptions("Hospitalized Mental Illness"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "hospitalized_mental_illness", OcanForm.getOcanFormOptions("Hospitalized Mental Illness"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>			
 		<tr>
 			<td class="genericTableHeader">If Yes, Total number of admissions (last two years)</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "hospitalized_mental_illness_admissions", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "hospitalized_mental_illness_admissions", 25,prepopulationLevel)%>						
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">If Yes, Total number of hospitalization days per admission. (last two years)</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "hospitalized_mental_illness_days", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "hospitalized_mental_illness_days", 25,prepopulationLevel)%>						
 			</td>
 		</tr>			
 		<tr>
 			<td class="genericTableHeader">Community Treatment Orders</td>
 			<td class="genericTableData">
 				<select name="community_treatment_orders" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "community_treatment_orders", OcanForm.getOcanFormOptions("Community Treatment Orders"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "community_treatment_orders", OcanForm.getOcanFormOptions("Community Treatment Orders"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Psychiatric History - Additional Information</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_psychiatric_history_addl_info",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"6_psychiatric_history_addl_info",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		<tr>
 			<td class="genericTableHeader">Symptom Checklist</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "symptom_checklist", OcanForm.getOcanFormOptions("Symptoms Checklist"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "symptom_checklist", OcanForm.getOcanFormOptions("Symptoms Checklist"),prepopulationLevel)%>						
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Symptom Checklist - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"symptom_checklist_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"symptom_checklist_other",5,30,prepopulationLevel)%>
 			</td>
 		</tr>										
 
@@ -1281,7 +1295,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Has the person had clear verbal or written information about condition and treatment?</td>
 			<td class="genericTableData">
 				<select name="8_1" id="8_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1290,7 +1304,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in obtaining such information?</td>
 			<td class="genericTableData">
 				<select name="8_2" id="8_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1299,7 +1313,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in obtaining such information? </td>
 			<td class="genericTableData">
 				<select name="8_3a" id="8_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1308,49 +1322,49 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b.  How much help does the person need from local services in obtaining such information?</td>
 			<td class="genericTableData">
 				<select name="8_3b" id="8_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "8_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"8_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "8_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "8_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "8_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "8_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 
 		<tr>
 			<td class="genericTableHeader">Diagnostic Categories</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "diagnostic_categories", OcanForm.getOcanFormOptions("Diagnostic Categories"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "diagnostic_categories", OcanForm.getOcanFormOptions("Diagnostic Categories"),prepopulationLevel)%>						
 			</td>
 		</tr>
 		
 		<tr>
 			<td class="genericTableHeader">Other Illness Information</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "diagnostic_categories", OcanForm.getOcanFormOptions("Diagnostic - Other Illness"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "diagnostic_categories", OcanForm.getOcanFormOptions("Diagnostic - Other Illness"),prepopulationLevel)%>						
 			</td>
 		</tr>		
 
@@ -1364,7 +1378,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person suffer from current psychological distress?</td>
 			<td class="genericTableData">
 				<select name="9_1"  id="9_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1373,7 +1387,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives for this distress?</td>
 			<td class="genericTableData">
 				<select name="9_2" id="9_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1382,7 +1396,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for this distress?</td>
 			<td class="genericTableData">
 				<select name="9_3a" id="9_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1391,35 +1405,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services for this distress?</td>
 			<td class="genericTableData">
 				<select name="9_3b" id="9_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "9_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"9_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "9_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "9_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "9_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "9_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 
@@ -1433,7 +1447,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Is the person a danger to him- or herself?</td>
 			<td class="genericTableData">
 				<select name="10_1" id="10_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1442,7 +1456,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2.  How much help does the person receive from friends or relatives to reduce the risk of self-harm?</td>
 			<td class="genericTableData">
 				<select name="10_2" id="10_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1451,7 +1465,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services to reduce the risk of self-harm?</td>
 			<td class="genericTableData">
 				<select name="10_3a" id="10_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1460,35 +1474,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services to reduce the risk of self-harm?</td>
 			<td class="genericTableData">
 				<select name="10_3b" id="10_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "10_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"10_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "10_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "10_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "10_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "10_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>
 
@@ -1497,7 +1511,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Have you attempted suicide in the past?</td>
 			<td class="genericTableData">
 				<select name="suicide_past">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "suicide_past", OcanForm.getOcanFormOptions("Suicide in Past"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "suicide_past", OcanForm.getOcanFormOptions("Suicide in Past"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>					
@@ -1506,7 +1520,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Do you have any concerns for your own safety?</td>
 			<td class="genericTableData">
 				<select name="safety_concerns">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "safety_concerns", OcanForm.getOcanFormOptions("Own Safety Concerns"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "safety_concerns", OcanForm.getOcanFormOptions("Own Safety Concerns"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1515,20 +1529,20 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Do you currently have suicidal thoughts?</td>
 			<td class="genericTableData">
 				<select name="suicidal_thoughts">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "suicidal_thoughts", OcanForm.getOcanFormOptions("Suicidal Thoughts"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "suicidal_thoughts", OcanForm.getOcanFormOptions("Suicidal Thoughts"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>														
 		<tr>
 			<td class="genericTableHeader">Risks</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "risks", OcanForm.getOcanFormOptions("Risks List"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "risks", OcanForm.getOcanFormOptions("Risks List"),prepopulationLevel)%>						
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">Risks - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"risks_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"risks_other",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 					
@@ -1542,7 +1556,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Is the person a current or potential risk to other's people safety?</td>
 			<td class="genericTableData">
 				<select name="11_1" id="11_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1551,7 +1565,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives to reduce the risk that he or she might harm someone else? </td>
 			<td class="genericTableData">
 				<select name="11_2" id="11_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1560,7 +1574,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a.  How much help does the person receive from local services to reduce the risk that he or she might harm someone else?</td>
 			<td class="genericTableData">
 				<select name="11_3a" id="11_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1569,35 +1583,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services to reduce the risk that he or she might harm someone else?</td>
 			<td class="genericTableData">
 				<select name="11_3b" id="11_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "11_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"11_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "11_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "11_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "11_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "11_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>					
 
@@ -1612,7 +1626,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1.  Does the person drink excessively, or have a problem controlling his or her drinking?</td>
 			<td class="genericTableData">
 				<select name="12_1" id="12_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1621,7 +1635,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives for this drinking?</td>
 			<td class="genericTableData">
 				<select name="12_2" id="12_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1630,7 +1644,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services for this drinking?</td>
 			<td class="genericTableData">
 				<select name="12_3a" id="12_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1639,42 +1653,42 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services for this drinking?</td>
 			<td class="genericTableData">
 				<select name="12_3b" id="12_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "12_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"12_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "12_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "12_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "12_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "12_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>					
 					
 		<tr>
 			<td class="genericTableHeader">Number of Drinks</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "num_drinks", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "num_drinks", 25,prepopulationLevel)%>						
 			</td>
 		</tr>							
 					
@@ -1682,7 +1696,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">How often do you drink alcohol?</td>
 			<td class="genericTableData">
 				<select name="frequency_alcohol">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "frequency_alcohol", OcanForm.getOcanFormOptions("Frequency of Alcohol Use"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "frequency_alcohol", OcanForm.getOcanFormOptions("Frequency of Alcohol Use"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>			
@@ -1691,14 +1705,14 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Indicate the stage of change client is at</td>
 			<td class="genericTableData">
 				<select name="state_of_change_alcohol">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_alcohol", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_alcohol", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>								
 		<tr>
 			<td class="genericTableHeader">How has drinking had an impact on your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drinking_impact",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drinking_impact",5,30,prepopulationLevel)%>
 			</td>
 		</tr>	
 
@@ -1719,7 +1733,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have problems with drug misuse?</td>
 			<td class="genericTableData">
 				<select name="13_1" id="13_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1728,7 +1742,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with drug misuse does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="13_2" id="13_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1737,7 +1751,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with drug misuse does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="13_3a" id="13_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1746,42 +1760,42 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with drug misuse does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="13_3b" id="13_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "13_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"13_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "13_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "13_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "13_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "13_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>					
 							
 		<tr>
 			<td class="genericTableHeader">Which of the following drugs have you used?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "drug_list", OcanForm.getOcanFormOptions("Drug List"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "drug_list", OcanForm.getOcanFormOptions("Drug List"),prepopulationLevel)%>						
 			</td>
 		</tr>	
 					
@@ -1790,7 +1804,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Which of the following drugs have you used?- Frequency</td>
 			<td class="genericTableData">
 				<select name="drug_use_freq">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "drug_use_freq", OcanForm.getOcanFormOptions("Frequence of Drug Use"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "drug_use_freq", OcanForm.getOcanFormOptions("Frequence of Drug Use"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1799,7 +1813,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Has the substance been injected?</td>
 			<td class="genericTableData">
 				<select name="drug_use_injected">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "drug_use_injected", OcanForm.getOcanFormOptions("Frequence of Drug Use"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "drug_use_injected", OcanForm.getOcanFormOptions("Frequence of Drug Use"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1808,7 +1822,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Indicate the stage of change client is at</td>
 			<td class="genericTableData">
 				<select name="state_of_change_addiction">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_addiction", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_addiction", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>			
@@ -1816,7 +1830,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">How has the substance(s) of choice had an impact on your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drug_impact",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"drug_impact",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
@@ -1831,7 +1845,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have problems with addictions?</td>
 			<td class="genericTableData">
 				<select name="14_1" id="14_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1840,7 +1854,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with addictions does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="14_2" id="14_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1849,7 +1863,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a.How much help with addictions does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="14_3a"  id="14_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1858,54 +1872,54 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with addictions does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="14_3b" id="14_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"14_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "14_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "14_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "14_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "14_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>			
 		<tr>
 			<td class="genericTableHeader">Type of Addiction</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "addiction_type", OcanForm.getOcanFormOptions("Addiction Type"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "addiction_type", OcanForm.getOcanFormOptions("Addiction Type"),prepopulationLevel)%>						
 			</td>
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Type of Addiction - Other</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"addiction_type_other",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"addiction_type_other",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Indicate the stage of change client is at</td>
 			<td class="genericTableData">
 				<select name="state_of_change_addiction">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_state_of_change", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_state_of_change", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>			
@@ -1913,7 +1927,7 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">How has the addiction had an impact on your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"addiction_impact",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"addiction_impact",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 								
@@ -1928,7 +1942,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1.  Does the person need help with social contact?</td>
 			<td class="genericTableData">
 				<select name="15_1" id="15_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1937,7 +1951,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with social contact does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="15_2" id="15_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1946,7 +1960,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in organizing social contact?</td>
 			<td class="genericTableData">
 				<select name="15_3a" id="15_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -1955,42 +1969,42 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
 				<select name="15_3b" id="15_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "15_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"15_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "15_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "15_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "15_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "15_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Have there been any changes to your social patterns recently?</td>
 			<td class="genericTableData">
 				<select name="social_patterns">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "social_patterns", OcanForm.getOcanFormOptions("Social Patterns Changes"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "social_patterns", OcanForm.getOcanFormOptions("Social Patterns Changes"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
@@ -2007,7 +2021,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1.  Does the person have any difficulty in finding a partner or in maintaining a close relationship?</td>
 			<td class="genericTableData">
 				<select name="16_1" id="16_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2016,7 +2030,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with forming and maintaining close relationships does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="16_2" id="16_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2025,7 +2039,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with forming and maintaining close relationships does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="16_3a" id="16_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2034,35 +2048,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with forming and maintaining close relationships does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
 				<select name="16_3b" id="16_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"16_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "16_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "16_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "16_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "16_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>		
 		
@@ -2075,7 +2089,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have problems with his or her sex life?</td>
 			<td class="genericTableData">
 				<select name="17_1" id="17_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2084,7 +2098,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with problems in his or her sex life does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="17_2" id="17_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2093,7 +2107,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with problems in his or her sex life does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="17_3a" id="17_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2102,35 +2116,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with problems in his or her sex life does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
 				<select name="17_3b" id="17_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"17_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "17_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "17_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "17_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "17_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 		
@@ -2143,7 +2157,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have difficulty looking after his or her children?</td>
 			<td class="genericTableData">
 				<select name="18_1" id="18_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2152,7 +2166,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with looking after the children does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="18_2" id="18_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2161,7 +2175,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with looking after the children does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="18_3a" id="18_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2170,35 +2184,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with looking after the children does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="18_3b" id="18_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "18_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"18_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "18_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "18_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "18_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "18_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>			
 
@@ -2211,7 +2225,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have difficulty looking after other dependents?</td>
 			<td class="genericTableData">
 				<select name="19_1" id="19_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2220,7 +2234,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with looking after other dependants does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="19_2" id="19_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2229,7 +2243,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with looking after other dependents does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="19_3a" id="19_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2238,35 +2252,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with looking after other dependents does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="19_3b" id="19_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "19_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"19_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "19_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "19_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "19_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "19_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>
 
@@ -2279,7 +2293,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person lack basic skills in numeracy and literacy?</td>
 			<td class="genericTableData">
 				<select name="20_1" id="20_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2288,7 +2302,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with numeracy and literacy does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="20_2" id="20_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2297,7 +2311,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with numeracy and literacy does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="20_3a" id="20_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2306,35 +2320,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with numeracy and literacy does the person need from local services in organizing social contact?</td>
 			<td class="genericTableData">
 				<select name="20_3b" id="20_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"20_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "20_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "20_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "20_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "20_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>	
 		
@@ -2342,7 +2356,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">What is your highest level of education?</td>
 			<td class="genericTableData">
 				<select name="level_of_education" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "level_of_education", OcanForm.getOcanFormOptions("Education Level"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "level_of_education", OcanForm.getOcanFormOptions("Education Level"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2357,7 +2371,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person lack basic skills in getting access to or using a telephone?</td>
 			<td class="genericTableData">
 				<select name="21_1" id="21_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2366,7 +2380,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives to make telephone calls?</td>
 			<td class="genericTableData">
 				<select name="21_2" id="21_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2375,7 +2389,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services to make telephone calls?</td>
 			<td class="genericTableData">
 				<select name="21_3a" id="21_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2384,35 +2398,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services to make telephone calls?</td>
 			<td class="genericTableData">
 				<select name="21_3b" id="21_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "21_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"21_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "21_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "21_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "21_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "21_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>		
 		
@@ -2426,7 +2440,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have any problems using public transport?</td>
 			<td class="genericTableData">
 				<select name="22_1" id="22_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2435,7 +2449,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help with traveling does the person receive from friends or relatives?</td>
 			<td class="genericTableData">
 				<select name="22_2" id="22_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2444,7 +2458,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help with traveling does the person receive from local services?</td>
 			<td class="genericTableData">
 				<select name="22_3a" id="22_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2453,35 +2467,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help with traveling does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="22_3b" id="22_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "22_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"22_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "22_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "22_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "22_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "22_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>
 		
@@ -2495,7 +2509,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1. Does the person have problems budgeting his or her money?</td>
 			<td class="genericTableData">
 				<select name="23_1" id="23_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2504,7 +2518,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in managing his or her money?</td>
 			<td class="genericTableData">
 				<select name="23_2" id="23_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2513,7 +2527,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in managing his or her money?</td>
 			<td class="genericTableData">
 				<select name="23_3a" id="23_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2522,35 +2536,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services in managing his or her money?</td>
 			<td class="genericTableData">
 				<select name="23_3b" id="23_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "23_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"23_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "23_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "23_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "23_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "23_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>		
 
@@ -2558,7 +2572,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">What is your primary source of income?</td>
 			<td class="genericTableData">
 				<select name="income_source_type" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "income_source_type", OcanForm.getOcanFormOptions("Income Source Type"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "income_source_type", OcanForm.getOcanFormOptions("Income Source Type"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2572,7 +2586,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">1.  Is the person definitely receiving all the benefits that he or she is entitled to?</td>
 			<td class="genericTableData">
 				<select name="24_1" id="24_1" class="{validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_1", OcanForm.getOcanFormOptions("Camberwell Need"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_1", OcanForm.getOcanFormOptions("Camberwell Need"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2581,7 +2595,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">2. How much help does the person receive from friends or relatives in obtaining the full benefit entitlement?</td>
 			<td class="genericTableData">
 				<select name="24_2" id="24_2" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_2", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_2", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2590,7 +2604,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3a. How much help does the person receive from local services in obtaining the full benefit entitlement?</td>
 			<td class="genericTableData">
 				<select name="24_3a" id="24_3a" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_3a", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_3a", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -2599,35 +2613,35 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">3b. How much help does the person need from local services in obtaining the full benefit entitlement?</td>
 			<td class="genericTableData">
 				<select name="24_3b" id="24_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_3b", OcanForm.getOcanFormOptions("Camberwell Help"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "24_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>						
 		<tr>
 			<td class="genericTableHeader">Comments</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_comments",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_comments",5,30,prepopulationLevel)%>
 			</td>
 		</tr>			
 		
 		<tr>
 			<td class="genericTableHeader">Action(s)</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_actions",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"24_actions",5,30,prepopulationLevel)%>
 			</td>
 		</tr>					
 			
 		<tr>
 			<td class="genericTableHeader">By Whom?</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "24_by_whom", 25)%>						
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "24_by_whom", 25,prepopulationLevel)%>						
 			</td>
 		</tr>				
 		
 		<tr>
 			<td class="genericTableHeader">Review Date</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "24_review_date",false)%>				
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "24_review_date",false,prepopulationLevel)%>				
 			</td>
 		</tr>		
 		
@@ -2639,38 +2653,38 @@ function changeNumberOfReferrals() {
 		<tr>
 			<td class="genericTableHeader">What are your hopes for the future?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hopes_future",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hopes_future",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">What do you think you need in order to get there?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hope_future_need",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"hope_future_need",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">How do you view your mental health?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"view_mental_health",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"view_mental_health",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Is spirituality an important part of your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"sprituality",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"sprituality",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Is culture (heritage) an important part of your life?</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"culture_heritage",5,30)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"culture_heritage",5,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		
 		<tr>
 			<td class="genericTableHeader">Presenting Issues</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "presenting_issues", OcanForm.getOcanFormOptions("Presenting Issues"))%>						
+				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "presenting_issues", OcanForm.getOcanFormOptions("Presenting Issues"),prepopulationLevel)%>						
 			</td>
 		</tr>
 			
@@ -2682,8 +2696,8 @@ function changeNumberOfReferrals() {
 		</tr>	
 		<tr>
 			<td colspan="2"><input type="button" value="Generate Summary" name="generate_summary_of_actions" id="generate_summary_of_actions"/></td>
-			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_count")%>
-			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_domains")%>		
+			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_count",prepopulationLevel)%>
+			<%=OcanForm.renderAsHiddenField(ocanStaffForm.getId(), "summary_of_actions_domains",prepopulationLevel)%>		
 		</tr>
 		<tr>
 			<td colspan="2">			
@@ -2705,7 +2719,7 @@ function changeNumberOfReferrals() {
 			<td class="genericTableHeader">Number of Referrals?</td>
 			<td class="genericTableData">
 				<select name="referrals_count" id="referrals_count" onchange="changeNumberOfReferrals();">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "referrals_count", OcanForm.getOcanFormOptions("Years in Canada"))%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "referrals_count", OcanForm.getOcanFormOptions("Years in Canada"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>													

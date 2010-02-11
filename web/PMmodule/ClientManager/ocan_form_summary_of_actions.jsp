@@ -6,8 +6,8 @@
 
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
-
-	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId);		
+	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
+	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId, prepopulationLevel);		
 
 	int size=0;
 	try {
@@ -36,11 +36,11 @@
 	<td>
 		<select name="<%=x%>_summary_of_actions_domain" id="<%=x%>_summary_of_actions_domain" onchange="suaChangeDomain(this)">
 					<option value=""></option>
-					<%=OcanForm.renderAsDomainSelectOptions(ocanStaffForm.getId(), x+"_summary_of_actions_domain", OcanForm.getOcanFormOptions("Domain"),domainsAsArray)%>
+					<%=OcanForm.renderAsDomainSelectOptions(ocanStaffForm.getId(), x+"_summary_of_actions_domain", OcanForm.getOcanFormOptions("Domain"),domainsAsArray, prepopulationLevel)%>
 		</select>
 	</td>
 	<td>
-		<%=OcanForm.renderAsSoATextArea(ocanStaffForm.getId(),x+"_summary_of_actions_action",5,30)%>							
+		<%=OcanForm.renderAsSoATextArea(ocanStaffForm.getId(),x+"_summary_of_actions_action",5,30,prepopulationLevel)%>							
 	</td>
 </tr>		
 

@@ -1,6 +1,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -54,9 +55,13 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	private String dateOfBirth;
 	
 	private String assessmentStatus;
+	private Date startDate;
+	private Date completionDate;
+	private String reasonForAssessment;
+	
 	
 	public OcanStaffForm() {
-		province = "ON";
+		province = "ON";		
 	}
 	
 	public Integer getId() {
@@ -255,4 +260,41 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 		this.assessmentStatus = assessmentStatus;
 	}
 
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getCompletionDate() {
+		return completionDate;
+	}
+
+	public void setCompletionDate(Date completionDate) {
+		this.completionDate = completionDate;
+	}
+
+	public String getFormattedStartDate() {
+		Date d = getStartDate();
+		if(d==null) {return "";}
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(d);
+	}
+	
+	public String getFormattedCompletionDate() {
+		Date d = getCompletionDate();
+		if(d==null) {return "";}
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(d);
+	}
+
+	public String getReasonForAssessment() {
+		return reasonForAssessment;
+	}
+
+	public void setReasonForAssessment(String reasonForAssessment) {
+		this.reasonForAssessment = reasonForAssessment;
+	}
 }
