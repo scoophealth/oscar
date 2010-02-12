@@ -44,7 +44,7 @@ public class RxSessionBean {
     private Hashtable allergyWarnings = new Hashtable();
     private Hashtable workingAllergyWarnings = new Hashtable();
     private ArrayList attributeNames = new ArrayList();
-    private Vector interactingDrugList=new Vector();//contains hash tables, each hashtable has the a
+    private String interactingDrugList="";//contains hash tables, each hashtable has the a
 
 
 
@@ -53,15 +53,13 @@ public class RxSessionBean {
     //--------------------------------------------------------------------------
 
 
-    public Vector getInteractingDrugList(){
+    public String getInteractingDrugList(){
         return interactingDrugList;
     }
-    public void setInteractingDrugList(Vector v){
-        interactingDrugList=v;
+    public void setInteractingDrugList(String s){
+        interactingDrugList=s;
     }
-    public void addInteractingDrugList(Hashtable ht){
-        interactingDrugList.add(ht);
-    }
+
     public String getProviderNo() {
         return this.providerNo;
     }
