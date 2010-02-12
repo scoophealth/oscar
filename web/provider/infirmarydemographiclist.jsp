@@ -169,7 +169,7 @@ if ((k/2)*2==k){ %>
 					<security:oscarSec roleName="<%=roleName$%>"
 						objectName="_appointment.doctorLink" rights="r">
 						<a href=#
-							onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message
+							onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message
 							key="global.rx" /></a>
 						<oscar:oscarPropertiesCheck property="SHOW_APPT_REASON"
 							value="yes">| <b><%=reason%></b>

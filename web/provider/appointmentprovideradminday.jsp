@@ -48,7 +48,7 @@ sites = siteDao.getAllSites();
 <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<!-- caisi infirmary view extension add ffffffffffffff-->
+<!-- caisi infirmary view extension add -->
 <caisi:isModuleLoad moduleName="caisi">
 <%
 if (request.getParameter("year")!=null && request.getParameter("month")!=null && request.getParameter("day")!=null)
@@ -77,7 +77,7 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 %>
 <c:import url="/infirm.do?action=showProgram" />
 </caisi:isModuleLoad>
-<!-- caisi infirmary view extension add end ffffffffffffff-->
+<!-- caisi infirmary view extension add end -->
 
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*, org.oscarehr.provider.model.PreventionManager" %>
 <%@ page import="org.apache.commons.lang.*" %>
@@ -1367,7 +1367,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
           <!-- doctor code block -->
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
-      <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/></a>
+      <a href=# onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')" title="<bean:message key="global.prescriptions"/>">|<bean:message key="global.rx"/></a>
       <%
 	  if("bc".equalsIgnoreCase(prov)){
 	  if(patientHasOutstandingPrivateBills(String.valueOf(demographic_no))){
