@@ -949,7 +949,6 @@ body {
                     str=str.replace(/<\/script>/,'');
                     eval(str);
                     //oscarLog("str="+str);
-                    //console.log(transport.responseText);
                     oscarLog("in asdfadf");
                     <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
                       callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
@@ -1256,8 +1255,7 @@ YAHOO.example.BasicRemote = function() {
  		oscarLog(type+" :: "+args);
                 oscarLog(args[2]);
                 arr = args[2];
-                oscarLog('In yahoo----'+arr[1]);
-                oscarLog('In yahoo----'+arr[0]);
+                oscarLog('In yahoo----'+arr[1]);oscarLog('In yahoo----'+arr[0]);
                 var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                 var ran_number=Math.round(Math.random()*1000000);
                 var name=encodeURIComponent(arr[0]);
@@ -1412,7 +1410,6 @@ function addFav(randomId,brandName){
         var ran_number=Math.round(Math.random()*1000000);
         var params = "resId="+resourceId+"&updatedat="+updated+"&rand="+ran_number;  //hack to get around ie caching the page
         //totalHiddenResources++;
-        //console.log("params: "+params);
         new Ajax.Updater('showHideTotal',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,onSuccess:function(transport){
 
                 //oscarLog("successfully sent data "+url);
