@@ -1,11 +1,6 @@
 alter table OcanStaffForm add startDate date NOT NULL;
 alter table OcanStaffForm add completionDate date;
 alter table OcanStaffForm add reasonForAssessment varchar(100);
-
-alter table OcanClientForm add startDate date NOT NULL;
-alter table OcanClientForm add completionDate date;
-
-
 alter table OcanStaffForm add assessmentStatus varchar(40) NOT NULL;
 
 create table OcanClientForm
@@ -32,4 +27,7 @@ create table OcanClientFormData
         index(question),
         answer varchar(16) not null
 );
+
+alter table OcanClientForm add startDate date NOT NULL;
+alter table OcanClientForm add completionDate date;
 
