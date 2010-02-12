@@ -10,8 +10,8 @@ System.out.println("***### IN prescribe.jsp");
 
 List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("listRxDrugs");
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-Vector interactingDrugList=bean.getInteractingDrugList();
-int interactingDrugListSize=interactingDrugList.size();
+String interactingDrugList=bean.getInteractingDrugList();
+System.out.println("interactingDrugList="+interactingDrugList);
 System.out.println("listRxDrugs="+listRxDrugs);
 if(listRxDrugs!=null){
             String specStr=RxUtil.getSpecialInstructions();
@@ -109,7 +109,7 @@ if(listRxDrugs!=null){
        <label for="specialInstr_<%=rand%>" ></label>
        <div id="siAutoComplete_<%=rand%>" <%if(isSpecInstPresent){%> style="overflow:visible;"<%} else{%> style="overflow:visible;display:none;"<%}%> >
            <label style="float:left;width:80px;">&nbsp;&nbsp;</label>
-           <input id="siInput_<%=rand%>" type="text" <%if(!isSpecInstPresent) {%>style="color:gray; width:auto" value="Enter Special Instruction" <%} else {%> style="color:black; width:auto" value="<%=specialInstruction%>" <%}%> onblur="changeText('siInput_<%=rand%>');updateSpecialInstruction('siInput_<%=rand%>');" onfocus="changeText('siInput_<%=rand%>');" >
+           <input id="siInput_<%=rand%>" type="text" size="60" <%if(!isSpecInstPresent) {%>style="color:gray; width:auto" value="Enter Special Instruction" <%} else {%> style="color:black; width:auto" value="<%=specialInstruction%>" <%}%> onblur="changeText('siInput_<%=rand%>');updateSpecialInstruction('siInput_<%=rand%>');" onfocus="changeText('siInput_<%=rand%>');" >
            <div id="siContainer_<%=rand%>" style="float:right" >
            </div>
                        <br><br>
@@ -255,164 +255,25 @@ if(listRxDrugs!=null){
                     }
             }
 
-            var interactionSize=<%=interactingDrugListSize%>;
-            if(interactionSize>0){
 
-                var interactionDrugList='<%=interactingDrugList%>';
-                oscarLog(interactionDrugList);
-                var patt1=/\}, \{/g;
-                if(patt1.test(interactionDrugList)){//multiple interactions
-                    var intArr=interactionDrugList.split("}, {");
-                    oscarLog("in multiple interactions="+intArr);
-                    for(var i=0;i<intArr.length;i++){
-                        var str=intArr[i];
-                        oscarLog(str);
-                        str=str.replace(/\{/g, "");
-                        str=str.replace(/\}/g, "");
-                        str=str.replace(/\[/g, "");
-                        str=str.replace(/\]/g, "");
-                        var strArr=str.split("=");
-                        var interacter=strArr[0];
-                        var interactee=strArr[1];
-                        var interacteeArr=interactee.split(",");
-                        var interacteeNameArr=new Array();
-                        var interacteeEffectArr=new Array();
-                        var interacteeSigArr=new Array();
-                        for(var j=0;j<interacteeArr.length;j++){
-                            if(j%3==0){
-                                interacteeNameArr.push(interacteeArr[j]);
-                            }else if((j+2)%3==0){
-                                interacteeEffectArr.push(interacteeArr[j]);
-                            }else{
-                                interacteeSigArr.push(interacteeArr[j]);
-                            }
-                        }
-                        oscarLog("interacter="+interacter);
-                        oscarLog("interacteeNameArr="+interacteeNameArr);
-                        oscarLog("interacteeEffectArr="+interacteeEffectArr);
-                        oscarLog("interacteeSigArr="+interacteeSigArr);
-                        //update the html here.
-                        //new Insertion.After("instructions_"+interacter, "<p>"+interacteeNameArr+"<p>");
-                            /*     h.put("1","minor");
-                                   h.put("2","moderate");
-                                   h.put("3","major");
-                                   h.put(" ","unknown");
-
-                                   h.put("1","yellow");
-                                   h.put("2","orange");
-                                   h.put("3","red");
-                                   h.put(" ","greenyellow");*/
-                        var minor="";
-                        var moderate="";
-                        var major="";
-                        var unknownStr="";
-                        for(var h=0;h<interacteeSigArr.length;h++){
-                            oscarLog("interacteeSigArr[h]="+interacteeSigArr[h]);
-                            if(interacteeSigArr[h]==1){
-                                minor+=" "+interacteeNameArr[h];
-                            }else if(interacteeSigArr[h]==2){
-                                moderate+=" "+interacteeNameArr[h];
-                            }else if(interacteeSigArr[h]==3){
-                                major+=" "+interacteeNameArr[h];
-                            }else{
-                                unknownStr+=" "+interacteeNameArr[h];
-                            }
-                        }
-                        oscarLog("major="+major);
-                        oscarLog("moderate="+moderate);
-                        oscarLog("minor="+minor);
-                        oscarLog("unknownStr="+unknownStr);
-                        if(major.length>0){
-                            var htmlStr="<a title='"+major+"'>&nbsp;&nbsp;</a>";
-                            $('major_'+interacter).show();
-                            $('major_'+interacter).update(htmlStr);
-                        }
-                        if(moderate.length>0){
-                            var htmlStr="<a title='"+moderate+"'>&nbsp;&nbsp;</a>";
-                            $('moderate_'+interacter).show();
-                            $('moderate_'+interacter).update(htmlStr);
-                        }
-                        if(minor.length>0){
-                            var htmlStr="<a title='"+minor+"'>&nbsp;&nbsp;</a>";
-                            $('minor_'+interacter).show();
-                            $('minor_'+interacter).update(htmlStr);
-                        }
-                        if(unknownStr.length>0){
-                            var htmlStr="<a title='"+unknownStr+"'>&nbsp;&nbsp;</a>";
-                            $('unknown_'+interacter).show();
-                            $('unknown_'+interacter).update(htmlStr);
-                        }
-                    }
-                }else{//only one interaction
-                    var str=interactionDrugList.replace(/\{/g, "");
-                        str=str.replace(/\}/g, "");
-                        str=str.replace(/\[/g, "");
-                        str=str.replace(/\]/g, "");
-                        var strArr=str.split("=");
-                        var interacter=strArr[0];
-                        var interactee=strArr[1];
-                        var interacteeArr=interactee.split(",");
-                        var interacteeNameArr=new Array();
-                        var interacteeEffectArr=new Array();
-                        var interacteeSigArr=new Array();
-                        for(var j=0;j<interacteeArr.length;j++){
-                            if(j%3==0){
-                                interacteeNameArr.push(interacteeArr[j]);
-                            }else if((j+2)%3==0){
-                                interacteeEffectArr.push(interacteeArr[j]);
-                            }else{
-                                interacteeSigArr.push(interacteeArr[j]);
-                            }
-                        }
-                        oscarLog("interacter="+interacter);
-                        oscarLog("interacteeNameArr="+interacteeNameArr);
-                        oscarLog("interacteeEffectArr="+interacteeEffectArr);
-                        oscarLog("interacteeSigArr="+interacteeSigArr);
-
-                        //new Insertion.After("instructions_"+interacter, "<p>"+interacteeNameArr+"<p>");
-                        var minor="";
-                        var moderate="";
-                        var major="";
-                        var unknownStr="";
-                        for(var h=0;h<interacteeSigArr.length;h++){
-                            oscarLog("interacteeSigArr[h]="+interacteeSigArr[h]);
-                            if(interacteeSigArr[h]==1){
-                                minor+=" "+interacteeNameArr[h];
-                            }else if(interacteeSigArr[h]==2){
-                                moderate+=" "+interacteeNameArr[h];
-                            }else if(interacteeSigArr[h]==3){
-                                major+=" "+interacteeNameArr[h];
-                            }else{
-                                unknownStr+=" "+interacteeNameArr[h];
-                            }
-                        }
-                        oscarLog("major="+major);
-                        oscarLog("moderate="+moderate);
-                        oscarLog("minor="+minor);
-                        oscarLog("unknownStr="+unknownStr);
-                        if(major.length>0){
-                            var htmlStr="<a title='"+major+"'>&nbsp;&nbsp;</a>";
-                            $('major_'+interacter).show();
-                            $('major_'+interacter).update(htmlStr);
-                        }
-                        if(moderate.length>0){
-                            var htmlStr="<a title='"+moderate+"'>&nbsp;&nbsp;</a>";
-                            $('moderate_'+interacter).show();
-                            $('moderate_'+interacter).update(htmlStr);
-                        }
-                        if(minor.length>0){
-                            var htmlStr="<a title='"+minor+"'>&nbsp;&nbsp;</a>";
-                            $('minor_'+interacter).show();
-                            $('minor_'+interacter).update(htmlStr);
-                        }
-                        if(unknownStr.length>0){
-                            var htmlStr="<a title='"+unknownStr+"'>&nbsp;&nbsp;</a>";
-                            $('unknown_'+interacter).show();
-                            $('unknown_'+interacter).update(htmlStr);
-                        }
-
+            var interactStr='<%=interactingDrugList%>';
+            oscarLog("interactStr="+interactStr);
+            if(interactStr.length>0){
+                var arr1=interactStr.split(",");
+                for(var i=0;i<arr1.length;i++){
+                    var str=arr1[i];
+                    var arr2=str.split("=");
+                    var id=arr2[0];
+                    var title=arr2[1];
+                    var htmlStr="<a title='"+title+"'>&nbsp;&nbsp;</a>";
+                    oscarLog('id='+id);
+                    id=id.replace(/\s/g,"");
+                    $(id).show();
+                    $(id).update(htmlStr);
                 }
+
             }
+
         </script>
                 <%}
 }%>
