@@ -578,15 +578,6 @@
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
             <forward name="successRX3" path="/oscarRx/SearchDrug3.jsp" />
         </action>
-        <action name="RxChoosePatientForm" path="/oscarRx/choosePatient2" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
-            <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
-        </action>
-
-        <action name="RxChoosePatientForm" path="/oscarRx/choosePatient3" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
-            <forward name="success" path="/oscarRx/SearchDrug3.jsp" />
-        </action>
-
-
         <action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
         </action>
