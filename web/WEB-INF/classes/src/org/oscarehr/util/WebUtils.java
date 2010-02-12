@@ -23,13 +23,32 @@
 package org.oscarehr.util;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 public class WebUtils {
+	private static final Logger logger=MiscUtils.getLogger();
 	private static final String ERROR_MESSAGE_SESSION_KEY = WebUtils.class.getName() + ".ERROR_MESSAGE_SESSION_KEY";
 
+    public static void dumpParameters(HttpServletRequest request)
+	{
+    	logger.error("--- Dump Request Parameters Start ---");
+    	
+    	@SuppressWarnings("unchecked")
+		Enumeration<String> e=request.getParameterNames();
+		while (e.hasMoreElements())
+		{
+			String key=e.nextElement();
+			logger.error(key+'='+request.getParameter(key));
+		}
+
+		logger.error("--- Dump Request Parameters End ---");
+	}
+	
 	/**
 	 * This method is intended to be used to see if a check box was checked on a form submit
 	 */
