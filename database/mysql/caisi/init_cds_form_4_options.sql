@@ -383,10 +383,3 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','031-08','No source of income');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','031-09','Other');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','031-10','Unknown or Service Recipient Declined');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','032-01','Service Recipient Satisfaction');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','032-02','Service Recipient Family Satisfaction');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','032-03','Quality Improvement');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','032-04','Accreditation');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','036-01','Service Recipients in multiple functions');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','036-02','Baseline status not tracked');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','036-03','Multiple diagnosis');

@@ -256,6 +256,15 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
 
+    public List<Program> getProgramsByFunctionalCentreId(String functionalCentreId) {
+        String queryStr = "FROM Program p WHERE p.functionalCentreId = '"+functionalCentreId+'\'';
+
+        @SuppressWarnings("unchecked")
+        List<Program> rs = getHibernateTemplate().find(queryStr);
+
+        return rs;
+    }
+
     /**
      * @param facilityId is allowed to be null
      * @return a list of community programs in the facility and any programs with no facility associated

@@ -20,6 +20,7 @@
 
 package org.oscarehr.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -28,29 +29,35 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
+import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;
+import org.oscarehr.common.model.FunctionalCentre;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-public class Cds4ReportUIBean {
+public final class Cds4ReportUIBean {
 
 	private static Logger logger = MiscUtils.getLogger();
 
+	private static FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
 	private static CdsFormOptionDao cdsFormOptionDao = (CdsFormOptionDao) SpringUtils.getBean("cdsFormOptionDao");
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 
-	private static final char ROW_TERMINATOR = '>';
 	private static final int NUMBER_OF_COHORT_BUCKETS = 11;
 
 	enum MinMax {
@@ -58,72 +65,61 @@ public class Cds4ReportUIBean {
 	}
 
 	public static class SingleMultiAdmissions {
+		// key=clientId
 		public HashMap<Integer, CdsClientForm> singleAdmissions = new HashMap<Integer, CdsClientForm>();
+
 		// this is a map where key=0-10 representing each cohort bucket., value is a collection of CdsClientForms
 		public MultiValueMap singleAdmissionCohortBuckets = new MultiValueMap();
 
+		// key=clientId
 		public HashMap<Integer, CdsClientForm> multipleAdmissionsLatestForms = new HashMap<Integer, CdsClientForm>();
+		
 		public ArrayList<CdsClientForm> multipleAdmissionsAllForms = new ArrayList<CdsClientForm>();
-
 	}
 
+	private SingleMultiAdmissions singleMultiAdmissions;
+	private FunctionalCentre functionalCentre;
+	private GregorianCalendar startDate;
+	private GregorianCalendar endDate;
+	
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages, String[] serviceDeliveryLhins, HashMap<String,CdsManualLineEntry> manualSections, boolean measureServiceRecipientSatisfaction, boolean measureServiceRecipientFamiltySatisfaction, boolean qualityImprovementStrategies, boolean participateInAccreditation) {
+	public Cds4ReportUIBean(String functionalCentreId, int startYear, int startMonth, int endYear, int endMonth) {
 
-		GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, 1);
-		GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, 1);
+		startDate = new GregorianCalendar(startYear, startMonth, 1);
+		endDate = new GregorianCalendar(endYear, endMonth, 1);
 		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
-
-		ArrayList<String> asciiTextFileRows = new ArrayList<String>();
-		asciiTextFileRows.add(getHeader(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode) + ROW_TERMINATOR);
 		
-		SingleMultiAdmissions singleMultiAdmissions = sortSingleMultiAdmission(caisiProgramIds, startDate, endDate);
-
-		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4")) {
-			String dataLine=null;
-			String dataCategory=cdsFormOption.getCdsDataCategory();
-			
-			if (dataCategory.startsWith("006-")) dataLine=get006DataLine(cdsFormOption, serviceLanguages);
-			else if (dataCategory.startsWith("10b-")) dataLine=get10bDataLine(cdsFormOption, serviceDeliveryLhins);
-			else if (dataCategory.startsWith("032-")) dataLine=get032DataLine(cdsFormOption, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
-			else if (manualSections.get(dataCategory)!=null) dataLine=getManualSectionDataLine(manualSections.get(cdsFormOption.getCdsDataCategory()));
-			else dataLine=getAdmissionDataLine(cdsFormOption, singleMultiAdmissions);
-			
-			if (dataLine!=null) asciiTextFileRows.add(dataCategory + dataLine + ROW_TERMINATOR);
-		}
-
-		return (asciiTextFileRows);
+		functionalCentre=functionalCentreDao.find(functionalCentreId);
+		
+		singleMultiAdmissions = getAdmissionsSortedSingleMulti(functionalCentreId, startDate, endDate);
+	}
+	
+	public String getFunctionalCentreDescription()
+	{
+		return(StringEscapeUtils.escapeHtml(functionalCentre.getAccountId()+", "+functionalCentre.getDescription()));
+	}
+	
+	public String getDateRangeForDisplay() 
+	{
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		return(StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime())+" to "+simpleDateFormat.format(endDate.getTime())+" (exclusive)"));
 	}
 
-	private static String getManualSectionDataLine(CdsManualLineEntry cdsManualLineEntry) {
-		StringBuilder sb=new StringBuilder();
-		
-		sb.append(padTo6(cdsManualLineEntry.multipleAdmissions));
-		sb.append(padTo6(cdsManualLineEntry.cohort0));
-		sb.append(padTo6(cdsManualLineEntry.cohort1));
-		sb.append(padTo6(cdsManualLineEntry.cohort2));
-		sb.append(padTo6(cdsManualLineEntry.cohort3));
-		sb.append(padTo6(cdsManualLineEntry.cohort4));
-		sb.append(padTo6(cdsManualLineEntry.cohort5));
-		sb.append(padTo6(cdsManualLineEntry.cohort6));
-		sb.append(padTo6(cdsManualLineEntry.cohort7));
-		sb.append(padTo6(cdsManualLineEntry.cohort8));
-		sb.append(padTo6(cdsManualLineEntry.cohort9));
-		sb.append(padTo6(cdsManualLineEntry.cohort10));
-		
-		return(sb.toString());
+	public static List<CdsFormOption> getCdsFormOptions()
+	{
+		return(cdsFormOptionDao.findByVersion("4"));
 	}
-
-	private static SingleMultiAdmissions sortSingleMultiAdmission(int[] caisiProgramIds, GregorianCalendar startDate, GregorianCalendar endDate) {
+	
+	private static SingleMultiAdmissions getAdmissionsSortedSingleMulti(String functionalCentreAccountId, GregorianCalendar startDate, GregorianCalendar endDate) {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDate.getTime());
 		logger.debug("valid cds form count : "+cdsForms.size());
 		
-		HashMap<Integer, Admission> admissionMap = getAdmissionMap(caisiProgramIds, startDate, endDate);
+		HashMap<Integer, Admission> admissionMap = getAdmissionMap(functionalCentreAccountId, startDate, endDate);
 
 		// sort into single and multiple admissions
 		for (CdsClientForm form : cdsForms) {
@@ -176,6 +172,31 @@ public class Cds4ReportUIBean {
 		return (singleMultiAdmissions);
 	}
 
+	private static HashMap<Integer, Admission> getAdmissionMap(String functionalCentreId, GregorianCalendar startDate, GregorianCalendar endDate) {
+
+		// put admissions into map so it's easier to retrieve by id.
+		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
+
+		List<Program> programs=programDao.getProgramsByFunctionalCentreId(functionalCentreId);
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		for (Program program : programs) {
+			// only report on admissions to programs in our facility
+			if (program.getFacilityId()!=loggedInInfo.currentFacility.getId().intValue()) continue;
+			
+			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDate.getTime());
+
+			logger.debug("corresponding cds admissions count:"+admissions.size());
+			
+			for (Admission admission : admissions) {
+				admissionMap.put(admission.getId().intValue(), admission);
+				logger.debug("valid cds admission, id="+admission.getId());
+			}
+		}
+
+		return admissionMap;
+	}
+
 	private static int getCohortBucket(Admission admission) {
 		Date dischargeDate = new Date(); // default duration calculation to today if not discharged.
 		if (admission.getDischargeDate() != null) dischargeDate = admission.getDischargeDate();
@@ -191,24 +212,9 @@ public class Cds4ReportUIBean {
 		else return (form2);
 	}
 
-	private static HashMap<Integer, Admission> getAdmissionMap(int[] caisiProgramIds, GregorianCalendar startDate, GregorianCalendar endDate) {
-
-		// put admissions into map so it's easier to retrieve by id.
-		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
-
-		for (int caisiProgramId : caisiProgramIds) {
-			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(caisiProgramId, startDate.getTime(), endDate.getTime());
-
-			logger.debug("corresponding cds admissions count:"+admissions.size());
-			
-			for (Admission admission : admissions) {
-				admissionMap.put(admission.getId().intValue(), admission);
-				logger.debug("valid cds admission, id="+admission.getId());
-			}
-		}
-
-		return admissionMap;
-	}
+	
+	//-------------------------------------------------------------------------
+	
 
 	private static String getAdmissionDataLine(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions) {
 
