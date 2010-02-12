@@ -716,7 +716,7 @@ div.demographicWrapper {
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
-					onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message
+					onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message
 					key="global.prescriptions" /></a>
 				</th>
 				</td>

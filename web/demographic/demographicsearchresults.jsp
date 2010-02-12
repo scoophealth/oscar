@@ -64,6 +64,7 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/Oscar.js"/>"></script>
 <title><bean:message
 	key="demographic.demographicsearchresults.title" /></title>
 <link rel="stylesheet" href="../web.css">
@@ -311,8 +312,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 				onclick="popupEChart(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;">E</a>
 		</security:oscarSec> <!-- Rights --> <security:oscarSec roleName="<%=roleName$%>"
 			objectName="_rx" rights="r">
-			<a title="Prescriptions" href="#"
-				onclick="popup(600,900,'../oscarRx/choosePatient.do?providerNo=<%=rs.getString("provider_no")%>&demographicNo=<%=dem_no%>')">Rx</a>
+			<a title="Prescriptions" href="#" onclick="popup(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=rs.getString("provider_no")%>&demographicNo=<%=dem_no%>')">Rx</a>
 		</security:oscarSec></td>
 		<%}%>
 		</td>

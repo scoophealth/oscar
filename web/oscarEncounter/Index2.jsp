@@ -36,9 +36,9 @@
     String demographic$ = request.getParameter("demographicNo") ;
     boolean bPrincipalControl = false;
     boolean bPrincipalDisplay = false;
-    
+
     String eChart$ = "_eChart$"+demographic$;
-    
+
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
 	rights="r" reverse="<%=true%>">
@@ -95,7 +95,7 @@ You have no rights to access the data!
 	String ip = request.getRemoteAddr();
 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip,demographic$);
 %>
-<%  
+<%
   //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
   //it dumps you out to an erros page.
 
@@ -109,13 +109,13 @@ You have no rights to access the data!
 <!-- check to see if new case management is request -->
 <%
     ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
-    
+
     if( users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, bean.providerNo)>=0)) {
-        session.setAttribute("newCaseManagement", "true");        
+        session.setAttribute("newCaseManagement", "true");
 %>
 <caisi:isModuleLoad moduleName="caisi" reverse="true">
 	<%
-            EctProgram prgrmMgr = new EctProgram(session);            
+            EctProgram prgrmMgr = new EctProgram(session);
             session.setAttribute("case_program_id", prgrmMgr.getProgram(bean.providerNo));
             System.out.println("case_program_id " + session.getAttribute("case_program_id"));
             session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
@@ -123,11 +123,11 @@ You have no rights to access the data!
             session.setAttribute(strBeanName, bean);
             session.setAttribute("casemgmt_bean_flag", "true");
             String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName+"&appointmentNo="+request.getParameter("appointmentNo")+"&appointmentDate="+request.getParameter("appointmentDate")+"&start_time="+request.getParameter("startTime")+ "&apptProvider=" + request.getParameter("apptProvider_no")+"&providerview="+ request.getParameter("providerview");
-            
+
             if( request.getParameter("noteBody") != null )
                 hrefurl += "&noteBody=" + request.getParameter("noteBody");
-                
-            if( !response.isCommitted())                
+
+            if( !response.isCommitted())
                 response.sendRedirect(hrefurl);
         %>
 
@@ -148,7 +148,7 @@ session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
 String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 if (request.getParameter("casetoEncounter")==null)
-{   
+{
         if( !response.isCommitted())
             response.sendRedirect(hrefurl);
     return;
@@ -162,26 +162,26 @@ if (request.getParameter("casetoEncounter")==null)
   //need these variables for the forms
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
-  String provNo = bean.providerNo;  
+  String provNo = bean.providerNo;
   EctFormData.Form[] forms = new EctFormData().getForms();
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
   String famDocName, famDocSurname;
   if(bean.familyDoctorNo.equals("")) {
     famDocName = "";
-    famDocSurname = "";      
+    famDocSurname = "";
   }
   else {
-    EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo); 
+    EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo);
     famDocName = prov.getFirstName();
     famDocSurname = prov.getSurname();
-    
+
   }
-  
+
   String patientName = pd.getFirstName()+" "+pd.getSurname();
   String patientAge = pd.getAge();
   String patientSex = pd.getSex();
   String providerName = bean.userName;
-  
+
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
@@ -199,10 +199,10 @@ if (request.getParameter("casetoEncounter")==null)
   if (splitChart == null || splitChart.size() == 0){
      sChart = false;
   }
-  
-  
 
-  
+
+
+
 %>
 
 
@@ -249,33 +249,33 @@ if (request.getParameter("casetoEncounter")==null)
     var autoCompleted = new Object();
     var autoCompList = new Array();
     var itemColours = new Object();
-    
+
     //Add calculators to autocompleter menu
     autoCompleted["<bean:message key="oscarEncounter.Index.bodyMass"/>"] = "popupPage(650,775,'BodyMassIndex','http://www.intmed.mcw.edu/clincalc/body.html')";
     autoCompList.push("<bean:message key="oscarEncounter.Index.bodyMass"/>");
     itemColours["<bean:message key="oscarEncounter.Index.bodyMass"/>"] = calculatorColour;
-    
+
     autoCompleted["<bean:message key="oscarEncounter.Index.coronary"/>"] = "popupPage(525,775,'CoronaryArteryDiseaseRisk','calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>')";
     autoCompList.push("<bean:message key="oscarEncounter.Index.coronary"/>");
     itemColours["<bean:message key="oscarEncounter.Index.coronary"/>"] = calculatorColour;
-    
+
     autoCompleted["<bean:message key="oscarEncounter.Index.msgOsteoporotic"/>"] = "popupPage(525,775,'OsteoporoticFracture','calculators/OsteoporoticFracture.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>')";
     autoCompList.push("<bean:message key="oscarEncounter.Index.msgOsteoporotic"/>");
     itemColours["<bean:message key="oscarEncounter.Index.msgOsteoporotic"/>"] = calculatorColour;
-    
+
     autoCompleted["<bean:message key="oscarEncounter.Index.pregnancy"/>"] = "popupPage(650,775,'PregancyCalculator','http://www.intmed.mcw.edu/clincalc/pregnancy.html')";
     autoCompList.push("<bean:message key="oscarEncounter.Index.pregnancy"/>");
     itemColours["<bean:message key="oscarEncounter.Index.pregnancy"/>"] = calculatorColour;
-    
+
     autoCompleted["<bean:message key="oscarEncounter.Index.simpleCalculator"/>"] = "popupPage(400,500,'SimpleCalc','calculators/SimpleCalculator.jsp')";
     autoCompList.push("<bean:message key="oscarEncounter.Index.simpleCalculator"/>");
     itemColours["<bean:message key="oscarEncounter.Index.simpleCalculator"/>"] = calculatorColour;
-    
+
     autoCompleted["<bean:message key="oscarEncounter.Index.generalConversions"/>"] = "popupPage(650,775,'GeneralConversions','calculators/GeneralCalculators.jsp')";
     autoCompList.push("<bean:message key="oscarEncounter.Index.generalConversions"/>");
     itemColours["<bean:message key="oscarEncounter.Index.generalConversions"/>"] = calculatorColour;
-    
-   <% 
+
+   <%
    int MaxLen = 25;
    int TruncLen = 22;
    String ellipses = "...";
@@ -303,11 +303,11 @@ if (request.getParameter("casetoEncounter")==null)
         var ret = confirm("<bean:message key="oscarEncounter.Index.confirmSplit"/>");
         return ret;
     }
-    
+
     function setCaretPosition(inpu, pos){
 	if(inpu.setSelectionRange){
 		inpu.focus();
-		inpu.setSelectionRange(pos,pos);                
+		inpu.setSelectionRange(pos,pos);
 	}else if (inpu.createTextRange) {
 		var range = inpu.createTextRange();
 		range.collapse(true);
@@ -330,47 +330,47 @@ if (request.getParameter("casetoEncounter")==null)
 
         document.encForm.enTextarea.value += "\n\n";
         var curPos = document.encForm.enTextarea.value.length;
-        
+
         //subtract \r chars from total length for IE
-        if( document.all ) {                        
-            var newLines = document.encForm.enTextarea.value.match(/.*\n.*/g);                        
-            curPos -= newLines.length;                    
+        if( document.all ) {
+            var newLines = document.encForm.enTextarea.value.match(/.*\n.*/g);
+            curPos -= newLines.length;
         }
-        ++curPos;            
-        
-        //if insert text begins with a new line char jump to second new line        
+        ++curPos;
+
+        //if insert text begins with a new line char jump to second new line
         var newlinePos;
         if( (newlinePos = text.indexOf('\n')) == 0 ) {
-            ++newlinePos;            
+            ++newlinePos;
             var subtxt = text.substr(newlinePos);
-            curPos += subtxt.indexOf('\n');            
-        }               
+            curPos += subtxt.indexOf('\n');
+        }
 
-        document.encForm.enTextarea.value = document.encForm.enTextarea.value + text;                                
-        
-        setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+        document.encForm.enTextarea.value = document.encForm.enTextarea.value + text;
+
+        setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated
         document.encForm.enTextarea.focus();
         setCaretPosition(document.encForm.enTextarea,curPos);
     }
-    
+
     function ajaxInsertTemplate(varpage) { //fetch template
-        if(varpage!= 'null'){                  
+        if(varpage!= 'null'){
           var page = "<rewrite:reWrite jspPage="InsertTemplate.do"/>";
           var params = "templateName=" + varpage + "&version=2";
           new Ajax.Request( page, {
                                     method: 'post',
                                     postBody: params,
-                                    evalScripts: true, 
+                                    evalScripts: true,
                                     onSuccess:writeToEncounterNote,
                                     onFailure: function() {
                                             alert("Inserting template " + varpage + " failed");
                                         }
                                   }
-                            );                    
+                            );
         }
-          
+
     }
-    
+
 
     function popupStart1(vheight,vwidth,varpage) {
         var page = varpage;
@@ -410,26 +410,26 @@ if (request.getParameter("casetoEncounter")==null)
         if(confirm("<bean:message key="oscarEncounter.Index.onUnbilledConfirm"/>")) {
             popupPage(700,720,'unbilled', url);
         }
-    }    
-        
-    var curWin = 0;    
-    
+    }
+
+    var curWin = 0;
+
     function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
       var page = "" + varpage;
-      name = name.replace(/\s+/g,"_"); 
+      name = name.replace(/\s+/g,"_");
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
             //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
             openWindows[name] = window.open(page, name, windowprops);
-            
-            if (openWindows[name] != null) {        
+
+            if (openWindows[name] != null) {
                 if (openWindows[name].opener == null) {
                     openWindows[name].opener = self;
                     alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
                 }
                 openWindows[name].focus();
-            }            
-    }        
-    
+            }
+    }
+
     function urlencode(str) {
         var ns = (navigator.appName=="Netscape") ? 1 : 0;
         if (ns) { return escape(str); }
@@ -694,7 +694,7 @@ function measurementLoaded(name) {
     measurementWindows.push(openWindows[name]);
 }
 
-function onClosing() {    
+function onClosing() {
     for( var idx = 0; idx < measurementWindows.length; ++idx ) {
         if( !measurementWindows[idx].closed )
             measurementWindows[idx].parentChanged = true;
@@ -732,21 +732,21 @@ document.onclick = hideAllMenus;
 
     //This object stores the key -> cmd value passed to action class and the id of the created div
     // and the value -> URL of the action class
-    var URLs = { 
+    var URLs = {
                   preventions:  "<rewrite:reWrite jspPage="displayPrevention.do?hC=009999"/>",
                   tickler:      "<rewrite:reWrite jspPage="displayTickler.do?hC=FF6600"/>",
                   Dx:           "<rewrite:reWrite jspPage="displayDisease.do?hC=5A5A5A"/>",
                   forms:        "<rewrite:reWrite jspPage="displayForms.do?hC=917611"/>",
-                  eforms:       "<rewrite:reWrite jspPage="displayEForms.do?hC=11CC00"/>",<%/*  88E900 */%> 
+                  eforms:       "<rewrite:reWrite jspPage="displayEForms.do?hC=11CC00"/>",<%/*  88E900 */%>
                   docs:         "<rewrite:reWrite jspPage="displayDocuments.do?hC=476BB3"/>",
-                  labs:         "<rewrite:reWrite jspPage="displayLabs.do?hC=A0509C"/>", <%/* 550066   */%>                         
+                  labs:         "<rewrite:reWrite jspPage="displayLabs.do?hC=A0509C"/>", <%/* 550066   */%>
                   msgs:         "<rewrite:reWrite jspPage="displayMessages.do?hC=DDDD00"/>", <% /* FF33CC */ %>
                   measurements: "<rewrite:reWrite jspPage="displayMeasurements.do?hC=344887"/>",
                   consultation: "<rewrite:reWrite jspPage="displayConsultation.do"/>"
-              };                                               
-    
-    var params = new Array("cmd=forms", "cmd=eforms", "cmd=docs", "cmd=labs", "cmd=msgs", "cmd=measurements", "cmd=tickler", 
-                            "cmd=Dx", "cmd=preventions", "cmd=consultation", "cmd=msgs+eforms+forms+docs+labs+measurements+tickler");                
+              };
+
+    var params = new Array("cmd=forms", "cmd=eforms", "cmd=docs", "cmd=labs", "cmd=msgs", "cmd=measurements", "cmd=tickler",
+                            "cmd=Dx", "cmd=preventions", "cmd=consultation", "cmd=msgs+eforms+forms+docs+labs+measurements+tickler");
 
 function loader(){
     window.focus();
@@ -755,14 +755,14 @@ function loader(){
     document.encForm.enTextarea.focus();
     document.encForm.enTextarea.value = document.encForm.enTextarea.value + "";
     document.encForm.enTextarea.scrollTop = document.encForm.enTextarea.scrollHeight;
-    
+
     <%String popUrl = request.getParameter("popupUrl");
       if (popUrl != null){           %>
       window.setTimeout("popupPage(700,900,'<%=popUrl%>')", 2);
     <%}%>
 
     <%-- Old navbar loader
-     for( var idx in URLs ) {        
+     for( var idx in URLs ) {
         var div = document.createElement("div");
         div.id = idx;
         div.className = "leftBox";
@@ -771,48 +771,48 @@ function loader(){
     }--%>
     //new navbar loader
     var navBars = new navBarLoader();
-    navBars.load(); 
+    navBars.load();
 }
 
 var updateNeeded = false;
 
 function updateDiv() {
-    
-    if( updateNeeded ) { 
+
+    if( updateNeeded ) {
         var div = $F("reloadDiv");
-        popLeftColumn(URLs[div], div, div);  
+        popLeftColumn(URLs[div], div, div);
         updateNeeded = false;
     }
-    
+
     setTimeout("updateDiv();", 1000);
 }
 
 function clickLoadDiv(e) {
     var data = $A(arguments);
-    Event.stop(e);  
-    data.shift();        
+    Event.stop(e);
+    data.shift();
     loadDiv(data[0],data[1],0);
 }
 
 function loadDiv(div,url,limit) {
-    
-    var objAjax = new Ajax.Request (                        
+
+    var objAjax = new Ajax.Request (
                             url,
                             {
-                                method: 'post', 
+                                method: 'post',
                                 evalScripts: true,
-                                /*onLoading: function() {                            
+                                /*onLoading: function() {
                                                 $(div).update("<p>Loading ...<\/p>");
                                             },*/
-                                onSuccess: function(request) {                            
+                                onSuccess: function(request) {
                                                 /*while( $(div).firstChild )
                                                     $(div).removeChild($(div).firstChild);
                                                 */
 
                                                 $(div).update(request.responseText);
                                                 //listDisplay(div,100);
-                                               
-                                           }, 
+
+                                           },
                                 onFailure: function(request) {
                                                 $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
                                             }
@@ -838,31 +838,31 @@ function loadDiv(div,url,limit) {
 
 }--%>
 
-function popLeftColumn(url,div,params) {    
+function popLeftColumn(url,div,params) {
     params = "cmd=" + params;
-    var objAjax = new Ajax.Request (                        
+    var objAjax = new Ajax.Request (
                         url,
                         {
-                            method: 'post', 
+                            method: 'post',
                             postBody: params,
                             evalScripts: true,
-                            /*onLoading: function() {                            
+                            /*onLoading: function() {
                                             $(div).update("<p>Loading ...</p>");
-                                        }, */                            
-                            onSuccess: function(request) {                            
+                                        }, */
+                            onSuccess: function(request) {
                                             while( $(div).firstChild )
                                                 $(div).removeChild($(div).firstChild);
-                                                                                             
-                                            
+
+
                                             $(div).update(request.responseText);
-                                                
+
                                             listDisplay(params);
-                                       }, 
+                                       },
                             onFailure: function(request) {
                                             $(div).innerHTML = "<h3>Error:</h3>" + request.status;
                                         }
                         }
-                           
+
                   );
 }
 
@@ -875,23 +875,23 @@ function popLeftColumn(url,div,params) {
    function listDisplay(Id, threshold) {
             if( threshold == 0 )
                 return;
-                
-            var listId = Id + "list";            
+
+            var listId = Id + "list";
             var list = $(listId);
             var items = list.getElementsByTagName('li');
-            items = $A(items);            
-            
+            items = $A(items);
+
             var topName = "img"+Id+"0";
             var midName = "img"+Id+(threshold-1);
             var lastName = "img"+Id+(items.length-1);
-            var topImage = $(topName);            
+            var topImage = $(topName);
             var midImage = $(midName);
             var lastImage = $(lastName);
             var expand;
             var expandPath = "<c:out value="${ctx}"/>/oscarEncounter/graphics/expand.gif";
             var collapsePath = "<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif";
             var transparentPath = "<c:out value="${ctx}"/>/images/clear.gif";
-            
+
             for( var idx = threshold; idx < items.length; ++idx ) {
                 if( items[idx].style.display == 'block' ) {
                     items[idx].style.display = 'none';
@@ -911,7 +911,7 @@ function popLeftColumn(url,div,params) {
 
                 Element.stopObserving(topImage, "click", imgfunc[topName]);
                 Element.stopObserving(lastImage, "click", imgfunc[lastName]);
-                
+
                 imgfunc[midName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
                 Element.observe(midImage, "click", imgfunc[midName]);
 
@@ -923,16 +923,16 @@ function popLeftColumn(url,div,params) {
                 midImage.title = "";
 
                Element.stopObserving(midImage, "click", imgfunc[midName]);
-                
+
                 imgfunc[topName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
                 Element.observe(topImage, "click", imgfunc[topName]);
-                
-                imgfunc[lastName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
-                Element.observe(lastImage, "click", imgfunc[lastName]);                
 
-            }        
-    
-    }  
+                imgfunc[lastName] = clickListDisplay.bindAsEventListener(obj,Id,threshold);
+                Element.observe(lastImage, "click", imgfunc[lastName]);
+
+            }
+
+    }
 
  function clickListDisplay(e) {
 	var data = $A(arguments);
@@ -942,7 +942,7 @@ function popLeftColumn(url,div,params) {
 
 function navBarLoader() {
     //$("leftNavbar").style.height = $("content").getHeight();
-    
+
     /*
      *is right navbar present?
      *if so work with it
@@ -950,13 +950,13 @@ function navBarLoader() {
      */
     if( $("rightNavBar") != undefined ) {
         $("rightNavBar").style.height = $("notCPP").getHeight();
-        this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 14);        
+        this.maxRightNumLines = Math.floor($("rightNavBar").getHeight() / 14);
     }
     else
         this.rightNumLines = 0;
-    
-    $("leftNavbar").style.height = "660px";    
-    this.maxLeftNumLines = Math.floor($("leftNavbar").getHeight() / 14);    
+
+    $("leftNavbar").style.height = "660px";
+    this.maxLeftNumLines = Math.floor($("leftNavbar").getHeight() / 14);
     this.arrLeftDivs = new Array();
     this.arrRightDivs = new Array();
     this.rightTotal = 0;
@@ -965,77 +965,77 @@ function navBarLoader() {
     this.rightDivs = 3;
     this.leftReported = 0;
     this.rightReported = 0;
-    
+
     //init ajax calls for all sections of the navbars and create a div for each ajax request
     this.load = function() {
-             
-            var leftNavbar = { 
+
+            var leftNavbar = {
                   preventions:  "<c:out value="${ctx}"/>/oscarEncounter/displayPrevention.do?hC=009999",
                   tickler:      "<c:out value="${ctx}"/>/oscarEncounter/displayTickler.do?hC=FF6600",
                   Dx:           "<c:out value="${ctx}"/>/oscarEncounter/displayDisease.do?hC=5A5A5A",
                   forms:        "<c:out value="${ctx}"/>/oscarEncounter/displayForms.do?hC=917611",
-                  eforms:       "<c:out value="${ctx}"/>/oscarEncounter/displayEForms.do?hC=11CC00",<%/*  88E900 */%> 
+                  eforms:       "<c:out value="${ctx}"/>/oscarEncounter/displayEForms.do?hC=11CC00",<%/*  88E900 */%>
                   docs:         "<c:out value="${ctx}"/>/oscarEncounter/displayDocuments.do?hC=476BB3",
-                  labs:         "<c:out value="${ctx}"/>/oscarEncounter/displayLabs.do?hC=A0509C", <%/* 550066   */%>                         
+                  labs:         "<c:out value="${ctx}"/>/oscarEncounter/displayLabs.do?hC=A0509C", <%/* 550066   */%>
                   msgs:         "<c:out value="${ctx}"/>/oscarEncounter/displayMessages.do?hC=DDDD00", <% /* FF33CC */ %>
                   measurements: "<c:out value="${ctx}"/>/oscarEncounter/displayMeasurements.do?hC=344887",
                   consultation: "<c:out value="${ctx}"/>/oscarEncounter/displayConsultation.do?hC="
               };
-                          
+
           var URLs = new Array();
           URLs.push(leftNavbar);
-          
-              
-        for( var j = 0; j < URLs.length; ++j ) {                                    
-            
+
+
+        for( var j = 0; j < URLs.length; ++j ) {
+
             var navbar;
-            if( j == 0 )                
-                navbar = "leftNavbar";            
-            else if( j == 1)                            
-                navbar = "rightNavBar";            
-            
-            for( idx in URLs[j] ) {                                
-                var div = document.createElement("div");            
+            if( j == 0 )
+                navbar = "leftNavbar";
+            else if( j == 1)
+                navbar = "rightNavBar";
+
+            for( idx in URLs[j] ) {
+                var div = document.createElement("div");
                 div.className = "leftBox";
                 div.style.display = "block";
                 div.id = idx;
-                $(navbar).appendChild(div); 
-                
+                $(navbar).appendChild(div);
+
                 if( navbar == "leftNavbar" )
                     this.arrLeftDivs.push(div);
                 if( navbar == "rightNavBar" )
-                    this.arrRightDivs.push(div); 
-                    
+                    this.arrRightDivs.push(div);
+
                 this.popColumn(URLs[j][idx],idx,idx, navbar, this);
             }
-            
+
         }
-    
-    
+
+
     };
-    
+
     //update each ajax div with info from request
-    this.popColumn = function (url,div,params, navBar, navBarObj) {    
+    this.popColumn = function (url,div,params, navBar, navBarObj) {
         params = "reloadURL=" + url + "&numToDisplay=6&cmd=" + params;
-        
-        var objAjax = new Ajax.Request (                        
+
+        var objAjax = new Ajax.Request (
                             url,
                             {
-                                method: 'post', 
+                                method: 'post',
                                 postBody: params,
                                 evalScripts: true,
-                                /*onLoading: function() {                            
+                                /*onLoading: function() {
                                                 $(div).update("<p>Loading ...<\/p>");
-                                            }, */                            
-                                onSuccess: function(request) {                            
+                                            }, */
+                                onSuccess: function(request) {
                                                 while( $(div).firstChild )
                                                     $(div).removeChild($(div).firstChild);
-                                                
-                                                $(div).update(request.responseText);  
 
-                                                //track ajax completions and display divs when last ajax call completes                                                
+                                                $(div).update(request.responseText);
+
+                                                //track ajax completions and display divs when last ajax call completes
                                                 //navBarObj.display(navBar,div);
-                                           }, 
+                                           },
                                 onFailure: function(request) {
                                                 $(div).innerHTML = "<h3>Error:<\/h3>" + request.status;
                                             }
@@ -1043,16 +1043,16 @@ function navBarLoader() {
 
                       );
         };
-        
+
         //format display and show divs in navbars
-        this.display = function(navBar,div) {          
-             
+        this.display = function(navBar,div) {
+
             //add number of items plus header to total
             var reported = 0;
             var numDivs = 0;
             var arrDivs;
             if( navBar == "leftNavbar" ) {
-                this.leftTotal += parseInt($F(div+"num")) + 1;                                
+                this.leftTotal += parseInt($F(div+"num")) + 1;
                 reported = ++this.leftReported;
                 numDivs = this.leftDivs;
                 arrDivs = this.arrLeftDivs;
@@ -1063,38 +1063,38 @@ function navBarLoader() {
                 numDivs = this.rightDivs;
                 arrDivs = this.arrRightDivs;
             }
-            
+
             if( reported == numDivs ) {
-                                
+
                 /*
                  * do we have more lines than permitted?
                  * if so we need to reduce display
                  */
-                var overflow = this.leftTotal - this.maxLeftNumLines;                
+                var overflow = this.leftTotal - this.maxLeftNumLines;
                 if( navBar == "leftNavbar" && overflow > 0 ) {
                     this.adjust(this.arrLeftDivs, this.leftTotal, overflow);                                    	      }
-                    
-                overflow = this.rightTotal - this.maxRightNumLines;                
+
+                overflow = this.rightTotal - this.maxRightNumLines;
                 if( navBar == "rightNavBar" && overflow > 0 )
                     this.adjust(this.arrRightDivs, this.rightTotal, overflow);
-            
+
             } //end if
         };
-        
+
         this.adjust = function(divs, total, overflow) {
-            //spread reduction across all divs weighted according to number of lines each div has            
+            //spread reduction across all divs weighted according to number of lines each div has
             var num2reduce;
             var numLines;
             var threshold;
             for( var idx = 0; idx < divs.length; ++idx ) {
                 numLines = parseInt($F(divs[idx].id + "num"));
                 num2reduce = Math.ceil(overflow * (numLines/total));
-                if( num2reduce == numLines && num2reduce > 0 ) 
+                if( num2reduce == numLines && num2reduce > 0 )
                     --num2reduce;
-                
+
                 threshold = numLines - num2reduce;
-                listDisplay(divs[idx].id, threshold);                
-            }        
+                listDisplay(divs[idx].id, threshold);
+            }
         };
 
 }
@@ -1147,10 +1147,10 @@ function grabEnter(event){
 
 function grabEnterGetTemplate(event){
 
-  
-  if(window.event && window.event.keyCode == 13){          
+
+  if(window.event && window.event.keyCode == 13){
       return false;
-  }else if (event && event.which == 13){     
+  }else if (event && event.which == 13){
       return false;
   }
 }
@@ -1199,7 +1199,7 @@ function grabEnterGetTemplate(event){
                             String winName = "Master" + bean.demographicNo;
                             String url;
                             if (vLocale.getCountry().equals("BR"))
-                                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail_ptbr";                            
+                                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail_ptbr";
                             else
                                 url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
                         %> <a href="#"
@@ -1432,7 +1432,7 @@ function grabEnterGetTemplate(event){
 								<td>
 								<div class="RowTop">
 								<div class="RowTop"><a href=#
-									onClick="popupPage(700,960,'Rx','../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
+									onClick="popupPage(700,1027,'Rx','../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
 									key="global.prescriptions" /></a></div>
 								</div>
 								</td>
@@ -1524,8 +1524,8 @@ function grabEnterGetTemplate(event){
                                     function menuAction(){
                                        var name = document.getElementById('enTemplate').value;
                                        var func = autoCompleted[name];
-                                       eval(func);     
-                                    }    
+                                       eval(func);
+                                    }
                                 new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );
                                 </script> <!-- end template --></div>
 

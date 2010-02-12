@@ -889,7 +889,7 @@ function removeSaveFeedback()  {
 					title="<bean:message key="global.unbil"/>">-<bean:message
 					key="global.billing" /></a> <% } %> <% } %> <br>
 				<%  if (!vLocale.getCountry().equals("BR")) { %> <a href=#
-					onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
+					onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
 					key="global.prescriptions" /></a><br>
 				<% } %> <a href=#
 					onClick="popupOscarCon(700,960,'<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message
@@ -1370,7 +1370,7 @@ function removeSaveFeedback()  {
 								<td>
 								<div class="RowTop">
 								<div class="RowTop"><a href=#
-									onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
+									onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
 									key="global.prescriptions" /></a></div>
 								</div>
 								</td>
