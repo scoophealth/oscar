@@ -48,6 +48,7 @@ import org.oscarehr.common.model.UserProperty;
 import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.oscarRx.util.RxUtil;
 import oscar.oscarRx.util.TimingOutCallback;
 
 public final class RxStashAction extends DispatchAction {
@@ -166,156 +167,14 @@ public final class RxStashAction extends DispatchAction {
                     bean.setStashIndex(bean.getStashSize() - 1);
                 }
 
-
-
-            //quiry mydrugref database to get a vector with all interacting drugs
-            //if effect is not null or effect is not empty string
-                //get a list of all pending prescriptions' ATC codes
-                //compare if anyone match,
-                        //if yes, get it's randomId and set an session attribute
-                        //if not, do nothing
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
             UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
             String provider = (String) request.getSession().getAttribute("user");
-            UserProperty prop = propDAO.getProp(provider, UserProperty.MYDRUGREF_ID);
-            String myDrugrefId = null;
-            if (prop != null){
-                myDrugrefId = prop.getValue();
-                System.out.println("3myDrugrefId"+myDrugrefId);
-            }
-            RxPrescriptionData.Prescription[] rxs=bean.getStash();
-            //acd contains all atccodes in stash
-            Vector acd=new Vector();
-            for(RxPrescriptionData.Prescription rxItem:rxs){
-                acd.add(rxItem.getAtcCode());
-            }
-            System.out.println("3acd="+acd);
-
-            String[] str = new String[]{"warnings_byATC,bulletins_byATC,interactions_byATC,get_guidelines"};   //NEW more efficent way of sending multiple requests at the same time.
-            Vector allInteractions = new Vector();
-            for (String command : str){
-                try{
-                    Vector v = getMyDrugrefInfo(command,  acd,myDrugrefId) ;
-                    System.out.println("2v in for loop: "+v);
-                    if (v !=null && v.size() > 0){
-                        allInteractions.addAll(v);
-                    }
-                    System.out.println("3after all.addAll(v): "+allInteractions);
-                }catch(Exception e){
-                    log2.debug("3command :"+command+" "+e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-
-
-            Vector allInteractingPairs=new Vector();
-            for (RxPrescriptionData.Prescription rxItem:rxs){
-                Vector interactedDrugs=new Vector();
-                System.out.println("3rxItem="+rxItem.getDrugName());
-                Vector uniqueDrugNameList=new Vector();
-                for(int i=0;i<allInteractions.size();i++){
-                    Hashtable hb=(Hashtable)allInteractions.get(i);
-                    String interactingAtc=(String)hb.get("atc");
-                    String interactingDrugName=(String)hb.get("drug2");
-                    String effectStr=(String)hb.get("effect");
-                    String significanceStr=(String)hb.get("significance");
-                    if(rxItem.getAtcCode().equals(interactingAtc) && effectStr!=null && effectStr.length()>0 && !effectStr.equalsIgnoreCase("N")&& !effectStr.equals(" ")){
-                        System.out.println("3interactingDrugName="+interactingDrugName);
-                        RxPrescriptionData.Prescription rrx=findRxFromDrugNameOrGN(rxs,interactingDrugName);
-                        System.out.println("3rrx.getDrugName()="+rrx.getDrugName());
-                        if(rrx!=null && !uniqueDrugNameList.contains(rrx.getDrugName())) {
-                            uniqueDrugNameList.add(rrx.getDrugName());
-                            Vector oneDrugInfo=new Vector();
-                            oneDrugInfo.add(rrx.getDrugName());
-                            oneDrugInfo.add(effectStr);
-                            oneDrugInfo.add(significanceStr);
-                            interactedDrugs.add(oneDrugInfo);
-                            System.out.println("3interactedDrugs="+interactedDrugs);
-                        }
-                    }
-                }
-
-                if(interactedDrugs.size()>0){
-                    Hashtable interactingPairs=new Hashtable();
-                    interactingPairs.put(rxItem.getRandomId(), interactedDrugs);
-                    allInteractingPairs.add(interactingPairs);
-                }
-                System.out.println("3***next rxItem***");
-            }
-            System.out.println("3allInteractingPairs="+allInteractingPairs);
-            bean.setInteractingDrugList(allInteractingPairs);
-            //request.setAttribute("abc", allInteractingPairs);
+            String retStr=RxUtil.findInterDrugStr(propDAO,provider,bean);
+            bean.setInteractingDrugList(retStr);
 
         return mapping.findForward("success");
     }
 
-        private RxPrescriptionData.Prescription findRxFromDrugNameOrGN(final RxPrescriptionData.Prescription[] rxs,String interactingDrugName){
-        RxPrescriptionData.Prescription returnRx=null;
-        for (RxPrescriptionData.Prescription rxItem:rxs){
-            if(rxItem.getDrugName().contains(interactingDrugName)){
-                returnRx=rxItem;
-            }else if(rxItem.getGenericName().contains(interactingDrugName)){
-                returnRx=rxItem;
-            }
-        }
-        return returnRx;
 
-    }
-    private Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {
-        System.out.println("3in getMyDrugrefInfo");
-        RxMyDrugrefInfoAction.removeNullFromVector(drugs);
-        Vector params = new Vector();
-        System.out.println("3command,drugs,myDrugrefId= "+command+"--"+drugs+"--"+myDrugrefId);
-        params.addElement(command);
-        params.addElement(drugs);
-        if (myDrugrefId != null && !myDrugrefId.trim().equals("")){
-            log2.debug("putting >"+myDrugrefId+ "< in the request");
-            params.addElement(myDrugrefId);
-            //params.addElement("true");
-        }
-        Vector vec = new Vector();
-        Object obj =  callWebserviceLite("Fetch",params);
-        log2.debug("RETURNED "+obj);
-        if (obj instanceof Vector){
-            System.out.println("3obj is instance of vector");
-            vec = (Vector) obj;
-            System.out.println(vec);
-        }else if(obj instanceof Hashtable){
-            System.out.println("3obj is instace of hashtable");
-            Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");
-            if (holbrook instanceof Vector){
-                System.out.println("3holbrook is instance of vector ");
-                vec = (Vector) holbrook;
-                System.out.println(vec);
-            }
-            Enumeration e = ((Hashtable) obj).keys();
-            while (e.hasMoreElements()){
-                String s = (String) e.nextElement();
-                System.out.println(s);
-                log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
-            }
-        }
-        return vec;
-    }
-
-    private static Log log2 = LogFactory.getLog(RxMyDrugrefInfoAction.class);
-    public Object callWebserviceLite(String procedureName, Vector params) throws Exception{
-        log2.debug("#CALLmyDRUGREF-"+procedureName);
-        Object object = null;
-
-        String server_url = OscarProperties.getInstance().getProperty("MY_DRUGREF_URL","http://mydrugref.org/backend/api");
-        System.out.println("server_url: "+server_url);
-        TimingOutCallback callback = new TimingOutCallback(10 * 1000);
-        try{
-            log2.debug("server_url :"+server_url);
-            XmlRpcClientLite server = new XmlRpcClientLite(server_url);
-            server.executeAsync(procedureName, params, callback);
-            object = callback.waitForResponse();
-        } catch (TimeoutException e) {
-            log2.debug("No response from server."+server_url);
-        }catch(Throwable ethrow){
-            log2.debug("Throwing error."+ethrow.getMessage());
-        }
-        return object;
-    }
 }
