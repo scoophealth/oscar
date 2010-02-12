@@ -79,17 +79,8 @@ public final class RxChoosePatientAction extends Action {
         RxChoosePatientForm frm = (RxChoosePatientForm) form;
         //     p("frm",frm.toString());
         // Setup bean
-        RxSessionBean bean;
+        RxSessionBean bean=new RxSessionBean();
 
-        if (request.getSession().getAttribute("RxSessionBean") != null) {
-            bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-
-            if ((bean.getProviderNo().trim().equals(frm.getProviderNo().trim())) || (bean.getDemographicNo() != Integer.parseInt(frm.getDemographicNo()))) {
-                bean = new RxSessionBean();
-            }
-        } else {
-            bean = new RxSessionBean();
-        }
         bean.setProviderNo(user_no);
         bean.setDemographicNo(Integer.parseInt(frm.getDemographicNo()));
 
