@@ -45,7 +45,7 @@
 	{
 		var fields = form.elements;
 
-		if (fields."functionalCentreId".value==null||fields."functionalCentreId".value=="")
+		if (fields.functionalCentreId.value==null||fields.functionalCentreId.value=="")
 		{
 			alert('Please select a functional centre.');
 			return(false);
