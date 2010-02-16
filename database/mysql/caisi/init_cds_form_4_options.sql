@@ -201,7 +201,6 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','018-04','CMH&A - Case Management');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','018-05','CMH&A - ACT Teams');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','018-06','CMH&A - Counseling and Treatment');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','018-07','CMH&A - Diversion and Court Support (Enter in CJS subcategories) (Data no longer accepted)');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','018-08','CMH&A - Early Intervention');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','018-09','CMH&A - Crisis Intervention');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','018-10','CMH&A - Supports within Housing');

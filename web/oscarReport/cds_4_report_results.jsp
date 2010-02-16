@@ -50,14 +50,38 @@
 	<tr class="genericTableHeader">
 		<td style="width:5em">CDS Category ID</td>
 		<td style="width:15em">CDS Category Description</td>
+		<td>Multi<br />Admn</td>
+		<%
+			for (int i=0; i<Cds4ReportUIBean.NUMBER_OF_COHORT_BUCKETS; i++)
+			{
+				%>
+					<td>Coh<br /><%=i%></td>
+				<%
+			}
+		%>
 	</tr>
 	<%
+		int rowCounter=0;
 		for (CdsFormOption cdsFormOption : cdsFormOptions)
 		{
+			rowCounter++;
+			String backgroundColour;
+			if (rowCounter%2==0) backgroundColour="#eeeeee";
+			else backgroundColour="#dddddd";
+				
+			String[] dataRow=cds4ReportUIBean.getDataRow(cdsFormOption);
 			%>
-				<tr class="genericTableRow">
+				<tr class="genericTableRow" style="background-color:<%=backgroundColour%>">
 					<td style="font-weight:bold"><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategory())%></td>
 					<td style="font-weight:bold"><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategoryName())%></td>
+					<%
+						for (String dataElement : dataRow)
+						{
+							%>
+								<td><%=dataElement%></td>
+							<%
+						}
+					%>
 				</tr>
 			<%
 		}
