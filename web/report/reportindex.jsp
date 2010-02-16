@@ -97,6 +97,17 @@ function ogo2() {
   popupPage(700,900,u);
 }
 
+function popupPageNew(vheight,vwidth,varpage) {
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "demographicprofile", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self;
+    }
+  }
+}
+
 function go(r) {
 //s.options[s.selectedIndex].value
   var s = document.report.provider_no.value ;
@@ -121,9 +132,9 @@ else if(r=='new') {
 	}
  }
  else if( ro == true ) {
-        popupPage(600,750,x2);
+        popupPageNew(600,750,x2);
   }else {
-	popupPage(600,750,x);
+	popupPageNew(600,750,x);
   }
 }
 function ggo(r) {
