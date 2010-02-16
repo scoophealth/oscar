@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.OcanStaffFormData;
 import org.springframework.stereotype.Repository;
 

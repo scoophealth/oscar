@@ -2738,7 +2738,7 @@ function changeNumberOfReferrals() {
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="submit" value="Submit"  onclick="document.getElementById('assessment_status').value='Complete';"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active';"/>
+				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active'; document.getElementById('completionDate').value=''"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="button" value="Cancel" onclick="history.go(-1)" />
 			</td>
