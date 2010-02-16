@@ -1,6 +1,3 @@
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','006-01','English');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','006-02','French');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','006-03','Other');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-01','Unique individuals - admitted');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-02','Unique individuals - pre-admission');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-03','Individuals- not uniquely identified');

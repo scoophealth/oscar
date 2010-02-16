@@ -1,0 +1,1 @@
+delete from CdsFormOption where cdsDataCategory like ('006-%');
