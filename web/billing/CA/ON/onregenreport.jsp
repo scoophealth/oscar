@@ -56,7 +56,6 @@
 				objFile.setOhipFilename(ohipFilename);
 				objFile.setHtmlFilename(htmlFilename);
 				objFile.readInBillingNo();
-				objFile.renameFile();
 				// 
 				String dateRange = "";
 				dateRange = " and billing_date <= '" + dateEnd + "'";
