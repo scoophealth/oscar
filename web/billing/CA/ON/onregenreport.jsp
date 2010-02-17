@@ -102,7 +102,7 @@
 						objFile.setOhipFilename(ohipFilename);
 						objFile.setHtmlFilename(htmlFilename);
 						objFile.readInBillingNo();
-						objFile.renameFile();
+						
 						// 
 						String dateRange = "";
 						dateRange = " and billing_date <= '" + dateEnd + "'";
@@ -118,7 +118,7 @@
 						objFile.writeHtml(objFile.getHtmlCode());
 						objFile.updateDisknameSum(Integer.parseInt(diskId));
  					}
-
+                                        objFile.renameFile();
 					objFile.writeFile(value);
 				}
 
