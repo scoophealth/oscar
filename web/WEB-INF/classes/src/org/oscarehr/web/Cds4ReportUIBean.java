@@ -669,6 +669,26 @@ public final class Cds4ReportUIBean {
 			return(getNotAvailableDataLine());
 		} else if ("020-04".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
+		} else if ("020-05".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-06".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-07".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-08".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-09".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-10".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-11".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-12".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-13".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
+		} else if ("020-14".equals(cdsFormOption.getCdsDataCategory())) {
+			return(getNotAvailableDataLine());
 		} else {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 			return(getNotAvailableDataLine());
