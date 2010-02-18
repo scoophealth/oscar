@@ -148,11 +148,6 @@
 		<ap-output>${clinic_address}\n${clinic_city},${clinic_postal}\n${clinic_province},Canada</ap-output>
 	</databaseap>
 	<databaseap>
-		<ap-name>clinic_address</ap-name>
-		<ap-sql>SELECT * FROM clinic</ap-sql>
-		<ap-output>${clinic_address}\n${clinic_city},${clinic_postal}\n${clinic_province},Canada</ap-output>
-	</databaseap>
-	<databaseap>
                 <ap-name>clinic_city</ap-name>
                 <ap-sql>SELECT * FROM clinic</ap-sql>
                 <ap-output>${clinic_city}</ap-output>
