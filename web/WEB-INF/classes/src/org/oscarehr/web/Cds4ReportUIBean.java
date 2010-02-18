@@ -78,10 +78,10 @@ public final class Cds4ReportUIBean {
 		public ArrayList<CdsClientForm> multipleAdmissionsAllForms = new ArrayList<CdsClientForm>();
 	}
 
-	private SingleMultiAdmissions singleMultiAdmissions;
-	private FunctionalCentre functionalCentre;
-	private GregorianCalendar startDate;
-	private GregorianCalendar endDate;
+	private SingleMultiAdmissions singleMultiAdmissions=null;
+	private FunctionalCentre functionalCentre=null;
+	private GregorianCalendar startDate=null;
+	private GregorianCalendar endDate=null;
 	
 	/**
 	 * End dates should be treated as inclusive.
@@ -105,7 +105,9 @@ public final class Cds4ReportUIBean {
 	public String getDateRangeForDisplay() 
 	{
 		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-		return(StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime())+" to "+simpleDateFormat.format(endDate.getTime())+" (exclusive)"));
+		GregorianCalendar displayEndDate=(GregorianCalendar) endDate.clone();
+		displayEndDate.add(GregorianCalendar.MONTH, -1);
+		return(StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime())+" to "+simpleDateFormat.format(displayEndDate.getTime())+" (inclusive)"));
 	}
 
 	public static List<CdsFormOption> getCdsFormOptions()
@@ -214,7 +216,7 @@ public final class Cds4ReportUIBean {
 	}
 
 	
-	public String[] getDataRow(CdsFormOption cdsFormOption) {
+	public int[] getDataRow(CdsFormOption cdsFormOption) {
 		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (get007DataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return (get009DataLine(cdsFormOption));
@@ -252,11 +254,11 @@ public final class Cds4ReportUIBean {
 		}
 	}
 
-	private String[] get007DataLine(CdsFormOption cdsFormOption) {
+	private int[] get007DataLine(CdsFormOption cdsFormOption) {
 		if ("007-01".equals(cdsFormOption.getCdsDataCategory())) {
-			String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
-			dataRow[0]=String.valueOf(singleMultiAdmissions.multipleAdmissionsLatestForms.size());
+			dataRow[0]=singleMultiAdmissions.multipleAdmissionsLatestForms.size();
 			
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 				int size = 0;
@@ -265,7 +267,7 @@ public final class Cds4ReportUIBean {
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
 				if (bucket != null) size = bucket.size();
 
-				dataRow[i+1]=String.valueOf(size);
+				dataRow[i+1]=size;
 			}
 			
 			return(dataRow);
@@ -274,30 +276,44 @@ public final class Cds4ReportUIBean {
 		} else if ("007-03".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
 		} else if ("007-04".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+
+			dataRow[0]=singleMultiAdmissions.multipleAdmissionsLatestForms.size();
+			
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				int size = 0;
+
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				if (bucket != null) size = bucket.size();
+
+				dataRow[i+1]=size;
+			}
+			
+			return(dataRow);
 		} else {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 			return(getNotAvailableDataLine());
 		}
 	}
 
-	private static String[] getNotAvailableDataLine() {
-		String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
-		for (int i=0;i<dataRow.length; i++) dataRow[i]="N/A";
+	private static int[] getNotAvailableDataLine() {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		for (int i=0;i<dataRow.length; i++) dataRow[i]=-1;
 		return(dataRow);		
 	}
 
-	private String[] getGenericLatestAnswerDataLine(CdsFormOption cdsFormOption) {
-		String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+	private int[] getGenericLatestAnswerDataLine(CdsFormOption cdsFormOption) {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 		// get multiadmissions number
-		dataRow[0]=String.valueOf(getAnswerCounts(cdsFormOption.getCdsDataCategory(), singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+		dataRow[0]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 
 		// get cohort numbers
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> cdsForms = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			dataRow[i+1]=String.valueOf(getAnswerCounts(cdsFormOption.getCdsDataCategory(), cdsForms));
+			dataRow[i+1]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), cdsForms);
 		}
 
 		return (dataRow);
@@ -317,7 +333,7 @@ public final class Cds4ReportUIBean {
 		return(totalCount);
 	}
 
-	private String[] get009DataLine(CdsFormOption cdsFormOption) {
+	private int[] get009DataLine(CdsFormOption cdsFormOption) {
 		if ("009-01".equals(cdsFormOption.getCdsDataCategory())) {
 			return(get009AgeRangeDataLine(0, 15));
 		} else if ("009-02".equals(cdsFormOption.getCdsDataCategory())) {
@@ -339,40 +355,40 @@ public final class Cds4ReportUIBean {
 		} else if ("009-10".equals(cdsFormOption.getCdsDataCategory())) {
 			return(get009AgeRangeDataLine(85, 200));
 		} else if ("009-11".equals(cdsFormOption.getCdsDataCategory())) {
-			String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 			// get multi admissions number
-			dataRow[0]=String.valueOf(get009MultipleAdmissionCountByNoAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+			dataRow[0]=get009MultipleAdmissionCountByNoAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 
 			// get cohort numbers
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-				dataRow[i+1]=String.valueOf(get009MultipleAdmissionCountByNoAge(bucket));
+				dataRow[i+1]=get009MultipleAdmissionCountByNoAge(bucket);
 			}
 			
 			return(dataRow);		
 		} else if ("009-12".equals(cdsFormOption.getCdsDataCategory())) {
-			String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
-			dataRow[0]=String.valueOf(getMultipleAdmissionCountByMinMaxAge(MinMax.MIN, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+			dataRow[0]=getMultipleAdmissionCountByMinMaxAge(MinMax.MIN, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 			populateCohortCountsByMinMaxAge(dataRow, MinMax.MIN);
 			return(dataRow);
 		} else if ("009-13".equals(cdsFormOption.getCdsDataCategory())) {
-			String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
-			dataRow[0]=String.valueOf(getMultipleAdmissionCountByMinMaxAge(MinMax.MAX, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+			dataRow[0]=getMultipleAdmissionCountByMinMaxAge(MinMax.MAX, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 			populateCohortCountsByMinMaxAge(dataRow, MinMax.MAX);
 			return(dataRow);
 		} else if ("009-14".equals(cdsFormOption.getCdsDataCategory())) {
-			String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 			// get multiple admissions
-			dataRow[0]=String.valueOf(getMultipleAdmissionCountByAvgAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+			dataRow[0]=getMultipleAdmissionCountByAvgAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 
 			// get cohorts
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-				dataRow[i+1]=String.valueOf(getMultipleAdmissionCountByAvgAge(bucket));
+				dataRow[i+1]=getMultipleAdmissionCountByAvgAge(bucket);
 			}
 
 			return(dataRow);		
@@ -382,17 +398,17 @@ public final class Cds4ReportUIBean {
 		}
 	}
 	
-	private String[] get009AgeRangeDataLine(int startAge, int endAge) {
-		String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+	private int[] get009AgeRangeDataLine(int startAge, int endAge) {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 		// get multi admissions number
-		dataRow[0]=String.valueOf(get009MultipleAdmissionCountByAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values(), startAge, endAge));
+		dataRow[0]=get009MultipleAdmissionCountByAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values(), startAge, endAge);
 
 		// get cohort numbers
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			dataRow[i+1]=String.valueOf(get009MultipleAdmissionCountByAge(bucket, startAge, endAge));
+			dataRow[i+1]=get009MultipleAdmissionCountByAge(bucket, startAge, endAge);
 		}
 		
 		return(dataRow);		
@@ -447,11 +463,11 @@ public final class Cds4ReportUIBean {
 		else throw (new IllegalStateException("okay I missed something : minMax=" + minMax + ", i1=" + i1 + ", i2=" + i2));
 	}
 
-	private void populateCohortCountsByMinMaxAge(String[] dataRow, MinMax minMax) {
+	private void populateCohortCountsByMinMaxAge(int[] dataRow, MinMax minMax) {
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			dataRow[i+1]=String.valueOf(getMultipleAdmissionCountByMinMaxAge(minMax, bucket));
+			dataRow[i+1]=getMultipleAdmissionCountByMinMaxAge(minMax, bucket);
 		}
 	}
 
@@ -474,23 +490,23 @@ public final class Cds4ReportUIBean {
 		return(avg);
 	}
 
-	private String[] getGenericAllAnswersDataLine(CdsFormOption cdsFormOption) {
-		String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+	private int[] getGenericAllAnswersDataLine(CdsFormOption cdsFormOption) {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 		// get multi admissions number
-		dataRow[0]=String.valueOf(getAnswerCounts(cdsFormOption.getCdsDataCategory(), singleMultiAdmissions.multipleAdmissionsAllForms));
+		dataRow[0]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), singleMultiAdmissions.multipleAdmissionsAllForms);
 
 		// get cohort numbers
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> cdsForms = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			dataRow[i+1]=String.valueOf(getAnswerCounts(cdsFormOption.getCdsDataCategory(), cdsForms));
+			dataRow[i+1]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), cdsForms);
 		}
 		
 		return(dataRow);		
 	}
 
-	private String[] get020DataLine(CdsFormOption cdsFormOption) {
+	private int[] get020DataLine(CdsFormOption cdsFormOption) {
 		if ("020-01".equals(cdsFormOption.getCdsDataCategory())) {
 			return(get02xQuestionAnswerCountsDataLine("baselineTotalNumberOfHospitalisedDays", "0"));
 		} else if ("020-02".equals(cdsFormOption.getCdsDataCategory())) {
@@ -509,18 +525,18 @@ public final class Cds4ReportUIBean {
 		}
 	}
 
-	private String[] get02xQuestionAnswerCountsDataLine(String question, String answerToCount) {
-		String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+	private int[] get02xQuestionAnswerCountsDataLine(String question, String answerToCount) {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 		// get multi admissions number
-		dataRow[0]=String.valueOf(get02xQuestionAnswerCounts(question, answerToCount, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+		dataRow[0]=get02xQuestionAnswerCounts(question, answerToCount, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 
 		// get cohort numbers
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			if (bucket != null) dataRow[i+1]=String.valueOf(get02xQuestionAnswerCounts(question, answerToCount, bucket));
-			else dataRow[i+1]="N/A";
+			if (bucket != null) dataRow[i+1]=get02xQuestionAnswerCounts(question, answerToCount, bucket);
+			else dataRow[i+1]=-1;
 			
 		}
 		
@@ -544,18 +560,18 @@ public final class Cds4ReportUIBean {
 	}
 
 
-	private String[] get02xQuestionSumScalarAnswersDataLine(String question) {
-		String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+	private int[] get02xQuestionSumScalarAnswersDataLine(String question) {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 		// get multi admissions number
-		dataRow[0]=String.valueOf(get02xQuestionSumScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+		dataRow[0]=get02xQuestionSumScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 
 		// get cohort numbers
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			if (bucket != null) dataRow[i+1]=String.valueOf(get02xQuestionSumScalarAnswers(question, bucket));
-			else dataRow[i+1]="N/A";
+			if (bucket != null) dataRow[i+1]=get02xQuestionSumScalarAnswers(question, bucket);
+			else dataRow[i+1]=-1;
 		}
 		
 		return(dataRow);		
@@ -583,18 +599,18 @@ public final class Cds4ReportUIBean {
 		return(totals);
 	}
 
-	private String[] get020QuestionAvgScalarDataLine(String question) {
-		String[] dataRow=new String[NUMBER_OF_DATA_ROW_COLUMNS];
+	private int[] get020QuestionAvgScalarDataLine(String question) {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
 
 		// get multi admissions number
-		dataRow[0]=String.valueOf(get020QuestionAvgScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+		dataRow[0]=get020QuestionAvgScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 
 		// get cohort numbers
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			if (bucket != null) dataRow[i+1]=String.valueOf(get020QuestionAvgScalarAnswers(question, bucket));
-			else dataRow[i+1]="N/A";
+			if (bucket != null) dataRow[i+1]=get020QuestionAvgScalarAnswers(question, bucket);
+			else dataRow[i+1]=-1;
 		}
 		
 		return(dataRow);		
@@ -629,7 +645,7 @@ public final class Cds4ReportUIBean {
 		return(avg);
 	}
 
-	private static String[] get021DataLine(CdsFormOption cdsFormOption) {
+	private static int[] get021DataLine(CdsFormOption cdsFormOption) {
 		if ("021-01".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
 		} else if ("021-02".equals(cdsFormOption.getCdsDataCategory())) {

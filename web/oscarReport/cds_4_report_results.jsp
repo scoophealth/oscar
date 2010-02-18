@@ -69,16 +69,16 @@
 			if (rowCounter%2==0) backgroundColour="#eeeeee";
 			else backgroundColour="#dddddd";
 				
-			String[] dataRow=cds4ReportUIBean.getDataRow(cdsFormOption);
+			int[] dataRow=cds4ReportUIBean.getDataRow(cdsFormOption);
 			%>
 				<tr class="genericTableRow" style="background-color:<%=backgroundColour%>">
 					<td style="font-weight:bold"><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategory())%></td>
 					<td style="font-weight:bold"><%=StringEscapeUtils.escapeHtml(cdsFormOption.getCdsDataCategoryName())%></td>
 					<%
-						for (String dataElement : dataRow)
+						for (int dataElement : dataRow)
 						{
 							%>
-								<td><%=dataElement%></td>
+								<td><%=dataElement==-1?"N/A":String.valueOf(dataElement)%></td>
 							<%
 						}
 					%>
