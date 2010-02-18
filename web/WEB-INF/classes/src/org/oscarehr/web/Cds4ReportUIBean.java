@@ -76,6 +76,9 @@ public final class Cds4ReportUIBean {
 		public HashMap<Integer, CdsClientForm> multipleAdmissionsLatestForms = new HashMap<Integer, CdsClientForm>();
 		
 		public ArrayList<CdsClientForm> multipleAdmissionsAllForms = new ArrayList<CdsClientForm>();
+
+		// this is a map where key=0-10 representing each cohort bucket., value is a collection of CdsClientForms
+		public MultiValueMap multipleAdmissionCohortBuckets = new MultiValueMap();
 	}
 
 	private SingleMultiAdmissions singleMultiAdmissions=null;
@@ -172,7 +175,16 @@ public final class Cds4ReportUIBean {
 			logger.debug("cds form id="+form.getId()+", admission="+admission.getId()+", cohort bucket="+bucket);
 		}
 
-		return (singleMultiAdmissions);
+		// sort multiple admissions into cohort buckets
+		for (CdsClientForm form : singleMultiAdmissions.multipleAdmissionsAllForms) {
+			Admission admission = admissionMap.get(form.getAdmissionId());
+			int bucket = getCohortBucket(admission);
+			singleMultiAdmissions.multipleAdmissionCohortBuckets.put(bucket, form);
+			
+			logger.debug("cds form id="+form.getId()+", admission="+admission.getId()+", cohort bucket="+bucket);
+		}
+
+		return(singleMultiAdmissions);
 	}
 
 	private static HashMap<Integer, Admission> getAdmissionMap(String functionalCentreId, GregorianCalendar startDate, GregorianCalendar endDate) {
@@ -207,47 +219,48 @@ public final class Cds4ReportUIBean {
 		int years = MiscUtils.calculateYearDifference(dischargeDate, admission.getAdmissionDate());
 		if (years > 10) years = 10; // limit everything above 10 years to the 10 year bucket.
 
-		return (years);
+		return(years);
 	}
 
 	private static CdsClientForm getNewerForm(CdsClientForm form1, CdsClientForm form2) {
-		if (form1.getCreated().after(form2.getCreated())) return (form1);
-		else return (form2);
+		if (form1.getCreated().after(form2.getCreated())) return(form1);
+		else return(form2);
 	}
 
 	
 	public int[] getDataRow(CdsFormOption cdsFormOption) {
-		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (get007DataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return (get009DataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("10a-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("10b-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("011-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("012-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("013-")) return (getGenericAllAnswersDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("014-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("015-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("016-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("16a-")) return (getGenericAllAnswersDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("017-")) return (getGenericAllAnswersDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("018-")) return (getGenericAllAnswersDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("019-")) return (getGenericAllAnswersDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("020-")) return (get020DataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("021-")) return (get021DataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("022-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("023-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("024-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("24a-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("025-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("25a-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("026-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("027-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("028-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("029-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("29a-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("030-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("031-")) return (getGenericLatestAnswerDataLine(cdsFormOption));
+		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return(get007DataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("07a-")) return(getNotAvailableDataLine());
+		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return(get009DataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("10a-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("10b-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("011-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("012-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("013-")) return(getGenericAllAnswersDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("014-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("015-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("016-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("16a-")) return(getGenericAllAnswersDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("017-")) return(getGenericAllAnswersDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("018-")) return(getGenericAllAnswersDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("019-")) return(getGenericAllAnswersDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("020-")) return(get020DataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("021-")) return(get021DataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("022-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("023-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("024-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("24a-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("025-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("25a-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("026-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("027-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("028-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("029-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("29a-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("030-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("031-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
 		else {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 			return(getNotAvailableDataLine());
@@ -266,6 +279,7 @@ public final class Cds4ReportUIBean {
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
 				if (bucket != null) size = bucket.size();
+				else size=0;
 
 				dataRow[i+1]=size;
 			}
@@ -284,8 +298,9 @@ public final class Cds4ReportUIBean {
 				int size = 0;
 
 				@SuppressWarnings("unchecked")
-				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.multipleAdmissionCohortBuckets.getCollection(i);
 				if (bucket != null) size = bucket.size();
+				else size=0;
 
 				dataRow[i+1]=size;
 			}
@@ -316,7 +331,7 @@ public final class Cds4ReportUIBean {
 			dataRow[i+1]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), cdsForms);
 		}
 
-		return (dataRow);
+		return(dataRow);
 	}
 
 	private static int getAnswerCounts(String cdsAnswer, Collection<CdsClientForm> cdsForms) {
@@ -455,11 +470,11 @@ public final class Cds4ReportUIBean {
 	}
 
 	private static Integer nullSafeMinMax(MinMax minMax, Integer i1, Integer i2) {
-		if (i1 == null) return (i2);
-		if (i2 == null) return (i1);
+		if (i1 == null) return(i2);
+		if (i2 == null) return(i1);
 
-		if (minMax == MinMax.MAX) return (Math.max(i1.intValue(), i2.intValue()));
-		else if (minMax == MinMax.MIN) return (Math.min(i1.intValue(), i2.intValue()));
+		if (minMax == MinMax.MAX) return(Math.max(i1.intValue(), i2.intValue()));
+		else if (minMax == MinMax.MIN) return(Math.min(i1.intValue(), i2.intValue()));
 		else throw (new IllegalStateException("okay I missed something : minMax=" + minMax + ", i1=" + i1 + ", i2=" + i2));
 	}
 
@@ -658,5 +673,17 @@ public final class Cds4ReportUIBean {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 			return(getNotAvailableDataLine());
 		}
+	}
+	
+	public static int getCohortTotal(int[] dataRow)
+	{
+		int total=0;
+		
+		for (int i=1; i<dataRow.length; i++)
+		{
+			if (dataRow[i]!=-1) total=total+dataRow[i];
+		}
+		
+		return(total);
 	}
 }

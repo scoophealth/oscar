@@ -59,6 +59,7 @@
 				<%
 			}
 		%>
+		<td>Coh<br />Total</td>
 	</tr>
 	<%
 		int rowCounter=0;
@@ -82,6 +83,7 @@
 							<%
 						}
 					%>
+					<td><%=Cds4ReportUIBean.getCohortTotal(dataRow)%></td>
 				</tr>
 			<%
 		}
