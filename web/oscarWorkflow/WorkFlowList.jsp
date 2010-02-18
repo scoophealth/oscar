@@ -174,7 +174,7 @@
 				<td><%=flow.getState(""+h.get("current_state"))%></td>
 				<td><%=gestAge%></td>
 				<td><oscar:nextAppt
-					demographicNo="<%=(String) h.get("demographic_no")%>" /></td>
+					demographicNo='<%=(String) h.get("demographic_no")%>' /></td>
 			</tr>
 			<%}%>
 		</table>

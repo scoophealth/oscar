@@ -36,7 +36,7 @@
 </security:oscarSec>
 
 <security:oscarSec roleName="<%=roleName$%>"
-	objectName="<%="_demographic$"+demographic$%>" rights="o"
+	objectName='<%="_demographic$"+demographic$%>' rights="o"
 	reverse="<%=false%>">
 You have no rights to access the data!
 <% response.sendRedirect("../noRights.html"); %>
