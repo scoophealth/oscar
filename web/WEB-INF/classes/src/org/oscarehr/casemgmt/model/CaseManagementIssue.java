@@ -37,6 +37,7 @@ import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.TimeClearedHashMap;
@@ -48,6 +49,7 @@ public class CaseManagementIssue extends BaseObject {
 	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
 	private static Map<String, Boolean> writeAccessCache=Collections.synchronizedMap(new TimeClearedHashMap<String, Boolean>(DateUtils.MILLIS_PER_MINUTE, DateUtils.MILLIS_PER_MINUTE));
+	private RoleProgramAccessDAO roleProgramAccessDAO=(RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
 	
 	protected Long id;
 	protected String demographic_no;
@@ -253,8 +255,8 @@ public class CaseManagementIssue extends BaseObject {
 	    String issueRole = getIssue().getRole().toLowerCase();
 	    ProgramAccess pa = null;
 
-	    // write
-	    pa = programAccessMap.get("write " + issueRole + " issues");
+	    String accessName="write " + issueRole + " issues";
+	    pa = programAccessMap.get(accessName);
 	    if (pa != null) {
 	    	if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
 	    		return(true);
@@ -265,6 +267,10 @@ public class CaseManagementIssue extends BaseObject {
 	    	}
 	    }
 	    
+	    //global default role access
+		if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
+				return(true);
+		}
 	    return(false);
     }
 	

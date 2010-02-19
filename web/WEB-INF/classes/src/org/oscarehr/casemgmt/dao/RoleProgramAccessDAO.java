@@ -40,4 +40,9 @@ public class RoleProgramAccessDAO extends HibernateDaoSupport {
         String q = "from DefaultRoleAccess da where da.caisi_role.id=?";
         return getHibernateTemplate().find(q, roleId);
     }
+    
+    public boolean hasAccess(String accessName, Long roleId) {
+    	String q = "from DefaultRoleAccess da where da.caisi_role.id=" + roleId+" and da.access_type.Name= ?";	
+    	return getHibernateTemplate().find(q, accessName).isEmpty()?false:true;
+    }
 }
