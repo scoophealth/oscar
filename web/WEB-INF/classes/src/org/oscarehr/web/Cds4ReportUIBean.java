@@ -659,17 +659,18 @@ public final class Cds4ReportUIBean {
 		if ("021-01".equals(cdsFormOption.getCdsDataCategory())) {
 			int[] dataRow=getNotAvailableDataLine();
 
-			// key = clientId, value = # of hospital admissions
-			AccumulatorMap<Integer> multipleAdmissionHospitalisations=new AccumulatorMap<Integer>();
-			for (CdsClientForm form : singleMultiAdmissions.multipleAdmissionsAllForms)
-			{
-				List<CdsHospitalisationDays> hospitalisationDays=getHopitalisationDaysDuringAdmission(form);
-				multipleAdmissionHospitalisations.increment(form.getClientId(), hospitalisationDays.size());
-			}
-			
 			// get multi admissions number
+			AccumulatorMap<Integer> multipleAdmissionHospitalisations=getCdsHospitalisationDaysDuringAdmission(singleMultiAdmissions.multipleAdmissionsAllForms);
 			dataRow[0]=multipleAdmissionHospitalisations.countInstancesOfValue(0);
 			
+			// get cohort numbers
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				AccumulatorMap<Integer> singleAdmissionHospitalisations=getCdsHospitalisationDaysDuringAdmission(bucket);
+				dataRow[i+1]=singleAdmissionHospitalisations.countInstancesOfValue(0);
+			}
+
 			return(dataRow);
 		} else if ("021-02".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
@@ -731,6 +732,23 @@ public final class Cds4ReportUIBean {
 		}
 		
 		return(results);
+	}
+	
+	private AccumulatorMap<Integer> getCdsHospitalisationDaysDuringAdmission(Collection<CdsClientForm> forms)
+	{
+		// key = clientId, value = # of hospital admissions
+		AccumulatorMap<Integer> admissionHospitalisations=new AccumulatorMap<Integer>();
+		
+		if (forms!=null)
+		{
+			for (CdsClientForm form : forms)
+			{
+				List<CdsHospitalisationDays> hospitalisationDays=getHopitalisationDaysDuringAdmission(form);
+				admissionHospitalisations.increment(form.getClientId(), hospitalisationDays.size());
+			}
+		}
+		
+		return(admissionHospitalisations);
 	}
 	
 	public static int getCohortTotal(int[] dataRow)
