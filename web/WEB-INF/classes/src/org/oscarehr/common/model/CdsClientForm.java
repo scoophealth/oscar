@@ -40,7 +40,8 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 	private Integer admissionId=null;
 	private Integer clientAge=null;
 	
-	public Integer getId() {
+	@Override
+    public Integer getId() {
 		return id;
 	}
 
@@ -112,7 +113,8 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 		}
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return (id != null ? id.hashCode() : 0);
 	}
 	

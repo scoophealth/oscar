@@ -38,11 +38,14 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
+import org.oscarehr.common.dao.CdsHospitalisationDaysDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;
+import org.oscarehr.common.model.CdsHospitalisationDays;
 import org.oscarehr.common.model.FunctionalCentre;
+import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -57,6 +60,7 @@ public final class Cds4ReportUIBean {
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	private static CdsHospitalisationDaysDao cdsHospitalisationDaysDao = (CdsHospitalisationDaysDao) SpringUtils.getBean("cdsHospitalisationDaysDao");
 
 	public static final int NUMBER_OF_COHORT_BUCKETS = 11;
 	private static final int NUMBER_OF_DATA_ROW_COLUMNS=NUMBER_OF_COHORT_BUCKETS+1;
@@ -81,6 +85,8 @@ public final class Cds4ReportUIBean {
 		public MultiValueMap multipleAdmissionCohortBuckets = new MultiValueMap();
 	}
 
+	/** key=admissionId, value=admission */
+	private HashMap<Integer, Admission> admissionMap = null;
 	private SingleMultiAdmissions singleMultiAdmissions=null;
 	private FunctionalCentre functionalCentre=null;
 	private GregorianCalendar startDate=null;
@@ -97,7 +103,9 @@ public final class Cds4ReportUIBean {
 		
 		functionalCentre=functionalCentreDao.find(functionalCentreId);
 		
-		singleMultiAdmissions = getAdmissionsSortedSingleMulti(functionalCentreId, startDate, endDate);
+		admissionMap=getAdmissionMap(functionalCentreId, startDate, endDate);
+		
+		singleMultiAdmissions = getAdmissionsSortedSingleMulti(startDate, endDate);
 	}
 	
 	public String getFunctionalCentreDescription()
@@ -118,15 +126,13 @@ public final class Cds4ReportUIBean {
 		return(cdsFormOptionDao.findByVersion("4"));
 	}
 	
-	private static SingleMultiAdmissions getAdmissionsSortedSingleMulti(String functionalCentreAccountId, GregorianCalendar startDate, GregorianCalendar endDate) {
+	private SingleMultiAdmissions getAdmissionsSortedSingleMulti(GregorianCalendar startDate, GregorianCalendar endDate) {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDate.getTime());
 		logger.debug("valid cds form count : "+cdsForms.size());
 		
-		HashMap<Integer, Admission> admissionMap = getAdmissionMap(functionalCentreAccountId, startDate, endDate);
-
 		// sort into single and multiple admissions
 		for (CdsClientForm form : cdsForms) {
 			logger.debug("valid cds form, id="+form.getId());
@@ -268,9 +274,9 @@ public final class Cds4ReportUIBean {
 	}
 
 	private int[] get007DataLine(CdsFormOption cdsFormOption) {
-		if ("007-01".equals(cdsFormOption.getCdsDataCategory())) {
-			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		int[] dataRow=getNotAvailableDataLine();
 
+		if ("007-01".equals(cdsFormOption.getCdsDataCategory())) {
 			dataRow[0]=singleMultiAdmissions.multipleAdmissionsLatestForms.size();
 			
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
@@ -282,16 +288,10 @@ public final class Cds4ReportUIBean {
 				else size=0;
 
 				dataRow[i+1]=size;
-			}
-			
-			return(dataRow);
+			}			
 		} else if ("007-02".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
 		} else if ("007-03".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
 		} else if ("007-04".equals(cdsFormOption.getCdsDataCategory())) {
-			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
-
 			dataRow[0]=singleMultiAdmissions.multipleAdmissionsLatestForms.size();
 			
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
@@ -304,12 +304,11 @@ public final class Cds4ReportUIBean {
 
 				dataRow[i+1]=size;
 			}
-			
-			return(dataRow);
 		} else {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
-			return(getNotAvailableDataLine());
 		}
+
+		return(dataRow);
 	}
 
 	private static int[] getNotAvailableDataLine() {
@@ -319,7 +318,7 @@ public final class Cds4ReportUIBean {
 	}
 
 	private int[] getGenericLatestAnswerDataLine(CdsFormOption cdsFormOption) {
-		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		int[] dataRow=getNotAvailableDataLine();
 
 		// get multiadmissions number
 		dataRow[0]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), singleMultiAdmissions.multipleAdmissionsLatestForms.values());
@@ -370,7 +369,7 @@ public final class Cds4ReportUIBean {
 		} else if ("009-10".equals(cdsFormOption.getCdsDataCategory())) {
 			return(get009AgeRangeDataLine(85, 200));
 		} else if ("009-11".equals(cdsFormOption.getCdsDataCategory())) {
-			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+			int[] dataRow=getNotAvailableDataLine();
 
 			// get multi admissions number
 			dataRow[0]=get009MultipleAdmissionCountByNoAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
@@ -384,17 +383,17 @@ public final class Cds4ReportUIBean {
 			
 			return(dataRow);		
 		} else if ("009-12".equals(cdsFormOption.getCdsDataCategory())) {
-			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+			int[] dataRow=getNotAvailableDataLine();
 			dataRow[0]=getMultipleAdmissionCountByMinMaxAge(MinMax.MIN, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 			populateCohortCountsByMinMaxAge(dataRow, MinMax.MIN);
 			return(dataRow);
 		} else if ("009-13".equals(cdsFormOption.getCdsDataCategory())) {
-			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+			int[] dataRow=getNotAvailableDataLine();
 			dataRow[0]=getMultipleAdmissionCountByMinMaxAge(MinMax.MAX, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 			populateCohortCountsByMinMaxAge(dataRow, MinMax.MAX);
 			return(dataRow);
 		} else if ("009-14".equals(cdsFormOption.getCdsDataCategory())) {
-			int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+			int[] dataRow=getNotAvailableDataLine();
 
 			// get multiple admissions
 			dataRow[0]=getMultipleAdmissionCountByAvgAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
@@ -414,7 +413,7 @@ public final class Cds4ReportUIBean {
 	}
 	
 	private int[] get009AgeRangeDataLine(int startAge, int endAge) {
-		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		int[] dataRow=getNotAvailableDataLine();
 
 		// get multi admissions number
 		dataRow[0]=get009MultipleAdmissionCountByAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values(), startAge, endAge);
@@ -506,7 +505,7 @@ public final class Cds4ReportUIBean {
 	}
 
 	private int[] getGenericAllAnswersDataLine(CdsFormOption cdsFormOption) {
-		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		int[] dataRow=getNotAvailableDataLine();
 
 		// get multi admissions number
 		dataRow[0]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), singleMultiAdmissions.multipleAdmissionsAllForms);
@@ -541,7 +540,7 @@ public final class Cds4ReportUIBean {
 	}
 
 	private int[] get02xQuestionAnswerCountsDataLine(String question, String answerToCount) {
-		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		int[] dataRow=getNotAvailableDataLine();
 
 		// get multi admissions number
 		dataRow[0]=get02xQuestionAnswerCounts(question, answerToCount, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
@@ -574,7 +573,7 @@ public final class Cds4ReportUIBean {
 
 
 	private int[] get02xQuestionSumScalarAnswersDataLine(String question) {
-		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		int[] dataRow=getNotAvailableDataLine();
 
 		// get multi admissions number
 		dataRow[0]=get02xQuestionSumScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
@@ -612,7 +611,7 @@ public final class Cds4ReportUIBean {
 	}
 
 	private int[] get020QuestionAvgScalarDataLine(String question) {
-		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		int[] dataRow=getNotAvailableDataLine();
 
 		// get multi admissions number
 		dataRow[0]=get020QuestionAvgScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values());
@@ -656,9 +655,22 @@ public final class Cds4ReportUIBean {
 		return(avg);
 	}
 
-	private static int[] get021DataLine(CdsFormOption cdsFormOption) {
+	private int[] get021DataLine(CdsFormOption cdsFormOption) {
 		if ("021-01".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			int[] dataRow=getNotAvailableDataLine();
+
+			// key = clientId, value = # of hospital admissions
+			AccumulatorMap<Integer> multipleAdmissionHospitalisations=new AccumulatorMap<Integer>();
+			for (CdsClientForm form : singleMultiAdmissions.multipleAdmissionsAllForms)
+			{
+				List<CdsHospitalisationDays> hospitalisationDays=getHopitalisationDaysDuringAdmission(form);
+				multipleAdmissionHospitalisations.increment(form.getClientId(), hospitalisationDays.size());
+			}
+			
+			// get multi admissions number
+			dataRow[0]=multipleAdmissionHospitalisations.countInstancesOfValue(0);
+			
+			return(dataRow);
 		} else if ("021-02".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
 		} else if ("021-03".equals(cdsFormOption.getCdsDataCategory())) {
@@ -689,6 +701,36 @@ public final class Cds4ReportUIBean {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 			return(getNotAvailableDataLine());
 		}
+	}
+	
+	private List<CdsHospitalisationDays> getHopitalisationDaysDuringAdmission(CdsClientForm form)
+	{
+		ArrayList<CdsHospitalisationDays> results=new ArrayList<CdsHospitalisationDays>();
+		
+		Admission admission=admissionMap.get(form.getAdmissionId());
+		List<CdsHospitalisationDays> allHospitalDays=cdsHospitalisationDaysDao.findByClientId(form.getClientId());
+		for (CdsHospitalisationDays temp : allHospitalDays)
+		{
+			// if the person was admitted to a hospital after admission to the program.
+			if (temp.getAdmitted().after(admission.getAdmissionCalendar()))
+			{
+				// if the person hasn't been discharged from hospital yet or if the person hasn't been discharged from the program yet (either case means it's a valid hosptialistion instance)
+				if (temp.getDischarged()==null || admission.getDischargeCalendar()==null)
+				{
+					results.add(temp);
+					break;
+				}
+				
+				// or if the hospital discharge date is before the program discharge date
+				if (temp.getDischarged().before(admission.getDischargeCalendar()))
+				{
+					results.add(temp);
+					break;					
+				}
+			}
+		}
+		
+		return(results);
 	}
 	
 	public static int getCohortTotal(int[] dataRow)

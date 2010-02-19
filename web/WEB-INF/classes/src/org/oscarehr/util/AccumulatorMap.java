@@ -68,4 +68,22 @@ public class AccumulatorMap<K> extends java.util.TreeMap<K, Integer> {
             increment(entry.getKey(), entry.getValue());
         }
     }
+    
+    /**
+     * This method will count how many times the value appears in the map.
+     * As an example, to count the number of entries which have an accumulated value of 2.
+     * Note for this number to be accurate for values of 0, you must enter 0 into the map,
+     * null doesn't work nor if you forget to put a key/value entry in, in the first place. 
+     */
+    public int countInstancesOfValue(int value)
+    {
+    	int count=0;
+    	
+    	for (int temp : values())
+    	{
+    		if (temp==value) count++;
+    	}
+    	
+    	return(count);
+    }
 }
