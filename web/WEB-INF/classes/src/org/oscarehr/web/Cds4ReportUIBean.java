@@ -550,9 +550,7 @@ public final class Cds4ReportUIBean {
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			if (bucket != null) dataRow[i+1]=get02xQuestionAnswerCounts(question, answerToCount, bucket);
-			else dataRow[i+1]=-1;
-			
+			dataRow[i+1]=get02xQuestionAnswerCounts(question, answerToCount, bucket);
 		}
 		
 		return(dataRow);		
@@ -585,8 +583,7 @@ public final class Cds4ReportUIBean {
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			if (bucket != null) dataRow[i+1]=get02xQuestionSumScalarAnswers(question, bucket);
-			else dataRow[i+1]=-1;
+			dataRow[i+1]=get02xQuestionSumScalarAnswers(question, bucket);
 		}
 		
 		return(dataRow);		
@@ -624,8 +621,7 @@ public final class Cds4ReportUIBean {
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
 			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-			if (bucket != null) dataRow[i+1]=get020QuestionAvgScalarAnswers(question, bucket);
-			else dataRow[i+1]=-1;
+			dataRow[i+1]=get020QuestionAvgScalarAnswers(question, bucket);
 		}
 		
 		return(dataRow);		
@@ -665,29 +661,29 @@ public final class Cds4ReportUIBean {
 			return(getNotAvailableDataLine());
 		} else if ("021-02".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-03".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-03".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-04".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-04".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-05".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-05".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-06".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-06".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-07".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-07".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-08".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-08".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-09".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-09".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-10".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-10".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-11".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-11".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-12".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-12".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-13".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-13".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
-		} else if ("020-14".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("021-14".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
 		} else {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
