@@ -450,6 +450,12 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
     	this.writtenDate = writtenDate;
     }
 
+        public boolean isExternal(){//test if prescription is external
+            if(outsideProviderName==null || outsideProviderName.trim().length()==0 || outsideProviderOhip==null || outsideProviderOhip.trim().length()==0)
+                return false;
+            else
+                return true;
+        }
 	public String getOutsideProviderName() {
     	return outsideProviderName;
     }
