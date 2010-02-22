@@ -691,7 +691,7 @@ function prepareExtraFields(cpp,exts) {
 function openAnnotation() {
     var atbname = document.getElementById('annotation_attrib').value;
     var data = $A(arguments);
-    var addr = "/oscar/annotation/annotation.jsp?atbname="+atbname+"&table_id="+data[1]+"&display="+data[2]+"&demo="+data[3];
+    var addr = ctx+"/annotation/annotation.jsp?atbname="+atbname+"&table_id="+data[1]+"&display="+data[2]+"&demo="+data[3];
     window.open(addr, "anwin", "width=400,height=250");
     Event.stop(data[0]);
 }
