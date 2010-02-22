@@ -165,7 +165,7 @@ public class EDocUtil extends SqlUtilBaseS {
         runPreparedSql(preparedSQL, param);
         String document_no = getLastDocumentNo();
         String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "')";
-        System.out.println("add ctl_document: " + ctlDocumentSql);
+        System.out.println("in addDocumentSQL ,add ctl_document: " + ctlDocumentSql);
         runSQL(ctlDocumentSql);
         return document_no;
     }
@@ -797,7 +797,7 @@ public static String getLastDocumentDesc() {
 
     }
 
-    //get tableId from noteId
+    //get tableId from noteId when table_name is document
     public static Long getTableIdFromNoteId(Long noteId){
       //  System.out.println("noteIdVal="+noteId);
         String getTableIdSql = "select table_id from casemgmt_note_link where table_name=5 and note_id=" + noteId;
@@ -850,22 +850,6 @@ public static String getLastDocumentDesc() {
         return doc;
     }
 
-    public static String typeAnnotation(Long noteId){
-        String getDocIdSql = "select annotation from casemgmt_note where note_id=" + noteId;
-      //  System.out.println("getDocIdSql="+getDocIdSql);
-        String retStr="";
-        try {
-            ResultSet rs = getSQL(getDocIdSql);
-            if (!rs.first()) {
-                return retStr;//if the noteId is not in casemgmt_note tale.
-            } else{
-             //   System.out.println("rs.getstring="+rs.getString("annotation"));
-                retStr=rs.getString("annotation");
-            }
-        } catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
-        return retStr;
-    }
+
 }
 
