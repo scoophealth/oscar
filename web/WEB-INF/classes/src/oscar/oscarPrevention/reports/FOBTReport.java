@@ -54,11 +54,14 @@ import oscar.util.UtilDateUtilities;
  */
 public class FOBTReport implements PreventionReport{
     private static Log log = LogFactory.getLog(FOBTReport.class);
+
+
     /** Creates a new instance of MammogramReport */
     public FOBTReport() {
     }
     
     public Hashtable runReport(ArrayList list,Date asofDate){
+        
         int inList = 0;
         double done= 0,doneWithGrace = 0;
         ArrayList returnReport = new ArrayList();
@@ -74,6 +77,7 @@ public class FOBTReport implements PreventionReport{
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
+             Date prevDate = null;
              if(ineligible(prevs) || colonoscopywith5(colonoscopys,asofDate)){
                 prd.rank = 5;
                 prd.lastDate = "------"; 
@@ -91,7 +95,7 @@ public class FOBTReport implements PreventionReport{
                 Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String prevDateStr = (String) h.get("prevention_date");
-                Date prevDate = null;
+                
                 try{
                    prevDate = (java.util.Date)formatter.parse(prevDateStr);
                 }catch (Exception e){}
@@ -113,7 +117,7 @@ public class FOBTReport implements PreventionReport{
                 cal2.add(Calendar.MONTH,-6);
                 Date cutoffDate2 = cal2.getTime();
                 
-                log.debug("cut 1 "+cutoffDate.toString()+ " cut 2 "+cutoffDate2.toString());
+                log.info("cut 1 "+cutoffDate.toString()+ " cut 2 "+cutoffDate2.toString());
                
                 // if prevDate is less than as of date and greater than 2 years prior 
                 Calendar bonusEl = Calendar.getInstance();
@@ -122,7 +126,7 @@ public class FOBTReport implements PreventionReport{
                 Date bonusStartDate = bonusEl.getTime();
                 
                 log.debug("\n\n\n prevDate "+prevDate);
-                log.debug("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
+                log.debug("bonusEl date "+bonusStartDate+ " "+bonusStartDate.before(prevDate));
                 log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
                 String result = pd.getExtValue((String)h.get("id"), "result");
 
@@ -181,7 +185,7 @@ public class FOBTReport implements PreventionReport{
                    //done++;
                 }
              }
-             letterProcessing( prd,"FOBF",asofDate);
+             letterProcessing( prd,"FOBF",asofDate,prevDate);
              returnReport.add(prd);
              
           }
@@ -276,9 +280,24 @@ public class FOBTReport implements PreventionReport{
    String PHONE1 = "P1";
    String CALLFU = "Follow Up";
   
-   private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate){
+   private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate, Date prevDate){
        if (prd != null){
-          if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
+          boolean inclUpToDate = false;
+          if( prd.state.equals("Up to date") ) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(asofDate);
+            cal.add(Calendar.YEAR, -2);
+            Date dueDate = cal.getTime();                
+            cal.add(Calendar.MONTH,-6);
+            Date cutoffDate = cal.getTime();
+
+            if( (dueDate.after(prevDate) && cutoffDate.before(prevDate)) || cutoffDate.after(prevDate) ) {
+                inclUpToDate = true;
+            }
+          }
+           
+           if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue") || inclUpToDate ){
+
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
