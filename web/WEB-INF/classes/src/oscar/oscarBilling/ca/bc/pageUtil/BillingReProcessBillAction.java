@@ -34,6 +34,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -56,8 +58,9 @@ import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.SqlUtils;
 import oscar.util.StringUtils;
 
-public class BillingReProcessBillAction
-    extends Action {
+public class BillingReProcessBillAction extends Action {
+    private static Log _log = LogFactory.getLog(BillingReProcessBillAction.class);
+
   //Misc misc = new Misc();
   MSPReconcile msp = new MSPReconcile();
   public ActionForward execute(ActionMapping mapping,
@@ -77,12 +80,12 @@ public class BillingReProcessBillAction
     
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
     BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO"); 
-    System.out.println("RETRIEVING Using "+billingmasterNo);
+    _log.debug("RETRIEVING Using "+billingmasterNo);
     Billingmaster billingmaster = billingmasterDAO.getBillingMasterByBillingMasterNo(billingmasterNo);
     Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
     
     
-    System.out.println("type "+bill.getBillingtype());
+    _log.debug("type "+bill.getBillingtype());
 
 
     BillingFormData billform = new BillingFormData();
@@ -239,7 +242,7 @@ public class BillingReProcessBillAction
       String codePrice = "";
       if (codeRecord != null && codeRecord.length > 0) {
           codePrice = codeRecord[0];
-          System.out.println("codePrice=" + codePrice);
+          _log.debug("codePrice=" + codePrice);
       }
 
       if("E".equals(payment_mode)){
@@ -249,7 +252,10 @@ public class BillingReProcessBillAction
       double dblBillAmount = Double.parseDouble(codePrice);
       double dblUnit = Double.parseDouble(billingUnit);
       double amtTemp = dblBillAmount * dblUnit;
-      BigDecimal bdFee = new BigDecimal(amtTemp).setScale(2,RoundingMode.HALF_UP);
+      BigDecimal bdFee = new BigDecimal(""+amtTemp).setScale(2,RoundingMode.HALF_UP);
+
+   
+
       billingServicePrice = bdFee.toString();
     } catch(NumberFormatException e){
       e.printStackTrace();
@@ -311,12 +317,12 @@ public class BillingReProcessBillAction
         billingmaster.setWcbId(Integer.parseInt(request.getParameter("WCBid")));
         }catch(Exception e){}
         bill.setProviderNo(providerNo);
-        System.out.println("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo());
+        _log.debug("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo()+" --- "+billingmaster.wcbId);
         billingmasterDAO.update(billingmaster);
         billingmasterDAO.update(bill);
         
-    System.out.println("type 2"+bill.getBillingtype());
-        System.out.println("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
+        _log.debug("type 2"+bill.getBillingtype());
+        _log.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo()+" --- "+billingmaster.wcbId);
         
         try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -340,7 +346,7 @@ public class BillingReProcessBillAction
         dao.createBillingHistoryArchive(billingmasterNo);
       }
       if (secondSQL != null) {
-        System.out.println(secondSQL);
+        _log.debug(secondSQL);
         db.RunSQL(secondSQL);
       }
 
@@ -357,7 +363,7 @@ public class BillingReProcessBillAction
       }
     }
     catch (SQLException e3) {
-      System.out.println(e3.getMessage());
+      _log.info(e3.getMessage());
     }
 
     request.setAttribute("billing_no", billingmasterNo);
@@ -399,7 +405,7 @@ public class BillingReProcessBillAction
    */
   public String convertDate8Char(String s) {
     String sdate = "00000000", syear = "", smonth = "", sday = "";
-    System.out.println("s=" + s);
+    _log.debug("s=" + s);
     if (s != null) {
 
       if (s.indexOf("-") != -1) {
@@ -416,13 +422,13 @@ public class BillingReProcessBillAction
           sday = "0" + sday;
         }
 
-        System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
+        _log.debug("Year" + syear + " Month" + smonth + " Day" + sday);
         sdate = syear + smonth + sday;
 
       }else {
         sdate = s;
       }
-      System.out.println("sdate:" + sdate);
+      _log.debug("sdate:" + sdate);
     }else {
       sdate = "00000000";
 
