@@ -34,30 +34,6 @@ if(session.getValue("user") == null)
   String curUser_no;
   curUser_no = (String) session.getAttribute("user");
    String tite = (String) request.getAttribute("provider.title");
- //  Enumeration em=request.getAttributeNames();
- /*  while(em.hasMoreElements()){
-       String s=(String)em.nextElement();
-       System.out.println("next attribute ="+s);
-       try{
-       String ss=(String)request.getAttribute(s);
-       System.out.println("next attribute value======"+ss);}catch(Exception e){
-
-            e.printStackTrace();
-           System.out.println("exception here");
-       }
-   }*/
-   System.out.println("--------------------");
-  // em=session.getAttributeNames();
-   /*while(em.hasMoreElements()){
-       String s=(String)em.nextElement();
-       System.out.println("next attribute ="+s);
-       try{
-           String ss=(String)session.getAttribute(s);
-           System.out.println("next attribute value====="+ss);}catch(Exception e){
-           e.printStackTrace();
-           System.out.println("exception here");
-       }
-   }*/
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
