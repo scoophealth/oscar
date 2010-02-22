@@ -125,7 +125,9 @@ public class MammogramReport implements PreventionReport{
                 log.debug("\n\n\n prevDate "+prevDate);
                 log.debug("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
                 log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
-                if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
+                String result = pd.getExtValue((String)h.get("id"), "result");
+
+                if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate) && !result.equalsIgnoreCase("pending")){
                    prd.bonusStatus = "Y";
                    done++;
                 }
@@ -166,7 +168,15 @@ public class MammogramReport implements PreventionReport{
                    prd.state = "Refused";
                    prd.numMonths = numMonths;
                    prd.color = "orange"; //FF9933
-                } else if (dueDate.before(prevDate)  ){  // recorded done
+                   
+                } else if( dueDate.before(prevDate) && result.equalsIgnoreCase("pending") ) {
+                    prd.rank = 4;
+                    prd.lastDate = prevDateStr;
+                    prd.state = "Pending";
+                    prd.numMonths = numMonths;
+                    prd.color = "pink";
+
+                }else if (dueDate.before(prevDate)  ){  // recorded done
                    prd.rank = 4;
                    prd.lastDate = prevDateStr;                
                    prd.state = "Up to date";
