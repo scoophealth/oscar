@@ -237,7 +237,7 @@ public class ProviderPropertyAction extends DispatchAction {
          }
 
          String [] propertyArray= new String[7];
-         String [] va={" show_current "," show_all "," active "," inactive "," all "," longterm_acute "," longterm_acute_inactive "};
+         String [] va={" show_current "," show_all "," active "," inactive "," all "," longterm_acute "," longterm_acute_inactive_external "};
 
          for(int i=0;i<propertyArray.length;i++){
              System.out.println(propValue +"--"+va[i]);
@@ -251,7 +251,7 @@ public class ProviderPropertyAction extends DispatchAction {
          viewChoices.add(new LabelValueBean("Show Inactive","inactive"));
          viewChoices.add(new LabelValueBean("All","all"));
          viewChoices.add(new LabelValueBean("Show Longterm/Acute","longterm_acute"));
-         viewChoices.add(new LabelValueBean("Show Longterm/Acute/Inactive","longterm_acute_inactive"));
+         viewChoices.add(new LabelValueBean("Show Longterm/Acute/Inactive","longterm_acute_inactive_external"));
          request.setAttribute("viewChoices", viewChoices);
          request.setAttribute("providertitle","provider.setRxProfileView.title"); //=Set Rx Profile View
          request.setAttribute("providermsgPrefs","provider.setRxProfileView.msgPrefs"); //=Preferences

@@ -112,7 +112,7 @@ public final class RxChoosePatientAction extends Action {
                         String propValue = prop.getValue();
                         //System.out.println("prop=" + prop.getValue());
                         HashMap hm = new HashMap();
-                        String[] va = {" show_current ", " show_all ", " active ", " inactive ", " all ", " longterm_acute ", " longterm_acute_inactive "};
+                        String[] va = {" show_current ", " show_all ", " active ", " inactive ", " all ", " longterm_acute ", " longterm_acute_inactive_external "};
                         for (int i = 0; i < va.length; i++) {
                             if (propValue.contains(va[i])) {
                                 hm.put(va[i].trim(), true);
