@@ -132,8 +132,14 @@ if (heading != null){
                       continue;
                     }
                 }
+                if(request.getParameter("drugLocation")!=null&&request.getParameter("drugLocation").equals("external")){
+                    if(!prescriptDrug.isExternal())
+                        continue;
+                }
 //add all long term med drugIds to an array.
                 styleColor = getClassColour( prescriptDrug, now, month);
+                String specialText=prescriptDrug.getSpecial();
+                specialText=specialText.replace("\n"," ");
         %>
         <tr>
             <td valign="top"><a id="rxDate_<%=prescriptDrug.getId()%>"   <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a></td>
@@ -166,7 +172,7 @@ if (heading != null){
             </td>
 
             <td width="10px" align="center" valign="top">
-                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
+                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>&amp;drugSpecial=<%=specialText%>','anwin','width=400,height=250');">
                     <%if(!isPrevAnnotation){%> <img src="../images/notes.gif" alt="rxAnnotation" border="0"><%} else{%><img src="../images/filledNotes.gif" alt="rxFilledNotes" border="0"> <%}%></a>
             </td>
 
