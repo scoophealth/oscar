@@ -34,9 +34,8 @@ import java.util.Set;
 
 import org.caisi.model.BaseObject;
 import org.oscarehr.common.model.Provider;
-import oscar.dms.EDoc;
 import oscar.oscarDB.DBHandler;
-import oscar.dms.EDocUtil;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 
 public class CaseManagementNote extends BaseObject {
@@ -462,26 +461,36 @@ public class CaseManagementNote extends BaseObject {
     }
 
 
-
-     public boolean isDocumentAnnotation(){
-        boolean bool=false;        
-        //check if annotation field in casemgmt_note table is set to DOC.
-        String annotationType=EDocUtil.typeAnnotation(this.id);
-       // System.out.println("tableId="+annotationType);
-        if (annotationType.equals("DOC")) {
-            bool=true;
+    public boolean isRxAnnotation(){
+        boolean bool=false;
+        String sql="select id from casemgmt_note_link where note_id=" + this.id + " and table_name=2";
+        //System.out.println(" in isRxAnnotation,sql="+sql);
+        ResultSet rs = null;
+        rs = getSQL(sql);
+        try {
+            bool = rs.first();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
         }
         return bool;
     }
-    public Long getDocIdFromAnno(Long annoId){
-        Long docId=0L;
-        CaseManagementNote cmn=new CaseManagementNote();
-        cmn.setId(annoId);
-        if(cmn.isDocumentAnnotation()){
-            docId=EDocUtil.getTableIdFromNoteId(this.id);
-        }
-        return docId;
+   public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){       
+        if(this.isRxAnnotation()){
+            String drugId=cmnl.getTableId().toString();
+            //System.out.println("drugId="+drugId);
+            //get drug id from cmn_link table
+            RxPrescriptionData rxData = new RxPrescriptionData();
+            // create Prescription
+            RxPrescriptionData.Prescription[] rxs = rxData.getPrescriptionScriptsByPatientDrugId(Integer.parseInt(this.getDemographic_no()), drugId);
+            if(rxs.length>0)
+                return rxs[0];
+            else
+                return null;
+        }else
+        
+            return null;
     }
+   
     public boolean isFirstDocNote(Long tableId) {
         //System.out.println("tableId="+tableId);
         String sql = "select min(note_id) as min_note_id from casemgmt_note_link where table_id=" + tableId;
