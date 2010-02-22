@@ -19,4 +19,5 @@ public class Colour {
     public static final String labs = "A0509C";
     public static final String messages = "DDDD00";
     public static final String measurements = "344887";
+    public static final String rx="C3C3C3";
 }
