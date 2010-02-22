@@ -225,7 +225,7 @@ public final class Cds4ReportUIBean {
 		Date dischargeDate = new Date(); // default duration calculation to today if not discharged.
 		if (admission.getDischargeDate() != null) dischargeDate = admission.getDischargeDate();
 
-		int years = MiscUtils.calculateYearDifference(dischargeDate, admission.getAdmissionDate());
+		int years = MiscUtils.calculateYearDifference(admission.getAdmissionDate(), dischargeDate);
 		if (years > 10) years = 10; // limit everything above 10 years to the 10 year bucket.
 
 		return(years);
@@ -708,25 +708,25 @@ public final class Cds4ReportUIBean {
 		} else if ("021-04".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
 		} else if ("021-05".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(1));
 		} else if ("021-06".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(2));
 		} else if ("021-07".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(3));
 		} else if ("021-08".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(4));
 		} else if ("021-09".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(5));
 		} else if ("021-10".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(6));
 		} else if ("021-11".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(7));
 		} else if ("021-12".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(8));
 		} else if ("021-13".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(9));
 		} else if ("021-14".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			return(get021HospitalDays(10));
 		} else {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 			return(getNotAvailableDataLine());
@@ -739,24 +739,23 @@ public final class Cds4ReportUIBean {
 		
 		Admission admission=admissionMap.get(form.getAdmissionId());
 		List<CdsHospitalisationDays> allHospitalDays=cdsHospitalisationDaysDao.findByClientId(form.getClientId());
+
 		for (CdsHospitalisationDays temp : allHospitalDays)
 		{
-			// if the person was admitted to a hospital after admission to the program.
-			if (temp.getAdmitted().after(admission.getAdmissionCalendar()))
+			// program :  ------- A ------- D --------
+			// Hosp    :    A D 
+			// Hosp    :*   A           D 
+			// Hosp    :*   A                     D
+			// Hosp    :*            A  D
+			// Hosp    :*            A            D
+			// Hosp    :                        A D 
+			
+			// so if H admission before P discharge && H discharge after P Admission
+			
+			if ((admission.getDischargeCalendar() ==null || temp.getAdmitted().before(admission.getDischargeCalendar())) &&
+				(temp.getDischarged()==null || temp.getDischarged().after(admission.getAdmissionCalendar())))
 			{
-				// if the person hasn't been discharged from hospital yet or if the person hasn't been discharged from the program yet (either case means it's a valid hosptialistion instance)
-				if (temp.getDischarged()==null || admission.getDischargeCalendar()==null)
-				{
-					results.add(temp);
-					break;
-				}
-				
-				// or if the hospital discharge date is before the program discharge date
-				if (temp.getDischarged().before(admission.getDischargeCalendar()))
-				{
-					results.add(temp);
-					break;					
-				}
+				results.add(temp);
 			}
 		}
 		
@@ -801,23 +800,92 @@ public final class Cds4ReportUIBean {
 	    
 	    for (CdsHospitalisationDays cdsHospitalisationDays : hospitalisationDays)
 	    {
-	    	daysCount=daysCount+getTotalDayCount(cdsHospitalisationDays);
+	    	daysCount=daysCount+getTotalDayCount(cdsHospitalisationDays, startDate, endDate);
 	    }
 	    
 	    return(daysCount);
     }
 
-	private int getTotalDayCount(CdsHospitalisationDays cdsHospitalisationDays) {
+	/**
+	 * The bounds on the dates is to ensure we don't count days in the hospital beyond our desired range, i.e. the stay for the admission, or reporting period etc.
+	 */
+	private int getTotalDayCount(CdsHospitalisationDays cdsHospitalisationDays, Calendar startBoundingDate, Calendar endBoundingDate) {
 
-		Calendar fromCal=startDate;
-		if (cdsHospitalisationDays.getAdmitted().after(fromCal)) fromCal=cdsHospitalisationDays.getAdmitted();
+		// check the hospital days are within bounding dates
+		if (cdsHospitalisationDays.getDischarged().before(startBoundingDate)) return(0);
+		if (cdsHospitalisationDays.getAdmitted().after(endBoundingDate)) return(0);
 		
-		Calendar toCal=endDate;		
-		if (cdsHospitalisationDays.getDischarged()!=null &&  cdsHospitalisationDays.getDischarged().before(toCal)) toCal=cdsHospitalisationDays.getDischarged();
+		// limit to max bounding dates
+		Calendar fromCal=startBoundingDate;
+		if (cdsHospitalisationDays.getAdmitted().after(startBoundingDate)) fromCal=cdsHospitalisationDays.getAdmitted();
+		
+		Calendar toCal=endBoundingDate;		
+		if (cdsHospitalisationDays.getDischarged()!=null &&  cdsHospitalisationDays.getDischarged().before(endBoundingDate)) toCal=cdsHospitalisationDays.getDischarged();
 		
 	    return (int) (DateUtils.getNumberOfDaysBetweenTwoDates(fromCal, toCal));
     }
 
+	/**
+	 * @param admissionPeriod refers to "year 1 hospital days" = 1, etc.. with respect to cds section 021-05 through 021-14
+	 */
+	private int getCdsHospitalisationDaysCountDuringPeriod(Collection<CdsClientForm> forms, int admissionPeriod) {
+
+		int totalDays=0;
+		
+		if (forms!=null)
+		{
+			for (CdsClientForm form : forms)
+			{
+				List<CdsHospitalisationDays> allFormHospitalisationDays=getHopitalisationDaysDuringAdmission(form);
+	
+				Admission admission=admissionMap.get(form.getAdmissionId());
+				Calendar startBoundingDate=getStartBound(admission, admissionPeriod);
+				Calendar endBoundingDate=getEndBound(admission, admissionPeriod);
+				
+				for (CdsHospitalisationDays cdsHospitalisationDays : allFormHospitalisationDays)
+				{
+					totalDays=totalDays+getTotalDayCount(cdsHospitalisationDays, startBoundingDate, endBoundingDate);
+				}
+			}
+		}
+		
+		return(totalDays);
+	}
+
+	private Calendar getEndBound(Admission admission, int admissionPeriod) {
+
+		Calendar endBound=getStartBound(admission, admissionPeriod);
+		endBound.add(Calendar.YEAR, 1);
+
+		return(endBound);
+    }
+
+	private Calendar getStartBound(Admission admission, int admissionPeriod) {
+
+		Calendar startBound=new GregorianCalendar();
+		startBound.setTime(admission.getAdmissionDate()); 
+		startBound.add(Calendar.YEAR, admissionPeriod-1);
+		
+	    return(startBound);
+    }
+
+	private int[] get021HospitalDays(int year)
+	{
+		int[] dataRow=getNotAvailableDataLine();
+
+		// get multi admissions number
+		dataRow[0]=getCdsHospitalisationDaysCountDuringPeriod(singleMultiAdmissions.multipleAdmissionsAllForms, year);
+		
+		// get cohort numbers
+		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+			@SuppressWarnings("unchecked")
+			Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+			dataRow[i+1]=getCdsHospitalisationDaysCountDuringPeriod(bucket, year);
+		}
+
+		return(dataRow);
+	}
+	
 	public static int getCohortTotal(int[] dataRow)
 	{
 		int total=0;
