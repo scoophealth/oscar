@@ -64,7 +64,7 @@
             boolean inactive=true;
             boolean all=true;
             boolean longterm_acute=true;
-            boolean longterm_acute_inactive=true;
+            boolean longterm_acute_inactive_external=true;
             if(hm==null) {System.out.println("hm is null");}
             else{
              show_current=(Boolean)hm.get("show_current");
@@ -73,7 +73,7 @@
              inactive=(Boolean)hm.get("inactive");
              all=(Boolean)hm.get("all");
              longterm_acute=(Boolean)hm.get("longterm_acute");
-             longterm_acute_inactive=(Boolean)hm.get("longterm_acute_inactive");
+             longterm_acute_inactive_external=(Boolean)hm.get("longterm_acute_inactive_external");
             }
 
             //System.out.println("usefav="+usefav);
@@ -659,7 +659,7 @@ body {
                                                                     <tr>
                                                                         <td align="left">
                                                                             <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" ><bean:message key="SearchDrug.msgProfileLegend"/></a>
-                                                                            <a href="javascript:void(0);" title="Change what kind of prescriptions to see in this drug profile" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');return false;" style="font-style:italic;color:#000000" ><bean:message key="provider.rxChangeProfileView"/></a>
+                                                                            <a href="#"  title="<bean:message key="provider.rxChangeProfileViewMessage"/>" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');" style="color:red;vertical-align:super;text-decoration:none" ><bean:message key="provider.rxChangeProfileView"/></a>
                                                                             <%if(show_current){%>
                                                                             <a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp','drugProfile');"><bean:message key="SearchDrug.msgShowCurrent"/></a>
                                                                             <%}if(show_all){%>
@@ -668,7 +668,7 @@ body {
                                                                             <%}if(inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=inactive','drugProfile');"><bean:message key="SearchDrug.msgInactive"/></a>
                                                                             <%}if(all){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?status=all','drugProfile');"><bean:message key="SearchDrug.msgAll"/></a>
                                                                             <%}if(longterm_acute){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcute"/></a>
-                                                                            <%}if(longterm_acute_inactive){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcuteInactive"/></a>
+                                                                            <%}if(longterm_acute_inactive_external){%><a href="javascript:void(0);" onclick="callReplacementWebService('ListDrugs.jsp?longTermOnly=true&heading=Long Term Meds','drugProfile'); callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Acute&status=active','drugProfile');callAdditionWebService('ListDrugs.jsp?longTermOnly=acute&heading=Inactive&status=inactive','drugProfile');callAdditionWebService('ListDrugs.jsp?heading=External&drugLocation=external','drugProfile')"><bean:message key="SearchDrug.msgLongTermAcuteInactiveExternal"/></a>
                                                                             <%}%>
                                                                         </td>
                                                                         <td align="right">
