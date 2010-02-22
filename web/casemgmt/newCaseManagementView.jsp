@@ -29,7 +29,7 @@
 <%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO"%>
 <%@page	import="java.util.Arrays,java.util.Properties,java.util.List,java.util.Set,java.util.ArrayList,java.util.Enumeration,java.util.HashSet,java.util.Iterator,java.text.SimpleDateFormat,java.util.Calendar,java.util.Date,java.text.ParseException"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="org.oscarehr.common.model.UserProperty,org.oscarehr.casemgmt.model.*"%>
+<%@page import="org.oscarehr.common.model.UserProperty,org.oscarehr.casemgmt.model.*,org.oscarehr.casemgmt.service.* "%>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
@@ -48,13 +48,16 @@
 <%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
 <%@page import="org.oscarehr.common.dao.CaseManagementIssueNotesDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
+<%@page import="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 
 <%
 	CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
-
+        CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+      
 	String demographicNo = request.getParameter("demographicNo");
 	oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
 	String strBeanName = "casemgmt_oscar_bean" + demographicNo;
@@ -434,6 +437,7 @@
 		String messagesColour = "color:#" + blackColour + ";background-color:#" + Colour.messages + ";";
 		String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.prevention + ";";
 		String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.tickler + ";";
+                String rxColour="color:#" + blackColour + ";background-color:#"+Colour.rx+";";
 
 		for (pos = noteSize - 1; pos >= 0; --pos)
 		{
@@ -462,6 +466,9 @@
 			{
 				bgColour = documentColour;
 			}
+                        else if (cmNote.isRxAnnotation()){
+                            bgColour=rxColour;
+                        }
 
 			colourStyle.add(bgColour);
 
@@ -556,8 +563,8 @@
 
   		<div id="n<%=note.getNoteId()%>">
 		<%
-			//display last saved note for editing
-			if (note.getNoteId() !=null && note.getNoteId().equals(savedId))
+	       //display last saved note for editing
+	       if (note.getNoteId() !=null && note.getNoteId().equals(savedId))
 			{
 				found = true;
 		%> 
@@ -617,7 +624,7 @@
 					<%
 				}
 				
-			 	if (!note.isDocument())
+			 	if (!note.isDocument()&&!note.isRxAnnotation())
 			 	{
 			 		if (note.getRemoteFacilityId()==null) // only allow editing for local notes
 					{
@@ -628,7 +635,33 @@
 				 		</a> 
 						<%
 					}
-			 	}
+			 	}else if(note.isRxAnnotation()){//prescription note
+                                    System.out.println("note is rx annotation");
+                                    String winName="dummie";
+                                    int hash = Math.abs(winName.hashCode());
+                                    //get drug from note id.
+                                    CaseManagementNoteLink cmnl=caseManagementManager.getLatestLinkByNote(Long.parseLong(note.getNoteId().toString()));
+                                    RxPrescriptionData.Prescription rx=note.getRxFromAnnotation(cmnl);
+                                    
+                                    if (note.getRemoteFacilityId()==null) // only allow editing for local notes
+					{
+						%>
+				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
+				 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+				 		<bean:message key="oscarEncounter.edit.msgEdit" />
+				 		</a>
+				 		<%
+					}
+                                    if(rx!=null){
+                                        String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
+                                        //System.out.println("url="+url);
+
+                                        %>
+                                        <a class="links" title="<%=rx.getSpecial()%>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.rxView" /> </a>
+                                        <%
+                                        }
+
+                                }
 				else if (note.isDocument() && !note.getProviderNo().equals("-1"))
 				{ //document annotation
 			
@@ -646,7 +679,7 @@
 					{
 						%> 
 				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
-				 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+				 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
 				 		<bean:message key="oscarEncounter.edit.msgEdit" />
 				 		</a>
 				 		<%
@@ -666,7 +699,7 @@
 					url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
 					url = url + "return false;";
 			 	%> 
-			 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> 
+			 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;">
 			 	<bean:message key="oscarEncounter.view.docView" /> 
 				</a> 
 				<%
