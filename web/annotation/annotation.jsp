@@ -46,11 +46,12 @@
 
 <%
     String attrib_name = request.getParameter("atbname");
+    String special=request.getParameter("drugSpecial");
     if (attrib_name==null) attrib_name="";
 
     String demo = request.getParameter("demo");
     String display = request.getParameter("display");
-System.out.println("demo_no="+demo);
+    System.out.println("demo_no="+demo);
     boolean saved = Boolean.valueOf(request.getParameter("saved"));
 
     String tid = request.getParameter("table_id");
@@ -66,11 +67,14 @@ System.out.println("demo_no="+demo);
 
     Integer tableName = cmm.getTableNameByDisplay(display);
     String note = "";
-    System.out.println("========= important section ===============");
     System.out.println("tableName="+tableName+"---"+"tableId="+tableId);
     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);//the lastest note which should be the annotation instead of document note.
     CaseManagementNote p_cmn = null;
-    if (cml!=null) p_cmn = cmm.getNote(cml.getNoteId().toString());
+    if (cml!=null) {
+        p_cmn = cmm.getNote(cml.getNoteId().toString());
+        //get the most recent previous note from uuid.
+        p_cmn=cmm.getMostRecentNote(p_cmn.getUuid());
+    }
 
     String uuid = "";
     //if get provider no is -1 , it's a document note.
@@ -80,20 +84,23 @@ System.out.println("demo_no="+demo);
     //get note from attribute
     CaseManagementNote a_cmn = (CaseManagementNote)se.getAttribute(attrib_name);
     System.out.println("attrib_name value="+attrib_name);
+    CaseManagementNote historyNote=new CaseManagementNote();
     if (a_cmn!=null) {
+        historyNote=a_cmn;
 	note = a_cmn.getNote();
         System.out.println("a_cmn is not null , note="+note);
-    } else {
+    } else if (p_cmn!=null){
 	//get note from database
-	if (p_cmn!=null) { //previous annotation exists
+	 //previous annotation exists
+            historyNote=p_cmn;
 	    note = p_cmn.getNote();
             System.out.println("if p_cmn is not null, note="+note);
+
 	}
-    }
     if (saved) {
 	String prog_no = new EctProgram(se).getProgram(user_no);
         //create a note with demo, user_no, prog_no
-	CaseManagementNote cmn = createCMNote(request.getParameter("note"), demo, user_no, prog_no);
+	CaseManagementNote cmn = createCMNote(historyNote,request.getParameter("note"), demo, user_no, prog_no);
         System.out.println("annotation note id="+cmn.getNote());
 	if (cmn!=null) {
 	    if (p_cmn!=null) {  //previous annotation exists
@@ -103,15 +110,15 @@ System.out.println("demo_no="+demo);
 	    if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
                 System.out.println("NOT SAVING");
 		if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
-	    } else { //annotated subject exists
-                System.out.println("saving annotation here");
-		cmm.saveNoteSimple(cmn);
-		cml = new CaseManagementNoteLink();
-		cml.setTableName(tableName);
-		cml.setTableId(tableId);
-		cml.setNoteId(cmn.getId());
-		cmm.saveNoteLink(cml);
-                LogAction.addLog(user_no,LogConst.ANNOTATE, display, String.valueOf(tableId), request.getRemoteAddr(), demo, cmn.getNote());
+	    } else { //annotated subject exists                   
+                    System.out.println("saving annotation here");
+                    cmm.saveNoteSimple(cmn);
+                    cml = new CaseManagementNoteLink();
+                    cml.setTableName(tableName);
+                    cml.setTableId(tableId);
+                    cml.setNoteId(cmn.getId());
+                    cmm.saveNoteLink(cml);
+                    LogAction.addLog(user_no,LogConst.ANNOTATE, display, String.valueOf(tableId), request.getRemoteAddr(), demo, cmn.getNote());                
 	    }
 	}
 	response.sendRedirect("../close.html");
@@ -122,6 +129,11 @@ System.out.println("demo_no="+demo);
     if (p_cmn!=null) {
 	List l = cmm.getNotesByUUID(uuid);
 	rev = l.size();
+    }
+
+    if(display.equals("Prescriptions") && note.trim().length()==0){
+        if(special!=null)
+            note=special+"\nRx annotation: ";
     }
 %>
 
@@ -155,7 +167,7 @@ System.out.println("demo_no="+demo);
 	<table>
 	    <tr><td colspan="2"><%=display%> Annotation:</td></tr>
 	    <tr><td colspan="2">
-		    <textarea name="note" rows="10" cols="50"><%=note%></textarea>
+		    <textarea name="note" rows="10" cols="50"><%=note%></textarea>             
 		</td>
 	    </tr>
 	    <tr>
@@ -177,7 +189,7 @@ System.out.println("demo_no="+demo);
 
 
 <%!
-    CaseManagementNote createCMNote(String note, String demo_no, String provider, String program_no) {
+    CaseManagementNote createCMNote(CaseManagementNote historyNote,String note, String demo_no, String provider, String program_no) {
 	if (!filled(note)) return null;
 
 	CaseManagementNote cmNote = new CaseManagementNote();
@@ -187,12 +199,20 @@ System.out.println("demo_no="+demo);
 	    cmNote.setProviderNo(provider);
 	    cmNote.setSigning_provider_no(provider);
 	    cmNote.setSigned(true);
-	    cmNote.setHistory("");
 	    cmNote.setProgram_no(program_no);
 	    cmNote.setReporter_caisi_role("2");  //secRole for "doctor"
 	    cmNote.setReporter_program_team("0");
 	    cmNote.setNote(note);
+            String historyStr;
 
+            if(historyNote==null || historyNote.getHistory()==null || historyNote.getHistory().trim().length()==0 ){
+                historyStr=note;
+            }
+            else{
+                historyStr=note + "\n" + "   ----------------History Record----------------   \n" + historyNote.getHistory().trim() + "\n";
+            }
+            System.out.println("historyStr="+historyStr);
+            cmNote.setHistory(historyStr);
 	return cmNote;
     }
 
