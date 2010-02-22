@@ -22,6 +22,7 @@ package org.oscarehr.web;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -49,6 +50,8 @@ import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import oscar.util.DateUtils;
 
 public final class Cds4ReportUIBean {
 
@@ -660,22 +663,48 @@ public final class Cds4ReportUIBean {
 			int[] dataRow=getNotAvailableDataLine();
 
 			// get multi admissions number
-			AccumulatorMap<Integer> multipleAdmissionHospitalisations=getCdsHospitalisationDaysDuringAdmission(singleMultiAdmissions.multipleAdmissionsAllForms);
+			AccumulatorMap<Integer> multipleAdmissionHospitalisations=getCdsHospitalisationAdmissionCountDuringProgramAdmission(singleMultiAdmissions.multipleAdmissionsAllForms);
 			dataRow[0]=multipleAdmissionHospitalisations.countInstancesOfValue(0);
 			
 			// get cohort numbers
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-				AccumulatorMap<Integer> singleAdmissionHospitalisations=getCdsHospitalisationDaysDuringAdmission(bucket);
+				AccumulatorMap<Integer> singleAdmissionHospitalisations=getCdsHospitalisationAdmissionCountDuringProgramAdmission(bucket);
 				dataRow[i+1]=singleAdmissionHospitalisations.countInstancesOfValue(0);
 			}
 
 			return(dataRow);
 		} else if ("021-02".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			int[] dataRow=getNotAvailableDataLine();
+
+			// get multi admissions number
+			AccumulatorMap<Integer> multipleAdmissionHospitalisations=getCdsHospitalisationAdmissionCountDuringProgramAdmission(singleMultiAdmissions.multipleAdmissionsAllForms);
+			dataRow[0]=multipleAdmissionHospitalisations.getTotalOfAllValues();
+			
+			// get cohort numbers
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				AccumulatorMap<Integer> singleAdmissionHospitalisations=getCdsHospitalisationAdmissionCountDuringProgramAdmission(bucket);
+				dataRow[i+1]=singleAdmissionHospitalisations.getTotalOfAllValues();
+			}
+
+			return(dataRow);
 		} else if ("021-03".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			int[] dataRow=getNotAvailableDataLine();
+
+			// get multi admissions number
+			dataRow[0]=getCdsHospitalisationDaysCountDuringProgramAdmission(singleMultiAdmissions.multipleAdmissionsAllForms);
+			
+			// get cohort numbers
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=getCdsHospitalisationDaysCountDuringProgramAdmission(bucket);
+			}
+
+			return(dataRow);
 		} else if ("021-04".equals(cdsFormOption.getCdsDataCategory())) {
 			return(getNotAvailableDataLine());
 		} else if ("021-05".equals(cdsFormOption.getCdsDataCategory())) {
@@ -734,7 +763,7 @@ public final class Cds4ReportUIBean {
 		return(results);
 	}
 	
-	private AccumulatorMap<Integer> getCdsHospitalisationDaysDuringAdmission(Collection<CdsClientForm> forms)
+	private AccumulatorMap<Integer> getCdsHospitalisationAdmissionCountDuringProgramAdmission(Collection<CdsClientForm> forms)
 	{
 		// key = clientId, value = # of hospital admissions
 		AccumulatorMap<Integer> admissionHospitalisations=new AccumulatorMap<Integer>();
@@ -751,6 +780,44 @@ public final class Cds4ReportUIBean {
 		return(admissionHospitalisations);
 	}
 	
+	private int getCdsHospitalisationDaysCountDuringProgramAdmission(Collection<CdsClientForm> forms)
+	{
+		int numberOfDaysInHospital=0;
+		
+		if (forms!=null)
+		{
+			for (CdsClientForm form : forms)
+			{
+				List<CdsHospitalisationDays> hospitalisationDays=getHopitalisationDaysDuringAdmission(form);
+				numberOfDaysInHospital=numberOfDaysInHospital+getTotalDayCount(hospitalisationDays);
+			}
+		}
+		
+		return(numberOfDaysInHospital);
+	}
+	
+	private int getTotalDayCount(List<CdsHospitalisationDays> hospitalisationDays) {
+	    int daysCount=0;
+	    
+	    for (CdsHospitalisationDays cdsHospitalisationDays : hospitalisationDays)
+	    {
+	    	daysCount=daysCount+getTotalDayCount(cdsHospitalisationDays);
+	    }
+	    
+	    return(daysCount);
+    }
+
+	private int getTotalDayCount(CdsHospitalisationDays cdsHospitalisationDays) {
+
+		Calendar fromCal=startDate;
+		if (cdsHospitalisationDays.getAdmitted().after(fromCal)) fromCal=cdsHospitalisationDays.getAdmitted();
+		
+		Calendar toCal=endDate;		
+		if (cdsHospitalisationDays.getDischarged()!=null &&  cdsHospitalisationDays.getDischarged().before(toCal)) toCal=cdsHospitalisationDays.getDischarged();
+		
+	    return (int) (DateUtils.getNumberOfDaysBetweenTwoDates(fromCal, toCal));
+    }
+
 	public static int getCohortTotal(int[] dataRow)
 	{
 		int total=0;

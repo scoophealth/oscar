@@ -118,114 +118,6 @@ public class DateUtils {
 
 	}
 
-	/**
-	 * Compara uma data com a data atual.
-	 * 
-	 * @param pDate Data que ser� comparada com a data atual.
-	 * @param format Formato da data. Ex: dd/MM/yyyy, yyyy-MM-dd
-	 * @return 1 - se a data for maior que a data atual. -1 - se a data for menor que a data atual. 0 - se a data for igual que a data atual. -2 - se ocorrer algum erro.
-	 */
-
-	public static String compareDate(String pDate, String format) {
-
-		DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-		try {
-
-			Date date = df.parse(pDate);
-
-			logger.debug("[DateUtils] - compareDate: date = " + date.toString());
-
-			String sNow = DateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date());
-
-			Date now = df.parse(sNow);
-
-			logger.debug("[DateUtils] - compareDate: now = " + now.toString());
-
-			if (date.after(now)) {
-
-				logger.debug("[DateUtils] - compareDate: 1");
-
-				return "1";
-
-			} else if (date.before(now)) {
-
-				logger.debug("[DateUtils] - compareDate: -1");
-
-				return "-1";
-
-			} else {
-
-				logger.debug("[DateUtils] - compareDate: 0");
-
-				return "0";
-
-			}
-
-		} catch (ParseException e) {
-
-			logger.error("[DateUtils] - compareDate: -2", e);
-
-			return "-2";
-
-		}
-
-	}
-
-	/**
-	 * Compara uma data com outra.
-	 * 
-	 * @param pDate Data que ser� comparada com pDate2. * @param pDate2 Data que ser� comparada com pDate.
-	 * @param format Formato da data. Ex: dd/MM/yyyy, yyyy-MM-dd
-	 * @return 1 - se a data for maior que a data atual. -1 - se a data for menor que a data atual. 0 - se a data for igual que a data atual. -2 - se ocorrer algum erro.
-	 */
-
-	public static String compareDate(String pDate, String pDate2, String format) {
-
-		SimpleDateFormat df = new SimpleDateFormat(format);
-
-		try {
-
-			Date date = df.parse(pDate);
-
-			logger.debug("[DateUtils] - compareDate: date = " + date.toString());
-
-			// String sNow = df.format(df.parse(pDate2));
-
-			Date now = df.parse(pDate2);
-
-			logger.debug("[DateUtils] - compareDate: now = " + now.toString());
-
-			if (date.after(now)) {
-
-				logger.debug("[DateUtils] - compareDate: 1");
-
-				return "1";
-
-			} else if (date.before(now)) {
-
-				logger.debug("[DateUtils] - compareDate: -1");
-
-				return "-1";
-
-			} else {
-
-				logger.debug("[DateUtils] - compareDate: 0");
-
-				return "0";
-
-			}
-
-		} catch (ParseException e) {
-
-			logger.error("[DateUtils] - compareDate: -2", e);
-
-			return "-2";
-
-		}
-
-	}
-
 	public static String formatDate(String date, String format,
 
 	String formatAtual) {
@@ -305,8 +197,6 @@ public class DateUtils {
 	public String NextDay(int day, int month, int year) {
 
 		boolean leapyear;
-
-		System.out.println("Entered Date: " + year + "-" + month + "-" + day);
 
 		switch (month) {
 
@@ -422,19 +312,13 @@ public class DateUtils {
 
 		String nextDay = year + "-" + month + "-" + day;
 
-		System.out.println("next day: " + nextDay);
-
 		return nextDay;
 
 	}
 
 	public String NextDay(int day, int month, int year, int numDays) {
 
-		boolean leapyear;
-
 		int modValue = 28;
-
-		System.out.println("Entered Date: " + year + "-" + month + "-" + day);
 
 		while (numDays > 0) {
 
@@ -580,13 +464,9 @@ public class DateUtils {
 
 			numDays = numDays - curNumDays;
 
-			System.out.println("curNumDays: " + curNumDays + " ; numDays: " + numDays);
-
 		}
 
 		String nextDay = year + "-" + month + "-" + day;
-
-		System.out.println("next few day: " + nextDay);
 
 		return nextDay;
 
@@ -596,19 +476,16 @@ public class DateUtils {
 	 *Gets the difference between two dates, in days. Takes two dates represented in milliseconds and returns the difference in days
 	 */
 	public static long getDifDays(Date greater, Date lesser) {
-		System.out.println(greater.toString());
-		System.out.println(lesser.toString());
-		Calendar calLesser = new GregorianCalendar();
-		calLesser.setTime(lesser);
-
-		Calendar calGreater = new GregorianCalendar();
-		calGreater.setTime(greater);
-
-		long differenceInMillis = calGreater.getTimeInMillis() - calLesser.getTimeInMillis();
-		long differenceInDays = differenceInMillis / (24 * 60 * 60 * 1000);
-		return differenceInDays;
+		long timeInMillis=greater.getTime()-lesser.getTime();
+		return(timeInMillis/org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
 	}
 
+	public static long getNumberOfDaysBetweenTwoDates(Calendar cal1, Calendar cal2)
+	{
+		long timeInMillis=Math.abs(cal1.getTimeInMillis()-cal2.getTimeInMillis());
+		return(timeInMillis/org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
+	}
+	
 	/**
 	 * Converts a String date with the form 'yyyy-MM-dd' to a String date with the form 'yyyyMMdd'
 	 * 
