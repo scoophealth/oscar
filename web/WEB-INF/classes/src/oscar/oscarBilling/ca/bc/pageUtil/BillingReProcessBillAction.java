@@ -317,12 +317,12 @@ public class BillingReProcessBillAction extends Action {
         billingmaster.setWcbId(Integer.parseInt(request.getParameter("WCBid")));
         }catch(Exception e){}
         bill.setProviderNo(providerNo);
-        _log.debug("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo()+" --- "+billingmaster.wcbId);
+        _log.debug("WHAT IS BILL <ASTER "+billingmaster.getBillingmasterNo());
         billingmasterDAO.update(billingmaster);
         billingmasterDAO.update(bill);
         
         _log.debug("type 2"+bill.getBillingtype());
-        _log.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo()+" --- "+billingmaster.wcbId);
+        _log.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
         
         try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
