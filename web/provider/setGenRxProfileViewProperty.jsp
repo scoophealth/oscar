@@ -100,16 +100,10 @@ if(session.getValue("user") == null)
 	<tr>
 		<td class="MainTableLeftColumn">&nbsp;</td>
 		<td class="MainTableRightColumn">
-		<%if( request.getAttribute("status") == null ){%> <bean-el:message
-			key="${providermsgEdit}" /> <c:out value="${rxPageSizeProperty.value}" />
+		<%if( request.getAttribute("status") == null ){%>
+                <bean-el:message key="${providermsgEdit}" />
                 <html:form action="/setProviderStaleDate.do">
 			<input type="hidden" name="method" value="<c:out value="${method}"/>">
-			<!--html:text property="rxPageSizeProperty.value" /-->
-                   <%-- <html:select property="rxPageSizeProperty.value">
-                            <html:option value="PageSize.A4">A4</html:option>
-                            <html:option value="PageSize.A6">A6</html:option>
-                        </html:select> --%>
-
                    <logic:iterate name="viewChoices" id="viewChoice">
                        <html:multibox property="rxProfileViewProperty.valueArray">
                            <bean:write name="viewChoice" property="value"/>
