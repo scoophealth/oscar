@@ -247,7 +247,9 @@
      <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" >
     <classpath>
       <pathelement path="pmd-4.2.5.jar"/>
-
+      <fileset dir="../web/WEB-INF/lib">
+        <include name="*.jar"/>
+      </fileset>
 
    </classpath>
  </taskdef>
