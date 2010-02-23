@@ -243,17 +243,27 @@
  </target>
 
 
-<target name="pmd" depends="init">
-     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" >
-    <classpath>
-      <pathelement path="pmd-4.2.5.jar"/>
-      <fileset dir="../web/WEB-INF/lib">
-        <include name="*.jar"/>
-      </fileset>
+<path id="classpath.path.pmd">
+   <pathelement path="pmd-4.2.5.jar"/>
+   <fileset dir="../web/WEB-INF/lib">
+      <include name="*.jar"/>
+   </fileset>
+</path>
 
-   </classpath>
- </taskdef>
-    <!-- taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/ -->
+
+<target name="cpd" depends="init">
+    <taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" classpathref="classpath.path.pmd"  />
+    <cpd minimumTokenCount="100" outputFile="${report}/cpd_report.xml" format="xml">
+        <fileset dir="${src_web}">
+            <include name="**/*.java"/>
+        </fileset>
+    </cpd>
+</target>
+
+
+
+<target name="pmd" depends="init">
+    <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="classpath.path.pmd"  />
     <pmd rulesetfiles="unusedcode">
         <formatter type="xml" toFile="${report}/pmd_report.xml"/>
         <fileset dir="${src_web}">
