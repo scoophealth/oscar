@@ -242,6 +242,24 @@
   
  </target>
 
+
+<target name="pmd" depends="init">
+     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" >
+    <classpath>
+      <pathelement path="pmd-4.2.5.jar"/>
+
+
+   </classpath>
+ </taskdef>
+    <!-- taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/ -->
+    <pmd rulesetfiles="unusedcode">
+        <formatter type="xml" toFile="${report}/pmd_report.xml"/>
+        <fileset dir="${src_web}">
+            <include name="**/*.java"/>
+        </fileset>
+    </pmd>
+</target>
+
  
  <target name="oscarcomm-jar" depends="web">
         <echo message="${classes_web}/oscar/comm/**" />
