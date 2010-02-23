@@ -27,6 +27,19 @@ public class OcanStaffFormDataDao extends AbstractDao<OcanStaffFormData>{
 		
 		return (results);
 	}
+	
+	public List<OcanStaffFormData> findByForm(Integer ocanStaffFormId) {
+
+		String sqlCommand = "select x from OcanStaffFormData x where x.ocanStaffFormId=?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, ocanStaffFormId);
+	
+		@SuppressWarnings("unchecked")
+		List<OcanStaffFormData> results=query.getResultList();
+		
+		return (results);
+	}
 
     /**
      * Generally speaking this method is good for getting a form if

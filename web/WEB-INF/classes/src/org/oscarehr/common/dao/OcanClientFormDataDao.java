@@ -45,5 +45,17 @@ public class OcanClientFormDataDao extends AbstractDao<OcanClientFormData>{
 		return (getSingleResultOrNull(query));
 	}
 
+	public List<OcanClientFormData> findByForm(Integer ocanClientFormId) {
+
+		String sqlCommand = "select x from OcanClientFormData x where x.ocanClientFormId=?1";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, ocanClientFormId);
+	
+		@SuppressWarnings("unchecked")
+		List<OcanClientFormData> results=query.getResultList();
+		
+		return (results);
+	}
 	
 }

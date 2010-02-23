@@ -3,7 +3,7 @@
 <%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 
-<%@include file="/layouts/caisi_html_top2.jspf"%>
+<%@include file="/layouts/caisi_html_top-jquery.jspf"%>
 
 
 <%

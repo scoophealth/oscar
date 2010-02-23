@@ -50,33 +50,6 @@
 				</select>					
 			</td>
 		</tr>
-		<tr>
-			<td class="genericTableHeader">Reports Side Effects?</td>
-			<td class="genericTableData">
-				<select name="medication_<%=medicationNumber%>_se_reported">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "medication_"+medicationNumber+"_se_reported", OcanForm.getOcanFormOptions("Side Effects Reported Ability"),prepopulationLevel)%>
-				</select>					
-			</td>
-		</tr>
-		<tr>
-			<td class="genericTableHeader">Do these side effects affect your daily living?</td>
-			<td class="genericTableData">
-				<select name="medication_<%=medicationNumber%>_se_affects">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "medication_"+medicationNumber+"_se_affects", OcanForm.getOcanFormOptions("Side Effects Reported Ability"),prepopulationLevel)%>
-				</select>					
-			</td>
-		</tr>																		
-		<tr>
-			<td class="genericTableHeader">Description of side effects</td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "medication_"+medicationNumber+"_se_description", OcanForm.getOcanFormOptions("Side Effects Description List"),prepopulationLevel)%>						
-			</td>
-		</tr>
-		<tr>
-			<td class="genericTableHeader">Other</td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"medication_"+medicationNumber+"_se_description_other",5,30,prepopulationLevel)%>
-			</td>
-		</tr>										
+								
 	</table>
 </div>

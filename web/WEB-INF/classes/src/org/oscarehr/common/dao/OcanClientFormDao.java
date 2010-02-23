@@ -75,4 +75,22 @@ public class OcanClientFormDao extends AbstractDao<OcanClientForm> {
 		
 		return(results);
     }
+    
+    public OcanClientForm findLatestSignedOcanForm(Integer facilityId, Integer demographicNo, String formVersion, Date startDate, Date endDate) {
+		
+		String sqlCommand="select x from OcanClientForm x where x.facilityId=?1 and x.clientId=?2 and x.ocanFormVersion=?3 and x.created>=?4 and x.created<?5 order by x.created DESC";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, demographicNo);
+		query.setParameter(3, formVersion);
+		query.setParameter(4, startDate);
+		query.setParameter(5, endDate);
+		
+		@SuppressWarnings("unchecked")
+		List<OcanClientForm> results=query.getResultList();
+		
+		return (results.size()>0?results.get(0):null);
+	
+    }
 }

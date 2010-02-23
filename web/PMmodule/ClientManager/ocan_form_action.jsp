@@ -40,7 +40,7 @@
 	ocanStaffForm.setEmail(request.getParameter("email"));
 	ocanStaffForm.setHcNumber(request.getParameter("hcNumber"));
 	ocanStaffForm.setHcVersion(request.getParameter("hcVersion"));
-	ocanStaffForm.setDateOfBirth(request.getParameter("dateOfBirth"));	
+	ocanStaffForm.setDateOfBirth(request.getParameter("date_of_birth"));	
 	ocanStaffForm.setAdmissionId(admissionId);
 	ocanStaffForm.setAssessmentStatus(assessmentStatus);
 	ocanStaffForm.setReasonForAssessment(reasonForAssessment);
@@ -73,6 +73,7 @@
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{
+		System.out.println(entry.getKey());
 		if (entry.getValue()!=null)
 		{
 			for (String value : entry.getValue())
