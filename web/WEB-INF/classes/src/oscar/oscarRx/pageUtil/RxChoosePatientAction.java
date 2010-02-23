@@ -110,17 +110,19 @@ public final class RxChoosePatientAction extends Action {
                 if (prop != null) {
                     try {
                         String propValue = prop.getValue();
-                        //System.out.println("prop=" + prop.getValue());
+
                         HashMap hm = new HashMap();
-                        String[] va = {" show_current ", " show_all ", " active ", " inactive ", " all ", " longterm_acute ", " longterm_acute_inactive_external "};
+                        //the order of strings in this array is important, because of removing string from propValue if it contains the string.
+                        String[] va = {"show_current", "show_all","longterm_acute_inactive_external", "inactive", "active",  "all", "longterm_acute", };
                         for (int i = 0; i < va.length; i++) {
                             if (propValue.contains(va[i])) {
+                                propValue=propValue.replace(va[i], "");
                                 hm.put(va[i].trim(), true);
                             }else{
                                 hm.put(va[i].trim(), false);
                             }
                         }
-                        //System.out.println("hm=" + hm);
+                        //System.out.println("in choosepatient hm=" + hm);
                         request.getSession().setAttribute("profileViewSpec", hm);
                     } catch (Exception e) {
                         e.printStackTrace();
