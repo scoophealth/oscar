@@ -27,6 +27,7 @@
   <property name="now" value="${DSTAMP}-${TSTAMP}" />
 
   <property name="build" location="tmp" />
+  <property name="report" location="${build}/report"/>
   <property name="root_web" location="${build}/web" /> 
   <property name="classes_web" location="${root_web}/classes" /> 
   <property name="doc" location="${build}/doc" /> 
@@ -48,6 +49,7 @@
   
 
   <mkdir dir="${build}" />
+  <mkdir dir="${report}" />
   <mkdir dir="${root_web}" />
   <mkdir dir="${classes_web}" />
   <mkdir dir="${doc}" />
@@ -215,6 +217,7 @@
   <propertyfile file="../web/WEB-INF/classes/build.properties">
        <entry key="builddate" type="date" value="now"/>
    	   <entry key="builddate" operation="+" value=", branch : trunk" />
+           <entry key="buildtag" type="string" value="${env.BUILD_TAG}"/>
   </propertyfile>
   
   <war destfile="${build}/oscar.war" webxml="../web/WEB-INF/web.xml"> 
