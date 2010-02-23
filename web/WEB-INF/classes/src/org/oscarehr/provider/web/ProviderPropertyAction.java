@@ -241,7 +241,10 @@ public class ProviderPropertyAction extends DispatchAction {
 
          for(int i=0;i<propertyArray.length;i++){
              System.out.println(propValue +"--"+va[i]);
-             if(propValue.contains(va[i]))  { System.out.println("contains");  propertyArray[i]=va[i].trim();}//element of array has to match exactly with viewChoices values
+             if(propValue.contains(va[i]))  {
+                 System.out.println("contains");
+                 propertyArray[i]=va[i].trim();
+             }//element of array has to match exactly with viewChoices values
          }
          prop.setValueArray(propertyArray);
          Collection viewChoices=new ArrayList();
@@ -251,7 +254,7 @@ public class ProviderPropertyAction extends DispatchAction {
          viewChoices.add(new LabelValueBean("Show Inactive","inactive"));
          viewChoices.add(new LabelValueBean("All","all"));
          viewChoices.add(new LabelValueBean("Show Longterm/Acute","longterm_acute"));
-         viewChoices.add(new LabelValueBean("Show Longterm/Acute/Inactive","longterm_acute_inactive_external"));
+         viewChoices.add(new LabelValueBean("Show Longterm/Acute/Inactive/External","longterm_acute_inactive_external"));
          request.setAttribute("viewChoices", viewChoices);
          request.setAttribute("providertitle","provider.setRxProfileView.title"); //=Set Rx Profile View
          request.setAttribute("providermsgPrefs","provider.setRxProfileView.msgPrefs"); //=Preferences
@@ -268,11 +271,12 @@ public class ProviderPropertyAction extends DispatchAction {
 
    public ActionForward saveRxProfileView(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
         //System.out.println(" in saveProfileView");
+       try{
         String provider=(String) request.getSession().getAttribute("user");
 
         DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UProfileView=(UserProperty)frm.get("rxProfileViewProperty");
-        String[] va=new String[7];
+        String[] va=null;
         if(UProfileView!=null)
             va=UProfileView.getValueArray();
         UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
@@ -283,8 +287,10 @@ public class ProviderPropertyAction extends DispatchAction {
         }
 
         String rxProfileView="";
-        for(int i=0;i<va.length;i++){
-            rxProfileView+=" "+va[i]+" ";
+        if(va!=null){
+            for(int i=0;i<va.length;i++){
+                rxProfileView+=" "+va[i]+" ";
+            }
         }
         System.out.println("rxProfileView="+rxProfileView);
         prop.setValue(rxProfileView);
@@ -299,6 +305,9 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("providerbtnSubmit","provider.setRxProfileView.btnSubmit"); //=Save
          request.setAttribute("providermsgSuccess","provider.setRxProfileView.msgSuccess"); //=Rx Profile View saved
          request.setAttribute("method","saveRxProfileView");
+       }catch(Exception e){
+           e.printStackTrace();
+       }
          //System.out.println("Finish in saveProfileView");
          return actionmapping.findForward("genRxProfileView");
     }
