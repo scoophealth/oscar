@@ -67,13 +67,34 @@
             boolean longterm_acute_inactive_external=true;
             if(hm==null) {System.out.println("hm is null");}
             else{
+             if(hm.get("show_current")!=null)
              show_current=(Boolean)hm.get("show_current");
+             else
+                show_current=false;
+             if(hm.get("show_all")!=null)
              show_all=(Boolean)hm.get("show_all");
+             else
+                 show_all=false;
+             if(hm.get("active")!=null)
              active=(Boolean)hm.get("active");
+             else
+                 active=false ;
+             if(hm.get("inactive")!=null)
              inactive=(Boolean)hm.get("inactive");
+             else
+                 inactive=false;
+             if(hm.get("all")!=null)
              all=(Boolean)hm.get("all");
+             else
+                 all=false;
+             if(hm.get("longterm_acute")!=null)
              longterm_acute=(Boolean)hm.get("longterm_acute");
+             else
+                longterm_acute=false;
+             if(hm.get("longterm_acute_inactive_external")!=null)
              longterm_acute_inactive_external=(Boolean)hm.get("longterm_acute_inactive_external");
+             else
+                longterm_acute_inactive_external=false;
             }
 
             //System.out.println("usefav="+usefav);
