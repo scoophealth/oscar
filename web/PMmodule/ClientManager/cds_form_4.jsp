@@ -36,6 +36,26 @@
 			</td>
 		</tr>
 		<tr>
+			<td class="genericTableHeader">7a. Waiting list / assessment</td>
+			<td class="genericTableData">
+				<table>
+					<tr>
+						<td>Date of initial contact (waiting list)</td>
+						<td><input type="text" name="initialContactDate" id="initialContactDate" value="<%=CdsForm4.getDateAsISOString(cdsClientForm.getInitialContactDate())%>" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="initialContactDate_cal"></td>
+					</tr>
+					<tr>
+						<td>Date of assessment / interview</td>
+						<td><input type="text" name="assessmentDate" id="assessmentDate" value="<%=CdsForm4.getDateAsISOString(cdsClientForm.getAssessmentDate())%>" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="assessmentDate_cal"></td>
+					</tr>
+				</table>
+				
+				<script type="text/javascript">
+					Calendar.setup({ inputField : "initialContactDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "initialContactDate_cal", singleClick : true, step : 1 });
+					Calendar.setup({ inputField : "assessmentDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "assessmentDate_cal", singleClick : true, step : 1 });
+				</script>			
+			</td>
+		</tr>
+		<tr>
 			<td class="genericTableHeader">8. Gender</td>
 			<td class="genericTableData">
 				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "gender", CdsForm4.getCdsFormOptions("008"))%>

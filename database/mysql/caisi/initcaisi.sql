@@ -2599,7 +2599,9 @@ create table CdsClientForm
 	admissionId int,
 	index(admissionId),
 	clientAge int,
-	index(clientAge)
+	index(clientAge),
+	initialContactDate date,
+	assessmentDate date
 );
 
 create table CdsClientFormData

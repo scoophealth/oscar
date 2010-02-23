@@ -3,6 +3,7 @@ package org.oscarehr.PMmodule.web;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -212,5 +213,12 @@ public class CdsForm4 {
 	public static void deleteHospitalisationDay(Integer hospitalisationDayId)
 	{
 		cdsHospitalisationDaysDao.remove(hospitalisationDayId);		
+	}
+	
+	public static String getDateAsISOString(Date date)
+	{
+		if (date==null) return("");
+	
+		return(DateFormatUtils.ISO_DATE_FORMAT.format(date));
 	}
 }

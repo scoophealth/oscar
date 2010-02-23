@@ -1,5 +1,7 @@
 package org.oscarehr.PMmodule.web;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
@@ -13,7 +15,7 @@ public class CdsForm4Action {
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 
-	public static CdsClientForm createCdsClientForm(Integer admissionId, Integer clientAge, Integer clientId, boolean signed)
+	public static CdsClientForm createCdsClientForm(Integer admissionId, Integer clientAge, Integer clientId, Date initialContactDate, Date assessmentDate, boolean signed)
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
@@ -24,6 +26,8 @@ public class CdsForm4Action {
 		cdsClientForm.setClientId(clientId);
 		cdsClientForm.setFacilityId(loggedInInfo.currentFacility.getId());
 		cdsClientForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		cdsClientForm.setInitialContactDate(initialContactDate);
+		cdsClientForm.setAssessmentDate(assessmentDate);
 		cdsClientForm.setSigned(signed);
 		cdsClientFormDao.persist(cdsClientForm);
 		

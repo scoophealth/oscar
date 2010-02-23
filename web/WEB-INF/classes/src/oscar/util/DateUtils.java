@@ -524,4 +524,11 @@ public class DateUtils {
 			throw (new IllegalArgumentException("The passed in string is not a valid ISO date"));
 		}
 	}
+	
+	public static Date toDate(String isoDateString)
+	{
+		GregorianCalendar cal=toGregorianCalendarDate(isoDateString);
+		if (cal!=null) return(cal.getTime());
+		else return(null);
+	}
 }
