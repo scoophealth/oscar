@@ -74,6 +74,7 @@ public class MammogramReport implements PreventionReport{
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
              prd.bonusStatus = "N";
+             Date prevDate = null;
              if(ineligible(prevs)){
                 prd.rank = 5;
                 prd.lastDate = "------"; 
@@ -91,7 +92,7 @@ public class MammogramReport implements PreventionReport{
                 Hashtable h = (Hashtable) noFutureItems.get(noFutureItems.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 String prevDateStr = (String) h.get("prevention_date");
-                Date prevDate = null;
+                
                 try{
                    prevDate = (java.util.Date)formatter.parse(prevDateStr);
                 }catch (Exception e){}
@@ -185,7 +186,7 @@ public class MammogramReport implements PreventionReport{
                    //done++;
                 }
              }
-             letterProcessing( prd,"MAMF",asofDate);
+             letterProcessing( prd,"MAMF",asofDate,prevDate);
              returnReport.add(prd);
              
           }
@@ -271,10 +272,24 @@ public class MammogramReport implements PreventionReport{
    String LETTER1 = "L1";
    String LETTER2 = "L2";
    String PHONE1 = "P1";
+   String CALLFU = "Follow Up";
   
-   private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate){
+   private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate,Date prevDate){
        if (prd != null){
-          if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
+          boolean inclUpToDate = false;
+          if( prd.state.equals("Up to date") ) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(asofDate);
+            cal.add(Calendar.YEAR, -2);
+            Date dueDate = cal.getTime();
+            cal.add(Calendar.MONTH,-6);
+            Date cutoffDate = cal.getTime();
+
+            if( (dueDate.after(prevDate) && cutoffDate.before(prevDate)) || cutoffDate.after(prevDate) ) {
+                inclUpToDate = true;
+            }
+          }
+          if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue") || inclUpToDate){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
@@ -348,7 +363,9 @@ public class MammogramReport implements PreventionReport{
                 //prd.numMonths ;
           }else if(prd.state.equals("Ineligible")){
                 // Do nothing   
-                prd.nextSuggestedProcedure = "----"; 
+                prd.nextSuggestedProcedure = "----";
+          }else if(prd.state.equals("Pending")){
+                prd.nextSuggestedProcedure = this.CALLFU;
           }else if(prd.state.equals("Up to date")){
                 //Do nothing
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
