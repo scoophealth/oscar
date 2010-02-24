@@ -667,6 +667,7 @@ public class ProgramManagerAction extends BaseAction {
 		if (request.getParameter("program.transgender") == null) program.setTransgender(false);
 		if (request.getParameter("program.firstNation") == null) program.setFirstNation(false);
 		if (request.getParameter("program.bedProgramAffiliated") == null) program.setBedProgramAffiliated(false);
+		if (request.getParameter("program.bedProgramLinkId") == null) program.setBedProgramLinkId(0);
 		if (request.getParameter("program.alcohol") == null) program.setAlcohol(false);
 		if (request.getParameter("program.physicalHealth") == null) program.setPhysicalHealth(false);
 		if (request.getParameter("program.mentalHealth") == null) program.setMentalHealth(false);
