@@ -251,6 +251,17 @@
 </path>
 
 
+<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+
+<target name="findbugs" depends="init">
+    <findbugs home="${FINDBUGS.HOME}" output="xml" outputFile="${report}/oscar-fb.xml" >
+      <sourcePath path="${src_web}" />
+      <class location="${build}/oscar.war" />
+    </findbugs>
+</target>
+
+
+
 <target name="cpd" depends="init">
     <taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" classpathref="classpath.path.pmd"  />
     <cpd minimumTokenCount="100" outputFile="${report}/cpd_report.xml" format="xml">
