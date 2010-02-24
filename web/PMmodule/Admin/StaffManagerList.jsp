@@ -127,8 +127,10 @@
 		<display:column property="phone" sortable="true" title="Phone" />
 		<display:column property="workPhone" sortable="true"
 			title="Work Phone" />
+			<!-- 
 		<display:column property="providerType" sortable="true"
 			title="OSCAR Type" />
+			 -->
 	</display:table>
 
 </html:form>
