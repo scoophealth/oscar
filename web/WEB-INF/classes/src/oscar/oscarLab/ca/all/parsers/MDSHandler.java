@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.Segment;
+import ca.uhn.hl7v2.model.Structure;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
@@ -97,7 +99,7 @@ public class MDSHandler implements MessageHandler {
             ArrayList obxSegs = (ArrayList) obrGroups.get(i);
             for (int j=0; j < obxSegs.size(); j++){
                 String obx = (String) obxSegs.get(j);
-                logger.info("OBRSEG("+i+") OBXSEG("+j+"): "+obx);
+                //logger.info("OBRSEG("+i+") OBXSEG("+j+"): "+obx);
             }
         }
          */
@@ -200,7 +202,7 @@ public class MDSHandler implements MessageHandler {
     public String getObservationHeader(int i, int j){
         
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
-        logger.info("OBRGROUP("+i+") OBXSEG("+j+"): '"+((String) obxSegs.get(j)));
+        //logger.info("OBRGROUP("+i+") OBXSEG("+j+"): '"+((String) obxSegs.get(j)));
         return(matchOBXToHeader( (String) obxSegs.get(j)));
         
     }
@@ -346,18 +348,18 @@ public class MDSHandler implements MessageHandler {
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
         String obxSeg = ((String) obxSegs.get(j)).substring(2);
         
-        
         // if the obxSeg is part of the first obx array
         if (obxSeg.charAt(3) == '('){
             
-            if(j+1 == obxSegs.size())
+            if(j+1 == obxSegs.size()){
                 obxSeg = obxSeg.substring(0, 3);
-            else{
+            }else{
                 String nextObxSeg = ((String) obxSegs.get(j+1)).substring(2);
-                if (nextObxSeg.charAt(3) == '(')
+                if (nextObxSeg.charAt(3) == '('){
                     return(0);
-                else
+                }else{
                     obxSeg = obxSeg.substring(0, 3);
+                }
             }
             
         }
@@ -375,7 +377,6 @@ public class MDSHandler implements MessageHandler {
         }
         
         return(count);
-        
     }
     
     public String getOBXComment(int i, int j, int k){
@@ -383,26 +384,30 @@ public class MDSHandler implements MessageHandler {
         String[] segments = terser.getFinder().getCurrentGroup().getNames();
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
         String obxSeg = ((String) obxSegs.get(j)).substring(2);
-        
+
         // if the obxSeg is part of the first obx array
-        if (obxSeg.charAt(3) == '(')
+        if (obxSeg.charAt(3) == '('){
             obxSeg = obxSeg.substring(0, 3);
+        }
         
         int l = 0;
         while(!obxSeg.equals(segments[l])){
             l++;
         }
         
-        l = l+k+1;
+        l = l+k+1; // at this point, l is pointing at the NTE segment
         
         try{
+            Structure[] nteSegs = terser.getFinder().getRoot().getAll(segments[l]);
             if (getString(terser.get("/."+segments[l]+"-2-1")).equals("MC")){
+              String comment = "";
+              for (int x=0; x < nteSegs.length; x++){
                 
                 int m = 0;
                 int count = 0;
-                String commentCode = getString(terser.get("/."+segments[l]+"-3-2"));
+                Segment nteSeg = (Segment) nteSegs[x];
+                String commentCode = getString(terser.get(nteSeg,3,0,2,1));
                 String matchCommentCode = terser.get("/.ZMC("+m+")-2-1");
-                String comment = "";
                 while(matchCommentCode != null){
                     
                     if (matchCommentCode.equals(commentCode)){
@@ -415,14 +420,14 @@ public class MDSHandler implements MessageHandler {
                     m++;
                     matchCommentCode = terser.get("/.ZMC("+m+")-2-1");
                 }
-                
-                return(comment);
+              }
+              return(comment);
                 
             }else{
                 return(getString(terser.get("/."+segments[l]+"-3-2")));
             }
         }catch(Exception e){
-            logger.error("Could not retrieve the number of OBX comments", e);
+            logger.error("Could not retrieve OBX comments", e);
             
             return("");
         }
