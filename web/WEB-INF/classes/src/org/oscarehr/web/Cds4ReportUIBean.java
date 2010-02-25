@@ -239,7 +239,7 @@ public final class Cds4ReportUIBean {
 	
 	public int[] getDataRow(CdsFormOption cdsFormOption) {
 		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return(get007DataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("07a-")) return(getNotAvailableDataLine());
+		else if (cdsFormOption.getCdsDataCategory().startsWith("07a-")) return(get07aDataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return(get009DataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
@@ -274,6 +274,12 @@ public final class Cds4ReportUIBean {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 			return(getNotAvailableDataLine());
 		}
+	}
+
+	private static int[] getNotAvailableDataLine() {
+		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
+		for (int i=0;i<dataRow.length; i++) dataRow[i]=-1;
+		return(dataRow);		
 	}
 
 	private int[] get007DataLine(CdsFormOption cdsFormOption) {
@@ -314,11 +320,76 @@ public final class Cds4ReportUIBean {
 		return(dataRow);
 	}
 
-	private static int[] getNotAvailableDataLine() {
-		int[] dataRow=new int[NUMBER_OF_DATA_ROW_COLUMNS];
-		for (int i=0;i<dataRow.length; i++) dataRow[i]=-1;
-		return(dataRow);		
+	private int[] get07aDataLine(CdsFormOption cdsFormOption) {
+		int[] dataRow=getNotAvailableDataLine();
+
+		if ("07a-01".equals(cdsFormOption.getCdsDataCategory())) {
+			dataRow[0]=countWaitingForAssesment(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
+			
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=countWaitingForAssesment(bucket);
+			}			
+		} else if ("07a-02".equals(cdsFormOption.getCdsDataCategory())) {
+			dataRow[0]=countDaysWaitingForAssesment(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
+			
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=countDaysWaitingForAssesment(bucket);
+			}
+		} else {
+			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
+		}
+					
+		return(dataRow);
 	}
+	
+	private int countWaitingForAssesment(Collection<CdsClientForm> bucket) {
+		int count=0;
+
+		if (bucket!=null)
+		{
+			for (CdsClientForm form : bucket)
+			{
+				Date initialContactDate=form.getInitialContactDate();
+				if (initialContactDate!=null && initialContactDate.before(endDate.getTime()))
+				{
+					Date assessmentDate=form.getAssessmentDate();
+					if (assessmentDate==null || assessmentDate.after(endDate.getTime())) count++;
+				}
+			}
+		}
+		
+	    return(count);
+    }
+
+	private int countDaysWaitingForAssesment(Collection<CdsClientForm> bucket) {
+		int count=0;
+
+		if (bucket!=null)
+		{
+			for (CdsClientForm form : bucket)
+			{
+				Date initialContactDate=form.getInitialContactDate();
+				if (initialContactDate!=null && initialContactDate.before(endDate.getTime()))
+				{
+					Date assessmentDate=form.getAssessmentDate();
+					Date endCountDate=null;
+					
+					
+					if (assessmentDate==null) endCountDate=endDate.getTime();
+					else if (assessmentDate.after(endDate.getTime())) endCountDate=endDate.getTime();
+					else endCountDate=assessmentDate;
+
+					count=count+(int)(DateUtils.getNumberOfDaysBetweenTwoDates(initialContactDate, endCountDate));
+				}
+			}
+		}
+		
+	    return(count);
+    }
 
 	private int[] getGenericLatestAnswerDataLine(CdsFormOption cdsFormOption) {
 		int[] dataRow=getNotAvailableDataLine();

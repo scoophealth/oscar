@@ -486,6 +486,12 @@ public class DateUtils {
 		return(timeInMillis/org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
 	}
 	
+	public static long getNumberOfDaysBetweenTwoDates(Date date1, Date date2)
+	{
+		long timeInMillis=Math.abs(date1.getTime()-date2.getTime());
+		return(timeInMillis/org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY);
+	}
+
 	/**
 	 * Converts a String date with the form 'yyyy-MM-dd' to a String date with the form 'yyyyMMdd'
 	 * 
