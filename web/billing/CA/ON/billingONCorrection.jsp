@@ -57,6 +57,7 @@
 			String r_status = "";
 			String roster_status = "";
 			String comment = "";
+                        String payer = "";
 			String htmlPaid = "";
 			int rowCount = 0;
 			int rowReCount = 0;
@@ -151,6 +152,12 @@ function scScriptAttach(nameF) {
     f1 = escape("document.forms[1].elements[\'"+nameF+ "\'].value");
 	awnd=rs('att','billingCodeSearch.jsp?name='+f0 + '&search=&name1=&name2=&nameF='+f1,600,600,1);
 	awnd.focus();
+}
+
+function search3rdParty(elementName) {
+    var d = elementName;
+    t0 = escape("document.forms[1].elements[\'"+d+"\'].value");
+    popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
 }
 
 function validateNum(el){
@@ -311,6 +318,10 @@ function sanityCheck(id) {
 						+ tProp.getProperty("payment") + "' /></br>";
 					htmlPaid += "Refund</br><input type='text' name='refund' size=5 value='" 
 						+ tProp.getProperty("refund") + "' /></br>";
+                                        payer = tProp.getProperty("billTo");
+                                        if( payer == null ) {
+                                            payer = "";
+                                        }
 				}
 
 %>
@@ -415,6 +426,7 @@ if(bFlag) {
 		<td width="320"><strong><bean:message
 			key="billing.billingCorrection.formHCType" />:</strong> <select
 			name="hc_type" style="font-size: 80%;">
+                        <option value="OT" <%=HCTYPE.equals("OT")?" selected":""%>>OT-Other</option>
 			<option value="AB" <%=HCTYPE.equals("AB")?" selected":""%>>AB-Alberta</option>
                         <option value="BC" <%=HCTYPE.equals("BC")?" selected":""%>>BC-British Columbia</option>
                         <option value="MB" <%=HCTYPE.equals("MB")?" selected":""%>>MB-Manitoba</option>
@@ -777,9 +789,19 @@ function changeSite(sel) {
 			value="Submit&Correct Another"></td>
 	</tr>
 	<tr>
-		<td colspan="6">Billing Notes:<br>
-		<textarea name="comment" value="" cols=60 rows=4><%=comment %></textarea>
-		</td>
+            <td colspan="6">
+                <%
+                if( payer.length() > 0 ) {%>
+                    <span style="float:right;">
+                        <a href="#" onclick="search3rdParty('billto');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
+                        <textarea name="billto" value="" cols="32" rows=4><%=payer %></textarea>
+                    </span>
+                <%}%>
+                <span style="float:left;">
+                    <bean:message key="billing.billingCorrection.msgNotes"/>:<br>
+                    <textarea name="comment" cols="32" value="" rows=4><%=comment %></textarea>
+                </span>
+            </td>
 	</tr>
 	<tr>
 		<td><a href="billingON3rdInv.jsp?billingNo=<%=billNo%>">Reprint</a>
