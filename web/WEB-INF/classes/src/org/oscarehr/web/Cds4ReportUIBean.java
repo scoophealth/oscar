@@ -339,6 +339,22 @@ public final class Cds4ReportUIBean {
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
 				dataRow[i+1]=countDaysWaitingForAssesment(bucket);
 			}
+		} else if ("07a-03".equals(cdsFormOption.getCdsDataCategory())) {
+			dataRow[0]=countWaitingForService(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
+			
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=countWaitingForService(bucket);
+			}
+		} else if ("07a-04".equals(cdsFormOption.getCdsDataCategory())) {
+			dataRow[0]=countDaysWaitingForService(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
+			
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=countDaysWaitingForService(bucket);
+			}
 		} else {
 			logger.error("Missing case, cdsFormOption="+cdsFormOption.getCdsDataCategory());
 		}
@@ -378,7 +394,6 @@ public final class Cds4ReportUIBean {
 					Date assessmentDate=form.getAssessmentDate();
 					Date endCountDate=null;
 					
-					
 					if (assessmentDate==null) endCountDate=endDate.getTime();
 					else if (assessmentDate.after(endDate.getTime())) endCountDate=endDate.getTime();
 					else endCountDate=assessmentDate;
@@ -391,6 +406,51 @@ public final class Cds4ReportUIBean {
 	    return(count);
     }
 
+	private int countWaitingForService(Collection<CdsClientForm> bucket) {
+		int count=0;
+
+		if (bucket!=null)
+		{
+			for (CdsClientForm form : bucket)
+			{
+				Date assessmentDate=form.getAssessmentDate();
+				if (assessmentDate!=null && assessmentDate.before(endDate.getTime()))
+				{
+					Admission admission=admissionMap.get(form.getAdmissionId());
+					
+					if (admission==null || admission.getAdmissionDate().after(endDate.getTime())) count++;
+				}
+			}
+		}
+		
+	    return(count);
+    }
+
+	private int countDaysWaitingForService(Collection<CdsClientForm> bucket) {
+		int count=0;
+
+		if (bucket!=null)
+		{
+			for (CdsClientForm form : bucket)
+			{
+				Date assessmentDate=form.getAssessmentDate();
+				if (assessmentDate!=null && assessmentDate.before(endDate.getTime()))
+				{
+					Admission admission=admissionMap.get(form.getAdmissionId());					
+					Date endCountDate=null;
+					
+					if (admission==null) endCountDate=endDate.getTime();
+					else if (admission.getAdmissionDate().after(endDate.getTime())) endCountDate=endDate.getTime();
+					else endCountDate=admission.getAdmissionDate();
+
+					count=count+(int)(DateUtils.getNumberOfDaysBetweenTwoDates(assessmentDate, endCountDate));
+				}
+			}
+		}
+		
+	    return(count);
+    }
+	
 	private int[] getGenericLatestAnswerDataLine(CdsFormOption cdsFormOption) {
 		int[] dataRow=getNotAvailableDataLine();
 
@@ -883,7 +943,7 @@ public final class Cds4ReportUIBean {
 	private int getTotalDayCount(CdsHospitalisationDays cdsHospitalisationDays, Calendar startBoundingDate, Calendar endBoundingDate) {
 
 		// check the hospital days are within bounding dates
-		if (cdsHospitalisationDays.getDischarged().before(startBoundingDate)) return(0);
+		if (cdsHospitalisationDays.getDischarged()!=null && cdsHospitalisationDays.getDischarged().before(startBoundingDate)) return(0);
 		if (cdsHospitalisationDays.getAdmitted().after(endBoundingDate)) return(0);
 		
 		// limit to max bounding dates
