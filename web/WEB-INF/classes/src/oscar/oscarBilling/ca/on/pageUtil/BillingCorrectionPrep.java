@@ -98,8 +98,23 @@ public class BillingCorrectionPrep {
 
 		// 3rd party elements
 		if (requestData.getParameter("payment") != null) {
-			ret = update3rdPartyItem(requestData);
+			ret = update3rdPartyItem("payment", requestData);
+                        ret = update3rdPartyItem("refund", requestData);
 		}
+
+		if (requestData.getParameter("billto") != null) {
+			ret = update3rdPartyItem("billTo", requestData);
+		}
+
+		return ret;
+	}
+
+        public boolean update3rdPartyItem(String key, HttpServletRequest request) {
+		boolean ret = true;
+		JdbcBilling3rdPartImpl tobj = new JdbcBilling3rdPartImpl();
+		String billingNo = request.getParameter("xml_billing_no");
+		tobj.updateKeyValue(billingNo, key, request
+				.getParameter(key));
 		return ret;
 	}
 
