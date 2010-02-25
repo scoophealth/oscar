@@ -4,6 +4,7 @@
   <property environment="env"/>
 
   <property name="catalina" location="${env.CATALINA_HOME}" />
+  <property name="findbugs_home" location="${env.FINDBUGS_HOME}" />
   <property file="tomcat.properties" />
   <property name="webapp.name" value="oscar"/>
   
@@ -250,11 +251,13 @@
    </fileset>
 </path>
 
-
-<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
-
 <target name="findbugs" depends="init">
-    <findbugs home="${FINDBUGS.HOME}" output="xml" outputFile="${report}/oscar-fb.xml" >
+    <path id="findbugs-jar">
+      <pathelement path="${findbugs_home}/lib/findbugs-ant.jar" />
+    </path>
+   
+    <taskdef name="findbugs"  classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs-jar" />
+    <findbugs home="${findbugs_home}" output="xml" outputFile="${report}/oscar-fb.xml" >
       <sourcePath path="${src_web}" />
       <class location="${build}/oscar.war" />
     </findbugs>
