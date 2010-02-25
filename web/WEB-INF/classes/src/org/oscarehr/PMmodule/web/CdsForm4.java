@@ -221,4 +221,14 @@ public class CdsForm4 {
 	
 		return(DateFormatUtils.ISO_DATE_FORMAT.format(date));
 	}
+	
+	public static String getSingleAnswer(Integer cdsClientFormId, String question)
+	{
+		List<CdsClientFormData> answers=getAnswers(cdsClientFormId, question);
+		String result=null;
+		
+		if (answers.size()>0) result=answers.get(0).getAnswer();
+		
+		return(result);
+	}
 }

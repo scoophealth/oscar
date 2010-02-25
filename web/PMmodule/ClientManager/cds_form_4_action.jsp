@@ -21,10 +21,26 @@
 	Integer clientId=Integer.valueOf(parameters.get("clientId")[0]);	
 	parameters.remove("clientId");
 
-	Date initialContactDate=DateUtils.toDate(parameters.get("initialContactDate")[0]);
+	Date initialContactDate=null;
+	try
+	{
+		initialContactDate=DateUtils.toDate(parameters.get("initialContactDate")[0]);
+	}
+	catch(Exception e)
+	{
+		// do nothing, no date specified
+	}
 	parameters.remove("initialContactDate");
 
-	Date assessmentDate=DateUtils.toDate(parameters.get("assessmentDate")[0]);
+	Date assessmentDate=null;
+	try
+	{
+		assessmentDate=DateUtils.toDate(parameters.get("assessmentDate")[0]);
+	}
+	catch(Exception e)
+	{
+		// do nothing, no date specified
+	}
 	parameters.remove("assessmentDate");
 
 	boolean signed=WebUtils.isChecked(request, "signed");	

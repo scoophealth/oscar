@@ -247,6 +247,8 @@
 							</script>
 						</td>
 						<td>
+							Refused To Answer : <input type="checkbox" name="refused21" <%="on".equals(CdsForm4.getSingleAnswer(cdsClientForm.getId(), "refused21"))?"checked=\"checked\"":""%> />
+							<br /><br />
 							<table style="border-collapse:collapse;border:solid black 1px">
 								<tr>
 									<td class="genericTableHeader" style="border:solid black 1px;text-align:center" colspan="2">Add</td>
