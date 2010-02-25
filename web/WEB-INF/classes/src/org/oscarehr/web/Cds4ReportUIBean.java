@@ -337,8 +337,6 @@ public final class Cds4ReportUIBean {
 		return(dataRow);
 	}
 
-	
-	
 	private int countAnonymous(Collection<CdsClientForm> bucket) {
 		int count=0;
 
@@ -738,7 +736,6 @@ public final class Cds4ReportUIBean {
 	}
 
 	private static int get02xQuestionAnswerCounts(String cdsQuestion, String cdsAnswer, Collection<CdsClientForm> cdsForms) {
-
 		int totalCount = 0;
 
 		if (cdsForms != null) {
@@ -885,7 +882,19 @@ public final class Cds4ReportUIBean {
 
 			return(dataRow);
 		} else if ("021-04".equals(cdsFormOption.getCdsDataCategory())) {
-			return(getNotAvailableDataLine());
+			int[] dataRow=getNotAvailableDataLine();
+
+			// get multi admissions number
+			dataRow[0]=countRefused21(singleMultiAdmissions.multipleAdmissionsAllForms);
+			
+			// get cohort numbers
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=countRefused21(bucket);
+			}
+
+			return(dataRow);
 		} else if ("021-05".equals(cdsFormOption.getCdsDataCategory())) {
 			return(get021HospitalDays(1));
 		} else if ("021-06".equals(cdsFormOption.getCdsDataCategory())) {
@@ -912,6 +921,19 @@ public final class Cds4ReportUIBean {
 		}
 	}
 	
+	private int countRefused21(Collection<CdsClientForm> cdsForms) {
+		int totalCount = 0;
+
+		if (cdsForms != null) {
+			for (CdsClientForm form : cdsForms) {
+				List<CdsClientFormData> results = cdsClientFormDataDao.findByQuestion(form.getId(), "refused21");
+				if (results.size()>0 && "on".equals(results.get(0).getAnswer())) totalCount++;
+			}
+		}
+
+		return(totalCount);
+	}
+
 	private List<CdsHospitalisationDays> getHopitalisationDaysDuringAdmission(CdsClientForm form)
 	{
 		ArrayList<CdsHospitalisationDays> results=new ArrayList<CdsHospitalisationDays>();
