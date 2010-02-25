@@ -257,7 +257,7 @@
     </path>
    
     <taskdef name="findbugs"  classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs-jar" />
-    <findbugs home="${findbugs_home}" output="xml" outputFile="${report}/oscar-fb.xml" >
+    <findbugs home="${findbugs_home}" output="xml" outputFile="${report}/oscar-fb.xml" jvmargs="-Xmx1024m" timeout="9000000">
       <sourcePath path="${src_web}" />
       <class location="${build}/oscar.war" />
     </findbugs>
