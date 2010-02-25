@@ -665,7 +665,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             <td align="center"><%= handler.getTimeStamp(j, k) %></td>
                                             <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
                                         </tr>
-                                        
+
                                         <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                 <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
@@ -738,6 +738,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         </form>
         <!-- a style="color:white;" href="labDebug.jsp?segmentID=<%=segmentID%>" >debug</a -->
         <a style="color:white;" href="javascript: void();" onclick="showHideItem('rawhl7');" >show</a> 
-        <pre id="rawhl7"><%=hl7%></pre>
+        <pre id="rawhl7" style="display:none;"><%=hl7%></pre>
     </body>
 </html>
