@@ -364,6 +364,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				LOG.debug("date parse exception on eff date", e);
 				// that's fine ignore it, probably an invalid date or no date set.
 			}
+
+			String anonymous=StringUtils.trimToNull(request.getParameter("anonymous"));
+			client.setAnonymous(anonymous);
 			
 			// save client information.
 			saveClient(client, providerNo);

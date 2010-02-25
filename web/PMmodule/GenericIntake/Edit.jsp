@@ -426,6 +426,17 @@
                        value="<bean:write name="genericIntakeEditForm"  property="client.phone2"/>"/>
             </label>
         </td>
+        <td>
+            <label>Anonymous</label>
+            <br />
+            <%
+            	String anonymous=intakeEditForm.getClient().getAnonymous();
+            %>
+            <select name="anonymous">
+            	<option value="" <%=anonymous==null?"selected=\"selected\"":""%>>not anonymous</option>
+            	<option value="anonymous" <%="anonymous".equals(anonymous)?"selected=\"selected\"":""%>>anonymous</option>
+            </select>
+        </td>
     </tr>
     <tr>
         <td><label>Street<br><html:text size="20" maxlength="60" property="client.address"/></label></td>

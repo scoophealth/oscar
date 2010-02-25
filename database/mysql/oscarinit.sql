@@ -425,6 +425,7 @@ CREATE TABLE demographic (
 	sin varchar(15) default NULL, 
   country_of_origin char(4) default NULL,
   newsletter varchar(32) default '',
+  anonymous varchar(32),
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
   KEY name (last_name,first_name),

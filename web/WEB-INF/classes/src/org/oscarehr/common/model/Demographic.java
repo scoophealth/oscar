@@ -85,6 +85,7 @@ public class Demographic implements Serializable {
 	private String sin;
 	private Integer headRecord = null;
 	private Set<Integer> subRecord = null;
+	private String anonymous=null;
 
 	private int activeCount = 0;
 	private int hsAlertCount = 0;
@@ -601,6 +602,17 @@ public class Demographic implements Serializable {
 		else return("");
 	}
 
+	public String getAnonymous() {
+    	return anonymous;
+    }
+
+	/**
+	 * @param anonymous can be any string indicating it's anonymisity (if that's a word), null means it's not anonymous.
+	 */
+	public void setAnonymous(String anonymous) {
+    	this.anonymous = anonymous;
+    }
+
 	public void setFormattedEffDate(String formattedDate) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -682,7 +694,8 @@ public class Demographic implements Serializable {
 		this.sourceOfIncome = sourceOfIncome;
 	}
 
-	public boolean equals(Object obj) {
+	@Override
+    public boolean equals(Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof Demographic)) return false;
 		else {
@@ -692,7 +705,8 @@ public class Demographic implements Serializable {
 		}
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
 			if (null == this.getDemographicNo()) return super.hashCode();
 			else {
@@ -703,7 +717,8 @@ public class Demographic implements Serializable {
 		return this.hashCode;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return super.toString();
 	}
 
