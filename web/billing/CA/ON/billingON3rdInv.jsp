@@ -1,4 +1,6 @@
-
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%
 String invNo = request.getParameter("billingNo");
 Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
@@ -14,6 +16,8 @@ Properties propGst = privateObj.getGst(invNo);
 BillingCorrectionPrep billObj = new BillingCorrectionPrep();
 List aL = billObj.getBillingRecordObj(invNo);
 BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) aL.get(0);
+DemographicDao demoDAO = (DemographicDao)SpringUtils.getBean("demographicDao");
+Demographic demo = demoDAO.getDemographic(ch1Obj.getDemographic_no());
 
 Properties gstProp = new Properties();
 GstControlAction db = new GstControlAction();
@@ -67,7 +71,8 @@ String percent = gstProp.getProperty("gstPercent", "");
 <table width="100%" border="0">
 	<tr>
 		<td>Patient: <%=ch1Obj.getDemographic_name() %> (<%=ch1Obj.getDemographic_no() %>)
-		<%=ch1Obj.getSex().equals("1")? "Male":"Female" %> DOB: <%=ch1Obj.getDob() %>
+		<%=ch1Obj.getSex().equals("1")? "Male":"Female" %> DOB: <%=ch1Obj.getDob() %><br>
+                Insurance No: <%=demo.getHin()%>
 		</td>
 	</tr>
 </table>
