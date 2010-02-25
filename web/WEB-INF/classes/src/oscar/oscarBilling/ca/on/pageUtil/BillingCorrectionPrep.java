@@ -102,7 +102,7 @@ public class BillingCorrectionPrep {
                         ret = update3rdPartyItem("refund", requestData);
 		}
 
-		if (requestData.getParameter("billto") != null) {
+		if (requestData.getParameter("billTo") != null) {
 			ret = update3rdPartyItem("billTo", requestData);
 		}
 

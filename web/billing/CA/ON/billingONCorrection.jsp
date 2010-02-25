@@ -793,8 +793,8 @@ function changeSite(sel) {
                 <%
                 if( payer.length() > 0 ) {%>
                     <span style="float:right;">
-                        <a href="#" onclick="search3rdParty('billto');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
-                        <textarea name="billto" value="" cols="32" rows=4><%=payer %></textarea>
+                        <a href="#" onclick="search3rdParty('billTo');return false;"><bean:message key="billing.billingCorrection.msgPayer"/></a><br>
+                        <textarea name="billTo" value="" cols="32" rows=4><%=payer %></textarea>
                     </span>
                 <%}%>
                 <span style="float:left;">
