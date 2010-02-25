@@ -40,11 +40,13 @@ import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
 import org.oscarehr.common.dao.CdsHospitalisationDaysDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.common.model.CdsHospitalisationDays;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.FunctionalCentre;
 import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.LoggedInInfo;
@@ -64,6 +66,7 @@ public final class Cds4ReportUIBean {
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private static CdsHospitalisationDaysDao cdsHospitalisationDaysDao = (CdsHospitalisationDaysDao) SpringUtils.getBean("cdsHospitalisationDaysDao");
+	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
 	public static final int NUMBER_OF_COHORT_BUCKETS = 11;
 	private static final int NUMBER_OF_DATA_ROW_COLUMNS=NUMBER_OF_COHORT_BUCKETS+1;
@@ -299,7 +302,21 @@ public final class Cds4ReportUIBean {
 				dataRow[i+1]=size;
 			}			
 		} else if ("007-02".equals(cdsFormOption.getCdsDataCategory())) {
+			dataRow[0]=countNoAdmission(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
+			
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=countNoAdmission(bucket);
+			}			
 		} else if ("007-03".equals(cdsFormOption.getCdsDataCategory())) {
+			dataRow[0]=countAnonymous(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
+			
+			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				dataRow[i+1]=countAnonymous(bucket);
+			}			
 		} else if ("007-04".equals(cdsFormOption.getCdsDataCategory())) {
 			dataRow[0]=singleMultiAdmissions.multipleAdmissionsLatestForms.size();
 			
@@ -319,6 +336,37 @@ public final class Cds4ReportUIBean {
 
 		return(dataRow);
 	}
+
+	
+	
+	private int countAnonymous(Collection<CdsClientForm> bucket) {
+		int count=0;
+
+		if (bucket!=null)
+		{
+			for (CdsClientForm form : bucket)
+			{
+				Demographic demographic=demographicDao.getDemographicById(form.getClientId());
+				if (demographic.getAnonymous()!=null) count++;
+			}
+		}
+		
+	    return(count);
+    }
+
+	private int countNoAdmission(Collection<CdsClientForm> bucket) {
+		int count=0;
+
+		if (bucket!=null)
+		{
+			for (CdsClientForm form : bucket)
+			{
+				if (form.getAdmissionId()==null) count++;
+			}
+		}
+		
+	    return(count);
+    }
 
 	private int[] get07aDataLine(CdsFormOption cdsFormOption) {
 		int[] dataRow=getNotAvailableDataLine();
