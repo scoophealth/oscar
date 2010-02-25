@@ -885,7 +885,7 @@ public final class Cds4ReportUIBean {
 			int[] dataRow=getNotAvailableDataLine();
 
 			// get multi admissions number
-			dataRow[0]=countRefused21(singleMultiAdmissions.multipleAdmissionsAllForms);
+			dataRow[0]=countRefused21(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
 			
 			// get cohort numbers
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
@@ -952,7 +952,6 @@ public final class Cds4ReportUIBean {
 			// Hosp    :                        A D 
 			
 			// so if H admission before P discharge && H discharge after P Admission
-			
 			if ((admission.getDischargeCalendar() ==null || temp.getAdmitted().before(admission.getDischargeCalendar())) &&
 				(temp.getDischarged()==null || temp.getDischarged().after(admission.getAdmissionCalendar())))
 			{
