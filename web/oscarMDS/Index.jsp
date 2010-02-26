@@ -22,7 +22,7 @@
     //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
     ArrayList labs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);    
     Collections.sort(labs);
-    System.out.println("labs.size="+labs.size());
+
     HashMap labMap = new HashMap();
     LinkedHashMap accessionMap = new LinkedHashMap();
     LabResultData result;
@@ -247,16 +247,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 <script type="text/javascript" language=javascript>
  
 function popupStart(vheight,vwidth,varpage) {
-    console.log("in popupstart 3 args");
     popupStart(vheight,vwidth,varpage,"helpwindow");
 }
 
 function popupStart(vheight,vwidth,varpage,windowname) {
-    console.log("in popupstart 4 args");
-    console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
-    if(!windowname)
-        windowname="helpwindow";
-    console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
+    
     var page = varpage;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
     var popup=window.open(varpage, windowname, windowprops);
