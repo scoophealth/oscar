@@ -56,7 +56,7 @@ import oscar.util.UtilDateUtilities;
 public class AddEditDocumentAction extends DispatchAction {
 
     public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
-        System.out.println("IN MULTIFAST content len: "+request.getContentLength()+" ---- "+request.getParameter("provider"));
+
         Hashtable errors = new Hashtable();
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
 
