@@ -88,7 +88,7 @@
 
 //sorting
             String sort =EDocUtil.SORT_CREATOR+",  "+ EDocUtil.SORT_OBSERVATIONDATE;
-            String sortRequest = request.getParameter("sort");
+            String sortRequest = request.getParameter("sort"); 
             if (sortRequest != null) {
                 if (sortRequest.equals("description")) {
                     sort = EDocUtil.SORT_DESCRIPTION;
