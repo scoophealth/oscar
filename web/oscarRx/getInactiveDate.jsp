@@ -30,8 +30,11 @@ Vector vec=new Vector();
 try{
                 RxDrugRef drugData = new RxDrugRef();
                  vec = drugData.getInactiveDate(din);
-    }catch(Exception e)
-{e.printStackTrace();}
+    
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+
                 
 
     Hashtable d = new Hashtable();
