@@ -26,10 +26,12 @@
 System.out.println("In getInactiveDate");
 String din =  request.getParameter("din");
 String id = request.getParameter("id");
-
+Vector vec=new Vector();
+try{
                 RxDrugRef drugData = new RxDrugRef();
-                Vector vec = drugData.getInactiveDate(din);
-                
+                 vec = drugData.getInactiveDate(din);
+    }catch(Exception e)
+{e.printStackTrace();}
                 
 
     Hashtable d = new Hashtable();

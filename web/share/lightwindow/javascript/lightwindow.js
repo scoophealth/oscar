@@ -166,7 +166,7 @@ lightwindow.prototype = {
 							'<div id="lightwindow_title_bar" >'+
 								'<div id="lightwindow_title_bar_inner" >'+
 									'<span id="lightwindow_title_bar_title"></span>'+
-									'<a id="lightwindow_title_bar_close_link" >CLOSE</a>'+
+									'<a id="lightwindow_title_bar_close_link" >Edit Rx</a>'+
 								'</div>'+
 							'</div>'+
 							'<div id="lightwindow_stage" >'+
@@ -491,7 +491,7 @@ lightwindow.prototype = {
 	//	Add the markup to the page.
 	//
 	_addLightWindowMarkup : function(rebuild) {
-            oscarLog("&&&&&&&&&&&&&&&&&&&& _addLightWindowMarkup");
+            //oscarLog("&&&&&&&&&&&&&&&&&&&& _addLightWindowMarkup");
            
             
 		var overlay = Element.extend(document.createElement('div'));

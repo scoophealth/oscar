@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Upload Multiple Documents</title>
         <script type="text/javascript" src="../share/javascript/swfupload.js"></script>
         
         <script type="text/javascript" src="../share/javascript/swfupload.queue.js"></script>
@@ -33,8 +33,8 @@ window.onload = function() {
 				//post_params: {"PHPSESSID" : ""},
 
                                 file_post_name : "filedata",
-                    post_params: {"method" : "multifast"},
-                    use_query_string : true,
+                                post_params: {"method" : "multifast"},
+                                use_query_string : true,
 
 				file_size_limit : "100 MB",
 				file_types : "*.*",
@@ -58,8 +58,8 @@ window.onload = function() {
 				button_text_top_padding: 5,
 
                                 button_action : SWFUpload.BUTTON_ACTION.SELECT_FILES,
-                    button_disabled : false, button_cursor : SWFUpload.CURSOR.HAND,
-                    //button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
+                                button_disabled : false, button_cursor : SWFUpload.CURSOR.HAND,
+                                //button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
 
 				// The event handler functions are defined in handlers.js
 				file_queued_handler : fileQueued,

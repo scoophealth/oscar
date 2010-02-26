@@ -5,8 +5,10 @@ import java.util.Date;
 
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 public class NoteDisplayLocal implements NoteDisplay {
 	private CaseManagementNote caseManagementNote;
@@ -83,6 +85,16 @@ public class NoteDisplayLocal implements NoteDisplay {
 	public boolean isDocument() {
 	    return(caseManagementNote.isDocumentNote());
     }
+
+        public boolean isRxAnnotation(){
+            System.out.println("in isRxAnnotation in notedisplaylocal.java, note id="+caseManagementNote.getId());
+
+            return (caseManagementNote.isRxAnnotation());
+       }
+
+       public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){
+            return (caseManagementNote.getRxFromAnnotation(cmnl));
+       }
 
 	public boolean isEditable() {
 		return(editable);

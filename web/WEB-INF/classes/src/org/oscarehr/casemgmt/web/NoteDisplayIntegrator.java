@@ -13,9 +13,11 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 public class NoteDisplayIntegrator implements NoteDisplay {
 	private static final Logger logger=MiscUtils.getLogger();
@@ -126,7 +128,13 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	public boolean isDocument() {
 	    return(false);
     }
+        public boolean isRxAnnotation(){
+            return (false);
+       }
 
+       public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){
+            return (null);
+       }
 	public boolean isEditable() {
 	    return(false);
     }

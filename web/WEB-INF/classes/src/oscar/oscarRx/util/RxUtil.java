@@ -1200,13 +1200,18 @@ public class RxUtil {
                     String interactingDrugName=(String)hb.get("drug2");
                     String effectStr=(String)hb.get("effect");
                     String sigStr=(String)hb.get("significance");
-                    if(sigStr.equals("1")){
-                        sigStr="minor";
-                    }else if(sigStr.equals("2")){
-                        sigStr="moderate";
-                    }else if(sigStr.equals("3")){
-                        sigStr="major";
-                    }else {
+                    System.out.println("findInterDrugStr="+hb);
+                    if(sigStr!=null){
+                        if(sigStr.equals("1")){
+                            sigStr="minor";
+                        }else if(sigStr.equals("2")){
+                            sigStr="moderate";
+                        }else if(sigStr.equals("3")){
+                            sigStr="major";
+                        }else {
+                            sigStr="unknown";
+                        }
+                    }else{
                         sigStr="unknown";
                     }
                     if(rxItem.getAtcCode().equals(interactingAtc) && effectStr!=null &&

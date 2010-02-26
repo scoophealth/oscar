@@ -87,7 +87,7 @@
             }
 
 //sorting
-            String sort = EDocUtil.SORT_OBSERVATIONDATE;
+            String sort =EDocUtil.SORT_CREATOR+",  "+ EDocUtil.SORT_OBSERVATIONDATE;
             String sortRequest = request.getParameter("sort");
             if (sortRequest != null) {
                 if (sortRequest.equals("description")) {
@@ -153,7 +153,17 @@
         <script type="text/javascript" src="../share/yui/js/animation-min.js"/></script>
         <script type="text/javascript" src="../share/yui/js/datasource-min.js"/></script>
         <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"/></script>
-        <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>        
+        <!-- calendar stylesheet -->
+        <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+        <!-- main calendar program -->
+        <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+        <!-- language for the calendar -->
+        <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+        <!-- the following script defines the Calendar.setup helper function, which makes
+               adding a calendar a matter of 1 or 2 lines of code. -->
+        <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+        <link rel="stylesheet" href="../web.css">
         <style type="text/css">
 #myAutoComplete {
     width:15em; /* set width here or else widget will expand to fit its container */
@@ -214,7 +224,10 @@
         <script type="text/javascript" src="../share/javascript/nifty.js"></script>
         <script type="text/javascript" src="../phr/phr.js"></script>
         <script type="text/javascript">
-
+        function renderCalendar(id,inputFieldId){    
+                Calendar.setup({ inputField : inputFieldId, ifFormat : "%Y-%m-%d", showsTime :false, button : id });
+        }
+       var selectedDemos=new Array();
        var myContacts = [
        <%ArrayList providers = ProviderData.getProviderList();
         for (int i = 0; i < providers.size(); i++) {
@@ -295,16 +308,20 @@
 
 var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
         var query = sQuery.toLowerCase();
-           console.log(oResultData);
-            fname = oResultData[1];
-            dob = oResultData[0];
-            
+        //oscarLog("in resultFormatter2");
+           // oscarLog(oResultData);
+            fname = oResultData[0];
+            dob = oResultData[1];
+            //oscarLog(fname);
+            //oscarLog(dob);
+            //oscarLog(query);
             fnameMatchIndex = fname.toLowerCase().indexOf(query),
             
             displayfname= '';
-
+            //oscarLog("fnameMatchIndex="+fnameMatchIndex);
         if(fnameMatchIndex > -1) {
             displayfname = highlightMatch(fname, query, fnameMatchIndex);
+            //oscarLog("displayfname in if="+displayfname);
         }
         else {
             displayfname = fname;
@@ -315,15 +332,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
 
         return displayfname + " (" + dob+ ")" ;
 
-    };
-
-
-
-
-
-
-
-      
+    };      
             window.onload=function(){
                 if(!NiftyCheck())
                     return;
@@ -361,7 +370,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                 }
                 else {
                     document.getElementById(hideelement).style.display = 'none';
-                    document.getElementById(button).innerHTML = document.getElementById(button).innerHTML.replace(minus, plus);;
+                    document.getElementById(button).innerHTML = document.getElementById(button).innerHTML.replace(minus, plus);
                 }
             }
         }
@@ -526,9 +535,19 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
             //console.log("autoCompleteHideMenu");
         }
 
-        function enableSaveButton(elementId){
-       //     console.log("enablesavebutton");
-            $('save'+elementId).disable();
+        function checkSave(elementId){
+            var curVal=$('autocompletedemo'+elementId).value;
+            var isCurValValid=false;
+            for(var i=0;i<selectedDemos.length;i++){
+                if(curVal==selectedDemos[i]){
+                    isCurValValid=true;
+                    break;
+                }
+            }
+            if(isCurValValid)
+                $('save'+elementId).enable();
+            else
+                $('save'+elementId).disable();
         }
 
         </script>
@@ -597,9 +616,10 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
 
             System.out.println("CATS " + categories.size());
 
-
+            String preCreatorId="";
             for (int i = 0; i < categories.size(); i++) {
                 String currentkey = (String) categoryKeys.get(i);
+                System.out.println("currentkey="+currentkey);
                 ArrayList category = (ArrayList) categories.get(i);
                         %>
                         <div class="doclist">
@@ -617,8 +637,11 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                 <%-- <table id="privateDocs" class="docTable" --%> <%
                             int tabindex = 1;
 
+                            String curProvNo=request.getSession().getAttribute("user").toString();
                             for (int i2 = 0; i2 < category.size(); i2++) {
                                 EDoc curdoc = (EDoc) category.get(i2);
+                                String creatorId=curdoc.getCreatorId();
+                                System.out.println("creatorId="+curdoc.getCreatorId()+"--docId="+curdoc.getDocId()+"--name="+curdoc.getCreatorName());
                                 //content type (take everything following '/')
                                 int slash = 0;
                                 String contentType = "";
@@ -634,8 +657,12 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                 String curDocId=curdoc.getDocId();
                                 String url = "ManageDocument.do?method=view&doc_no=" + curDocId;
                                 String docUrl=request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no="+curDocId;
+                                
                                 %>
                                 <div id="document<%=curdoc.getDocId()%>">
+                                    <%if(!creatorId.equals(preCreatorId)){%>
+                                    <a onclick="showhide">*****************************************************************************************</a>
+                                    <%} preCreatorId=creatorId;%>
                                     <table class="docTable">
                                         <tr>
 
@@ -671,8 +698,8 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                             <tr>
                                                                 <td>Observation Date:</td>
                                                                 <td>
-                                                                    <input tabindex="<%=tabindex++%>" id="observationDate" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
-                                                                    <a id="obsdate"><img title="Calendar" src="../images/cal.gif" alt="Calendar"border="0" /></a>
+                                                                    <input tabindex="<%=tabindex++%>" id="observationDate<%=curdoc.getDocId()%>" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
+                                                                    <a id="obsdate<%=curdoc.getDocId()%>" onmouseover="renderCalendar(this.id,'observationDate<%=curdoc.getDocId()%>' );" href="javascript:void(0);" ><img title="Calendar" src="../images/cal.gif" alt="Calendar"border="0" /></a>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -680,7 +707,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                                     <%=request.getParameter("name")%> <% }%>
                                                                 </td>
                                                                 <td><input type="hidden" name="demog" id="demofind<%=curdoc.getDocId()%>" />
-                                                                    <input tabindex="<%=tabindex++%>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" onchange="enableSaveButton('<%=curdoc.getDocId()%>')" name="demographicKeyword"  />
+                                                                    <input tabindex="<%=tabindex++%>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" onchange="checkSave('<%=curdoc.getDocId()%>')" name="demographicKeyword"  />
                                                                     <div id="autocomplete_choices<%=curdoc.getDocId()%>"class="autocomplete"></div>
 
                                                                     <script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
@@ -690,16 +717,15 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                                     YAHOO.example.BasicRemote = function() {
                                                                             //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
                                                                             var url = "../demographic/SearchDemographic.do";
-                                                                            var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleRequests'});
+                                                                            var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
                                                                             oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
                                                                             // Define the schema of the delimited resultsTEST, PATIENT(1985-06-15)
                                                                             oDS.responseSchema = {
                                                                                 resultsList : "results",
-                                                                                fields : ["fomattedDob","formattedName", "demographicNo"]
+                                                                                fields : ["formattedName","fomattedDob","demographicNo"]
                                                                             };
                                                                             // Enable caching
-                                                                            oDS.maxCacheEntries = 500;
-
+                                                                            oDS.maxCacheEntries = 100;
                                                                             //oDS.connXhrMode ="cancelStaleRequests";
 
                                                                             // Instantiate the AutoComplete
@@ -707,22 +733,20 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                                             oAC.queryMatchSubset = true;
                                                                             oAC.minQueryLength = 3;
                                                                             oAC.maxResultsDisplayed = 25;
-                                                                             oAC.formatResult = resultFormatter2;
+                                                                            oAC.formatResult = resultFormatter2;
                                                                             //oAC.typeAhead = true;
                                                                             oAC.queryMatchContains = true;
                                                                             oAC.itemSelectEvent.subscribe(function(type, args) {
-                                                                               // console.log("before replace:");
-                                                                               // console.log(args);
-                                                                              //  console.log(args[0].getInputEl());
-                                                                               // console.log(args[0].getInputEl().id);
                                                                                var str = args[0].getInputEl().id.replace("autocompletedemo","demofind");
 
                                                                                $(str).value = args[2][2];//li.id;
-                                                                              // console.log(str+"--"+$(str).value+"--"+args);
-                                                                               args[0].getInputEl().value = args[2][1]+ "("+args[2][0]+")";
+                                                                               //oscarLog("str value="+$(str).value);
+                                                                               //oscarLog(args[2][1]+"--"+args[2][0]);
+                                                                               args[0].getInputEl().value = args[2][0] + "("+args[2][1]+")";
+                                                                               //oscarLog("--"+args[0].getInputEl().value);
+                                                                               selectedDemos.push(args[0].getInputEl().value);
                                                                                //enable Save button whenever a selection is made
                                                                                $('save<%=curdoc.getDocId()%>').enable();
-                                                                             //  console.log($("autocomplete_choices<%=curdoc.getDocId()%>").innerHTML);
                                                                                
                                                                             });
 
@@ -751,7 +775,6 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                                                     </div>
 
                                                                     <script type="text/javascript">
-                                                                    //new Ajax.Autocompleter("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", "testProvcomp.jsp", {minChars: 3, afterUpdateElement: saveProvId});
 
                                                                     YAHOO.example.FnMultipleFields = function(){
 
@@ -835,6 +858,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                     </table>
                                 </div>
                                 <%}
+            
 
                             if (category.size() == 0) {%>
                                 <table>

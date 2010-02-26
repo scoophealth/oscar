@@ -103,10 +103,10 @@ public class CommonLabResultData {
         
         OscarProperties op = OscarProperties.getInstance();
         
-        String cml = op.getProperty("CML_LABS");
-        String mds = op.getProperty("MDS_LABS");
-        String pathnet = op.getProperty("PATHNET_LABS");
-        String hl7text = op.getProperty("HL7TEXT_LABS");
+        String cml = op.getProperty("CML_LABS");//historic
+        String mds = op.getProperty("MDS_LABS");//tables start with mds
+        String pathnet = op.getProperty("PATHNET_LABS");//hl7textmessage,hl7textinfo
+        String hl7text = op.getProperty("HL7TEXT_LABS");//hl7textmessage,hl7textinfo
         
         if( cml != null && cml.trim().equals("yes")){
             ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
@@ -126,7 +126,7 @@ public class CommonLabResultData {
             ArrayList hl7Labs = hl7Data.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
             labs.addAll(hl7Labs);
         }
-        
+
         return labs;
     }
     

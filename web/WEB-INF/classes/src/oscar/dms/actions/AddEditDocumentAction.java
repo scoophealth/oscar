@@ -27,10 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -59,7 +56,7 @@ import oscar.util.UtilDateUtilities;
 public class AddEditDocumentAction extends DispatchAction {
 
     public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
-        System.out.println("IN MULTIFAST content len"+request.getContentLength()+" ---- "+request.getParameter("provider"));
+        System.out.println("IN MULTIFAST content len: "+request.getContentLength()+" ---- "+request.getParameter("provider"));
         Hashtable errors = new Hashtable();
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
 

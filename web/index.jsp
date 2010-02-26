@@ -139,15 +139,15 @@ response.addCookie(admCookie);
                             %>
                         
                         <br/>            
-                        <input type="text" name="username" value="" size="15" maxlength="15" autocomplete="off"/>
+                        <input type="text" name="username" value="oscardoc" size="15" maxlength="15" autocomplete="off"/>
                         <br/>                
                         <bean:message key="loginApplication.formPwd"/><br/>
-                        <input type="password" name="password" value="" size="15" maxlength="15" autocomplete="off"/><br/>
+                        <input type="password" name="password" value="mac2002" size="15" maxlength="15" autocomplete="off"/><br/>
                                 <input type="submit" value="<bean:message key="index.btnSignIn"/>" />
                         </br></br>
                         <bean:message key="index.formPIN"/>: 
                         <br/>
-                        <input type="password" name="pin" value="" size="15" maxlength="15" autocomplete="off"/><br/>
+                        <input type="password" name="pin" value="1117" size="15" maxlength="15" autocomplete="off"/><br/>
                        
                         <span class="extrasmall">
                             <bean:message key="loginApplication.formCmt"/>

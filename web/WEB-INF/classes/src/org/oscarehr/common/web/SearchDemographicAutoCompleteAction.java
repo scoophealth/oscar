@@ -49,13 +49,15 @@ public class SearchDemographicAutoCompleteAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws Exception{
         DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao"); 
         String searchStr = request.getParameter("demographicKeyword");
+        System.out.println("in SearchDemographicAutoCompleteAction, searchStr="+searchStr);
         if (searchStr == null){
            searchStr = request.getParameter("query");
         }
+        System.out.println(" searchStr_1="+searchStr);
         if (searchStr == null){
            searchStr = request.getParameter("name");
         }
-
+        System.out.println(" searchStr_2="+searchStr);
         List<Demographic> list = demographicDao.searchDemographic(searchStr);
         List secondList= new ArrayList();
         for(Demographic demo :list){

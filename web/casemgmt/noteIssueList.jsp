@@ -268,7 +268,7 @@
    var txtColour = txtStyles[0].substr(txtStyles[0].indexOf("#"));
    var background = txtStyles[1].substr(txtStyles[1].indexOf("#"));
    var summary = "sumary" + "<%=noteIndex%>";
-   
+
    if( $("observationDate") != null ) {
         $("observationDate").style.color = txtColour;
         $("observationDate").style.backgroundColor = background; 

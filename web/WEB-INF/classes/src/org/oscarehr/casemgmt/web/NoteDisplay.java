@@ -3,6 +3,8 @@ package org.oscarehr.casemgmt.web;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 public interface NoteDisplay {
 	public static Comparator<NoteDisplay> noteProviderComparator = new Comparator<NoteDisplay>() {
@@ -78,6 +80,10 @@ public interface NoteDisplay {
 	public String getNote();
 
 	public boolean isDocument();
+        
+        public boolean isRxAnnotation();
+        
+        public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl);
 
 	public String getEncounterType();
 

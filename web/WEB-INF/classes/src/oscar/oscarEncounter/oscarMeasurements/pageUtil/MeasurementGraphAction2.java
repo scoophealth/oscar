@@ -156,7 +156,28 @@ public class MeasurementGraphAction2 extends Action {
         return list;
     }
     
-    
+   /* maybe needed later
+   private static XYTaskDataset getDrugDataSetFromDrugIds(String demographic,String[] drugIds){
+
+        TaskSeriesCollection datasetDrug = new TaskSeriesCollection();
+        oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+
+
+        for(String drugId:drugIds){
+             oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr =  prescriptData.getPrescriptionScriptsByPatientDrugId(Integer.parseInt(demographic),drugId);
+             TaskSeries ts  = new TaskSeries(arr[0].getBrandName());
+             for(oscar.oscarRx.data.RxPrescriptionData.Prescription pres:arr){
+                 ts.add(new Task(pres.getBrandName(),pres.getRxDate(),pres.getEndDate()));
+             }
+             datasetDrug.add(ts);
+        }
+
+        XYTaskDataset dataset = new XYTaskDataset(datasetDrug);
+            dataset.setTransposed(true);
+            dataset.setSeriesWidth(0.6);
+        return dataset;
+    }
+    */
     private static XYTaskDataset getDrugDataSet(String demographic,String[] dins){
         
         TaskSeriesCollection datasetDrug = new TaskSeriesCollection();

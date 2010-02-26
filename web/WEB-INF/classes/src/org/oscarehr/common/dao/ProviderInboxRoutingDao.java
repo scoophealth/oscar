@@ -47,7 +47,12 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
     
     public boolean hasProviderBeenLinkedWithDocument(String docType,String docId,String providerNo){
         int dId = Integer.parseInt(docId);
-        
+
+        //System.out.println("Number of provider links for prov "+providerNo+" id "+docId+" docType "+docType);
+        //System.out.println(getHibernateTemplate());
+        //List rs=this.getHibernateTemplate().find("from ProviderInboxItem where labType = ? and labNo = ? and providerNo = ? ",new Object[] {docType,dId,providerNo});
+      //  List rs=(List)getHibernateTemplate().find("from ProviderInboxItem where labType = ? and labNo = ? and providerNo = ? ",new Object[] {docType,dId,providerNo});
+
         int count = DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from ProviderInboxItem where labType = ? and labNo = ? and provider_no = ?",new Object[] {docType,dId,providerNo}));
         if (count > 0){
             return true;
@@ -101,6 +106,7 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
            }
            
         }catch(Exception e){
+            System.out.println("this exception s");
             e.printStackTrace();
         }
         
