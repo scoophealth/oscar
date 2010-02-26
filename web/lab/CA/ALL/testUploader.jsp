@@ -34,7 +34,7 @@ if(outcome != null){
 <title>Lab Upload Utility</title>
 <link rel="stylesheet" type="text/css"
 	href="../../../share/css/OscarStandardLayout.css">
-<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script> 
 <script type="text/javascript">
             function selectOther(){                
                 if (document.UPLOAD.type.value == "OTHER")
