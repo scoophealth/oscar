@@ -1199,7 +1199,7 @@ public class RxUtil {
                     String interactingAtc=(String)hb.get("atc");
                     String interactingDrugName=(String)hb.get("drug2");
                     String effectStr=(String)hb.get("effect");
-                    String sigStr=(String)hb.get("significance");
+                    String sigStr=(String)hb.get("significance");                    
                     System.out.println("findInterDrugStr="+hb);
                     if(sigStr!=null){
                         if(sigStr.equals("1")){
