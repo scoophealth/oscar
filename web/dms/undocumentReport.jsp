@@ -661,7 +661,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
                                 %>
                                 <div id="document<%=curdoc.getDocId()%>">
                                     <%if(!creatorId.equals(preCreatorId)){%>
-                                    <a onclick="showhide">*****************************************************************************************</a>
+                                    <a>*****************************************************************************************</a>
                                     <%} preCreatorId=creatorId;%>
                                     <table class="docTable">
                                         <tr>
