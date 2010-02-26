@@ -231,7 +231,7 @@ public final class LoginAction extends DispatchAction {
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
             }
             else {
-        		List facilities = facilityDao.findAll(null);
+        		List facilities = facilityDao.findAll(true);
         		if(facilities!=null && facilities.size()>=1) {
         			Facility fac = (Facility)facilities.get(0);
         			int first_id = fac.getId();
