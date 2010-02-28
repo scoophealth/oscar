@@ -19,6 +19,7 @@
 String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
+String patientMatched = request.getParameter("patientMatched");
 
 Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
@@ -215,14 +216,21 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	    window.open(link, "linkwin", "width=500, height=200");
 	}
 
-    function sendToPHR(labId, demographicNo) {
-        popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
-    }
+        function sendToPHR(labId, demographicNo) {
+            popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
+        }
+
+        function matchMe() {
+            <% if ( patientMatched != null && patientMatched.equals("no") ) { %>
+               	popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow');
+            <% } %>
+	}
+
         </script>
-        
-    </head>    
-    
-    <body>
+
+    </head>
+
+    <body onLoad="javascript:matchMe();">
         <!-- form forwarding of the lab -->
         <form name="reassignForm" method="post" action="Forward.do">
             <input type="hidden" name="flaggedLabs" value="<%= segmentID %>" />
