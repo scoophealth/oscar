@@ -2072,11 +2072,11 @@
                 
     </action-mappings>
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M"/>
-    <message-resources parameter="oscarResources" />
-    <message-resources parameter="HelpResources" key="help" />
-    <message-resources parameter="MessageResources_program" key="pmm" />
-    <message-resources parameter="MessageResources_survey" key="survey" />
-    <message-resources parameter="MessageResources_casemgmt" key="casemgmt" />
+    <message-resources parameter="oscarResources" null="false"/>
+    <message-resources parameter="HelpResources" key="help"  null="false"/>
+    <message-resources parameter="MessageResources_program" key="pmm"  null="false" />
+    <message-resources parameter="MessageResources_survey" key="survey"  null="false"/>
+    <message-resources parameter="MessageResources_casemgmt" key="casemgmt"  null="false"/>
     <plug-in className="org.apache.struts.tiles.TilesPlugin">
         <!-- Path to XML definition file -->
         <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
