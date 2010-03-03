@@ -1143,19 +1143,47 @@ public class ProgramManagerAction extends BaseAction {
 	private boolean isChanged(Program program1, Program program2) {
 		boolean changed = false;
 
-		if (program1.getMaxAllowed().intValue() != program2.getMaxAllowed().intValue() || !program1.getName().equals(program2.getName()) || !program1.getType().equals(program2.getType()) || !program1.getDescription().equals(program2.getDescription())
-		        || !program1.getAddress().equals(program2.getAddress()) || !program1.getPhone().equals(program2.getPhone()) || !program1.getFax().equals(program2.getFax()) || !program1.getUrl().equals(program2.getUrl())
-		        || !program1.getEmail().equals(program2.getEmail()) || !program1.getEmergencyNumber().equals(program2.getEmergencyNumber()) || !program1.getLocation().equals(program2.getLocation())
-		        || !program1.getProgramStatus().equals(program2.getProgramStatus()) || !program1.getBedProgramLinkId().equals(program2.getBedProgramLinkId()) || !program1.getManOrWoman().equals(program2.getManOrWoman())
-		        || !program1.getAbstinenceSupport().equals(program2.getAbstinenceSupport()) || !program1.getExclusiveView().equals(program2.getExclusiveView()) || (program1.isHoldingTank() ^ program2.isHoldingTank())
-		        || (program1.isAllowBatchAdmission() ^ program2.isAllowBatchAdmission()) || (program1.isAllowBatchDischarge() ^ program2.isAllowBatchDischarge()) || (program1.isHic() ^ program2.isHic())
-		        || (program1.isTransgender() ^ program2.isTransgender()) || (program1.isFirstNation() ^ program2.isFirstNation()) || (program1.isBedProgramAffiliated() ^ program2.isBedProgramAffiliated()) || (program1.isAlcohol() ^ program2.isAlcohol())
-		        || (program1.isPhysicalHealth() ^ program2.isPhysicalHealth()) || (program1.isMentalHealth() ^ program2.isMentalHealth()) || (program1.getFacilityId() != program2.getFacilityId()) || (program1.isHousing() ^ program2.isHousing()))
+		if (   !eq(program1.getName(), program2.getName())
+                    || !eq(program1.getType(), program2.getType())
+                    || !eq(program1.getDescription(), program2.getDescription())
+                    || !eq(program1.getAddress(), program2.getAddress())
+                    || !eq(program1.getPhone(), program2.getPhone())
+                    || !eq(program1.getFax(), program2.getFax())
+                    || !eq(program1.getUrl(), program2.getUrl())
+                    || !eq(program1.getEmail(), program2.getEmail())
+                    || !eq(program1.getEmergencyNumber(), program2.getEmergencyNumber())
+                    || !eq(program1.getLocation(), program2.getLocation())
+                    || !eq(program1.getProgramStatus(), program2.getProgramStatus())
+                    || !eq(program1.getManOrWoman(), program2.getManOrWoman())
+                    || !eq(program1.getAbstinenceSupport(), program2.getAbstinenceSupport())
+                    || !eq(program1.getExclusiveView(), program2.getExclusiveView())
+                    || !eq(program1.getBedProgramLinkId(), program2.getBedProgramLinkId())
+                    || !eq(program1.getMaxAllowed(), program2.getMaxAllowed())
+                    || (program1.isHoldingTank() ^ program2.isHoldingTank())
+                    || (program1.isAllowBatchAdmission() ^ program2.isAllowBatchAdmission())
+                    || (program1.isAllowBatchDischarge() ^ program2.isAllowBatchDischarge())
+                    || (program1.isHic() ^ program2.isHic())
+                    || (program1.isTransgender() ^ program2.isTransgender())
+                    || (program1.isFirstNation() ^ program2.isFirstNation())
+                    || (program1.isBedProgramAffiliated() ^ program2.isBedProgramAffiliated())
+                    || (program1.isAlcohol() ^ program2.isAlcohol())
+                    || (program1.isPhysicalHealth() ^ program2.isPhysicalHealth())
+                    || (program1.isMentalHealth() ^ program2.isMentalHealth())
+                    || (program1.getFacilityId() != program2.getFacilityId())
+                    || (program1.isHousing() ^ program2.isHousing()))
 
 		changed = true;
 
 		return changed;
 	}
+
+        private boolean eq(String s1, String s2) {
+            return ((s1==null && s2==null) || s1.equals(s2));
+        }
+
+        private boolean eq(Integer in1, Integer in2) {
+            return ((in1==null && in2==null) || in1.equals(in2));
+        }
 
 	@Required
 	public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
