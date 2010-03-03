@@ -344,7 +344,7 @@ public abstract class BaseAction extends DispatchAction {
 
 	protected Integer getParameterAsInteger(HttpServletRequest request, String name, Integer defaultVal) {
 		String param = request.getParameter(name);
-		if(param != null) {
+		if(!(param==null || param.equals("null") || param.equals(""))) {
 			return Integer.valueOf(param);
 		}
 		return defaultVal;
