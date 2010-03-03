@@ -48,4 +48,8 @@ public class BuildInfo extends Properties {
     public String getBuildDate() {          
         return getProperty("builddate", "unknown");
     }
+
+    public String getBuildTag() {
+        return getProperty("buildtag","unknown");
+    }
 }
