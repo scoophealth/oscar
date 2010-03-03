@@ -17,7 +17,7 @@
    </fileset>
    <pathelement location="${classes}"/>
   </path>
-
+  
  <target name="init" 
          description="Init build directories">
   <tstamp/>
@@ -212,6 +212,64 @@
   </copy>
  </target>
 
+
+
+<target name="compileTasks" depends="init">
+  <javac
+         fork="true"
+         memoryinitialsize="128m"
+         memorymaximumsize="256m"
+	 srcdir="tasks/src"
+         destdir="tasks/classes"
+	 deprecation="on"
+	 debug="on"
+	target="${JAVA_TARGET_VERSION}"
+         source="1.5">
+   <classpath>
+      <fileset dir="tasks/lib">
+         <include name="*.jar"/>
+      </fileset>
+   </classpath>
+  </javac>
+ </target>
+
+  <path id="classpath.path.translate">
+   <fileset dir="tasks/lib">
+    <include name="*.jar"/>
+   </fileset>
+   <pathelement location="tasks/classes"/>
+  </path>
+
+
+<target name="english2French" description="Resource Compare" depends="init">
+        <taskdef name="languageCompareTask" classname="ResourceCompareTask" classpath="tasks/classes" classpathref="classpath.path.translate"/>
+        <languageCompareTask firstLanguage="${webapp}/WEB-INF/classes/oscarResources_en.properties" compareLanguage="${webapp}/WEB-INF/classes/oscarResources_fr.properties" />
+ </target>
+
+ <target name="english2Polish" description="Resource Compare" depends="init">
+        <taskdef name="languageCompareTask" classname="ResourceCompareTask" classpath="tasks/classes" classpathref="classpath.path.translate"/>
+        <languageCompareTask firstLanguage="${webapp}/WEB-INF/classes/oscarResources_en.properties" compareLanguage="${webapp}/WEB-INF/classes/oscarResources_pl.properties" />
+ </target>
+
+ <target name="english2Spanish" description="Resource Compare" depends="init">
+        <taskdef name="languageCompareTask" classname="ResourceCompareTask" classpath="tasks/classes" classpathref="classpath.path.translate"/>
+        <languageCompareTask firstLanguage="${webapp}/WEB-INF/classes/oscarResources_en.properties" compareLanguage="${webapp}/WEB-INF/classes/oscarResources_es.properties" />
+ </target>
+
+ <target name="english2BrazilianPortuguese" description="Resource Compare" depends="init">
+        <taskdef name="languageCompareTask" classname="ResourceCompareTask" classpath="tasks/classes" classpathref="classpath.path.translate"/>
+        <languageCompareTask firstLanguage="${webapp}/WEB-INF/classes/oscarResources_en.properties" compareLanguage="${webapp}/WEB-INF/classes/oscarResources_pt_BR.properties" />
+ </target>
+
+
+
+ <target name="use" description="Resource Compare" depends="init">
+        <taskdef name="languageCompareTask" classname="ResourceCompareTask" classpath="${classes_web}" classpathref="classpath.path.translate"/>
+        <languageCompareTask firstLanguage="${webapp}/WEB-INF/classes/oscarResources_en.properties" compareLanguage="${webapp}/WEB-INF/classes/oscarResources_sp.properties" />
+ </target>
+
+
+
  <target name="dist" depends="web, document">
   <!-- make the webapp clean, so even files that haven't changed get
   their filters updated -->
@@ -254,12 +312,15 @@
 <target name="findbugs" depends="init">
     <path id="findbugs-jar">
       <pathelement path="${findbugs_home}/lib/findbugs-ant.jar" />
+      <fileset dir="../web/WEB-INF/lib">
+         <include name="*.jar"/>
+      </fileset>
     </path>
    
     <taskdef name="findbugs"  classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs-jar" />
-    <findbugs home="${findbugs_home}" output="xml" outputFile="${report}/oscar-fb.xml" jvmargs="-Xmx1024m" timeout="9000000">
+    <findbugs home="${findbugs_home}" output="xml" outputFile="${report}/oscar-fb.xml" jvmargs="-Xmx1024m" timeout="9000000"   >
       <sourcePath path="${src_web}" />
-      <class location="${build}/oscar.war" />
+      <class location="${classes_web}" />
     </findbugs>
 </target>
 
