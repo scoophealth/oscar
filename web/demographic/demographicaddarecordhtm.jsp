@@ -333,8 +333,10 @@ function checkFormTypeIn() {
 
 function checkTitleSex() {
     var title = document.adddemographic.title.selectedIndex;
-	if (title<=2 || title==11) document.adddemographic.sex.selectedIndex=0;
-	else if (title==3 || title==4) document.adddemographic.sex.selectedIndex=1;
+    if (title>0) {
+        if (title<=3 || title==12) document.adddemographic.sex.selectedIndex=0;
+        if (title==4 || title==5) document.adddemographic.sex.selectedIndex=1;
+    }
 }
 
 </script>
@@ -382,18 +384,19 @@ function checkTitleSex() {
 	<td align="right"><b>Title<font color="red">:</font></b></td>
 	<td align="left">
 	    <select name="title" onchange="checkTitleSex();">
-		<option value="MS" selected>MS</option>
-		<option value="MISS">MISS</option>
-		<option value="MRS">MRS</option>
-		<option value="MR">MR</option>
-		<option value="MSSR">MSSR</option>
-		<option value="PROF">PROF</option>
-		<option value="REEVE">REEVE</option>
-		<option value="REV">REV</option>
-		<option value="RT_HON">RT_HON</option>
-		<option value="SEN">SEN</option>
-		<option value="SGT">SGT</option>
-		<option value="SR">SR</option>
+                <option value="" selected><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
+                <option value="MS"><bean:message key="demographic.demographicaddrecordhtm.msgMs"/></option>
+                <option value="MISS"><bean:message key="demographic.demographicaddrecordhtm.msgMiss"/></option>
+                <option value="MRS"><bean:message key="demographic.demographicaddrecordhtm.msgMrs"/></option>
+                <option value="MR"><bean:message key="demographic.demographicaddrecordhtm.msgMr"/></option>
+                <option value="MSSR"><bean:message key="demographic.demographicaddrecordhtm.msgMssr"/></option>
+                <option value="PROF"><bean:message key="demographic.demographicaddrecordhtm.msgProf"/></option>
+                <option value="REEVE"><bean:message key="demographic.demographicaddrecordhtm.msgReeve"/></option>
+                <option value="REV"><bean:message key="demographic.demographicaddrecordhtm.msgRev"/></option>
+                <option value="RT_HON"><bean:message key="demographic.demographicaddrecordhtm.msgRtHon"/></option>
+                <option value="SEN"><bean:message key="demographic.demographicaddrecordhtm.msgSen"/></option>
+                <option value="SGT"><bean:message key="demographic.demographicaddrecordhtm.msgSgt"/></option>
+                <option value="SR"><bean:message key="demographic.demographicaddrecordhtm.msgSr"/></option>
 	    </select>
 	</td>
     </tr>
@@ -596,11 +599,11 @@ function checkTitleSex() {
 			</tr>
 			<tr valign="top">
 				<td align="right"><b><bean:message
-					key="demographic.demographiceditdemographic.formPhoneC" />: </b></td>
+					key="demographic.demographicaddrecordhtm.formPhoneCell" />: </b></td>
 				<td align="left"><input type="text" name="cellphone"
 					onBlur="formatPhoneNum()"></td>
 				<td align="right"><b><bean:message
-					key="demographic.demographiceditdemographic.formNewsLetter" />: </b></td>
+					key="demographic.demographicaddrecordhtm.formNewsLetter" />: </b></td>
 				<td align="left"><select name="newsletter">
 					<option value="Unknown" selected><bean:message
 						key="demographic.demographicaddrecordhtm.formNewsLetter.optUnknown" /></option>
@@ -822,7 +825,7 @@ function checkTitleSex() {
 	</td>
 	
 	
-	<td  align="right"><b>  <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b> </td>
+	<td  align="right"><b>  <bean:message key="demographic.demographicaddrecordhtm.cytolNum"/>:</b> </td>
 	<td align="left"  >
 	    <input type="text" name="cytolNum">
 	    
@@ -830,7 +833,7 @@ function checkTitleSex() {
     </tr>
     <tr valign="top">
       <td align="right"><b><% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
-                                                <bean:message key="demographic.demographiceditdemographic.formDoctor"/><% } %>
+                                                <bean:message key="demographic.demographicaddrecordhtm.formDoctor"/><% } %>
                                                 : </b></td>
       <td align="left" >
         <select name="staff">
