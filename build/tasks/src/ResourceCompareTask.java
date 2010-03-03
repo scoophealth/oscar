@@ -107,10 +107,13 @@ public class ResourceCompareTask {
             return Language.ENGLISH;
         }else if (s.equals("fr")){
             return Language.FRENCH;
-        }else if (s.equals("sp")){
+        }else if (s.equals("pl")){
+            return Language.POLISH;
+        }else if (s.equals("es")){
             return Language.SPANISH;
+        }else if (s.equals("pt_BR")){
+            return Language.PORTUGESE;
         }
-
         return null;
     }
 
