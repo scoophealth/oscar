@@ -159,6 +159,12 @@ response.addCookie(admCookie);
                         <span class="extrasmall">
                             <bean:message key="loginApplication.leftRmk"/>
                             <a href=# onClick='popupPage(500,700,"<bean:message key="loginApplication.gpltext"/>")'><bean:message key="loginApplication.gplLink"/></a>
+                            <br>
+                            <img style="width: 26px; height: 18px;" alt="<bean:message key="loginApplication.image.i18nAlt"/>"
+                            title="<bean:message key="loginApplication.image.i18nTitle"/>"
+                            src="<bean:message key="loginApplication.image.i18n"/>">
+                            <bean:message key="loginApplication.i18nText"/>
+
                         </span>
                     <!-- left side end-->
                 </td>
