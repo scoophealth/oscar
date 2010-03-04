@@ -13,6 +13,8 @@ import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.util.DateUtils;
+
 /**
  * This is a display object for the history tab of a clients admissions.
  */
@@ -53,9 +55,9 @@ public class AdmissionForHistoryTabDisplay {
 
 		if (admission.getDischargeDate() != null) {
 			dischargeDate = dateFormatter.format(admission.getDischargeDate());
-			daysInProgram = MiscUtils.calculateDayDifference(admission.getAdmissionDate(), admission.getDischargeDate());
+			daysInProgram = DateUtils.calculateDayDifference(admission.getAdmissionDate(), admission.getDischargeDate());
 		} else {
-			daysInProgram = MiscUtils.calculateDayDifference(admission.getAdmissionDate(), new Date());
+			daysInProgram = DateUtils.calculateDayDifference(admission.getAdmissionDate(), new Date());
 		}
 
 		facilityDischarge = String.valueOf(!admission.isDischargeFromTransfer());
@@ -89,9 +91,9 @@ public class AdmissionForHistoryTabDisplay {
 
 		if (cachedAdmission.getDischargeDate() != null) {
 			dischargeDate = dateFormatter.format(cachedAdmission.getDischargeDate());
-			daysInProgram = MiscUtils.calculateDayDifference(cachedAdmission.getAdmissionDate(), cachedAdmission.getDischargeDate());
+			daysInProgram = DateUtils.calculateDayDifference(cachedAdmission.getAdmissionDate(), cachedAdmission.getDischargeDate());
 		} else {
-			daysInProgram = MiscUtils.calculateDayDifference(cachedAdmission.getAdmissionDate(), new Date());
+			daysInProgram = DateUtils.calculateDayDifference(cachedAdmission.getAdmissionDate(), new Date());
 
 		}
 

@@ -16,7 +16,8 @@ import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.Referral;
-import org.oscarehr.util.MiscUtils;
+
+import oscar.util.DateUtils;
 
 public class ReferralSummaryDisplay {
 	public static final Comparator<ReferralSummaryDisplay> REFERRAL_DATE_COMPARATOR=new Comparator<ReferralSummaryDisplay>() {
@@ -39,7 +40,7 @@ public class ReferralSummaryDisplay {
 		programType = clientReferral.getProgramType();
 		referralDate = dateFormatter.format(clientReferral.getReferralDate());
 		referringProvider = clientReferral.getProviderFormattedName();
-		daysInQueue = MiscUtils.calculateDayDifference(clientReferral.getReferralDate(), new Date());
+		daysInQueue = DateUtils.calculateDayDifference(clientReferral.getReferralDate(), new Date());
 	}
 
 	public ReferralSummaryDisplay(Referral referral) throws MalformedURLException {
@@ -54,7 +55,7 @@ public class ReferralSummaryDisplay {
 		programType = cachedProgram.getType();
 
 		referralDate = dateFormatter.format(referral.getReferralDate());
-		daysInQueue = MiscUtils.calculateDayDifference(referral.getReferralDate(), new Date());
+		daysInQueue = DateUtils.calculateDayDifference(referral.getReferralDate(), new Date());
 
 		FacilityIdStringCompositePk remoteProviderPk = new FacilityIdStringCompositePk();
 		remoteProviderPk.setIntegratorFacilityId(referral.getSourceIntegratorFacilityId());

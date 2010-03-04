@@ -38,7 +38,6 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 	private Integer facilityId=null;
 	private Integer clientId=null;
 	private Integer admissionId=null;
-	private Integer clientAge=null;
 	
 	@Temporal(TemporalType.DATE)
 	private Date initialContactDate;
@@ -101,14 +100,6 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 
 	public void setAdmissionId(Integer admissionId) {
     	this.admissionId = admissionId;
-    }
-
-	public Integer getClientAge() {
-    	return clientAge;
-    }
-
-	public void setClientAge(Integer clientAge) {
-    	this.clientAge = clientAge;
     }
 
 	public Date getInitialContactDate() {

@@ -14,20 +14,16 @@ import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
 import org.oscarehr.common.dao.CdsHospitalisationDaysDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.common.model.CdsHospitalisationDays;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class CdsForm4 {
 
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static CdsFormOptionDao cdsFormOptionDao = (CdsFormOptionDao) SpringUtils.getBean("cdsFormOptionDao");
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
@@ -44,14 +40,7 @@ public class CdsForm4 {
 		if (cdsClientForm==null)
 		{
 			cdsClientForm=new CdsClientForm();
-			
-			Demographic demographic=demographicDao.getDemographicById(clientId);
-			
-	        try {
-	        	cdsClientForm.setClientAge(MiscUtils.calculateAge(demographic.getBirthDay()));
-	        } catch (Exception e) {
-		        // it's okay leave it as null, no known age.
-	        }	        
+
 		}
 		
 		return(cdsClientForm);

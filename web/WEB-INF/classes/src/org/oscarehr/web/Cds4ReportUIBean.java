@@ -228,7 +228,7 @@ public final class Cds4ReportUIBean {
 		Date dischargeDate = new Date(); // default duration calculation to today if not discharged.
 		if (admission.getDischargeDate() != null) dischargeDate = admission.getDischargeDate();
 
-		int years = MiscUtils.calculateYearDifference(admission.getAdmissionDate(), dischargeDate);
+		int years = DateUtils.yearDifference(admission.getAdmissionDate(), dischargeDate);
 		if (years > 10) years = 10; // limit everything above 10 years to the 10 year bucket.
 
 		return(years);
@@ -608,12 +608,12 @@ public final class Cds4ReportUIBean {
 		return(dataRow);		
 	}
 
-	private static int get009MultipleAdmissionCountByAge(Collection<CdsClientForm> forms, int startAge, int endAge) {
+	private int get009MultipleAdmissionCountByAge(Collection<CdsClientForm> forms, int startAge, int endAge) {
 		int count = 0;
 
 		if (forms != null) {
 			for (CdsClientForm form : forms) {
-				Integer age = form.getClientAge();
+				Integer age = getClientAgeAtReportTime(form.getClientId());
 				if (age != null && age >= startAge && age <= endAge) count++;
 			}
 		}
@@ -621,12 +621,12 @@ public final class Cds4ReportUIBean {
 		return(count);
 	}
 
-	private static int get009MultipleAdmissionCountByNoAge(Collection<CdsClientForm> forms) {
+	private int get009MultipleAdmissionCountByNoAge(Collection<CdsClientForm> forms) {
 		int count = 0;
 
 		if (forms != null) {
 			for (CdsClientForm form : forms) {
-				Integer age = form.getClientAge();
+				Integer age = getClientAgeAtReportTime(form.getClientId());
 				if (age == null) count++;
 			}
 		}
@@ -634,12 +634,12 @@ public final class Cds4ReportUIBean {
 		return(count);
 	}
 
-	private static int getMultipleAdmissionCountByMinMaxAge(MinMax minMax, Collection<CdsClientForm> forms) {
+	private int getMultipleAdmissionCountByMinMaxAge(MinMax minMax, Collection<CdsClientForm> forms) {
 		Integer minMaxAge = null;
 
 		if (forms != null) {
 			for (CdsClientForm form : forms) {
-				minMaxAge = nullSafeMinMax(minMax, minMaxAge, form.getClientAge());
+				minMaxAge = nullSafeMinMax(minMax, minMaxAge, getClientAgeAtReportTime(form.getClientId()));
 			}
 		}
 
@@ -665,15 +665,16 @@ public final class Cds4ReportUIBean {
 		}
 	}
 
-	private static int getMultipleAdmissionCountByAvgAge(Collection<CdsClientForm> forms) {
+	private  int getMultipleAdmissionCountByAvgAge(Collection<CdsClientForm> forms) {
 		int totalPeople = 0;
 		int totalAge = 0;
 
 		if (forms != null) {
 			for (CdsClientForm form : forms) {
-				if (form.getClientAge() != null) {
+				Integer age=getClientAgeAtReportTime(form.getClientId());
+				if (age != null) {
 					totalPeople++;
-					totalAge = totalAge + form.getClientAge();
+					totalAge = totalAge + age;
 				}
 			}
 		}
@@ -1096,5 +1097,11 @@ public final class Cds4ReportUIBean {
 		}
 		
 		return(total);
+	}
+	
+	public Integer getClientAgeAtReportTime(int clientId)
+	{
+		Demographic demographic=demographicDao.getDemographicById(clientId);
+		return(DateUtils.getAge(demographic.getBirthDay(), endDate));
 	}
 }

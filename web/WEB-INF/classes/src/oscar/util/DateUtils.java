@@ -537,4 +537,78 @@ public class DateUtils {
 		if (cal!=null) return(cal.getTime());
 		else return(null);
 	}
+	
+	/**
+	 * date2-date1
+	 * 
+	 * if either are null, it returns null.
+	 */
+	public static Integer yearDifference(Date date1, Date date2)
+	{
+		if (date1==null || date2==null) return(null);
+		
+		Calendar cal1=new GregorianCalendar();
+		cal1.setTime(date1);
+		
+		Calendar cal2=new GregorianCalendar();
+		cal2.setTime(date2);
+		
+		return(yearDifference(cal1, cal2));
+	}
+		
+	/**
+	 * date2-date1
+	 * 
+	 * if either are null, it returns null.
+	 */
+	public static Integer yearDifference(Calendar date1, Calendar date2)
+	{
+		if (date1==null || date2==null) return(null);
+		
+		int yearDiff=date2.get(Calendar.YEAR)-date1.get(Calendar.YEAR);
+		
+		if (date2.get(Calendar.DAY_OF_YEAR)>date1.get(Calendar.DAY_OF_YEAR)) yearDiff--;
+		
+		return(yearDiff);
+	}
+	
+	/**
+	 * This method will calculate the age of the person on the given date.
+	 */
+	public static Integer getAge(Calendar dateOfBirth, Calendar onThisDay)
+	{
+		return(yearDifference(onThisDay, dateOfBirth));
+	}
+	
+	/**
+	 * date2-date1
+	 * 
+	 * if either are null, it returns null.
+	 */
+	public static Integer calculateDayDifference(Calendar date1, Calendar date2)
+	{
+		if (date1==null || date2==null) return(null);
+
+		long ms=date2.getTimeInMillis()-date1.getTimeInMillis();
+		return((int) (ms/org.apache.commons.lang.time.DateUtils.MILLIS_PER_DAY));
+	}
+
+	/**
+	 * date2-date1
+	 * 
+	 * if either are null, it returns null.
+	 */
+	public static Integer calculateDayDifference(Date date1, Date date2)
+	{
+		if (date1==null || date2==null) return(null);
+		
+		Calendar cal1=new GregorianCalendar();
+		cal1.setTime(date1);
+		
+		Calendar cal2=new GregorianCalendar();
+		cal2.setTime(date2);
+		
+		return(calculateDayDifference(cal1, cal2));
+	}
+
 }

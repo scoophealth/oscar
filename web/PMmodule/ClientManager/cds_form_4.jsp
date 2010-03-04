@@ -62,12 +62,6 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">9. Age</td>
-			<td class="genericTableData">
-				<input type="text" name="age" value="<%=cdsClientForm.getClientAge()%>" />
-			</td>
-		</tr>
-		<tr>
 			<td class="genericTableHeader">10. Service Recipient Location</td>
 			<td class="genericTableData">
 				<select name="serviceRecipientLocation">

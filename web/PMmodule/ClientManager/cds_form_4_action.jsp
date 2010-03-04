@@ -15,9 +15,6 @@
 	Integer admissionId=Integer.valueOf(parameters.get("admissionId")[0]);	
 	parameters.remove("admissionId");
 
-	Integer clientAge=Integer.valueOf(parameters.get("age")[0]);	
-	parameters.remove("age");
-
 	Integer clientId=Integer.valueOf(parameters.get("clientId")[0]);	
 	parameters.remove("clientId");
 
@@ -46,7 +43,7 @@
 	boolean signed=WebUtils.isChecked(request, "signed");	
 	parameters.remove("signed");
 
-	CdsClientForm cdsClientForm=CdsForm4Action.createCdsClientForm(admissionId, clientAge, clientId, initialContactDate, assessmentDate, signed);
+	CdsClientForm cdsClientForm=CdsForm4Action.createCdsClientForm(admissionId, clientId, initialContactDate, assessmentDate, signed);
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{

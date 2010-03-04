@@ -161,64 +161,6 @@ public class MiscUtils {
 		return(Logger.getLogger(caller));
 	}
 
-	public static int calculateAge(GregorianCalendar birthDate)
-	{
-		// example
-		// today = 2009-05-06
-		// birthdate = 2008-06-08
-		// is considered 1 year old
-
-		GregorianCalendar today=new GregorianCalendar();
-
-		return(calculateYearDifference(birthDate,today));
-	}
-
-	/**
-	 * This method does yearTwo-yearOne to calculate the year difference.
-	 */
-	public static int calculateYearDifference(Date date1, Date date2)
-	{
-		GregorianCalendar cal1=new GregorianCalendar();
-		cal1.setTime(date1);
-		cal1.getTimeInMillis();
-
-		GregorianCalendar cal2=new GregorianCalendar();
-		cal2.setTime(date2);
-		cal2.getTimeInMillis();
-
-		return(calculateYearDifference(cal1, cal2));
-	}
-
-	/**
-	 * This method does yearTwo-yearOne to calculate the year difference.
-	 */
-	public static int calculateYearDifference(GregorianCalendar date1, GregorianCalendar date2)
-	{
-		// example
-		// today = 2009-05-06
-		// birthdate = 2008-06-08
-		// is considered 1 year old
-
-		int diff=date2.get(GregorianCalendar.YEAR)-date1.get(GregorianCalendar.YEAR);
-
-		if (date2.get(GregorianCalendar.MONTH)<date1.get(GregorianCalendar.MONTH)) diff--;
-		else if (date2.get(GregorianCalendar.MONTH)==date1.get(GregorianCalendar.MONTH))
-		{
-			if (date2.get(GregorianCalendar.DAY_OF_MONTH)<date1.get(GregorianCalendar.DAY_OF_MONTH)) diff--;
-		}
-
-		return(diff);
-
-	}
-
-	/**
-	 * This method does date2-date1 to calculate the year difference.
-	 */
-	public static int calculateDayDifference(Date date1, Date date2)
-	{
-		long ms=date2.getTime()-date1.getTime();
-		return((int) (ms/DateUtils.MILLIS_PER_DAY));
-	}
 
         //return a vector which contains distinctive string elements
         public static Vector findUniqueElementVector (Vector v){
