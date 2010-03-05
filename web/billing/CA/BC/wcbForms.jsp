@@ -46,8 +46,8 @@
             <th>Date of Injury</th>
             <th>Created On</th>
             <th>Diagnosis</th>
-            <th>Verify FNN</th>
-            <th>Verify FN</th>
+            <th title="Verify Form Not Needed Errors">Verify FNN</th>
+            <th title="Verify Form Needed Errors">Verify FN</th>
         </tr>
         <%
             BillingmasterDAO billingmasterDAO = (BillingmasterDAO) SpringUtils.getBean("BillingmasterDAO");
@@ -63,23 +63,34 @@
             <td><input type="radio" name="WCBid" value="<%=wcb.getId()%>" <%=checked(wcbid,wcb.getId())%> /></td>                 
             <td><a href="javascript:void(0);" onclick="checkifSet('<%=wcb.getW_icd9()%>','<%= wcb.getW_feeitem()%>','<%= wcb.getW_extrafeeitem()%>');">Populate</a></td>
             <td align="middle">
-                <a  onclick="popup(700,960,'viewformwcb.do?demographic_no=<%=demographicNo%>&formId=<%=wcb.getId()%>&provNo=<%=session.getAttribute("user")%>&parentAjaxId=forms&billingcode=<%=billingcode%>&hideToBill=true','<%=demographicNo%>NEWWCB'); return false;"  href="javascript:void(0);" ><fmt:formatDate pattern="yyyy-MM-dd" value="${wcb.w_doi}" /></a></td>
+                <a  onclick="popup(700,960,'viewformwcb.do?demographic_no=<%=demographicNo%>&formId=<%=wcb.getId()%>&provNo=<%=session.getAttribute("user")%>&parentAjaxId=forms&billingcode=<%=billingcode%>&hideToBill=true','<%=demographicNo%>NEWWCB'); return false;"  href="javascript:void(0);" ><fmt:formatDate pattern="yyyy-MM-dd" value="${wcb.w_doi}" /></a>
+            
             </td>
             <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${wcb.formCreated}" /></td>
             <td><%=wcb.getW_diagnosis()%>&nbsp;</td>
-            <td title="<%if (wcb.verifyFormNotNeeded() != null && wcb.verifyFormNotNeeded().size() > 1) {
-                            List<String> errs = wcb.verifyFormNotNeeded();
-                            for (String s : errs) {%>
-                            <bean:message key="<%=s%>"/>
-                        <%  }
-                         }%>">
-            <%=wcb.verifyFormNotNeeded().size()%></td>
-            <td title="<%if (wcb.verifyEverythingOnForm() != null && wcb.verifyEverythingOnForm().size() > 1) {
-                            List<String> errs = wcb.verifyEverythingOnForm();
-                            for (String s : errs) {%><bean:message key="<%=s%>"/><%  }
-                        }%>">
-            <%=wcb.verifyEverythingOnForm().size()%></td>
             
+            
+
+            <%if (wcb.verifyFormNotNeeded() != null && wcb.verifyFormNotNeeded().size() > 0) {
+                 List<String> errs = wcb.verifyFormNotNeeded();%>
+            <td title="header=[To bill WCB without a form the following is needed] body=[<%for (String s : errs) { %><bean:message key="<%=s%>"/><%  }%>]">
+            <%}else{%>
+            <td>
+            <%}%>
+
+            <%=wcb.verifyFormNotNeeded().size()%>
+            </td>
+
+
+            <%if (wcb.verifyEverythingOnForm() != null && wcb.verifyEverythingOnForm().size() > 0) {
+                            List<String> errs = wcb.verifyEverythingOnForm();%>
+            <td title="header=[To bill WCB with a form the following is needed] body=[<%for (String s : errs) { %><bean:message key="<%=s%>"/><%  }%>]">
+            <%}else{%>
+            <td>
+            <%}%>
+            <%=wcb.verifyEverythingOnForm().size()%>
+            </td>
+     
             
         </tr>
         <%}%>
