@@ -346,7 +346,17 @@ function isformNeeded(){
   }
 
   function validateForm(){
-  
+
+    //if Check to make sure WCB ID is only numeric
+    var claimNum = document.WCBForm.w_wcbno.value; 
+    if (claimNum != ""){
+         if (claimNum != parseInt(claimNum)){
+            alert("Claim # has to be numeric");
+            document.WCBForm.w_wcbno.focus();
+            return false;
+         }
+     }
+    
      if(!checkAskiiData(document.getElementById('w_problem'))){
          return false;
      }
