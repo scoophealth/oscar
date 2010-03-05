@@ -371,6 +371,15 @@ function isformNeeded(){
      }
       return true;
   }
+
+  
+var WCBFeeItemCall = "popFeeItemList('WCBForm','w_feeitem')";
+var extraFeeItemCall = "popFeeItemList('WCBForm','w_extrafeeitem')";
+var icd9Call   = "popICD9List('WCBForm','w_icd9')";
+var bodyPartCall   = "popBodyPartList('WCBForm','w_bp')";
+var natureOfInjuryCall = "popNOIList('WCBForm','w_noi')";
+
+
 </script>
 </head>
 <body onLoad="isformNeeded()" bgproperties="fixed" topmargin="0"
@@ -589,22 +598,24 @@ String fmtApptDate = fmt.format(new Date());
 				onClick="showpic('Layer1','Calcs');" id="Calcs">WCB code: </a>
 
 			</td>
-			<td><html:text maxlength="5" property="w_feeitem" size="5" /> <a
-				onClick="popFeeItemList('WCBForm','w_feeitem');">Search</a></td>
+
+
+			<td><html:text maxlength="5" property="w_feeitem" size="5" onkeypress="return grabEnter(event,WCBFeeItemCall)" />
+                            <a onClick="popFeeItemList('WCBForm','w_feeitem');">Search</a></td>
 		</tr>
 		<tr>
 			<td>Service code:</td>
-			<td><html:text maxlength="5" property="w_extrafeeitem" size="5" />
+			<td><html:text maxlength="5" property="w_extrafeeitem" size="5" onkeypress="return grabEnter(event,extraFeeItemCall)" />
 			<a onClick="popFeeItemList('WCBForm','w_extrafeeitem');">Search</a></td>
 		</tr>
 		<tr>
 			<td><b>ICD9:</b></td>
-			<td><html:text maxlength="5" property="w_icd9" size="5" /> <a
+			<td><html:text maxlength="5" property="w_icd9" size="5" onkeypress="return grabEnter(event,icd9Call)" /> <a
 				onClick="popICD9List('WCBForm','w_icd9');">Search</a></td>
 		</tr>
 		<tr>
 			<td><b>Body Part:</b></td>
-			<td><html:text maxlength="5" property="w_bp" size="5" /> <a
+			<td><html:text maxlength="5" property="w_bp" size="5" onkeypress="return grabEnter(event,bodyPartCall)" /> <a
 				onClick="popBodyPartList('WCBForm','w_bp');">Search</a></td>
 		</tr>
 		<tr>
@@ -616,7 +627,7 @@ String fmtApptDate = fmt.format(new Date());
 		</tr>
 		<tr>
 			<td><b>Nature of Injury</b></td>
-			<td><html:text maxlength="5" property="w_noi" size="5" /> <a
+			<td><html:text maxlength="5" property="w_noi" size="5" onkeypress="return grabEnter(event,natureOfInjuryCall)" /> <a
 				onClick="popNOIList('WCBForm','w_noi');">Search</a></td>
 		</tr>
 		<tr id="thirdSection8">
