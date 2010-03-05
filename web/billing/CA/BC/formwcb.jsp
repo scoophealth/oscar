@@ -120,7 +120,6 @@ function validChar(ch){
     }
 
     if(ch < 32 || ch > 126){
-        oscarLog(ch);
         return false;
     }
     return true;
