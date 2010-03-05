@@ -128,7 +128,7 @@ public final class BillingCodeData implements Comparable      {
     billingservice.setBillingserviceNo(0);
     billingservice.setBillingserviceDate(new Date());
     billingservice.setValue(val);
-    billingServiceDao.persist(billingservice);
+    billingServiceDao.merge(billingservice);
     return retval;
   }
   
