@@ -115,7 +115,12 @@ function checkAskiiData(textEle){
 }
 
 function validChar(ch){
+    if(ch == 13 || ch == 10){  //Let new lines pass.  They will be removed anyway
+        return true;
+    }
+
     if(ch < 32 || ch > 126){
+        oscarLog(ch);
         return false;
     }
     return true;
