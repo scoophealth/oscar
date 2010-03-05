@@ -159,3 +159,13 @@ function oscarLog(str){
     }
     
 }
+
+
+//Can be use the enter key in a text box and call javacript function
+//example:  <itput type="text" onkeypress="return grabEnter(event,'ReferralScriptAttach1()')"/>
+function grabEnter(event,callb){
+  if( (window.event && window.event.keyCode == 13) || (event && event.which == 13) )  {
+     eval(callb);
+     return false;
+  }
+}
