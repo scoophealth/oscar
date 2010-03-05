@@ -104,11 +104,20 @@ public class WcbHelper {
       ArrayList claimList = new ArrayList();
       try{
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      String sql = "select distinct w_empname,w_emparea,w_empphone,w_opaddress,w_opcity,w_wcbno from wcb where demographic_no = '"+demographic_no+"'";
+      String sql = "select distinct w_empname,w_emparea,w_empphone,w_opaddress,w_opcity,w_wcbno,w_icd9,w_bp,w_side,w_noi,w_doi from wcb where demographic_no = '"+demographic_no+"'";
+
+
+
       ResultSet rs = db.GetSQL(sql);
       while(rs.next()){
          
          WCBClaim wcb = new WCBClaim(rs.getString("w_wcbno"));
+         wcb.w_icd9 = rs.getString("w_icd9");
+         wcb.w_bp   = rs.getString("w_bp");
+         wcb.w_side = rs.getString("w_side");
+         wcb.w_noi  = rs.getString("w_noi");
+         wcb.w_doi  = rs.getString("w_doi");
+
          WCBEmployer wcbEmp = new WCBEmployer();
             wcbEmp.w_empname   = rs.getString("w_empname");
             wcbEmp.w_emparea   = rs.getString("w_emparea");
@@ -159,6 +168,12 @@ public class WcbHelper {
    
    public class WCBClaim{
       public String w_wcbNo = "";
+      
+      public String w_icd9 = "";
+      public String w_bp= "";
+      public String w_side= "";
+      public String w_noi= "";
+      public String w_doi= "";
       public WCBEmployer wcbEmp = null;
       public WCBClaim(String clm){
          w_wcbNo = clm;
