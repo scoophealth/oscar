@@ -256,7 +256,7 @@ public final class Cds4ReportUIBean {
 		else if (cdsFormOption.getCdsDataCategory().startsWith("016-")) return(getGenericLatestAnswerDataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("16a-")) return(getGenericAllAnswersDataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("017-")) return(getGenericAllAnswersDataLine(cdsFormOption));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("018-")) return(getGenericAllAnswersDataLine(cdsFormOption));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("018-")) return(getGenericAllAnswersDataLineForNewAdmissionsDuringReportingPerdiod(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("019-")) return(getGenericAllAnswersDataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("020-")) return(get020DataLine(cdsFormOption));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("021-")) return(get021DataLine(cdsFormOption));
@@ -701,6 +701,43 @@ public final class Cds4ReportUIBean {
 		return(dataRow);		
 	}
 
+	private int[] getGenericAllAnswersDataLineForNewAdmissionsDuringReportingPerdiod(CdsFormOption cdsFormOption) {
+		// section 18 only counts NEW admissions during that reporting period
+		
+		int[] dataRow=getNotAvailableDataLine();
+
+		// get multi admissions number
+		dataRow[0]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), getOnlyNewAdmissionDuringReportPeriod(singleMultiAdmissions.multipleAdmissionsAllForms));
+
+		// get cohort numbers
+		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
+			@SuppressWarnings("unchecked")
+			Collection<CdsClientForm> cdsForms = getOnlyNewAdmissionDuringReportPeriod(singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i));
+			dataRow[i+1]=getAnswerCounts(cdsFormOption.getCdsDataCategory(), cdsForms);
+		}
+		
+		return(dataRow);		
+	}
+
+	private ArrayList<CdsClientForm> getOnlyNewAdmissionDuringReportPeriod(Collection<CdsClientForm> forms)
+	{
+		ArrayList<CdsClientForm> results=new ArrayList<CdsClientForm>();
+		
+		for (CdsClientForm form : forms)
+		{
+			Admission admission=admissionMap.get(form.getAdmissionId());
+			
+			if (admission==null) continue;
+			
+			if (startDate.getTime().before(admission.getAdmissionDate()) && endDate.getTime().after(admission.getAdmissionDate()))
+			{
+				results.add(form);
+			}
+		}
+		
+		return(results);
+	}
+	
 	private int[] get020DataLine(CdsFormOption cdsFormOption) {
 		if ("020-01".equals(cdsFormOption.getCdsDataCategory())) {
 			return(get02xQuestionAnswerCountsDataLine("baselineTotalNumberOfHospitalisedDays", "0"));
