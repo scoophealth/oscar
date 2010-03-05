@@ -1,5 +1,5 @@
 /* --- BoxOver ---
-/* --- v 1.9 12 December 2005
+/* --- v 2.1 17th June 2006
 By Oliver Bryant with help of Matthew Tagg
 http://boxover.swazz.org */
 
@@ -28,7 +28,7 @@ function init() {
 	oDv.appendChild(dvBdy);
 	oDv.style.position="absolute";
 	oDv.style.visibility='hidden';
-	document.body.appendChild(oDv);	
+	document.body.appendChild(oDv);
 }
 
 function defHdrStyle() {
@@ -44,7 +44,7 @@ function defHdrStyle() {
 	/*dvHdr.style.background='#D5EBF9';*/
         dvHdr.style.background='#D9D8FF';
 	dvHdr.style.filter='alpha(opacity=85)'; // IE
-	dvHdr.style.opacity='0.85'; // Firefox
+	dvHdr.style.opacity='0.85'; // FF
 }
 
 function defBdyStyle() {
@@ -61,71 +61,66 @@ function defBdyStyle() {
 	dvBdy.style.color='#1B4966';
 	dvBdy.style.background='#FFFFFF';
 	dvBdy.style.filter='alpha(opacity=85)'; // IE
-	dvBdy.style.opacity='0.85'; // Firefox
+	dvBdy.style.opacity='0.85'; // FF
 }
-
-var cnt=0;
 
 function checkElemBO(txt) {
-   if ((txt.indexOf('header')>-1)&(txt.indexOf('body')>-1)&(txt.indexOf('[')>-1)&(txt.indexOf('[')>-1))
-      return true;
-   else
-      return false;
+if (!txt || typeof(txt) != 'string') return false;
+if ((txt.indexOf('header')>-1)&&(txt.indexOf('body')>-1)&&(txt.indexOf('[')>-1)&&(txt.indexOf('[')>-1))
+   return true;
+else
+   return false;
 }
 
-function scanDOM(curNode) {
-	cnt++;
-	while(curNode)	{
-		if (curNode.title) {
-		  if (checkElemBO(curNode.title)) {
-   			curNode.boHDR=getParam('(?:[^a-zA-Z]header|^header)',curNode.title);
-   			curNode.boBDY=getParam('(?:[^a-zA-Z]body|^body)',curNode.title);
-   			curNode.boCSSBDY=getParam('cssbody',curNode.title);			
-   			curNode.boCSSHDR=getParam('cssheader',curNode.title);
-   			curNode.IEbugfix=(getParam('hideselects',curNode.title)=='on')?true:false;
-   			curNode.fixX=parseInt(getParam('fixedrelx',curNode.title));
-   			curNode.fixY=parseInt(getParam('fixedrely',curNode.title));
-   			curNode.absX=parseInt(getParam('fixedabsx',curNode.title));
-   			curNode.absY=parseInt(getParam('fixedabsy',curNode.title));
-   			curNode.offY=(getParam('offsety',curNode.title)!='')?parseInt(getParam('offsety',curNode.title)):10;
-   			curNode.offX=(getParam('offsetx',curNode.title)!='')?parseInt(getParam('offsetx',curNode.title)):10;
-   			curNode.fade=(getParam('fade',curNode.title)=='on')?true:false;
-   			curNode.fadespeed=(getParam('fadespeed',curNode.title)!='')?getParam('fadespeed',curNode.title):0.04;
-   			curNode.delay=(getParam('delay',curNode.title)!='')?parseInt(getParam('delay',curNode.title)):0;
-   			if (getParam('requireclick',curNode.title)=='on') {
-   				curNode.requireclick=true;
-   				document.all?curNode.attachEvent('onclick',showHideBox):curNode.addEventListener('click',showHideBox,false);
-   				document.all?curNode.attachEvent('onmouseover',hideBox):curNode.addEventListener('mouseover',hideBox,false);
+function scanBO(curNode) {
+	  if (checkElemBO(curNode.title)) {
+         curNode.boHDR=getParam('header',curNode.title);
+         curNode.boBDY=getParam('body',curNode.title);
+			curNode.boCSSBDY=getParam('cssbody',curNode.title);
+			curNode.boCSSHDR=getParam('cssheader',curNode.title);
+			curNode.IEbugfix=(getParam('hideselects',curNode.title)=='on')?true:false;
+			curNode.fixX=parseInt(getParam('fixedrelx',curNode.title));
+			curNode.fixY=parseInt(getParam('fixedrely',curNode.title));
+			curNode.absX=parseInt(getParam('fixedabsx',curNode.title));
+			curNode.absY=parseInt(getParam('fixedabsy',curNode.title));
+			curNode.offY=(getParam('offsety',curNode.title)!='')?parseInt(getParam('offsety',curNode.title)):10;
+			curNode.offX=(getParam('offsetx',curNode.title)!='')?parseInt(getParam('offsetx',curNode.title)):10;
+			curNode.fade=(getParam('fade',curNode.title)=='on')?true:false;
+			curNode.fadespeed=(getParam('fadespeed',curNode.title)!='')?getParam('fadespeed',curNode.title):0.04;
+			curNode.delay=(getParam('delay',curNode.title)!='')?parseInt(getParam('delay',curNode.title)):0;
+			if (getParam('requireclick',curNode.title)=='on') {
+				curNode.requireclick=true;
+				document.all?curNode.attachEvent('onclick',showHideBox):curNode.addEventListener('click',showHideBox,false);
+				document.all?curNode.attachEvent('onmouseover',hideBox):curNode.addEventListener('mouseover',hideBox,false);
+			}
+			else {// Note : if requireclick is on the stop clicks are ignored
+   			if (getParam('doubleclickstop',curNode.title)!='off') {
+   				document.all?curNode.attachEvent('ondblclick',pauseBox):curNode.addEventListener('dblclick',pauseBox,false);
    			}
-   			else {// Note : if requireclick is on the stop clicks are ignored   			
-	   			if (getParam('doubleclickstop',curNode.title)!='off') {
-	   				document.all?curNode.attachEvent('ondblclick',pauseBox):curNode.addEventListener('dblclick',pauseBox,false);
-	   			}	
-	   			if (getParam('singleclickstop',curNode.title)=='on') {
-	   				document.all?curNode.attachEvent('onclick',pauseBox):curNode.addEventListener('click',pauseBox,false);
-	   			}
-	   		}
-   			curNode.windowLock=getParam('windowlock',curNode.title).toLowerCase()=='off'?false:true;
-   			curNode.title='';
-   			curNode.hasbox='true';
-   	   }
-		}
-		scanDOM(curNode.firstChild);
-		curNode=curNode.nextSibling;
-	}
+   			if (getParam('singleclickstop',curNode.title)=='on') {
+   				document.all?curNode.attachEvent('onclick',pauseBox):curNode.addEventListener('click',pauseBox,false);
+   			}
+   		}
+			curNode.windowLock=getParam('windowlock',curNode.title).toLowerCase()=='off'?false:true;
+			curNode.title='';
+			curNode.hasbox=1;
+	   }
+	   else
+	      curNode.hasbox=2;
 }
+
 
 function getParam(param,list) {
-	var reg = new RegExp(param+'\\s*=\\s*\\[\\s*(((\\[\\[)|(\\]\\])|([^\\]\\[]))*)\\s*\\]');
+	var reg = new RegExp('([^a-zA-Z]' + param + '|^' + param + ')\\s*=\\s*\\[\\s*(((\\[\\[)|(\\]\\])|([^\\]\\[]))*)\\s*\\]');
 	var res = reg.exec(list);
 	var returnvar;
 	if(res)
-		return res[1].replace('[[','[').replace(']]',']');
+		return res[2].replace('[[','[').replace(']]',']');
 	else
 		return '';
 }
 
-function Left(elem){	
+function Left(elem){
 	var x=0;
 	if (elem.calcLeft)
 		return elem.calcLeft;
@@ -135,7 +130,7 @@ function Left(elem){
 		 	x+=parseInt(elem.currentStyle.borderLeftWidth);
 		 x+=elem.offsetLeft;
 		 elem=elem.offsetParent;
-	  } 
+	  }
 	oElem.calcLeft=x;
 	return x;
 	}
@@ -145,15 +140,15 @@ function Top(elem){
 	 if (elem.calcTop)
 	 	return elem.calcTop;
 	 var oElem=elem;
-	 while(elem){		
+	 while(elem){
 	 	 if ((elem.currentStyle)&& (!isNaN(parseInt(elem.currentStyle.borderTopWidth)))&&(x!=0))
-		 	x+=parseInt(elem.currentStyle.borderTopWidth); 
+		 	x+=parseInt(elem.currentStyle.borderTopWidth);
 		 x+=elem.offsetTop;
 	         elem=elem.offsetParent;
- 	 } 
+ 	 }
  	 oElem.calcTop=x;
  	 return x;
- 	 
+
 }
 
 var ah,ab;
@@ -170,14 +165,14 @@ function applyStyles() {
 	dvBdy.innerHTML=CBE.boBDY;
 	ah=false;
 	ab=false;
-	if (CBE.boHDR!='') {		
+	if (CBE.boHDR!='') {
 		oDv.appendChild(dvHdr);
 		ah=true;
-	}	
+	}
 	if (CBE.boBDY!=''){
 		oDv.appendChild(dvBdy);
 		ab=true;
-	}	
+	}
 }
 
 var CSE,iterElem,LSE,CBE,LBE, totalScrollLeft, totalScrollTop, width, height ;
@@ -190,37 +185,38 @@ function SHW() {
       height=document.body.clientHeight;
    }
    if (document.documentElement && (document.documentElement.clientWidth!=0) && (document.body.clientWidth + 20 >= document.documentElement.clientWidth)) {
-      width=document.documentElement.clientWidth;   
-      height=document.documentElement.clientHeight;   
-   }   
+      width=document.documentElement.clientWidth;
+      height=document.documentElement.clientHeight;
+   }
    return [width,height];
 }
 
 
 var ID=null;
 function moveMouse(e) {
-   if (!ini) {      
-      scanDOM(document.body.firstChild);
-      ini=true;
-   }
-	e?evt=e:evt=event;	
-	//evt=event;
-		
+   //boxMove=true;
+	e?evt=e:evt=event;
+
 	CSE=evt.target?evt.target:evt.srcElement;
+
+	if (!CSE.hasbox) {
+	   // Note we need to scan up DOM here, some elements like TR don't get triggered as srcElement
+	   iElem=CSE;
+	   while ((iElem.parentNode) && (!iElem.hasbox)) {
+	      scanBO(iElem);
+	      iElem=iElem.parentNode;
+	   }
+	}
+
 	if ((CSE!=LSE)&&(!isChild(CSE,dvHdr))&&(!isChild(CSE,dvBdy))){
-		
-		if (!CSE.boxItem) {
+	   if (!CSE.boxItem) {
 			iterElem=CSE;
-			while ((!iterElem.hasbox)&&(iterElem.parentNode))
-					iterElem=iterElem.parentNode; 
+			while ((iterElem.hasbox==2)&&(iterElem.parentNode))
+					iterElem=iterElem.parentNode;
 			CSE.boxItem=iterElem;
 			}
 		iterElem=CSE.boxItem;
-		if (CSE.boxItem.title)
-		  if (checkElemBO(CSE.boxItem.title)) {		      
-		      ini=false;
-		   }
-		if (CSE.boxItem&&CSE.boxItem.hasbox)  {
+		if (CSE.boxItem&&(CSE.boxItem.hasbox==1))  {
 			LBE=CBE;
 			CBE=iterElem;
 			if (CBE!=LBE) {
@@ -235,11 +231,11 @@ function moveMouse(e) {
 						if (ID!=null)
 							clearTimeout(ID);
 						COL=1;
-						ID=setTimeout("oDv.style.visibility='visible';ID=null;",CBE.delay);						
+						ID=setTimeout("oDv.style.visibility='visible';ID=null;",CBE.delay);
 					}
-				if (CBE.IEbugfix) {hideSelects();} 
+				if (CBE.IEbugfix) {hideSelects();}
 				fixposx=!isNaN(CBE.fixX)?Left(CBE)+CBE.fixX:CBE.absX;
-				fixposy=!isNaN(CBE.fixY)?Top(CBE)+CBE.fixY:CBE.absY;			
+				fixposy=!isNaN(CBE.fixY)?Top(CBE)+CBE.fixY:CBE.absY;
 				lockX=0;
 				lockY=0;
 				boxMove=true;
@@ -249,8 +245,10 @@ function moveMouse(e) {
 		}
 		else if (!isChild(CSE,dvHdr) && !isChild(CSE,dvBdy) && (boxMove))	{
 			// The conditional here fixes flickering between tables cells.
-			if ((!isChild(CBE,CSE)) || (CSE.tagName!='TABLE')) {   			
+			if ((!isChild(CBE,CSE)) || (CSE.tagName!='TABLE')) {
    			CBE=null;
+   			if (ID!=null)
+  					clearTimeout(ID);
    			fadeOut();
    			showSelects();
 			}
@@ -260,14 +258,14 @@ function moveMouse(e) {
 	else if (((isChild(CSE,dvHdr) || isChild(CSE,dvBdy))&&(boxMove))) {
 		totalScrollLeft=0;
 		totalScrollTop=0;
-		
+
 		iterElem=CSE;
 		while(iterElem) {
 			if(!isNaN(parseInt(iterElem.scrollTop)))
 				totalScrollTop+=parseInt(iterElem.scrollTop);
 			if(!isNaN(parseInt(iterElem.scrollLeft)))
 				totalScrollLeft+=parseInt(iterElem.scrollLeft);
-			iterElem=iterElem.parentNode;			
+			iterElem=iterElem.parentNode;
 		}
 		if (CBE!=null) {
 			boxLeft=Left(CBE)-totalScrollLeft;
@@ -277,7 +275,7 @@ function moveMouse(e) {
 			doCheck();
 		}
 	}
-	
+
 	if (boxMove&&CBE) {
 		// This added to alleviate bug in IE6 w.r.t DOCTYPE
 		bodyScrollTop=document.documentElement&&document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop;
@@ -288,15 +286,15 @@ function moveMouse(e) {
 			mouseY < -oy?lockY=-mouseY-oy:lockY=0;
 			mouseX < -ox?lockX=-mouseX-ox:lockX=0;
 			mouseY > (SHW()[1]-oDv.offsetHeight-oy)?lockY=-mouseY+SHW()[1]-oDv.offsetHeight-oy:lockY=lockY;
-			mouseX > (SHW()[0]-dvBdy.offsetWidth-ox)?lockX=-mouseX-ox+SHW()[0]-dvBdy.offsetWidth:lockX=lockX;			
+			mouseX > (SHW()[0]-dvBdy.offsetWidth-ox)?lockX=-mouseX-ox+SHW()[0]-dvBdy.offsetWidth:lockX=lockX;
 		}
 		oDv.style.left=((fixposx)||(fixposx==0))?fixposx:bodyScrollLet+mouseX+ox+lockX+"px";
-		oDv.style.top=((fixposy)||(fixposy==0))?fixposy:bodyScrollTop+mouseY+oy+lockY+"px";		
-		
+		oDv.style.top=((fixposy)||(fixposy==0))?fixposy:bodyScrollTop+mouseY+oy+lockY+"px";
+
 	}
 }
 
-function doCheck() {	
+function doCheck() {
 	if (   (mouseX < boxLeft)    ||     (mouseX >boxRight)     || (mouseY < boxTop) || (mouseY > boxBottom)) {
 		if (!CBE.requireclick)
 			fadeOut();
@@ -334,18 +332,18 @@ function fadeIn2(fs) {
 		oDv.style.filter='alpha(opacity='+parseInt(100*COL)+')';
 		oDv.style.opacity=COL;
 		if (COL<1)
-		 setTimeout("fadeIn2("+fs+")",20);		
+		 setTimeout("fadeIn2("+fs+")",20);
 }
 
 
 function fadeOut() {
 	oDv.style.visibility='hidden';
-	
+
 }
 
 function isChild(s,d) {
 	while(s) {
-		if (s==d) 
+		if (s==d)
 			return true;
 		s=s.parentNode;
 	}
