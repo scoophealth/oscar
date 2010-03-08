@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
+import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -108,14 +109,15 @@ public class JdbcBillingClaimImpl {
 		return retval;
 	}
 
-	public boolean add3rdBillExt(List lVal, int id) {
+	public boolean add3rdBillExt(Map<String,String>mVal, int id) {
 		boolean retval = true;
-		String[] temp = { "billTo", "remitTo", "total", "payment", "refund", "provider_no", "gst", "payMethod"};
-		String demoNo = (String) lVal.get(0);
+		String[] temp = { "billTo", "remitTo", "total", "payment", "refund", "provider_no", "gst", "payDate", "payMethod"};
+		String demoNo = mVal.get("demographic_no");
 		String dateTime = UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss");
-		for (int i = 1; i < lVal.size(); i++) {
-			String sql = "insert into billing_on_ext values(\\N, " + id + "," + demoNo + ", '" + temp[i - 1] + "', '"
-					+ lVal.get(i) + "', '" + dateTime + "', '1' )";
+                mVal.put("payDate", dateTime);
+		for (int i = 0; i < temp.length; i++) {
+			String sql = "insert into billing_on_ext values(\\N, " + id + "," + demoNo + ", '" + temp[i] + "', '"
+					+ mVal.get(temp[i]) + "', '" + dateTime + "', '1' )";
 			retval = dbObj.updateDBRecord(sql);
 			if (!retval) {
 				_logger.error("add3rdBillExt(sql = " + sql + ")");
