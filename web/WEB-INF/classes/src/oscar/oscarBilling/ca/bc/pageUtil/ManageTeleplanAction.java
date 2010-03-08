@@ -108,7 +108,6 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
         
-           System.out.println("UPDATE BILLING CODE WITH PARSING");
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
@@ -147,9 +146,8 @@ public class ManageTeleplanAction extends DispatchAction {
            String line = null;
            Properties dxProp = new Properties();
            while ((line = buff.readLine()) != null) {
-               System.out.println(line);
                if (!line.startsWith("REM")){
-                   System.out.println(line.substring(0,5).trim()+"="+line.substring(4).trim());
+                   log.debug(line.substring(0,5).trim()+"="+line.substring(4).trim());
                    String code = line.substring(0,5).trim();
                    String desc = line.substring(4).trim();
 
@@ -211,7 +209,7 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
         
-           System.out.println("UPDATE EXplanation  CODE WITH PARSING");
+
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
@@ -225,14 +223,13 @@ public class ManageTeleplanAction extends DispatchAction {
            BufferedReader buff = new BufferedReader(new FileReader(file));
 
            String line = null;
-           System.out.println("start while" );
+
            boolean start= false;
            StringBuffer sb = new StringBuffer();
            MspErrorCodes errorCodes = new MspErrorCodes();
-           System.out.println("Msp error codes "+errorCodes.size());
+
            while ((line = buff.readLine()) != null) {
                line = line.trim();
-               //System.out.println("LINE >"+line+"<");
                if (line != null && line.startsWith("--")){
                    start = true;
                    continue;
@@ -276,8 +273,8 @@ public class ManageTeleplanAction extends DispatchAction {
            request.setAttribute("error", errorStr);
            //---------------------------------------------------------------------------
 
-           System.out.println("Msp error codes "+errorCodes.size());
-           System.out.println(sb.toString());
+           log.info("Msp error codes "+errorCodes.size());
+           log.debug(sb.toString());
            return mapping.findForward("success");
     }
     
@@ -287,7 +284,6 @@ public class ManageTeleplanAction extends DispatchAction {
            String[] codes = request.getParameterValues("codes");
            if (codes != null){
                for(String code: codes){
-                  System.out.println(code);
                   String nCode = code.substring(0,5);
                   String fee = code.substring(5,13).trim();
                   String desc = code.substring(13).trim();
@@ -523,9 +519,9 @@ public class ManageTeleplanAction extends DispatchAction {
            boolean patientrestriction=true;
            
            TeleplanResponse tr = tAPI.checkElig(phn,dateofbirthyyyy,dateofbirthmm,dateofbirthdd,dateofserviceyyyy,dateofservicemm,dateofservicedd,patientvisitcharge,lasteyeexam, patientrestriction);
-           System.out.println(tr.getResult());
-           System.out.println(tr.isSuccess());
-           System.out.println(tr.toString());
+           log.debug(tr.getResult());
+           log.debug(tr.isSuccess());
+           log.debug(tr.toString());
            request.setAttribute("Result",tr.getResult());
            request.setAttribute("Msgs",tr.getMsgs());
 
