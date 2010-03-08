@@ -19,6 +19,8 @@ package oscar.oscarBilling.ca.on.pageUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Vector;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,7 +59,7 @@ public class BillingSavePrep {
 
 	public boolean addPrivateBillExtRecord(HttpServletRequest requestData) {
 		boolean ret = false;
-		List val = getPrivateBillExtObj(requestData);
+		Map<String,String> val = getPrivateBillExtObj(requestData);
 		ret = dbObj.add3rdBillExt(val, billingId);
 		if (!ret)
 			_logger.error("addPrivateBillExtRecord " + billingId);
@@ -291,20 +293,29 @@ public class BillingSavePrep {
 		return claimItem;
 	}
 
-	private List getPrivateBillExtObj(HttpServletRequest val) {
-		List aL = new Vector();
-		aL.add(val.getParameter("demographic_no"));
-		aL.add(val.getParameter("billto"));
-		aL.add(val.getParameter("remitto"));
-                aL.add(val.getParameter("gstBilledTotal"));
-		aL.add(val.getParameter("payment"));
-		aL.add(val.getParameter("refund"));
-                aL.add(val.getParameter("provider_no"));
-                aL.add(val.getParameter("gst"));
+	private Map getPrivateBillExtObj(HttpServletRequest val) {
+		Map<String,String> valsMap = new HashMap<String,String>();
+		valsMap.put("demographic_no",val.getParameter("demographic_no"));
+		valsMap.put("billTo",val.getParameter("billto"));
+		valsMap.put("remitTo",val.getParameter("remitto"));
+                valsMap.put("total",val.getParameter("gstBilledTotal"));
+                if (val.getParameter("submit").equalsIgnoreCase("Settle & Print Invoice")) {                    
+                    valsMap.put("payment", valsMap.get("total"));
+                }
+                else {                    
+                    valsMap.put("payment", val.getParameter("payment"));
+                }
+		valsMap.put("refund",val.getParameter("refund"));
+                valsMap.put("provider_no",val.getParameter("provider_no"));
+                valsMap.put("gst",val.getParameter("gst"));
+                
 		if (val.getParameter("payMethod") != null) {
-			aL.add(val.getParameter("payMethod"));
+			valsMap.put("payMethod",val.getParameter("payMethod"));
 		}
-		return aL;
+                else {
+                    valsMap.put("payMethod","");
+                }
+		return valsMap;
 	}
 
 	// HCP/WCB/RMB/NOT/PAT/...
