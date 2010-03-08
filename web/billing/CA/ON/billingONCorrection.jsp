@@ -81,6 +81,7 @@
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
+<%@ page import="oscar.util.UtilDateUtilities"  %>
 
 <%@ include file="../../../admin/dbconnection.jsp"%>
 <%GregorianCalendar now = new GregorianCalendar();
@@ -95,7 +96,9 @@
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
-<%@page import="org.oscarehr.common.model.Provider"%><html:html locale="true">
+<%@page import="org.oscarehr.common.model.Provider"%>
+
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.billingCorrection.title" /></title>
@@ -223,6 +226,17 @@ function sanityCheck(id) {
     }
     return false;
 }
+
+function checkSettle(status) {
+    if( status == 'S' ) {
+        var payElem = document.getElementById("payment");
+        if( payElem != null ) {
+            payElem.value = document.getElementById("billTotal").value;
+        }
+    }
+    
+}
+
 //-->
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -314,8 +328,10 @@ function sanityCheck(id) {
 				} else {
 					Billing3rdPartPrep tObj = new Billing3rdPartPrep();
 					Properties tProp = tObj.get3rdPartBillProp(request.getParameter("billing_no").trim());
-					htmlPaid = "Paid</br><input type='text' name='payment' size=5 value='" 
-						+ tProp.getProperty("payment") + "' /></br>";
+					htmlPaid = "Paid</br><input type='text' id='payment' name='payment' size=5 value='"
+						+ tProp.getProperty("payment") + "' /><input type='hidden' name='oldPayment' value='"
+                                                + tProp.getProperty("payment") + "' /><input type='hidden' name='payDate' value='"
+                                                + UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss") + "'/></br>";
 					htmlPaid += "Refund</br><input type='text' name='refund' size=5 value='" 
 						+ tProp.getProperty("refund") + "' /></br>";
                                         payer = tProp.getProperty("billTo");
@@ -328,6 +344,7 @@ function sanityCheck(id) {
 
 <table width="100%" border="0" class="myYellow">
 	<form name="form1" method="post" action="billingONCorrection.jsp">
+            <input type="hidden" id="billTotal" value="<%=BillTotal%>" />
 	<tr>
 		<th width="30%" align="left"><a
 			href="#" onclick="return sanityCheck('<%=nullToEmpty(ch1Obj.getId())%>');">
@@ -377,7 +394,8 @@ if(bFlag) {
 	onsubmit="return validateAllItems()"><input type="hidden"
 	name="xml_billing_no" value="<%=billNo%>" /> <input type="hidden"
 	name="update_date" value="<%=UpdateDate%>" />
-
+    <input type="hidden" name="payDate" value="<%=UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")%>" />
+    <input type="hidden" name="demoNo" value="<%=DemoNo%>" />
 <table width="600" border="0">
 	<tr class="myGreen">
 		<th align="left" colspan="2"><b><bean:message
@@ -525,7 +543,7 @@ if(bFlag) {
 		<td width="54%"><b><bean:message
 			key="billing.billingCorrection.formBillingType" />: </b> <input
 			type="hidden" name="xml_status" value="<%=BillType%>"> <select
-			style="font-size: 80%;" name="status">
+                        style="font-size: 80%;" name="status" onchange="checkSettle(this.options[this.selectedIndex].value);">
 			<option value=""><bean:message
 				key="billing.billingCorrection.formSelectBillType" /></option>
 			<option value="H" <%=BillType.equals("H")?"selected":""%>><bean:message
