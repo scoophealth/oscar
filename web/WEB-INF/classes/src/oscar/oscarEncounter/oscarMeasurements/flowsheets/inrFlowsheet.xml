@@ -28,7 +28,7 @@
 
 
 
-	<item measurement_type="COUM" display_name="Wafarin Weekly Dose"
+	<item measurement_type="COUM" display_name="Warfarin Weekly Dose"
 		guideline="" graphable="yes" value_name="Total mg Warfarin per week" />
 
 	<item measurement_type="INR" display_name="INR" guideline=""
