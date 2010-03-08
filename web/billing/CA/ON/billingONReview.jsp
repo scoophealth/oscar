@@ -552,8 +552,8 @@ window.onload=function(){
 						String codeTotal = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
                         String strWarning = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getMsg();
                                                 gstFlag = gstRep.getGstFlag(codeName,billReferalDate);  // Retrieve whether the code has gst involved
-                                                if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated
-                                                    BigDecimal cTotal = new BigDecimal(codeTotal);
+                                                BigDecimal cTotal = new BigDecimal(codeTotal);
+                                                if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated                                                    
                                                     BigDecimal perc = new BigDecimal(percent);
                                                     BigDecimal hund = new BigDecimal(100);
                                                     stotal = cTotal;
@@ -564,6 +564,9 @@ window.onload=function(){
                                                     codeTotal = stotal + "";
                                                     BigDecimal temp = new BigDecimal(codeTotal);
                                                     gstbilledtotal = gstbilledtotal.add(temp).setScale(2, BigDecimal.ROUND_HALF_UP);
+                                                }
+                                                else {
+                                                    gstbilledtotal = gstbilledtotal.add(cTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
                                                 }
                         if (codeValid) {                 
 			%>
