@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class JdbcBilling3rdPartImpl {
 	private static final Logger _logger = Logger
@@ -127,6 +128,41 @@ public class JdbcBilling3rdPartImpl {
 		}
 		return retval;
 	}
+
+        public boolean add3rdBillExt(String billingNo, String demoNo, String key, String value) {
+		boolean retval = false;
+
+		String dateTime = UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss");
+
+		String sql = "insert into billing_on_ext values(\\N, " + billingNo + "," + demoNo + ", '" + key + "', '"
+					+ value + "', '" + dateTime + "', '1' )";
+                retval = dbObj.updateDBRecord(sql);
+                if (!retval) {
+                        _logger.error("add3rdBillExt(sql = " + sql + ")");
+                        return retval;
+                }
+		
+		return retval;
+	}
+
+        public boolean keyExists(String billingNo, String key) {
+            boolean ret = false;
+
+            String sql = "select billing_no from billing_on_ext where billing_no="
+                    + billingNo + " and key_val = '" + StringEscapeUtils.escapeSql(key) + "'";
+
+            ResultSet rs = dbObj.searchDBRecord(sql);
+            try {
+                if( rs.next() ) {
+                    ret = true;
+                }
+            }
+            catch( SQLException e ) {
+                e.printStackTrace();
+            }
+
+            return ret;
+        }
 
 	public boolean updateKeyValue(String billingNo, String key, String value) {
 		String sql = "update billing_on_ext set value='"
