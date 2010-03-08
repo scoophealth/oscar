@@ -173,8 +173,11 @@ public class ManageTeleplanAction extends DispatchAction {
                    if (dxList == null || dxList.size() == 0){ //New Code
                         BillingDxCode dxCode = new BillingDxCode();
                         log.debug("Adding new code "+code+" desc : "+desc);
+                        dxCode.setDiagnosticCode(code);
+                        dxCode.setDescription(desc);
                         dxCode.setRegion("BC");
                         dxCode.setStatus("A");
+                        bDx.save(dxCode);
                    }
 /*
  We could change this to update descriptions of older codes.  But it would wipe out any customizations that had been made.                    
@@ -259,15 +262,16 @@ public class ManageTeleplanAction extends DispatchAction {
                }
            }
 
-           //errorCodes.save();
+           errorCodes.save();
 
            //...I guess pass the errors back to jsp
            StringBuffer errorStr = new StringBuffer("");
            for (Entry error: errorCodes.entrySet()) {
                errorStr.append("Error codes: \n");
                errorStr.append(error.getKey());
+               errorStr.append(" -- ");
                errorStr.append(error.getValue());
-               errorStr.append("\n");
+               errorStr.append("\n<br/>");
            }
            request.setAttribute("error", errorStr);
            //---------------------------------------------------------------------------
