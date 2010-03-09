@@ -137,7 +137,7 @@ public final class Cds4ReportUIBean {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDate.getTime());
-		logger.debug("valid cds form count : "+cdsForms.size());
+		logger.debug("valid cds form count, "+loggedInInfo.currentFacility.getId()+", 4, "+startDate.getTime()+", "+endDate.getTime()+", "+cdsForms.size());
 		
 		// sort into single and multiple admissions
 		for (CdsClientForm form : cdsForms) {
@@ -296,6 +296,7 @@ public final class Cds4ReportUIBean {
 
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+
 				if (bucket != null) size = bucket.size();
 				else size=0;
 

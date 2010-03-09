@@ -577,7 +577,7 @@ public class DateUtils {
 	 */
 	public static Integer getAge(Calendar dateOfBirth, Calendar onThisDay)
 	{
-		return(yearDifference(onThisDay, dateOfBirth));
+		return(yearDifference(dateOfBirth, onThisDay));
 	}
 	
 	/**
