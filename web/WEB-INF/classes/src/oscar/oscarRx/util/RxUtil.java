@@ -706,12 +706,13 @@ public class RxUtil {
 
             System.out.println("in instrucParser,unitName="+rx.getUnitName());
             boolean isUnitNameUsed=true;
-            if(rx.getUnitName()==null)
+            if(rx.getUnitName()==null ||rx.getUnitName().trim().length()==0 )
                 isUnitNameUsed=false;
             else if(rx.getUnitName().equalsIgnoreCase("null"))
                 isUnitNameUsed=false;
             else
                 isUnitNameUsed=true;
+            System.out.println("isUnitNameUsed="+isUnitNameUsed);
             //if duration is 0 or null or length==0,it means duration is not specified by user
                 //if quantity,frequency, durationUnit are valid values,isUnitNameUsed==false
                         //yes,calculate duration based on quantity because duration is not specified
@@ -721,6 +722,7 @@ public class RxUtil {
                     //yes, calculate quantity
                     //no, leave quantity intact.
             //--start new code
+            rx.setQuantity(rx.getQuantity().trim());
             if(duration.equals("0") || duration.length()==0 || duration==null){//if duration is not valid, find duration based on quantity
                 if(!isUnitNameUsed && rx.getQuantity()!=null && !rx.getQuantity().equalsIgnoreCase("null") &&
                     !rx.getQuantity().equals("") && !durationUnit.equals("") && !frequency.equals("") && !takeMax.equals("0")){
@@ -1214,7 +1216,7 @@ public class RxUtil {
                     }else{
                         sigStr="unknown";
                     }
-                    if(rxItem.getAtcCode().equals(interactingAtc) && effectStr!=null &&
+                    if(interactingAtc!=null && interactingDrugName!=null &&  rxItem.getAtcCode().equals(interactingAtc) && effectStr!=null &&
                             effectStr.length()>0 && !effectStr.equalsIgnoreCase("N")&& !effectStr.equals(" ")){
                         System.out.println("interactingDrugName="+interactingDrugName);
                         RxPrescriptionData.Prescription rrx=findRxFromDrugNameOrGN(rxs,interactingDrugName);
