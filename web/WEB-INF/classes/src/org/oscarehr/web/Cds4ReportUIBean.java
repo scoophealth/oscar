@@ -721,6 +721,8 @@ public final class Cds4ReportUIBean {
 
 	private ArrayList<CdsClientForm> getOnlyNewAdmissionDuringReportPeriod(Collection<CdsClientForm> forms)
 	{
+		if (forms==null) return(new ArrayList<CdsClientForm>());
+		
 		ArrayList<CdsClientForm> results=new ArrayList<CdsClientForm>();
 		
 		for (CdsClientForm form : forms)
