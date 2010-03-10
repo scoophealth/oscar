@@ -523,8 +523,34 @@ public class ManageTeleplanAction extends DispatchAction {
            log.debug(tr.isSuccess());
            log.debug(tr.toString());
            request.setAttribute("Result",tr.getResult());
-           request.setAttribute("Msgs",tr.getMsgs());
 
+           
+           String realFile = tr.getRealFilename();
+           if (realFile != null && !realFile.trim().equals("")){
+               File file = tr.getFile();
+               BufferedReader buff = new BufferedReader(new FileReader(file));
+               StringBuffer sb = new StringBuffer();
+               String line = null;
+               boolean eligible = true;
+               while ((line = buff.readLine()) != null) {
+
+                  if (line != null && line.startsWith("ELIG_ON_DOS:")){
+                      String el = line.substring(12).trim();
+                      if(el.equalsIgnoreCase("no")){
+                        request.setAttribute("Result","Failure");
+                        eligible = false;
+                        line = "<span style=\"color:red; font-weight:bold;\">"+line+"</span>";
+                      }
+                  }
+                  sb.append(line);
+                  sb.append("<br>");
+               }
+               request.setAttribute("Msgs", sb.toString());//tr.getMsgs());
+            
+           }else{
+               request.setAttribute("Msgs", tr.getMsgs());
+
+           }
            
            //request.setAttribute("message",tr.toString());
            return mapping.findForward("checkElig");
