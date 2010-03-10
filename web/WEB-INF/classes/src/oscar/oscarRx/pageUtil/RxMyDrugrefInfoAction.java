@@ -45,14 +45,42 @@ import org.oscarehr.common.model.*;
 import oscar.OscarProperties;
 import oscar.oscarRx.util.TimingOutCallback;
 import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
-
+import oscar.oscarRx.util.RxUtil;
 
 public final class RxMyDrugrefInfoAction extends DispatchAction {
 
     private static Log log2 = LogFactory.getLog(RxMyDrugrefInfoAction.class);
+    //return interactions about current pending prescriptions
+    public ActionForward findInteractingDrugList (ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+        System.out.println("in findInteractingDrugList");
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+         if (bean == null) {
+                response.sendRedirect("error.html");
+                return null;
+            }
+      try{
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
+        UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+        String provider = (String) request.getSession().getAttribute("user");
+        String retStr=RxUtil.findInterDrugStr(propDAO,provider,bean);
+            //System.out.println("retStr="+retStr);
+        bean.setInteractingDrugList(retStr);
+          /*  int pp=23;
+            if(pp==23)
+                throw new Exception();*/
+     }catch(Exception e){
+        e.printStackTrace();
+        ResourceBundle prop = ResourceBundle.getBundle("oscarResources");
+        String failedMsg=prop.getString("oscarRx.MyDrugref.InteractingDrugs.error.msgFailed");
+        bean.setInteractingDrugList(failedMsg);
+     }
+        return null;
+    }
 
     public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
         System.out.println("in view RxMyDrugrefInfoAction");
+        try{
+
         long start = System.currentTimeMillis();
         String target=(String)request.getParameter("target");
         if(target==null) System.out.println("target is null");
@@ -190,6 +218,10 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         log2.debug("MyDrugref return time " + (System.currentTimeMillis() - start) );
         if(target!=null && target.equals("interactionsRx")) return mapping.findForward("updateInteractions");
         else return mapping.findForward("success");
+        }catch(Exception e){
+            e.printStackTrace();
+            return mapping.findForward("failure");
+    }
     }
 
     private void setShowDSMessage(UserDSMessagePrefsDAO  dsmessageDAO,String provider,String resId,Date updatedatId){
