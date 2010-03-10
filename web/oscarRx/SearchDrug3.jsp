@@ -457,7 +457,10 @@ function checkRePrescribe(){
     function represcribeOnLoad(drugId){
         var data="drugId="+drugId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
-        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom});
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom,
+            onSuccess:function(transport){
+                updateCurrentInteractions();
+            }});
 
     }
 </script>
@@ -578,7 +581,9 @@ body {
                                 <%-- div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title" /></div --%>
 
                                 <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" style="display: inline; margin-bottom:0;" styleId="drugForm">
+                                    <div id="interactingDrugErrorMsg" style="display:none"></div>
                                     <div id="rxText" style="float:left;"></div><br style="clear:left;">
+
 
                                     <html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
                                     <table border="0">
@@ -730,23 +735,7 @@ body {
 
 <tr>
     <td width="100%" height="0%" colspan="2">&nbsp;
-        <%-- pre>
-            Things that need to work
-            JAC-Need data saving in the session.%
-            JAC-Represcribe
-            JAC-*REPRESCRIBE ALL long term meds
-            JAC-Need delete to work
-            -*discontinue!
 
-            JAC-format "more" section
-            +Adjust search to have required info returned. (What is the required info?  ATC, DIN, Route Form??
-            -*How to limit on Route and Form
-            -+*TREATMENTS%  *has bug if something is not found
-
-            +ajax ds.%
-
-        </pre
---%>
     </td>
 </tr>
 
@@ -790,7 +779,7 @@ body {
         Comment:<br/>
         <textarea id="disComment" rows="3" cols="45"></textarea><br/>
         <input type="button" onclick="$('discontinueUI').hide();" value="Cancel"/>
-        <input type="button" onclick="Discontinue2($('disDrugId').value,$('disReason').value,$('disComment').value);" value="Discontinue"/>
+        <input type="button" onclick="Discontinue2($('disDrugId').value,$('disReason').value,$('disComment').value,$('disDrug').innerHTML);" value="Discontinue"/>
 
     </div>
 
@@ -931,7 +920,9 @@ body {
     function resetStash(){
                var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearStash";
                var data = "";
-               new Ajax.Request(url, {method: 'post',parameters:data});
+               new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
+                            updateCurrentInteractions();
+            }});
                $('rxText').innerHTML="";//make pending prescriptions disappear.
                $("searchString").focus();
     }
@@ -962,21 +953,10 @@ body {
     function deletePrescribe(randomId){
         var data="randomId="+randomId;
         var url="<c:out value="${ctx}"/>" + "/oscarRx/rxStashDelete.do?parameterValue=deletePrescribe";
-        new Ajax.Request(url, {method: 'get',parameters:data,onSuccess:function(transport){
+        new Ajax.Request(url, {method: 'get',parameters:data,asynchronous:false,onSuccess:function(transport){
                 oscarLog("in deletePrescribe success");
-            new Ajax.Request("UpdateInteractingDrugs.jsp", {method:'get',onSuccess:function(transport){
-                    var str=transport.responseText;
-                    str=str.replace('<script type="text/javascript">','');
-                    str=str.replace(/<\/script>/,'');
-                    eval(str);
-                    //oscarLog("str="+str);
-                    oscarLog("in asdfadf");
-                    <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
-                      callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
-                     </oscar:oscarPropertiesCheck>
+                updateCurrentInteractions();
                 }});
-
-    }});
     }
 
     function ThemeViewer(){
@@ -1092,10 +1072,10 @@ body {
 
     }
 
-    function Discontinue2(id,reason,comment){
+    function Discontinue2(id,reason,comment,drugSpecial){
         var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=Discontinue"  ;
         var demoNo='<%=patient.getDemographicNo()%>';
-        var data="drugId="+id+"&reason="+reason+"&comment="+comment+"&demoNo="+demoNo;
+        var data="drugId="+id+"&reason="+reason+"&comment="+comment+"&demoNo="+demoNo+"&drugSpecial="+drugSpecial;
             new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
                   oscarLog("Drug is now discontinued>"+transport.responseText);
                   var json=transport.responseText.evalJSON();
@@ -1110,7 +1090,20 @@ body {
 
     }
 
-
+    function updateCurrentInteractions(){
+        new Ajax.Request("GetmyDrugrefInfo.do?method=findInteractingDrugList", {method:'get',onSuccess:function(transport){
+                            new Ajax.Request("UpdateInteractingDrugs.jsp", {method:'get',onSuccess:function(transport){
+                                            var str=transport.responseText;
+                                            str=str.replace('<script type="text/javascript">','');
+                                            str=str.replace(/<\/script>/,'');
+                                            eval(str);
+                                            //oscarLog("str="+str);
+                                            <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">re
+                                              callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
+                                             </oscar:oscarPropertiesCheck>
+                                        }});
+                            }});
+    }
 //represcribe long term meds
     function RePrescribeLongTerm(){
         //var longTermDrugs=$(longTermDrugList).value;
@@ -1120,17 +1113,13 @@ body {
         var data="demoNo="+demoNo+"&showall=<%=showall%>";
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=repcbAllLongTerm";
 
-        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
+            insertion: Insertion.Bottom,onSuccess:function(transport){
+                            updateCurrentInteractions();
+            }});
         return false;
     }
 
-     function createNewRx(element){
-       oscarLog("createNewRx called");
-        var data="drugName="+element.value;
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
-        new Ajax.Request(url, {method: 'get',parameters:data})
-        return false;
-    }
 
 function customWarning2(){
     if (confirm('This feature will allow you to manually enter a drug.'
@@ -1167,18 +1156,20 @@ function saveCustomName(element){
 }
 function popForm2(){
         try{
-            oscarLog("popForm2 called");
-           // var url= "<c:out value="${ctx}"/>" + "/oscarRx/Preview2.jsp";
+            //oscarLog("popForm2 called");
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp";
                     oscarLog( "preview2 done");
                     myLightWindow.activateWindow({
                         href: url,
                         width: 660
                     });
-
+                    var editRxMsg='<bean:message key="oscarRx.Preview.EditRx"/>';
+            $('lightwindow_title_bar_close_link').update(editRxMsg);
+                }
+        catch(er){
+            oscarLog(er);
         }
-        catch(er){alert(er);}
-        oscarLog("bottom of popForm");
+        //oscarLog("bottom of popForm");
     }
 
      function callTreatments(textId,id){
@@ -1235,14 +1226,7 @@ function upElement(li){
 --%>
 
 
- //used in autocomplete
-    function getSelectionId(text, li) {
-       var ran_number=Math.round(Math.random()*1000000);
-        oscarLog('In selection id');
-        var url1=  "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
-        var data1="randomId="+ran_number+"&drugId="+li.id+"&text="+text;
-        new Ajax.Updater('rxText',url1, {method:'get',parameters:data1,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
-    }
+
 
 YAHOO.example.BasicRemote = function() {
     //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
@@ -1281,7 +1265,11 @@ YAHOO.example.BasicRemote = function() {
                 var ran_number=Math.round(Math.random()*1000000);
                 var name=encodeURIComponent(arr[0]);
                 var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr[1]+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
-                new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
+               new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:false,evalScripts:true,
+                    insertion: Insertion.Bottom,onSuccess:function(transport){
+                        updateCurrentInteractions();
+                    }});
+
                 $('searchString').value = "";
     });
 <%--
@@ -1461,7 +1449,10 @@ function setSearchedDrug(drugId,name){
         var drugId=ar[1];
         var data="drugId="+drugId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
-        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,insertion: Insertion.Bottom});
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
+            insertion: Insertion.Bottom,onSuccess:function(transport){
+                updateCurrentInteractions();
+            }});
 
     }
 
