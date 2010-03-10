@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscar"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ page import="oscar.oscarProvider.data.*, oscar.log.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -189,14 +190,18 @@ System.out.println("==========================done first java part Preview2.jsp=
 					<%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         		    <%= provider.getClinicPostal() %><br>
 		            <bean:message key="RxPreview.msgTel"/>: <%= provider.getClinicPhone() %><br>
-        		    <bean:message key="RxPreview.msgFax"/>: <%= provider.getClinicFax() %><br>
+                            <oscar:oscarPropertiesCheck property="RXFAX" value="yes">
+                                <bean:message key="RxPreview.msgFax"/>: <%= provider.getClinicFax() %><br>
+                            </oscar:oscarPropertiesCheck>
 				</c:when>
 				<c:otherwise>
 					<c:out value="${infirmaryView_programAddress}" escapeXml="false" />
 					<br />
         			<bean:message key="RxPreview.msgTel"/>: <c:out value="${infirmaryView_programTel}" />
 					<br />
-        			<bean:message key="RxPreview.msgFax"/>: <c:out value="${infirmaryView_programFax}" />
+                                        <oscar:oscarPropertiesCheck property="RXFAX" value="yes">
+                                    <bean:message key="RxPreview.msgFax"/>: <c:out value="${infirmaryView_programFax}" />
+                                </oscar:oscarPropertiesCheck>
 				</c:otherwise>
 			</c:choose></td>
 		</tr>
