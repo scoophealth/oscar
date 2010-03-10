@@ -1019,7 +1019,14 @@ public class RxPrescriptionData {
         private Date archivedDate;
         private boolean discontinuedLatest=false;
         String special_instruction=null;
+        private boolean durationSpecifiedByUser=false;
 
+        public boolean isDurationSpecifiedByUser(){
+            return durationSpecifiedByUser;
+        }
+        public void setDurationSpecifiedByUser(boolean b){
+            this.durationSpecifiedByUser=b;
+        }
         public String getSpecialInstruction(){
             return special_instruction;
         }
@@ -1202,9 +1209,10 @@ public class RxPrescriptionData {
         }
 
         public void calcEndDate() {
+            try{
             GregorianCalendar cal = new GregorianCalendar(Locale.CANADA);
             int days = 0;
-            //        p("in calcEndDate");
+                        p("in calcEndDate");
             //          p("this.getRxDate()",this.getRxDate().toString());
             cal.setTime(this.getRxDate());
 
@@ -1213,13 +1221,13 @@ public class RxPrescriptionData {
                     int i = Integer.parseInt(this.getDuration());
                     //      p("i",Integer.toString(i));
                     //      p("this.getDurationUnit()",this.getDurationUnit());
-                    if (this.getDurationUnit().equalsIgnoreCase("D")) {
+                        if (this.getDurationUnit()!=null && this.getDurationUnit().equalsIgnoreCase("D")) {
                         days = i;
                     }
-                    if (this.getDurationUnit().equalsIgnoreCase("W")) {
+                        if (this.getDurationUnit()!=null && this.getDurationUnit().equalsIgnoreCase("W")) {
                         days = i * 7;
                     }
-                    if (this.getDurationUnit().equalsIgnoreCase("M")) {
+                        if (this.getDurationUnit()!=null && this.getDurationUnit().equalsIgnoreCase("M")) {
                         days = i * 30;
                     }
 
@@ -1238,6 +1246,9 @@ public class RxPrescriptionData {
             }
 
             this.endDate = cal.getTime();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
             //     p("endDate",RxUtil.DateToString(this.endDate));
         }
 
