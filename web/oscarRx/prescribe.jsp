@@ -10,8 +10,7 @@ System.out.println("***### IN prescribe.jsp");
 
 List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("listRxDrugs");
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-String interactingDrugList=bean.getInteractingDrugList();
-System.out.println("interactingDrugList="+interactingDrugList);
+
 System.out.println("listRxDrugs="+listRxDrugs);
 if(listRxDrugs!=null){
             String specStr=RxUtil.getSpecialInstructions();
@@ -255,24 +254,6 @@ if(listRxDrugs!=null){
                     }
             }
 
-
-            var interactStr='<%=interactingDrugList%>';
-            oscarLog("interactStr="+interactStr);
-            if(interactStr.length>0){
-                var arr1=interactStr.split(",");
-                for(var i=0;i<arr1.length;i++){
-                    var str=arr1[i];
-                    var arr2=str.split("=");
-                    var id=arr2[0];
-                    var title=arr2[1];
-                    var htmlStr="<a title='"+title+"'>&nbsp;&nbsp;</a>";
-                    oscarLog('id='+id);
-                    id=id.replace(/\s/g,"");
-                    $(id).show();
-                    $(id).update(htmlStr);
-                }
-
-            }
 
         </script>
                 <%}
