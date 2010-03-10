@@ -517,14 +517,6 @@ public final class RxWriteScriptAction extends DispatchAction {
             rx.setRxDate(tod);
             rx.setWrittenDate(tod);
             rx.setDiscontinuedLatest(RxUtil.checkDiscontinuedBefore(rx));//check and set if rx was discontinued before.
-
-            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
-            UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
-            String provider = (String) request.getSession().getAttribute("user");
-            String retStr=RxUtil.findInterDrugStr(propDAO,provider,bean);
-
-            bean.setInteractingDrugList(retStr);
-
             request.setAttribute("listRxDrugs", listRxDrugs);
         } catch (Exception e) {
             e.printStackTrace();
@@ -626,7 +618,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
                         nPerDay = RxUtil.findNPerDay(frequency);
                         nDays = RxUtil.findNDays(durationUnit);
-                        if(RxUtil.isStringToNumber(quantity)){
+                        if(RxUtil.isStringToNumber(quantity) && !rx.isDurationSpecifiedByUser()){//don't not caculate duration if it's already specified by the user
                             double qtyD = Double.parseDouble(quantity);
                             //quantity=takeMax * nDays * duration * nPerDay
                             double durD = qtyD / ((Double.parseDouble(takeMax)) * nPerDay * nDays);
