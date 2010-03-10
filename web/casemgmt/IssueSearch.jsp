@@ -51,6 +51,17 @@ function backToNote(from)
 	else location.href="<c:out value='${url}' escapeXml='false'/>"+"&from="+from;
 	return false;
 }
+
+
+function addIssue(form)
+{
+	form.method.value='issueAdd';
+	var btn = document.getElementById('submit_add_issue');
+	btn.disabled=true;
+	btn.value='processing';
+	return true; 	
+}
+
 </script>
 <html:hidden property="demographicNo"/>
 <html:hidden property="providerNo"/>
@@ -112,7 +123,7 @@ function backToNote(from)
 </table>
 
 <br>
-<nested:submit value="add checked issue" onclick="this.form.method.value='issueAdd';"/>
+<nested:submit styleId="submit_add_issue" value="add checked issue" onclick="return addIssue(this.form);"/>
 
 </nested:equal>
 
