@@ -349,30 +349,11 @@ public class RxUtil {
         if (instructions == null) {
             instructions = "";
         }
-        String amount = "0";
         String route = "";
         String frequency = "";
-        /*String frequency;
-        if (rx.getFrequencyCode() == null) {
-            frequency = "";
-        } else {
-            frequency = rx.getFrequencyCode();
-        }*/
-        String form = "";
         String duration="0";
-        /*if (rx.getDuration() == null) {
-            duration = "0";
-        } else {
-            duration = rx.getDuration();
-        }*/
-        System.out.println("duration="+duration);
         String method = "";
         String durationUnit="";
-        /*if (rx.getDurationUnit() == null) {
-            durationUnit = "";
-        } else {
-            durationUnit = rx.getDurationUnit();
-        }*/
         String durationUnitSpec = "";
         boolean prn = false;
         String amountFrequency = "";
@@ -383,18 +364,6 @@ public class RxUtil {
         String takeMaxMethod = "";
         String takeMin = "0";
         String takeMax = "0";
-      /*  String takeMin;
-        String takeMax;
-        if (rx.getTakeMinString() == null) {
-            takeMin = "0";
-        } else {
-            takeMin = rx.getTakeMinString();
-        }
-        if (rx.getTakeMaxString() == null) {
-            takeMax = "0";
-        } else {
-            takeMax = rx.getTakeMaxString();
-        }*/
         String durationSpec = "";
         int quantity = 0;
 
@@ -422,10 +391,17 @@ public class RxUtil {
                 "\\s(?i)Q4-6H$", "\\s(?i)Q6H$", "\\s(?i)Q8H$", "\\s(?i)Q12H$", "\\s(?i)QAM$", "\\s(?i)QPM$", "\\s(?i)QHS$", "\\s(?i)Q1Week$", "\\s(?i)Q2Week$",
                 "\\s(?i)Q1Month$", "\\s(?i)Q3Month$"};
             String[] methods = {"(?i)Take", "(?i)Apply", "(?i)Rub well in"};
-            String[] durationUnits = {"\\s+(?i)days\\s", "\\s+(?i)weeks\\s", "\\s+(?i)months\\s", "\\s+(?i)day\\s", "\\s+(?i)week\\s", "\\s+(?i)month\\s",
-                "\\s+(?i)d\\s", "\\s+(?i)w\\s", "\\s+(?i)m\\s", "\\s+(?i)days$", "\\s+(?i)weeks$", "\\s+(?i)months$", "\\s+(?i)day$", "\\s+(?i)week$", "\\s+(?i)month$",
-                "\\s+(?i)d$", "\\s+(?i)w$", "\\s+(?i)m$"};
-
+            String[] durationUnits =
+            {"\\s+(?i)days\\s", "\\s+(?i)weeks\\s", "\\s+(?i)months\\s", "\\s+(?i)day\\s", "\\s+(?i)week\\s", "\\s+(?i)month\\s",
+             "\\s+(?i)d\\s", "\\s+(?i)w\\s", "\\s+(?i)m\\s", "\\s+(?i)mo\\s",
+             "\\s+(?i)days$", "\\s+(?i)weeks$", "\\s+(?i)months$", "\\s+(?i)day$", "\\s+(?i)week$", "\\s+(?i)month$",
+             "\\s+(?i)d$", "\\s+(?i)w$", "\\s+(?i)m$","\\s+(?i)mo$"};
+            String[] durUnits2 =
+             {"\\s[0-9]+(?i)days\\s", "\\s[0-9]+(?i)weeks\\s", "\\s[0-9]+(?i)months\\s", "\\s[0-9]+(?i)day\\s", "\\s[0-9]+(?i)week\\s", "\\s[0-9]+(?i)month\\s",
+                "\\s[0-9]+(?i)d\\s", "\\s[0-9]+(?i)w\\s", "\\s[0-9]+(?i)m\\s","\\s[0-9]+(?i)mo\\s",
+              "\\s[0-9]+(?i)days$", "\\s[0-9]+(?i)weeks$", "\\s[0-9]+(?i)months$", "\\s[0-9]+(?i)day$", "\\s[0-9]+(?i)week$", "\\s[0-9]+(?i)month$",
+                "\\s[0-9]+(?i)d$", "\\s[0-9]+(?i)w$", "\\s[0-9]+(?i)m$","\\s[0-9]+(?i)mo$",
+            };
 
             for (String s : routes) {
                 Pattern p = Pattern.compile(s);
@@ -440,15 +416,6 @@ public class RxUtil {
                         //if route =od,check if there is a valid frequency, there is one, then route is od.
                         //if not , set the route="",keep looping. then set frequency to be od;
                         p("part is " + part);
-                        /* for (String f : frequences) {
-                        Pattern fPattern = Pattern.compile(f);
-                        Matcher fMatcher = fPattern.matcher(part);
-                        if (fMatcher.find()) {
-                        p("frequency is "+f);
-                        frequency = part.substring(fMatcher.start(), fMatcher.end());
-                        break;
-                        }
-                        }*/
                         Pattern fPattern = Pattern.compile("\\s(?i)OD\\s*");
                         Matcher fMatcher = fPattern.matcher(part);
                         String frequencyStr = "";
@@ -594,16 +561,18 @@ public class RxUtil {
                 // p(s);
                 Pattern p = Pattern.compile(s);
                 Matcher m = p.matcher(instructions);
+                //System.out.println("check duration unit, if space present,pattern="+s+"--instructions="+instructions);
                 if (m.find()) {
-                    //    p(instructions);
-                    //    p(s);
+                        p("FOUND");
+                        p(instructions);
+                        p(s);
                     durationUnitSpec = (instructions.substring(m.start(), m.end())).trim();
-                    //    p("durationUnitSpec", durationUnitSpec);
+                        p("durationUnitSpec", durationUnitSpec);
                     //get the number before durationUnit
                     Pattern p1 = Pattern.compile("[0-9]+" + s);
                     Matcher m1 = p1.matcher(instructions);
                     if (m1.find()) {
-                        //         p("" + m1.start(), "" + m.start());
+                                 p("" + m1.start(), "" + m.start());
                         durationSpec = instructions.substring(m1.start(), m.start());
                         duration = durationSpec.trim();
                                 p("duration here1", duration);
@@ -611,17 +580,21 @@ public class RxUtil {
                     break;
                 }
             }
-            String[] durUnits2 = {"\\s[0-9]+(?i)days\\s*", "\\s[0-9]+(?i)weeks\\s*", "\\s[0-9]+(?i)months\\s*", "\\s[0-9]+(?i)day\\s*", "\\s[0-9]+(?i)week\\s*", "\\s[0-9]+(?i)month\\s*",
-                "\\s[0-9]+(?i)d\\s*", "\\s[0-9]+(?i)w\\s*", "\\s[0-9]+(?i)m\\s*"};
+
+
             //match the pattern when there is no space between number and durationUnit.
             if (durationUnitSpec.equals("")) {
-                //    System.out.println("no space between duration and duration unit.");
+                    System.out.println("no space between duration and duration unit.");
                 for (String s : durUnits2) {
                     Pattern p = Pattern.compile(s);
                     Matcher m = p.matcher(instructions);
+                    //System.out.println("check duration unit, if space not present,pattern="+s+"--instructions="+instructions);
                     if (m.find()) {
-                        String str1 = instructions.substring(m.start(), m.end() - 1);
-                        //       System.out.println("str1=" + str1);
+                        p("FOUND");
+                        p(instructions);
+                        p(s);
+                        String str1 = instructions.substring(m.start(), m.end());
+                               System.out.println("str1=" + str1);
                         //get numUnit out
                         Pattern p1 = Pattern.compile("[0-9]+");
                         Matcher m1 = p1.matcher(str1);
@@ -687,7 +660,8 @@ public class RxUtil {
                 } else if (durationUnitSpec.equalsIgnoreCase("day") || durationUnitSpec.equalsIgnoreCase("days") || durationUnitSpec.equalsIgnoreCase("d")) {
 
                     durationUnit = "D";
-                } else if (durationUnitSpec.equalsIgnoreCase("month") || durationUnitSpec.equalsIgnoreCase("months") || durationUnitSpec.equalsIgnoreCase("m")) {
+                } else if (durationUnitSpec.equalsIgnoreCase("month") || durationUnitSpec.equalsIgnoreCase("months") || durationUnitSpec.equalsIgnoreCase("m")
+                        || durationUnitSpec.equalsIgnoreCase("mo")) {
 
                     durationUnit = "M";
                 }
@@ -723,7 +697,8 @@ public class RxUtil {
                     //no, leave quantity intact.
             //--start new code
             rx.setQuantity(rx.getQuantity().trim());
-            if(duration.equals("0") || duration.length()==0 || duration==null){//if duration is not valid, find duration based on quantity
+            if(duration.equals("0") || duration.length()==0 || duration==null){//if duration is not specified, find duration based on quantity
+                rx.setDurationSpecifiedByUser(false);
                 if(!isUnitNameUsed && rx.getQuantity()!=null && !rx.getQuantity().equalsIgnoreCase("null") &&
                     !rx.getQuantity().equals("") && !durationUnit.equals("") && !frequency.equals("") && !takeMax.equals("0")){
                     quantity=Integer.parseInt(rx.getQuantity());
@@ -737,6 +712,7 @@ public class RxUtil {
                 }else
                     rx.setDuration("0");
             }else{//if duration is valid, find quantity based on duration
+                rx.setDurationSpecifiedByUser(true);
                 rx.setDuration(duration);
                 if (!isUnitNameUsed && !durationUnit.equals("") && !takeMin.equals("0") && !takeMax.equals("0") && !frequency.equals("")) {
                     nPerDay = findNPerDay(frequency);
@@ -750,23 +726,6 @@ public class RxUtil {
 
             }
 
-            //--end new code
-            //calculate quantity based on duration, frequency, duration unit, takeMin , takeMax
-            //if unitName is used, don't calculate quantity or duration
-     /*       if (isUnitNameUsed || duration.equals("0")||duration.length()==0 || durationUnit.equals("") || takeMin.equals("0") || takeMax.equals("0") || frequency.equals("")) {
-                System.out.println("in instrucParser,if="+rx.getUnitName()+"--"+duration+" --"+durationUnit+"-- "+ takeMin+"-- "+ takeMax+"--"+frequency);
-            } else {
-
-
-                nPerDay = findNPerDay(frequency);
-                nDays = findNDays(durationUnit);
-                System.out.println("in instrucParser duration="+duration);
-                //quantity=takeMax * nDays * duration * nPerDay
-                double quantityD = (Double.parseDouble(takeMax)) * nPerDay * nDays * (Double.parseDouble(duration));
-                quantity = (int) quantityD;
-                System.out.println("in instrucParser,else="+quantity+"-- "+takeMax+" --"+nPerDay+"-- "+ nDays+"-- "+ duration);
-            }
-*/
             //if drug route is in rx is different from specified, set it to specified.
             if (!route.equals("") && !route.equalsIgnoreCase(rx.getRoute())) {
                 rx.setRoute(route);
@@ -776,9 +735,6 @@ public class RxUtil {
             rx.setTakeMin(Float.parseFloat(takeMin));
             rx.setMethod(method);
             rx.setFrequencyCode(frequency);
-         /*   if (!duration.equals("0")) {
-                rx.setDuration(duration);
-            }*/
             rx.setDurationUnit(durationUnit);
             rx.setPrn(prn);
             System.out.println("in instrucParser,quantity="+quantity +" ; unitName="+rx.getUnitName());
