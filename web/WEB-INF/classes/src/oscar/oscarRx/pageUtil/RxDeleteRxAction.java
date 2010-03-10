@@ -207,8 +207,11 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
             System.out.println("request.attributeName in session="+s);
             System.out.println("value="+request.getSession().getAttribute(s));
         }*/
-        
+        try{
         createDiscontinueNote(request);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DISCONTINUE, LogConst.CON_PRESCRIPTION,""+drug.getId(), ip,""+drug.getDemographicId(),logStatement);
        
@@ -232,7 +235,7 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         String demoNo=request.getParameter("demoNo");
         String idStr = request.getParameter("drugId");
         String user=request.getSession().getAttribute("user").toString();
-        String strNote="Discontinued reason: "+request.getParameter("reason")+ "\nDiscontinued comment: "+request.getParameter("comment") ;
+        String strNote=request.getParameter("drugSpecial")+"\nDiscontinued reason: "+request.getParameter("reason")+ "\nDiscontinued comment: "+request.getParameter("comment") ;
         HttpSession se = request.getSession();
         String prog_no = new EctProgram(se).getProgram(user);
 
