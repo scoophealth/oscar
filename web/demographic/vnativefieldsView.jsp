@@ -41,6 +41,7 @@ Hashtable h2 = new Hashtable();
 Status #: <b><%=apptMainBean.getString(demoExt.get("statusNum"))%></b>
 Ethinicity: <b><%=getEth(h,apptMainBean.getString(demoExt.get("ethnicity")) )%></b>
 </li>
+<li>First Nations Community: <b><%=apptMainBean.getString(demoExt.get("fNationCom"))%></b></li>
 
 <%!
 

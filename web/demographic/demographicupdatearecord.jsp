@@ -202,7 +202,8 @@
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"ethnicity",request.getParameter("ethnicity"),request.getParameter("ethnicityOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"area",request.getParameter("area"),request.getParameter("areaOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"statusNum",request.getParameter("statusNum"),request.getParameter("statusNumOrig") );
-     
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"fNationCom",request.getParameter("fNationCom"),request.getParameter("fNationComOrig") );
+
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"given_consent",request.getParameter("given_consent"),request.getParameter("given_consentOrig") );
     
      // customized key

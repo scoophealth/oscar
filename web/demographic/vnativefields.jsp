@@ -9,11 +9,15 @@ Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
 %>
 <tr>
 	<td align="right"><b>Status #:</b></td>
-	<td align="left" colspan="3"><input type="text" name="statusNum"
-		value="<%=apptMainBean.getString(demoExt.get("statusNum"))%>">
-	<input type="hidden" name="statusNumOrig"
-		value="<%=apptMainBean.getString(demoExt.get("statusNum"))%>">
+	<td align="left" >
+            <input type="text" name="statusNum" value="<%=apptMainBean.getString(demoExt.get("statusNum"))%>">
+	    <input type="hidden" name="statusNumOrig" value="<%=apptMainBean.getString(demoExt.get("statusNum"))%>">
 	</td>
+        <td align="right"><b>First Nation Community:</b></td>
+        <td align="left">
+            <input type="text" name="fNationCom" value="<%=apptMainBean.getString(demoExt.get("fNationCom"))%>">
+	    <input type="hidden" name="fNationComOrig" value="<%=apptMainBean.getString(demoExt.get("fNationCom"))%>">
+        </td>
 </tr>
 
 <tr>
