@@ -587,6 +587,10 @@
             <forward name="newRx" path="/oscarRx/prescribe.jsp" />
         </action>
 
+        <action name="FrmForm" path="/dms/inboxManage" scope="request"  parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="success" path="/dms/inboxManager.jsp" />
+        </action>
+
         <action input="/oscarRx/ChooseDrug.jsp" path="/oscarRx/chooseDrug" scope="request" type="oscar.oscarRx.pageUtil.RxChooseDrugAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
         </action>
@@ -720,6 +724,7 @@
         </action>
         <action input="/oscarRx/MyDrugrefDisplay.jsp" name="FrmForm" path="/oscarRx/GetmyDrugrefInfo" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction">
             <forward name="success" path="/oscarRx/MyDrugrefDisplay.jsp"></forward>
+            <forward name="failure" path="/oscarRx/MyDrugrefError.jsp"></forward>
             <forward name="updateInteractions" path="/oscarRx/InteractionDisplay2.jsp"></forward>
             <forward name="updateResources" path="/oscarRx/updateMyDrugrefResource.jsp"></forward>
         </action>
