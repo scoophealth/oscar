@@ -2,6 +2,7 @@
 <%@page pageEncoding="UTF-8"%>
 <%@page import="java.util.*" %>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
 <%
     oscar.oscarRx.pageUtil.RxSessionBean bean2 =(oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
     RxPrescriptionData.Prescription [] allRxInStash=bean2.getStash();
@@ -9,18 +10,21 @@
     for(RxPrescriptionData.Prescription rx:allRxInStash){
         allRandomIdInStash.add(rx.getRandomId());
     }
-    //System.out.println("allRandomIdInStash="+allRandomIdInStash);
     String interactingDrugList=bean2.getInteractingDrugList();
-    //System.out.println("bean2.getInteractingDrugList()="+bean2Vec);
+
 
 %>
 
 <script type="text/javascript">
+
+    var errorMsg="<bean:message key='oscarRx.MyDrugref.InteractingDrugs.error.msgFailed' />" ;
+    oscarLog("errorMsg="+errorMsg);
             var interactStr='<%=interactingDrugList%>';
             var randomIds='<%=allRandomIdInStash%>';
                 //clear all warnings
                 randomIds=randomIds.replace(/\[/, "");
                 randomIds=randomIds.replace(/\]/, "");
+                if(randomIds.length>0){
                 var randomIdArr=randomIds.split(",");
                 for(var h=0;h<randomIdArr.length;h++){
                     var randId=randomIdArr[h];
@@ -34,7 +38,17 @@
                     $('unknown_'+randId).hide();
                     $('unknown_'+randId).update("");
                 }
+                }
+
+
             if(interactStr.length>0){
+                if(interactStr==errorMsg){
+                    $("interactingDrugErrorMsg").show();
+                    $("interactingDrugErrorMsg").update("<span style='color:red'>"+errorMsg+"</span>");
+                }
+                else{
+                    $("interactingDrugErrorMsg").hide();
+                    $("interactingDrugErrorMsg").update("");
                 var arr1=interactStr.split(",");
                 for(var i=0;i<arr1.length;i++){
                     var str=arr1[i];
@@ -46,7 +60,10 @@
                     $(id).show();
                     $(id).update(htmlStr);
                 }
-
+            }
+            }else{
+                $("interactingDrugErrorMsg").hide();
+                $("interactingDrugErrorMsg").update("");
             }
 
 </script>
