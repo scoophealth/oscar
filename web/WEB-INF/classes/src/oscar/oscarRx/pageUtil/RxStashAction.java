@@ -24,7 +24,6 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -35,21 +34,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import oscar.OscarProperties;
-import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
-import org.apache.xmlrpc.XmlRpcClientLite;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import java.util.Hashtable;
-import org.oscarehr.common.dao.UserPropertyDAO;
-import org.oscarehr.common.model.UserProperty;
-import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
-import oscar.oscarRx.data.RxPrescriptionData;
-import oscar.oscarRx.util.RxUtil;
-import oscar.oscarRx.util.TimingOutCallback;
 
 public final class RxStashAction extends DispatchAction {
 
@@ -167,11 +152,6 @@ public final class RxStashAction extends DispatchAction {
                     bean.setStashIndex(bean.getStashSize() - 1);
                 }
 
-            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
-            UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
-            String provider = (String) request.getSession().getAttribute("user");
-            String retStr=RxUtil.findInterDrugStr(propDAO,provider,bean);
-            bean.setInteractingDrugList(retStr);
 
         return mapping.findForward("success");
     }
