@@ -3,7 +3,5 @@
 -- the list provided here for now is just the starting point, until we get feed back.
 -- see the OHRS appendix 7 for a full list of functional centres
 
-insert into FunctionalCentre values ('7* 5 09 76','COM Case Management Mental Health');
-insert into FunctionalCentre values ('7* 5 09 78 11','COM Case Management - Substance Abuse');
-insert into FunctionalCentre values ('7* 5 09 78 12','COM Case Management - Problem Gambling');
-
+insert into FunctionalCentre values ('725 09 76','Mental Health Case Managament');
+insert into FunctionalCentre values ('725 40 76 30','Support within housing');
