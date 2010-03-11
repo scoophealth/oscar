@@ -350,7 +350,7 @@ function isformNeeded(){
     //if Check to make sure WCB ID is only numeric
     var claimNum = document.WCBForm.w_wcbno.value; 
     if (claimNum != ""){
-         if (claimNum != parseInt(claimNum)){
+         if (!isNumericInt(claimNum)){
             alert("Claim # has to be numeric");
             document.WCBForm.w_wcbno.focus();
             return false;
