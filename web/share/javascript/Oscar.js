@@ -152,7 +152,7 @@ function checkAll(master, parentEle, className){
    }
 }
 
-
+//Calls firebugs console log if it's available.  A safer way to use the console because if firebug is not enabled the javascript will error on the console.log line.
 function oscarLog(str){
     if(window.console){
        console.log(str);
@@ -168,4 +168,34 @@ function grabEnter(event,callb){
      eval(callb);
      return false;
   }
+}
+
+
+
+//Checks to see if a String is numeric integer ie. No decimal aloud
+function isNumericInt(sText){
+   var validNumChars = "0123456789";
+   var isNumber=true;
+   var chara;
+   for (i = 0; i < sText.length && isNumber == true; i++) {
+      chara = sText.charAt(i);
+      if (validNumChars.indexOf(chara) == -1) {
+         isNumber = false;
+      }
+   }
+   return isNumber;
+}
+
+//Checks to see if a String is numeric
+function isNumeric(sText){
+   var validNumChars = "0123456789.";
+   var isNumber=true;
+   var chara;
+   for (i = 0; i < sText.length && isNumber == true; i++) {
+      chara = sText.charAt(i);
+      if (validNumChars.indexOf(chara) == -1) {
+         isNumber = false;
+      }
+   }
+   return isNumber;
 }
