@@ -256,8 +256,8 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
 
-    public List<Program> getProgramsByFunctionalCentreId(String functionalCentreId) {
-        String queryStr = "FROM Program p WHERE p.functionalCentreId = '"+functionalCentreId+'\'';
+    public List<Program> getProgramsByFacilityIdAndFunctionalCentreId(Integer facilityId, String functionalCentreId) {
+        String queryStr = "FROM Program p WHERE p.facilityId = "+facilityId+" and p.functionalCentreId = '"+functionalCentreId+'\'';
 
         @SuppressWarnings("unchecked")
         List<Program> rs = getHibernateTemplate().find(queryStr);
