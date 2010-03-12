@@ -27,7 +27,7 @@ public abstract class DSService {
     }
 
     public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo) {
-        System.out.println("passed in provider: " + providerNo + " demographicNo" + demographicNo);
+        _log.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
         List<DSGuideline> dsGuidelines = this.dsGuidelineDAO.getDSGuidelinesByProvider(providerNo);
         _log.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + dsGuidelines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList();

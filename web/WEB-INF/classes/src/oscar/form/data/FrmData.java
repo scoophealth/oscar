@@ -30,7 +30,12 @@ import java.util.ArrayList;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class FrmData {
+    private static final Log _log = LogFactory.getLog(FrmData.class);
+
     public class Form {
         private String formName;
         private String formPage;
@@ -147,7 +152,7 @@ public class FrmData {
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         String sql = "SELECT form_value, form_table FROM encounterForm WHERE form_name='" + formName + "'";
-        System.out.println(sql);
+        _log.debug(sql);
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
             ret[0] = db.getString(rs,"form_value");
@@ -248,7 +253,7 @@ public class FrmData {
         }
 
         rs.close();
-        System.out.println("RETURNING "+ret[0]+" = "+ret[1]);
+        _log.debug("RETURNING "+ret[0]+" = "+ret[1]);
         return ret;
     }
 

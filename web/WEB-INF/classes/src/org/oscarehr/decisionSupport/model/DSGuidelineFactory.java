@@ -18,12 +18,14 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 /**
  *
  * @author apavel
  */
 public class DSGuidelineFactory {
+    protected static Log _log = LogFactory.getLog(DSGuidelineFactory.class);
     public DSGuideline createGuidelineFromXml(String xml) throws DecisionSupportParseException {
        if (xml == null || xml.equals("")) throw new DecisionSupportParseException("Xml not set");
         SAXBuilder parser = new SAXBuilder();
@@ -85,7 +87,7 @@ public class DSGuidelineFactory {
                 dsCondition.setConditionType(conditionType);
                 dsCondition.setListOperator(operator); //i.e. any, all, not
                 if (paramHashtable != null && !paramHashtable.isEmpty()){
-                    System.out.println("THIS IS THE HASH STRING "+paramHashtable.toString());
+                    _log.debug("THIS IS THE HASH STRING "+paramHashtable.toString());
                     dsCondition.setParam(paramHashtable);
                 }
 

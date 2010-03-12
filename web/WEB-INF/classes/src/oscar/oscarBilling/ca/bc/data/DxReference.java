@@ -43,11 +43,15 @@ import java.util.Map;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  *
  * @author jay
  */
 public class DxReference {
+    private static final Log _log = LogFactory.getLog(DxReference.class);
     
     /** Creates a new instance of DxReference */
     public DxReference() {
@@ -79,9 +83,8 @@ public class DxReference {
                 dx[0] = rs.getString("dx_code1");
                 dx[1] = rs.getString("dx_code2");
                 dx[2] = rs.getString("dx_code3");
-                System.out.println("THIS IS THE DATE: "+sDate);
                 Date sD = UtilDateUtilities.StringToDate(sDate,"yyyyMMdd") ;
-                System.out.println("DATE PARSED "+sD);
+                _log.debug("THIS IS THE DATE: "+sDate +" DATE PARSED "+sD);
                        
                 for (int i = 0; i < dx.length; i++){
                     if (dx[i] != null && !dx[i].trim().equals("")){
@@ -142,7 +145,7 @@ public class DxReference {
         private int getNumMonths(Date dStart, Date dEnd) {
             int i = 0;
             try{
-                System.out.println("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
+                _log.debug("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(dStart);
                 while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {
@@ -152,7 +155,7 @@ public class DxReference {
                 i--;
                 if (i < 0) { i = 0; }
             }catch (Exception e){
-                System.out.println("Date was NULL in DxReference");
+                _log.warn("Date was NULL in DxReference");
             }
             return i;
         }

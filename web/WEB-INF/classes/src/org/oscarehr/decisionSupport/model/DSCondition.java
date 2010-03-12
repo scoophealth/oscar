@@ -9,12 +9,15 @@ import java.util.Hashtable;
 import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
  * @author apavel
  */
 public class DSCondition {
+    private static final Log _log = LogFactory.getLog(DSCondition.class);
 
     /**
      * @return the param
@@ -34,7 +37,7 @@ public class DSCondition {
      * @return the label
      */
     public String getLabel() {
-        System.out.println("getting label in "+this.hashCode());
+        _log.debug("getting label in "+this.hashCode());
         return label;
     }
 
@@ -43,7 +46,7 @@ public class DSCondition {
      * @param label the label to set
      */
     public void setLabel(String label) {
-        System.out.println("Setting label in "+this.hashCode());
+        _log.debug("Setting label in "+this.hashCode());
         this.label = label;
     }
     

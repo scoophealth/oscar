@@ -41,9 +41,11 @@ import org.oscarehr.decisionSupport.model.DSConsequence;
 import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines;
 import oscar.util.SqlUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public final class BillingAction
-    extends Action {
+public final class BillingAction extends Action {
+  protected static Log _log = LogFactory.getLog(BillingAction.class);
   private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
@@ -96,11 +98,11 @@ public final class BillingAction
  //       this.validateCodeLastBilled(request, errors,
  //                                   request.getParameter("demographic_no"));
         try{
-            System.out.println("Start of billing rules");
+            _log.debug("Start of billing rules");
             List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
         
             for (DSConsequence dscon : list){
-                System.out.println("DSTEXT "+dscon.getText());
+                _log.debug("DSTEXT "+dscon.getText());
                 errors.add("",new ActionMessage("message.custom",dscon.getText()));
            }
         }catch(Exception e){

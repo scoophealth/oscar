@@ -32,8 +32,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
-public final class BillingCreateBillingForm
-    extends ActionForm {
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public final class BillingCreateBillingForm extends ActionForm {
+  private static final Log _log = LogFactory.getLog(BillingCreateBillingForm.class);
 
   private String[] service;
   private String xml_provider, xml_location, xml_billtype;
@@ -101,7 +104,7 @@ public final class BillingCreateBillingForm
    * @return String, this is the text of the message
    */
   public String getXml_billtype() {
-    System.out.println(this.hashCode());
+    _log.debug(this.hashCode());
     return xml_billtype != null ? xml_billtype : "";
   }
 
@@ -110,7 +113,7 @@ public final class BillingCreateBillingForm
    * @param msg String, The text of a message
    */
   public void setXml_billtype(String xml_billtype) {
-    System.out.println(this.hashCode());
+    _log.debug(this.hashCode());
     this.xml_billtype = xml_billtype;
   }
 
@@ -396,7 +399,7 @@ public final class BillingCreateBillingForm
    */
   public void reset(ActionMapping mapping, HttpServletRequest request) {
     this.service = null;
-    System.out.println("RESET IS CALLED IN BILLING CREATE BILLING FORM");
+    _log.debug("RESET IS CALLED IN BILLING CREATE BILLING FORM");
     // this.message = null;
     // this.subject = null;
 
@@ -771,7 +774,7 @@ public final class BillingCreateBillingForm
       request.setAttribute("newWCBClaim","1");
     }
 
-    System.out.println("About to return errors "+errors.size());
+    _log.debug("About to return errors "+errors.size());
     return errors;
   }
   /**

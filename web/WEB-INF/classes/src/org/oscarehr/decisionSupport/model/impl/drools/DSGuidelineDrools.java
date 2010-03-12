@@ -59,7 +59,7 @@ public class DSGuidelineDrools extends DSGuideline {
 
             for(DSCondition dsc :this.getConditions()){
                 if (dsc.getParam() != null && !dsc.getParam().isEmpty()){
-                    System.out.println("PARAM:"+dsc.getParam().toString());
+                    log.debug("PARAM:"+dsc.getParam().toString());
                     workingMemory.assertObject(dsc.getParam());
                 }
             }

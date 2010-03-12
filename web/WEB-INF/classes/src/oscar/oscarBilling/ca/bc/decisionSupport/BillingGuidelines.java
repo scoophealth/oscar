@@ -89,7 +89,7 @@ public class BillingGuidelines  {
             StringBuffer sb = new StringBuffer();
             try{
                 String streamToGet = "oscar/oscarBilling/ca/bc/decisionSupport/"+filename;
-                System.out.println("Trying to get "+streamToGet);
+                log.debug("Trying to get "+streamToGet);
                 BufferedReader in = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(streamToGet)));
                 String str;
                 while ((str = in.readLine()) != null) {
@@ -97,7 +97,7 @@ public class BillingGuidelines  {
                 }
                 in.close();
                 DSGuidelineFactory dsFactory = new DSGuidelineFactory();
-                System.out.println("xml "+sb.toString());
+                log.debug("xml "+sb.toString());
                 guideline = dsFactory.createGuidelineFromXml(sb.toString());
                 billingGuideLines.add(guideline);
             }catch(Exception e){
@@ -108,7 +108,7 @@ public class BillingGuidelines  {
 
 
     public List<DSConsequence> evaluateAndGetConsequences(String demographicNo, String providerNo) {
-        System.out.println("passed in provider: " + providerNo + " demographicNo" + demographicNo);
+        log.debug("passed in provider: " + providerNo + " demographicNo" + demographicNo);
         log.info("Decision Support 'evaluateAndGetConsequences' has been called, reading " + billingGuideLines.size() + " for this provider");
         ArrayList<DSConsequence> allResultingConsequences = new ArrayList();
         for (DSGuideline dsGuideline: billingGuideLines) {

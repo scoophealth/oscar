@@ -37,8 +37,13 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 import oscar.util.UtilDateUtilities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 public class BillingFormData {
+  protected static Log _log = LogFactory.getLog(BillingFormData.class);
+
   public ArrayList getPaymentTypes() {
     ArrayList types = new ArrayList();
     String sql = "select * from billing_payment_type";
@@ -156,7 +161,7 @@ public class BillingFormData {
           + serviceGroup + "' and c.servicetype='" + serviceType +
           "' order by c.service_order";
 
-       System.out.println("getServiceList "+sql);
+       _log.debug("getServiceList "+sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -172,7 +177,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return arr;
@@ -183,7 +188,7 @@ public class BillingFormData {
   public BillingService[] getServiceList(String serviceGroup,
                                          String serviceType, String billRegion,Date billingDate) {
     BillingService[] arr = {};
-          System.out.println("In getServiceList 2 the one with the billing date");
+          _log.debug("In getServiceList 2 the one with the billing date");
     try {
       String billReferenceDate = UtilDateUtilities.DateToString(billingDate);
       ArrayList lst = new ArrayList();
@@ -200,7 +205,7 @@ public class BillingFormData {
           + "c.service_code where b.region='" + billRegion +"' and c.service_group='"+ serviceGroup + "' and c.servicetype='" + serviceType +"' " +
           " and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) order by c.service_order";
 
-       System.out.println("getServiceList2 "+sql);
+       _log.debug("getServiceList2 "+sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -216,7 +221,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return arr;
@@ -241,7 +246,7 @@ public class BillingFormData {
           + "d.region='" + billRegion + "' and c.servicetype='" + serviceType +
           "'";
 
-      System.out.println("getDiagnosticList " + sql);
+      _log.debug("getDiagnosticList " + sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -255,7 +260,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return arr;
@@ -278,7 +283,7 @@ public class BillingFormData {
       sql = "SELECT billinglocation,billinglocation_desc FROM billinglocation "
           + " WHERE region='" + billRegion + "'";
 
-      System.out.println(" getLocationList " + sql);
+      _log.debug(" getLocationList " + sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -292,7 +297,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return arr;
@@ -314,7 +319,7 @@ public class BillingFormData {
 
       sql = "SELECT visittype,visit_desc FROM billingvisit "
           + " WHERE region='" + billRegion + "'";
-      System.out.println("getVisitType" + sql);
+      _log.debug("getVisitType" + sql);
 
       rs = db.GetSQL(sql);
 
@@ -329,7 +334,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return arr;
@@ -351,7 +356,7 @@ public class BillingFormData {
 
       sql = "SELECT p.last_name, p.first_name, p.provider_no FROM provider p "
           + " WHERE p.ohip_no <>'' order by p.last_name, p.first_name";
-      System.out.println("getProviderList " + sql);
+      _log.debug("getProviderList " + sql);
 
       rs = db.GetSQL(sql);
 
@@ -368,7 +373,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return arr;
@@ -391,7 +396,7 @@ public class BillingFormData {
       sql = "select servicetype_name, servicetype from ctl_billingservice "
           + "group by servicetype, servicetype_name";
 
-      System.out.println("getFormList " + sql);
+      _log.debug("getFormList " + sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -405,7 +410,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return arr;
@@ -568,7 +573,7 @@ public class BillingFormData {
       rs.close();
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
     return billType;
 
@@ -588,7 +593,7 @@ public class BillingFormData {
           provider_no + "'";
 
       rs = db.GetSQL(sql);
-      System.out.println("getProviderName " + sql);
+      _log.debug("getProviderName " + sql);
       while (rs.next()) {
 
         provider_n = rs.getString("last_name") + ", " +
@@ -598,7 +603,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
     return provider_n;
 
@@ -619,7 +624,7 @@ public class BillingFormData {
           "'";
 
       rs = db.GetSQL(sql);
-      System.out.println("getPracNo " + sql);
+      _log.debug("getPracNo " + sql);
 
       while (rs.next()) {
 
@@ -629,7 +634,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.info(e.getMessage());
     }
     return prac_no;
 
@@ -649,7 +654,7 @@ public class BillingFormData {
       sql = "SELECT billing_no from provider where provider_no='" + provider_no +
           "'";
 
-      System.out.println("getGroupNo " + sql);
+      _log.debug("getGroupNo " + sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -660,7 +665,7 @@ public class BillingFormData {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
     return prac_no;
 
@@ -677,14 +682,14 @@ public class BillingFormData {
           dx + "' and region='" + reg + "'";
 
       rs = db.GetSQL(sql);
-      System.out.println("getDiagDesc " + sql);
+      _log.debug("getDiagDesc " + sql);
       while (rs.next()) {
         dxdesc = rs.getString("description");
       }
       rs.close();
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
     return dxdesc;
   }
@@ -704,7 +709,7 @@ public class BillingFormData {
       rs.close();
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
     return codeDesc;
   }
@@ -728,7 +733,7 @@ public class BillingFormData {
       rs.close();
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return ret;
@@ -753,7 +758,7 @@ public class BillingFormData {
       rs.close();
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
 
     return ret;
@@ -769,14 +774,14 @@ public class BillingFormData {
         rs = db.GetSQL(sql);
         if (rs.next()) {
           svc[i].price = rs.getString(1);
-          System.out.println("svc[i].service_code = rs.getString(1)=" +
+          _log.debug("svc[i].service_code = rs.getString(1)=" +
                              svc[i].service_code + " : " + rs.getString(1));
         }
         rs.close();
       }
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      _log.warn(e.getMessage());
     }
   }
 
