@@ -33,9 +33,7 @@ import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
@@ -64,7 +62,6 @@ public final class Cds4ReportUIBean {
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private static CdsHospitalisationDaysDao cdsHospitalisationDaysDao = (CdsHospitalisationDaysDao) SpringUtils.getBean("cdsHospitalisationDaysDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
@@ -91,8 +88,6 @@ public final class Cds4ReportUIBean {
 		public MultiValueMap multipleAdmissionCohortBuckets = new MultiValueMap();
 	}
 
-	/** key=admissionId, value=admission */
-	private HashMap<Integer, Admission> admissionMap = null;
 	private SingleMultiAdmissions singleMultiAdmissions=null;
 	private FunctionalCentre functionalCentre=null;
 	private GregorianCalendar startDate=null;
@@ -108,8 +103,6 @@ public final class Cds4ReportUIBean {
 		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
 		
 		functionalCentre=functionalCentreDao.find(functionalCentreId);
-		
-		admissionMap=getAdmissionMap(functionalCentreId, startDate, endDate);
 		
 		singleMultiAdmissions = getAdmissionsSortedSingleMulti(startDate, endDate);
 	}
@@ -143,7 +136,7 @@ public final class Cds4ReportUIBean {
 		for (CdsClientForm form : cdsForms) {
 			logger.debug("valid cds form, id="+form.getId());
 			
-			Admission admission = admissionMap.get(form.getAdmissionId());
+			Admission admission = admissionDao.getAdmission(form.getAdmissionId());
 			if (admission != null) {
 				Integer clientId = form.getClientId();
 
@@ -180,7 +173,7 @@ public final class Cds4ReportUIBean {
 
 		// sort single admissions into cohort buckets
 		for (CdsClientForm form : singleMultiAdmissions.singleAdmissions.values()) {
-			Admission admission = admissionMap.get(form.getAdmissionId());
+			Admission admission = admissionDao.getAdmission(form.getAdmissionId());
 			int bucket = getCohortBucket(admission);
 			singleMultiAdmissions.singleAdmissionCohortBuckets.put(bucket, form);
 			
@@ -189,7 +182,7 @@ public final class Cds4ReportUIBean {
 
 		// sort multiple admissions into cohort buckets
 		for (CdsClientForm form : singleMultiAdmissions.multipleAdmissionsAllForms) {
-			Admission admission = admissionMap.get(form.getAdmissionId());
+			Admission admission = admissionDao.getAdmission(form.getAdmissionId());
 			int bucket = getCohortBucket(admission);
 			singleMultiAdmissions.multipleAdmissionCohortBuckets.put(bucket, form);
 			
@@ -199,29 +192,9 @@ public final class Cds4ReportUIBean {
 		return(singleMultiAdmissions);
 	}
 
-	private static HashMap<Integer, Admission> getAdmissionMap(String functionalCentreId, GregorianCalendar startDate, GregorianCalendar endDate) {
-
-		// put admissions into map so it's easier to retrieve by id.
-		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
-
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
-		
-		for (Program program : programs) {			
-			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDate.getTime());
-
-			logger.debug("corresponding cds admissions count:"+admissions.size());
-			
-			for (Admission admission : admissions) {
-				admissionMap.put(admission.getId().intValue(), admission);
-				logger.debug("valid cds admission, id="+admission.getId());
-			}
-		}
-
-		return admissionMap;
-	}
-
 	private static int getCohortBucket(Admission admission) {
+		if (admission==null) return(0);
+		
 		Date dischargeDate = new Date(); // default duration calculation to today if not discharged.
 		if (admission.getDischargeDate() != null) dischargeDate = admission.getDischargeDate();
 
@@ -455,7 +428,7 @@ public final class Cds4ReportUIBean {
 				Date assessmentDate=form.getAssessmentDate();
 				if (assessmentDate!=null && assessmentDate.before(endDate.getTime()))
 				{
-					Admission admission=admissionMap.get(form.getAdmissionId());
+					Admission admission=admissionDao.getAdmission(form.getAdmissionId());
 					
 					if (admission==null || admission.getAdmissionDate().after(endDate.getTime())) count++;
 				}
@@ -475,7 +448,7 @@ public final class Cds4ReportUIBean {
 				Date assessmentDate=form.getAssessmentDate();
 				if (assessmentDate!=null && assessmentDate.before(endDate.getTime()))
 				{
-					Admission admission=admissionMap.get(form.getAdmissionId());					
+					Admission admission=admissionDao.getAdmission(form.getAdmissionId());					
 					Date endCountDate=null;
 					
 					if (admission==null) endCountDate=endDate.getTime();
@@ -720,7 +693,7 @@ public final class Cds4ReportUIBean {
 		
 		for (CdsClientForm form : forms)
 		{
-			Admission admission=admissionMap.get(form.getAdmissionId());
+			Admission admission=admissionDao.getAdmission(form.getAdmissionId());
 			
 			if (admission==null) continue;
 			
@@ -971,7 +944,7 @@ public final class Cds4ReportUIBean {
 	{
 		ArrayList<CdsHospitalisationDays> results=new ArrayList<CdsHospitalisationDays>();
 		
-		Admission admission=admissionMap.get(form.getAdmissionId());
+		Admission admission=admissionDao.getAdmission(form.getAdmissionId());
 		List<CdsHospitalisationDays> allHospitalDays=cdsHospitalisationDaysDao.findByClientId(form.getClientId());
 
 		for (CdsHospitalisationDays temp : allHospitalDays)
@@ -1071,13 +1044,16 @@ public final class Cds4ReportUIBean {
 			{
 				List<CdsHospitalisationDays> allFormHospitalisationDays=getHopitalisationDaysDuringAdmission(form);
 	
-				Admission admission=admissionMap.get(form.getAdmissionId());
-				Calendar startBoundingDate=getStartBound(admission, admissionPeriod);
-				Calendar endBoundingDate=getEndBound(admission, admissionPeriod);
-				
-				for (CdsHospitalisationDays cdsHospitalisationDays : allFormHospitalisationDays)
+				Admission admission=admissionDao.getAdmission(form.getAdmissionId());
+				if (admission!=null)
 				{
-					totalDays=totalDays+getTotalDayCount(cdsHospitalisationDays, startBoundingDate, endBoundingDate);
+					Calendar startBoundingDate=getStartBound(admission, admissionPeriod);
+					Calendar endBoundingDate=getEndBound(admission, admissionPeriod);
+					
+					for (CdsHospitalisationDays cdsHospitalisationDays : allFormHospitalisationDays)
+					{
+						totalDays=totalDays+getTotalDayCount(cdsHospitalisationDays, startBoundingDate, endBoundingDate);
+					}
 				}
 			}
 		}
