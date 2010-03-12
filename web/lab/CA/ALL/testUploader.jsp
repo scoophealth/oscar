@@ -32,9 +32,8 @@ if(outcome != null){
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Lab Upload Utility</title>
-<link rel="stylesheet" type="text/css"
-	href="../../../share/css/OscarStandardLayout.css">
-<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script> 
+<link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
+<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
 <script type="text/javascript">
             function selectOther(){                
                 if (document.UPLOAD.type.value == "OTHER")
@@ -105,6 +104,8 @@ if(outcome != null){
 					<option value="PATHL7"
 						<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
 					<option value="OTHER">Other</option>
+                                        <option value="HHSEMR">HHS Emr Download</option>
+                                        <option value="IHA">IHA</option>
 				</select></td>
 			</tr>
 			<tr id="OTHER" style="visibility: hidden;">
