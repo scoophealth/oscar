@@ -6,6 +6,11 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+
+
 /**
  * Oscar super DAO implementation created to extract database access code from
  * JSP files. This class should be extended by a scope named DAO class, i.e.
@@ -16,6 +21,8 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
  * 
  */
 public abstract class OscarSuperDao extends JdbcDaoSupport {
+
+        private static final Log _log = LogFactory.getLog(OscarSuperDao.class);
 
 	protected abstract String[][] getDbQueries();
 
@@ -74,6 +81,7 @@ public abstract class OscarSuperDao extends JdbcDaoSupport {
 	 * @return sql query
 	 */
 	private String getSqlQueryByKey(String key) {
+                _log.debug("Calling query "+key);
 		for (String[] query : getDbQueries()) {
 			if (query[0].equals(key)) {
 				return query[1];
