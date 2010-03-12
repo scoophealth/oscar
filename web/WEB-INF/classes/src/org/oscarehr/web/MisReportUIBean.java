@@ -32,10 +32,13 @@ import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.FunctionalCentre;
+import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -46,11 +49,12 @@ public final class MisReportUIBean {
 
 	private static Logger logger = MiscUtils.getLogger();
 
-	private static FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
-	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-
+	private FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
+	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private CaseManagementNoteDAO caseManagementNoteDAO=(CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
+	
 	private static int ELDERLY_AGE = 65;
 
 	public static class DataRow {
@@ -83,7 +87,7 @@ public final class MisReportUIBean {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		functionalCentre = functionalCentreDao.find(functionalCentreId);
 		programs = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
-		admissions=getAdmissions(programs, startDate, endDate);
+		populateAdmissions();
 	}
 
 	public String getFunctionalCentreDescription() {
@@ -97,10 +101,9 @@ public final class MisReportUIBean {
 		return (StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime()) + " to " + simpleDateFormat.format(displayEndDate.getTime()) + " (inclusive)"));
 	}
 
-	private static List<Admission> getAdmissions(List<Program> programs, GregorianCalendar startDate, GregorianCalendar endDate) {
+	private void populateAdmissions() {
 
-		// put admissions into map so it's easier to retrieve by id.
-		List<Admission> admissions = new ArrayList<Admission>();
+		admissions = new ArrayList<Admission>();
 
 		for (Program program : programs) {
 			List<Admission> programAdmissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDate.getTime());
@@ -112,15 +115,15 @@ public final class MisReportUIBean {
 				logger.debug("valid mis admission, id=" + admission.getId());
 			}
 		}
-
-		return admissions;
 	}
 
 	public ArrayList<DataRow> getDataRows() {
 		ArrayList<DataRow> results = new ArrayList<DataRow>();
 
 		addBedProgramInfo(results);
-
+		
+		results.add(getFaceToFace());
+		
 		return (results);
 	}
 
@@ -195,4 +198,35 @@ public final class MisReportUIBean {
 
 		return (DateUtils.calculateDayDifference(startBound, endBound));
 	}
+	
+	private DataRow getFaceToFace() {
+		int visitsCount=0;
+		
+		// count all notes in the system pertainning to the allowed programs during that time frame.
+		for (Program program : programs)
+		{
+			visitsCount=visitsCount+countNotesInProgram(program);
+		}
+		
+		return(new DataRow(4502440, "Visits Face to Face", visitsCount));	    
+    }
+
+	private int countNotesInProgram(Program program) {
+		List<CaseManagementNote> notes=caseManagementNoteDAO.getCaseManagementNoteByProgramIdAndObservationDate(program.getId(), startDate.getTime(), endDate.getTime());
+		
+		int count=0;
+		
+		for (CaseManagementNote note : notes)
+		{
+			if (EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT.getOldDbValue().equals(note.getEncounter_type()))
+			{
+				Demographic demographic=demographicDao.getDemographic(note.getDemographic_no());
+				if (demographic!=null) count++;
+			}
+		}
+		
+		return(count);
+	}
+
+
 }

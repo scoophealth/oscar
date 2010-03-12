@@ -435,4 +435,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return result;
 	}
 
+    public List<CaseManagementNote> getCaseManagementNoteByProgramIdAndObservationDate(Integer programId, Date minObservationDate, Date maxObservationDate) {
+        String queryStr = "FROM CaseManagementNote x WHERE x.program_no=? and x.observation_date>=? and x.observation_date<=?";
+
+        @SuppressWarnings("unchecked")
+        List<CaseManagementNote> rs = getHibernateTemplate().find(queryStr, new Object[] {programId.toString(), minObservationDate, maxObservationDate});
+
+        return rs;
+    }
 }
