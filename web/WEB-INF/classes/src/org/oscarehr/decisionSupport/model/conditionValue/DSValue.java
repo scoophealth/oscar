@@ -162,10 +162,7 @@ public abstract class DSValue {
             dsValue.setValue(valueStr);
             returnDsValue = dsValue;
         }
-        _log.debug("DSValue object type: " + returnDsValue.getClass().getName());
-        _log.debug("DSValue type: " + returnDsValue.getValueType());
-        _log.debug("DSValue operator: " + returnDsValue.getValue());
-        _log.debug("DSValue unit: " + returnDsValue.getValueUnit());
+        _log.debug("DSValue type: "+returnDsValue.getValueType()+ " operator: " + returnDsValue.getValue()+" unit: " + returnDsValue.getValueUnit()+" object type: " + returnDsValue.getClass().getName());
         return returnDsValue;
     }
 
