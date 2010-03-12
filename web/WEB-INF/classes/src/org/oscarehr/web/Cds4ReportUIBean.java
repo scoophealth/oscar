@@ -204,13 +204,10 @@ public final class Cds4ReportUIBean {
 		// put admissions into map so it's easier to retrieve by id.
 		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
 
-		List<Program> programs=programDao.getProgramsByFunctionalCentreId(functionalCentreId);
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		List<Program> programs=programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
 		
-		for (Program program : programs) {
-			// only report on admissions to programs in our facility
-			if (program.getFacilityId()!=loggedInInfo.currentFacility.getId().intValue()) continue;
-			
+		for (Program program : programs) {			
 			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDate.getTime());
 
 			logger.debug("corresponding cds admissions count:"+admissions.size());
@@ -289,18 +286,12 @@ public final class Cds4ReportUIBean {
 		int[] dataRow=getNotAvailableDataLine();
 
 		if ("007-01".equals(cdsFormOption.getCdsDataCategory())) {
-			dataRow[0]=singleMultiAdmissions.multipleAdmissionsLatestForms.size();
+			dataRow[0]=countAnonymous(singleMultiAdmissions.multipleAdmissionsLatestForms.values(), false);
 			
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
-				int size = 0;
-
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-
-				if (bucket != null) size = bucket.size();
-				else size=0;
-
-				dataRow[i+1]=size;
+				dataRow[i+1]=countAnonymous(bucket, false);
 			}			
 		} else if ("007-02".equals(cdsFormOption.getCdsDataCategory())) {
 			dataRow[0]=countNoAdmission(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
@@ -311,12 +302,12 @@ public final class Cds4ReportUIBean {
 				dataRow[i+1]=countNoAdmission(bucket);
 			}			
 		} else if ("007-03".equals(cdsFormOption.getCdsDataCategory())) {
-			dataRow[0]=countAnonymous(singleMultiAdmissions.multipleAdmissionsLatestForms.values());
+			dataRow[0]=countAnonymous(singleMultiAdmissions.multipleAdmissionsLatestForms.values(), true);
 			
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
-				dataRow[i+1]=countAnonymous(bucket);
+				dataRow[i+1]=countAnonymous(bucket, true);
 			}			
 		} else if ("007-04".equals(cdsFormOption.getCdsDataCategory())) {
 			dataRow[0]=singleMultiAdmissions.multipleAdmissionsLatestForms.size();
@@ -338,7 +329,7 @@ public final class Cds4ReportUIBean {
 		return(dataRow);
 	}
 
-	private int countAnonymous(Collection<CdsClientForm> bucket) {
+	private int countAnonymous(Collection<CdsClientForm> bucket, boolean isAnonymous) {
 		int count=0;
 
 		if (bucket!=null)
@@ -346,7 +337,8 @@ public final class Cds4ReportUIBean {
 			for (CdsClientForm form : bucket)
 			{
 				Demographic demographic=demographicDao.getDemographicById(form.getClientId());
-				if (demographic.getAnonymous()!=null) count++;
+				if (isAnonymous && demographic.getAnonymous()!=null) count++;
+				else if (!isAnonymous && demographic.getAnonymous()==null) count++;
 			}
 		}
 		
