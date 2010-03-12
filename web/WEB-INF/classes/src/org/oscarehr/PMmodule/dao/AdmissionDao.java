@@ -403,9 +403,13 @@ public class AdmissionDao extends HibernateDaoSupport {
         return results;
     }
 
+    public Admission getAdmission(int id) {
+    	return(getAdmission(new Long(id)));
+    }
+    
     public Admission getAdmission(Long id) {
 
-        if (id == null || id <= 0) {
+        if (id == null) {
             throw new IllegalArgumentException();
         }
 
