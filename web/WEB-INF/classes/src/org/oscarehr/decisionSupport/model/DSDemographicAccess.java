@@ -311,22 +311,39 @@ public class DSDemographicAccess {
     public boolean billedForAny(String searchStrings,Hashtable options) throws DecisionSupportException {
         boolean retval = false;
         if(options.containsKey("payer") && options.get("payer").equals("MSP")){
+            _log.debug("PAYER:MSP ");
             ServiceCodeValidationLogic bcCodeValidation = new ServiceCodeValidationLogic();
             String[] codes = searchStrings.replaceAll("\'","" ).split(",");
 
+
+            /* Has any of these codes been billed for in the past number of days.   ( if any
+             *
+             * If:
+                icd9 code 250 is in the disease registry
+                AND
+                icd9 code 401 is not in the disease registry
+                AND
+                Any of the billing codes (13050,14050,14051,14052) Payer MSP have not been billed in the past 365 days.
+             */
             if(options.containsKey("notInDays")){
                 int notInDays = getAsInt(options,"notInDays");
+                retval = true;  //Set this optimistically that it has not been billed in the said number of days
                 for (String code: codes){
+                    //This returns how many days since the last time this code was billed and -1 if it never has been billed
                     int numDays = bcCodeValidation.daysSinceCodeLastBilled(demographicNo,code) ;
-                    if (numDays > notInDays || numDays == -1){
-                        retval = true;
+
+                    //If any of the codes has been billed in the number of days then return false
+                    if (numDays < notInDays && numDays != -1){
+                        retval = false;  // should it just return false here,  why go on once it finds a false?
                     }
+                    _log.debug("PAYER:MSP demo "+demographicNo+" Code:"+code+" numDays"+numDays+" notInDays:"+notInDays+ " Answer: "+!(numDays < notInDays && numDays != -1)+" Setting return val to :"+retval);
+
                 }
 
             }
         }
 
-        System.out.println("In Billed For Any  look for "+searchStrings);
+        _log.debug("In Billed For Any  look for "+searchStrings+" returning :"+retval);
         return retval;
     }
 
@@ -352,7 +369,7 @@ public class DSDemographicAccess {
 
         }
 
-        System.out.println("In Billed For Any  look for "+searchStrings);
+        _log.debug("In Billed For Any  look for "+searchStrings);
         return retval;
     }
 
