@@ -165,7 +165,7 @@ public class Billingmaster {
     @Column(name = "oin_postalcode")
     private String oinPostalcode;
     @Column(name = "wcb_id")
-    private int wcbId;
+    public Integer wcbId;
     @Column(name = "paymentMethod")
     private int paymentMethod;
 
@@ -413,6 +413,16 @@ public class Billingmaster {
         return (phn != null ? phn : "");
     }
 
+    public void setNameVerify(String firstName, String lastName){
+        if (lastName.length() < 2){
+           lastName += "   ";
+        }
+        if (firstName.length() < 1){
+           firstName += "   ";
+        }
+        nameVerify = oscar.util.UtilMisc.mysqlEscape(firstName.substring(0, 1) + " " + lastName.substring(0, 2));
+    }
+
     /**
      * Gets the nameVerify
      * @return String nameVerify
@@ -483,6 +493,10 @@ public class Billingmaster {
      */
     public String getBillAmount() {
         return (billAmount != null ? billAmount : "");
+    }
+
+    public double getBillAmountAsDouble(){
+        return Double.parseDouble(getBillAmount());
     }
 
     /**
@@ -1319,7 +1333,7 @@ public class Billingmaster {
         return wcbId;
     }
 
-    public void setWcbId(int wcbId) {
+    public void setWcbId(Integer wcbId) {
         this.wcbId = wcbId;
     }
 }
