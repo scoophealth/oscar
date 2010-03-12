@@ -394,8 +394,7 @@ public class BillingBillingManager {
     }
 
     public String getDispLineTotal() {
-      BigDecimal bdFee = new BigDecimal(""+lineTotal).setScale(2,
-          RoundingMode.HALF_UP);
+      BigDecimal bdFee = new BigDecimal(""+lineTotal).setScale(2,RoundingMode.HALF_UP);
       return bdFee.toString();
     }
   }
