@@ -152,24 +152,25 @@ public class BillingSaveBillingAction extends Action {
             billingmasterDAO.save(billingmaster);
             billingMasterId = "" + billingmaster.getBillingmasterNo();
             this.createBillArchive(billingMasterId);
-        }
-
-        if (bean.getCorrespondenceCode().equals("N") || bean.getCorrespondenceCode().equals("B")) {
-            try {
-                MSPBillingNote n = new MSPBillingNote();
-                n.addNote(billingMasterId, bean.getCreator(), bean.getNotes());
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
+        
+            //Changed March 8th to be included side this loop,  before only one billing would get this information.
+            if (bean.getCorrespondenceCode().equals("N") || bean.getCorrespondenceCode().equals("B")) {
+                try {
+                    MSPBillingNote n = new MSPBillingNote();
+                    n.addNote(billingMasterId, bean.getCreator(), bean.getNotes());
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
+                }
             }
-        }
-        if (bean.getMessageNotes() != null || !bean.getMessageNotes().trim().equals("")) {
-            try {
-                BillingNote n = new BillingNote();
-                n.addNote(billingMasterId, bean.getCreator(), bean.getMessageNotes());
-            } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-            }
+            if (bean.getMessageNotes() != null || !bean.getMessageNotes().trim().equals("")) {
+                try {
+                    BillingNote n = new BillingNote();
+                    n.addNote(billingMasterId, bean.getCreator(), bean.getMessageNotes());
+                } catch (SQLException e) {
+                    log.error(e.getMessage(), e);
+                }
 
+            }
         }
         
         if (bean.getBillingType().equals("WCB")) {
@@ -532,7 +533,10 @@ public class BillingSaveBillingAction extends Action {
         bill.setPayeeNo(bean.getBillingGroupNo());
         bill.setPractitionerNo(bean.getBillingPracNo());
         bill.setPhn(bean.getPatientPHN());
-        bill.setNameVerify(oscar.util.UtilMisc.mysqlEscape(bean.getPatientFirstName().substring(0, 1) + " " + bean.getPatientLastName().substring(0, 2)));
+
+
+
+        bill.setNameVerify(bean.getPatientFirstName(),bean.getPatientLastName());
         bill.setDependentNum(bean.getDependent());
         bill.setBillingUnit(billingUnit); //"" + billItem.getUnit());
         bill.setClarificationCode(bean.getVisitLocation().substring(0, 2));
