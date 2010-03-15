@@ -478,6 +478,20 @@ function checkRePrescribe(){
                </style>
 
         <style type="text/css">
+            .highlight {
+                background-color : #99FFCC;
+                border: 1px solid #008000;
+                width: 230px;
+
+            }
+            .rxStr a:hover{
+                color:blue;
+                text-decoration:underline;
+            }
+            .rxStr a{
+                color:black;
+                text-decoration:none;
+            }
             .match{
                 font-weight:bold;
             }
@@ -866,6 +880,47 @@ body {
                         }
 %>
 <script type="text/javascript">
+    function updateProperty(elementId){
+         var randomId=elementId.split("_")[1];
+         if(randomId!=null){
+             var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=updateProperty";
+             var data="";
+             if(elementId.match("prnVal_")!=null)
+                 data="elementId="+elementId+"&propertyValue="+$(elementId).value;
+             else
+                 data="elementId="+elementId+"&propertyValue="+$(elementId).innerHTML;
+             new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false});
+         }
+    }
+    function lookNonEdittable(elementId){
+        $(elementId).className='';
+    }
+    function lookEdittable(elementId){
+        $(elementId).className='highlight';
+    }
+    function setPrn(randomId){
+        var prnStr=$('prn_'+randomId).innerHTML;
+        prnStr=prnStr.strip();
+        var prnStyle=$('prn_'+randomId).getStyle('textDecoration');
+        if(prnStr=='prn' || prnStr=='PRN'|| prnStr=='Prn'){
+            oscarLog("prnStyle="+prnStyle);
+            oscarLog("randomId="+randomId);
+            oscarLog("$('prnVal_'+randomId).value="+$('prnVal_'+randomId).value);
+            if(prnStyle.match("line-through")!=null){
+                $('prn_'+randomId).setStyle({textDecoration:'none'});
+                $('prnVal_'+randomId).value=true;
+            }else{
+                $('prn_'+randomId).setStyle({textDecoration:'line-through'});
+                $('prnVal_'+randomId).value=false;
+            }
+        }
+    }
+     function focusTo(elementId){
+         oscarLog(elementId);
+         $(elementId).contentEditable='true';
+         $(elementId).focus();
+     }
+
      function updateSpecialInstruction(elementId){
          var randomId=elementId.split("_")[1];
          var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=updateSpecialInstruction";
@@ -1020,10 +1075,7 @@ body {
                   oscarLog("here2 -- " +$('alleg_'+json.id));
 
 
-                <%--  //Severity:</b>
-                //<%=severityOfReaction(allerg[i].getAllergy().getSeverityOfReaction())%>
-		//			<b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getAllergy().getOnSetOfReaction())%>
-                --%>
+
                  // var str = "Allergy: "+ json.alleg.DESCRIPTION + " Reaction: "+json.alleg.reaction;
                  if(json.DESCRIPTION!=null&&json.reaction!=null){
                       var str = "Allergy: "+ json.DESCRIPTION + " Reaction: "+json.reaction;
@@ -1199,34 +1251,6 @@ function popForm2(){
           </oscar:oscarPropertiesCheck>
           callReplacementWebService("ListDrugs.jsp",'drugProfile');
 
-    <%--
-    new Ajax.Autocompleter("searchString", "autocomplete_choices", "search2.jsp", {paramName: "searchString",
-       minChars: 2,
-       //afterUpdateElement : getSelectionId,
-       updateElement : upElement
-});
-
-function getSelectionId(text, li) {
-    oscarLog('In selection id');
-    var url = "prescribe.jsp";
-    var ran_number=Math.round(Math.random()*1000000);
-    var params = "demographicNo=<%=bean.getDemographicNo()%>&id="+li.id+"&text="+text+"&rand="+ran_number;  //hack to get around ie caching the page
-    new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom
-});
-
-}
-
-function upElement(li){
-    //oscarLog('In up Element '+li);
-    //alert($(li).innerHTML);
-    getSelectionId($(li).innerHTML,li);
-    $('searchString').value = "";
-}
-
---%>
-
-
-
 
 YAHOO.example.BasicRemote = function() {
     //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
@@ -1272,28 +1296,7 @@ YAHOO.example.BasicRemote = function() {
 
                 $('searchString').value = "";
     });
-<%--
-    /* when this was enabled nothing happened when you selected the event
-     oAC.itemSelectEvent = function(acinst,ele,item){
-        oscarLog(acinst+" :: "+ele+" -- "+item);
-        return this;
-    }
-        */
-    /*
-     oAC.applyLocalFilter = true; // pass results thru filter
-    oAC.filterResults = function(sQuery, oFullResponse,oParsedResponse, oCallback) {
-        oscarLog("inhere"+sQuery);
-        var matches = [], matchee;
-        for(var i=0; i<oParsedResponse.results.length; i++) {
-            if(oParsedResponse.results[i].someValue > 0) {
-                matches[matches.length] =oParsedResponse.results[i]
-            }
-        }
-        //oParsedResponse.results = matches;
-        return oParsedResponse;
-    }
-*/
---%>
+
 
     return {
         oDS: oDS,
@@ -1456,34 +1459,6 @@ function setSearchedDrug(drugId,name){
 
     }
 
-   //not used now.
-   function checkQuantity(element){
-        var elemId=element.id;
-        var ar=elemId.split("_");
-        var rand=ar[1];
-        var calQ="calQuantity_"+rand;
-        var warning=" WARNING: quantities don't match";
-        //oscarLog($(calQ).value);
-        //oscarLog(element.value);
-        if(element.value==$(calQ).value){
-            //if it contains warning, remove warning
-            if(($("rxString_"+rand).innerHTML).include(warning)){
-                var s=$("rxString_"+rand).innerHTML;
-                $("rxString_"+rand).innerHTML=s.replace(/WARNING: quantities don't match/,"");
-            }else{}
-            //if it doesn't contain warning , do ntohing
-            oscarLog("quantity entered equals to quantity calculated form instruction="+element.value);
-        }else{
-            //if it contains WARNING,do nothing
-            if(($("rxString_"+rand).innerHTML).include(warning)){
-
-            }else{
-                //if it doesn't contain warning, add
-                $("rxString_"+rand).innerHTML=$("rxString_"+rand).innerHTML + warning;
-            }
-            oscarLog("quantity entered does not match quantity calculated form instructions.");
-        }
-    }
 function updateQty(element){
         var elemId=element.id;
         var ar=elemId.split("_");
@@ -1499,11 +1474,21 @@ function updateQty(element){
         var rxDurationUnit="rxDurationUnit_"+rand;
         var rxAmt="rxAmount_"+rand;
         var str;
-        var rxString="rxString_"+rand;
-
+       // var rxString="rxString_"+rand;
+       var methodStr="method_"+rand;
+       var routeStr="route_"+rand;
+       var frequencyStr="frequency_"+rand;
+       var minimumStr="minimum_"+rand;
+       var maximumStr="maximum_"+rand;
+       var durationStr="duration_"+rand;
+       var durationUnitStr="durationUnit_"+rand;
+       var quantityStr="quantityStr_"+rand;
+       var unitNameStr="unitName_"+rand;
+       var prnStr="prn_"+rand;
+       var prnVal="prnVal_"+rand;
         new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
-                str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
+         /*       str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:";
                     if(json.duration==null || json.duration=="null"){
                         str+=  "; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
@@ -1519,11 +1504,36 @@ function updateQty(element){
                 } else{ }
                 oscarLog("str="+str);
                 $(rxString).innerHTML=str;//display parsed string below instruction.
+*/
+                $(methodStr).innerHTML=json.method;
+                $(routeStr).innerHTML=json.route;
+                $(frequencyStr).innerHTML=json.frequency;
+                $(minimumStr).innerHTML=json.takeMin;
+                $(maximumStr).innerHTML=json.takeMax;
+                if(json.duration==null || json.duration=="null"){
+                    $(durationStr).innerHTML='';
+                }else{
+                    $(durationStr).innerHTML=json.duration;
+                }
+                $(durationUnitStr).innerHTML=json.durationUnit;
+                $(quantityStr).innerHTML=json.calQuantity;
+                if(json.unitName!=null && json.unitName!="null" && json.unitName!="NULL" && json.unitName!="Null"){
+                    $(unitNameStr).innerHTML=json.unitName;
+                }else{
+                    $(unitNameStr).innerHTML='';
+                }
+                if(json.prn){
+                    $(prnStr).innerHTML="prn";
+                    $(prnVal).value=true;
+                } else{
+                    $(prnStr).innerHTML="";$(prnVal).value=false;
+                }
+
             }});
         return true;
 }
     function parseIntr(element){
-        var instruction="instruction="+element.value+"&action=parseInstructions";
+       // var instruction="instruction="+element.value+"&action=parseInstructions";
         //oscarLog(instruction);
         var elemId=element.id;
         var ar=elemId.split("_");
@@ -1538,11 +1548,21 @@ function updateQty(element){
         var rxDurationUnit="rxDurationUnit_"+rand;*/
         var quantity="quantity_"+rand;
         var str;
-        var rxString="rxString_"+rand;
-
-        new Ajax.Request(url, {method: 'get',parameters:instruction, onSuccess:function(transport){
+       //var rxString="rxString_"+rand;
+       var methodStr="method_"+rand;
+       var routeStr="route_"+rand;
+       var frequencyStr="frequency_"+rand;
+       var minimumStr="minimum_"+rand;
+       var maximumStr="maximum_"+rand;
+       var durationStr="duration_"+rand;
+       var durationUnitStr="durationUnit_"+rand;
+       var quantityStr="quantityStr_"+rand;
+       var unitNameStr="unitName_"+rand;
+       var prnStr="prn_"+rand;
+       var prnVal="prnVal_"+rand;
+        new Ajax.Request(url, {method: 'get',parameters:instruction,asynchronous:false, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
-                str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
+            /*    str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
                     +json.takeMax +"; Duration:";
                 if(json.duration==null || json.duration=="null"){
                         str+="; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
@@ -1558,12 +1578,44 @@ function updateQty(element){
                 } else{ }
                 oscarLog("str="+str);
                 $(rxString).innerHTML=str;//display parsed string below instruction.
-                var quantityText;
+                */
+                $(methodStr).innerHTML=json.method;
+                $(routeStr).innerHTML=json.route;
+                $(frequencyStr).innerHTML=json.frequency;
+                $(minimumStr).innerHTML=json.takeMin;
+                $(maximumStr).innerHTML=json.takeMax;
+                if(json.duration==null || json.duration=="null"){
+                    $(durationStr).innerHTML='';
+                }else{
+                    $(durationStr).innerHTML=json.duration;
+                }
+                $(durationUnitStr).innerHTML=json.durationUnit;
+                $(quantityStr).innerHTML=json.calQuantity;
+                oscarLog("json.prn0="+json.prn);
+                oscarLog("json.unitName="+json.unitName);
+                oscarLog("$(unitNameStr).innerHTML="+$(unitNameStr).innerHTML);
+                if(json.unitName!=null && json.unitName!="null" && json.unitName!="NULL" && json.unitName!="Null"){
+                    $(unitNameStr).innerHTML=json.unitName;
+                }else{
+                    $(unitNameStr).innerHTML='';
+                }
+                oscarLog("json.prn="+json.prn);
+                if(json.prn){
+                    $(prnStr).innerHTML="prn";$(prnVal).value=true;
+                } else{
+                    $(prnStr).innerHTML="";$(prnVal).value=false;
+                }
+               // oscarLog("$(prnStr).innerHTML="+$(prnStr).innerHTML);
+              /*  var quantityText;
                 if(json.unitName!=null && json.unitName!="null"){
                     quantityText=json.calQuantity+" "+json.unitName;
                 }else
-                    quantityText=json.calQuantity;
-                $(quantity).value=quantityText;
+                    quantityText=json.calQuantity;*/
+            //oscarLog("$(quantityStr).innerHTML+$(unitNameStr).innerHTML="+$(quantityStr).innerHTML+$(unitNameStr).innerHTML);
+            if($(unitNameStr).innerHTML!='')
+                $(quantity).value=$(quantityStr).innerHTML+" "+$(unitNameStr).innerHTML;
+            else
+                $(quantity).value=$(quantityStr).innerHTML;
             }});
         return true;
     }
@@ -1581,12 +1633,68 @@ function updateQty(element){
                //alert(origRequest.responseText);
          }
 
+/*
+function findUniqueRandomIds(str){
+    var retArr=new Array();
+    var arr1=str.split("&");
+    for(var i=0;i<arr1.length;i++){
+        var str2=arr1[i];
+        var arr2=str2.split("=");
+        var elementId=arr2[0];
+        var arr3=elementId.split("_");
+        var randomId=arr3[1];
+        if(randomId!=null)
+            retArr.push(randomId);
+    }
+    retArr=retArr.uniq();
 
+    return retArr;
+}
+
+function findDataStr(ids){
+    oscarLog("ids="+ids);
+    var retVal='';
+    for(var i=0;i<ids.length;i++){
+       var rand=ids[i];
+       var methodStr="method_"+rand;
+       var routeStr="route_"+rand;
+       var frequencyStr="frequency_"+rand;
+       var minimumStr="minimum_"+rand;
+       var maximumStr="maximum_"+rand;
+       var durationStr="duration_"+rand;
+       var durationUnitStr="durationUnit_"+rand;
+       var quantityStr="quantityStr_"+rand;
+       var unitNameStr="unitName_"+rand;
+       var prnStr="prn_"+rand;
+       var prnVal="prnVal_"+rand;
+       oscarLog("methodStr="+methodStr);
+       retVal+=methodStr+"="+$(methodStr).innerHTML+"&"+
+               routeStr+"="+$(routeStr).innerHTML+"&"+
+               frequencyStr+"="+$(frequencyStr).innerHTML+"&"+
+               minimumStr+"="+$(minimumStr).innerHTML+"&"+
+               maximumStr+"="+$(maximumStr).innerHTML+"&"+
+               durationStr+"="+$(durationStr).innerHTML+"&"+
+               durationUnitStr+"="+$(durationUnitStr).innerHTML+"&"+
+               quantityStr+"="+$(quantityStr).innerHTML+"&"+
+               unitNameStr+"="+$(unitNameStr).innerHTML+"&"+
+               prnStr+"="+$(prnStr).innerHTML+"&"+
+               prnVal+"="+$(prnVal).value;
+           if(i<ids.length-1)
+               retVal+="&";
+    }
+    oscarLog(retVal);
+    return retVal;
+}*/
     function updateSaveAllDrugs(){
         var data=Form.serialize($('drugForm'));
+        //var uniqueIds=findUniqueRandomIds(data);
+        //var data2=findDataStr(uniqueIds);
+        //if(data2!='')
+          //  data+="&"+data2;
+        oscarLog("data="+data);
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs";
         new Ajax.Request(url,
-        {method: 'post',postBody:data,
+        {method: 'post',postBody:data,asynchronous:false,
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
                 callReplacementWebService("ListDrugs.jsp",'drugProfile');
