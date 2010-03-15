@@ -45,6 +45,7 @@ public class UserProperty implements Serializable {
     public final static String RX_DEFAULT_QUANTITY = "rx_default_quantity";
     public final static String RX_PROFILE_VIEW = "rx_profile_view";
     public final static String RX_USE_RX3 = "rx_use_rx3";
+    public final static String DMFLOW_SHEET_VIEW = "DMFlowsheet_view";
     private long id;
     private String name;
     private String value;
