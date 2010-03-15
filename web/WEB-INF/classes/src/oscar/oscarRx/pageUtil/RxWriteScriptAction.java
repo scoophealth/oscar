@@ -699,6 +699,61 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         return null;
     }
+    public ActionForward updateProperty(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException, Exception {
+            System.out.println("==========***### start updateOneProperty RxWriteScriptAction.java");
+            oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+            String elem=request.getParameter("elementId");
+            String val=request.getParameter("propertyValue");
+            val=val.trim();
+            if(elem!=null && val!=null){
+                String[] strArr=elem.split("_");
+                if(strArr.length>1){
+                    String num=strArr[1];
+                    num=num.trim();
+                    RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(num));
+                    if (elem.equals("method_"+num)){
+                        if(!val.equals("")&&!val.equalsIgnoreCase("null"))
+                            rx.setMethod(val);
+                    }
+                     else if (elem.equals("route_"+num)){
+                         if(!val.equals("")&&!val.equalsIgnoreCase("null"))
+                            rx.setRoute(val);
+                     }
+                     else if (elem.equals("frequency_"+num)){
+                         if(!val.equals("")&&!val.equalsIgnoreCase("null"))
+                            rx.setFrequencyCode(val);
+                     }
+                     else if (elem.equals("minimum_"+num)){
+                         if(!val.equals("")&&!val.equalsIgnoreCase("null"))
+                             rx.setTakeMin(Float.parseFloat(val));
+                     }
+                     else if (elem.equals("maximum_"+num)){
+                         if(!val.equals("")&&!val.equalsIgnoreCase("null"))
+                             rx.setTakeMax(Float.parseFloat(val));
+                     }
+                     else if (elem.equals("duration_"+num)){
+                         if(!val.equals("")&&!val.equalsIgnoreCase("null"))
+                             rx.setDuration(val);
+                     }
+                     else if (elem.equals("durationUnit_"+num)){
+                         if(!val.equals("")&&!val.equalsIgnoreCase("null"))
+                             rx.setDurationUnit(val);
+                     }
+                     else if (elem.equals("prnVal_"+num)){
+                         if(!val.equals("")&&!val.equalsIgnoreCase("null")){
+                             if(val.equalsIgnoreCase("true"))
+                                 rx.setPrn(true);
+                             else
+                                 rx.setPrn(false);
+                         }
+                         else
+                             rx.setPrn(false);
+                     }
+                }
+            }
+            return null;
+    }
     public ActionForward updateSaveAllDrugs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
         System.out.println("==========***### start updaing drugs RxWriteScriptAction.java");
@@ -727,7 +782,6 @@ public final class RxWriteScriptAction extends DispatchAction {
             allIndex.add(i);
         }
         List<Integer> existingIndex = new ArrayList();
-
         for (String num : randNum) {
             //          p("num", num);
             int stashIndex = bean.getIndexFromRx(Integer.parseInt(num));
@@ -744,6 +798,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 while (em.hasMoreElements()) {
                     String elem = (String) em.nextElement();
                     String val = request.getParameter(elem);
+                    val=val.trim();
                     System.out.println("paramName=" + elem + ", value=" + val);
                     if (elem.startsWith("drugName_" + num)) {
                         if (rx.isCustom()) {
@@ -755,14 +810,13 @@ public final class RxWriteScriptAction extends DispatchAction {
                         }
                         ;
                     } else if (elem.equals("repeats_" + num)) {
-
                         if (val.equals("") || val == null) {
                             rx.setRepeat(0);
                         } else {
                             rx.setRepeat(Integer.parseInt(val));
                         }
 
-                    } else if (elem.startsWith("instructions_" + num)) {
+                    } else if (elem.equals("instructions_" + num)) {
                         rx.setSpecial(val);
                     } else if (elem.equals("quantity_" + num)) {
                         if (val.equals("") || val == null) {
@@ -886,17 +940,8 @@ public final class RxWriteScriptAction extends DispatchAction {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
-            //    p("the rxDate is in updateDrug", RxUtil.DateToString(rx.getRxDate()));
-            //   p("duration after updated", rx.getDuration());
-
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(stashIndex));
-            //    p("before bean.getStashIndex()", Integer.toString(stashIndex));
             bean.setStashItem(stashIndex, rx);
-            //    p("brand name of updated rx", rx.getBrandName());
-            //    p("stash index of updated rx", Integer.toString(bean.getStashIndex()));
-
         }
         for (Integer n : existingIndex) {
             if (allIndex.contains(n)) {
@@ -905,7 +950,6 @@ public final class RxWriteScriptAction extends DispatchAction {
         }
         List<Integer> deletedIndex = allIndex;
         //remove closed Rx from stash
-
         for (Integer n : deletedIndex) {
             //    p("stash index of closed rx",""+n);
             bean.removeStashItem(n);
@@ -918,7 +962,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         System.out.println("***===========finish updating all drugs RxWriteScriptAction.java");
         saveDrug(request);
-        //return mapping.findForward("viewScript");
         return null;
     }
 
