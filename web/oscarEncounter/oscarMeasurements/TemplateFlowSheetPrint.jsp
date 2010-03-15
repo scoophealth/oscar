@@ -28,6 +28,26 @@
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
     boolean printView = false;
+
+    //preset for patient handout
+    ArrayList<String> phandout = new ArrayList<String>();
+    if( request.getParameter("patientHandout") != null ) {
+        phandout.add("FGLC");
+        phandout.add("A1C");
+        phandout.add("TCHD");
+        phandout.add("LDL");
+        phandout.add("HDL");
+        phandout.add("TG");
+        phandout.add("BP");
+        phandout.add("ACR");
+        phandout.add("SCR");
+        phandout.add("EYEE");
+        phandout.add("FTE");
+        phandout.add("FTLS");
+        phandout.add("WT");
+        phandout.add("WC");
+        phandout.add("SMCD");
+    }
     
     /////ITEMS for printing
     if (request.getParameter("printView") != null){
@@ -354,6 +374,7 @@ div.recommendations li{
 
 <body class="BodyStyle" >
 <!--  -->
+<form action="TemplateFlowSheetPrint.jsp" method="POST">
 <table  class="MainTable" id="scrollNumber1" >
 <tr class="MainTableTopRow">
     <td class="MainTableTopRowLeftColumn"  >
@@ -406,6 +427,10 @@ div.recommendations li{
         <li style="color: red;">Decision Support Had Errors Running.</li>
         <% } %>
     </ul>
+        <% if( !printView ) {%>
+    <br>
+    <input type="submit" value="Print Preview" class="DoNotPrint"/>&nbsp;<input type="button" onclick="history.go(-1);" value="Back">
+        <%}%>
 </div>
 <% } %>
 <%=mFlowsheet.getTopHTMLStream() %>
@@ -414,11 +439,12 @@ div.recommendations li{
 <%
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
+    boolean setToPrint;
     for (String measure:measurements){
         Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
         System.out.println(">>>>"+item.getItemName()+" "+item.isHide());
-        
+        setToPrint = phandout.contains(measure);
         String hidden= "";
         
         System.out.println("For PRint "+measure+" : "+ forPrint.get(measure) + " view "+printView);
@@ -453,14 +479,13 @@ div.recommendations li{
             
             
 %>
-<form action="TemplateFlowSheetPrint.jsp" method="get">
     <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
     <input type="hidden" name="template" value="<%=temp%>"/>
     <input type="hidden" name="printView" value="true"/>
 <div class="preventionSection"  style="<%=hidden%>" nowrap>
     <%if (!printView){%>
     <div style="position: relative; float: left; padding-right: 10px;" class="DoNotPrint">
-    <input  type="checkbox" name="printHP"   value="<%=measure%>" />
+       <input  type="checkbox" name="printHP"   value="<%=measure%>"  <%=setToPrint ? "checked" : ""%>/>
        <input type="radio" name="printStyle<%=measure%>" value="all" checked >ALL</input><br>
        <input type="radio" name="printStyle<%=measure%>" value="num" ># Elements</input>
        <input type="text" name="numEle<%=measure%>" size="3"/>    <br>
