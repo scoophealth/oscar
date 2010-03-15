@@ -88,7 +88,7 @@ public class MeasurementFlowSheet {
     
     private ListOrderedMap itemList = new ListOrderedMap();
     
-    public void addListItem(FlowSheetItem item){
+    public FlowSheetItem addListItem(FlowSheetItem item){
         log.debug("ITEM "+ item.getItemName());
         String dsRules = (String) item.getAllFields().get("ds_rules");  //ds_rules=
         log.debug("DS RULES "+dsRules);
@@ -101,8 +101,17 @@ public class MeasurementFlowSheet {
         }
         itemList.put(item.getItemName(), item);
         log.debug("ADDED "+item);
+        return item;
     }
-    
+
+    private List<MeasurementTemplateFlowSheetConfig.Node> itemHeirarchy = new ArrayList<MeasurementTemplateFlowSheetConfig.Node>();
+    public void setItemHeirarchy(List<MeasurementTemplateFlowSheetConfig.Node> itemHeirarchy) {
+        this.itemHeirarchy = itemHeirarchy;
+    }
+
+    public List<MeasurementTemplateFlowSheetConfig.Node> getItemHeirarchy() {
+        return this.itemHeirarchy;
+    }
 
     public void parseDxTriggers(String s) {
         dxTriggers = s.split(","); //TODO: what do about different coding systems.
