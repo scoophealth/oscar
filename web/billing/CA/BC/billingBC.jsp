@@ -558,13 +558,29 @@ function formPopupHide(){
 }
 //-->
 
+function addCodeToList(svcCode){
+    if (myform.xml_other1.value == "") {
+        myform.xml_other1.value = svcCode;
+        return true;
+    }else if (myform.xml_other2.value == "") {
+        myform.xml_other2.value = svcCode;
+        return true;
+    }else if (myform.xml_other3.value == "") {
+        myform.xml_other3.value  = svcCode;
+        return true;
+    }
+}
+
 function setCodeToChecked(svcCode){
     myform = document.forms[0];
     var codeset = false;
     for (var i = 0; i < myform.service.length; i++) {
         if (myform.service[i].value == svcCode) {
-            myform.service[i].checked = true;
-            codeset = true;
+            var wasAbleToAddCode = addCodeToList(svcCode);
+            if(wasAbleToAddCode){
+               myform.service[i].checked = true;
+               codeset = true;
+            }
             return;
         }
     }
