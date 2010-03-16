@@ -169,30 +169,14 @@
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<td>Total number of episodes</td>
-						<td>
-							<select name="baselineTotalNumberOfEpisodes">
-								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "baselineTotalNumberOfEpisodes", 999)%>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>Total number of hospitalised days</td>
-						<td>
-							<select name="baselineTotalNumberOfHospitalisedDays">
-								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "baselineTotalNumberOfHospitalisedDays", 999)%>
-							</select>
-						</td>
-					</tr>
 				</table>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">
-				21. Psychiatric Hospitalizations
+				20./21. Psychiatric Hospitalizations
 				<div style="font-weight:normal;font-size:smaller">
-					This shows all historical hospitalisations, the correct ones for the report will be automatically calculated.
+					This shows all historical hospitalisations, the correct ones for the report will be automatically calculated for base line (20) and current (21).
 					<br /><br />
 					To update a hospitalisation date, create a new entry then delete the old one.
 				</div>
