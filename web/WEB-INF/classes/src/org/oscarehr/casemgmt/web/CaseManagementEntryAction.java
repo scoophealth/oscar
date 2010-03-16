@@ -1121,7 +1121,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                     caseManagementIssue.setType(issue.getRole());
                     caseManagementIssue.setUpdate_date(new Date());
                     
-                    caseManagementIssueDao.saveIssue(caseManagementIssue);
+                    // Should not save duplicated issue for one demographic
+                    if(caseManagementIssueDao.getIssuebyId(demo, String.valueOf(issue.getId()))==null) {
+                    	caseManagementIssueDao.saveIssue(caseManagementIssue);
+                    }
                     // reload to materliase generated fields.
                     caseManagementIssue=caseManagementIssueDao.getIssuebyId(demo, String.valueOf(issue.getId()));
                 }
@@ -1814,6 +1817,12 @@ System.out.println("before notesave in saveandexit");
         int k = 0;
         if( issueList != null ) {
             for (int i = 0; i < issueList.length; i++) {
+            	
+            	//duplicated issues should be discarded.
+            	if(caseManagementIssueDao.getIssuebyId(demono, String.valueOf(issueList[i].getIssue().getId()))!=null) {
+                	continue;
+                }
+            	
                 if (issueList[i].isChecked()) k++;
             }
         }
@@ -1843,7 +1852,10 @@ System.out.println("before notesave in saveandexit");
         	CaseManagementViewAction caseManagementViewAction=new CaseManagementViewAction();
 
         	for (int i = 0; i < issueList.length; i++) {
-                if (issueList[i].isChecked()) {
+                if (issueList[i].isChecked()) {                    
+                    if(caseManagementIssueDao.getIssuebyId(demono, String.valueOf(issueList[i].getIssue().getId()))!=null) {
+                    	continue;
+                    }
                     caseIssueList[oldList.length + k] = new CheckBoxBean();
                     CaseManagementIssue cmi=newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId);
                     caseIssueList[oldList.length + k].setIssue(cmi);
