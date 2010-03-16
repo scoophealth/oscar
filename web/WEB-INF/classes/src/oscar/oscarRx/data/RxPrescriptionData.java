@@ -1021,6 +1021,16 @@ public class RxPrescriptionData {
         String special_instruction=null;
         private boolean durationSpecifiedByUser=false;
 
+        public boolean isMitte(){
+            if(unitName!=null &&
+                    (unitName.equalsIgnoreCase("D")||unitName.equalsIgnoreCase("W")||unitName.equalsIgnoreCase("M")||
+                    unitName.equalsIgnoreCase("day")||unitName.equalsIgnoreCase("week")||unitName.equalsIgnoreCase("month")||
+                    unitName.equalsIgnoreCase("days")||unitName.equalsIgnoreCase("weeks")||unitName.equalsIgnoreCase("months")||
+                    unitName.equalsIgnoreCase("mo")))
+                return true;
+            else
+                return false;
+        }
         public boolean isDurationSpecifiedByUser(){
             return durationSpecifiedByUser;
         }
