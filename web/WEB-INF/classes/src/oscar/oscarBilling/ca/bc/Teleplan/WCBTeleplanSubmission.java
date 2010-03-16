@@ -48,7 +48,7 @@ public class WCBTeleplanSubmission {
     //Misc misc = new Misc();
     public String getHtmlLine(WCB wcb,Billingmaster bm) {
         log.debug("WCB "+wcb+ " BM "+bm);
-        return getHtmlLine(""+bm.getBillingNo(),""+bm.getBillingmasterNo(), wcb.getW_lname() + "," + wcb.getW_fname(), wcb.getW_phn(),dateFormat(wcb.getW_servicedate()), bm.getBillingCode(), bm.getBillAmount(), bm.getDxCode1(), "", "");
+        return getHtmlLine(""+bm.getBillingmasterNo(),""+bm.getBillingNo(), wcb.getW_lname() + "," + wcb.getW_fname(), wcb.getW_phn(),dateFormat(wcb.getW_servicedate()), bm.getBillingCode(), bm.getBillAmount(), bm.getDxCode1(), "", "");
 
 
     }
@@ -126,7 +126,7 @@ public class WCBTeleplanSubmission {
        
         String ret = "<tr bgcolor='red'><td colspan='11'>"
                 + "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no="
-                + Misc.forwardZero(""+bm.getBillingNo(), 7) 
+                + Misc.forwardZero(""+bm.getBillingmasterNo(), 7)
                 + "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"
                 + m.toString() + "</a>" + "</td></tr>";
         if ("".equals(m.toString())){
@@ -167,7 +167,25 @@ public class WCBTeleplanSubmission {
    private String Claim1(String logNo,Billingmaster bm,WCB wcb) {
       return this.Claim(logNo, bm.getBillAmount(), bm.getBillingCode(), "N", bm, wcb);
    }
-   
+
+
+  private String replaceExtendedAskiiValues(String s){
+       log.debug("s "+s.length());
+       StringBuffer sb = new StringBuffer();
+       for (int i =0; i < s.length(); i++){
+           char c = s.charAt(i);
+           int j = (int) c;
+           System.out.println(j+" : "+c);
+           if(j < 32 || j > 126){
+              c = '?';
+           }
+           sb.append(c);
+
+       }
+       log.debug("sb "+sb.toString().length());
+       return sb.toString();
+   }
+
      
    private String Note1(String logNo,Billingmaster bm,WCB wcb) {
       
@@ -227,7 +245,7 @@ public class WCBTeleplanSubmission {
       return this.Note(logNo, a, "",bm,wcb);
    }
    private String Note(String logNo, String a, String b,Billingmaster bm,WCB wcb) {
-      return "N01" + this.ClaimNote1Head(logNo,bm.getPayeeNo(),bm.getPractitionerNo()) + "W" + a + b;
+      return "N01" + this.ClaimNote1Head(logNo,bm.getPayeeNo(),bm.getPractitionerNo()) + "W" + replaceExtendedAskiiValues(a) + replaceExtendedAskiiValues(b);
    }
    
    
