@@ -1106,16 +1106,44 @@ body {
     function Discontinue(event,element){
        var id_str=(element.id).split("_");
        var id=id_str[1];
-
+       var widVal = ($('drugProfile').getWidth()-300);
+       var widStr=widVal+'px';
+       var heightDrugProfile=$('discontinueUI').getHeight();
+       //oscarLog(heightDrugProfile);
+       //get x and y of mouse click
+       var posx=0,posy=0;
+       if(event.pageX||event.pageY){
+           posx=event.pageX;
+           posx=posx-widVal;
+           posy=event.pageY-heightDrugProfile/2;
+           posx = posx+'px';
+           posy = posy+'px';
+       }else if(event.clientX||event.clientY){
+           posx = event.clientX + document.body.scrollLeft
+			+ document.documentElement.scrollLeft;
+           posx=posx-widVal;
+	   posy = event.clientY + document.body.scrollTop
+			+ document.documentElement.scrollTop-heightDrugProfile/2;
+           posx = posx+'px';
+           posy = posy+'px';
+       }else{
        var xy = Position.page($('drugProfile'));
-       var x = (xy[0]+200)+'px';
-       var y = xy[1]+'px';
-       var wid = ($('drugProfile').getWidth()-300)+'px';
-       var styleStr= {left: x, top: y,width: wid};
-       oscarLog("styleStr="+styleStr);
+           //oscarLog("xy="+xy);
+           posx = (xy[0]+200)+'px';
+           if(xy[1]>=0)
+               posy = xy[1]+'px';
+           else
+               posy=0+'px';
+       }
+
+       //oscarLog("posx="+posx+"--posy="+posy+"--widStr="+widStr);
+
+
+       var styleStr= {left: posx, top: posy,width: widStr};
+       //oscarLog("styleStr="+styleStr);
 
         var drugName = $('prescrip_'+id).innerHTML;
-        oscarLog("drugName="+drugName);
+        //oscarLog("drugName="+drugName);
        $('discontinueUI').setStyle(styleStr);
        $('disDrug').innerHTML = drugName;
        $('discontinueUI').show();
