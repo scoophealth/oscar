@@ -145,13 +145,13 @@
 			<td><html:checkbox property="facility.enableOcanForms" /></td>
 		</tr>
 		<tr>
-			<td colspan="2"><html:submit property="submit.save">Save</html:submit>
+			<td colspan="2"><html:submit property="submit.save" onclick="bCancel=false;">Save</html:submit>
 			<html:cancel>Cancel</html:cancel></td>
 		</tr>
 	</table>
 </html:form>
 <div>
 <p><a
-	href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=list" />Return
+	href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=list" >Return
 to facilities list</a></p>
 </div>
