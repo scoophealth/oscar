@@ -61,6 +61,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.WebUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -116,6 +117,8 @@ import cds.RiskFactorsDocument.RiskFactors;
 public class DemographicExportAction3 extends Action {
     String demographicNo=null;
 
+@Override
+    @SuppressWarnings("static-access")
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     OscarProperties oscarp = OscarProperties.getInstance();
     String strEditable = oscarp.getProperty("ENABLE_EDIT_APPT_STATUS");
@@ -126,20 +129,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     String mediaType = defrm.getMediaType();
     String noOfMedia = defrm.getNoOfMedia();
     String pgpReady = defrm.getPgpReady();
-    boolean exPersonalHistory = defrm.getExPersonalHistory();
-    boolean exFamilyHistory = defrm.getExFamilyHistory();
-    boolean exPastHealth = defrm.getExPastHealth();
-    boolean exProblemList = defrm.getExProblemList();
-    boolean exRiskFactors = defrm.getExRiskFactors();
-    boolean exAllergiesAndAdverseReactions = defrm.getExAllergiesAndAdverseReactions();
-    boolean exMedicationsAndTreatments = defrm.getExMedicationsAndTreatments();
-    boolean exImmunizations = defrm.getExImmunizations();
-    boolean exLaboratoryResults = defrm.getExLaboratoryResults();
-    boolean exAppointments = defrm.getExAppointments();
-    boolean exClinicalNotes = defrm.getExClinicalNotes();
-    boolean exReportsReceived = defrm.getExReportsReceived();
-    boolean exAuditInformation = defrm.getExAuditInformation();
-    boolean exCareElements = defrm.getExCareElements();
+    boolean exPersonalHistory = WebUtils.isChecked(request, "exPersonalHistory");
+    boolean exFamilyHistory = WebUtils.isChecked(request, "exFamilyHistory");
+    boolean exPastHealth = WebUtils.isChecked(request, "exPastHealth");
+    boolean exProblemList = WebUtils.isChecked(request, "exProblemList");
+    boolean exRiskFactors = WebUtils.isChecked(request, "exRiskFactors");
+    boolean exAllergiesAndAdverseReactions = WebUtils.isChecked(request, "exAllergiesAndAdverseReactions");
+    boolean exMedicationsAndTreatments = WebUtils.isChecked(request, "exMedicationsAndTreatments");
+    boolean exImmunizations = WebUtils.isChecked(request, "exImmunizations");
+    boolean exLaboratoryResults = WebUtils.isChecked(request, "exLaboratoryResults");
+    boolean exAppointments = WebUtils.isChecked(request, "exAppointments");
+    boolean exClinicalNotes = WebUtils.isChecked(request, "exClinicalNotes");
+    boolean exReportsReceived = WebUtils.isChecked(request, "exReportsReceived");
+    boolean exAuditInformation = WebUtils.isChecked(request, "exAuditInformation");
+    boolean exCareElements = WebUtils.isChecked(request, "exCareElements");
 
     ArrayList list = new ArrayList();
     if (this.demographicNo==null) {
