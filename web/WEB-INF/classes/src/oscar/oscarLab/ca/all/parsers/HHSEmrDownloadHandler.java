@@ -430,37 +430,18 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        }
 //    }
 //    
-//    public String getHealthNum(){
-//        String healthNum;
-//        
-//        try{
-//            
-//            //Try finding the health number in the external ID
-//            healthNum = getString(terser.get("/.PID-2-1"));
-//            if (healthNum.length() == 10)
-//                return(healthNum);
-//            
-//            //Try finding the health number in the alternate patient ID
-//            healthNum = getString(terser.get("/.PID-4-1"));
-//            if (healthNum.length() == 10)
-//                return(healthNum);
-//            
-//            //Try finding the health number in the internal ID
-//            healthNum = getString(terser.get("/.PID-3-1"));
-//            if (healthNum.length() == 10)
-//                return(healthNum);
-//            
-//            //Try finding the health number in the SSN field
-//            healthNum = getString(terser.get("/.PID-19-1"));
-//            if (healthNum.length() == 10)
-//                return(healthNum);
-//        }catch(Exception e){
-//            //ignore exceptions
-//        }
-//        
-//        return("");
-//    }
-//    
+    public String getHealthNum(){
+        String healthNum;     
+        try{        
+            healthNum = getString(terser.get("/.PID-3-1"));
+                return(healthNum);      
+        }catch(Exception e){
+            //ignore exceptions
+        }
+        
+        return("");
+    }
+    
 //    public String getHomePhone(){
 //        try{
 //            return(getString(terser.get("/.PID-13-1")));
