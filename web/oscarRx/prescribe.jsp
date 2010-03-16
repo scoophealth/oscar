@@ -127,7 +127,7 @@ if(listRxDrugs!=null){
            </div>
                        <br><br>
         </div>
-    <label style="float:left;width:80px;">Quantity:</label>
+           <label id="labelQuantity_<%=rand%>" style="float:left;width:80px;">Qty/Mitte:</label>
     <input type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
     <label style="">Repeats:</label>
        <input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />
@@ -141,7 +141,7 @@ if(listRxDrugs!=null){
            <a href="javascript:void(0);" onclick="focusTo('maximum_<%=rand%>')">Max:</a><a id="maximum_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=maximumStr%></a>
            <a href="javascript:void(0);" onclick="focusTo('duration_<%=rand%>')">Duration:</a><a  id="duration_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationStr%></a>
            <a href="javascript:void(0);" onclick="focusTo('durationUnit_<%=rand%>')">DurationUnit:</a><a  id="durationUnit_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationUnitStr%></a>
-           <a>Qty:</a><a id="quantityStr_<%=rand%>"> <%=quantityStr%></a>
+           <a>Qty/Mitte:</a><a id="quantityStr_<%=rand%>"> <%=quantityStr%></a>
            <a> </a><a id="unitName_<%=rand%>"> <%=unitNameStr%></a>
            <a> </a><a href="javascript:void(0);" id="prn_<%=rand%>" onclick="setPrn('<%=rand%>');updateProperty('prnVal_<%=rand%>');"><%=prnStr%></a>
            <input id="prnVal_<%=rand%>"  style="display:none" <%if(prnStr.trim().length()==0){%>value="false"<%} else{%>value="true" <%}%> />
