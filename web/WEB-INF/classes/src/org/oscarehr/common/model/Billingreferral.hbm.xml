@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Sep 16, 2009 3:01:45 PM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-    <class name="org.oscarehr.common.model.Billingreferral" table="billingreferral" catalog="oscar_cvs_on">
+    <class name="org.oscarehr.common.model.Billingreferral" table="billingreferral">
         <id name="billingreferralNo" type="java.lang.Integer">
             <column name="billingreferral_no" />
             <generator class="native" />
