@@ -233,7 +233,30 @@ public final class RxWriteScriptAction extends DispatchAction {
         //   System.out.println("***===========End of unspecified RxWriteScriptAction.java");
         return mapping.findForward(fwd);
     }
+    public ActionForward updateReRxDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        System.out.println("** in updateReRxDrug ***");
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (bean == null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        List<String> reRxDrugIdList=bean.getReRxDrugIdList();
+        String action=request.getParameter("action");
+        String drugId=request.getParameter("reRxDrugId");
+        if(action.equals("addToReRxDrugIdList")&&!reRxDrugIdList.contains(drugId)){
+            reRxDrugIdList.add(drugId);
+        }else if(action.equals("removeFromReRxDrugIdList")&&reRxDrugIdList.contains(drugId)){
+            reRxDrugIdList.remove(drugId);
+        }else if(action.equals("clearReRxDrugIdList")){
+            bean.clearReRxDrugIdList();
+        }else{
+            System.out.println("WARNING: reRxDrugId not updated");
+        }
+        System.out.println("ReRxDrugIdList="+bean.getReRxDrugIdList());
+        return null;
 
+    }
     public ActionForward saveCustomName(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         //   p("=============Start  saveCustomName RxWriteScriptAction.java===============");
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
