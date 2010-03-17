@@ -7,7 +7,7 @@
 <%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*"%>
 <%@page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*" %>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.springframework.web.context.support.WebApplicationContextUtils, oscar.entities.*" %>
-
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
@@ -20,7 +20,7 @@
     response.sendRedirect("../../../logout.htm");
 
 
-
+  
 
 
   String curUser_no,userfirstname,userlastname;
@@ -88,6 +88,11 @@
   request.setAttribute("codes",codes);
   String serviceLocation = allFields.getProperty("service_location");
 
+
+  WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+  BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
+  Billingmaster billingmaster = billingmasterDAO.getBillingMasterByBillingMasterNo(billNo);
+  Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
 
   //fixes bug where invoice number is null when
   //bill changed to Private
@@ -355,14 +360,17 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }%>
   <table width="100%" border="0" bgcolor="#FFFFFF">
     <tr>
-      <td width="20%" align="left"  class="bCellData"><font color="#000000">
+      <td  align="left"  class="bCellData"><font color="#000000">
          Office Claim No
       </td>
-      <td width="20%"  class="bCellData">
+      <td   class="bCellData">
          <%=billNo%>
       </td>
-      <td width="60%" align="left"  class="bCellData">
+      <td  align="left"  class="bCellData">
          <font color="#000000">Last update: <%=UpdateDate%></font>
+      </td>
+      <td align="right" class="bCellData">
+          Creator:  <%=providerBean.getProperty(bill.getCreator(),bill.getCreator() )%>
       </td>
     </tr>
 
@@ -396,10 +404,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     </table>
 
 <%
-WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO"); 
-Billingmaster billingmaster = billingmasterDAO.getBillingMasterByBillingMasterNo(billNo);
-Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
+
 
     DemoNo =  ""+bill.getDemographicNo();
     UpdateDate = bill.getUpdateDate();//  rslocation.getString("update_date");
@@ -503,7 +508,7 @@ Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
   <tr bgcolor="#CCCCFF">
     <td colspan="2"  class="bCellData">
        Billing Information  Data Center <%=allFields.getProperty("datacenter")%> Payee Number: <%=allFields.getProperty("payee_no")%> Practitioner Number: <%=allFields.getProperty("practitioner_no")%>
-       Bill Type: <%=bill.getBillingtype()%>
+       Bill Type: <%=bill.getBillingtype()%> 
      </td>
   </tr>
 
