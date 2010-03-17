@@ -146,10 +146,11 @@ if (heading != null){
             <td valign="top"><%=prescriptDrug.daysToExpire()%></td>
             <td valign="top"><%if(prescriptDrug.isLongTerm()){%>*<%}%> </td>
 
-            <td><a id="prescrip_<%=prescriptDrug.getId()%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
+            <td valign="top"><a id="prescrip_<%=prescriptDrug.getId()%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                <a name="rePrescribe" id="reRx_<%=prescriptDrug.getId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)">ReRx</a>
+                <input id="reRxCheckBox_<%=prescriptDrug.getId()%>" type=CHECKBOX onclick="updateReRxDrugId(this.id)" name="checkBox_<%=prescriptDrug.getId()%>">
+                <a name="rePrescribe" style="vertical-align:top" id="reRx_<%=prescriptDrug.getId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)">ReRx</a>
                 <%} else {%> <%--TODO: redo this part for rx3--%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
                     <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
