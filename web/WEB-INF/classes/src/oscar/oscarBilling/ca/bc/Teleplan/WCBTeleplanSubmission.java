@@ -97,11 +97,14 @@ public class WCBTeleplanSubmission {
         }catch(Exception e){
             m.append(": ICD9 may only contain Numbers ");
         }
-        
-        try {
-            Integer.parseInt(wcb.getW_wcbno());
-        }catch(Exception e){
-            m.append(": WCB claim # may only contain Numbers ");
+
+
+        if (wcb.getW_wcbno() != null && !wcb.getW_wcbno().trim().equals("")){
+            try {
+                Integer.parseInt(wcb.getW_wcbno());
+            }catch(Exception e){
+                m.append(": WCB claim # may only contain Numbers ");
+            }
         }
         
         if (wcb.getW_reporttype() != null && wcb.getW_reporttype().equals("F") ){
