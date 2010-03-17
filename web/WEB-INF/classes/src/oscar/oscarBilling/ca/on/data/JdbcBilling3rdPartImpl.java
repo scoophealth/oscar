@@ -179,7 +179,7 @@ public class JdbcBilling3rdPartImpl {
 
 	public List get3rdAddrNameList() {
 		List ret = new Vector();
-		String sql = "select id, company_name from billing_on_3rdPartyAddress ";
+		String sql = "select id, company_name from billing_on_3rdPartyAddress order by company_name ";
 		ResultSet rsdemo = dbObj.searchDBRecord(sql);
 		try {
 			while (rsdemo.next()) {
