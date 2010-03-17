@@ -30,11 +30,14 @@
 package oscar.oscarBilling.ca.bc.data;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +45,6 @@ import oscar.entities.Billing;
 import oscar.entities.Billingmaster;
 import oscar.entities.WCB;
 import oscar.oscarDB.DBHandler;
-import oscar.util.SqlUtils;
 import oscar.util.StringUtils;
 
 /**
@@ -52,28 +54,58 @@ import oscar.util.StringUtils;
 @Repository
 @Transactional(propagation=Propagation.REQUIRES_NEW)
 public class BillingmasterDAO {
+    private static Log log = LogFactory.getLog(BillingmasterDAO.class);
+
     @PersistenceContext
     protected EntityManager entityManager = null;
     /** Creates a new instance of BillingmasterDAO */
     public BillingmasterDAO() {
     }
-    
-    public List getBillingMasterWithStatus(String billingmasterNo,String status){
-        String query = "select * from billingmaster where billing_no='"+ billingmasterNo +"' and billingstatus='"+status+"'"; 
-        return getBillingMaster(query);
+
+    public List<Billingmaster> getBillingMasterWithStatus(String billingmasterNo,String status){
+        log.debug("WHAT IS NULL ? "+billingmasterNo+"  status "+status+"   "+entityManager);
+        Query query = entityManager.createQuery("select b from Billingmaster b where b.billingNo = (:billingNo) and billingstatus = (:status)");
+        query.setParameter("billingNo",Integer.parseInt(billingmasterNo));
+        query.setParameter("status", status);
+        List<Billingmaster> list= query.getResultList();
+        return list;
     }
 
     public List getBillingMasterByBillingNo(String billingNo){
-        String query = "select * from billingmaster where billing_no='"+ billingNo +"'"; 
-        return getBillingMaster(query);
+        return getBillingmasterByBillingNo(Integer.parseInt(billingNo));
     }
-    
+    public List<Billingmaster> getBillingmasterByBillingNo(int billingNo){
+        Query query = entityManager.createQuery("select b from Billingmaster b where b.billingNo = (:billingNo)");
+        query.setParameter("billingNo",billingNo);
+        List<Billingmaster> list= query.getResultList();
+        return list;
+    }
+
+    public List<Billing> getPrivateBillings(String demographicNo){
+        Query query = entityManager.createQuery("select b from Billing b where b.billingtype = 'Pri' and b.demographicNo = (:demographicNo)");
+        query.setParameter("demographicNo",Integer.parseInt(demographicNo));
+        return query.getResultList();
+    }
+
+    public Billingmaster getBillingmaster(String billingNo){
+        return getBillingmaster(Integer.parseInt(billingNo));
+    }
+
+    public Billingmaster getBillingmaster(int billingmasterNo){
+        Query query = entityManager.createQuery("select b from Billingmaster b where b.billingmasterNo = (:billingmasterNo)");
+        query.setParameter("billingmasterNo",billingmasterNo);
+        List<Billingmaster> list= query.getResultList();
+        return list.get(0);
+    }
+
     public void save(Billingmaster bm){
         entityManager.persist(bm);
-        //getHibernateTemplate().save((bm));
     }
     
     public void save(WCB wcb){
+        if (wcb.getW_doi() == null){
+            wcb.setW_doi(new Date());  //Fixes SF ID : 2962864
+        }
         entityManager.persist(wcb);
     }
     
@@ -119,20 +151,9 @@ public class BillingmasterDAO {
     
     
     public Billingmaster getBillingMasterByBillingMasterNo(String billingNo){
-        String query = "select * from billingmaster where billingmaster_no='"+ billingNo +"'"; 
-        List l = getBillingMaster(query);
-        Billingmaster billingmaster = null;
-        try{
-            billingmaster =(Billingmaster) l.get(0);
-        }catch(Exception e){}
-        return billingmaster;
+        return getBillingmaster(billingNo);
     }
-    
-    private List getBillingMaster(String qry) {
-        List res = SqlUtils.getBeanList(qry, Billingmaster.class);
-        return res;
-    }
-    
+       
     public void markListAsBilled(List list){                    //TODO: Should be set form CONST var
         String query = "update billingmaster set billingstatus = 'B' where billingmaster_no in ("+ StringUtils.getCSV(list) +")"; 
         try {             
