@@ -283,7 +283,9 @@ try{
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(), "" + beanRX.getDemographicNo(), auditStr.toString());
         //RxUtil.printStashContent(beanRX);
         request.setAttribute("listRxDrugs", listReRx);
-}catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){
+            e.printStackTrace();
+        }
       //  System.out.println("================END represcribe2 of RxRePrescribeAction.java=================");
         return (mapping.findForward("represcribe"));
     }
@@ -372,8 +374,48 @@ try{
      //   System.out.println("================END repcbAllLongTerm of RxRePrescribeAction.java=================");
         return (mapping.findForward("repcbLongTerm"));
     }
+public ActionForward represcribeMultiple(ActionMapping mapping,
+            ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        System.out.println("================in represcribeMultiple of RxRePrescribeAction.java=================");
+        oscar.oscarRx.pageUtil.RxSessionBean bean =
+                (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (bean == null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        List<String> reRxDrugList=new ArrayList();
+        reRxDrugList=bean.getReRxDrugIdList();
+        System.out.println(reRxDrugList);
+        List<RxPrescriptionData.Prescription> listReRxDrug = new ArrayList();
+        for(String drugId:reRxDrugList){
+            Long rand = Math.round(Math.random() * 1000000);
+            RxPrescriptionData rxData = new RxPrescriptionData();
+            RxPrescriptionData.Prescription oldRx = rxData.getPrescription(Integer.parseInt(drugId));
+            RxPrescriptionData.Prescription rx =rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo(), oldRx);
+            rx.setRandomId(rand);
+            String qText=rx.getQuantity();
+            System.out.println("qText in represcribe2="+qText);
+            if(RxUtil.isStringToNumber(qText)){}
+            else{
+                rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
+                rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
+            }
+            System.out.println("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
+            String spec=RxUtil.trimSpecial(rx);
+            rx.setSpecial(spec);
+            if(RxUtil.isRxUniqueInStash(bean,rx)){
+                listReRxDrug.add(rx);
+            }
+            int rxStashIndex=bean.addStashItem(rx);
+            bean.setStashIndex(rxStashIndex);
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+        }
+        System.out.println(listReRxDrug);
+        request.setAttribute("listRxDrugs", listReRxDrug);
+        System.out.println("================END represcribeMultiple of RxRePrescribeAction.java=================");
+        return (mapping.findForward("represcribe"));
+    }
 
-    
     public void p(String s) {
         System.out.println(s);
     }
