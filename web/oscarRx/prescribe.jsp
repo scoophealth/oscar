@@ -231,7 +231,7 @@ if(listRxDrugs!=null){
             var specArr=new Array();
             var specStr='<%=specStr%>';
             specArr=specStr.split("*");// * is used as delimiter
-            oscarLog("specArr="+specArr);
+            //oscarLog("specArr="+specArr);
             YAHOO.example.BasicLocal = function() {
                 // Use a LocalDataSource
                 var oDS = new YAHOO.util.LocalDataSource(specArr);
@@ -250,13 +250,7 @@ if(listRxDrugs!=null){
             }();
 
 
-            callReplacementWebService('GetmyDrugrefInfo.do?method=view','interactionsRxMyD');
-            var gcn_val=<%=gcn%>;
-           if(gcn_val==0){
-               $('drugName_<%=rand%>').focus();
-           } else{
-               $('instructions_<%=rand%>').focus();
-           }
+
             checkAllergy('<%=rand%>','<%=rx.getAtcCode()%>');
             checkIfInactive('<%=rand%>','<%=rx.getRegionalIdentifier()%>');
             <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
@@ -280,9 +274,22 @@ if(listRxDrugs!=null){
                         deletePrescribe(randId);
                     }
             }
-
+            var listRxDrugSize=<%=listRxDrugs.size()%>;
+            oscarLog("listRxDrugsSize="+listRxDrugSize);
+            counterRx++;
+            oscarLog("counterRx="+counterRx);
+           var gcn_val=<%=gcn%>;
+           if(gcn_val==0){
+               $('drugName_<%=rand%>').focus();
+           } else if(counterRx==listRxDrugSize){
+               oscarLog("counterRx="+counterRx+"--listRxDrugSize="+listRxDrugSize);
+               $('instructions_<%=rand%>').focus();
+           }
 
         </script>
-                <%}
-}%>
+                <%}%>
+  <script type="text/javascript">
+    counterRx=0;
+</script>
+<%}%>
 
