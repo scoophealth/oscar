@@ -18,7 +18,7 @@
 <script type="text/javascript">
 
     var errorMsg="<bean:message key='oscarRx.MyDrugref.InteractingDrugs.error.msgFailed' />" ;
-    oscarLog("errorMsg="+errorMsg);
+    //oscarLog("errorMsg="+errorMsg);
             var interactStr='<%=interactingDrugList%>';
             var randomIds='<%=allRandomIdInStash%>';
                 //clear all warnings
