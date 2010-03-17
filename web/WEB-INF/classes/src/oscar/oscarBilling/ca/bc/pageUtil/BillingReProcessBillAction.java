@@ -262,6 +262,7 @@ public class BillingReProcessBillAction extends Action {
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
     }
     bill.setProviderOhipNo(practitionerNo);
+    bill.setBillingDate(serviceDate);
     billingmaster.setDatacenter(dataCenterId);
         //TODO
         billingmaster.setPayeeNo(billingGroupNo);
