@@ -26,6 +26,7 @@ package oscar.oscarRx.pageUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import oscar.OscarProperties;
@@ -45,6 +46,7 @@ public class RxSessionBean {
     private Hashtable workingAllergyWarnings = new Hashtable();
     private ArrayList attributeNames = new ArrayList();
     private String interactingDrugList="";//contains hash tables, each hashtable has the a
+    private List<String> reRxDrugIdList=new ArrayList();
 
 
 
@@ -52,7 +54,18 @@ public class RxSessionBean {
 
     //--------------------------------------------------------------------------
 
-
+    public void addReRxDrugIdList(String s){
+        reRxDrugIdList.add(s);
+    }
+    public void setReRxDrugIdList(List<String> sList){
+        reRxDrugIdList=sList;
+    }
+    public List<String> getReRxDrugIdList(){
+        return reRxDrugIdList;
+    }
+    public void clearReRxDrugIdList(){
+        reRxDrugIdList=new ArrayList();
+    }
     public String getInteractingDrugList(){
         return interactingDrugList;
     }
