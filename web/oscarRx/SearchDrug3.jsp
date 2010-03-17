@@ -1473,11 +1473,35 @@ function setSearchedDrug(drugId,name){
 
     $('searchString').value = "";
 }
+var counterRx=0;
+function updateReRxDrugId(elementId){
+        var ar=elementId.split("_");
+        var drugId=ar[1];
+   if(drugId!=null && $(elementId).checked==true){
+       oscarLog("checked");
+       var data="reRxDrugId="+drugId+"&action=addToReRxDrugIdList";
+       var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateReRxDrug";
+       new Ajax.Request(url, {method: 'get',parameters:data});
+   }else if(drugId!=null){
+       oscarLog("unchecked");
+       var data="reRxDrugId="+drugId+"&action=removeFromReRxDrugIdList";
+       var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateReRxDrug";
+       new Ajax.Request(url, {method: 'get',parameters:data});
+   }
+}
  //represcribe a drug
     function represcribe(element){
         var elemId=element.id;
         var ar=elemId.split("_");
         var drugId=ar[1];
+        if(drugId!=null && $("reRxCheckBox_"+drugId).checked==true){
+            oscarLog("this checked");
+            var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribeMultiple";
+            new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
+                insertion: Insertion.Bottom,onSuccess:function(transport){
+                    updateCurrentInteractions();
+                }});
+        }else if(drugId!=null){
         var data="drugId="+drugId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
@@ -1485,6 +1509,7 @@ function setSearchedDrug(drugId,name){
                 updateCurrentInteractions();
             }});
 
+    }
     }
 
 function updateQty(element){
