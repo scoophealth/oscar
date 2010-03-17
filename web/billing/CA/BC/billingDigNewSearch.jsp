@@ -115,6 +115,7 @@ function CodeAttach(File0) {
 	action="billingDigNewUpdate.jsp"><input type="hidden"
 	name="formName" value="<%=formName%>" /> <input type="hidden"
 	name="formElement" value="<%=formElement%>" />
+<div style="height: 600; overflow: auto">
 <table width="800" border="1">
 	<tr bgcolor="#CCCCFF">
 		<td><b> <font face="Arial, Helvetica, sans-serif" size="2">Code</font>
@@ -176,6 +177,7 @@ function CodeAttach(File0) {
 </script>
 	<%}%>
 </table>
+</div>
 <input type="submit" name="update" value="Confirm"> <input
 	type="button" name="cancel" value="Cancel"
 	onclick="javascript:window.close()"></form>
