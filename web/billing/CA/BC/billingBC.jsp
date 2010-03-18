@@ -789,6 +789,8 @@ if(wcbneeds != null){%>
             </td>
             <td>
                 <u><%=demo.getLastName()%>,<%=demo.getFirstName()%></u>
+                <a href="javascript: void();" onclick="popup(800, 1000, 'billStatus.jsp?lastName=<%=demo.getLastName()%>&firstName=<%=demo.getFirstName()%>&filterPatient=true&demographicNo=<%=demo.getDemographicNo()%>','InvoiceList');return false;">
+				<bean:message key="demographic.demographiceditdemographic.msgInvoiceList"/></a>
             </td>
             <td>
                 <b><bean:message key="billing.patient.status"/>:<%=demo.getPatientStatus()%></b>    &nbsp;&nbsp;&nbsp;&nbsp;
