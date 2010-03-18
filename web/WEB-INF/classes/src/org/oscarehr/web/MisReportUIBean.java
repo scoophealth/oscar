@@ -124,6 +124,8 @@ public final class MisReportUIBean {
 		
 		results.add(getFaceToFace());
 		results.add(getPhone());
+		results.add(getIndividualsSeen());
+		results.add(getTotalIndividualsServed());
 		
 		return (results);
 	}
@@ -203,7 +205,7 @@ public final class MisReportUIBean {
 	private DataRow getFaceToFace() {
 		int visitsCount=0;
 		
-		// count face to face notes in the system pertainning to the allowed programs during that time frame.
+		// count face to face notes in the system pertaining to the allowed programs during that time frame.
 		for (Program program : programs)
 		{
 			visitsCount=visitsCount+countFaceToFaceNotesInProgram(program);
@@ -234,13 +236,13 @@ public final class MisReportUIBean {
 	private DataRow getPhone() {
 		int visitsCount=0;
 		
-		// count phone notes in the system pertainning to the allowed programs during that time frame.
+		// count phone notes in the system pertaining to the allowed programs during that time frame.
 		for (Program program : programs)
 		{
 			visitsCount=visitsCount+countPhoneNotesInProgram(program);
 		}
 		
-		return(new DataRow(4502440, "Visits - Telephone (named and unique anonymous)", visitsCount));	    
+		return(new DataRow(4512440, "Visits - Telephone (named and unique anonymous)", visitsCount));	    
     }
 
 	private int countPhoneNotesInProgram(Program program) {
@@ -264,4 +266,52 @@ public final class MisReportUIBean {
 		return(count);
 	}
 
+	private DataRow getIndividualsSeen() {
+		HashSet<Integer> individuals=new HashSet<Integer>();
+		
+		// count face to face individuals in the system pertaining to the allowed programs during that time frame.
+		for (Program program : programs)
+		{
+			addIndividualsSeenInProgram(individuals, program);
+		}
+		
+		return(new DataRow(4526000, "Service Recipients Seen, (anonymous or no client record, excluding unique anonymous)", individuals.size()));	    
+    }
+
+	private void addIndividualsSeenInProgram(HashSet<Integer> individuals, Program program) {
+		List<CaseManagementNote> notes=caseManagementNoteDAO.getCaseManagementNoteByProgramIdAndObservationDate(program.getId(), startDate.getTime(), endDate.getTime());
+		
+		for (CaseManagementNote note : notes)
+		{
+			if (EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT.getOldDbValue().equals(note.getEncounter_type()))
+			{
+				// as per request/requirements only count individuals who are anonymous or have no client record, excluding unique_anonymous
+				// sorry can only count people who have demographic records.
+				Demographic demographic=demographicDao.getDemographic(note.getDemographic_no());
+				if (demographic!=null && Demographic.ANONYMOUS.equals(demographic.getAnonymous())) individuals.add(demographic.getDemographicNo());
+			}
+		}
+	}
+
+	private DataRow getTotalIndividualsServed() {
+		HashSet<Integer> individuals=new HashSet<Integer>();
+		
+		// count individuals in the system pertaining to the allowed programs during that time frame.
+		for (Program program : programs)
+		{
+			addIndividualsServedInProgram(individuals, program);
+		}
+		
+		return(new DataRow(4552440, "Individuals Served, (total clients)", individuals.size()));	    
+    }
+
+	private void addIndividualsServedInProgram(HashSet<Integer> individuals, Program program) {
+		List<CaseManagementNote> notes=caseManagementNoteDAO.getCaseManagementNoteByProgramIdAndObservationDate(program.getId(), startDate.getTime(), endDate.getTime());
+		
+		for (CaseManagementNote note : notes)
+		{
+			Demographic demographic=demographicDao.getDemographic(note.getDemographic_no());
+			if (demographic!=null) individuals.add(demographic.getDemographicNo());
+		}
+	}
 }
