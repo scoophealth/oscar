@@ -46,7 +46,8 @@
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.text.DateFormatSymbols"%>
-<%@page import="org.apache.commons.lang.time.DateFormatUtils"%><html:html xhtml="true" locale="true">
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@page import="org.oscarehr.common.model.Demographic"%><html:html xhtml="true" locale="true">
 <head>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/check_hin.js"></script>
@@ -434,7 +435,8 @@
             %>
             <select name="anonymous">
             	<option value="" <%=anonymous==null?"selected=\"selected\"":""%>>not anonymous</option>
-            	<option value="anonymous" <%="anonymous".equals(anonymous)?"selected=\"selected\"":""%>>anonymous</option>
+            	<option value="<%=Demographic.ANONYMOUS%>" <%="anonymous".equals(Demographic.ANONYMOUS)?"selected=\"selected\"":""%>>anonymous</option>
+            	<option value="<%=Demographic.UNIQUE_ANONYMOUS%>" <%="anonymous".equals(Demographic.UNIQUE_ANONYMOUS)?"selected=\"selected\"":""%>>unique anonymous</option>
             </select>
         </td>
     </tr>

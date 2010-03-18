@@ -123,6 +123,7 @@ public final class MisReportUIBean {
 		addBedProgramInfo(results);
 		
 		results.add(getFaceToFace());
+		results.add(getPhone());
 		
 		return (results);
 	}
@@ -202,16 +203,16 @@ public final class MisReportUIBean {
 	private DataRow getFaceToFace() {
 		int visitsCount=0;
 		
-		// count all notes in the system pertainning to the allowed programs during that time frame.
+		// count face to face notes in the system pertainning to the allowed programs during that time frame.
 		for (Program program : programs)
 		{
-			visitsCount=visitsCount+countNotesInProgram(program);
+			visitsCount=visitsCount+countFaceToFaceNotesInProgram(program);
 		}
 		
-		return(new DataRow(4502440, "Visits Face to Face", visitsCount));	    
+		return(new DataRow(4502440, "Visits Face to Face (must have client record)", visitsCount));	    
     }
 
-	private int countNotesInProgram(Program program) {
+	private int countFaceToFaceNotesInProgram(Program program) {
 		List<CaseManagementNote> notes=caseManagementNoteDAO.getCaseManagementNoteByProgramIdAndObservationDate(program.getId(), startDate.getTime(), endDate.getTime());
 		
 		int count=0;
@@ -220,6 +221,8 @@ public final class MisReportUIBean {
 		{
 			if (EncounterUtil.EncounterType.FACE_TO_FACE_WITH_CLIENT.getOldDbValue().equals(note.getEncounter_type()))
 			{
+				// as per request/requirements only count individuals with a client record.
+				// I know, this doesn't entirely make sense as a note must have a client record...
 				Demographic demographic=demographicDao.getDemographic(note.getDemographic_no());
 				if (demographic!=null) count++;
 			}
@@ -228,5 +231,37 @@ public final class MisReportUIBean {
 		return(count);
 	}
 
+	private DataRow getPhone() {
+		int visitsCount=0;
+		
+		// count phone notes in the system pertainning to the allowed programs during that time frame.
+		for (Program program : programs)
+		{
+			visitsCount=visitsCount+countPhoneNotesInProgram(program);
+		}
+		
+		return(new DataRow(4502440, "Visits - Telephone (named and unique anonymous)", visitsCount));	    
+    }
+
+	private int countPhoneNotesInProgram(Program program) {
+		List<CaseManagementNote> notes=caseManagementNoteDAO.getCaseManagementNoteByProgramIdAndObservationDate(program.getId(), startDate.getTime(), endDate.getTime());
+		
+		int count=0;
+		
+		for (CaseManagementNote note : notes)
+		{
+			if (EncounterUtil.EncounterType.TELEPHONE_WITH_CLIENT.getOldDbValue().equals(note.getEncounter_type()))
+			{
+				// as per request/requirements only count individuals who are named or are unique anonymous
+				Demographic demographic=demographicDao.getDemographic(note.getDemographic_no());
+				if (demographic!=null)
+				{
+					if (demographic.getAnonymous()==null || Demographic.UNIQUE_ANONYMOUS.equals(demographic.getAnonymous())) count++;
+				}
+			}
+		}
+		
+		return(count);
+	}
 
 }

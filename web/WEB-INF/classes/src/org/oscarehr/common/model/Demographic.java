@@ -43,7 +43,10 @@ public class Demographic implements Serializable {
 	private static final String DEFAULT_PATIENT_STATUS = PatientStatus.AC.name();
 	private static final String DEFAULT_HEATH_CARD_TYPE = "ON";
 	private static final String DEFAULT_FUTURE_DATE = "2100-01-01";
-
+	public static final String ANONYMOUS="ANONYMOUS";
+	public static final String UNIQUE_ANONYMOUS="UNIQUE_ANONYMOUS";
+	
+	
 	private int hashCode = Integer.MIN_VALUE;// primary key
 	private Integer demographicNo;// fields
 	private String phone;
