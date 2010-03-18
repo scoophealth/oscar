@@ -42,7 +42,7 @@
 <br />
 <span style="font-weight:bold">Dates : </span><%=misReportUIBean.getDateRangeForDisplay()%>
 
-<br />
+<br /><br />
 
 <table class="genericTable borderedTableAndCells" style="font-size:12px">
 	<%
