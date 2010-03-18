@@ -104,12 +104,10 @@ if (heading != null){
                 String styleColor = "";
                 //test for previous note
                 HttpSession se = request.getSession();
-                WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
-                CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-                Integer tableName = cmm.getTableNameByDisplay(annotation_display);
-                CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, Long.parseLong(prescriptDrug.getId().toString()));
+                Integer tableName = caseManagementManager.getTableNameByDisplay(annotation_display);
+                CaseManagementNoteLink cml = caseManagementManager.getLatestLinkByTableId(tableName, Long.parseLong(prescriptDrug.getId().toString()));
                 CaseManagementNote p_cmn = null;
-                if (cml!=null) {p_cmn = cmm.getNote(cml.getNoteId().toString());}
+                if (cml!=null) {p_cmn = caseManagementManager.getNote(cml.getNoteId().toString());}
                 if (p_cmn!=null){isPrevAnnotation=true;}
               //  System.out.println("in list drugs.jsp: "+Long.parseLong(prescriptDrug.getId().toString())+"--"+tableName+"--"+p_cmn+"--"+cml);
 
@@ -140,17 +138,18 @@ if (heading != null){
                 styleColor = getClassColour( prescriptDrug, now, month);
                 String specialText=prescriptDrug.getSpecial();
                 specialText=specialText.replace("\n"," ");
+                Integer prescriptIdInt=prescriptDrug.getId();
         %>
         <tr>
-            <td valign="top"><a id="rxDate_<%=prescriptDrug.getId()%>"   <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a></td>
+            <td valign="top"><a id="rxDate_<%=prescriptIdInt%>"   <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"><%=oscar.util.UtilDateUtilities.DateToString(prescriptDrug.getRxDate())%></a></td>
             <td valign="top"><%=prescriptDrug.daysToExpire()%></td>
             <td valign="top"><%if(prescriptDrug.isLongTerm()){%>*<%}%> </td>
 
-            <td valign="top"><a id="prescrip_<%=prescriptDrug.getId()%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
+            <td valign="top"><a id="prescrip_<%=prescriptIdInt%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                <input id="reRxCheckBox_<%=prescriptDrug.getId()%>" type=CHECKBOX onclick="updateReRxDrugId(this.id)" name="checkBox_<%=prescriptDrug.getId()%>">
-                <a name="rePrescribe" style="vertical-align:top" id="reRx_<%=prescriptDrug.getId()%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)">ReRx</a>
+                <input id="reRxCheckBox_<%=prescriptIdInt%>" type=CHECKBOX onclick="updateReRxDrugId(this.id)" name="checkBox_<%=prescriptIdInt%>">
+                <a name="rePrescribe" style="vertical-align:top" id="reRx_<%=prescriptIdInt%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)">ReRx</a>
                 <%} else {%> <%--TODO: redo this part for rx3--%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
                     <input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
@@ -161,19 +160,19 @@ if (heading != null){
             </td>
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                   <a id="del_<%=prescriptDrug.getId()%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">Del</a>
+                   <a id="del_<%=prescriptIdInt%>" name="delete" <%=styleColor%> href="javascript:void(0);" onclick="Delete2(this);">Del</a>
                 <%}%>
             </td>
             <td width="20px" align="center" valign="top">
                 <%if(!prescriptDrug.isDiscontinued()){%>
-                <a id="discont_<%=prescriptDrug.getId()%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discon</a>
+                <a id="discont_<%=prescriptIdInt%>" href="javascript:void(0);" onclick="Discontinue(event,this);" <%=styleColor%> >Discon</a>
                 <%}else{%>
                   <%=prescriptDrug.getArchivedReason()%>
                 <%}%>
             </td>
 
             <td width="10px" align="center" valign="top">
-                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptDrug.getId()%>&amp;demo=<%=bean.getDemographicNo()%>&amp;drugSpecial=<%=specialText%>','anwin','width=400,height=250');">
+                <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=prescriptIdInt%>&amp;demo=<%=bean.getDemographicNo()%>&amp;drugSpecial=<%=specialText%>','anwin','width=400,height=250');">
                     <%if(!isPrevAnnotation){%> <img src="../images/notes.gif" alt="rxAnnotation" border="0"><%} else{%><img src="../images/filledNotes.gif" alt="rxFilledNotes" border="0"> <%}%></a>
             </td>
 
@@ -218,7 +217,7 @@ String getName(Drug prescriptDrug){
     String getClassColour(Drug drug, long referenceTime, long durationToSoon){
         StringBuffer sb = new StringBuffer("class=\"");
 
-        if (!drug.isExpired() && (drug.getEndDate().getTime() - referenceTime <= durationToSoon)) {  // ref = now and duration will be a month
+        if (!drug.isExpired() && drug.getEndDate()!=null && (drug.getEndDate().getTime() - referenceTime <= durationToSoon)) {  // ref = now and duration will be a month
             sb.append("expireInReference ");
         }
 
