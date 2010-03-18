@@ -478,6 +478,9 @@ function checkRePrescribe(){
                </style>
 
         <style type="text/css">
+    .ControlPushButton{
+        font-size:10.5px;
+    }
             .highlight {
                 background-color : #99FFCC;
                 border: 1px solid #008000;
@@ -608,16 +611,12 @@ body {
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
                                             <td>
-                                                <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();">
-                                                <a href="javascript:void(0);" onclick="callTreatments('searchString','treatmentsMyD')"><bean:message key="SearchDrug.msgDrugOfChoice" /></a>
-                                                <a href=#  title="Set most frequently used prescription quantity" onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultQuantity');return false;" style="font-style:normal;color:#6699CC"><bean:message key="provider.SetDefaultPrescriptionQuantity"/></a>
+                                                <input type="button" name="search" class="ControlPushButton" style="width:45px" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();"><input id="customDrug" type="button" class="ControlPushButton" style="width:75px" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" /><!--input id="customDrug" type="button" class="ControlPushButton" style="width:74px"   onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgCustomNoteRx3"/>"/--><input id="reset" type="button" class="ControlPushButton" style="width:39px" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/><input type="button" class="ControlPushButton" style="width:82px" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>"/>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
                                                 <div class="buttonrow">
                                                     <input id="saveButton" type="button"  onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveAndPrescribe"/>" />
-                                                    <input id="customDrug" type="button"  onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrug"/>" />
-                                                    <input id="reset" type="button" title="Clear pending prescriptions" onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescription"/>" />
                                                     <!--input id="testEvalJS" type="button"   onclick="functionOne();" value="testEvalJS" /-->
                                                 </div>
                                             </td>
@@ -1200,6 +1199,21 @@ body {
         return false;
     }
 
+/*function customNoteWarning(){
+    if (confirm('This feature will allow you to manually enter a prescription.'
+	+ '\nWarning: you will lose the following functionality:'
+        + '\n  *  Quantity and Repeats'
+	+ '\n  *  Known Dosage Forms / Routes'
+	+ '\n  *  Drug Allergy Information'
+	+ '\n  *  Drug-Drug Interaction Information'
+	+ '\n  *  Drug Information'
+	+ '\n\nAre you sure you wish to use this feature?')==true) {
+        var randomId=Math.round(Math.random()*1000000);
+        var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=newCustomNote";
+        var data="randomId="+randomId;
+        new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
+    }
+}*/
 
 function customWarning2(){
     if (confirm('This feature will allow you to manually enter a drug.'
