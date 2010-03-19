@@ -4,6 +4,10 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--
@@ -55,7 +59,7 @@
 		<logic:redirect href="error.html" />
 	</logic:equal>
 </logic:present>
-
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 
@@ -169,6 +173,35 @@ String comment = (String) request.getSession().getAttribute("comment");
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
 <script type="text/javascript">
+    function resetStash(){
+               var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearStash";
+               var data = "";
+               new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
+                            updateCurrentInteractions();
+                }});
+               parent.document.getElementById('rxText').innerHTML="";//make pending prescriptions disappear.
+               parent.document.getElementById('searchString').focus();
+    }
+    function resetReRxDrugList(){
+        var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearReRxDrugList";
+               var data = "";
+               new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
+                }});
+    }
+    function updateCurrentInteractions(){
+        new Ajax.Request("GetmyDrugrefInfo.do?method=findInteractingDrugList", {method:'get',onSuccess:function(transport){
+                            new Ajax.Request("UpdateInteractingDrugs.jsp", {method:'get',onSuccess:function(transport){
+                                            var str=transport.responseText;
+                                            str=str.replace('<script type="text/javascript">','');
+                                            str=str.replace(/<\/script>/,'');
+                                            eval(str);
+                                            //oscarLog("str="+str);
+                                            <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">re
+                                              callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
+                                             </oscar:oscarPropertiesCheck>
+                                        }});
+                            }});
+    }
     function onPrint2(method) {
         var useSC=false;
         var scAddress="";
@@ -454,6 +487,12 @@ function toggleView(form) {
 						<td><span><input type=button
 							value="Print PDF" class="ControlPushButton"
 							style="width: 120px" onClick="<%=reprint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');" %>" /></span></td>
+					</tr>
+					<tr>
+						<!--td width=10px></td-->
+						<td><span><input type=button
+							value="Create New Prescription" class="ControlPushButton"
+                                                        style="width: 120px"  onClick="resetStash();resetReRxDrugList();javascript:parent.myLightWindow.deactivate();" /></span></td>
 					</tr>
 					<tr>
 						<!--td width=10px></td-->
