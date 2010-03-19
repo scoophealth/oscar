@@ -93,7 +93,7 @@ if (heading != null){
             List<Drug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
             //DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
             //List<Drug> prescriptDrugs = drugDao.getPrescriptions(""+patient.getDemographicNo(), showall);
-
+            List<String> reRxDrugList=bean.getReRxDrugIdList();
 
 
             long now = System.currentTimeMillis();
@@ -148,7 +148,7 @@ if (heading != null){
             <td valign="top"><a id="prescrip_<%=prescriptIdInt%>" <%=styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&amp;cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getSpecial()).replaceAll(";", " ")%></a></td>
             <td width="20px" align="center" valign="top">
                 <%if (prescriptDrug.getRemoteFacilityName() == null) {%>
-                <input id="reRxCheckBox_<%=prescriptIdInt%>" type=CHECKBOX onclick="updateReRxDrugId(this.id)" name="checkBox_<%=prescriptIdInt%>">
+                <input id="reRxCheckBox_<%=prescriptIdInt%>" type=CHECKBOX onclick="updateReRxDrugId(this.id)" <%if(reRxDrugList.contains(prescriptIdInt.toString())){%>checked<%}%> name="checkBox_<%=prescriptIdInt%>">
                 <a name="rePrescribe" style="vertical-align:top" id="reRx_<%=prescriptIdInt%>" <%=styleColor%> href="javascript:void(0)" onclick="represcribe(this)">ReRx</a>
                 <%} else {%> <%--TODO: redo this part for rx3--%>
                 <form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
