@@ -2,6 +2,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+
 <%
 	response.setHeader("Cache-Control", "no-cache");
 %>
@@ -59,6 +62,7 @@
 		<logic:redirect href="error.html" />
 	</logic:equal>
 </logic:present>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
 	oscar.oscarRx.pageUtil.RxSessionBean bean=(oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
@@ -74,6 +78,9 @@
 </script>
 
 <%
+       if(session.getAttribute("user") == null )
+            response.sendRedirect("../logout.jsp");
+	String curUser_no = (String) session.getAttribute("user");
 	String regionalIdentifier=request.getParameter("regionalIdentifier");
         System.out.println("req ctx "+request.getContextPath());
 	String cn=request.getParameter("cn");
@@ -103,7 +110,13 @@
     }
      //represcribe a drug
     function reRxDrugSearch3(reRxDrugId){
-        location.href="SearchDrug3.jsp?reRxDrugId="+reRxDrugId;
+        //location.href="SearchDrug3.jsp?reRxDrugId="+reRxDrugId;
+        //location.href='../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=currentDemographicNo%>'
+        var data="drugId="+reRxDrugId;
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=saveReRxDrugIdToStash";
+        new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
+                 location.href="SearchDrug3.jsp?";
+        }});
     }
 
 </script>
