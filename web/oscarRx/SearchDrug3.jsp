@@ -184,6 +184,12 @@
 
 
         <script type="text/javascript">
+            function resetReRxDrugList(){
+                var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearReRxDrugList";
+                       var data = "";
+                       new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
+                        }});
+            }
             function onPrint(cfgPage) {
                 var docF = $('printFormDD');
                 oscarLog('in onPrint'+docF);
@@ -1766,6 +1772,7 @@ function findDataStr(ids){
                 oscarLog("successfully sent data "+url);
                 callReplacementWebService("ListDrugs.jsp",'drugProfile');
                 popForm2();
+                resetReRxDrugList();
             }});
         return false;
     }
