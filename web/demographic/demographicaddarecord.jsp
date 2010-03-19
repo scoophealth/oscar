@@ -63,6 +63,8 @@
 </table>
 
 <%
+    String dem = null;
+
     String curUser_no = (String)session.getAttribute("user");
     
     //check to see if new case management is request
@@ -264,7 +266,7 @@
 	    //System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
 
-       String dem = apptMainBean.getString(rs,"demographic_no");
+       dem = apptMainBean.getString(rs,"demographic_no");
        DemographicExt dExt = new DemographicExt();
        String proNo = (String) session.getValue("user");
        dExt.addKey(proNo,dem,"hPhoneExt",request.getParameter("hPhoneExt"),"");
@@ -344,8 +346,9 @@
 
 %>
 <p>
-<h2><bean:message
-	key="demographic.demographicaddarecord.msgSuccessful" /></h2>
+<h2><bean:message key="demographic.demographicaddarecord.msgSuccessful" /></h2>
+    <a href="demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographicaddarecord.goToRecord"/></a>
+
 </p>
 <%
   } else {
