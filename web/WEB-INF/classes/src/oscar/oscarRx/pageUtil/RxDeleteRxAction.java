@@ -152,6 +152,18 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
         return mapping.findForward("successClearStash");
     }
 
+   public ActionForward clearReRxDrugList(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
+    throws IOException, ServletException {
+        RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        if(bean==null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+        bean.clearReRxDrugIdList();
+        //return mapping.findForward("successClearStash");
+        return null;
+    }
+
     /**
      * The action to discontinue a drug.
      *
