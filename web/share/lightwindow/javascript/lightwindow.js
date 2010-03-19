@@ -80,7 +80,7 @@ lightwindow.prototype = {
 	//	Initialize the lightwindow.
 	//
 	initialize : function(options) {
-            oscarLog("initialize of lightwindow");
+            //oscarLog("initialize of lightwindow");
             //get the domain.
 		this.options = Object.extend({
 			resizeSpeed : 8,
@@ -166,7 +166,7 @@ lightwindow.prototype = {
 							'<div id="lightwindow_title_bar" >'+
 								'<div id="lightwindow_title_bar_inner" >'+
 									'<span id="lightwindow_title_bar_title"></span>'+
-									'<a id="lightwindow_title_bar_close_link" >CLOSE</a>'+
+									'<a id="lightwindow_title_bar_close_link" >X</a>'+
 								'</div>'+
 							'</div>'+
 							'<div id="lightwindow_stage" >'+
@@ -255,7 +255,7 @@ lightwindow.prototype = {
 	//	Activate the lightwindow.
 	//
 	activate : function(e, link){
-            oscarLog("activate");
+            //oscarLog("activate");
 		// Clear out the window Contents
 		this._clearWindowContents(true);
 
@@ -280,7 +280,7 @@ lightwindow.prototype = {
 	//	Turn off the window
 	//
 	deactivate : function(){
-            oscarLog("deactivate");
+            //oscarLog("deactivate");
 		// The window is not active
 		this.windowActive = false;
 
@@ -321,7 +321,7 @@ lightwindow.prototype = {
 	//  Open a Window from a hash of attributes
 	//
 	activateWindow : function(options) {
-            oscarLog("activateWindow");
+            //oscarLog("activateWindow");
             //oscarLog("before this.element.href "+this.element.href);
 		this.element = Object.extend({
 			href : null,
@@ -339,7 +339,7 @@ lightwindow.prototype = {
 			iframeEmbed : null,
 			form : null
 		}, options || {});
-             oscarLog("this.element.href "+this.element.href);
+             //oscarLog("this.element.href "+this.element.href);
 		// Set the window type
 		this.contentToFetch = this.element.href;
 		this.windowType = this.element.type ? this.element.type : this._fileType(this.element.href);
@@ -438,7 +438,8 @@ lightwindow.prototype = {
 	//
 	//  Set Links Up
 	//
-	_setupLinks : function() {oscarLog("_setupLinks");
+	_setupLinks : function() {
+            //oscarLog("_setupLinks");
 		var links = $$('.'+this.options.classNames.standard);
 		links.each(function(link) {
 			this._processLink(link);
@@ -447,7 +448,8 @@ lightwindow.prototype = {
 	//
 	//  Process a Link
 	//
-	_processLink : function(link) {oscarLog("&&&&&&&&&& _processLink");
+	_processLink : function(link) {
+            //oscarLog("&&&&&&&&&& _processLink");
 		if ((this._fileType(link.getAttribute('href')) == 'image' || this._fileType(link.getAttribute('href')) == 'media')) {
 			if (gallery = this._getGalleryInfo(link.rel)) {
 				if (!this.galleries[gallery[0]]) {
@@ -462,7 +464,7 @@ lightwindow.prototype = {
 
 		// Take care of our inline content
 		var url = link.getAttribute('href');
-                oscarLog("url in ");
+                //oscarLog("url in ");
 		if (url.indexOf('?') > -1) {
 			url = url.substring(0, url.indexOf('?'));
 		}
@@ -491,9 +493,9 @@ lightwindow.prototype = {
 	//	Add the markup to the page.
 	//
 	_addLightWindowMarkup : function(rebuild) {
-            //oscarLog("&&&&&&&&&&&&&&&&&&&& _addLightWindowMarkup");
-           
-            
+           //oscarLog("&&&&&&&&&&&&&&&&&&&& _addLightWindowMarkup");
+
+
 		var overlay = Element.extend(document.createElement('div'));
 		overlay.setAttribute('id', 'lightwindow_overlay');
                 //var h=this._viewportHeight();
@@ -507,16 +509,16 @@ lightwindow.prototype = {
                 var h='10000';
 		// FF Mac has a problem with putting Flash above a layer without a 100% opacity background, so we need to use a pre-made
 		if (Prototype.Browser.Gecko) {
-                    oscarLog("overlay presetImage :"+this.options.overlay.presetImage);
+                    //oscarLog("overlay presetImage :"+this.options.overlay.presetImage);
 			overlay.setStyle({
 				backgroundImage: 'url('+ this.options.overlay.presetImage+')',
 				backgroundRepeat: 'repeat',
 				//height: this.pageDimensions.height+'px'
                                 height: h+'px'
 			});
-                        
+
 		} else {
-                    oscarLog("overlay image :"+this.options.overlay.image);
+                    //oscarLog("overlay image :"+this.options.overlay.image);
 			overlay.setStyle({
 				opacity: this.options.overlay.opacity,
 				backgroundImage: 'url('+this.options.overlay.image+')',
@@ -563,7 +565,7 @@ lightwindow.prototype = {
 	//  Add loading window markup
 	//
 	_addLoadingWindowMarkup : function() {
-            oscarLog("_addLoadingWindowMarkup");
+            //oscarLog("_addLoadingWindowMarkup");
             //modified loading;
             this.options.skin.loading='<div id="lightwindow_loading" >'+
 								'<img src="/'+this.oscar_domain+ '/share/lightwindow/images/ajax-loading.gif" alt="loading" />'+
@@ -576,7 +578,7 @@ lightwindow.prototype = {
 	//  Setup the window elements
 	//
 	_setupWindowElements : function(link) {
-            oscarLog("_setupWindowElements ");
+            //oscarLog("_setupWindowElements ");
 		this.element = link;
 		this.element.title = null ? '' : link.getAttribute('title');
 		this.element.author = null ? '' : link.getAttribute('author');
@@ -687,22 +689,15 @@ lightwindow.prototype = {
 					left: parseFloat($('lightwindow').getStyle('left'))-this.pagePosition.x+'px'
 				});
 			} else {
-                                //oscarLog("x2");
-                              // if(!(window.frames['lightwindow_iframe'].document==null)){
-                                   //oscarLog("$$$ $$$ pwTable's height="+window.frames['lightwindow_iframe'].document.getElementById('pwTable').clientHeight);
-                                   //oscarLog(window.frames['lightwindow_iframe'].document);
-                               //    this.customedHeight=window.frames['lightwindow_iframe'].document.getElementById('pwTable').clientHeight+200;
 
-                                    //oscarLog("222 222 pwTable's height="+document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('pwTable').clientHeight);
                                     this.customedHeight=document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('preview').contentWindow.document.getElementById('pwTable').clientHeight+150;
-                               //oscarLog("contentWindow scrollHeight: "+document.getElementById('lightwindow_iframe').contentWindow.document.body.scrollHeight);
-                                //oscarLog("$$$ $$$ this.customedHeight="+this.customedHeight);
+
                                 $('lightwindow_contents').setStyle({
                                        height:  this.customedHeight+'px'
                                });
                                 //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
                                 //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
-                                
+
 				if ($('lightwindow_iframe')) {
 					// Ideally here we would set a 50% value for top and left, but Safari rears it ugly head again and we need to do it by pixels
 					this._browserDimensions();
@@ -839,18 +834,18 @@ lightwindow.prototype = {
 	//	Display the lightWindow.
 	//
 	_displayLightWindow : function(display, visibility) {
-            oscarLog("_displayLightWindow");
+            //oscarLog("_displayLightWindow");
 		$('lightwindow_overlay').style.display = $('lightwindow').style.display = $('lightwindow_container').style.display = display;
 		$('lightwindow_overlay').style.visibility = $('lightwindow').style.visibility = $('lightwindow_container').style.visibility = visibility;
-                oscarLog($('lightwindow_overlay').style.display);
-                oscarLog($('lightwindow_overlay').style.visibility);
+                //oscarLog($('lightwindow_overlay').style.display);
+                //oscarLog($('lightwindow_overlay').style.visibility);
 	},
 	//
 	//	Setup Dimensions of lightwindow.
 
 	//
 	_setupDimensions : function() {
-oscarLog("_setupDimensions");
+//oscarLog("_setupDimensions");
 		var originalHeight, originalWidth;
 		switch (this.windowType) {
 			case 'page' :
@@ -910,8 +905,8 @@ oscarLog("_setupDimensions");
 	//	Get the type of file.
 	//
 	_fileType : function(url) {
-            oscarLog("&&&&&&&&&&&&&&&&&&&&&& _fileType");
-            oscarLog("&&&&&&&&&&&&&&&&&&&&&& url "+url);
+            //oscarLog("&&&&&&&&&&&&&&&&&&&&&& _fileType");
+            //oscarLog("&&&&&&&&&&&&&&&&&&&&&& url "+url);
 		var image = new RegExp("[^\.]\.("+this.options.fileTypes.image.join('|')+")\s*$", "i");
 		if (image.test(url)) return 'image';
 		if (url.indexOf('#') > -1 && (document.domain == this._getDomain(url))) return 'inline';
@@ -933,7 +928,7 @@ oscarLog("_setupDimensions");
 	//  Get file Extension
 	//
 	_fileExtension : function(url) {
-            oscarLog("&&&&&&&&&&&&&&&&&&&&& _fileExtension");
+            //oscarLog("&&&&&&&&&&&&&&&&&&&&& _fileExtension");
 		if (url.indexOf('?') > -1) {
 			url = url.substring(0, url.indexOf('?'));
 		}
@@ -1020,7 +1015,7 @@ oscarLog("_setupDimensions");
 			var portColon = domain.indexOf(':');
 			domain = domain.substring(0, portColon);
        	}
-        oscarLog("domain="+domain);
+        //oscarLog("domain="+domain);
         //change the options.loading
         this.oscar_domain=domain;
 		return domain;
@@ -1214,12 +1209,12 @@ oscarLog("_setupDimensions");
 	//  Write Content to the iframe using the skin
 	//
 	_writeToIframe : function(content) {
-            oscarLog("_writeToIframe");
-            oscarLog(this.options.skin.iframe);
+            //oscarLog("_writeToIframe");
+            //oscarLog(this.options.skin.iframe);
 
 		var template = this.options.skin.iframe;
 		template = template.replace('{body_replace}', content);
-                oscarLog(template);
+               // oscarLog(template);
 		if ($('lightwindow_iframe').contentWindow){
 			$('lightwindow_iframe').contentWindow.document.open();
 			$('lightwindow_iframe').contentWindow.document.write(template);
@@ -1694,7 +1689,8 @@ oscarLog("_setupDimensions");
 	//
 	//  This is the default animation handler for LightWindow
 	//
-	_defaultAnimationHandler : function() {	 oscarLog("_defaultAnimationHandler");
+	_defaultAnimationHandler : function() {
+           //oscarLog("_defaultAnimationHandler");
 		// Now that we have figures out the cruft lets make the caption go away and add its effects
 		if (this.element.caption || this.element.author || (this.activeGallery && this.options.showGalleryCount)) {
 			$('lightwindow_data_slide').setStyle({
@@ -1985,7 +1981,8 @@ oscarLog("_setupDimensions");
 	//
 	//  Wrap everything up
 	//
-	_finishWindow : function() { oscarLog("_finishWindow");
+	_finishWindow : function() {
+            ////oscarLog("_finishWindow");
 		if (this.windowType == 'external') {
 			// We set the externals source here because it allows for a much smoother animation
 			$('lightwindow_iframe').setAttribute('src', this.element.href);
@@ -2048,6 +2045,6 @@ Event.observe(window, 'load', lightwindowInit, false);
 //
 var myLightWindow = null;
 function lightwindowInit() {
-    oscarLog("in lightwindowInit");
+    //oscarLog("in lightwindowInit");
 	myLightWindow = new lightwindow();
 }
