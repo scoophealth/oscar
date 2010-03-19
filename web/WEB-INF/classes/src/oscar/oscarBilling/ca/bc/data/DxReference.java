@@ -45,6 +45,8 @@ import oscar.util.UtilDateUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.SpringUtils;
+import oscar.entities.BillingDxCode;
 
 /**
  *
@@ -52,7 +54,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DxReference {
     private static final Log _log = LogFactory.getLog(DxReference.class);
-    
+    BillingDxCodeDAO dxCode = (BillingDxCodeDAO) SpringUtils.getBean("BillingDxCodeDAO");
+
     /** Creates a new instance of DxReference */
     public DxReference() {
     }
@@ -91,6 +94,7 @@ public class DxReference {
                         DxCode code = new DxCode(sD,dx[i]);
                         if (!m.containsKey(dx[i])){
                             m.put(dx[i],dx[i]);
+                            fillDxCodeDescrition(code);
                             list.add(code);
                         }
                     }
@@ -105,7 +109,12 @@ public class DxReference {
        return list;
     }
     
-    
+    private void fillDxCodeDescrition(DxCode code){
+         
+         List<BillingDxCode> dxCodeList = dxCode.getByDxCode(code.getDx());
+         BillingDxCode bdc = dxCodeList.get(0);
+         code.setDesc(bdc.getDescription());
+    }
     
 
     public class DxCode implements Comparable{
@@ -117,6 +126,7 @@ public class DxReference {
         
         private String dx = null;
         private Date date = null;
+        private String desc = null;
 
         public String getDx() {
             return dx;
@@ -132,6 +142,14 @@ public class DxReference {
 
         public void setDate(Date date) {
             this.date = date;
+        }
+
+        public void setDesc(String desc){
+            this.desc = desc;
+        }
+
+        public String getDesc(){
+            return this.desc;
         }
         
         

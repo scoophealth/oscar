@@ -66,7 +66,7 @@
           <ul class="dxlist" >
              <%}%>  
              <li>
-                 <a href="javascript: function myFunction() {return false; }" onClick="quickPickDiagnostic('<%=dxc.getDx()%>');return false;">         
+                 <a href="javascript: function myFunction() {return false; }" onClick="quickPickDiagnostic('<%=dxc.getDx()%>');return false;" title="<%=dxc.getDesc()%>">
                     <%=dxc.getDx()%> <%=dxc.getNumMonthSinceDate()%>M
                  </a>
              
