@@ -678,6 +678,7 @@ if (bMultisites) { %>
 		</td>
 	</tr>
 </table>
+<%String demoNo = request.getParameter("demographic_no");%>
 <table width="100%" BGCOLOR="<%=deepcolor%>">
 	<tr>
 		<% if(!bDnb) { %>
@@ -696,11 +697,21 @@ if (bMultisites) { %>
     %> <INPUT TYPE="submit"
 			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintPreview'"
 			VALUE="<bean:message key='appointment.addappointment.btnAddApptPrintPreview'/>"
-			<%=disabled%>> <%
+			<%=disabled%>>
 
+
+    <%
   }
 
-%> <INPUT TYPE="submit"
+%>
+
+    
+ <INPUT TYPE="submit"
+			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintCard'"
+			VALUE="<bean:message key='global.btnPrint'/>"
+			<%=disabled%>>
+
+<INPUT TYPE="submit"
 			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'"
 			tabindex="6"
 			VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>" <%=disabled%>></TD>
@@ -715,7 +726,7 @@ if (bMultisites) { %>
 </TABLE>
 </FORM>
 
-<%String demoNo = request.getParameter("demographic_no");%>
+
 <table align="center" style="font-family: arial, sans-serif">
 <tr>
     <td valign="top">    

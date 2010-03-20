@@ -16,6 +16,7 @@
      {"Group Appt" , "appointmentgrouprecords.jsp"},
      {"Group Action" ,  "appointmentgrouprecords.jsp"},
      {"Add Appt & PrintPreview" , "appointmentaddrecordprint.jsp"},
+     {"Add Appt & PrintCard" , "appointmentaddrecordcard.jsp"},
      {"TicklerSearch" , "../tickler/ticklerAdd.jsp"},
      {"Search " , "../demographic/demographiccontrol.jsp"},
      {"Search" , "appointmentsearchrecords.jsp"},
