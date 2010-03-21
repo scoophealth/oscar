@@ -572,6 +572,8 @@ div.logoutBox {
 				<li><a href="#"
 					onclick="popupPage(600,900, &quot;<html:rewrite page="/admin/oscarLogging.jsp"/>&quot;)"><bean:message key="admin.admin.serverLog"/></a></li>
 			</oscar:oscarPropertiesCheck>
+                        <li><a href="#"
+                               onclick="popupPage(600,900,&quot;<html:rewrite page="/report/DxresearchReport.do"/>&quot;)"><bean:message key="admin.admin.diseaseRegister"/></a></li>
             
 		</ul>
 		</div>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 17, 2010 12:03:58 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="org.oscarehr.common.model.Dxresearch" table="dxresearch">
+        <id name="dxresearchNo" type="java.lang.Integer">
+            <column name="dxresearch_no" />
+            <generator class="native" />
+        </id>
+        <property name="demographicNo" type="java.lang.Integer">
+            <column name="demographic_no" />
+        </property>
+        <property name="startDate" type="date">
+            <column name="start_date" length="10" />
+        </property>
+        <property name="updateDate" type="date">
+            <column name="update_date" length="10" />
+        </property>
+        <property name="status" type="java.lang.Character">
+            <column name="status" length="1" />
+        </property>
+        <property name="dxresearchCode" type="string">
+            <column name="dxresearch_code" length="10" />
+        </property>
+        <property name="codingSystem" type="string">
+            <column name="coding_system" length="20" />
+        </property>
+        <property name="association" type="byte">
+            <column name="association" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

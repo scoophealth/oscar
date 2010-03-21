@@ -224,6 +224,10 @@
         <property name="providerMgr" ref="providerManager"/>
     </bean>
 
+        <bean name="/report/DxresearchReport" class="org.oscarehr.common.web.DxresearchReportAction" singleton="false">
+            <property name="dxresearchdao" ref="DxresearchDAO" />
+        </bean>
+
 	<!-- Indivo -->
 
 	<bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false">
@@ -292,6 +296,6 @@
 
 <!--
 	<bean name="/PMmodule/CaseLoad" class="org.oscarehr.PMmodule.web.CaseLoadService" singleton="false" autowire="byName"/>
--->	
+-->
 	<bean name="/PMmodule/Admin/MigrateCaisiRoles" class="org.oscarehr.PMmodule.web.admin.MigrateCaisiRolesAction" singleton="false" autowire="byName"/>
 </beans>

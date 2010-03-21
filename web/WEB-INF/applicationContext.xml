@@ -39,7 +39,7 @@
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
 	<bean id="consultationRequestDAO" class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
-	<!-- 
+	<!--
     <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
  -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
@@ -98,6 +98,8 @@
 	<bean id="BillingmasterDAO" class="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" autowire="byName" />
         <bean id="BillingDxCodeDAO" class="oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO" autowire="byName" />
         <bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
+        <bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
+
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
@@ -139,7 +141,7 @@
 
 	<!-- OscarSuperManager manager provides business logic facade for jsp layer -->
 	<bean id="oscarSuperManager" class="oscar.service.OscarSuperManager" autowire="byName" init-method="init"/>
-        
+
 	<bean id="scratchPadManager" class="com.quatro.service.ScratchPadManager">
 		<property name="scratchPadDao" ref="scratchPadDao" />
 	</bean>
@@ -160,15 +162,15 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
                                  <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
                                 <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
-                                 
-                                 
+
+
                     <!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
 		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdHypertensionFlowsheet.xml</value-->
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdDiabetesFlowsheet.xml</value>
-	            
+
 			</list>
 		</property>
 	</bean>
@@ -223,7 +225,7 @@
 		<property name="programProviderDao" ref="programProviderDAO" />
 		<property name="programAccessDAO" ref="programAccessDAO" />
 	</bean>
-	<!-- 
+	<!--
 	<bean id="roleManager" class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">
 		<property name="roleDAO" ref="roleDAO" />
 	</bean>

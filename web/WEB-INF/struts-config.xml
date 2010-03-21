@@ -50,6 +50,9 @@
             <form-property name="search" type="java.lang.String" />
             <form-property name="referral" type="org.oscarehr.common.model.Billingreferral" />
         </form-bean>
+
+        <form-bean name="DxresearchReportForm" type="org.apache.struts.validator.DynaValidatorForm"/>
+
         <form-bean name="annotationForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="oAnnotation" type="org.oscarehr.common.model.OscarAnnotation" />
         </form-bean>
@@ -581,7 +584,7 @@
         <action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
         </action>
-        
+
         <action input="/oscarRx/SearchDrug3.jsp" path="/oscarRx/WriteScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
             <forward name="newRx" path="/oscarRx/prescribe.jsp" />
@@ -1212,7 +1215,7 @@
         </action>
         <action parameter="method" path="/oscarResearch/oscarDxResearch/dxResearchLoadAssociations" name="dxAssociationsForm" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadAssociationsAction">
             <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchSelectAssociations.jsp" redirect="true"/>
-        </action>        
+        </action>
         <action input="/billing/billingBrazil.jsp" name="procedimentoRealizadoForm" parameter="init" path="/oscar/billing/procedimentoRealizado/init" scope="session" type="oscar.billing.controler.ProcedimentoRealizadoAction">
             <forward name="success" path="/billing/billingBrazil.jsp" />
             <forward name="failure" path="/billing/billingBrazil.jsp" />
@@ -1286,7 +1289,7 @@
             <forward name="success" path="/billing/CA/BC/billingCreated.jsp" />
             <forward name="newbill" path="/billing.do?newWCBClaim=1" />
             <forward name="viewformwcb" path="/billing/CA/BC/viewformwcb.do" />
-            
+
             <forward name="saveAndClose" path="/billing/CA/BC/wcbClose.jsp"/>
         </action>
         <action input="/billing/CA/BC/formwcb.jsp" name="WCBForm" path="/billing/CA/BC/viewformwcb" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ViewWCBAction" validate="false">
@@ -1948,7 +1951,7 @@
         <action path="/admin/ManageClinic" name="clinicForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="success" path="/admin/clinicAdmin.jsp" />
         </action>
-        
+
         <action path="/admin/ManageSites" name="siteForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="list" path="/admin/sitesAdmin.jsp" />
             <forward name="details" path="/admin/sitesAdminDetail.jsp" />
@@ -1958,7 +1961,11 @@
             <forward name="list" path="/admin/billingreferralAdmin.jsp" />
             <forward name="detail" path="/admin/billingreferralAdminDetail.jsp" />
         </action>
-        
+
+        <action path="/report/DxresearchReport" name="DxresearchReportForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="success" path="/oscarReport/oscarReportDxReg.jsp" />
+        </action>
+
         <action path="/OscarAnnotation" name="annotationForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="success" path="/close.jsp" />
             <forward name="formAnno" path="/common/Annotation.jsp"/>
@@ -2068,13 +2075,13 @@
         <action path="/Provider/showPersonal" type="org.oscarehr.provider.web.DisplayPersonalInfoAppointmentAction" parameter="method" validate="false" scope="request" >
         </action>
 <!--
-        <action path="/PMmodule/CaseLoad" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method">            
+        <action path="/PMmodule/CaseLoad" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method">
         </action>
--->		
+-->
  		<action parameter="method" path="/PMmodule/Admin/MigrateCaisiRoles" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
             <forward name="success" path="/PMmodule/Admin/migrateCaisiRoles.jsp" redirect="true"/>
-        </action>    
-                
+        </action>
+
     </action-mappings>
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M"/>
     <message-resources parameter="oscarResources" null="false"/>

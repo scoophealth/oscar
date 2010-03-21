@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+-->
+<%@ include file="/taglibs.jsp"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+            if (session.getAttribute("userrole") == null) {
+                response.sendRedirect("../logout.jsp");
+            }
+            String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>"
+objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
+    <%response.sendRedirect("../logout.jsp");%>
+</security:oscarSec>
+
+<%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
+<%@page import="org.oscarehr.common.model.Dxresearch"%>
+<%@page import="oscar.oscarResearch.oscarDxResearch.util.*"%>
+<%@page import="java.util.*"%>
+
+
+<script type="text/JavaScript">
+
+function changeaction() {
+		alert(document[0].form[0].valule);
+                
+}
+
+</script>
+
+
+<html:html locale="true">
+    <head>
+        <script type="text/javascript" src="<%= request.getContextPath()%>/js/global.js"></script>
+        <title>Dx Register Report</title>
+        <link rel="stylesheet" type="text/css"
+              href="../share/css/OscarStandardLayout.css">
+
+        <script type="text/javascript" language="JavaScript"
+        src="../share/javascript/prototype.js"></script>
+        <script type="text/javascript" language="JavaScript"
+        src="../share/javascript/Oscar.js"></script>
+        <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
+    </head>
+
+    <body vlink="#0000FF" class="BodyStyle">
+
+        <table class="MainTable">
+            <tr class="MainTableTopRow">
+                <td class="MainTableTopRowLeftColumn">admin</td>
+                <td class="MainTableTopRowRightColumn">
+                    <table class="TopStatusBar" style="width: 100%;">
+                        <tr>
+                            <td>Patient Disease Registry Report</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="MainTableLeftColumn" valign="top" width="160px;">&nbsp;
+                </td>
+                <td class="MainTableRightColumn" valign="top">
+
+                    <%
+                                request.setAttribute("listview", request.getSession().getAttribute("listview"));
+                    %>
+
+
+                    <nested:form action="/report/DxresearchReport?method=patientRegistedAll">
+                        Filter: &nbsp;&nbsp;
+                        <label>
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDistincted'">
+                            ALL(distincted)</label>
+                        <label>
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedAll'">
+                            ALL</label>
+                         <label>
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedActive'">
+                            Active</label>
+                        <label>
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedResolve'">
+                            Deleted</label>
+                         <label>
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDeleted'">
+                            Resolved</label>
+                        
+                        
+                        &nbsp;&nbsp;
+                        <nested:submit style="border:1px solid #666666;">Search Registed Patients</nested:submit>
+                    </nested:form>
+
+                        <display:table name="listview" id="listview" class="its" style="border:1px solid #666666; width:99%;margin-top:2px;">
+                            <display:column property="strFirstName" title="First Name" />
+                            <display:column property="strLastName" title="Last Name" />
+                            <display:column property="strSex" title="Sex" />
+                            <display:column property="strDOB" title="DOB" />
+                            <display:column property="strPhone" title="Phone" />
+                            <display:column property="strHIN" title="HIN" />
+                            <display:column property="strCodeSys" title="Code System" />
+                            <display:column property="strCode" title="Code" />
+                            <display:column property="strStartDate" title="Start Date" />
+                            <display:column property="strUpdateDate" title="Update Date" />
+                            <display:column property="strStatus" title="Status" />
+                        </display:table>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+
+                <td class="MainTableBottomRowRightColumn">&nbsp;</td>
+            </tr>
+        </table>
+
+    </html:html>
