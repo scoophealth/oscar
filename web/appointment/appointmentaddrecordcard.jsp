@@ -7,10 +7,16 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<style type="text/css" media="print">
+    .DoNotPrint {
+        display: none;
+    }
+</style>
 </head>
 <body background="../images/gray_bg.jpg"
 	bgproperties="fixed">
 <center>
+<div class="DoNotPrint">
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
 	<tr bgcolor="#486ebd">
 		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
@@ -44,15 +50,95 @@
 
     int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
 	if (rowsAffected == 1) {
+
+                String patientname = "";
+            	String[] param2 = new String[8];
+                param2[0]=param[1];
+                param2[1]=param[0];
+                param2[2]=param[2];
+                param2[3]=param[2];
+                param2[4]=param[3];
+                param2[5]=param[3];
+                param2[6]=param[2];
+                param2[7]=param[3];
+                List<Map> resultList  = oscarSuperManager.find("appointmentDao", "search_appt_name", param2);
+                if (resultList.size() > 0) {
+                    Map name = resultList.get(0);
+                    patientname = "" + name.get("name");
+                }
+
 %>
 <p>
-<h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
+<h3><bean:message key="appointment.addappointment.msgAddSuccess" /></h3>
 </p>
-<script LANGUAGE="JavaScript">
-	self.opener.refresh();
-	popupPage(350,750,'appointmentcard.jsp?demographic_no=<%=param[16]%>') ;
-	self.close();
-</script>
+    </div>
+<form>
+    <table border="1" bgcolor="white" >
+        <tr><td>
+ 
+        <table style="font-size: 8pt;"  align="left" valign="top">
+
+            <tr style="font-family: arial, sans-serif; font-size: 6pt;" >
+                <th colspan="3"><%=patientname%></th>
+            </tr>
+             <tr style="font-family: arial, sans-serif; font-size: 8pt;" >
+		<th style="padding-right: 10px"><bean:message key="Appointment.formDate" /></th>
+ 		<th width="60" style="padding-right: 10px"><bean:message key="Appointment.formStartTime" /></th>
+		<th width="120" style="padding-right: 10px"><bean:message key="appointment.addappointment.msgProvider" /></th>
+
+            </tr>
+        <%
+        String demoNo = param[16];
+        String appt_date = param[1];
+        String appt_time = MyDateFormat.getTimeXX_XXampm(param[2]);
+        int iRow=0;
+        int iPageSize=5;
+        String pname="";
+        // if the booking is not matched to a demographic demoNo=="0" as a default
+        if( demoNo != null && demoNo.equals("0") ) {
+
+        %>
+            <tr bgcolor="#eeeeff">
+		<td style="padding-right: 10px"><%=appt_date%></td>
+		<td style="padding-right: 10px"><%=appt_time%></td>
+		<td style="padding-right: 10px">&nbsp;</td>
+            </tr>
+	<%
+        } else if( demoNo != null && demoNo.length() > 0) {
+
+            Object [] para = new Object[3];
+            para[0] = demoNo;
+            Calendar cal = Calendar.getInstance();
+            para[1] = new java.sql.Date(cal.getTime().getTime());
+            cal.add(Calendar.YEAR, 1);
+            para[2] = new java.sql.Date(cal.getTime().getTime());
+            resultList  = oscarSuperManager.find("appointmentDao", "search_appt_future", para);
+
+            for (Map appt : resultList) {
+                iRow ++;
+                if (iRow > iPageSize) break;
+                appt_time = MyDateFormat.getTimeXX_XXampm("" + appt.get("start_time"));
+                pname = "" + appt.get("first_name");
+                pname = ""+ appt.get("last_name")+ ", "+ pname.substring(0,1);
+    %>
+            <tr bgcolor="#eeeeff">
+		<td style="padding-right: 10px"><%=appt.get("appointment_date")%></td>
+		<td style="padding-right: 10px"><%=appt_time%></td>
+		<td style="padding-right: 10px"><%=pname%></td>
+            </tr>
+	<%
+            }
+        }
+    %>
+    
+            <tr class="DoNotPrint">
+		<td style="padding-left: 10px"><input type="button" value="<bean:message key="global.btnPrint"/>" onClick="window.print();"></td>
+                <td>&nbsp;</td>
+		<td>&nbsp;</td>
+            </tr>
+       </table>
+       </td></tr>
+</table>
 <%
 	} else {
 %>
@@ -62,10 +148,12 @@
 <%
 	}
 %>
+<div class="DoNotPrint">
 <p></p>
 <hr width="90%"/>
-<form>
+
 <input type="button" value="<bean:message key="global.btnClose"/>" onClick="window.close();">
+</div>
 </form>
 </center>
 </body>

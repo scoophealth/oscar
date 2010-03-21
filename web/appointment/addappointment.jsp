@@ -706,15 +706,15 @@ if (bMultisites) { %>
 %>
 
     
- <INPUT TYPE="submit"
-			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintCard'"
-			VALUE="<bean:message key='global.btnPrint'/>"
-			<%=disabled%>>
-
 <INPUT TYPE="submit"
 			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'"
 			tabindex="6"
-			VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>" <%=disabled%>></TD>
+			VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>" <%=disabled%>>
+ <INPUT TYPE="submit"
+			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintCard'"
+			VALUE="&<bean:message key='global.btnPrint'/>"
+			<%=disabled%>>
+                </TD>
 		<TD></TD>
 		<% } %>
 		<TD align="right">
