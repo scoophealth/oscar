@@ -31,7 +31,7 @@ public class CdsForm4 {
 
 	private static final int MAX_DISPLAY_NAME_LENGTH=60;
 
-	public static CdsClientForm getCdsClientForm(Integer clientId)
+	public static CdsClientForm getCdsClientFormByClientId(Integer clientId)
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
@@ -43,6 +43,12 @@ public class CdsForm4 {
 
 		}
 		
+		return(cdsClientForm);
+	}
+	
+	public static CdsClientForm getCdsClientFormByCdsFormId(Integer cdsFormId)
+	{
+		CdsClientForm cdsClientForm=cdsClientFormDao.find(cdsFormId);
 		return(cdsClientForm);
 	}
 	

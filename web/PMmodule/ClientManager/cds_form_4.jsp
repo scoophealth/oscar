@@ -5,12 +5,30 @@
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
 <%
-	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
+	// is only populated if it's an existing form, i.e. viewing previous form.
+	Integer cdsFormId=null;
 
-	CdsClientForm cdsClientForm=CdsForm4.getCdsClientForm(currentDemographicId);
+	// must be populated some how
+	int currentDemographicId=0;
+	
+	// must be populated some how
+	CdsClientForm cdsClientForm=null;
+	
+	if (request.getParameter("cdsFormId")!=null)
+	{
+		cdsFormId=Integer.parseInt(request.getParameter("cdsFormId"));
+		cdsClientForm=CdsForm4.getCdsClientFormByCdsFormId(cdsFormId);
+		currentDemographicId=cdsClientForm.getClientId();
+	}
+	else
+	{
+		currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
+		cdsClientForm=CdsForm4.getCdsClientFormByClientId(currentDemographicId);
+	}
 %>
 
-<form action="cds_form_4_action.jsp">
+
+<form action="cds_form_4_action.jsp" name="form">
 	<h3>CDS form (CDS-MH v4.05)</h3>
 
 	<br />
@@ -387,7 +405,17 @@
 			</td>
 		</tr>
 	</table>
-
+	
+	<%
+		if (cdsFormId!=null)
+		{
+			%>
+				<script>
+					setEnabledAll(document.form, false);
+				</script>
+			<%
+		}
+	%>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

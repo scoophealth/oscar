@@ -112,3 +112,10 @@ function updateAjax() {
         window.opener.updateNeeded = true;    
     }
 }
+
+function setEnabledAll(var form, var enabled){
+	for (var i = 0; i < form.elements.length; i++) {
+		form.elements[i].disabled=!enabled;
+	}
+}
+
