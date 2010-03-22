@@ -160,7 +160,8 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     StringBuffer study_no=null, study_link=null,studyDescription=null;
 	String studySymbol = "#", studyColor = "red";
 
-    String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
+    //String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
+    String resourcebaseurl = "http://www.oscarcanada.org/manual/oscar-caisi-documentation/";
     List<Map> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new Object[] {"resource_baseurl"});
     for (Map url : resultList) {
             resourcebaseurl = (String)url.get("value");
