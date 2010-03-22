@@ -129,7 +129,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 		<td align="right" valign="bottom">
  			<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'<html:rewrite page="/scratch/index.jsp"/>','scratch')"><span id="oscar_scratch"></span></a>
   			&nbsp;&nbsp;   
-			<a href=# onClick ="popupPage(600,750,'http://resource.oscarmcmaster.org/oscarResource/');return false;"><u>H</u>elp</a>
+			<a href=# onClick ="popupPage(600,750,'http://www.oscarcanada.org/manual/oscar-caisi-documentation/');return false;"><u>H</u>elp</a>
 			&nbsp;
 			<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Home</a> &nbsp;
 			<a href="<html:rewrite page="/logout.jsp"/>">Lo<u>g</u>out</a>
