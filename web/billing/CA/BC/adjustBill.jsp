@@ -390,9 +390,8 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     <table>
     <%
         ArrayList li = msp.getAllC12Records(billNo);
-        if (li.size() == 0 ){
-            li = msp.getAllS00Records(billNo);
-        }
+        li.addAll(msp.getAllS00Records(billNo));
+
         for ( int i = 0; i < li.size(); i++){
         String rejReason = (String) li.get(i);
     %>
