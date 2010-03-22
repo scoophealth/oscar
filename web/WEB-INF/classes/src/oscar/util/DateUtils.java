@@ -522,7 +522,7 @@ public class DateUtils {
 		try {
 			String[] split=isoDateString.split("-");
 			int year=Integer.parseInt(split[0]);
-			int month=Integer.parseInt(split[1]);
+			int month=Integer.parseInt(split[1])-1;
 			int day=Integer.parseInt(split[2]);
 			
 			return(new GregorianCalendar(year,month,day));
