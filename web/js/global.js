@@ -113,7 +113,7 @@ function updateAjax() {
     }
 }
 
-function setEnabledAll(var form, var enabled){
+function setEnabledAll(form, enabled){
 	for (var i = 0; i < form.elements.length; i++) {
 		form.elements[i].disabled=!enabled;
 	}
