@@ -504,7 +504,7 @@ public class ManageTeleplanAction extends DispatchAction {
            }catch(Exception e){
                log.debug(e.getMessage(),e);
                request.setAttribute("error",e.getMessage());
-               return mapping.findForward("success");
+               return mapping.findForward("checkElig");
            }
            
            String phn = demo.getHin();
