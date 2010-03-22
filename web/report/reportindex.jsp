@@ -62,6 +62,17 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 <script type="text/javascript"
 	src="../share/calendar/lang/calendar-en.js"></script>
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+
+
+<script type="text/javascript" src="../dojoAjax/dojo.js"></script>
+<script type="text/javascript" language="JavaScript">
+            dojo.require("dojo.date.format");
+			dojo.require("dojo.widget.*");
+			dojo.require("dojo.validate.*");
+		</script>
+<script type="text/javascript" src="../js/caisi_report_tools.js"></script>
+
+
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -703,7 +714,51 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
     </tr>
-        <tr>
+        
+     <tr></tr>  
+     <tr></tr>
+     
+    <tr><td width="2"></td>
+    	<td colspan='3' align="left">
+    <c:if
+	test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
+	<div><span>CAISI Reporting Tools</span> <caisi:isModuleLoad
+		moduleName="TORONTO_RFQ" reverse="true">
+				
+		<div><a HREF="../PMmodule/ClientManager.do?method=getGeneralFormsReport" target="generalFormsReport">General Forms Reports 
+		</a></div>
+		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('quick');return false;">Registration
+		Intake Report</a></div>
+		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('indepth');return false;">Follow-up
+		Intake Report</a></div>
+		  
+		<caisi:isModuleLoad moduleName="intakec.enabled">
+			<div><a href="javascript:void(0);" onclick="javascript:createIntakeCReport1();return false;">Street
+			Health Mental Health Report</a></div>
+		</caisi:isModuleLoad>
+		
+		<div><html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
+		</div>
+		<%--
+                <div>
+                    <html:link action="/PMmodule/Reports/ClientListsReport">Client Lists Report</html:link>
+                </div>
+                --%>
+		<div><html:link action="/SurveyManager.do?method=reportForm">User Created Form Report</html:link>
+		</div>
+		</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+			<div><html:link action="QuatroReport/ReportList.do">Quatro Report Runner</html:link>
+			</div>
+		</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="streethealth">
+		<div><a href="javascript:void(0);" onclick="javascript:createStreetHealthReport();return false;">Street
+		Health Mental Health Report</a></div>
+	</caisi:isModuleLoad></div>
+</c:if> 
+	
+    </td>
+    </tr>
+    
+    <tr>
         <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
         <td></td>
         <td></td>

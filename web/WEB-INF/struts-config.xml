@@ -1779,11 +1779,11 @@
         </action>
         <!-- REPORTS -->
         <action path="/QuatroReport/ReportList" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="quatroReportListForm" scope="request" validate="false" >
-            <forward name="reportlist" path="page.report.quatroreportlist" />
+            <forward name="reportlist" path="/PMmodule/reports/QuatroReportList.jsp"/>
         </action>
         <action path="/QuatroReport/ReportRunner" type="com.quatro.web.report.QuatroReportRunnerAction"
                 name="quatroReportRunnerForm" validate="false" scope="request">
-            <forward name="success" path="page.report.quatroreportrunner" />
+            <forward name="success" path="/PMmodule/reports/QuatroReportRunner.jsp"/>
         </action>
         <action path="/QuatroReport/ReportViewer" type="com.quatro.web.report.QuatroReportViewerAction"
                 name="quatroReportRunnerForm" validate="false" scope="request">
@@ -1801,12 +1801,12 @@
 
         <action path="/Lookup/LookupTableList" type="org.springframework.web.struts.DelegatingActionProxy"
                 name="lookupTableListForm" scope="request" validate="false" parameter="method">
-            <forward name="list" path="page.admin.lookup.tablelist" />
+            <forward name="list" path="/PMmodule/lookup/LookupTableList.jsp"/>
         </action>
 
         <action path="/Lookup/LookupCodeList" type="org.springframework.web.struts.DelegatingActionProxy"
                 name="lookupCodeListForm" scope="request" validate="false" parameter="method">
-             <forward name="list" path="page.admin.lookup.codelist" />
+             <forward name="list" path="/PMmodule/lookup/LookupCodeList.jsp"/>
         </action>
 
         <action path="/Lookup/LookupCodeEdit" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method"
@@ -1815,15 +1815,15 @@
         </action>
 
         <action path="/PMmodule/Reports/ProgramActivityReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="activityReportForm" scope="request" validate="false">
-            <forward name="form" path="page.report.activityform" />
-            <forward name="report" path="page.report.activityreport" />
+            <forward name="form" path="/PMmodule/reports/ActivityReportForm.jsp"/>
+            <forward name="report" path="/PMmodule/reports/ActivityReport.jsp"/>
         </action>
         <action path="/PMmodule/Reports/BasicReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
-            <forward name="form" path="page.report.basicform" />
+            <forward name="form" path="/PMmodule/reports/BasicReport.jsp"/>
         </action>
         <action path="/PMmodule/Reports/ClientListsReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientListsReportForm" scope="request" validate="false">
-            <forward name="form" path="page.report.clientlistsreportform" />
-            <forward name="report" path="page.report.clientlistsreport" />
+            <forward name="form" path="/PMmodule/reports/ClientListsReportForm.jsp"/>
+            <forward name="report" path="/PMmodule/reports/ClientListsReport.jsp"/>
         </action>
         <!--
         <action path="/PMmodule/Reports/CustomReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="customReportForm" scope="request" validate="false">
