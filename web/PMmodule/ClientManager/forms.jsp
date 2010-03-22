@@ -333,13 +333,6 @@ New User Created Form:&nbsp;
 		<tr>
 			<c:set var="form" value="${form}" scope="request" />
 			<%
-				System.err.println("----- req ");
-				Enumeration e=request.getAttributeNames();
-				while (e.hasMoreElements())
-				{
-					System.err.println(e.nextElement());
-				}
-
 				CdsClientForm cdsForm=(CdsClientForm)request.getAttribute("form");
 				String admissionString=ClientManagerAction.getEscapedAdmissionSelectionDisplay(cdsForm.getAdmissionId());
 			%>
@@ -347,7 +340,7 @@ New User Created Form:&nbsp;
 			<td><%=ClientManagerAction.getEscapedDateDisplay(cdsForm.getCreated())%></td>
 			<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsForm.getProviderNo())%></td>
 			<td><%=cdsForm.isSigned()%></td>
-			<td><a>details</a></td>
+			<td><a href="ClientManager/cds_form_4.jsp?cdsFormId=<%=cdsForm.getId()%>">details</a></td>
 		</tr>
 	</c:forEach>
 </table>
