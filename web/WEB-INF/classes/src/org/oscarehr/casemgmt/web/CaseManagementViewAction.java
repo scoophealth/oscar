@@ -512,7 +512,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		boolean hideInactiveIssues=Boolean.parseBoolean(caseForm.getHideActiveIssue());
 		
 		ArrayList<CheckBoxBean> checkBoxBeanList = new ArrayList<CheckBoxBean>();
-		addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
+		//addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
+		addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, Integer.valueOf(programId));
 		addRemoteIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
 		
        	request.setAttribute("Issues", checkBoxBeanList);

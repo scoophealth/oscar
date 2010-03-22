@@ -129,7 +129,11 @@ public class ProgramManager {
     public String getProgramName(String programId) {
         return programDao.getProgramName(Integer.valueOf(programId));
     }
-
+    
+    public Integer getProgramIdByProgramName(String programName) {
+    	return programDao.getProgramIdByProgramName(programName);
+    }
+    
     public List<Program> getAllPrograms() {
         return programDao.getAllPrograms();
     }

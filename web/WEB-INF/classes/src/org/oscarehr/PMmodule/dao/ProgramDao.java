@@ -164,6 +164,18 @@ public class ProgramDao extends HibernateDaoSupport {
         return name;
     }
 
+    public Integer getProgramIdByProgramName(String programName) {
+    	Integer id = null;
+    	if(programName == null) return null;
+    	
+    	List<Program> programs = getHibernateTemplate().find("FROM Program p WHERE p.name = ? ORDER BY p.id ", programName);
+    	if(!programs.isEmpty()) {
+    		return programs.get(0).getId();
+    	} else {
+    		return null;
+    	}
+    }
+    
     public List getAllPrograms(String programStatus, String type, Integer facilityId, String providerNo,Integer shelterId)
     {
     	return getAllPrograms(programStatus, type,facilityId,null,providerNo,shelterId);

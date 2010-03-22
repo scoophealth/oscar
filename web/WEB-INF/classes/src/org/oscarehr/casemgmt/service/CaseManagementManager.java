@@ -1168,6 +1168,13 @@ public class CaseManagementManager {
 					add = true;
 				}
 			}
+			
+			//global default role access
+			String accessName="write " + issueRole + " issues";
+			if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
+					add=true;
+			}
+			
 			pa = null;
 			// read
 			pa = (ProgramAccess) programAccessMap.get("read " + issueRole + " issues");
@@ -1182,7 +1189,12 @@ public class CaseManagementManager {
 					add = true;
 				}
 			}
-
+			//global default role access
+			accessName= "read " + issueRole + " issues";
+			if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
+					add=true;
+			}
+			
 			// apply defaults
 			if (!add) {
 				if (issueRole.equalsIgnoreCase(role.getRoleName())) {
