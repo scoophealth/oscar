@@ -210,7 +210,10 @@ for (int j=0; j<selRoute.length; j++) {
                                 <html:submit property="submit" styleClass="ControlPushButton" ><bean:message key="ChooseDrug.msgSearch"/></html:submit>
 				&nbsp;&nbsp;&nbsp;
 				<input type=button class="ControlPushButton"  onclick="javascript:document.forms.RxSearchDrugForm.searchString.value='';document.forms.RxSearchDrugForm.searchString.focus();" value="<bean:message key="ChooseDrug.msgReset"/>" />
+				<%if(request.getParameter("rx2") == null || !request.getParameter("rx2").equals("true")){ %>
 				<input type=button class="ControlPushButton"  onclick="javascript:customWarning();" value="<bean:message key="ChooseDrug.msgCustomDrug"/>" />                            
+                                <%}%>
+
 			    </td>
                         </tr>
                      </table>
@@ -310,9 +313,11 @@ for (int j=0; j<selRoute.length; j++) {
                             }
                         </script>
                         <div class="LeftMargin">
+                           <%if(request.getParameter("rx2") == null || !request.getParameter("rx2").equals("true")){ %>
                             <a href="javascript:customWarning();">
                                 <bean:message key="ChooseDrug.msgDrugNotFound"/>
                             </a>
+                           <%}%>
                         </div>
                     </td>
                   </tr>
