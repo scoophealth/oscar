@@ -1024,7 +1024,8 @@ public class RxUtil {
                 p(rx.getRegionalIdentifier());
                 //query the database to see if there is a rx with same din as this rx.
                 // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
-                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' order by drugid desc"; //most recent is the first.
+                String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
+                System.out.println("sql 1="+sql);
                 rs = db.GetSQL(sql);
                 if (rs.first()) {//use the first result if there are multiple.
                     setResultSpecialQuantityRepeat(rx, rs);
@@ -1037,7 +1038,8 @@ public class RxUtil {
                 if (rx.getBrandName() != null && rx.getBrandName().length() > 1) {
                     p("if2");
                     //String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by written_date desc"; //most recent is the first.
-                    String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by drugid desc"; //most recent is the first.
+                    String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
+                    System.out.println("sql 2="+sql2);
                     //if none, query database to see if there is rx with same brandname.
                     //if there are multiple, use latest.
                     rs = db.GetSQL(sql2);
@@ -1052,7 +1054,8 @@ public class RxUtil {
                     if (rx.getCustomName() != null && rx.getCustomName().length() > 1) {
                         p("customName is not null");
                         //String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by written_date desc"; //most recent is the first.
-                        String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by drugid desc"; //most recent is the first.
+                        String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "'  AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
+                        System.out.println("sql 3="+sql3);
                         //if none, query database to see if there is rx with same customName.
                         //if there are multiple, use latest.
                         rs = db.GetSQL(sql3);
