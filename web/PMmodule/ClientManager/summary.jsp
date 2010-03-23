@@ -278,7 +278,7 @@ function openSurvey() {
 	<tr>
 		<th>CDS Data</th>
 		<td>
-			<input type="button" value="CDS Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+			<input type="button" value="Update CDS Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 		</td>
 	</tr>
 			<%
