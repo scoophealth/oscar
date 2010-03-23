@@ -203,12 +203,12 @@
             function buildRoute() {
 
                 pickRoute = "";
-                <oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
+             <%--   <oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
                 <%for (int i = 0; i < d_route.length; i++) {%>
                         if (document.forms[2].route<%=i%>.checked) pickRoute += " "+document.forms[2].route<%=i%>.value;
                 <%}%>
                         document.forms[2].searchRoute.value = pickRoute;
-                </oscar:oscarPropertiesCheck>
+                </oscar:oscarPropertiesCheck> --%>
             }
 
 
@@ -627,14 +627,14 @@ body {
                                                     <!--input id="testEvalJS" type="button"   onclick="functionOne();" value="testEvalJS" /-->
                                                 </div>
                                             </td>
-                                            <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
+                                       <%--     <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
                                                     <bean:message key="SearchDrug.drugSearchRouteLabel" />
                                                     <br>
                                                     <%for (int i = 0; i < d_route.length; i++) {%>
                                                     <input type="checkbox" name="route" <%=i%> value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
                                                     <%}%>
                                                     <html:hidden property="searchRoute" />
-                                                </oscar:oscarPropertiesCheck></td>
+                                                </oscar:oscarPropertiesCheck></td>--%>
                                         </tr>
                                         <tr>
                                             <td colspan="3">
