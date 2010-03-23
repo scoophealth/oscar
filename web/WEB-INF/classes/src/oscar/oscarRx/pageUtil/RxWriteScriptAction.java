@@ -320,6 +320,72 @@ public final class RxWriteScriptAction extends DispatchAction {
         }
     }
 
+  /*  public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        p("=============Start newCustomNote RxWriteScriptAction.java===============");
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources(request);
+        //set default quantity;
+        //setDefaultQuantity(request);
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (bean == null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+
+        try {
+            RxPrescriptionData rxData = new RxPrescriptionData();
+            RxDrugData drugData = new RxDrugData();
+            // create Prescription
+            RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
+            String ra = request.getParameter("randomId");
+            rx.setRandomId(Integer.parseInt(ra));
+            rx.setGenericName(null);
+            rx.setBrandName(null);
+            rx.setDrugForm("");
+            rx.setRoute("");
+            rx.setDosage("");
+            rx.setUnit("");
+            rx.setGCN_SEQNO(0);
+            rx.setRegionalIdentifier("");
+            rx.setAtcCode("");
+            RxUtil.setDefaultSpecialQuantityRepeat(rx);//1 OD, 20, 0;
+            rx.setDuration(RxUtil.findDuration(rx));
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
+            List<RxPrescriptionData.Prescription> listRxDrugs = new ArrayList();
+
+            if (RxUtil.isRxUniqueInStash(bean, rx)) {
+                listRxDrugs.add(rx);
+            }
+            int rxStashIndex = bean.addStashItem(rx);
+            bean.setStashIndex(rxStashIndex);
+
+            //bean.setStashIndex(bean.addStashItem(rx));
+            //    p("brandName of rx", rx.getBrandName());
+            //    p("stash index it's set to", "" + bean.getStashIndex());
+
+            String today = null;
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                today = dateFormat.format(calendar.getTime());
+                //      p("today's date", today);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
+            rx.setRxDate(tod);
+            rx.setWrittenDate(tod);
+
+
+            request.setAttribute("listRxDrugs", listRxDrugs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        p("=============END newCustomNote RxWriteScriptAction.java===============");
+        return (mapping.findForward("newRx"));
+    }*/
+
     public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start newCustomDrug RxWriteScriptAction.java===============");
         Locale locale = getLocale(request);
@@ -816,6 +882,12 @@ public final class RxWriteScriptAction extends DispatchAction {
         for (String num : randNum) {
             //          p("num", num);
             int stashIndex = bean.getIndexFromRx(Integer.parseInt(num));
+         try {
+             if(stashIndex==-1){
+                    System.out.println("stashIndex is -1");
+                    continue;
+                }
+             else{
             existingIndex.add(stashIndex);
             RxPrescriptionData.Prescription rx = bean.getStashItem(stashIndex);
 
@@ -824,7 +896,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             boolean isOutsideProvider = false;
             boolean isLongTerm = false;
             boolean isPastMed = false;
-            try {
+
                 em = request.getParameterNames();
                 while (em.hasMoreElements()) {
                     String elem = (String) em.nextElement();
@@ -959,25 +1031,15 @@ public final class RxWriteScriptAction extends DispatchAction {
                 rx.setSpecial(special.trim());
                 System.out.println("SETTING SPECIAL TOO >" + special + "<");
                 //         p("rx.getDuration()", rx.getDuration());
-                int duration;
-                if (rx.getDuration() == null || rx.getDuration().equals("")) {
-                    duration = 0;
-                } else {
-                    duration = Integer.parseInt(rx.getDuration());
+
+
+                            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(stashIndex));
+                            bean.setStashItem(stashIndex, rx);
                 }
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(rx.getRxDate());
-                DateFormat ft = new SimpleDateFormat("yyyy/MM/dd");
-                //       p("cal", ft.format(cal.getTime()));
-                cal.add(Calendar.DATE, duration);
-                String end = ft.format(cal.getTime());
-                //       p("after addition", end);
-                Date endDate = (Date) ft.parse(end);
             } catch (Exception e) {
                 e.printStackTrace();
+                continue;
             }
-            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(stashIndex));
-            bean.setStashItem(stashIndex, rx);
         }
         for (Integer n : existingIndex) {
             if (allIndex.contains(n)) {
