@@ -1275,6 +1275,20 @@ insert into `secRole` values(5, 'nurse', 'nurse');
 insert into `secRole` values(6, 'Vaccine Provider', 'Vaccine Provider');
 insert into `secRole` values(null, 'external', 'External');
 insert into `secRole` values(null, 'er_clerk', 'ER Clerk');
+insert into `secRole` (role_name, description) values('psychiatrist', 'psychiatrist');
+insert into `secRole` (role_name, description) values('RN', 'Registered Nurse');
+insert into `secRole` (role_name, description) values('RPN', 'Registered Practical Nurse');
+insert into `secRole` (role_name, description) values('Nurse Manager', 'Nurse Manager');
+insert into `secRole` (role_name, description) values('Clinical Social Worker','Clinical Social Worker');
+insert into `secRole` (role_name, description) values('Clinical Case Manager','Clinical Case Manager');
+insert into `secRole` (role_name, description) values('Medical Secretary', 'Medical Secretary');
+insert into `secRole` (role_name, description) values('Clinical Assistant', 'Clinical Assistant');
+insert into `secRole` (role_name, description) values('secretary', 'secretary');
+insert into `secRole` (role_name, description) values('counsellor', 'counsellor');
+insert into `secRole` (role_name, description) values('Case Manager', 'Case Manager');
+insert into `secRole` (role_name, description) values('Housing Worker', 'Housing Worker');
+insert into `secRole` (role_name, description) values('Support Worker', 'Support Worker');
+insert into `secRole` (role_name, description) values('Client Service Worker', 'Client Service Worker');
 
 insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'doctor', 'R0000001',1);
 insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'admin', 'R0000001',1);
@@ -1325,25 +1339,62 @@ insert into `secObjPrivilege` values('receptionist', '_casemgmt.issues', 'x', 0,
 insert into `secObjPrivilege` values('receptionist', '_casemgmt.notes', 'x', 0, '999998');
 
 
-insert into `secObjPrivilege` values('doctor', '_appointment', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor', '_eChart', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor', '_appointment.doctorLink', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor', '_eChart.verifyButton', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor', '_demographic', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor', '_billing', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor', '_tasks', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor','_masterLink','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_rx','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_appointment.doctorLink','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_billing','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_rx','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_tasks','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_admin.reporting','x',0,999998);
-insert into `secObjPrivilege` values('doctor','_flowsheet','x',0,999998);
-insert into `secObjPrivilege` values('doctor', '_casemgmt.issues', 'x', 0, '999998');
-insert into `secObjPrivilege` values('doctor', '_casemgmt.notes', 'x', 0, '999998');
 
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
 insert into `secObjPrivilege` values('admin', '_casemgmt.issues', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin', '_casemgmt.notes', 'x', 0, '999998');
+insert into `secObjPrivilege` values('admin','_admin.caisi','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.cookieRevolver','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.facilityMessage','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.issueEditor','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.lookupFieldEditor','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.provider','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.reporting','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.security','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.securityLogReport','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.systemMessage','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.unlockAccount','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_admin.userCreatedForms','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_appointment.doctorLink','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm.addProgram','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm.globalRoleAccess','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm.manageFacilities','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm.programList','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm.staffList','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.access','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.bedCheck','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.clients','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.clientStatus','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.functionUser','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.general','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.queue','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.serviceRestrictions','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.staff','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_pmm_editProgram.teams','x',0,'999998');
 
 
 -- for role locum
@@ -1360,16 +1411,246 @@ insert into `secObjPrivilege` values('locum', '_casemgmt.issues', 'x', 0, '99999
 insert into `secObjPrivilege` values('locum', '_casemgmt.notes', 'x', 0, '999998');
 
 -- for role nurse
-insert into `secObjPrivilege` values('nurse', '_appointment', 'x', 0, '999998');
-insert into `secObjPrivilege` values('nurse', '_eChart', 'x', 0, '999998');
-insert into `secObjPrivilege` values('nurse', '_appointment.doctorLink', 'x', 0, '999998');
-insert into `secObjPrivilege` values('nurse', '_demographic', 'x', 0, '999998');
-insert into `secObjPrivilege` values('nurse', '_billing', 'x', 0, '999998');
-insert into `secObjPrivilege` values('nurse', '_tasks', 'x', 0, '999998');
-insert into `secObjPrivilege` values('nurse','_masterLink','x',0,999998);
-insert into `secObjPrivilege` values('nurse','_rx','x',0,999998);
-insert into `secObjPrivilege` values('nurse', '_casemgmt.issues', 'x', 0, '999998');
-insert into `secObjPrivilege` values('nurse', '_casemgmt.notes', 'x', 0, '999998');
+insert into `secObjPrivilege` values('nurse','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_tasks','x',0,'999998');
+
+
+
+insert into `secObjPrivilege` values('psychiatrist','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_appointment.doctorLink','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_billing','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_rx','x',0,'999998');
+insert into `secObjPrivilege` values('psychiatrist','_tasks','x',0,'999998');
+
+insert into `secObjPrivilege` values('RN','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('RN','_tasks','x',0,'999998');
+
+
+
+insert into `secObjPrivilege` values('RPN','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('RPN','_tasks','x',0,'999998');
+
+
+
+
+insert into `secObjPrivilege` values('Nurse Manager','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Nurse Manager','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('Clinical Social Worker','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Social Worker','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('Clinical Case Manager','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Case Manager','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('counsellor','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('counsellor','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('Case Manager','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Case Manager','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('Housing Worker','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_flowsheet','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Housing Worker','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('Medical Secretary','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Medical Secretary','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('Clinical Assistant','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Clinical Assistant','_tasks','x',0,'999998');
+
+
+insert into `secObjPrivilege` values('secretary','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_pmm.caisiRoles','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_pmm.mergeRecords','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('secretary','_tasks','x',0,'999998');
+
+insert into `secObjPrivilege` values('Support Worker','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Support Worker','_tasks','x',0,'999998');
+
+insert into `secObjPrivilege` values('Client Service Worker','_appointment','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_casemgmt.notes','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_demographic','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_eChart','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_eChart.verifyButton','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_masterLink','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_pmm.agencyInformation','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_pmm.caseManagement','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_pmm.clientSearch','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_pmm.newClient','x',0,'999998');
+insert into `secObjPrivilege` values('Client Service Worker','_tasks','x',0,'999998');
+
+
+
 
 insert into lst_orgcd (code, description, activeyn, orderbyindex,codetree) values('R0000001','Shelter Management Information System',1,10,'R000001');
 
