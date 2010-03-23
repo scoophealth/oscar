@@ -627,7 +627,7 @@ function changeNumberOfReferrals() {
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Do you have any issues with your immigration experience?</td>
+			<td class="genericTableHeader">Do you have any issues with your immigration experience? (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "immigration_issues", OcanForm.getOcanFormOptions("Immigration Experience"),prepopulationLevel)%>						
 			</td>
@@ -640,7 +640,7 @@ function changeNumberOfReferrals() {
 		</tr>
 		
 		<tr>
-			<td class="genericTableHeader">Do you have any experience of discrimination?</td>
+			<td class="genericTableHeader">Do you have any experience of discrimination? (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "discrimination", OcanForm.getOcanFormOptions("Discrimination Experience"),prepopulationLevel)%>						
 			</td>
@@ -679,7 +679,7 @@ function changeNumberOfReferrals() {
 			</td>
 		</tr>													
 		<tr>
-			<td class="genericTableHeader">Legal Status?</td>
+			<td class="genericTableHeader">Legal Status? (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "legal_status", OcanForm.getOcanFormOptions("Legal History Type"),prepopulationLevel)%>						
 			</td>
@@ -1084,7 +1084,7 @@ function changeNumberOfReferrals() {
 		</tr>		
 	
 		<tr>
-			<td class="genericTableHeader">Are you at risk of unemployment or disrupted education?</td>
+			<td class="genericTableHeader">Are you at risk of unemployment or disrupted education? (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "5_unemployment_risk", OcanForm.getOcanFormOptions("Unemployed Education Risk"),prepopulationLevel)%>						
 			</td>
@@ -1159,7 +1159,7 @@ function changeNumberOfReferrals() {
 		</tr>						
 				
 		<tr>
-			<td class="genericTableHeader">Medical Conditions?</td>
+			<td class="genericTableHeader">Medical Conditions? (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_medical_conditions", OcanForm.getOcanFormOptions("Medical Conditions"),prepopulationLevel)%>						
 			</td>
@@ -1185,7 +1185,7 @@ function changeNumberOfReferrals() {
 			</td>
 		</tr>			
 		<tr>
-			<td class="genericTableHeader">If Yes, please indicate the areas where you have concerns</td>
+			<td class="genericTableHeader">If Yes, please indicate the areas where you have concerns (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "6_physical_health_details", OcanForm.getOcanFormOptions("Concerns Detail"),prepopulationLevel)%>						
 			</td>
@@ -1230,7 +1230,7 @@ function changeNumberOfReferrals() {
 			</td>
 		</tr>																		
 		<tr>
-			<td class="genericTableHeader">Description of side effects</td>
+			<td class="genericTableHeader">Description of side effects (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "se_description", OcanForm.getOcanFormOptions("Side Effects Description List"),prepopulationLevel)%>						
 			</td>
@@ -1348,7 +1348,7 @@ function changeNumberOfReferrals() {
 			</td>
 		</tr>			
 		<tr>
-			<td class="genericTableHeader">Symptom Checklist</td>
+			<td class="genericTableHeader">Symptom Checklist (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "symptom_checklist", OcanForm.getOcanFormOptions("Symptoms Checklist"),prepopulationLevel)%>						
 			</td>
@@ -1430,14 +1430,14 @@ function changeNumberOfReferrals() {
 		</tr>	
 
 		<tr>
-			<td class="genericTableHeader">Diagnostic Categories</td>
+			<td class="genericTableHeader">Diagnostic Categories (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "diagnostic_categories", OcanForm.getOcanFormOptions("Diagnostic Categories"),prepopulationLevel)%>						
 			</td>
 		</tr>
 		
 		<tr>
-			<td class="genericTableHeader">Other Illness Information</td>
+			<td class="genericTableHeader">Other Illness Information (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "other_illness", OcanForm.getOcanFormOptions("Diagnostic - Other Illness"),prepopulationLevel)%>						
 			</td>
@@ -1609,7 +1609,7 @@ function changeNumberOfReferrals() {
 			</td>
 		</tr>														
 		<tr>
-			<td class="genericTableHeader">Risks</td>
+			<td class="genericTableHeader">Risks (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "risks", OcanForm.getOcanFormOptions("Risks List"),prepopulationLevel)%>						
 			</td>
@@ -1868,7 +1868,7 @@ function changeNumberOfReferrals() {
 		</tr>					
 							
 		<tr>
-			<td class="genericTableHeader">Which of the following drugs have you used?</td>
+			<td class="genericTableHeader">Which of the following drugs have you used? (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsDrugUseCheckBoxOptions(ocanStaffForm.getId(), "drug_list", OcanForm.getOcanFormOptions("Drug List"),prepopulationLevel)%>						
 			</td>
@@ -1979,7 +1979,7 @@ function changeNumberOfReferrals() {
 			</td>
 		</tr>			
 		<tr>
-			<td class="genericTableHeader">Type of Addiction</td>
+			<td class="genericTableHeader">Type of Addiction (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "addiction_type", OcanForm.getOcanFormOptions("Addiction Type"),prepopulationLevel)%>						
 			</td>
@@ -2757,7 +2757,7 @@ function changeNumberOfReferrals() {
 		</tr>
 		
 		<tr>
-			<td class="genericTableHeader">Presenting Issues</td>
+			<td class="genericTableHeader">Presenting Issues (Select all that apply)</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "presenting_issues", OcanForm.getOcanFormOptions("Presenting Issues"),prepopulationLevel)%>						
 			</td>
