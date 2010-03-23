@@ -503,4 +503,9 @@ public class AdmissionManager {
         
         return(false);
     }
+    
+    public List getActiveAnonymousAdmissions() {
+    	return dao.getActiveAnonymousAdmissions();
+    }
 }
+

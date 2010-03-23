@@ -46,6 +46,7 @@ public class OcanClientForm extends AbstractModel<Integer> implements Serializab
 	private Date startDate;
 	private Date completionDate;
 	
+	private String assessmentStatus;
 	
 	public OcanClientForm() {		
 	}
@@ -172,6 +173,14 @@ public class OcanClientForm extends AbstractModel<Integer> implements Serializab
 		if(d==null) {return "";}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(d);
+	}
+
+	public String getAssessmentStatus() {
+		return assessmentStatus;
+	}
+
+	public void setAssessmentStatus(String assessmentStatus) {
+		this.assessmentStatus = assessmentStatus;
 	}
 
 }

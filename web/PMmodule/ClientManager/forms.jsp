@@ -3,6 +3,8 @@
 
 <%@page import="org.oscarehr.PMmodule.web.ClientManagerAction"%>
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
+<%@page import="org.oscarehr.common.model.OcanStaffForm"%>
+<%@page import="org.oscarehr.common.model.OcanClientForm"%>
 <%@page import="java.util.Enumeration"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
@@ -341,6 +343,63 @@ New User Created Form:&nbsp;
 			<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsForm.getProviderNo())%></td>
 			<td><%=cdsForm.isSigned()%></td>
 			<td><a href="ClientManager/cds_form_4.jsp?cdsFormId=<%=cdsForm.getId()%>">details</a></td>
+		</tr>
+	</c:forEach>
+</table>
+<br />
+<br />
+
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Ocan Staff Assessment Form History</th>
+	</tr>
+</table>
+</div>
+<table class="simple" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Staff</th>
+			<th>Status</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<c:forEach var="form" items="${ocanStaffForms}">
+		<tr>		
+			<td width="20%"><c:out value="${form.created}" /></td>
+			<td><c:out value="${form.providerNo}" /></td>
+			<td><c:out value="${form.assessmentStatus}" /></td>
+			<td><input type="button" value="Print Preview" onclick="printOcanStaffForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
+		</tr>
+	</c:forEach>
+</table>
+<br />
+<br />
+
+
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Ocan Consumer Self-Assessment Form History</th>
+	</tr>
+</table>
+</div>
+<table class="simple" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Staff</th>
+			<th>Status</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<c:forEach var="form" items="${ocanClientForms}">
+		<tr>		
+			<td width="20%"><c:out value="${form.created}" /></td>
+			<td><c:out value="${form.providerNo}" /></td>
+			<td>N/A</td>
+			<td><input type="button" value="Print Preview" onclick="printOcanClientForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
 		</tr>
 	</c:forEach>
 </table>

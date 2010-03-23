@@ -181,6 +181,12 @@
 		return true;
 	}
 
+	function toggleGroupNote(el) {
+		var checked = el.checked;
+		if(checked == true) {
+			alert('show group dialog');	
+		}
+	}
 </script>
 
 <script language="JavaScript">
@@ -486,6 +492,11 @@ if (pId==null) pId="";
 			<td class="fieldValue"><html:checkbox property="includeIssue" onchange="setChangeFlag(true);" /></td>
 		</tr>
 
+		<tr>
+			<td class="fieldTitle">Group Note</td>
+			<td class="fieldValue"><html:checkbox property="groupNote" onchange="setChangeFlag(true);toggleGroupNote(this);" /></td>
+		</tr>
+		
       <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<c:if test="${param.from=='casemgmt' || requestScope.from=='casemgmt'}" >
 		<c:url value="${sessionScope.billing_url}" var="url"/>

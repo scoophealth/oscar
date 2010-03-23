@@ -275,30 +275,6 @@ function openSurvey() {
 			<%
 		}		
 			%>
-	<tr>
-		<th>CDS Data</th>
-		<td>
-			<input type="button" value="Update CDS Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-		</td>
-	</tr>
-			<%
-		
-		
-		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
-		{
-			%>
-				<tr>
-					<th>OCAN</th>
-					<td>
-						<input type="button" value="Staff Assessment" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-						<br/>
-						<input type="button" value="Consumer Self-Assessment" onclick="document.location='ClientManager/ocan_client_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-					</td>
-				</tr>
-			<%
-		}		
-
-	%>	
 </table>
 
 <br />
@@ -461,7 +437,7 @@ function openSurvey() {
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
-		<th>Intake Form</th>
+		<th>Intake Form/Follow up Intake forms</th>
 	</tr>
 </table>
 </div>
@@ -500,6 +476,68 @@ function openSurvey() {
 				onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</c:if>
 	</tr>
+	<tr>
+		<td width="20%">CDS</td>
+		<c:if test="${cdsClientForm != null}">
+			<td><c:out value="${cdsClientForm.created}" /></td>
+			<td><c:out value="${cdsClientForm.providerNo}" /></td>
+			<td><c:out value="${cdsClientForm.signed}" /></td>
+			<td>
+				<input type="button" value="Update" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+			</td>
+		</c:if>
+		<c:if test="${cdsClientForm == null}">
+			<td><span style="color: red">None found</span></td>
+			<td></td>
+			<td>
+				<input type="button" value="New Form" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+			</td>
+		</c:if>
+	</tr>
+		
+													
+	<%
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableOcanForms())
+		{
+	%>
+	<tr>
+		<td width="20%">OCAN Staff Assessment</td>
+		<c:if test="${ocanStaffForm != null}">
+			<td><c:out value="${ocanStaffForm.created}" /></td>
+			<td><c:out value="${ocanStaffForm.providerNo}" /></td>
+			<td><c:out value="${ocanStaffForm.assessmentStatus}" /></td>
+			<td>
+				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />			
+			</td>
+		</c:if>
+		<c:if test="${ocanStaffForm == null}">
+			<td><span style="color: red">None found</span></td>
+			<td></td>
+			<td>
+				<input type="button" value="New Form" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />						
+			</td>
+		</c:if>
+	</tr>
+	
+	<tr>
+		<td width="20%">OCAN Consumer Self-Assessment</td>
+		<c:if test="${ocanClientForm != null}">
+			<td><c:out value="${ocanClientForm.created}" /></td>
+			<td><c:out value="${ocanClientForm.providerNo}" /></td>
+			<td>N/A</td>
+			<td>
+				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_client_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />								
+			</td>
+		</c:if>
+		<c:if test="${ocanClientForm == null}">
+			<td><span style="color: red">None found</span></td>
+			<td></td>
+			<td>
+				<input type="button" value="New Form" onclick="document.location='ClientManager/ocan_client_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />							
+			</td>
+		</c:if>
+	</tr>
+	<% } %>
 </table>
 <br />
 

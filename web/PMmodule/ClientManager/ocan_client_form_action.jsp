@@ -15,11 +15,14 @@
 	String startDate = parameters.get("startDate")[0];
 	String completionDate = parameters.get("completionDate")[0];
 	
+	String assessmentStatus = parameters.get("assessment_status")[0];
+	
 
 	OcanClientForm ocanClientForm=OcanFormAction.createOcanClientForm(clientId);
 	ocanClientForm.setLastName(request.getParameter("lastName"));
 	ocanClientForm.setFirstName(request.getParameter("firstName"));	
 	ocanClientForm.setDateOfBirth(request.getParameter("dateOfBirth"));	
+	ocanClientForm.setAssessmentStatus(assessmentStatus);
 
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	

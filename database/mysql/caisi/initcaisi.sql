@@ -19,6 +19,8 @@ create table Facility (
 	enableDigitalSignatures tinyint(1) not null,
         ocanServiceOrgNumber int(10) not null default '0',
         enableOcanForms tinyint(1) not null,
+	enableAnonymous tinyint(1) unsigned NOT NULL default 0,
+	enableGroupNotes tinyint(1) unsigned NOT NULL default 0,
 	lastUpdated datetime not null
 );
 
@@ -2686,8 +2688,9 @@ create table OcanClientForm
 	startDate date NOT NULL,
 	completionDate date,
 	index(startDate),
-	index(completionDate)
-
+	index(completionDate),
+	assessmentStatus varchar(50),
+	index(assessmentStatus)
 );
 
 create table OcanClientFormData
@@ -2728,3 +2731,13 @@ create table FunctionalCentre
 	accountId varchar(64) primary key,
 	description varchar(255) not null
 );
+
+create table group_note_link (
+        id int primary key auto_increment,
+        created timestamp,
+        noteId int(10) not null,
+        demographicNo int(10) not null,
+        key(noteId),
+        key(demographicNo)
+);
+

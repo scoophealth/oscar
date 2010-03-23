@@ -100,10 +100,14 @@ import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.dao.OcanClientFormDao;
+import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.OcanClientForm;
+import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.LoggedInInfo;
@@ -138,7 +142,10 @@ public class ClientManagerAction extends BaseAction {
 	private CdsClientFormDao cdsClientFormDao;
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-
+	private OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao)SpringUtils.getBean("ocanStaffFormDao");
+	private OcanClientFormDao ocanClientFormDao = (OcanClientFormDao)SpringUtils.getBean("ocanClientFormDao");
+	//private CdsClientFormDao cdsClientFormDao = (CdsClientFormDao)SpringUtils.getBean("cdsClientFormDao");
+	
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
 		this.integratorConsentDao = integratorConsentDao;
 	}
@@ -1366,6 +1373,16 @@ public class ClientManagerAction extends BaseAction {
 			request.setAttribute("healthsafety", healthsafety);
 
 			request.setAttribute("referrals", getReferralsForSummary(Integer.parseInt(demographicNo), facilityId));
+			
+			//OCAN Staff/Client Assessment
+			OcanStaffForm ocanStaffForm = ocanStaffFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo));
+			OcanClientForm ocanClientForm = ocanClientFormDao.findLatestByFacilityClient(facilityId,Integer.valueOf(demographicNo));
+			request.setAttribute("ocanStaffForm", ocanStaffForm);
+			request.setAttribute("ocanClientForm", ocanClientForm);	
+			
+			//CDS
+			CdsClientForm cdsClientForm = cdsClientFormDao.findLatestByFacilityClient(facilityId, Integer.valueOf(demographicNo));
+			request.setAttribute("cdsClientForm", cdsClientForm);
 		}
 
 		/* history */
@@ -1535,6 +1552,14 @@ public class ClientManagerAction extends BaseAction {
 			// CDS forms
 			List<CdsClientForm> cdsForms = cdsClientFormDao.findByFacilityClient(facilityId, clientId);
 			request.setAttribute("cdsForms", cdsForms);
+			
+			//OCAN Forms
+			List<OcanStaffForm> ocanStaffForms = ocanStaffFormDao.findByFacilityClient(facilityId, clientId);
+			List<OcanClientForm> ocanClientForms = ocanClientFormDao.findByFacilityClient(facilityId, clientId);
+			request.setAttribute("ocanStaffForms", ocanStaffForms);
+			request.setAttribute("ocanClientForms", ocanClientForms);	
+			
+			
 		}
 
 		/* refer */

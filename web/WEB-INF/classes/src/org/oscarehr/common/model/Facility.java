@@ -35,7 +35,9 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 	private boolean allowSims = true;
 	private boolean enableDigitalSignatures = false;
 	private boolean enableOcanForms = false;
+	private boolean enableAnonymous = false;
 	private String ocanServiceOrgNumber;
+	private boolean enableGroupNotes = false;
 
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -238,6 +240,22 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 
 	public int hashCode() {
 		return (id != null ? id.hashCode() : 0);
+	}
+
+	public boolean isEnableAnonymous() {
+		return enableAnonymous;
+	}
+
+	public void setEnableAnonymous(boolean enableAnonymous) {
+		this.enableAnonymous = enableAnonymous;
+	}
+
+	public boolean isEnableGroupNotes() {
+		return enableGroupNotes;
+	}
+
+	public void setEnableGroupNotes(boolean enableGroupNotes) {
+		this.enableGroupNotes = enableGroupNotes;
 	}
 
 }

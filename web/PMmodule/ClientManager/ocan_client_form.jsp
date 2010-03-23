@@ -24,9 +24,20 @@ $("document").ready(function() {
 	$("#ocan_client_form").validate({meta: "validate"});	
 });
 
+
 function submitOcanClientForm() {
+	var status = document.getElementById('assessment_status').value;
+	if(status == 'Active') {
+		$('#ocan_client_form').unbind('submit').submit();		
+		return true;
+	}
+	if(!$("#ocan_client_form").valid()) {
+		alert('Validation failed. Please check all required fields highlighted');
+		return false;
+	}
 	return true;
 }
+
 </script>
 
 
@@ -36,6 +47,8 @@ function submitOcanClientForm() {
 
 
 <form id="ocan_client_form" action="ocan_client_form_action.jsp" onsubmit="return submitOcanClientForm()">
+	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
+	
 	<h3>OCAN Consumer Self-Assessment (v1.2)</h3>
 
 	<br />
@@ -624,7 +637,8 @@ function submitOcanClientForm() {
 				
 				<input type="submit" name="submit" value="Submit"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				
+				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active'; document.getElementById('completionDate').value=''"/>
+				&nbsp;&nbsp;&nbsp;&nbsp;				
 				<input type="button" value="Cancel" onclick="history.go(-1)" />
 			</td>
 		</tr>		

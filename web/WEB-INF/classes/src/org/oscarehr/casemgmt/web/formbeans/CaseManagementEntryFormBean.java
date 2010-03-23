@@ -62,6 +62,11 @@ public class CaseManagementEntryFormBean extends ActionForm {
 	
         private String observation_date;
 	
+        private boolean groupNote;
+        private String[] groupNoteClientIds;
+        private int groupNoteTotalAnonymous;
+        
+        
         public CaseManagementEntryFormBean() {
             super();           
             this.caseNote = new CaseManagementNote();
@@ -112,6 +117,7 @@ public class CaseManagementEntryFormBean extends ActionForm {
 	{
 		this.includeIssue = includeIssue;
 	}
+	
 	public CheckBoxBean[] getIssueCheckList()
 	{               
 		return issueCheckList;
@@ -313,4 +319,40 @@ public class CaseManagementEntryFormBean extends ActionForm {
         public void setProviderview(String providerview) {
             this.providerview = providerview;
         }
+
+		public boolean isGroupNote() {
+			return groupNote;
+		}
+
+		public void setGroupNote(boolean groupNote) {
+			this.groupNote = groupNote;
+		}
+
+		public String[] getGroupNoteClientIds() {
+			return groupNoteClientIds;
+		}
+
+		public void setGroupNoteClientIds(String[] groupNoteClientIds) {
+			this.groupNoteClientIds = groupNoteClientIds;
+		}
+
+		public String getStartTime() {
+			return startTime;
+		}
+
+		public void setStartTime(String startTime) {
+			this.startTime = startTime;
+		}
+
+		public int getGroupNoteTotalAnonymous() {
+			return groupNoteTotalAnonymous;
+		}
+
+		public void setGroupNoteTotalAnonymous(int groupNoteTotalAnonymous) {
+			this.groupNoteTotalAnonymous = groupNoteTotalAnonymous;
+		}
+		
+		public String getTrimmedNoteText() {
+			return org.apache.commons.lang.StringUtils.trimToNull(this.getCaseNote_note());	
+		}
 }

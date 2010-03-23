@@ -544,6 +544,10 @@ public class CaseManagementManager {
 	}
 
 	public void saveAndUpdateCaseIssues(List issuelist) {
+		/*
+		 * We're having a problem where duplicate CaseManagementIssue objects being 
+		 * created (as in points to same issue). 
+		 */
 		caseManagementIssueDAO.saveAndUpdateCaseIssues(issuelist);
 	}
 

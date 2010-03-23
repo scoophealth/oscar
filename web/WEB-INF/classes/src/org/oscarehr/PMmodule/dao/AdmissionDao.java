@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.dao;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -34,6 +35,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.AdmissionSearchBean;
+import org.oscarehr.common.model.Demographic;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class AdmissionDao extends HibernateDaoSupport {
@@ -578,4 +580,18 @@ public class AdmissionDao extends HibernateDaoSupport {
         
 		return rs;
     }
+    
+    /*
+     * get demographics according to their program, admit time, discharge time, ordered by lastname and first name
+     */
+    public List getActiveAnonymousAdmissions() {
+        // get duplicated clients from this sql
+        String q = "Select a From Demographic d, Admission a " + "Where d.anonymous = ? and (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.AdmissionStatus='current' and a.programType != 'community'";                 
+
+        String status = "AC"; // only show active clients
+        List rs = (List) getHibernateTemplate().find(q, new Object[] { "one-time-anonymous",status});
+
+        return rs;
+    }
+   
 }
