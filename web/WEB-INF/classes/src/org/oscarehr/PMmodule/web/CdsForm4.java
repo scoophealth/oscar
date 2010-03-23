@@ -88,6 +88,8 @@ public class CdsForm4 {
 
 		StringBuilder sb=new StringBuilder();
 
+		sb.append("<option value=\"\" title=\"\">&nbsp;</option>");
+
 		for (CdsFormOption option : options)
 		{
 			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getCdsDataCategoryName());
