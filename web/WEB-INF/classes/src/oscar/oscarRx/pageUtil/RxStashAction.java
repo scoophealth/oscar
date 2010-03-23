@@ -147,11 +147,15 @@ public final class RxStashAction extends DispatchAction {
 
         int randomId=Integer.parseInt(request.getParameter("randomId"));
        System.out.println("randomId="+randomId);
-                bean.removeStashItem(bean.getIndexFromRx(randomId));
+       int stashId=bean.getIndexFromRx(randomId);
+       if(stashId!=-1){
+                bean.removeStashItem(stashId);
                 if(bean.getStashIndex() >= bean.getStashSize()) {
                     bean.setStashIndex(bean.getStashSize() - 1);
                 }
-
+       }else{
+        System.out.println("stashId iss  -1");
+       }
 
         return mapping.findForward("success");
     }
