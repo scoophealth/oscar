@@ -177,7 +177,59 @@ $("document").ready(function(){
 			$("#"+domainNumber+"_3b").attr("disabled","");
 		}
 	});
-	
+
+	$("select[domain1='true']").each(function(){
+		var curId = $(this).attr("id");
+		var domainNumber = curId.substring(0,curId.indexOf("_"));
+		var value = $(this).val();
+		if(value == '0' || value == '9') {
+			//blank out 2,3a,3b
+			$("#"+domainNumber+"_2").attr("disabled","disabled");
+			$("#"+domainNumber+"_3a").attr("disabled","disabled");
+			$("#"+domainNumber+"_3b").attr("disabled","disabled");
+		} else {
+			$("#"+domainNumber+"_2").attr("disabled","");
+			$("#"+domainNumber+"_3a").attr("disabled","");
+			$("#"+domainNumber+"_3b").attr("disabled","");
+		}
+	});
+
+	//autism
+	$("input[name='6_medical_conditions'][value='408856003']").change(function(){
+		if($(this).attr("checked")) {
+			$("#6_medical_conditions_autism").attr("disabled","");
+		} else {
+			$("#6_medical_conditions_autism").attr("disabled","disabled");
+			$("#6_medical_conditions_autism").val("");
+		}
+		
+	});
+
+	if($("input[name='6_medical_conditions'][value='408856003']").attr("checked")) {	
+		$("#6_medical_conditions_autism").attr("disabled","");
+	} else {
+		$("#6_medical_conditions_autism").attr("disabled","disabled");
+		$("#6_medical_conditions_autism").val("");
+	}
+
+	//phys health - other
+	//410515003
+	$("input[name='6_medical_conditions'][value='410515003']").change(function(){
+		if($(this).attr("checked")) {
+			$("#6_medical_conditions_other").attr("disabled","");
+		} else {
+			$("#6_medical_conditions_other").attr("disabled","disabled");
+			$("#6_medical_conditions_other").val("");
+		}
+		
+	});
+
+	if($("input[name='6_medical_conditions'][value='410515003']").attr("checked")) {	
+		$("#6_medical_conditions_other").attr("disabled","");
+	} else {
+		$("#6_medical_conditions_other").attr("disabled","disabled");
+		$("#6_medical_conditions_other").val("");
+	}
 });
 </script>
 
@@ -702,7 +754,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Legal Status? (Select all that apply)</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsCheckBoxOptions(ocanStaffForm.getId(), "legal_status", OcanForm.getOcanFormOptions("Legal History Type"),prepopulationLevel)%>						
+				<%=OcanForm.renderLegalStatusOptions(ocanStaffForm.getId(), "legal_status", OcanForm.getOcanFormOptions("Legal History Type"),prepopulationLevel,false)%>						
 			</td>
 		</tr>		
 
@@ -1798,7 +1850,7 @@ $("document").ready(function(){
 		</tr>			
 		
 		<tr>
-			<td class="genericTableHeader">Indicate the stage of change client is at</td>
+			<td class="genericTableHeader">Indicate the stage of change client is at - Optional</td>
 			<td class="genericTableData">
 				<select name="state_of_change_alcohol">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_alcohol", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
@@ -1915,7 +1967,7 @@ $("document").ready(function(){
 		</tr>
 		-->
 		<tr>
-			<td class="genericTableHeader">Indicate the stage of change client is at</td>
+			<td class="genericTableHeader">Indicate the stage of change client is at - Optional</td>
 			<td class="genericTableData">
 				<select name="state_of_change_addiction">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_addiction", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
@@ -2012,7 +2064,7 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Indicate the stage of change client is at</td>
+			<td class="genericTableHeader">Indicate the stage of change client is at - Optional</td>
 			<td class="genericTableData">
 				<select name="state_of_change_addiction">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_state_of_change", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>

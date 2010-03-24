@@ -1,7 +1,9 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -20,7 +22,6 @@ import org.oscarehr.common.model.OcanFormOption;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.OcanStaffFormData;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class OcanForm {
@@ -391,6 +392,59 @@ public class OcanForm {
 		}
 		
 		return(sb.toString());
+	}
+	
+	public static String renderLegalStatusOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
+	{
+		List<OcanStaffFormData> existingAnswers=getStaffAnswers(ocanStaffFormId, question, prepopulationLevel);
+ 
+		StringBuilder sb=new StringBuilder();
+
+		Map<String,OcanFormOption> optionMap = new HashMap<String,OcanFormOption>();
+		for (OcanFormOption option : options)
+		{
+			optionMap.put(option.getOcanDataCategoryValue(), option);
+		}
+		
+		
+		sb.append("<h4>Pre-Charge</h4>");
+		renderSingleCheckbox(optionMap.get("013-01"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-02"),sb,question,existingAnswers);
+		sb.append("<h4>Pre-Trial</h4>");
+		renderSingleCheckbox(optionMap.get("013-03"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-04"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-05"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-06"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-07"),sb,question,existingAnswers);
+		sb.append("<h4>Custody Status</h4>");
+		renderSingleCheckbox(optionMap.get("013-17"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-18"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-19"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-20"),sb,question,existingAnswers);
+		sb.append("<h4>Outcomes</h4>");
+		renderSingleCheckbox(optionMap.get("013-08"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-09"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-10"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-11"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-12"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-13"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-14"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-15"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-16"),sb,question,existingAnswers);
+		sb.append("<h4>Other</h4>");
+		renderSingleCheckbox(optionMap.get("013-21"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-24"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("013-25"),sb,question,existingAnswers);
+		
+		
+		return(sb.toString());
+	}
+	
+	public static void renderSingleCheckbox(OcanFormOption option,StringBuilder sb, String question, List<OcanStaffFormData> existingAnswers) {
+		String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOcanDataCategoryName());			
+		String checked=(OcanStaffFormData.containsAnswer(existingAnswers, option.getOcanDataCategoryValue())?"checked=\"checked\"":"");
+			
+		sb.append("<div title=\""+htmlEscapedName+"\"><input type=\"checkBox\" "+checked+" name=\""+question+"\" value=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"\" /> "+htmlEscapedName+"</div>");
 	}
 	
 	public static String renderAsHiddenField(Integer ocanStaffFormId, String question, int prepopulationLevel)
