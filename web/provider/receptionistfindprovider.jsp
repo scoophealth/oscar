@@ -45,7 +45,18 @@
   String strStartHour = (String) session.getAttribute("starthour");
   String strEndHour = (String) session.getAttribute("endhour");
   String strEveryMin = (String) session.getAttribute("everymin");
+  String defaultServiceType = (String) session.getAttribute("default_servicetype");
+  if( defaultServiceType == null ) {
+      List<Map> prefList = oscarSuperManager.find("providerDao", "search_pref_defaultbill", new Object[] {curUser_no});
+      if (prefList.size() > 0) {
+        defaultServiceType = String.valueOf(prefList.get(0).get("default_servicetype"));
+      }
+  }
   
+  if( defaultServiceType == null ) {
+    defaultServiceType = "";
+  }
+
   int startHour=Integer.parseInt(strStartHour.trim());
   int endHour=Integer.parseInt(strEndHour.trim());
   int everyMin=Integer.parseInt(strEveryMin.trim());
@@ -67,9 +78,9 @@
 function selectProvider(p,pn) {
 	  newGroupNo = p;
 <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
-	  this.location.href = "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo;
+	  this.location.href = "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo;
 <%}else{%>
-	  this.location.href = "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo;
+	  this.location.href = "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo;
 <%}%>
 }
 
