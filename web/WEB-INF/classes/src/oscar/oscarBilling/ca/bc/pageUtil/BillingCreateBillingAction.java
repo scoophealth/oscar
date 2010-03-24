@@ -36,6 +36,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -59,6 +61,8 @@ import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.SqlUtils;
 
 public class BillingCreateBillingAction extends Action {
+  private static final Log log = LogFactory.getLog(BillingCreateBillingAction.class);
+
   private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
   private ArrayList patientDX = new ArrayList(); //List of disease codes for current patient
   
@@ -154,32 +158,35 @@ public class BillingCreateBillingAction extends Action {
       }
 
     }
-    validateServiceCodeList(billItem, demo, errors);
-    validateDxCodeList(bean, errors);
-    validateServiceCodeTimes(billItem, frm, errors);
+    log.debug("Ignore warnings ? "+request.getParameter("ignoreWarn"));
+    if (request.getParameter("ignoreWarn") == null){
+        validateServiceCodeList(billItem, demo, errors);
+        validateDxCodeList(bean, errors);
+        validateServiceCodeTimes(billItem, frm, errors);
+    
+        for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
+          BillingItem item = (BillingItem) iter.next();
+          validateCDMCodeConditions(errors, demo.getDemographicNo(),
+                                    item.getServiceCode());
+        }
 
-    for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
-      BillingItem item = (BillingItem) iter.next();
-      validateCDMCodeConditions(errors, demo.getDemographicNo(),
-                                item.getServiceCode());
-    }
+        if (!errors.isEmpty()) {
+          validateCodeLastBilled(request, errors, demo.getDemographicNo());
+          return mapping.getInputForward();
+        }
+        validate00120(errors, demo, billItem, bean.getServiceDate());
+        if (!errors.isEmpty()) {
+          validateCodeLastBilled(request, errors, demo.getDemographicNo());
+          return mapping.getInputForward();
+        }
+        this.validatePatientManagementCodes(errors, demo, billItem,
+                                            bean.getServiceDate());
+        if (!errors.isEmpty()) {
+          validateCodeLastBilled(request, errors, demo.getDemographicNo());
+          return mapping.getInputForward();
+        }
 
-    if (!errors.isEmpty()) {
-      validateCodeLastBilled(request, errors, demo.getDemographicNo());
-      return mapping.getInputForward();
     }
-    validate00120(errors, demo, billItem, bean.getServiceDate());
-    if (!errors.isEmpty()) {
-      validateCodeLastBilled(request, errors, demo.getDemographicNo());
-      return mapping.getInputForward();
-    }
-    this.validatePatientManagementCodes(errors, demo, billItem,
-                                        bean.getServiceDate());
-    if (!errors.isEmpty()) {
-      validateCodeLastBilled(request, errors, demo.getDemographicNo());
-      return mapping.getInputForward();
-    }
-
 
     if (request.getParameter("WCBid") != null){
             System.out.println("WCB id is not null "+request.getParameter("WCBid"));
