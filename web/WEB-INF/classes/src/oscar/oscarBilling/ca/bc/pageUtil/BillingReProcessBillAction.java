@@ -238,13 +238,11 @@ public class BillingReProcessBillAction extends Action {
 
     try{
 
-      String[] codeRecord = getServiceCodePrice(billingServiceCode,false);
-      String codePrice = "";
-      if (codeRecord != null && codeRecord.length > 0) {
-          codePrice = codeRecord[0];
-          _log.debug("codePrice=" + codePrice);
-      }
-
+      //BillingCodeData bcd = new BillingCodeData();
+      //BillingService billingService = bcd.getBillingCodeByCode(billingServiceCode, new Date());
+      String codePrice = request.getParameter("billingAmount"); //billingService.getValue();
+      _log.debug("codePrice=" + codePrice+" amount on form "+request.getParameter("billingAmount"));
+      
       if("E".equals(payment_mode)){
           codePrice = "0.00";
       }

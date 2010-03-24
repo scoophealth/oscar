@@ -124,9 +124,10 @@ public class BillingSaveBillingAction extends Action {
         //REALLY should be able to get rid of this since every claim will go thru here.
 ////        if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri") || bean.getBillingType().equals("WCB")) {  
         for (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem bItem: billItem){
-            
+
             if(request.getParameter("dispPrice+"+bItem.getServiceCode())!= null){
                 String updatedPrice = request.getParameter("dispPrice+"+bItem.getServiceCode());
+                log.debug(bItem.getServiceCode()+"Original "+bItem.price+ " updated price "+Double.parseDouble(updatedPrice));
                 bItem.price = Double.parseDouble(updatedPrice);
                 bItem.getLineTotal();
             }
@@ -597,6 +598,7 @@ public class BillingSaveBillingAction extends Action {
             bill.setBirthDate("00000000");
 
         }
+        log.debug("Bill "+bill.getBillingCode()+" "+bill.getBillAmount());
         return bill;
     }
 }
