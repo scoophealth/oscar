@@ -84,9 +84,9 @@
 	String regionalIdentifier=request.getParameter("regionalIdentifier");
         System.out.println("req ctx "+request.getContextPath());
 	String cn=request.getParameter("cn");
+        String bn=request.getParameter("bn");
 	Integer currentDemographicNo=bean.getDemographicNo();
-
-	ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn);
+        ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn,bn);
 
 	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(currentDemographicNo);
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
