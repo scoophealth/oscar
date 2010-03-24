@@ -25,7 +25,7 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 
@@ -115,7 +115,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     public ActionForward Delete2(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException, ServletException {
 
-      //  System.out.println("===========================Delete2 RxDeleteRxAction========================");
+        System.out.println("===========================Delete2 RxDeleteRxAction========================");
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -135,12 +135,49 @@ public final class RxDeleteRxAction extends DispatchAction {
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, deleteRxId, ip,""+bean.getDemographicNo(), drug.getAuditString());
         }
         catch (Exception e) {
-            e.printStackTrace(System.out);
+            e.printStackTrace();
         }
-        //      System.out.println("===========================END Delete2 RxDeleteRxAction========================");
+              System.out.println("===========================END Delete2 RxDeleteRxAction========================");
          return null;
     }
+    public ActionForward DeleteRxOnCloseRxBox(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
+    throws IOException, ServletException {
     
+        System.out.println("===========================DeleteRxOnCloseRxBox RxDeleteRxAction========================");
+        String randomId=request.getParameter("randomId");
+
+
+        // Setup variables
+        RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        if(bean==null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
+       if(randomId!=null){
+            HashMap rd=bean.getRandomIdDrugIdPair();
+            Integer drugId=(Integer)rd.get(Long.parseLong(randomId));
+            System.out.println("111drugId="+drugId+"--randomId="+randomId);
+            if(drugId!=null){
+                String ip = request.getRemoteAddr();
+                try{
+                    Drug drug = drugDao.find(drugId);
+                    setDrugDelete(drug);
+                    drugDao.merge(drug);
+                    LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugId.toString(), ip,""+bean.getDemographicNo(), drug.getAuditString());
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            HashMap hm = new HashMap();
+            hm.put("drugId", drugId);
+            JSONObject jsonObject = JSONObject.fromObject(hm);
+            System.out.println("jsonObject="+ jsonObject.toString());
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+       }
+        System.out.println("===========================END DeleteRxOnCloseRxBox RxDeleteRxAction========================");
+         return null;
+    }
 public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException, ServletException {        
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
