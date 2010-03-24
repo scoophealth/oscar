@@ -1,8 +1,6 @@
 package org.oscarehr.web;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -14,10 +12,14 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.OcanClientFormDao;
 import org.oscarehr.common.dao.OcanClientFormDataDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.OcanClientForm;
 import org.oscarehr.common.model.OcanClientFormData;
 import org.oscarehr.common.model.OcanStaffForm;
@@ -88,7 +90,8 @@ public class OcanReportUIBean {
 	private static OcanStaffFormDataDao ocanStaffFormDataDao = (OcanStaffFormDataDao) SpringUtils.getBean("ocanStaffFormDataDao");	
 	private static OcanClientFormDao ocanClientFormDao = (OcanClientFormDao) SpringUtils.getBean("ocanClientFormDao");
 	private static OcanClientFormDataDao ocanClientFormDataDao = (OcanClientFormDataDao) SpringUtils.getBean("ocanClientFormDataDao");
-	
+	private static FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
+	private static AdmissionDao admissionDao = (AdmissionDao)SpringUtils.getBean("admissionDao");
 	
 	public static void writeXmlExportData(int year, int month, int increment, OutputStream out) {
 		
@@ -397,7 +400,8 @@ public class OcanReportUIBean {
 		needRating.setStaff(Byte.valueOf(staffAnswer));
 		if(ocanClientForm != null) {
 			String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
-			needRating.setClient(Byte.valueOf(clientAnswer));
+			if(clientAnswer.length()>0)
+				needRating.setClient(Byte.valueOf(clientAnswer));
 		}
 		return needRating;
 	}
@@ -558,25 +562,25 @@ public class OcanReportUIBean {
 	
 	public static OrganizationRecord convertOrganizationRecord(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		OrganizationRecord organizationRecord = OrganizationRecord.Factory.newInstance();
-		organizationRecord.setServiceOrg(convertServiceOrg());
+		organizationRecord.setServiceOrg(convertServiceOrg(ocanStaffForm));		
 		organizationRecord.setProgram(convertProgram(ocanStaffForm,ocanStaffFormData));
 		organizationRecord.setMISFunction(convertMISFunction(ocanStaffForm,ocanStaffFormData));
 		return organizationRecord;
 	}
 		
-	//TODO:
-	public static ServiceOrg convertServiceOrg() {
+	public static ServiceOrg convertServiceOrg(OcanStaffForm ocanStaffForm) {
+		Facility facility = facilityDao.find(ocanStaffForm.getFacilityId());
 		ServiceOrg serviceOrg = ServiceOrg.Factory.newInstance();
-		serviceOrg.setName("Facility Name");
-		serviceOrg.setNumber("1234");
+		serviceOrg.setName(facility.getName());
+		serviceOrg.setNumber(facility.getOcanServiceOrgNumber());
 		return serviceOrg;
 	}
 	
-	//TODO:
 	public static Program convertProgram(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
+		Admission admission = admissionDao.getAdmission(ocanStaffForm.getAdmissionId());		
 		Program program = Program.Factory.newInstance();
-		program.setName("program name");
-		program.setNumber("1234");
+		program.setName(admission.getProgramName());
+		program.setNumber(String.valueOf(admission.getProgramId()));
 		return program;
 	}
 	
