@@ -57,14 +57,14 @@ public class StaticScriptBean {
 		public boolean isLocal = true;
 	}
 
-	public static ArrayList<DrugDisplayData> getDrugList(int demographicId, String regionalIdentifier, String customName) {
+	public static ArrayList<DrugDisplayData> getDrugList(int demographicId, String regionalIdentifier, String customName, String brandName) {
 		regionalIdentifier=StringUtils.trimToNull(regionalIdentifier);
 		customName=StringUtils.trimToNull(customName);
 		
 		ArrayList<DrugDisplayData> results = new ArrayList<DrugDisplayData>();
 
 		// add local drugs
-		List<Drug> drugs = drugDao.findByDemographicIdSimilarDrugOrderByDate(demographicId, regionalIdentifier, customName);
+		List<Drug> drugs = drugDao.findByDemographicIdSimilarDrugOrderByDate(demographicId, regionalIdentifier, customName,brandName);
 		for (Drug drug : drugs)
 		{
 			results.add(getDrugDisplayData(drug));
