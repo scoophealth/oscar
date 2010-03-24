@@ -31,7 +31,7 @@ import oscar.util.UtilDateUtilities;
 
 @Repository
 public class BillingServiceDao extends AbstractDao<BillingService> {
-	public final String BC = "BC";
+	static public final String BC = "BC";
 
 	public BillingServiceDao() {
 		super(BillingService.class);
