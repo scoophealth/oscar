@@ -179,6 +179,7 @@ function showHideLayers() { //v3.0
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0"
 	topmargin="10" marginwidth="0" marginheight="0"
 	onLoad="setfocus();showHideLayers('Layer1','','hide')">
+    <html:form action="/billing/CA/BC/SaveBilling">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr bgcolor="#000000">
 		<td height="40" width="10%"></td>
@@ -292,13 +293,15 @@ function showHideLayers() { //v3.0
 						<td><bean:message key="billing.service.fee" /></td>
 						<td><bean:message key="billing.service.total" /></td>
 					</tr>
-					<% for (int i=0; i < billItem.size(); i++){ %>
+					<% for (int i=0; i < billItem.size(); i++){
+                                              BillingBillingManager.BillingItem bi = (BillingBillingManager.BillingItem) billItem.get(i) ;
+                                        %>
 					<tr>
-						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()%></td>
-						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDescription()%></td>
-						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getUnit()%></td>
-						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDispPrice()%></td>
-						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDispLineTotal()%></td>
+						<td><%=bi.getServiceCode()%></td>
+						<td><%=bi.getDescription()%></td>
+						<td><%=bi.getUnit()%></td>
+						<td><input type="text" name="dispPrice+<%=bi.getServiceCode()%>" value="<%=bi.getDispPrice()%>"/>  </td>
+						<td><%=bi.getDispLineTotal()%></td>
 					</tr>
 					<% } %>
 					<tr>
@@ -366,8 +369,7 @@ function showHideLayers() { //v3.0
                 %> <%=wcb.getW_fname()%> <%}%>
 						</td>
 					</tr>
-					<td align="right" colspan="4"><html:form
-						action="/billing/CA/BC/SaveBilling">
+					<td align="right" colspan="4">
 						<%if ("pri".equalsIgnoreCase(bean.getBillingType())){%>
 						<input type="submit" name="submit" value="Save & Print Receipt" />
 						<%}%>
@@ -380,9 +382,8 @@ function showHideLayers() { //v3.0
 						<%}%>
 						<input type="submit" name="submit" value="Another Bill" />
 						<input type="submit" name="submit" value="Save Bill" />
-						<input type="button" name="Submit2" value="Cancel"
-							onClick="window.close();" />
-					</html:form></td>
+						<input type="button" name="Submit2" value="Cancel" onClick="window.close();" />
+					</td>
 					</tr>
 				</table>
 
@@ -399,6 +400,7 @@ function showHideLayers() { //v3.0
 </table>
 
 <p>&nbsp;</p>
+</html:form>
 </body>
 </html>
 <%!
