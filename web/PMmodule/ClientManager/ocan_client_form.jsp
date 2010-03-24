@@ -77,7 +77,7 @@ function submitOcanClientForm() {
 		<tr>
 			<td class="genericTableHeader">Date of Birth</td>
 			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanClientForm.getId(), "date_of_birth",true,prepopulationLevel,true)%>				
+				<%=OcanForm.renderAsDate(ocanClientForm.getId(), "date_of_birth",true,ocanClientForm.getDateOfBirth(),prepopulationLevel)%>										
 			</td>
 		</tr>
 

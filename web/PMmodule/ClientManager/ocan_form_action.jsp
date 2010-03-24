@@ -26,7 +26,7 @@
 	String startDate = parameters.get("startDate")[0];
 	String completionDate = parameters.get("completionDate")[0];
 	String reasonForAssessment = parameters.get("reasonForAssessment")[0];
-	
+	String gender = parameters.get("gender")[0];	
 	
 	OcanStaffForm ocanStaffForm=OcanFormAction.createOcanStaffForm(admissionId, clientId, signed);
 	ocanStaffForm.setLastName(request.getParameter("lastName"));
@@ -40,7 +40,8 @@
 	ocanStaffForm.setEmail(request.getParameter("email"));
 	ocanStaffForm.setHcNumber(request.getParameter("hcNumber"));
 	ocanStaffForm.setHcVersion(request.getParameter("hcVersion"));
-	ocanStaffForm.setDateOfBirth(request.getParameter("date_of_birth"));	
+	ocanStaffForm.setDateOfBirth(request.getParameter("date_of_birth"));
+	ocanStaffForm.setGender(gender);
 	ocanStaffForm.setAdmissionId(admissionId);
 	ocanStaffForm.setAssessmentStatus(assessmentStatus);
 	ocanStaffForm.setReasonForAssessment(reasonForAssessment);
@@ -70,6 +71,7 @@
 	parameters.remove("startDate");
 	parameters.remove("completionDate");
 	parameters.remove("reasonForAssessment");
+	parameters.remove("gender");
 	
 	for (Map.Entry<String, String[]> entry : parameters.entrySet())
 	{

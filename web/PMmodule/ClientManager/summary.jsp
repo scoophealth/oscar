@@ -507,7 +507,8 @@ function openSurvey() {
 			<td><c:out value="${ocanStaffForm.providerNo}" /></td>
 			<td><c:out value="${ocanStaffForm.assessmentStatus}" /></td>
 			<td>
-				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />			
+				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN Part II Staff Assessment_v1.0.1.pdf"/>')"/>			
 			</td>
 		</c:if>
 		<c:if test="${ocanStaffForm == null}">
@@ -526,7 +527,8 @@ function openSurvey() {
 			<td><c:out value="${ocanClientForm.providerNo}" /></td>
 			<td>N/A</td>
 			<td>
-				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_client_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />								
+				<input type="button" value="Update" onclick="document.location='ClientManager/ocan_client_form.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+				<input type="button" value="Blank Form" onclick="window.open('<html:rewrite page="/ocan/OCAN Part I Consumer Self-Assessment_v1.0.1.pdf"/>')"/>											
 			</td>
 		</c:if>
 		<c:if test="${ocanClientForm == null}">

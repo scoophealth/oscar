@@ -71,10 +71,32 @@ public class OcanForm {
 				ocanStaffForm.setHcNumber(demographic.getHin());
 				ocanStaffForm.setHcVersion(demographic.getVer());
 				ocanStaffForm.setDateOfBirth(demographic.getFormattedDob());
+				ocanStaffForm.setGender(convertGender(demographic.getSex()));
 			}				             
 		}
 		
 		return(ocanStaffForm);
+	}
+	
+	/**
+	 * input is ""/M/F/T/O
+	 * 
+	 * returns M/F/OTH/UNK/CDA
+	 */
+	public static String convertGender(String oscarGender) {
+		if(oscarGender == null || oscarGender.equals("")) {
+			return "UNK";
+		}
+		if(oscarGender.equals("T") || oscarGender.equals("O")) {
+			return "OTH";
+		}
+		if(oscarGender.equals("M")) {
+			return "M";
+		}
+		if(oscarGender.equals("F")) {
+			return "F";
+		}
+		return "UNK";
 	}
 	
 	public static List<OcanFormOption> getOcanFormOptions(String category)
