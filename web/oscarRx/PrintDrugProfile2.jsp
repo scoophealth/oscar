@@ -169,10 +169,10 @@
                                                 %>
                                                 <tr>
                                                     <td width=20% valign="top">
-                                                        <a <%= styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=drug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(drug.getCustomName())%>"><%=drug.getRxDate()%> </a --%>
+                                                        <a <%= styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%=drug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(drug.getCustomName())%>&bn=<%=response.encodeURL(drug.getBrandName())%>"><%=drug.getRxDate()%> </a>
                                                     </td>
                                                     <td width=100%>
-                                                        <a <%= styleColor%> href="StaticScript.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()%>&cn=<%= response.encodeURL(drug.getCustomName())%>"><%= drug.getFullOutLine().replaceAll(";", " ")%> </a>
+                                                        <a <%= styleColor%> href="StaticScript2.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()%>&cn=<%= response.encodeURL(drug.getCustomName())%>&bn=<%=response.encodeURL(drug.getBrandName())%>"><%= drug.getFullOutLine().replaceAll(";", " ")%> </a>
                                                     </td>
                                                 </tr>
                                                 <%
