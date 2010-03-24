@@ -203,12 +203,12 @@
             function buildRoute() {
 
                 pickRoute = "";
-             <%--   <oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
+              <%--  <oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
                 <%for (int i = 0; i < d_route.length; i++) {%>
                         if (document.forms[2].route<%=i%>.checked) pickRoute += " "+document.forms[2].route<%=i%>.value;
                 <%}%>
                         document.forms[2].searchRoute.value = pickRoute;
-                </oscar:oscarPropertiesCheck> --%>
+                </oscar:oscarPropertiesCheck>--%>
             }
 
 
@@ -607,7 +607,7 @@ body {
                                 <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" style="display: inline; margin-bottom:0;" styleId="drugForm">
                                     <div id="interactingDrugErrorMsg" style="display:none"></div>
                                     <div id="rxText" style="float:left;"></div><br style="clear:left;">
-
+                                    <input type="hidden" id="deleteOnCloseRxBox" value="false">
 
                                     <html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
                                     <table border="0">
@@ -627,14 +627,15 @@ body {
                                                     <!--input id="testEvalJS" type="button"   onclick="functionOne();" value="testEvalJS" /-->
                                                 </div>
                                             </td>
-                                       <%--     <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
+                                           <%-- <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
                                                     <bean:message key="SearchDrug.drugSearchRouteLabel" />
                                                     <br>
                                                     <%for (int i = 0; i < d_route.length; i++) {%>
                                                     <input type="checkbox" name="route" <%=i%> value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
                                                     <%}%>
                                                     <html:hidden property="searchRoute" />
-                                                </oscar:oscarPropertiesCheck></td>--%>
+                                                </oscar:oscarPropertiesCheck>
+                                            </td>--%>
                                         </tr>
                                         <tr>
                                             <td colspan="3">
@@ -1021,7 +1022,34 @@ body {
         new Ajax.Request(url, {method: 'get',parameters:data,asynchronous:false,onSuccess:function(transport){
                 oscarLog("in deletePrescribe success");
                 updateCurrentInteractions();
+                if($('deleteOnCloseRxBox').value=='true'){
+                    deleteRxOnCloseRxBox(randomId);
+                }
                 }});
+    }
+
+    function deleteRxOnCloseRxBox(randomId){
+
+            var data="randomId="+randomId;
+            var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=DeleteRxOnCloseRxBox";
+            new Ajax.Request(url, {method: 'get',parameters:data,asynchronous:false,onSuccess:function(transport){
+                     var json=transport.responseText.evalJSON();
+                     if(json!=null){
+                             var id=json.drugId;
+                             var rxDate="rxDate_"+ id;
+                             var reRx="reRx_"+ id;
+                             var del="del_"+ id;
+                             var discont="discont_"+ id;
+                             var prescrip="prescrip_"+id;
+                             $(rxDate).style.textDecoration='line-through';
+                             $(reRx).style.textDecoration='line-through';
+                             $(del).style.textDecoration='line-through';
+                             $(discont).style.textDecoration='line-through';
+                             $(prescrip).style.textDecoration='line-through';
+                             oscarLog("in deleteRxOnCloseRxBox success");
+                    }
+                }});
+
     }
 
     function ThemeViewer(){
@@ -1259,6 +1287,9 @@ function saveCustomName(element){
                 $(repeat).value=json.repeat;
             }});
 }
+function updateDeleteOnCloseRxBox(){
+    $('deleteOnCloseRxBox').value='true';
+}
 function popForm2(){
         try{
             //oscarLog("popForm2 called");
@@ -1270,6 +1301,7 @@ function popForm2(){
                     });
                     var editRxMsg='<bean:message key="oscarRx.Preview.EditRx"/>';
             $('lightwindow_title_bar_close_link').update(editRxMsg);
+            $('lightwindow_title_bar_close_link').onclick=updateDeleteOnCloseRxBox;
                 }
         catch(er){
             oscarLog(er);
