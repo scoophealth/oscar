@@ -1078,7 +1078,9 @@ public final class RxWriteScriptAction extends DispatchAction {
         for (int i = 0; i < bean.getStashSize(); i++) {
             try {
                 rx = bean.getStashItem(i);
-                rx.Save(scriptId);
+                rx.Save(scriptId);//new drug id availble after this line
+                System.out.println("adding rd pair="+rx.getRandomId()+"--"+rx.getDrugId());
+                bean.addRandomIdDrugIdPair(rx.getRandomId(), rx.getDrugId());
                 auditStr.append(rx.getAuditString());
                 auditStr.append("\n");
             } catch (Exception e) {
