@@ -25,6 +25,7 @@ package oscar.oscarRx.pageUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -47,13 +48,24 @@ public class RxSessionBean {
     private ArrayList attributeNames = new ArrayList();
     private String interactingDrugList="";//contains hash tables, each hashtable has the a
     private List<String> reRxDrugIdList=new ArrayList();
+    private HashMap randomIdDrugIdPair=new HashMap();
 
 
 
 
 
     //--------------------------------------------------------------------------
+    public HashMap getRandomIdDrugIdPair(){
+        return randomIdDrugIdPair;
+    }
 
+    public void setRandomIdDrugIdPair(HashMap hm){
+        randomIdDrugIdPair=hm;
+    }
+
+    public void addRandomIdDrugIdPair(long r,int d){
+        randomIdDrugIdPair.put(r, d);
+    }
     public void addReRxDrugIdList(String s){
         reRxDrugIdList.add(s);
     }
@@ -122,9 +134,9 @@ public class RxSessionBean {
             if( ((RxPrescriptionData.Prescription)stash.get(i)).getRandomId()==randomId) {
                 ret=i;
                 break;
-            };
         }
-    //    System.out.println("in getIndexFromRx="+ret);
+        }
+        System.out.println("in getIndexFromRx="+ret);
         return ret;
     }
     public RxPrescriptionData.Prescription[] getStash() {
