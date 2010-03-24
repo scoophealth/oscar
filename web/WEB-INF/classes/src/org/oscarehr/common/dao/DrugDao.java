@@ -72,6 +72,32 @@ public class DrugDao extends AbstractDao<Drug> {
         return (results);
     }
 
+    public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName, String brandName) {
+        // build sql string
+        String sqlCommand ="";
+        if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
+            sqlCommand="select x from Drug x where x.demographicId=?1 and x.regionalIdentifier=?2 order by x.rxDate desc, x.id desc";
+        else if(customName!=null && !customName.equalsIgnoreCase("null") && customName.trim().length()!=0)
+            sqlCommand="select x from Drug x where x.demographicId=?1 and x.customName=?2 order by x.rxDate desc, x.id desc";
+        else
+            sqlCommand="select x from Drug x where x.demographicId=?1 and x.brandName=?2 order by x.rxDate desc, x.id desc";
+        System.out.println("sqlCommand="+sqlCommand);
+        // set parameters
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, demographicId);
+        if(regionalIdentifier!=null && !regionalIdentifier.equalsIgnoreCase("null") && regionalIdentifier.trim().length()!=0)
+             query.setParameter(2, regionalIdentifier);
+        else if(customName!=null && !customName.equalsIgnoreCase("null") && customName.trim().length()!=0)
+              query.setParameter(2,customName);
+        else
+             query.setParameter(2,brandName);
+        // run query
+        @SuppressWarnings("unchecked")
+        List<Drug> results = query.getResultList();
+
+        return (results);
+    }
+
     ///////
     public List<Drug> getUniquePrescriptions(String demographic_no) {
         //   System.out.println("===========IN getUniquePrescriptions======");
