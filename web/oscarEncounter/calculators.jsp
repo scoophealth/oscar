@@ -85,7 +85,14 @@ if(demo != null){
 			onclick="popperup(525,775,'calculators/riskcalc/index.html?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
 		Framingham/UKPDS Risk Calculator </a></td>
 	</tr>
-
+        <tr>
+            <td align="center" class="menuLayer">
+                <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'http://cvrisk.mvm.ed.ac.uk/calculator/calc.asp','CVRisk');">CV Risk</a>
+            </td>
+	</tr>
+        
+        
+        
 	<tr>
 		<td align="center" class="menuLayer"><a
 			href="javascript: function myFunction() {return false; }"
