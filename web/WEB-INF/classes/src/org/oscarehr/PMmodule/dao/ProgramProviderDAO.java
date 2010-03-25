@@ -275,6 +275,24 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         }
         return results;
     }
+    
+    public boolean isThisProgramInProgramDomain(String providerNo, Integer programId) 
+	{
+		if (providerNo == null || Long.valueOf(providerNo) == null)
+		{
+			throw new IllegalArgumentException();
+		}
+
+		String queryStr = "from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId = ?";
+		List results = getHibernateTemplate().find(queryStr, new Object[]{providerNo, Long.valueOf(programId.longValue())});
+		if(results!=null && results.size()>0) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
 
     @SuppressWarnings("unchecked")
     public List<Facility> getFacilitiesInProgramDomain(String providerNo) {
