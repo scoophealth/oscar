@@ -47,12 +47,19 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
+import org.oscarehr.caisi_integrator.ws.CachedAppointment;
+import org.oscarehr.caisi_integrator.ws.CachedBillingOnItem;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
+import org.oscarehr.caisi_integrator.ws.CachedDxresearch;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
+import org.oscarehr.caisi_integrator.ws.CachedMeasurementExt;
+import org.oscarehr.caisi_integrator.ws.CachedMeasurementMap;
+import org.oscarehr.caisi_integrator.ws.CachedMeasurementType;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.CodeType;
@@ -97,6 +104,22 @@ import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import org.oscarehr.common.model.OscarAppointment;
+import org.oscarehr.dx.dao.DxResearchDAO;
+import org.oscarehr.dx.model.DxResearch;
+import oscar.appt.AppointmentDao;
+import oscar.facility.IntegratorControlDao;
+import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
+import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
+import oscar.oscarBilling.ca.on.model.BillingOnItem;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementTypeDao;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao;
+import oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsHibernateDao;
+import oscar.oscarEncounter.oscarMeasurements.model.Measurementmap;
+import oscar.oscarEncounter.oscarMeasurements.model.Measurements;
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
+import oscar.oscarEncounter.oscarMeasurements.model.Measurementtype;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
@@ -105,7 +128,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
-	private static TimerTask timerTask = null;
 
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -120,7 +142,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
-	private AdmissionDao admissionDao= (AdmissionDao) SpringUtils.getBean("admissionDao");
+	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
+        private AppointmentDao appointmentDao = (AppointmentDao) SpringUtils.getBean("appointmentDao");
+        private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
+        private MeasurementsHibernateDao measurementsDao = (MeasurementsHibernateDao) SpringUtils.getBean("measurementsDao");
+        private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
+        private MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
+        private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
+        private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
+        private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
+	private static TimerTask timerTask = null;
 
 	static {
 		// ensure cxf uses log4j
@@ -129,11 +160,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	public static synchronized void startTask() {
 		if (timerTask == null) {
-			int period = 0;
+			long period = 0;
 			String periodStr = null;
 			try {
 				periodStr = (String) OscarProperties.getInstance().get(INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY);
-				period = Integer.parseInt(periodStr);
+                                period = Long.parseLong(periodStr);
 			} catch (Exception e) {
 				logger.error("CaisiIntegratorUpdateTask not scheduled, period is missing or invalid properties file : " + INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY + '=' + periodStr, e);
 				return;
@@ -350,7 +381,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			MiscUtils.checkShutdownSignaled();
 
 			try {
-				pushDemographic(demographicService, demographicId);
+				pushDemographic(demographicService, demographicId, facility.getId());
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
 				pushDemographicConsent(facility, demographicService, demographicId);
 				pushDemographicIssues(facility, programsInFacility, demographicService, demographicId);
@@ -358,6 +389,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographicNotes(facility, demographicService, demographicId);
 				pushDemographicDrugs(facility, providerIdsInFacility, demographicService, demographicId);
 				pushAdmissions(facility, programsInFacility, demographicService, demographicId);
+                                pushAppointments(facility, demographicService, demographicId);
+                                pushMeasurements(facility, demographicService, demographicId);
+                                pushDxresearchs(facility, demographicService, demographicId);
+                                pushBillingItems(facility, demographicService, demographicId);
+
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
@@ -370,12 +406,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushDemographic(DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException {
+	private void pushDemographic(DemographicWs service, Integer demographicId, Integer facilityId) throws IllegalAccessException, InvocationTargetException {
 		DemographicTransfer demographicTransfer = new DemographicTransfer();
 
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
+                //The following line copy 6 fields: FirstName,LastName,City,Province,Hin,Sin
 		BeanUtils.copyProperties(demographicTransfer, demographic);
 
 		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
@@ -400,6 +437,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			demographicTransfer.setPhoto(clientImage.getImage_data());
 			demographicTransfer.setPhotoUpdateDate(clientImage.getUpdate_date());
 		}
+
+                // set flag to remove demographic identity
+                boolean rid = integratorControlDao.readRemoveDemographicIdentity(facilityId);
+                demographicTransfer.setRemoveId(rid);
 
 		// send the request
 		service.setDemographic(demographicTransfer);
@@ -487,7 +528,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 
 		if (cachedAdmissions.size() > 0) demographicService.setCachedAdmissions(cachedAdmissions);	    
-    }
+        }
 
 	private boolean isProgramIdInProgramList(List<Program> programList, int programId) {
 		for (Program p : programList) {
@@ -666,4 +707,213 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		if (drugsToSend.size() > 0) demogrpahicService.setCachedDemographicDrugs(drugsToSend);
 	}
 
+	private void pushAppointments(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+            logger.debug("pushing appointments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+            List<OscarAppointment> appointments = appointmentDao.getAllByDemographicNo(demographicId);
+            if (appointments.size()==0) return;
+
+            ArrayList<CachedAppointment> cachedAppointments = new ArrayList<CachedAppointment>();
+            for (OscarAppointment appointment : appointments) {
+                MiscUtils.checkShutdownSignaled();
+
+                CachedAppointment cachedAppointment = new CachedAppointment();
+                FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                facilityIdIntegerCompositePk.setCaisiItemId(appointment.getAppointment_no());
+                cachedAppointment.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+                cachedAppointment.setAppointmentDate(appointment.getAppointment_date());
+                cachedAppointment.setBilling(appointment.getBilling());
+                cachedAppointment.setCaisiDemographicId(demographicId);
+                cachedAppointment.setCaisiProviderId(appointment.getProvider_no());
+                cachedAppointment.setCreateDatetime(appointment.getCreatedatetime());
+                cachedAppointment.setEndTime(appointment.getEnd_time());
+                cachedAppointment.setLocation(appointment.getLocation());
+                cachedAppointment.setNotes(appointment.getNotes());
+                cachedAppointment.setReason(appointment.getReason());
+                cachedAppointment.setRemarks(appointment.getRemarks());
+                cachedAppointment.setResources(appointment.getResources());
+                cachedAppointment.setStartTime(appointment.getStart_time());
+                cachedAppointment.setStatus(appointment.getStatus());
+                cachedAppointment.setStyle(appointment.getStyle());
+                cachedAppointment.setType(appointment.getType());
+                cachedAppointment.setUpdateDatetime(appointment.getUpdatedatetime());
+
+                cachedAppointments.add(cachedAppointment);
+            }
+            if (cachedAppointments.size()>0) demographicService.setCachedAppointments(cachedAppointments);
+        }
+
+        private void pushDxresearchs(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+            logger.debug("pushing dxresearchs facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+            List<DxResearch> dxresearchs = dxresearchDao.getByDemographicNo(demographicId);
+            if (dxresearchs.size()==0) return;
+
+            ArrayList<CachedDxresearch> cachedDxresearchs = new ArrayList<CachedDxresearch>();
+            for (DxResearch dxresearch : dxresearchs) {
+                MiscUtils.checkShutdownSignaled();
+
+                CachedDxresearch cachedDxresearch = new CachedDxresearch();
+                FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                facilityIdIntegerCompositePk.setCaisiItemId(dxresearch.getId().intValue());
+                cachedDxresearch.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+                cachedDxresearch.setCaisiDemographicId(demographicId);
+                cachedDxresearch.setDxresearchCode(dxresearch.getCode());
+                cachedDxresearch.setCodingSystem(dxresearch.getCodingSystem());
+                cachedDxresearch.setStartDate(dxresearch.getStartDate());
+                cachedDxresearch.setUpdateDate(dxresearch.getUpdateDate());
+                cachedDxresearch.setStatus(dxresearch.getStatus());
+
+                cachedDxresearchs.add(cachedDxresearch);
+            }
+            if (cachedDxresearchs.size()>0) demographicService.setCachedDxresearch(cachedDxresearchs);
+        }
+
+        private void pushBillingItems(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+            logger.debug("pushing billingitems facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+            List<BillingOnCHeader1> billingCh1s = billingOnItemDao.getCh1ByDemographicNo(demographicId);
+            if (billingCh1s.size()==0) return;
+
+            ArrayList<CachedBillingOnItem> cachedBillingOnItems = new ArrayList<CachedBillingOnItem>();
+            for (BillingOnCHeader1 billingCh1 : billingCh1s) {
+                List<BillingOnItem> billingItems = billingOnItemDao.getBillingItemByCh1Id(billingCh1.getId());
+                for (BillingOnItem billingItem : billingItems) {
+                    MiscUtils.checkShutdownSignaled();
+
+                    CachedBillingOnItem cachedBillingOnItem = new CachedBillingOnItem();
+                    FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                    facilityIdIntegerCompositePk.setCaisiItemId(billingItem.getId());
+                    cachedBillingOnItem.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+                    cachedBillingOnItem.setCaisiDemographicId(demographicId);
+                    cachedBillingOnItem.setCaisiProviderId(billingCh1.getProvider_no());
+                    cachedBillingOnItem.setDx(billingItem.getDx());
+                    cachedBillingOnItem.setDx1(billingItem.getDx1());
+                    cachedBillingOnItem.setDx2(billingItem.getDx2());
+                    cachedBillingOnItem.setServiceDate(billingItem.getService_date());
+                    cachedBillingOnItem.setStatus(billingItem.getStatus());
+
+                    cachedBillingOnItems.add(cachedBillingOnItem);
+                }
+            }
+            if (cachedBillingOnItems.size()>0) demographicService.setCachedBillingOnItem(cachedBillingOnItems);
+        }
+
+	private void pushMeasurements(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+            logger.debug("pushing measurements facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+            List<Measurements> measurements = measurementsDao.getMeasurementsByDemo(demographicId);
+            if (measurements.size()==0) return;
+
+            ArrayList<CachedMeasurement>     cachedMeasurements     = new ArrayList<CachedMeasurement>();
+            ArrayList<CachedMeasurementExt>  cachedMeasurementExts  = new ArrayList<CachedMeasurementExt>();
+            ArrayList<CachedMeasurementType> cachedMeasurementTypes = new ArrayList<CachedMeasurementType>();
+            ArrayList<CachedMeasurementMap>  cachedMeasurementMaps  = new ArrayList<CachedMeasurementMap>();
+
+            for (Measurements measurement : measurements) {
+                MiscUtils.checkShutdownSignaled();
+
+                CachedMeasurement cachedMeasurement = new CachedMeasurement();
+                FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                facilityIdIntegerCompositePk.setCaisiItemId(measurement.getId());
+                cachedMeasurement.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+                cachedMeasurement.setCaisiDemographicId(demographicId);
+                cachedMeasurement.setCaisiProviderId(measurement.getProviderNo());
+                cachedMeasurement.setComments(measurement.getComments());
+                cachedMeasurement.setDataField(measurement.getDataField());
+                cachedMeasurement.setDateEntered(measurement.getDateEntered());
+                cachedMeasurement.setDateObserved(measurement.getDateObserved());
+                cachedMeasurement.setMeasuringInstruction(measurement.getMeasuringInstruction());
+                cachedMeasurement.setType(measurement.getType());
+
+                cachedMeasurements.add(cachedMeasurement);
+
+                List<MeasurementsExt> measurementExts = measurementsExtDao.getMeasurementsExtByMeasurementId(measurement.getId());
+                for (MeasurementsExt measurementExt : measurementExts) {
+                    MiscUtils.checkShutdownSignaled();
+                    CachedMeasurementExt cachedMeasurementExt = new CachedMeasurementExt();
+                    FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                    fidIntegerCompositePk.setCaisiItemId(measurementExt.getId().intValue());
+                    cachedMeasurementExt.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
+
+                    cachedMeasurementExt.setMeasurementId(measurementExt.getMeasurementId().intValue());
+                    cachedMeasurementExt.setKeyval(measurementExt.getKeyVal());
+                    cachedMeasurementExt.setVal(measurementExt.getVal());
+
+                    cachedMeasurementExts.add(cachedMeasurementExt);
+                }
+
+                List<Measurementtype> measurementTypes = measurementTypeDao.getByType(measurement.getType());
+                for (Measurementtype measurementType : measurementTypes) {
+                    MiscUtils.checkShutdownSignaled();
+                    if (inList(measurementType, cachedMeasurementTypes)) continue;
+
+                    CachedMeasurementType cachedMeasurementType = new CachedMeasurementType();
+                    FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                    fidIntegerCompositePk.setCaisiItemId(measurementType.getId());
+                    cachedMeasurementType.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
+
+                    cachedMeasurementType.setType(measurementType.getType());
+                    cachedMeasurementType.setTypeDescription(measurementType.getTypeDescription());
+                    cachedMeasurementType.setMeasuringInstruction(measurementType.getMeasuringInstruction());
+
+                    cachedMeasurementTypes.add(cachedMeasurementType);
+
+                }
+
+                List<Measurementmap> measurementMaps = measurementMapDao.getMapsByIdent(measurement.getType());
+                for (Measurementmap measurementMap : measurementMaps) {
+                    if (inList(measurementMap, cachedMeasurementMaps)) continue;
+
+                    CachedMeasurementMap cachedMeasurementMap = new CachedMeasurementMap();
+                    FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                    fidIntegerCompositePk.setCaisiItemId(measurementMap.getId());
+                    cachedMeasurementMap.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
+
+                    cachedMeasurementMap.setIdentCode(measurementMap.getIdentCode());
+                    cachedMeasurementMap.setLoincCode(measurementMap.getLoincCode());
+                    cachedMeasurementMap.setName(measurementMap.getName());
+                    cachedMeasurementMap.setLabType(measurementMap.getLabType());
+
+                    cachedMeasurementMaps.add(cachedMeasurementMap);
+
+                }
+            }
+            if (cachedMeasurements.size()>0)     demographicService.setCachedMeasurements(cachedMeasurements);
+            if (cachedMeasurementExts.size()>0)  demographicService.setCachedMeasurementExts(cachedMeasurementExts);
+            if (cachedMeasurementTypes.size()>0) demographicService.setCachedMeasurementTypes(cachedMeasurementTypes);
+            if (cachedMeasurementMaps.size()>0)  demographicService.setCachedMeasurementMaps(cachedMeasurementMaps);
+        }
+
+        private boolean inList(Measurementtype measurementType, List<CachedMeasurementType> cachedMeasurementTypes) {
+                if (measurementType==null || cachedMeasurementTypes==null || cachedMeasurementTypes.size()==0) {
+                    return false;
+                }
+                boolean retrn = false;
+                for (CachedMeasurementType cmType : cachedMeasurementTypes) {
+                    if (measurementType.getId()==cmType.getFacilityIdIntegerCompositePk().getCaisiItemId()) {
+                        retrn = true;
+                        break;
+                    }
+                }
+                return retrn;
+        }
+
+        private boolean inList(Measurementmap measurementMap, List<CachedMeasurementMap> cachedMeasurementMaps) {
+                if (measurementMap==null || cachedMeasurementMaps==null || cachedMeasurementMaps.size()==0) {
+                    return false;
+                }
+                boolean retrn = false;
+                for (CachedMeasurementMap cmMap : cachedMeasurementMaps) {
+                    if (measurementMap.getId()==cmMap.getFacilityIdIntegerCompositePk().getCaisiItemId()) {
+                        retrn = true;
+                        break;
+                    }
+                }
+                return retrn;
+        }
 }
