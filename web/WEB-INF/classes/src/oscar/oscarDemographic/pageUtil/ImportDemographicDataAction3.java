@@ -80,7 +80,7 @@ import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
-import oscar.oscarEncounter.oscarMeasurements.data.MeasurementsExt;
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.on.LabResultImport;
 import oscar.oscarPrevention.PreventionData;

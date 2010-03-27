@@ -1242,8 +1242,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
 	    if (exAppointments) {
 		// APPOINTMENTS
-		HttpSession session = request.getSession();
-		Properties p = (Properties) session.getAttribute("oscarVariables");
 		List appts = oscarSuperManager.populate("appointmentDao", "export_appt", new String[] {this.demographicNo});
 		ApptData ap = null;
 		for (int j=0; j<appts.size(); j++) {
@@ -1294,11 +1292,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			aptm.setAppointmentPurpose(ap.getReason());
 			apNotes = Util.appendLine(apNotes, "Purpose: ", ap.getReason());
 		    }
-		    if (Util.filled(ap.getProviderFirstName()) || Util.filled(ap.getProviderLastName())) {
+		    if (Util.filled(ap.getProviderNo())) {
 			Appointments.Provider prov = aptm.addNewProvider();
-			if (Util.filled(ap.getOhipNo())) prov.setOHIPPhysicianId(ap.getOhipNo());
-			Util.writeNameSimple(prov.addNewName(), ap.getProviderFirstName(), ap.getProviderLastName());
-			apNotes = Util.appendLine(apNotes, "Provider: ", ap.getProviderFirstName()+" "+ap.getProviderLastName());
+
+                        ProviderData appd = new ProviderData(ap.getProviderNo());
+			if (Util.filled(appd.getOhip_no())) prov.setOHIPPhysicianId(appd.getOhip_no());
+			Util.writeNameSimple(prov.addNewName(), appd.getFirst_name(), appd.getLast_name());
+			apNotes = Util.appendLine(apNotes, "Provider: ", appd.getFirst_name()+" "+appd.getLast_name());
 		    }
 		    if (Util.filled(ap.getNotes())) apNotes = Util.appendLine(apNotes, "Notes: ", ap.getNotes());
 		    if (Util.filled(apNotes)) {
