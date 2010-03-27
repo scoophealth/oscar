@@ -28,6 +28,7 @@
 
 package oscar.oscarEncounter.oscarMeasurements.data;
 
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
