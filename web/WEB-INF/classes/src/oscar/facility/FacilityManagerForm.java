@@ -3,11 +3,10 @@ package oscar.facility;
 import org.apache.struts.action.ActionForm;
 import org.oscarehr.common.model.Facility;
 
-/**
- */
+
 public class FacilityManagerForm extends ActionForm {
     private Facility facility;
-    private boolean removeDemographicIdentity;
+    private boolean removeDemographicIdentity=true;
     private Integer updateInterval;
 
     public Facility getFacility() {
