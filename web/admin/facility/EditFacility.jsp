@@ -30,6 +30,7 @@
                 isOk = validateRequiredField('facilityName', 'Facility Name', 32);
                 if (isOk) isOk = validateRequiredField('facilityDesc', 'Facility Description', 70);
 //                if (isOk) isOk = validateUpdateInterval();
+                if (isOk) isOk = validateRemoveDemoId();
                 return isOk;
             }
 
@@ -43,6 +44,15 @@
                     alert("Integrator Update Interval must be > 0");
                 } else {
                     ret = true;
+                }
+                return ret;
+            }
+
+            function validateRemoveDemoId() {
+                var ret = true;
+                var rid = document.forms[0].removeDemographicIdentity.checked;
+                if (!rid) {
+                    ret = confirm("Remove Demographic Identity NOT checked! Is it OK?");
                 }
                 return ret;
             }

@@ -47,14 +47,18 @@
                     <a href="<html:rewrite action="/FacilityManager.do"/>?method=edit&id=<c:out value="${facility.id}" />">
                     Edit </a>
                 </display:column>
-                <display:column sortable="false" title="">
-                    <a href="<html:rewrite action="/FacilityManager.do"/>?method=delete&id=<c:out value="${facility.id}"/>&name=<c:out value="${facility.name}"/>"
-                       onclick="return ConfirmDelete('<c:out value="${facility.name}"/>')">
+<!--
+                < isplay:column sortable="false" title="">
+                    <a href="< tml:rewrite action="/FacilityManager.do"/>?method=delete&id=< :out value="${facility.id}"/>&name=< :out value="${facility.name}"/>"
+                       onclick="return ConfirmDelete('< :out value="${facility.name}"/>')">
                     Delete </a>
-                </display:column>
+                </ isplay:column>
+-->
             </display:table>
         </html:form>
-        <p><a href="<html:rewrite action="/FacilityManager.do"/>?method=add">
+<!--
+        <p><a href="< :rewrite action="/FacilityManager.do"/>?method=add">
         Add new facility </a></p>
+-->
     </body>
 </html:html>
