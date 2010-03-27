@@ -22,6 +22,7 @@
 
 package oscar.facility;
 
+import org.oscarehr.common.model.IntegratorControl;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +51,7 @@ public class IntegratorControlDao extends HibernateDaoSupport {
         return rid;
     }
 
-    public IntegratorControl readRemoveDemographicIdentityCtrl(Integer facilityId) {
+    private IntegratorControl readRemoveDemographicIdentityCtrl(Integer facilityId) {
         IntegratorControl ic_rid = null;
 
         List<IntegratorControl> lic = getAllByFacilityId(facilityId);
@@ -74,7 +75,7 @@ public class IntegratorControlDao extends HibernateDaoSupport {
         ic_rid.setExecute(removeDemoId);
         save(ic_rid);
     }
-/*Ronnie
+
     public Integer readUpdateInterval(Integer facilityId) {
         Integer upi = 0;
         IntegratorControl ic_upi = readUpdateIntervalCtrl(facilityId);
@@ -110,7 +111,7 @@ public class IntegratorControlDao extends HibernateDaoSupport {
         ic_rid.setExecute(updateInterval>0);
         save(ic_rid);
     }
-*/
+
     public void save(IntegratorControl ic) {
         if (ic == null) {
             throw new IllegalArgumentException();
