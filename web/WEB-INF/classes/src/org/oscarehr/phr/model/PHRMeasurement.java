@@ -32,7 +32,7 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarEncounter.oscarMeasurements.data.LoincMapEntry;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
-import oscar.oscarEncounter.oscarMeasurements.data.MeasurementsExt;
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
 /**
  *
