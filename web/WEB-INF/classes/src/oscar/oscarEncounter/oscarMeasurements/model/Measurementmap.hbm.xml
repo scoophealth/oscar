@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="oscar.oscarEncounter.oscarMeasurements.model">
+	<class
+		name="Measurementmap"
+		table="measurementMap"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="id"
+			type="integer"
+			column="id"
+		>
+			<generator class="native"/>
+		</id>
+
+		<property
+			name="loincCode"
+			column="loinc_code"
+			type="string"
+			not-null="false"
+			length="20"
+		/>
+		<property
+			name="identCode"
+			column="ident_code"
+			type="string"
+			not-null="true"
+			length="20"
+		/>
+		<property
+			name="name"
+			column="name"
+			type="string"
+			not-null="true"
+			length="255"
+		/>
+		<property
+			name="labType"
+			column="lab_type"
+			type="string"
+			not-null="true"
+			length="10"
+		/>
+
+
+	</class>	
+</hibernate-mapping>
