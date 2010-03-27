@@ -6,18 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -113,4 +109,13 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
 			releaseSession(s);
 		}
 	}
+
+        public List<Measurements> getMeasurementsByDemo(Integer demoId) {
+            String queryStr = "FROM Measurements m WHERE m.demographicNo = "+demoId+" ORDER BY m.id";
+
+            @SuppressWarnings("unchecked")
+            List<Measurements> rs = getHibernateTemplate().find(queryStr);
+
+            return rs;
+        }
 }
