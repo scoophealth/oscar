@@ -72,6 +72,7 @@
 	</bean>
 	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false" autowire="byName" />
+        <bean name="/FacilityManager" class="oscar.facility.FacilityManagerAction" singleton="false" autowire="byName" />
     <bean name="/PMmodule/MergeClient" class="org.oscarehr.PMmodule.web.admin.MergeClientAction"
     	singleton="false"  autowire="byName"/>
     <bean name="/PMmodule/UnmergeClient" class="org.oscarehr.PMmodule.web.admin.UnMergeClientAction"
