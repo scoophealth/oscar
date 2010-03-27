@@ -699,6 +699,9 @@ div.logoutBox {
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/oscarKeys/keyGen.jsp"/>&quot;);return false;'><bean:message key="admin.admin.keyPairGen"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/labforwardingrules.jsp"/>&quot;);return false;'><bean:message key="admin.admin.labFwdRules"/></a></li>
+                        <li>
+                            <a href="#" onclick='popupPage(600,600,&quot;<html:rewrite page="/FacilityManager.do"/>&quot;);return false;'><bean:message key="admin.admin.manageIntegratorFacilities"/></a>
+                        </li>
 			<%if (oscarVariables.getProperty("hsfo.loginSiteCode","")!=null && 
 		!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
 			<li><a href="#"
