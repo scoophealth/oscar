@@ -24,7 +24,10 @@
 	<!-- hibernated DAO -->
     <bean id="demoDao" class="oscar.oscarEncounter.oscarMeasurements.dao.DemographicHibernateDao" autowire="byName"/>
     <bean id="measurementsDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsHibernateDao" autowire="byName"/>
-	<bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName" />
+    <bean id="measurementsExtDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao" autowire="byName"/>
+    <bean id="measurementTypeDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementTypeDao" autowire="byName"/>
+    <bean id="measurementMapDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao" autowire="byName"/>
+    	<bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName" />
 	<bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.ProgramQueueDao" autowire="byName" />
 	<bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName" />
 	<bean id="agencyDao" class="org.oscarehr.PMmodule.dao.AgencyDao" autowire="byName" />
@@ -39,7 +42,8 @@
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
 	<bean id="consultationRequestDAO" class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
-	<!--
+        <bean id="billingOnItemDao" class="oscar.oscarBilling.ca.on.dao.BillingOnItemDao" autowire="byName" />
+	<!-- 
     <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
  -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
@@ -108,6 +112,8 @@
 	<bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
 	<bean id="rxCloneDao" class="oscar.oscarRx.dao.hibernate.RxCloneFavoritesDAOHibernate" autowire="byName" />
 	<bean id="providerInboxRoutingDAO" class="org.oscarehr.common.dao.ProviderInboxRoutingDao" autowire="byName"/>
+        <bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
+        <bean id="appointmentDao" class="oscar.appt.AppointmentDao" autowire="byName" />
 
 	<!-- Dao classes that implement OscarSuperDao -->
 	<bean id="appointmentSuperDao" class="oscar.dao.AppointmentDao" autowire="byName" />
