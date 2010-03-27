@@ -10,7 +10,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
