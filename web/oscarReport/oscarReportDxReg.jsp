@@ -44,16 +44,6 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 <%@page import="java.util.*"%>
 
 
-<script type="text/JavaScript">
-
-function changeaction() {
-		alert(document[0].form[0].valule);
-                
-}
-
-</script>
-
-
 <html:html locale="true">
     <head>
         <script type="text/javascript" src="<%= request.getContextPath()%>/js/global.js"></script>
@@ -66,8 +56,24 @@ function changeaction() {
         <script type="text/javascript" language="JavaScript"
         src="../share/javascript/Oscar.js"></script>
         <link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" ></link>
+        	<link rel="stylesheet" type="text/css" href="../css/jquery.autocomplete.css" />
+	<script src="http://www.google.com/jsapi"></script>
+	<script>
+		google.load("jquery", "1");
+	</script>
+	<script src="../js/jquery.autocomplete.js"></script>
+	<style>
+		input {
+			font-size: 100%;
+		}
+	</style>
     </head>
+    <%
+                request.setAttribute("listview", request.getSession().getAttribute("listview"));
+                request.setAttribute("codeSearch", request.getSession().getAttribute("codeSearch"));
+                //request.setAttribute("codeSearch", request.getSession().getAttribute("codeSearch"));
 
+    %>
     <body vlink="#0000FF" class="BodyStyle">
 
         <table class="MainTable">
@@ -86,12 +92,93 @@ function changeaction() {
                 </td>
                 <td class="MainTableRightColumn" valign="top">
 
-                    <%
-                                request.setAttribute("listview", request.getSession().getAttribute("listview"));
-                    %>
+                    <table border="1" width="100%">
+                            <tbody>
+                                <html:form action="/report/DxresearchReport?method=addSearchCode">
+                                <tr>
+                                    <td>
+                                        <html:select property="quicklistname">
+                                            <option  value="">Add From QuickList</option>
+                                            <logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector">
+							<option
+								value="<bean:write name="quickLists" property="quickListName" />"
+								<bean:write name="quickLists" property="lastUsed" />><bean:write
+								name="quickLists" property="quickListName" />
+                                                        </option>
+                                            </logic:iterate>
+                                        </html:select>
+                                    </td>
+                                    <td>
+                                        OR
+                                        <html:select property="codesystem">
+                                            <option  value="">Select Coding System</option>
+						<logic:iterate id="codingSys" name="codingSystem"
+							property="codingSystems">
+							<option value="<bean:write name="codingSys"/>"><bean:write
+								name="codingSys" /></option>
+						</logic:iterate>
+					</html:select>
+                                    </td>
+                                    
+                                    <td>
+                                        <input type="text" id="codesearch" name="codesearch" size="45" />
 
+                                        <script>
+                                            $("#codesearch").autocomplete("../oscarReport/oscarReportDxRegHelper.jsp");
+                                        </script>
+                                    </td>
+                                    <td>
+                                        <nested:submit style="border:1px solid #666666;">ADD</nested:submit>
+                                    </td>
+
+                                </html:form>
+                                <html:form action="/report/DxresearchReport?method=clearSearchCode">
+
+                                        <td>
+                                            <nested:submit style="border:1px solid #666666;">CLEAR</nested:submit>
+                                        </td>
+                                    </tr>
+                                </html:form>
+                            </tbody>
+                        </table>
+
+                    <table border="0">
+                        <tbody>
+                            <tr>
+                                <td>Search Patients Who Registed With Below Codes:(ichppccode/icd10 not supported yet)</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                     <nested:form action="/report/DxresearchReport?method=patientRegistedAll">
+
+                        <table border="1" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <display:table name="codeSearch" id="codeSearch" class="simple" style="border:1px solid #666666; width:99%;margin-top:2px;">
+                                            <display:column property="type" title="Code System" />
+                                            <display:column property="dxSearchCode" title="Code" />
+                                            <display:column property="description" title="Description" />
+                                        </display:table>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table border="0">
+                            <thead>
+                                <tr>
+                                    <th>Search Result: </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                         Filter: &nbsp;&nbsp;
                         <label>
                             <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDistincted'">
@@ -103,18 +190,18 @@ function changeaction() {
                             <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedActive'">
                             Active</label>
                         <label>
-                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedResolve'">
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDeleted'">
                             Deleted</label>
                          <label>
-                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDeleted'">
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedResolve'">
                             Resolved</label>
-                        
-                        
+
+
                         &nbsp;&nbsp;
                         <nested:submit style="border:1px solid #666666;">Search Registed Patients</nested:submit>
                     </nested:form>
 
-                        <display:table name="listview" id="listview" class="its" style="border:1px solid #666666; width:99%;margin-top:2px;">
+                        <display:table name="listview" id="listview" class="mars" style="border:1px solid #666666; width:99%;margin-top:2px;">
                             <display:column property="strFirstName" title="First Name" />
                             <display:column property="strLastName" title="Last Name" />
                             <display:column property="strSex" title="Sex" />

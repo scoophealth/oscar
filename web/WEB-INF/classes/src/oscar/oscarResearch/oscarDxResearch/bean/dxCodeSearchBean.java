@@ -25,7 +25,7 @@
 package oscar.oscarResearch.oscarDxResearch.bean;
 
 
-public class dxCodeSearchBean{
+public class dxCodeSearchBean implements java.io.Serializable{
 
        String description;       
        String dxSearchCode;              

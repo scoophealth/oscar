@@ -51,7 +51,11 @@
             <form-property name="referral" type="org.oscarehr.common.model.Billingreferral" />
         </form-bean>
 
-        <form-bean name="DxresearchReportForm" type="org.apache.struts.validator.DynaValidatorForm"/>
+        <form-bean name="DxresearchReportForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="quicklistname" type="java.lang.String" />
+            <form-property name="codesystem" type="java.lang.String" />
+        <!--    <form-property name="codesearch" type="java.lang.String" />  -->
+        </form-bean>
 
         <form-bean name="annotationForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="oAnnotation" type="org.oscarehr.common.model.OscarAnnotation" />

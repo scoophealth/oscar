@@ -13,6 +13,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DxRegistedPTInfo;
 import org.oscarehr.common.model.Dxresearch;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import oscar.oscarResearch.oscarDxResearch.bean.dxCodeSearchBean;
+import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
 
 /**
  *
@@ -61,12 +63,37 @@ public class DxresearchDAO extends HibernateDaoSupport{
     }
 
 
-    public List patientRegistedDistincted(){
+    public List patientRegistedDistincted(List searchItems){
         List dList = null;
         Session session = null;
+        List<dxCodeSearchBean> listItems = searchItems;
+        String HQL = "";
+
+        if (listItems != null && listItems.size()>0) {
+            Iterator ite = listItems.listIterator();
+            HQL = "SELECT dxres FROM Dxresearch dxres";
+
+            if (ite.hasNext()) {
+                HQL += " WHERE ";
+            }
+
+            while (ite.hasNext()) {
+                dxCodeSearchBean bean = (dxCodeSearchBean)ite.next();
+                String codeSys = bean.getType();
+                String code = bean.getDxSearchCode();
+                HQL += "dxres.codingSystem= '" + codeSys + "' AND dxres.dxresearchCode='" + code + "'";
+                if (ite.hasNext()) {
+                    HQL += " OR ";
+                }
+            }
+            HQL += " GROUP BY dxres.demographicNo ORDER BY dxres.updateDate asc";
+            
+        } else {
+            HQL = "SELECT dxres FROM Dxresearch dxres GROUP BY dxres.demographicNo ORDER BY dxres.updateDate asc";
+        }
         try {
             session = getSession();
-            dList = session.createQuery("select dxres from Dxresearch dxres group by dxres.demographicNo order by dxres.updateDate asc").list();
+            dList = session.createQuery(HQL).list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -76,21 +103,47 @@ public class DxresearchDAO extends HibernateDaoSupport{
         }
 
         if (dList != null && dList.size() > 0) {
-            Iterator i = dList.listIterator();
-            while (i.hasNext())
-                System.out.println(i.next());
+            //Iterator i = dList.listIterator();
+            //while (i.hasNext())
+             //   System.out.println(i.next());
             return getPatientRegisted (dList);
         } else {
             return null;
         }
     }
 
-    public List patientRegistedAll(){
+    public List patientRegistedAll(List searchItems){
         List dList = null;
         Session session = null;
+        List<dxCodeSearchBean> listItems = searchItems;
+        String HQL = "";
+
+        if (listItems != null && listItems.size()>0) {
+            Iterator ite = listItems.listIterator();
+            HQL = "SELECT dxres FROM Dxresearch dxres";
+
+            if (ite.hasNext()) {
+                HQL += " WHERE ";
+            }
+
+            while (ite.hasNext()) {
+                dxCodeSearchBean bean = (dxCodeSearchBean)ite.next();
+                String codeSys = bean.getType();
+                String code = bean.getDxSearchCode();
+                HQL += "dxres.codingSystem= '" + codeSys + "' AND dxres.dxresearchCode='" + code + "'";
+                if (ite.hasNext()) {
+                    HQL += " OR ";
+                }
+            }
+            HQL += " ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
+            
+        } else {
+            HQL = "SELECT dxres FROM Dxresearch dxres ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
+        }
+        //System.out.println("HQL======="+HQL);
         try {
             session = getSession();
-            dList = session.createQuery("select dxres from Dxresearch dxres order by dxres.demographicNo asc, dxres.updateDate asc").list();
+            dList = session.createQuery(HQL).list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -100,33 +153,58 @@ public class DxresearchDAO extends HibernateDaoSupport{
         }
 
         if (dList != null && dList.size() > 0) {
-            Iterator i = dList.listIterator();
-            while (i.hasNext())
-                System.out.println(i.next());
+            //Iterator i = dList.listIterator();
+            //while (i.hasNext())
+             //   System.out.println(i.next());
             return getPatientRegisted (dList);
         } else {
             return null;
         }
     }
 
-    public List patientRegistedActive(){
-        return patientRegistedStatus("A");
+    public List patientRegistedActive(List searchItems){
+        return patientRegistedStatus("A",searchItems);
     }
 
-    public List patientRegistedResolve(){
-        return patientRegistedStatus("C");
+    public List patientRegistedResolve(List searchItems){
+        return patientRegistedStatus("C",searchItems);
     }
 
-    public List patientRegistedDeleted(){
-        return patientRegistedStatus("D");
+    public List patientRegistedDeleted(List searchItems){
+        return patientRegistedStatus("D",searchItems);
     }
 
-    public List patientRegistedStatus(String status){
+    public List patientRegistedStatus(String status,List searchItems){
         List dList = null;
         Session session = null;
+        List<dxCodeSearchBean> listItems = searchItems;
+        String HQL = "";
+
+        if (listItems != null && listItems.size()>0) {
+            Iterator ite = listItems.listIterator();
+            HQL = "SELECT dxres FROM Dxresearch dxres WHERE (";
+
+            while (ite.hasNext()) {
+                dxCodeSearchBean bean = (dxCodeSearchBean)ite.next();
+                String codeSys = bean.getType();
+                String code = bean.getDxSearchCode();
+                HQL += "dxres.codingSystem= '" + codeSys + "' AND dxres.dxresearchCode='" + code + "'";
+                if (ite.hasNext()) {
+                    HQL += " OR ";
+                }
+            }
+            if (listItems.size()>0)
+                HQL += ") AND ";
+
+            HQL += "dxres.status= '" + status + "' ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
+            
+        } else {
+            HQL = "SELECT dxres FROM Dxresearch dxres WHERE dxres.status= '" + status + "' ORDER BY dxres.demographicNo asc, dxres.updateDate asc";
+            
+        }
         try {
             session = getSession();
-            dList = session.createQuery("select dxres from Dxresearch dxres where dxres.status= '"+status+"' order by dxres.demographicNo asc, dxres.updateDate asc").list();
+            dList = session.createQuery(HQL).list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -136,16 +214,19 @@ public class DxresearchDAO extends HibernateDaoSupport{
         }
 
         if (dList != null && dList.size() > 0) {
-            Iterator i = dList.listIterator();
-            while (i.hasNext())
-                System.out.println(i.next());
+            //Iterator i = dList.listIterator();
+            //while (i.hasNext())
+            //    System.out.println(i.next());
             return getPatientRegisted (dList);
         } else {
             return null;
         }
     }
 
-    public List patientRegisted(String dxResearchCode){
-        return null;
+    public List getQuickListItems(String quickListName){
+
+        List<dxCodeSearchBean> listItems = new ArrayList<dxCodeSearchBean>();
+        listItems.addAll(new dxQuickListItemsHandler(quickListName).getDxQuickListItemsVector());
+        return listItems;
     }
 }
