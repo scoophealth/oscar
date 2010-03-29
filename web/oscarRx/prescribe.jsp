@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@page import="oscar.oscarRx.data.RxDrugData,java.util.*" %>
@@ -32,11 +33,15 @@ if(listRxDrugs!=null){
          String durationUnit    = rx.getDurationUnit();
          boolean prn            = rx.getPrn();
          String repeats         = Integer.toString(rx.getRepeat());
-         String takeMin          = rx.getTakeMinString();
-         String takeMax         =rx.getTakeMaxString();
+         String takeMin         = rx.getTakeMinString();
+         String takeMax         = rx.getTakeMaxString();
          boolean longTerm       = rx.getLongTerm();
+      //   boolean isCustomNote   =rx.isCustomNote();
          String outsideProvOhip = rx.getOutsideProviderOhip();
-         String brandName        = rx.getBrandName();
+         String brandName       = rx.getBrandName();
+         String ATC             = rx.getAtcCode();
+         if(ATC.trim().length()>0)
+             ATC="ATC: "+ATC;
          String drugName;
          boolean isSpecInstPresent=false;
          if(gcn==0){//it's a custom drug
@@ -89,7 +94,7 @@ if(listRxDrugs!=null){
              isOutsideProvider=false;
              //System.out.println("isOutsideProvider false");
          }
-         System.out.println("instructions from repscbAllLongTerm="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
+         System.out.println("instructions ="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
          if(route==null || route.equalsIgnoreCase("null")) route="";
          String rxString="Method:"+method+"; Route:"+route+"; Frequency:"+frequency+"; Min:"+takeMin+"; Max:"
                     +takeMax+"; Duration:"+duration+"; DurationUnit:"+durationUnit+"; Quantity:"+quantityText;
@@ -114,24 +119,21 @@ if(listRxDrugs!=null){
     <a href="javascript:void(0);"  style="float:right;margin-left:5px;margin-top:0px;padding-top:0px;" onclick="$('set_<%=rand%>').remove();deletePrescribe('<%=rand%>');">X</a>
     <a href="javascript:void(0);" style="float:right;margin-top:0px;padding-top:0px;" onclick="$('rx_more_<%=rand%>').toggle();">  <span id="moreLessWord_<%=rand%>" onclick="updateMoreLess(id)" >more</span> </a>
 
-    <label style="float:left;width:80px;">Name:</label>
-    <input type="text" id="drugName_<%=rand%>"     name="drugName_<%=rand%>"  size="30" <%if(gcn==0){%> onchange="saveCustomName(this);" value="<%=drugName%>"<%} else{%> value="<%=drugName%>"  onchange="changeDrugName('<%=rand%>','<%=drugName%>');" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span>&nbsp;&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span><br>
+    <label style="float:left;width:80px;" title="<%=ATC%>" >Name:</label>
+    <input type="text" id="drugName_<%=rand%>"  name="drugName_<%=rand%>"  size="30" <%if(gcn==0){%> onchange="saveCustomName(this);" value="<%=drugName%>"<%} else{%> value="<%=drugName%>"  onchange="changeDrugName('<%=rand%>','<%=drugName%>');" <%}%>/><span id="alleg_<%=rand%>" style="color:red;"></span>&nbsp;&nbsp;<span id="inactive_<%=rand%>" style="color:red;"></span><br>
     <a href="javascript:void(0);" onclick="showHideSpecInst('siAutoComplete_<%=rand%>')" style="float:left;width:80px;">Instructions:</a>
     <input type="text" id="instructions_<%=rand%>" name="instructions_<%=rand%>" onkeypress="handleEnter(this,event);" value="<%=instructions%>" size="60" onchange="parseIntr(this);" /> <a id="major_<%=rand%>" style="display:none;background-color:red"></a>&nbsp;<a id="moderate_<%=rand%>" style="display:none;background-color:orange"></a>&nbsp;<a id='minor_<%=rand%>' style="display:none;background-color:yellow;"></a>&nbsp;<a id='unknown_<%=rand%>' style="display:none;background-color:#B1FB17"></a>
        <br>
        <label for="specialInstr_<%=rand%>" ></label>
        <div id="siAutoComplete_<%=rand%>" <%if(isSpecInstPresent){%> style="overflow:visible;"<%} else{%> style="overflow:visible;display:none;"<%}%> >
-           <label style="float:left;width:80px;">&nbsp;&nbsp;</label>
-           <input id="siInput_<%=rand%>" type="text" size="60" <%if(!isSpecInstPresent) {%>style="color:gray; width:auto" value="Enter Special Instruction" <%} else {%> style="color:black; width:auto" value="<%=specialInstruction%>" <%}%> onblur="changeText('siInput_<%=rand%>');updateSpecialInstruction('siInput_<%=rand%>');" onfocus="changeText('siInput_<%=rand%>');" >
+           <label style="float:left;width:80px;">&nbsp;&nbsp;</label><input id="siInput_<%=rand%>" type="text" size="60" <%if(!isSpecInstPresent) {%>style="color:gray; width:auto" value="Enter Special Instruction" <%} else {%> style="color:black; width:auto" value="<%=specialInstruction%>" <%}%> onblur="changeText('siInput_<%=rand%>');updateSpecialInstruction('siInput_<%=rand%>');" onfocus="changeText('siInput_<%=rand%>');" >
            <div id="siContainer_<%=rand%>" style="float:right" >
            </div>
                        <br><br>
         </div>
-           <label id="labelQuantity_<%=rand%>" style="float:left;width:80px;">Qty/Mitte:</label>
-    <input type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
-    <label style="">Repeats:</label>
-       <input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />
-       <input type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
+    <label id="labelQuantity_<%=rand%>" style="float:left;width:80px;">Qty/Mitte:</label><input type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
+    <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />
+    <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
 
        <div class="rxStr" title="not what you mean?" >
            <a href="javascript:void(0);" onclick="focusTo('method_<%=rand%>')">Method:</a><a   id="method_<%=rand%>" onclick="focusTo(this.id)" onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"><%=methodStr%></a>
