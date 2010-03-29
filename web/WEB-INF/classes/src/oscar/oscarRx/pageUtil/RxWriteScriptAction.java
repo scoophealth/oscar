@@ -1002,13 +1002,19 @@ public final class RxWriteScriptAction extends DispatchAction {
                 String newline = System.getProperty("line.separator");
                 rx.setPatientCompliance(patientComplianceY, patientComplianceN);
                 String special;
-                if (rx.isCustom()) {
+                            if (rx.isCustom()) {//custom drug
+                               if(rx.getUnitName()==null){
                     special = rx.getCustomName() + newline + rx.getSpecial();
                     if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length()>0)
                             special+=newline+rx.getSpecialInstruction();
-
                     special+= newline + "Qty:" + rx.getQuantity() + " Repeats:" + "" + rx.getRepeat();
-                } else {
+                               }else{
+                                    special=rx.getCustomName()+newline+rx.getSpecial();
+                                    if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length()>0)
+                                        special+=newline+rx.getSpecialInstruction();
+                                    special+= newline + "Qty:" + rx.getQuantity() + " "+rx.getUnitName() +" Repeats:" + "" + rx.getRepeat();
+                               }
+                            } else {//non-custom drug
                     if(rx.getUnitName()==null){
                         special = rx.getBrandName() + newline + rx.getSpecial();
                         if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length()>0)
