@@ -615,7 +615,7 @@ function calToday(field) {
   if (!bView) {
 %>
 			<td><a
-				href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
 			</td>
 
 			<td align="right"><b>View:</b> <a
@@ -1677,7 +1677,7 @@ function calToday(field) {
   if (!bView) {
 %>
 			<td><a
-				href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
 			</td>
 
 			<td align="right"><font size="-1"><b>View:</b> <a

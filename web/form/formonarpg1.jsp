@@ -386,7 +386,7 @@ function calByLMP(obj) {
   if (!bView) {
 %>
 			<td><a
-				href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
 			</td>
 
 			<td align="right"><b>View:</b> <a
@@ -1746,7 +1746,7 @@ function calByLMP(obj) {
   if (!bView) {
 %>
 			<td><a
-				href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+				href="javascript: popPage('formlabreq07.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq');">LAB</a>
 			</td>
 			<td align="right"><b>View:</b> <a
 				href="javascript: popupPage('formonarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
