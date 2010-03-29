@@ -286,7 +286,7 @@ public class RxUtil {
                 return qNum;
             }
             return null;
-    }
+        }
         public static boolean isMitte(String qStr){
             boolean isMitte=false;
             String[] durationUnits =
@@ -381,7 +381,7 @@ public class RxUtil {
             return retStr;
         }
 
-    public static String findDuration(RxPrescriptionData.Prescription rx) {//calculate duration based on quantity, takemax,takemin,frequency,durationUnit.
+     public static String findDuration(RxPrescriptionData.Prescription rx) {//calculate duration based on quantity, takemax,takemin,frequency,durationUnit.
         //get frequency,takemax,takemin,durationUnit by parsing special.
         instrucParser(rx);
         System.out.println("after  instrucParser,quantity="+rx.getQuantity());
@@ -434,7 +434,39 @@ public class RxUtil {
         rx.setQuantity(Integer.toString(0));
         rx.setSpecial("");
     }
+    private static String changeToStandardFrequencyCode(String str) {
+        String retVal=str;
+        if(str.equalsIgnoreCase("daily")){
+            retVal="OD";
+        }else if(str.equalsIgnoreCase("once daily")){
+            retVal="OD";
+        }else if(str.equalsIgnoreCase("twice daily")){
+            retVal="BID";
+        }else if(str.equalsIgnoreCase("3x day")){
+            retVal="TID";
+        }else if(str.equalsIgnoreCase("3x daily")){
+            retVal="TID";
+        }else if(str.equalsIgnoreCase("4x day")){
+            retVal="QID";
+        }else if(str.equalsIgnoreCase("4x daily")){
+            retVal="QID";
+        }else if(str.equalsIgnoreCase("weekly")){
+            retVal="Q1Week";
+        }else if(str.equalsIgnoreCase("monthly")){
+            retVal="Q1Month";
+        }
+        return retVal;
+    }
 
+    private static String checkInstructionStr(String str) {//replace if instruction contains certain string which may confuse the text parser
+        String retVal=str;
+        if(str.contains("3x day")){
+            retVal=retVal.replace("3x day", "");
+        }else if(str.contains("4x day")){
+            retVal=retVal.replace("4x day", "");
+        }
+        return retVal;
+    }
     public static void instrucParser(RxPrescriptionData.Prescription rx) {
         if (rx == null) {
             return;
@@ -478,12 +510,18 @@ public class RxUtil {
                 "\\s(?i)SUPP$", "\\s(?i)O.D.$", "\\s(?i)O.S.$", "\\s(?i)O.U.$", "\\s(?i)OD$", "\\s(?i)OS$", "\\s(?i)OU$", "\\s(?i)PO\\s", "\\s(?i)SL\\s", "\\s(?i)IM\\s",
                 "\\s(?i)SC\\s", "\\s(?i)PATCH\\s", "\\s(?i)TOP\\.\\s", "\\s(?i)INH\\s",
                 "\\s(?i)SUPP\\s", "\\s(?i)O.D.\\s", "\\s(?i)O.S.\\s", "\\s(?i)O.U.\\s", "\\s(?i)OD\\s", "\\s(?i)OS\\s", "\\s(?i)OU\\s"};
-            String[] frequences = {"\\s(?i)OD\\s", "\\s(?i)BID\\s", "\\s(?i)TID\\s", "\\s(?i)QID\\s", "\\s(?i)Q1H\\s", "\\s(?i)Q2H\\s", "\\s(?i)Q1-2H\\s", "\\s(?i)Q3-4H\\s",
-                "\\s(?i)Q4H\\s", "\\s(?i)Q4-6H\\s", "\\s(?i)Q6H\\s", "\\s(?i)Q8H\\s", "\\s(?i)Q12H\\s", "\\s(?i)QAM\\s", "\\s(?i)QPM\\s", "\\s(?i)QHS\\s", "\\s(?i)Q1Week\\s",
-                "\\s(?i)Q2Week\\s", "\\s(?i)Q1Month\\s", "\\s(?i)Q3Month\\s",
+            String[] frequences =
+            {
+                "\\s(?i)OD\\s", "\\s(?i)BID\\s", "\\s(?i)TID\\s", "\\s(?i)QID\\s", "\\s(?i)Q1H\\s", "\\s(?i)Q2H\\s", "\\s(?i)Q1-2H\\s", "\\s(?i)Q3-4H\\s",
+                "\\s(?i)Q4H\\s", "\\s(?i)Q4-6H\\s", "\\s(?i)Q6H\\s", "\\s(?i)Q8H\\s", "\\s(?i)Q12H\\s", "\\s(?i)QAM\\s", "\\s(?i)QPM\\s", "\\s(?i)QHS\\s", "\\s(?i)Q1Week\\s","\\s(?i)weekly\\s",
+                "\\s(?i)Q2Week\\s", "\\s(?i)Q1Month\\s", "\\s(?i)Q3Month\\s","\\s(?i)monthly\\s",
+                        "\\s(?i)once daily\\s","\\s(?i)twice daily\\s","\\s(?i)3x day\\s","\\s(?i)4x day\\s","\\s(?i)3x daily\\s","\\s(?i)4x daily\\s",
                 "\\s(?i)OD$", "\\s(?i)BID$", "\\s(?i)TID$", "\\s(?i)QID$", "\\s(?i)Q1H$", "\\s(?i)Q2H$", "\\s(?i)Q1-2H$", "\\s(?i)Q3-4H$", "\\s(?i)Q4H$",
-                "\\s(?i)Q4-6H$", "\\s(?i)Q6H$", "\\s(?i)Q8H$", "\\s(?i)Q12H$", "\\s(?i)QAM$", "\\s(?i)QPM$", "\\s(?i)QHS$", "\\s(?i)Q1Week$", "\\s(?i)Q2Week$",
-                "\\s(?i)Q1Month$", "\\s(?i)Q3Month$"};
+                "\\s(?i)Q4-6H$", "\\s(?i)Q6H$", "\\s(?i)Q8H$", "\\s(?i)Q12H$", "\\s(?i)QAM$", "\\s(?i)QPM$", "\\s(?i)QHS$", "\\s(?i)Q1Week$", "\\s(?i)weekly$","\\s(?i)Q2Week$",
+                "\\s(?i)Q1Month$", "\\s(?i)Q3Month$",  "\\s(?i)monthly$",
+                         "\\s(?i)once daily$", "\\s(?i)twice daily$", "\\s(?i)3x day$","\\s(?i)4x day$","\\s(?i)3x daily$","\\s(?i)4x daily$",
+                    "\\s(?i)daily\\s","\\s(?i)daily$",// put at last because if frequency is 'twice daily', it will first be detected as 'daily'
+            };
             String[] methods = {"(?i)Take", "(?i)Apply", "(?i)Rub well in"};
             String[] durationUnits =
             {"\\s+(?i)days\\s", "\\s+(?i)weeks\\s", "\\s+(?i)months\\s", "\\s+(?i)day\\s", "\\s+(?i)week\\s", "\\s+(?i)month\\s",
@@ -543,6 +581,7 @@ public class RxUtil {
                 Matcher matcher = p.matcher(instructions);
                 if (matcher.find()) {
                     frequency = (instructions.substring(matcher.start(), matcher.end())).trim();
+                    frequency=changeToStandardFrequencyCode(frequency);
                     Pattern p2 = Pattern.compile("\\s*\\d*\\.*\\d+\\s+" + frequency); //allow to detect decimal number.
                     Matcher m2 = p2.matcher(instructions);
 
@@ -653,22 +692,23 @@ public class RxUtil {
             for (String s : durationUnits) {
                 // p(instructions);
                 // p(s);
+                String instructionToCheck=checkInstructionStr(instructions);
                 Pattern p = Pattern.compile(s);
-                Matcher m = p.matcher(instructions);
+                Matcher m = p.matcher(instructionToCheck);
                 //System.out.println("check duration unit, if space present,pattern="+s+"--instructions="+instructions);
                 if (m.find()) {
                         p("FOUND");
-                        p(instructions);
+                        p("instructionToCheck==", instructionToCheck);
                         p(s);
-                    durationUnitSpec = (instructions.substring(m.start(), m.end())).trim();
+                    durationUnitSpec = ( instructionToCheck.substring(m.start(), m.end())).trim();
                         p("durationUnitSpec", durationUnitSpec);
                     //get the number before durationUnit
                     Pattern p1 = Pattern.compile("[0-9]+" + s);
-                    Matcher m1 = p1.matcher(instructions);
+                    Matcher m1 = p1.matcher(instructionToCheck );
                     if (m1.find()) {
-                                 p("" + m1.start(), "" + m.start());
-                        durationSpec = instructions.substring(m1.start(), m.start());
-                        duration = durationSpec.trim();
+                                p("" + m1.start(), "" + m.start());
+                                durationSpec =  instructionToCheck.substring(m1.start(), m.start());
+                                duration = durationSpec.trim();
                                 p("duration here1", duration);
                     }
                     break;
@@ -680,14 +720,15 @@ public class RxUtil {
             if (durationUnitSpec.equals("")) {
                     System.out.println("no space between duration and duration unit.");
                 for (String s : durUnits2) {
+                    String instructionToCheck=checkInstructionStr(instructions);
                     Pattern p = Pattern.compile(s);
-                    Matcher m = p.matcher(instructions);
+                    Matcher m = p.matcher(instructionToCheck);
                     //System.out.println("check duration unit, if space not present,pattern="+s+"--instructions="+instructions);
                     if (m.find()) {
                         p("FOUND");
-                        p(instructions);
+                        p("instructionToCheck="+ instructionToCheck);
                         p(s);
-                        String str1 = instructions.substring(m.start(), m.end());
+                        String str1 = instructionToCheck.substring(m.start(), m.end());
                                System.out.println("str1=" + str1);
                         //get numUnit out
                         Pattern p1 = Pattern.compile("[0-9]+");
@@ -708,7 +749,10 @@ public class RxUtil {
             if (durationUnitSpec.equals("")) {
                 //    p("here?? if");
                 String[] freq1 = {"\\s*(?i)OD\\s*", "\\s*(?i)BID\\s*", "\\s*(?i)TID\\s*", "\\s*(?i)QID\\s*", "\\s*(?i)Q1H\\s*", "\\s*(?i)Q2H\\s*", "\\s*(?i)Q1-2H\\s*", "\\s*(?i)Q3-4H\\s*", "\\s*(?i)Q4H\\s*", "\\s*(?i)Q4-6H\\s*",
-                    "\\s*(?i)Q6H\\s*", "\\s*(?i)Q8H\\s*", "\\s*(?i)Q12H\\s*", "\\s*(?i)QAM\\s*", "\\s*(?i)QPM\\s*", "\\s*(?i)QHS\\s*"};//QPM is once a day in the evening, qhs once a day at night.
+                    "\\s*(?i)Q6H\\s*", "\\s*(?i)Q8H\\s*", "\\s*(?i)Q12H\\s*", "\\s*(?i)QAM\\s*", "\\s*(?i)QPM\\s*", "\\s*(?i)QHS\\s*",
+                    "\\s*(?i)once daily\\s*","\\s*(?i)twice daily\\s*","\\s*(?i)3x day\\s*","\\s*(?i)4x day\\s*","\\s*(?i)3x daily\\s*","\\s*(?i)4x daily\\s*",
+                    "\\s*(?i)daily\\s*"// put at last because if frequency is 'twice daily', it will first be detected as 'daily'
+                    };//QPM is once a day in the evening, qhs once a day at night.
                 String[] freq2 = {"\\s*(?i)Q1Week\\s*", "\\s*(?i)Q2Week\\s*"};
                 String[] freq3 = {"\\s*(?i)Q1Month\\s*", "\\s*(?i)Q3Month\\s*"};
                 boolean found = false;
@@ -1258,7 +1302,7 @@ public class RxUtil {
                     String interactingAtc=(String)hb.get("atc");
                     String interactingDrugName=(String)hb.get("drug2");
                     String effectStr=(String)hb.get("effect");
-                    String sigStr=(String)hb.get("significance");                    
+                    String sigStr=(String)hb.get("significance");
                     System.out.println("findInterDrugStr="+hb);
                     if(sigStr!=null){
                         if(sigStr.equals("1")){
