@@ -1293,15 +1293,29 @@ function updateDeleteOnCloseRxBox(){
 function popForm2(){
         try{
             //oscarLog("popForm2 called");
+            var url1="<c:out value="${ctx}"/>"+"/oscarRx/WriteScript.do?parameterValue=checkNoStashItem";
+            var data="";
+            var h=700;
+            new Ajax.Request(url1, {method: 'get',parameters:data, onSuccess:function(transport){
+                //output default instructions
+                var json=transport.responseText.evalJSON();
+                var n=json.NoStashItem;
+                if(n>4){
+                    h=h+(n-4)*100;
+                }
+                oscarLog("h="+h+"--n="+n);
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp";
                     oscarLog( "preview2 done");
                     myLightWindow.activateWindow({
                         href: url,
-                        width: 660
+                    width: 660,
+                    height: h
                     });
                     var editRxMsg='<bean:message key="oscarRx.Preview.EditRx"/>';
             $('lightwindow_title_bar_close_link').update(editRxMsg);
             $('lightwindow_title_bar_close_link').onclick=updateDeleteOnCloseRxBox;
+            }});
+
                 }
         catch(er){
             oscarLog(er);
