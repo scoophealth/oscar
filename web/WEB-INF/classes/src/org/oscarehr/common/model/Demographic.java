@@ -894,6 +894,9 @@ public class Demographic implements Serializable {
 			cal = new GregorianCalendar();
 			cal.setTimeInMillis(0);
 			cal.set(Integer.parseInt(yearOfBirth), Integer.parseInt(monthOfBirth) - 1, Integer.parseInt(dateOfBirth));
+			
+			// force materialisation of data
+			cal.getTimeInMillis();
 		}
 
 		return (cal);

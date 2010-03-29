@@ -324,11 +324,11 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
-			<th>Admission</th>
 			<th>Date</th>
 			<th>Provider</th>
 			<th>Signed</th>
-			<th></th>
+			<th>Admission</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${cdsForms}">
@@ -338,11 +338,14 @@ New User Created Form:&nbsp;
 				CdsClientForm cdsForm=(CdsClientForm)request.getAttribute("form");
 				String admissionString=ClientManagerAction.getEscapedAdmissionSelectionDisplay(cdsForm.getAdmissionId());
 			%>
-			<td><%=admissionString%></td>
 			<td><%=ClientManagerAction.getEscapedDateDisplay(cdsForm.getCreated())%></td>
 			<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsForm.getProviderNo())%></td>
-			<td><%=cdsForm.isSigned()%></td>
-			<td><a href="ClientManager/cds_form_4.jsp?cdsFormId=<%=cdsForm.getId()%>">details</a></td>
+			<td><%=cdsForm.isSigned()?"signed":"unsigned"%></td>
+			<td><%=admissionString%></td>
+			<%
+				String cdsFormUrl="ClientManager/cds_form_4.jsp?cdsFormId="+cdsForm.getId();
+			%>
+			<td><a href="<%=cdsFormUrl%>">update cds data</a> <input type="button" value="Print Preview" onclick="document.location='<%=cdsFormUrl+"&print=true"%>'" /></td>
 		</tr>
 	</c:forEach>
 </table>

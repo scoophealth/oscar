@@ -2,10 +2,8 @@
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
 <%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
 
-<%@include file="/layouts/caisi_html_top2.jspf"%>
-
 <%
-	// is only populated if it's an existing form, i.e. viewing previous form.
+	// is only populated if it's an existing form, i.e. new one off existing form
 	Integer cdsFormId=null;
 
 	// must be populated some how
@@ -25,8 +23,12 @@
 		currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 		cdsClientForm=CdsForm4.getCdsClientFormByClientId(currentDemographicId);
 	}
+	
+	boolean printOnly=request.getParameter("print")!=null;
+	if (printOnly) request.setAttribute("noMenus", true);
 %>
 
+<%@include file="/layouts/caisi_html_top2.jspf"%>
 
 <form action="cds_form_4_action.jsp" name="form">
 	<h3>CDS form (CDS-MH v4.05)</h3>
@@ -37,20 +39,35 @@
 		<tr>
 			<td class="genericTableHeader">Select corresponding admission</td>
 			<td class="genericTableData">
-				<select name="admissionId">
-					<%
-						for (Admission admission : CdsForm4.getAdmissions(currentDemographicId))
-						{
-							String selected="";
-							
-							if (cdsClientForm.getAdmissionId()!=null && cdsClientForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
-							
-							%>
-								<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
+				<%
+					if (cdsFormId==null)
+					{
+						%>
+						<select name="admissionId">
 							<%
-						}
-					%>
-				</select>
+								for (Admission admission : CdsForm4.getAdmissions(currentDemographicId))
+								{
+									String selected="";
+									
+									if (cdsClientForm.getAdmissionId()!=null && cdsClientForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
+									
+									%>
+										<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
+									<%
+								}
+							%>
+						</select>
+						<%	
+					}
+					else
+					{
+						%>
+							<input type="hidden" name="admissionId" value="<%=cdsClientForm.getAdmissionId()%>" />
+							<%=CdsForm4.getEscapedAdmissionSelectionDisplay(cdsClientForm.getAdmissionId())%>
+						<%	
+					}
+				%>
+			
 			</td>
 		</tr>
 		<tr>
@@ -397,21 +414,35 @@
 			<td colspan="2">
 				<br />
 				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
-				Sign <input type="checkbox" name="signed" />
+				Sign <input type="checkbox" name="signed" <%=printOnly&&cdsClientForm.isSigned()?"checked=\"checked\"":""%>/>
+
+				<%
+					if (!printOnly)
+					{
+						%>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="submit" value="Save CDS Data" />
+						<%
+					}
+				%>
+
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="submit" value="Save" />
+				<input type="button" name="cancel" value="Cancel" onclick="history.go(-1)" />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="button" value="Cancel" onclick="history.go(-1)" />
+				<input type="button" value="Print" onclick="window.print()">
 			</td>
 		</tr>
 	</table>
 	
 	<%
-		if (cdsFormId!=null)
+		if (printOnly)
 		{
 			%>
 				<script>
 					setEnabledAll(document.form, false);
+
+					document.getElementsByName('cancel')[0].disabled=false;
+					document.getElementsByName('print')[0].disabled=false;
 				</script>
 			<%
 		}

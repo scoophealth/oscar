@@ -58,6 +58,12 @@ public class CdsForm4 {
 		return(admissionDao.getAdmissionsByFacility(clientId, loggedInInfo.currentFacility.getId()));
 	}
 	
+	public static String getEscapedAdmissionSelectionDisplay(Integer admissionId)
+	{
+		Admission admission=admissionDao.getAdmission(admissionId);
+		return(getEscapedAdmissionSelectionDisplay(admission));
+	}
+	
 	public static String getEscapedAdmissionSelectionDisplay(Admission admission)
 	{
 		StringBuilder sb=new StringBuilder();
@@ -88,7 +94,7 @@ public class CdsForm4 {
 
 		StringBuilder sb=new StringBuilder();
 
-		sb.append("<option value=\"\" title=\"\">&nbsp;</option>");
+		sb.append("<option value=\"\" title=\"\">--- no selection ---</option>");
 
 		for (CdsFormOption option : options)
 		{
