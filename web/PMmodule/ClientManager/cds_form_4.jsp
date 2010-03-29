@@ -43,20 +43,20 @@
 					if (cdsFormId==null)
 					{
 						%>
-						<select name="admissionId">
-							<%
-								for (Admission admission : CdsForm4.getAdmissions(currentDemographicId))
-								{
-									String selected="";
-									
-									if (cdsClientForm.getAdmissionId()!=null && cdsClientForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
-									
-									%>
-										<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
-									<%
-								}
-							%>
-						</select>
+							<select name="admissionId">
+								<%
+									for (Admission admission : CdsForm4.getAdmissions(currentDemographicId))
+									{
+										String selected="";
+										
+										if (cdsClientForm.getAdmissionId()!=null && cdsClientForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
+										
+										%>
+											<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
+										<%
+									}
+								%>
+							</select>
 						<%	
 					}
 					else
@@ -99,17 +99,13 @@
 		<tr>
 			<td class="genericTableHeader">10. Service Recipient Location</td>
 			<td class="genericTableData">
-				<select name="serviceRecipientLocation">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "serviceRecipientLocation", CdsForm4.getCdsFormOptions("010"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "serviceRecipientLocation", CdsForm4.getCdsFormOptions("010"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">10a. Service Recipient LHIN</td>
 			<td class="genericTableData">
-				<select name="serviceRecipientLhin">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "serviceRecipientLhin", CdsForm4.getCdsFormOptions("10a"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "serviceRecipientLhin", CdsForm4.getCdsFormOptions("10a"))%>
 			</td>
 		</tr>
 		<tr>
@@ -127,17 +123,13 @@
 		<tr>
 			<td class="genericTableHeader">13. Baseline Legal status</td>
 			<td class="genericTableData">
-				<select multiple="multiple" name="baselineLegalStatus" style="height:8em">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "baselineLegalStatus", CdsForm4.getCdsFormOptions("013"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(true, false, printOnly, cdsClientForm.getId(), "baselineLegalStatus", CdsForm4.getCdsFormOptions("013"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">14. Current Legal status</td>
 			<td class="genericTableData">
-				<select multiple="multiple" name="currentLegalStatus" style="height:8em">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentLegalStatus", CdsForm4.getCdsFormOptions("014"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(true, false, printOnly, cdsClientForm.getId(), "currentLegalStatus", CdsForm4.getCdsFormOptions("014"))%>
 			</td>
 		</tr>
 		<tr>
@@ -149,9 +141,7 @@
 		<tr>
 			<td class="genericTableHeader">16. Diagnostic Categories</td>
 			<td class="genericTableData">
-				<select name="diagnosticCategories">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "diagnosticCategories", CdsForm4.getCdsFormOptions("016"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "diagnosticCategories", CdsForm4.getCdsFormOptions("016"))%>
 			</td>
 		</tr>
 		<tr>
@@ -163,25 +153,19 @@
 		<tr>
 			<td class="genericTableHeader">17. Presenting Issues (to be) Addressed</td>
 			<td class="genericTableData">
-				<select multiple="multiple" name="presentingIssues" style="height:8em">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "presentingIssues", CdsForm4.getCdsFormOptions("017"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(true, false, printOnly, cdsClientForm.getId(), "presentingIssues", CdsForm4.getCdsFormOptions("017"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">18. Source of Referral</td>
 			<td class="genericTableData">
-				<select name="sourceOfReferral">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "sourceOfReferral", CdsForm4.getCdsFormOptions("018"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "sourceOfReferral", CdsForm4.getCdsFormOptions("018"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">19. Exit Disposition</td>
 			<td class="genericTableData">
-				<select name="exitDisposition">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "exitDisposition", CdsForm4.getCdsFormOptions("019"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "exitDisposition", CdsForm4.getCdsFormOptions("019"))%>
 			</td>
 		</tr>
 		<tr>
@@ -309,105 +293,79 @@
 		<tr>
 			<td class="genericTableHeader">22. Baseline Living Arrangement</td>
 			<td class="genericTableData">
-				<select name="baselineLivingArrangement">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "baselineLivingArrangement", CdsForm4.getCdsFormOptions("022"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineLivingArrangement", CdsForm4.getCdsFormOptions("022"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">23. Current Living Arrangement</td>
 			<td class="genericTableData">
-				<select name="currentLivingArrangement">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentLivingArrangement", CdsForm4.getCdsFormOptions("023"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentLivingArrangement", CdsForm4.getCdsFormOptions("023"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">24. Baseline Residence Type</td>
 			<td class="genericTableData">
-				<select name="baselineResidenceType">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "baselineResidenceType", CdsForm4.getCdsFormOptions("024"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineResidenceType", CdsForm4.getCdsFormOptions("024"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">24a. Baseline Level of Residential Support</td>
 			<td class="genericTableData">
-				<select name="baselineResidentialSupport">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "baselineResidentialSupport", CdsForm4.getCdsFormOptions("24a"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineResidentialSupport", CdsForm4.getCdsFormOptions("24a"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">25. Current Residence Type</td>
 			<td class="genericTableData">
-				<select name="currentResidenceType">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentResidenceType", CdsForm4.getCdsFormOptions("025"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentResidenceType", CdsForm4.getCdsFormOptions("025"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">25a. Current Level of Residential Support</td>
 			<td class="genericTableData">
-				<select name="currentResidentialSupport">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentResidentialSupport", CdsForm4.getCdsFormOptions("25a"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentResidentialSupport", CdsForm4.getCdsFormOptions("25a"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">26. Baseline Employment Status</td>
 			<td class="genericTableData">
-				<select name="baselineEmploymentStatus">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "baselineEmploymentStatus", CdsForm4.getCdsFormOptions("026"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineEmploymentStatus", CdsForm4.getCdsFormOptions("026"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">27.Current Employment Status</td>
 			<td class="genericTableData">
-				<select name="currentEmploymentStatus">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("027"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("027"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">28. Baseline Educational Status</td>
 			<td class="genericTableData">
-				<select name="baselineEducationStatus">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "baselineEducationStatus", CdsForm4.getCdsFormOptions("028"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineEducationStatus", CdsForm4.getCdsFormOptions("028"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">29. Current Educational Status</td>
 			<td class="genericTableData">
-				<select name="currentEducationStatus">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentEducationStatus", CdsForm4.getCdsFormOptions("029"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentEducationStatus", CdsForm4.getCdsFormOptions("029"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">29a. Highest Level of Education</td>
 			<td class="genericTableData">
-				<select name="highestLevelEducation">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "highestLevelEducation", CdsForm4.getCdsFormOptions("29a"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "highestLevelEducation", CdsForm4.getCdsFormOptions("29a"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">30. Baseline Primary Income Source</td>
 			<td class="genericTableData">
-				<select name="baselinePrimaryIncome">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "baselinePrimaryIncome", CdsForm4.getCdsFormOptions("030"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselinePrimaryIncome", CdsForm4.getCdsFormOptions("030"))%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">31. Current Primary Income Source</td>
 			<td class="genericTableData">
-				<select name="currentPrimaryIncome">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentPrimaryIncome", CdsForm4.getCdsFormOptions("031"))%>
-				</select>
+				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentPrimaryIncome", CdsForm4.getCdsFormOptions("031"))%>
 			</td>
 		</tr>
 		<tr style="background-color:white">
@@ -428,8 +386,16 @@
 
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="button" name="cancel" value="Cancel" onclick="history.go(-1)" />
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="button" value="Print" onclick="window.print()">
+
+				<%
+					if (printOnly)
+					{
+						%>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" name="print" value="Print" onclick="window.print()">
+						<%
+					}
+				%>
 			</td>
 		</tr>
 	</table>

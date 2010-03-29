@@ -85,10 +85,50 @@ public class CdsForm4 {
 		return(results);
 	}
 	
+	public static String renderSelectQuestion(boolean multiple, boolean dropDown, boolean forPrint, Integer cdsClientFormId, String question, List<CdsFormOption> options)
+	{
+		if (!forPrint)
+		{
+			StringBuilder sb=new StringBuilder();
+			sb.append("<select "+(multiple?"multiple=\"multiple\" ":"")+"name=\""+question+"\" "+(!dropDown?"style=\"height:8em\"":"")+">");
+			sb.append(renderAsSelectOptions(cdsClientFormId, question, options));
+			sb.append("</select>");
+			
+			return(sb.toString());
+		}
+		else
+		{
+			StringBuilder sb=new StringBuilder();
+
+			List<CdsClientFormData> existingAnswers=getAnswers(cdsClientFormId, question);
+			for (CdsClientFormData answer : existingAnswers)
+			{
+				CdsFormOption option=getOptionFromAnswerId(options, answer.getAnswer());
+				if (option!=null)
+				{
+					if (sb.length()!=0) sb.append("<br />");
+					sb.append(StringEscapeUtils.escapeHtml(option.getCdsDataCategoryName()));
+				}
+			}
+			
+			return(sb.toString());			
+		}
+	}
+	
+	private static CdsFormOption getOptionFromAnswerId(List<CdsFormOption> options, String cdsDataCategory)
+	{
+		for (CdsFormOption option : options)
+		{
+			if (option.getCdsDataCategory().equals(cdsDataCategory)) return(option);
+		}
+		
+		return(null);
+	}
+	
 	/**
 	 * This method is meant to return a bunch of html <option> tags for each list element.
 	 */
-	public static String renderAsSelectOptions(Integer cdsClientFormId, String question, List<CdsFormOption> options)
+	private static String renderAsSelectOptions(Integer cdsClientFormId, String question, List<CdsFormOption> options)
 	{
 		List<CdsClientFormData> existingAnswers=getAnswers(cdsClientFormId, question);
 
