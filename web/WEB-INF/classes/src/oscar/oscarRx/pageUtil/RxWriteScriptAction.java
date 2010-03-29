@@ -1116,4 +1116,15 @@ public final class RxWriteScriptAction extends DispatchAction {
         System.out.println("***===========finish saving drugs RxWriteScriptAction.java");
         return;
     }
+    public ActionForward checkNoStashItem(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException, Exception {
+            oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+            int n=bean.getStashSize();
+            HashMap hm = new HashMap();
+            hm.put("NoStashItem", n);
+            JSONObject jsonObject = JSONObject.fromObject(hm);
+            //      p("jsonObject", jsonObject.toString());
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+            return null;
+}
 }
