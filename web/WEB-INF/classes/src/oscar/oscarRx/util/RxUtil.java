@@ -61,7 +61,7 @@ public class RxUtil {
     private static Locale locale = Locale.CANADA;
     private static String defaultQuantity = "30";
     private static final Logger logger = MiscUtils.getLogger();
-
+    private static String[] zeroToTen={"(?i)zero","(?i)one","(?i)two","(?i)three","(?i)four","(?i)five","(?i)six","(?i)seven","(?i)eight","(?i)nine","(?i)ten"};
     public static void setDefaultQuantity(String quantity) {
         defaultQuantity = quantity;
     }
@@ -457,7 +457,49 @@ public class RxUtil {
         }
         return retVal;
     }
+        private static String convertWordToNumerical(String s){
 
+            s=s.trim();
+            String retVal=s;
+            if(s.equalsIgnoreCase("zero")){
+                retVal="0";
+            }
+            else if(s.equalsIgnoreCase("one")){
+                retVal="1";
+            }
+            else if(s.equalsIgnoreCase("two")){
+                retVal="2";
+            }
+            else if(s.equalsIgnoreCase("three")){
+                retVal="3";
+            }
+            else if(s.equalsIgnoreCase("four")){
+                retVal="4";
+            }
+            else if(s.equalsIgnoreCase("five")){
+                retVal="5";
+            }
+            else if(s.equalsIgnoreCase("six")){
+                retVal="6";
+            }
+            else if(s.equalsIgnoreCase("seven")){
+                retVal="7";
+            }
+            else if(s.equalsIgnoreCase("eight")){
+                retVal="8";
+            }
+            else if(s.equalsIgnoreCase("nine")){
+                retVal="9";
+            }
+            else if(s.equalsIgnoreCase("ten")){
+                retVal="10";
+            }else{
+                if(!isStringToNumber(retVal))
+                    retVal="0";
+            }
+
+            return retVal;
+        }
     private static String checkInstructionStr(String str) {//replace if instruction contains certain string which may confuse the text parser
         String retVal=str;
         if(str.contains("3x day")){
@@ -608,7 +650,34 @@ public class RxUtil {
                         if (m3.find()) {
                             amountFrequency = str.substring(m3.start(), m3.end());
                         }
-                    } else;
+                    }else{
+                            p("word amount");
+                            for(String word:zeroToTen){
+                                String r1="\\s"+word+"\\s*"+frequency;
+                                String r2="^"+word+"\\s*"+frequency;//start at the begin of instructions
+                                Pattern p5=Pattern.compile(r1);
+                                Matcher m5=p5.matcher(instructions);
+                                p("pattern word ="+r1);
+                                if(m5.find()){
+                                    amountFrequency = instructions.substring(m5.start(), m5.end());
+                                    amountFrequency=amountFrequency.replace(frequency, "").trim();
+                                    p("amountFreq="+amountFrequency);
+                                    amountFrequency=convertWordToNumerical(amountFrequency);
+                                    p("num amountFreq="+amountFrequency);
+                                    break;
+                                }
+                                 p5=Pattern.compile(r2);
+                                 m5=p5.matcher(instructions);
+                                 if(m5.find()){
+                                    amountFrequency = instructions.substring(m5.start(), m5.end());
+                                    amountFrequency=amountFrequency.replace(frequency, "").trim();
+                                    p("amountFreq="+amountFrequency);
+                                    amountFrequency=convertWordToNumerical(amountFrequency);
+                                    p("num amountFreq="+amountFrequency);
+                                    break;
+                                 }
+                            }
+                     }
                     //the string before frequency maybe the amount of drug
                     //check if the string is a number,if it is, get the number
                     //if not a number, check if it has "min-max" pattern, if yes, get min and max, if not, ignore
@@ -621,6 +690,7 @@ public class RxUtil {
                 Pattern p = Pattern.compile(s);
                 Matcher m = p.matcher(instructions);
                 if (m.find()) {
+                    p("must be here");
                     method = instructions.substring(m.start(), m.end());
 
                     Pattern p2 = Pattern.compile(method + "\\s*\\d*\\.*\\d+\\s+");
@@ -630,7 +700,7 @@ public class RxUtil {
                     Matcher m4 = p4.matcher(instructions);
                     //since "\\s+[0-9]+-[0-9]+\\s+" is a case in "\\s+[0-9]+\\s+", check the latter regex first.
                     if (m4.find()) {
-                        //     p("else if 1");
+                             p("else if 1");
                         String str2 = instructions.substring(m4.start(), m4.end());
                         Pattern p5 = Pattern.compile("\\d*\\.*\\d+-\\s*\\d*\\.*\\d+");
                         Matcher m5 = p5.matcher(str2);
@@ -641,18 +711,46 @@ public class RxUtil {
                             takeMaxMethod = str3.split("-")[1];
                         }
                     } else if (m2.find()) {
-                        //    p("if 1");
+                            p("if 1");
                         String str = instructions.substring(m2.start(), m2.end());
-                        //    p("str1 ", str);
+                            p("str1 ", str);
                         Pattern p3 = Pattern.compile("\\d*\\.*\\d+");
                         Matcher m3 = p3.matcher(str);
                         if (m3.find()) {
-                            //       p("found1");
+                                   p("found1");
                             amountMethod = str.substring(m3.start(), m3.end());
                             //      p("amountMethod", amountMethod);
                         }
-                    } else;
-
+                    } else{
+                            p("word amount");
+                            for(String word:zeroToTen){
+                                String r1=method+"\\s+"+word+"\\s";
+                                String r2=method+"\\s+"+word+"$";
+                                Pattern p5=Pattern.compile(r1);
+                                Matcher m5=p5.matcher(instructions);
+                                p("pattern word ="+r1);
+                                if(m5.find()){
+                                    amountMethod = instructions.substring(m5.start(), m5.end());
+                                    amountMethod=amountMethod.replace(method, "").trim();
+                                    p("amountMethod="+amountMethod);
+                                    amountMethod=convertWordToNumerical(amountMethod);
+                                    p("num amountMethod="+amountMethod);
+                                    break;
+                                }else{
+                                    p5=Pattern.compile(r2);
+                                    m5=p5.matcher(instructions);
+                                    p("pattern word ="+r2);
+                                    if(m5.find()){
+                                        amountMethod = instructions.substring(m5.start(), m5.end());
+                                        amountMethod=amountMethod.replace(method, "").trim();
+                                        p("amountMethod="+amountMethod);
+                                        amountMethod=convertWordToNumerical(amountMethod);
+                                        p("num amountMethod="+amountMethod);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     break;
                 }
             }
@@ -897,9 +995,9 @@ public class RxUtil {
         return;
     }
 
-    public static boolean isStringToNumber(String s){
+    public static boolean isStringToNumber(String s){//see if string contains decimal or integer
         boolean retBool=false;
-        Pattern p1=Pattern.compile("\\d+");
+        Pattern p1=Pattern.compile("\\d*\\.*\\d+");
         Matcher m1=p1.matcher(s);
         if(m1.find()){
             String numStr=s.substring(m1.start(), m1.end());
