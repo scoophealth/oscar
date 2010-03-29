@@ -33,7 +33,7 @@
 	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%@ page import="oscar.form.data.*" errorPage="../errorpage.jsp"%>
+<%@ page import="java.net.URLDecoder, oscar.form.data.*" errorPage="../errorpage.jsp"%>
 
 <%
   //if(session.getValue("user") == null || !( ((String) session.getValue("userprofession")).equalsIgnoreCase("doctor") ))
@@ -43,8 +43,9 @@
     if(true) {
         out.clear();
         //forward to the current specified form, e.g. ../form/formar.jsp?demographic_no=
-        String[] formPath = (new FrmData()).getShortcutFormValue(request.getParameter("demographic_no"), request.getParameter("formname"));
-        //System.out.println(formPath[0]);
+        String strFrm = URLDecoder.decode(request.getParameter("formname"), "UTF-8");
+        String[] formPath = (new FrmData()).getShortcutFormValue(request.getParameter("demographic_no"), strFrm);
+        formPath[0] = formPath[0].trim();
         pageContext.forward(formPath[0] + request.getParameter("demographic_no")  + "&formId=" + formPath[1]);
         return;
     }
