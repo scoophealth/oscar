@@ -79,7 +79,6 @@
 	<bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.ProgramTeamDAO" autowire="byName" />
 	<bean id="providerDefaultProgramDao" class="org.caisi.dao.ProviderDefaultProgramDao" autowire="byName" />
 	<bean id="bedProgramDao" class="org.caisi.dao.BedProgramDao" autowire="byName" />
-	<bean id="demographicDaoT" class="org.oscarehr.common.dao.DemographicDao" autowire="byName" />
 	<bean id="demographicDao" class="org.oscarehr.common.dao.DemographicDao" autowire="byName" />
 	<bean id="secUserRoleDao" class="org.oscarehr.PMmodule.dao.SecUserRoleDao" autowire="byName" />
 	<bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.ProgramSignatureDao" autowire="byName" />
@@ -258,7 +257,7 @@
 	</bean>
 	<bean id="infirmBedProgramManager" class="org.caisi.service.InfirmBedProgramManager" autowire="byName">
 		<property name="programProviderDAOT" ref="programProviderDAO" />
-		<property name="demographicDao" ref="demographicDaoT" />
+		<property name="demographicDao" ref="demographicDao" />
 	</bean>
 
 	<!-- TicklerPlus managers -->
@@ -271,7 +270,7 @@
 		<property name="programProviderDAO" ref="programProviderDAO" />
 	</bean>
  	<bean id="demographicManagerT" class="org.caisi.service.DemographicManagerTickler">
-		<property name="demographicDao" ref="demographicDaoT" />
+		<property name="demographicDao" ref="demographicDao" />
 	</bean>
 	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton" />
 	<bean id="consultationManager" class="org.caisi.service.ConsultationManager">

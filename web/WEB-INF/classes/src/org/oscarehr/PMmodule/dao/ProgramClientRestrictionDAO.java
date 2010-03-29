@@ -14,7 +14,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 /**
  */
 public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
-    private DemographicDao demographicDaoT;
+    private DemographicDao demographicDao;
     private ProgramDao programDao;
     private ProviderDao providerDao;
 
@@ -92,7 +92,7 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     }
 
     private ProgramClientRestriction setRelationships(ProgramClientRestriction pcr) {
-        pcr.setClient(demographicDaoT.getDemographic("" + pcr.getDemographicNo()));
+        pcr.setClient(demographicDao.getDemographic("" + pcr.getDemographicNo()));
         pcr.setProgram(programDao.getProgram(pcr.getProgramId()));
         pcr.setProvider(providerDao.getProvider(pcr.getProviderNo()));
         
@@ -100,8 +100,8 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     }
 
     @Required
-    public void setDemographicDaoT(DemographicDao demographicDaoT) {
-        this.demographicDaoT = demographicDaoT;
+    public void setDemographicDao(DemographicDao demographicDao) {
+        this.demographicDao = demographicDao;
     }
 
     @Required

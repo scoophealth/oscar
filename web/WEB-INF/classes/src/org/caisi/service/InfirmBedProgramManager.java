@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class InfirmBedProgramManager {
     private BedProgramDao bedProgramDao;
-    private DemographicDao demographicDaoT;
+    private DemographicDao demographicDao;
     private ProgramProviderDAO programProviderDAOT;
     private ProviderDefaultProgramDao providerDefaultProgramDao;
     private ProgramDao programDao;
@@ -67,7 +67,7 @@ public class InfirmBedProgramManager {
 
     @Required
     public void setDemographicDao(DemographicDao dao) {
-        this.demographicDaoT = dao;
+        this.demographicDao = dao;
     }
 
     public List getPrgramNameID() {
@@ -124,9 +124,8 @@ public class InfirmBedProgramManager {
         dt = cal.getTime();
         Iterator iter;
 
-        //if (archiveView != null && archiveView.equals("true")) iter = demographicDaoT.getArchiveDemographicByPromgram(programId, dt, defdt).iterator();
-        if (archiveView != null && archiveView.equals("true")) iter = demographicDaoT.getArchiveDemographicByProgramOptimized(programId, dt, defdt).iterator();        
-        else iter = demographicDaoT.getActiveDemographicByProgram(programId, dt, defdt).iterator();
+        if (archiveView != null && archiveView.equals("true")) iter = demographicDao.getArchiveDemographicByProgramOptimized(programId, dt, defdt).iterator();        
+        else iter = demographicDao.getActiveDemographicByProgram(programId, dt, defdt).iterator();
 
         ArrayList demographicList = new ArrayList();
         Demographic de = null;
