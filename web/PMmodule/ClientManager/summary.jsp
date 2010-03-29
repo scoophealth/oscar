@@ -31,7 +31,9 @@
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.ConsentState"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="org.oscarehr.util.MiscUtils"%><input type="hidden" name="clientId" value="" />
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.common.model.CdsClientForm"%>
+<%@page import="org.oscarehr.PMmodule.web.ClientManagerAction"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
@@ -479,12 +481,17 @@ function openSurvey() {
 	</tr>
 	<tr>
 		<td width="20%">CDS</td>
+		<c:set var="cdsClientForm" value="${cdsClientForm}" scope="request" />
+		<%
+			CdsClientForm cdsClientForm=(CdsClientForm)request.getAttribute("cdsClientForm");
+		%>
 		<c:if test="${cdsClientForm != null}">
 			<td><c:out value="${cdsClientForm.created}" /></td>
-			<td><c:out value="${cdsClientForm.providerNo}" /></td>
-			<td><c:out value="${cdsClientForm.signed}" /></td>
+			<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsClientForm.getProviderNo())%></td>
+			<td><%=cdsClientForm.isSigned()?"signed":"unsigned"%></td>
 			<td>
 				<input type="button" value="Update" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+				<input type="button" value="Print Preview" onclick="document.location='ClientManager/cds_form_4.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>&print=true'" />
 			</td>
 		</c:if>
 		<c:if test="${cdsClientForm == null}">
