@@ -1244,7 +1244,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                     dob = String.valueOf(intDob);
                     demBday = mob + "-" + dob;
 
-                    if (roster == null || !(roster.equalsIgnoreCase("FS") || roster.equalsIgnoreCase("NR") || roster.equalsIgnoreCase("PL"))) {
+                    if (roster == null ) { //|| !(roster.equalsIgnoreCase("FS") || roster.equalsIgnoreCase("NR") || roster.equalsIgnoreCase("PL"))) {
                         roster = "";
                     }
                   }
