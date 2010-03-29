@@ -30,11 +30,15 @@
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
+Client name : <%=CdsForm4.getEscapedClientName(currentDemographicId)%> 
+<br />
+Client date of birth : <%=CdsForm4.getFormattedClientBirthDay(currentDemographicId)%>
+<br />
+<br />
+CDS form (CDS-MH v4.05)
+<br />
+
 <form action="cds_form_4_action.jsp" name="form">
-	<h3>CDS form (CDS-MH v4.05)</h3>
-
-	<br />
-
 	<table style="margin-left:auto;margin-right:auto;background-color:#f0f0f0;border-collapse:collapse">
 		<tr>
 			<td class="genericTableHeader">Select corresponding admission</td>
