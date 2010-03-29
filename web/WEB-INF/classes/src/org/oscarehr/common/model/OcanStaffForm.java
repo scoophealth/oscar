@@ -60,6 +60,7 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	private Date completionDate;
 	private String reasonForAssessment;
 	
+	private String providerName;
 	
 	public OcanStaffForm() {
 		province = "ON";		
@@ -306,4 +307,13 @@ public class OcanStaffForm extends AbstractModel<Integer> implements Serializabl
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
+
+	public String getProviderName() {
+		return providerName;
+	}
+
+	public void setProviderName(String providerName) {
+		this.providerName = providerName;
+	}
+	
 }

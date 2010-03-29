@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -158,6 +160,11 @@ public class OcanReportUIBean {
 		try {
 			XmlOptions options = new XmlOptions();
 			options.setUseDefaultNamespace();
+			options.setSavePrettyPrint();
+			options.setCharacterEncoding("UTF-16");
+			Map<String,String> implicitNamespaces = new HashMap<String,String>();
+			implicitNamespaces.put("", "http://oscarehr.org/ocan");
+			options.setSaveImplicitNamespaces(implicitNamespaces);
 			submissionFileDoc.save(out,options);
 		}catch(IOException e) {
 			logger.error(e);
@@ -402,6 +409,10 @@ public class OcanReportUIBean {
 			String clientAnswer = getClientAnswer(domainNumber+"_1",ocanClientFormData);
 			if(clientAnswer.length()>0)
 				needRating.setClient(Byte.valueOf(clientAnswer));
+			else
+				needRating.setClient((byte)-1);
+		} else {
+			needRating.setClient((byte)-1);
 		}
 		return needRating;
 	}
@@ -673,7 +684,7 @@ public class OcanReportUIBean {
 	
 	public static ClientName convertClientName(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		ClientName clientName = ClientName.Factory.newInstance();
-	//	clientName.setLast(ocanStaffForm.getLastName());
+		//clientName.setLast(ocanStaffForm.getLastName());
 		//clientName.setFirst(ocanStaffForm.getFirstName());
 		clientName.setLast("");
 		clientName.setFirst("");
@@ -855,7 +866,7 @@ public class OcanReportUIBean {
 	
 	public static String convertToOcanXmlDateTime(Date date) {
 		SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat formatter2 = new SimpleDateFormat("HH-mm-ss");
+		SimpleDateFormat formatter2 = new SimpleDateFormat("HH:mm:ss");
 		
 		return formatter1.format(date) + "T" + formatter2.format(date) + "Z";
 	}

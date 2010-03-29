@@ -38,6 +38,9 @@ public class OcanFormAction {
 	}
 	
 	public static void saveOcanStaffForm(OcanStaffForm ocanStaffForm) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		ocanStaffForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		ocanStaffForm.setProviderName(loggedInInfo.loggedInProvider.getFormattedName());
 		ocanStaffFormDao.persist(ocanStaffForm);
 	}
 	
@@ -73,6 +76,10 @@ public class OcanFormAction {
 	}
 	
 	public static void saveOcanClientForm(OcanClientForm ocanClientForm) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		ocanClientForm.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		ocanClientForm.setProviderName(loggedInInfo.loggedInProvider.getFormattedName());
+		
 		ocanClientFormDao.persist(ocanClientForm);
 	}
 	

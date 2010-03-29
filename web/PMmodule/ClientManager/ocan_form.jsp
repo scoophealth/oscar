@@ -17,7 +17,13 @@
 
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/PMmodule/ClientManager/ocan_staff_form_validation.js"></script>
-		
+
+<script type="text/javascript">
+function clearDate(el)
+{
+	$("#"+el).val("");
+}
+</script>		
 
 <script>
 //setup validation plugin
@@ -32,6 +38,7 @@ $("document").ready(function() {
 
 
 </script>
+
 
 <script type="text/javascript">
 
@@ -95,7 +102,7 @@ $("document").ready(function() {
 		$("#summary_of_actions_domains").val(domains);
 		var demographicId='<%=currentDemographicId%>';
 		$.get('ocan_form_summary_of_actions.jsp?demographicId='+demographicId+'&size='+count+'&domains='+domains, function(data) {
-			  $("#summary_of_actions_block").append(data);					 
+			  $("#summary_of_actions_block").innerHTML=data;					 
 			});		
 	});
 	
@@ -231,6 +238,7 @@ $("document").ready(function(){
 		$("#6_medical_conditions_other").val("");
 	}
 });
+
 </script>
 
 <style>

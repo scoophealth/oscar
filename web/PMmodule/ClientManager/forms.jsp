@@ -362,7 +362,9 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
-			<th>Date</th>
+			<th>Creation Date</th>
+			<th>Start Date</th>
+			<th>Completion Date</th>
 			<th>Staff</th>
 			<th>Status</th>
 			<th>Actions</th>
@@ -371,7 +373,9 @@ New User Created Form:&nbsp;
 	<c:forEach var="form" items="${ocanStaffForms}">
 		<tr>		
 			<td width="20%"><c:out value="${form.created}" /></td>
-			<td><c:out value="${form.providerNo}" /></td>
+			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
+			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>	
+			<td><c:out value="${form.providerName}" /></td>
 			<td><c:out value="${form.assessmentStatus}" /></td>
 			<td><input type="button" value="Print Preview" onclick="printOcanStaffForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
 		</tr>
@@ -391,7 +395,9 @@ New User Created Form:&nbsp;
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
-			<th>Date</th>
+			<th>Creation Date</th>
+			<th>Start Date</th>
+			<th>Completion Date</th>
 			<th>Staff</th>
 			<th>Status</th>
 			<th>Actions</th>
@@ -400,8 +406,10 @@ New User Created Form:&nbsp;
 	<c:forEach var="form" items="${ocanClientForms}">
 		<tr>		
 			<td width="20%"><c:out value="${form.created}" /></td>
-			<td><c:out value="${form.providerNo}" /></td>
-			<td>N/A</td>
+			<td width="10%"><c:out value="${form.formattedStartDate}" /></td>
+			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>			
+			<td><c:out value="${form.providerName}" /></td>
+			<td><c:out value="${form.assessmentStatus}" /></td>
 			<td><input type="button" value="Print Preview" onclick="printOcanClientForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
 		</tr>
 	</c:forEach>

@@ -635,7 +635,7 @@ function submitOcanClientForm() {
 				<br />
 				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
 				
-				<input type="submit" name="submit" value="Submit"/>
+				<input type="submit" name="submit" value="Submit" onclick="document.getElementById('assessment_status').value='Complete';"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active'; document.getElementById('completionDate').value=''"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;				

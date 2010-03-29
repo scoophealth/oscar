@@ -48,6 +48,8 @@ public class OcanClientForm extends AbstractModel<Integer> implements Serializab
 	
 	private String assessmentStatus;
 	
+	private String providerName;
+	
 	public OcanClientForm() {		
 	}
 	
@@ -181,6 +183,14 @@ public class OcanClientForm extends AbstractModel<Integer> implements Serializab
 
 	public void setAssessmentStatus(String assessmentStatus) {
 		this.assessmentStatus = assessmentStatus;
+	}
+
+	public String getProviderName() {
+		return providerName;
+	}
+
+	public void setProviderName(String providerName) {
+		this.providerName = providerName;
 	}
 
 }
