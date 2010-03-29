@@ -60,7 +60,7 @@ lightwindow.prototype = {
 		fixedTop : null,
 		fixedLeft : null
 	},
-        customedHeight : 0,
+        //customedHeight : 0,
         oscar_domain: null,
 	scrollbarOffset : 18,
 	navigationObservers : {
@@ -690,11 +690,12 @@ lightwindow.prototype = {
 				});
 			} else {
 
-                                    this.customedHeight=document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('preview').contentWindow.document.getElementById('pwTable').clientHeight+150;
-
+                               // this.customedHeight=document.getElementById('lightwindow_iframe').contentWindow.document.getElementById('preview').contentWindow.document.getElementById('pwTable').clientHeight+150;
+                               var user_defined_height=this._getParameter('lightwindow_height');
                                 $('lightwindow_contents').setStyle({
-                                       height:  this.customedHeight+'px'
+                                       height:  user_defined_height+'px'
                                });
+
                                 //oscarLog("lightwindow_contents' height :"+$('lightwindow_contents').getHeight());
                                 //oscarLog("lightwindow_contents' scroll height :"+$('lightwindow_contents').scrollHeight);
 
@@ -1037,7 +1038,7 @@ lightwindow.prototype = {
 		} else if (parameter == 'lightwindow_show_images' && this.element.showImages) {
 			return unescape(this.element.showImages);
 		} else if (parameter == 'lightwindow_height' && this.element.height) {
-                    this.customedHeight=this.element.height;
+                    //this.customedHeight=this.element.height;
                                 //oscarLog("this.element.height : "+this.element.height);
 			return unescape(this.element.height);
 		} else if (parameter == 'lightwindow_width' && this.element.width) {
@@ -1591,7 +1592,10 @@ lightwindow.prototype = {
 
 		// Set Sizes if we need too
 		this._presetWindowSize();
-		this._resizeWindowToFit(); // Even if the window is preset we still don't want it to go outside of the viewport
+               // if(this._getParameter('resize_to_fit_window')=='1'){
+                 //   oscarLog('resizing window to fit');
+                    this._resizeWindowToFit(); // Even if the window is preset we still don't want it to go outside of the viewport}
+                //}
 
 		if (!this.windowActive) {
 			// Position the window
