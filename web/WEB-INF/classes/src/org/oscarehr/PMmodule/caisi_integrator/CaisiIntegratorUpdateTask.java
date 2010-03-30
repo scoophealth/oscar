@@ -55,6 +55,8 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedDxresearch;
+import org.oscarehr.caisi_integrator.ws.CachedEformData;
+import org.oscarehr.caisi_integrator.ws.CachedEformValue;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
 import org.oscarehr.caisi_integrator.ws.CachedMeasurementExt;
@@ -108,6 +110,9 @@ import org.oscarehr.common.model.OscarAppointment;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
 import oscar.appt.AppointmentDao;
+import oscar.eform.dao.EformDao;
+import oscar.eform.model.EformData;
+import oscar.eform.model.EformValue;
 import oscar.facility.IntegratorControlDao;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
@@ -151,6 +156,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
         private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
         private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
+        private EformDao eformDao = (EformDao) SpringUtils.getBean("eformDao");
 	private static TimerTask timerTask = null;
 
 	static {
@@ -393,6 +399,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                                 pushMeasurements(facility, demographicService, demographicId);
                                 pushDxresearchs(facility, demographicService, demographicId);
                                 pushBillingItems(facility, demographicService, demographicId);
+                                pushEforms(facility, demographicService, demographicId);
 
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
@@ -664,6 +671,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
 
 				cachedDemographicDrug.setArchived(drug.isArchived());
+                                cachedDemographicDrug.setArchivedReason(drug.getArchivedReason());
+                                cachedDemographicDrug.setArchivedDate(drug.getArchivedDate());
 				cachedDemographicDrug.setAtc(drug.getAtc());
 				cachedDemographicDrug.setBrandName(drug.getBrandName());
 				cachedDemographicDrug.setCaisiDemographicId(drug.getDemographicId());
@@ -723,7 +732,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                 cachedAppointment.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
                 cachedAppointment.setAppointmentDate(appointment.getAppointment_date());
-                cachedAppointment.setBilling(appointment.getBilling());
                 cachedAppointment.setCaisiDemographicId(demographicId);
                 cachedAppointment.setCaisiProviderId(appointment.getProvider_no());
                 cachedAppointment.setCreateDatetime(appointment.getCreatedatetime());
@@ -800,6 +808,59 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                 }
             }
             if (cachedBillingOnItems.size()>0) demographicService.setCachedBillingOnItem(cachedBillingOnItems);
+        }
+
+        private void pushEforms(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+            logger.debug("pushing eforms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+            List<EformData> eformDatas = eformDao.getEformDatabyDemoNo(demographicId);
+            if (eformDatas.size()==0) return;
+
+            ArrayList<CachedEformData> cachedEformDatas = new ArrayList<CachedEformData>();
+            for (EformData eformData : eformDatas) {
+                MiscUtils.checkShutdownSignaled();
+
+                CachedEformData cachedEformData = new CachedEformData();
+                FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                facilityIdIntegerCompositePk.setCaisiItemId(eformData.getFdid());
+                cachedEformData.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+                cachedEformData.setCaisiDemographicId(demographicId);
+                cachedEformData.setFormDate(eformData.getForm_date());
+                cachedEformData.setFormTime(eformData.getForm_time());
+                cachedEformData.setFormId(eformData.getFid());
+                cachedEformData.setFormName(eformData.getForm_name());
+                cachedEformData.setFormData(eformData.getForm_data());
+                cachedEformData.setSubject(eformData.getSubject());
+                cachedEformData.setStatus(eformData.getStatus());
+                cachedEformData.setFormProvider(eformData.getForm_provider());
+
+                cachedEformDatas.add(cachedEformData);
+            }
+
+            List<EformValue> eformValues = eformDao.getEformValuebyDemoNo(demographicId);
+            if (eformValues.size()==0) return;
+
+            ArrayList<CachedEformValue> cachedEformValues = new ArrayList<CachedEformValue>();
+            for (EformValue eformValue : eformValues) {
+                MiscUtils.checkShutdownSignaled();
+
+                CachedEformValue cachedEformValue = new CachedEformValue();
+                FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+                facilityIdIntegerCompositePk.setCaisiItemId(eformValue.getId());
+                cachedEformValue.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+
+                cachedEformValue.setCaisiDemographicId(demographicId);
+                cachedEformValue.setFormId(eformValue.getFid());
+                cachedEformValue.setFormDataId(eformValue.getFdid());
+                cachedEformValue.setVarName(eformValue.getVar_name());
+                cachedEformValue.setVarValue(eformValue.getVar_value());
+
+                cachedEformValues.add(cachedEformValue);
+            }
+
+            if (cachedEformDatas.size()>0) demographicService.setCachedEformData(cachedEformDatas);
+            if (cachedEformValues.size()>0) demographicService.setCachedEformValues(cachedEformValues);
         }
 
 	private void pushMeasurements(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
