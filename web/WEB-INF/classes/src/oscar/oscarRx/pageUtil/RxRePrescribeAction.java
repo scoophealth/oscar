@@ -250,7 +250,7 @@ try{
         request.setAttribute("BoxNoFillFirstLoad", "true");
         String qText=rx.getQuantity();
         System.out.println("qText in represcribe2="+qText);
-        if(RxUtil.isStringToNumber(qText)){}
+        if(qText!=null && RxUtil.isStringToNumber(qText)){}
         else{
             rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
             rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
@@ -319,7 +319,7 @@ try{
         request.setAttribute("BoxNoFillFirstLoad", "true");
         String qText=rx.getQuantity();
         System.out.println("qText in represcribe2="+qText);
-        if(RxUtil.isStringToNumber(qText)){}
+        if(qText!=null && RxUtil.isStringToNumber(qText)){}
         else{
             rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
             rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
@@ -414,7 +414,7 @@ try{
             rx.setRandomId(rand);
             String qText=rx.getQuantity();
             System.out.println("qText in represcribe2="+qText);
-            if(RxUtil.isStringToNumber(qText)){}
+            if(qText!=null && RxUtil.isStringToNumber(qText)){}
             else{
                 rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
                 rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
@@ -461,7 +461,7 @@ public ActionForward represcribeMultiple(ActionMapping mapping,
             rx.setRandomId(rand);
             String qText=rx.getQuantity();
             System.out.println("qText in represcribe2="+qText);
-            if(RxUtil.isStringToNumber(qText)){}
+            if(qText!=null && RxUtil.isStringToNumber(qText)){}
             else{
                 rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
                 rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
