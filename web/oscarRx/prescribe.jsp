@@ -131,8 +131,10 @@ if(listRxDrugs!=null){
            </div>
                        <br><br>
         </div>
+   <%if(!rx.isCustomNote()){%>
     <label id="labelQuantity_<%=rand%>" style="float:left;width:80px;">Qty/Mitte:</label><input type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
     <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"      name="repeats_<%=rand%>"      value="<%=repeats%>" />
+    <%}%>
     <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
 
        <div class="rxStr" title="not what you mean?" >
