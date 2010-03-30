@@ -1216,7 +1216,7 @@ body {
                                             str=str.replace(/<\/script>/,'');
                                             eval(str);
                                             //oscarLog("str="+str);
-                                            <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">re
+                                            <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
                                               callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
                                              </oscar:oscarPropertiesCheck>
                                         }});
