@@ -618,7 +618,7 @@ body {
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
                                             <td>
-                                                <input type="button" name="search" class="ControlPushButton" style="width:45px" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();"><input id="customDrug" type="button" class="ControlPushButton" style="width:75px" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" /><!--input id="customDrug" type="button" class="ControlPushButton" style="width:74px"   onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgCustomNoteRx3"/>"/--><input id="reset" type="button" class="ControlPushButton" style="width:39px" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/><input type="button" class="ControlPushButton" style="width:82px" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>"/>
+                                                <input type="button" name="search" class="ControlPushButton" style="width:45px" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();"><input id="customDrug" type="button" class="ControlPushButton" style="width:75px" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" /><input id="customNote" type="button" class="ControlPushButton" style="width:74px"   onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgCustomNoteRx3"/>"/><input id="reset" type="button" class="ControlPushButton" style="width:39px" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/><input type="button" class="ControlPushButton" style="width:82px" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>"/>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
@@ -1238,7 +1238,7 @@ body {
         return false;
     }
 
-/*function customNoteWarning(){
+function customNoteWarning(){
     if (confirm('This feature will allow you to manually enter a prescription.'
 	+ '\nWarning: you will lose the following functionality:'
         + '\n  *  Quantity and Repeats'
@@ -1252,7 +1252,7 @@ body {
         var data="randomId="+randomId;
         new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
     }
-}*/
+}
 
 function customWarning2(){
     if (confirm('This feature will allow you to manually enter a drug.'
