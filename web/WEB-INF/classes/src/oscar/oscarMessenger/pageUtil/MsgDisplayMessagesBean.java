@@ -288,7 +288,7 @@ public class MsgDisplayMessagesBean {
   public String getOrderBy(String order){          
      String orderBy = null;
      if(order == null){        
-        orderBy="m.messageid desc";
+        orderBy=" m.messageid desc";
      }else{
         String desc = "";
         if (order.charAt(0) == '!'){
@@ -302,7 +302,7 @@ public class MsgDisplayMessagesBean {
         orderTable.put("date","thedate");        
         orderTable.put("sentto", "sentto");
                                 
-        orderBy = (String) orderTable.get(order);  
+        orderBy = (String) orderTable.get(order);
         if (orderBy == null){
            orderBy = "message";
         }
@@ -332,10 +332,11 @@ public class MsgDisplayMessagesBean {
 /*        if (moreMessages.equals("false"))
         {messageLimit=" Limit "+initialDisplay;}
 */        
-        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
-        +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
-                
+        String sql = new String("select map.messageID is null as isnull, ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        + " left outer join msgDemoMap map on map.messageID = m.messageid "
+        +" where ml.provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by isnull asc, "+getOrderBy(orderby));
+        System.out.println(sql);
         rs = db.GetSQL(sql);
         int idx = 0;
         while (rs.next()) {
