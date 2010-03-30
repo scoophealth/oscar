@@ -607,6 +607,7 @@ CREATE TABLE drugs (
   dosage text,
   custom_instructions boolean default false,
   unitName varchar(10) default NULL,
+  custom_note boolean,
   long_term boolean,
   past_med boolean,
   patient_compliance tinyint(1),
