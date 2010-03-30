@@ -320,7 +320,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         }
     }
 
-  /*  public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         p("=============Start newCustomNote RxWriteScriptAction.java===============");
         Locale locale = getLocale(request);
@@ -340,6 +340,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
             String ra = request.getParameter("randomId");
             rx.setRandomId(Integer.parseInt(ra));
+            rx.setCustomNote(true);
             rx.setGenericName(null);
             rx.setBrandName(null);
             rx.setDrugForm("");
@@ -384,7 +385,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         }
         p("=============END newCustomNote RxWriteScriptAction.java===============");
         return (mapping.findForward("newRx"));
-    }*/
+    }
 
     public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start newCustomDrug RxWriteScriptAction.java===============");
@@ -677,7 +678,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 String randomId = request.getParameter("randomId");
                 RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
                 //get rx from randomId
-                if (quantity == null) {
+                if (quantity == null || quantity.equalsIgnoreCase("null")) {
                     quantity = "";
                 }
                 //check if quantity is same as rx.getquantity(), if yes, do nothing.
@@ -1002,7 +1003,14 @@ public final class RxWriteScriptAction extends DispatchAction {
                 String newline = System.getProperty("line.separator");
                 rx.setPatientCompliance(patientComplianceY, patientComplianceN);
                 String special;
-                            if (rx.isCustom()) {//custom drug
+                            if(rx.isCustomNote()){
+                                rx.setQuantity(null);
+                                rx.setUnitName(null);
+                                rx.setRepeat(0);
+                                special=rx.getCustomName()+newline+rx.getSpecial();
+                                if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length()>0)
+                                        special+=newline+rx.getSpecialInstruction();
+                            }else if (rx.isCustom()) {//custom drug
                                if(rx.getUnitName()==null){
                     special = rx.getCustomName() + newline + rx.getSpecial();
                     if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null") && rx.getSpecialInstruction().trim().length()>0)
@@ -1029,7 +1037,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     }
                 }
 
-                if(rx.isMitte()){
+                            if(!rx.isCustomNote() && rx.isMitte()){
                     special=special.replace("Qty", "Mitte");
                 }
 
