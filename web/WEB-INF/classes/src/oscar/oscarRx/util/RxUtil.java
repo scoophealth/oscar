@@ -266,6 +266,7 @@ public class RxUtil {
         return nPerDay;
     }
     public static String getUnitNameFromQuantityText(String qStr){
+        if(qStr!=null){
             Pattern p1 = Pattern.compile("\\d+");
             Matcher m1 = p1.matcher(qStr);
             if (m1.find()) {
@@ -276,15 +277,18 @@ public class RxUtil {
                     return qUnit;
                 }
             }
+        }
             return null;
     }
         public static String getQuantityFromQuantityText(String qStr){
+          if(qStr!=null){
             Pattern p1 = Pattern.compile("\\d+");
             Matcher m1 = p1.matcher(qStr);
             if (m1.find()) {
                 String qNum = qStr.substring(m1.start(), m1.end());
                 return qNum;
             }
+          }
             return null;
         }
         public static boolean isMitte(String qStr){
@@ -461,6 +465,7 @@ public class RxUtil {
 
             s=s.trim();
             String retVal=s;
+            if(s!=null && !s.equalsIgnoreCase("null")){
             if(s.equalsIgnoreCase("zero")){
                 retVal="0";
             }
@@ -497,6 +502,8 @@ public class RxUtil {
                 if(!isStringToNumber(retVal))
                     retVal="0";
             }
+            }else
+                retVal="0";
 
             return retVal;
         }
@@ -979,6 +986,10 @@ public class RxUtil {
             }
             rx.setSpecial(instructions);
         }
+        if(rx.isCustomNote()){
+            rx.setQuantity(null);
+            rx.setUnitName(null);
+        }
         p("below set special");
         HashMap hm = new HashMap();
         hm.put("takeMin", rx.getTakeMin());
@@ -1015,60 +1026,50 @@ public class RxUtil {
         String special = rx.getSpecial();
         if(special==null || special.trim().length()==0)
             return "";
+       // System.out.println("before   mitte="+special);
         //if rx has special instruction, remove it from special
         if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null")&&rx.getSpecialInstruction().trim().length()>0){
             special=special.replace(rx.getSpecialInstruction(), "");
         }
+        //System.out.println("before   mitte="+special);
         //remove Qty:num
         String regex1 = "Qty:\\s*[0-9]*\\.?[0-9]*\\s*";
         Pattern p = Pattern.compile(regex1);
         Matcher m = p.matcher(special);
         special = m.replaceAll("");
+        //System.out.println("before   mitte="+special);
         //remove Repeats:num from special
         String regex2 = "Repeats:\\s*[0-9]*\\.?[0-9]*\\s*";
         p = Pattern.compile(regex2);
         m = p.matcher(special);
         special = m.replaceAll("");
+        //System.out.println("before   mitte="+special);
         //remove brand name
         String regex3 = rx.getBrandName();
         if(regex3!=null){
             regex3=regex3.trim();
             special=special.replace(regex3,"");
-     /*   System.out.println("regex3== "+regex3);
-        if (regex3 != null) {
-            p = Pattern.compile(regex3);
-            m = p.matcher(special);
-            special = m.replaceAll("");
-        }*/
         }
+        //System.out.println("before   mitte="+special);
         //remove generic name
         String regex4 = rx.getGenericName();
         if(regex4!=null){
             regex4=regex4.trim();
             special=special.replace(regex4, "");
         }
-        /*if (regex4 != null) {
-            p = Pattern.compile(regex4);
-            m = p.matcher(special);
-            special = m.replaceAll("");
-        }*/
+       // System.out.println("before   mitte="+special);
         //remove custom name
         String regex5 = rx.getCustomName();
         if(regex5!=null){
             regex5=regex5.trim();
             special=special.replace(regex5, "");
         }
+        System.out.println("before trimming mitte="+special);
         String regex6= "Mitte:\\s*[0-9]+\\s*\\w+";
         p = Pattern.compile(regex6);
         m = p.matcher(special);
         special = m.replaceAll("");
-     /*   System.out.println("regex5=" + regex5);
-        if (regex5 != null) {
-            p = Pattern.compile(regex5);
-            m = p.matcher(special);
-            special = m.replaceAll("");
-        }*/
-        System.out.println("special=" + special);
+        System.out.println("after trimming mitte special=" + special);
         //assume drug name is before method and drug name is the first part of the instruction.
         if (special.indexOf("Take") != -1) {
             special = special.substring(special.indexOf("Take"));
@@ -1300,7 +1301,7 @@ public class RxUtil {
     //check to see if a represcription of a med is clicked twice.
     public static boolean isRxUniqueInStash(final oscar.oscarRx.pageUtil.RxSessionBean beanRx, final RxPrescriptionData.Prescription rx) {
         boolean unique = true;
-
+        if(rx.isCustom()){
         for (int j = 0; j < beanRx.getStashSize(); j++) {
             try {
                 RxPrescriptionData.Prescription rxTemp = beanRx.getStashItem(j);
@@ -1308,12 +1309,29 @@ public class RxUtil {
                 //p("BN in stash",rxTemp.getBrandName());
                 //p("GCN  ",""+rx.getGCN_SEQNO());
                 //p("GCN in stash",""+rxTemp.getGCN_SEQNO());
-                if (rx.getBrandName()!=null && rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO() == rxTemp.getGCN_SEQNO()) {
-                    //p("unique turning false");
+                    if (rxTemp.isCustom() && rxTemp.getCustomName().equals(rx.getCustomName()) && rxTemp.isCustomNote()==rx.isCustomNote()) {
+                        p("unique turning false");
                     unique = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+        }else{
+            for (int j = 0; j < beanRx.getStashSize(); j++) {
+                try {
+                    RxPrescriptionData.Prescription rxTemp = beanRx.getStashItem(j);
+                    //p("BN rx  ",rx.getBrandName());
+                    //p("BN in stash",rxTemp.getBrandName());
+                    //p("GCN  ",""+rx.getGCN_SEQNO());
+                    //p("GCN in stash",""+rxTemp.getGCN_SEQNO());
+                    if (rx.getBrandName()!=null && !rx.getBrandName().equalsIgnoreCase("null") && rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO() == rxTemp.getGCN_SEQNO()) {
+                        p("unique turning false");
+                        unique = false;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         if (unique) {
