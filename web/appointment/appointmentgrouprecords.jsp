@@ -17,7 +17,7 @@
   if (request.getParameter("groupappt") != null) {
     boolean bSucc = false;
     if (request.getParameter("groupappt").equals("Add Group Appointment")) {
-        String[] param = new String[17];
+        String[] param = new String[18];
         int rowsAffected = 0, datano = 0;
         StringBuffer strbuf = null;
 		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
@@ -38,7 +38,8 @@
  	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
         param[14]=userName;  //request.getParameter("creator");
 	    param[15]=request.getParameter("remarks");
-
+	    param[17]=(String)request.getSession().getAttribute("programId_oscarView");
+		
         for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	        strbuf = new StringBuffer(e.nextElement().toString());
             if (strbuf.toString().indexOf("one")==-1 && strbuf.toString().indexOf("two")==-1) continue;
@@ -88,7 +89,7 @@
             	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
             			new Object [] {request.getParameter("appointment_no" + datano)});
      	        
-                String[] paramu = new String[17];
+                String[] paramu = new String[18];
 				paramu[0]=request.getParameter("provider_no"+datano);
 				paramu[1]=request.getParameter("appointment_date");
 	    	    paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
@@ -105,11 +106,14 @@
      			paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
 		        paramu[14]=userName;  //request.getParameter("creator");
 			    paramu[15]=request.getParameter("remarks");
+			    paramu[17]=(String)request.getSession().getAttribute("programId_oscarView");
+	    		
 		        if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
 					paramu[16]=request.getParameter("demographic_no");
 	     	    } else {
 	     	    	paramu[16]="0";
 	     	    }
+		        
 		    	rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", paramu);
 
 			}

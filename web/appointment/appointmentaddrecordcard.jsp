@@ -25,7 +25,7 @@
 </table>
 <%
 
-	String[] param = new String[17];
+	String[] param = new String[18];
 	param[0]=request.getParameter("provider_no");
 	param[1]=request.getParameter("appointment_date");
 	param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
@@ -42,6 +42,8 @@
 	param[13]=request.getParameter("createdatetime");
 	param[14]=request.getParameter("creator");
 	param[15]=request.getParameter("remarks");
+	param[17]=(String)request.getSession().getAttribute("programId_oscarView");
+	
     if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {
         param[16] = request.getParameter("demographic_no");
     } else {
@@ -52,7 +54,7 @@
 	if (rowsAffected == 1) {
 
                 String patientname = "";
-            	String[] param2 = new String[8];
+            	String[] param2 = new String[9];
                 param2[0]=param[1];
                 param2[1]=param[0];
                 param2[2]=param[2];
@@ -61,6 +63,7 @@
                 param2[5]=param[3];
                 param2[6]=param[2];
                 param2[7]=param[3];
+                param2[8]=param[17];
                 List<Map> resultList  = oscarSuperManager.find("appointmentDao", "search_appt_name", param2);
                 if (resultList.size() > 0) {
                     Map name = resultList.get(0);

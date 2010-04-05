@@ -42,7 +42,7 @@
 	</tr>
 </table>
 <%
-	String[] param = new String[17];
+	String[] param = new String[18];
 	param[0]=request.getParameter("provider_no");
 	param[1]=request.getParameter("appointment_date");
 	param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
@@ -72,7 +72,7 @@
 	param[13]=request.getParameter("createdatetime");
 	param[14]=request.getParameter("creator");
 	param[15]=request.getParameter("remarks");
-
+	param[17]=(String)request.getSession().getAttribute("programId_oscarView");
 	int rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
 
 	if (rowsAffected == 1) {

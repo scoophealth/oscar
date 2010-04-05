@@ -39,7 +39,7 @@
 
     // repeat adding
     if (request.getParameter("groupappt").equals("Add Group Appointment") ) {
-        String[] param = new String[17];
+        String[] param = new String[18];
         int rowsAffected=0, datano=0;
 
  	    param[0]=request.getParameter("provider_no");
@@ -58,6 +58,8 @@
  	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
         param[14]=userName;  //request.getParameter("creator");
 	    param[15]=request.getParameter("remarks");
+	    param[17]=(String)request.getSession().getAttribute("programId_oscarView");
+		
   	    if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
 			param[16]=request.getParameter("demographic_no");
 	    } else param[16]="0";

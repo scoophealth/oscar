@@ -321,7 +321,7 @@ function pasteAppt() {
   caltime.setTime(apptDate);
   caltime.add(caltime.MINUTE, Integer.parseInt(duration)-1 );
 
-  String [] param = new String[8] ;
+  String [] param = new String[9] ;
   param[0] = dateString2;
   param[1] = curProvider_no;
   param[2] = request.getParameter("start_time");
@@ -330,7 +330,8 @@ function pasteAppt() {
   param[5] = param[3];
   param[6] = param[2];
   param[7] = param[3];
-
+  param[8] = request.getParameter("programId_oscarView");
+  
   List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_appt", param);
   long apptnum = resultList.size() > 0 ? (Long)resultList.get(0).get("n") : 0;
 
