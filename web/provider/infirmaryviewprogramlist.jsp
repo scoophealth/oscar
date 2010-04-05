@@ -65,12 +65,10 @@ function submitStatus(ctrl) {
 	</select>
 </logic:notEqual>
 <logic:notEqual name="infirmaryView_isOscar" value="false">
-	<caisi:ProgramExclusiveView providerNo="<%=curUser_no%>"
-		value="appointment">
-		<br>
+	<br>
 		<b>Program:</b>
 		<select id="bedprogram_no" name="bedprogram_no"
-			onchange="submitProgram(this)">
+			onchange="changeGroup()">
 			<%java.util.List programBean=(java.util.List)session.getAttribute("infirmaryView_programBeans");
 	String programId=(String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
 	if (programBean.size()==0 || programId.equalsIgnoreCase("0")){%>
@@ -89,7 +87,6 @@ function submitStatus(ctrl) {
 			</logic:iterate>
 			<%} %>
 		</select>
-	</caisi:ProgramExclusiveView>
 </logic:notEqual>
 
 <logic:notEqual name="infirmaryView_isOscar" value="true">
@@ -131,9 +128,11 @@ function submitStatus(ctrl) {
 
 <logic:equal name="infirmaryView_isOscar" value="true">
 	<caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="no">
+		<caisi:isModuleLoad moduleName="oscarClinic" reverse="true">
 		<div align="right"><a
 			href='providercontrol.jsp?infirmaryView_isOscar=false&GoToCaisiViewFromOscarView=true&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|
 		Case Management View</a></div>
+		</caisi:isModuleLoad>
 	</caisi:ProgramExclusiveView>
 </logic:equal>
 </td>

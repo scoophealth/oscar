@@ -151,10 +151,16 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     
     String newticklerwarningwindow=null;
     String default_pmm=null;
+    String programId_oscarView=null;
+    
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
 	default_pmm = (String)session.getAttribute("default_pmm");
-}   
+	programId_oscarView= (String)session.getAttribute("programId_oscarView");   
+} else {
+	programId_oscarView="0";
+	session.setAttribute("programId_oscarView",programId_oscarView);
+}
     int lenLimitedL=11, lenLimitedS=3; //L - long, S - short
     int len = lenLimitedL;
     int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
@@ -460,17 +466,21 @@ popupPage(700,720, url);
 }
 }
 
-function changeGroup(s) {
+function changeGroup() {
+var s = document.appointmentForm.elements['mygroup_no'];		
 var newGroupNo = s.options[s.selectedIndex].value;
 if(newGroupNo.indexOf("_grp_") != -1) {
   newGroupNo = s.options[s.selectedIndex].value.substring(5);
 }else{
   newGroupNo = s.options[s.selectedIndex].value;
 }
-<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
-  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo);
+<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
+%>
+	var programId = document.getElementById("bedprogram_no").value;
+	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId);
 <%}else {%>
-  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo);
+  var programId=0;
+  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId);
 <%}%>
 }
 
@@ -859,7 +869,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <c:import url="/SystemMessage.do?method=view" />
 <c:import url="/FacilityMessage.do?method=view" />
 
-
+<form name="appointmentForm">
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C0C0C0">
 <tr><td>
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
@@ -919,6 +929,10 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ">
 	<% session.setAttribute("infirmaryView_isOscar", "false"); %>
 </caisi:isModuleLoad>
+
+<caisi:isModuleLoad moduleName="oscarClinic">
+	<% session.setAttribute("infirmaryView_isOscar", "true"); %>
+</caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 
 
@@ -929,7 +943,7 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 %>
   <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
 
-  <select name="mygroup_no" onChange="changeGroup(this)">
+  <select id="mygroup_no" name="mygroup_no" onChange="changeGroup()">
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 
 
@@ -992,7 +1006,7 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 <caisi:isModuleLoad moduleName="caisi">
 	
 	<%@ include file="infirmaryviewprogramlist.jsp" %>	
-	
+
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end fffffffffffff-->
 
@@ -1170,11 +1184,14 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <%
         bFirstTimeRs=true;
         bFirstFirstR=true;
-                param[0]=curProvider_no[nProvider];
-                param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
-
-                List<Map> appointmentList = oscarSuperManager.find("providerDao", strsearchappointmentday, param);
+        String [] param0 = new String[3];
+        
+                param0[0]=curProvider_no[nProvider];
+                param0[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
+				param0[2]=programId_oscarView;
+                List<Map> appointmentList = oscarSuperManager.find("providerDao", strsearchappointmentday, param0);
                 Iterator<Map> it = appointmentList.iterator();
+                
                 Map appointment = null;
 
 			    for(ih=startHour*60; ih<=(endHour*60+(60/depth-1)*depth); ih+=depth) { // use minutes as base
@@ -1191,7 +1208,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
         %>
           <tr>
             <td align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b><font face="verdana,arial,helvetica" size="2">
-             <a href=# onClick="confirmPopupPage(400,780,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>','<%= dateTimeCodeBean.get("confirm"+hourmin.toString()) %>');return false;"
+             <a href=# onClick="confirmPopupPage(400,780,'../appointment/addappointment.jsp?programId_oscarView=<%=programId_oscarView %>&provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>','<%= dateTimeCodeBean.get("confirm"+hourmin.toString()) %>');return false;"
   title='<%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+ (minuteCursor<10?"0":"")+minuteCursor)%> - <%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+((minuteCursor+depth-1)<10?"0":"")+(minuteCursor+depth-1))%>' class="adhour">
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></font></b></td>
             <td width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font></td>

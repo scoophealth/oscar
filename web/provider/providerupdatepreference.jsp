@@ -55,6 +55,9 @@
 <%
 String[] param=null;
 String op = request.getParameter("dboperation"); // updatepreference
+String programId = request.getParameter("programId_oscarView");
+session.setAttribute("programId_oscarView",programId);
+
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   param = new String[9];
   param[6]=request.getParameter("new_tickler_warning_window");
