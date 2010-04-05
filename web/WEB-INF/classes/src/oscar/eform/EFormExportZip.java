@@ -51,9 +51,12 @@ public class EFormExportZip {
             }
             Properties properties = new Properties(); //put all form properties into here
             String fileName = eForm.getFormFileName();
+            _log.debug("before:>"+fileName+"<");
             if (fileName == null || fileName.equals("")) {
                 fileName = eForm.getFormName().replaceAll("\\s", "") + ".html"; //make fileName = formname with all spaces removed
             }
+            _log.debug("after:>"+fileName+"<");
+            
             String directoryName = eForm.getFormName().replaceAll("\\s", "") + "/"; //formName with all spaces removed
             String html = eForm.getFormHtml();
             properties.setProperty("form.htmlFilename", fileName);
@@ -71,14 +74,8 @@ public class EFormExportZip {
 
             //write html
             String htmlFilename = "";
-            if (eForm.getFormFileName() != null || !eForm.getFormFileName().equals("")) {
-                htmlFilename = eForm.getFormFileName().replaceAll("\\s", "");
-            } else {
-                htmlFilename = eForm.getFormName().replaceAll("\\s", "");
-            }
-            if (!htmlFilename.endsWith(".html") && !htmlFilename.endsWith(".HTML"))
-                htmlFilename = htmlFilename + ".html";
-            htmlFilename = directoryName + htmlFilename;
+            htmlFilename = directoryName + fileName;
+            _log.debug("html file name "+htmlFilename);
             ZipEntry htmlZipEntry = new ZipEntry(htmlFilename);
             zos.putNextEntry(htmlZipEntry);
             byte[] bytes = html.getBytes("UTF-8");
@@ -181,6 +178,7 @@ public class EFormExportZip {
                     continue;
                 }
                 eformTable.put(newEForm.getFormFileName(), newEForm);  //store to add html and save to DB later
+                _log.debug("going in eform table >"+newEForm.getFormFileName()+"<");
             } else {
                 //store temp files on HD
                 File tempFile = new File(imageTempFolderDir, file.getName());
@@ -200,11 +198,13 @@ public class EFormExportZip {
 
         //loop through each file and decide -if html eform, put in DB, if supporting files (i.e. images) put on HD
         for (Entry<String, File> tempFile: tempFiles.entrySet()) {
+            _log.info("looking at "+tempFile.getKey());
             if (eformTable.containsKey(tempFile.getKey())) {  //if file name matches eform
                 FileInputStream fis = new FileInputStream(tempFile.getValue());
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 inputToOutput(fis, baos);
                 String html = new String(baos.toByteArray());
+                _log.debug("THIS IS WHAT THE HTML is"+html);
                 eformTable.get(tempFile.getKey()).setFormHtml(html);
                 fis.close();
                 baos.close();
