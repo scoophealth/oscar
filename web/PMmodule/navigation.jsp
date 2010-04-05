@@ -204,9 +204,18 @@
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_pmm.caseManagement" rights="r">
 		<div><span>Case Management</span>
-		<div><span><a
+		<div><span>
+		<caisi:isModuleLoad moduleName="oscarClinic">		
+		<a
+			href='<c:out value="${ctx}"/>/provider/providercontrol.jsp?infirmaryView_isOscar=true&GoToCaisiViewFromOscarView=false'>Case
+		Management</a>		
+		</caisi:isModuleLoad>
+		<caisi:isModuleLoad moduleName="oscarClinic" reverse="true">		
+		<a
 			href='<c:out value="${ctx}"/>/provider/providercontrol.jsp?infirmaryView_isOscar=false&GoToCaisiViewFromOscarView=true'>Case
-		Management</a></span></div>
+		Management</a>
+		</caisi:isModuleLoad>
+		</span></div>
 		</div>
 	</security:oscarSec>
 </c:if> <!--    <div>

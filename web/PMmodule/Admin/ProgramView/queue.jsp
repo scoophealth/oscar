@@ -1,9 +1,3 @@
-<%@ page import="java.util.*"%>
-<%@ page import="org.oscarehr.PMmodule.model.ProgramQueue"%>
-<%@ page import="java.net.URLEncoder"%>
-<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.common.model.Demographic"%>
 
 <!--
 /*
@@ -29,6 +23,16 @@
 */
 -->
 
+<%@ page import="java.util.*"%>
+<%@ page import="org.oscarehr.PMmodule.model.ProgramQueue"%>
+<%@ page import="java.net.URLEncoder"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
@@ -96,6 +100,25 @@
 </script>
 <html:hidden property="clientId" />
 <html:hidden property="queueId" />
+
+<%
+	ProgramProviderDAO ppd =(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
+	boolean bShowEncounterLink = false; 
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
+<% bShowEncounterLink = true; %>
+</security:oscarSec>
+<%
+String curUser_no = (String) session.getAttribute("user");
+String rsAppointNO="0";
+
+String status = "T";
+String userfirstname = (String) session.getAttribute("userfirstname");;
+String userlastname = (String) session.getAttribute("userlastname");
+String reason ="";
+%>
+
 <h3>Local Queue</h3>
 <%
 	HashSet<Long> genderConflict=(HashSet<Long>)request.getAttribute("genderConflict");
@@ -150,6 +173,31 @@
 	<%--</display:column>--%>
 	<display:column sortable="true" property="clientFormattedName"
 		title="Client name" />
+		
+	<display:column sortable="true" title="">	
+		<% 
+			if(bShowEncounterLink) {
+				Program program = (Program) request.getAttribute("program");
+				if(!"community".equalsIgnoreCase(program.getType())) {
+				HttpSession se = request.getSession();			
+				ProgramQueue temp=(ProgramQueue)pageContext.getAttribute("queue_entry");
+				String programId = String.valueOf(temp.getProgramId());
+				int demographic_no = temp.getClientId().intValue();
+				if(ppd.isThisProgramInProgramDomain(curUser_no,Integer.valueOf(programId))) {				
+					
+					String eURL = "../oscarEncounter/IncomingEncounter.do?programId="+programId+"&providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curUser_no+"&reason="+java.net.URLEncoder.encode(reason)+"&encType="+java.net.URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+java.net.URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate=null&appointmentDate=null&startTime=0:0"+"&status="+status+"&source=cm";
+		%>	
+		<a href=#
+			onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;"
+			title="<bean:message key="global.encounter"/>"> <bean:message
+			key="provider.appointmentProviderAdminDay.btnE" /></a> 
+		
+		
+	<% 	}	} 
+		}
+	%>
+	</display:column>
+	
 	<display:column property="referralDate" sortable="true"
 		title="Referral Date" />
 	<display:column property="providerFormattedName" sortable="true"

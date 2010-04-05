@@ -27,6 +27,10 @@
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
+<%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%@page import="org.oscarehr.PMmodule.web.AdmissionForHistoryTabDisplay"%><script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
@@ -52,6 +56,26 @@
 	<%
 		AdmissionForHistoryTabDisplay admissionForDisplay = (AdmissionForHistoryTabDisplay) pageContext.getAttribute("admission");
 	%>
+	<%
+		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
+		ProgramProviderDAO ppd =(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
+		
+	%>
+	<% boolean bShowEncounterLink = false; 
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	%>
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
+	<% bShowEncounterLink = true; %>
+	</security:oscarSec>
+	<%
+	String curUser_no = (String) session.getAttribute("user");
+	String rsAppointNO="0";
+	String status = "T";
+	String userfirstname = (String) session.getAttribute("userfirstname");;
+	String userlastname = (String) session.getAttribute("userlastname");
+	String reason ="";
+	%>
+	
     <display:column sortable="false">
     <%
     	if (!admissionForDisplay.isFromIntegrator())
@@ -66,6 +90,34 @@
     </display:column>
 	<display:column property="facilityName" sortable="false" title="Facility Name" />
     <display:column property="programName" sortable="true" title="Program Name" />
+    
+    <display:column sortable="true" title="">	
+		<% if(bShowEncounterLink) {	
+			HttpSession se = request.getSession();			
+			Admission tempAdmission=(Admission)pageContext.getAttribute("admission");
+			String programId = String.valueOf(tempAdmission.getProgramId());
+			Integer demographic_no = tempAdmission.getClientId();
+			
+			//Check program is in provider's program domain:
+			if(ppd.isThisProgramInProgramDomain(curUser_no,Integer.valueOf(programId))) {
+				String eURL = "../oscarEncounter/IncomingEncounter.do?programId="+programId+"&providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curUser_no+"&reason="+java.net.URLEncoder.encode(reason)+"&encType="+java.net.URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+java.net.URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate=null&appointmentDate=null&startTime=0:0"+"&status="+status+"&source=cm";
+		%>	
+		<logic:notEqual value="community" property="programType" name="admission">
+		
+		<a href=#
+			onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;"
+			title="<bean:message key="global.encounter"/>"> <bean:message
+			key="provider.appointmentProviderAdminDay.btnE" /></a> 
+		
+		</logic:notEqual>
+	<% 		} 
+		}
+	%>
+		</display:column>
+	
+		
+    
+    
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="admissionDate" sortable="true" title="Admission Date" />
 	<display:column property="facilityAdmission" title="Facility<br />Admission" />
