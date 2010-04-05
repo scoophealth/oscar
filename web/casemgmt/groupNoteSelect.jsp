@@ -5,21 +5,63 @@
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.PMmodule.service.ProgramManager"%>
 <%@page import="org.oscarehr.PMmodule.service.AdmissionManager"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.dao.GroupNoteDao"%>
+<%@page import="org.oscarehr.common.model.GroupNoteLink"%>
+<%@page import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean" %>
+
 <%
 	ProgramManager programManager = (ProgramManager)SpringUtils.getBean("programManager");
 	AdmissionManager admissionManager = (AdmissionManager)SpringUtils.getBean("admissionManager");
-
+	GroupNoteDao groupNoteLinkDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao"); 
+	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
 	List<Admission> admissions = admissionManager.getCurrentAdmissionsByProgramId(request.getParameter("programId"));
 	
 	String demographicNo = request.getParameter("demographicNo");
+	
+	String frmName = "caseManagementEntryForm" + demographicNo;
+	CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);
+	String noteId = cform.getNoteId();
+	System.out.println("noteId="+cform.getNoteId());
+	boolean isUpdate=false;
 %>
 <html>
 
 	<head>
 		<title>Group Note - Select Clients</title>
 	</head>
-	
 	<body>
+
+	<%if(noteId!=null&& noteId.length()>0) { 
+		List<GroupNoteLink> currentLinks = groupNoteLinkDao.findLinksByNoteId(Integer.parseInt(noteId));
+		if(currentLinks.size()>0) {
+			isUpdate=true;
+	%>
+	<h5>Current Group Links to this Note</h5>
+	
+	<table border="1" width="80%">
+		<tr>
+			<td>Name</td>
+			<td>Anonymous</td>
+		</tr>
+		
+	<%
+		for(GroupNoteLink link:currentLinks) {
+			Demographic demographic = demographicDao.getDemographic(String.valueOf(link.getDemographicNo()));
+	%>
+	<!-- current links? -->
+	
+		<tr>
+			<td><%=demographic.getFormattedName() %></td>
+			<td><%=link.isAnonymous() %></td>
+		</tr>
+	
+	<% } %>
+	</table>
+	<br/><br/>
+	<% } }%>
+	
+	<h5>Select clients for group note</h5>
 	<form action="groupNoteSelectAction.jsp">
 		<input type="hidden" name="demographicNo" value="<%=demographicNo%>"/>
 	<table>
@@ -45,7 +87,17 @@
 	
 	<br/><br/>
 	
-	<input type="button" value="cancel" onclick="window.close();"/> &nbsp;&nbsp; <input type="submit" value="Enter note into selected clients"/>
+	<script>
+		function confirmGroupNote() {
+			var update=<%=isUpdate%>;
+			if(update==true) {
+				return confirm('This will cause all previously associated clients to be disassociated with group note, and all previously associated anonymous clients to be set inactive');
+			}
+			return true;
+		}
+	</script>
+	
+	<input type="button" value="cancel" onclick="window.close();"/> &nbsp;&nbsp; <input type="submit" value="Enter note into selected clients" onclick="return confirmGroupNote();"/>
 	<input type="hidden" name="programId" value="<%=request.getParameter("programId")%>"/>
 	</form>
 	</body>

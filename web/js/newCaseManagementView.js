@@ -2774,8 +2774,4 @@ function autoCompleteShowMenuCPP(element, update) {
         }
     }
 
-    function selectGroup() {
-    	//alert(case_program_id);
-    	popupPage(600,700,'group','groupNoteSelect.jsp?programId='+case_program_id + '&demographicNo='+demographicNo);
-    
-    }
+   

@@ -850,6 +850,14 @@
 			Facility facility = org.oscarehr.util.LoggedInInfo.loggedInInfo.get().currentFacility;
 			if(facility.isEnableGroupNotes()) {
 		%>
+		<script>
+ function selectGroup() {
+	 	var noteId='<%=((CaseManagementEntryFormBean)session.getAttribute(frmName)).getNoteId()%>';
+    	alert(noteId);
+    	popupPage(600,700,'group','groupNoteSelect.jsp?programId='+case_program_id + '&demographicNo='+demographicNo);
+    
+    }
+</script>
 			<input tabindex="09" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/group-gnote.png"/>" id="groupNoteImg" onclick="Event.stop(event);return selectGroup();" title='<bean:message key="oscarEncounter.Index.btnGroupNote"/>'>&nbsp;
 		<%  } %>			 
 			<input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return savePage('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp; 

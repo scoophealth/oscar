@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +16,7 @@ public class GroupNoteDao extends AbstractDao<GroupNoteLink> {
 
 	public List<GroupNoteLink> findLinksByNoteId(Integer noteId) {
 
-		String sqlCommand = "select * from GroupNoteLink where noteId=?1";
+		String sqlCommand = "select * from GroupNoteLink where noteId=?1 and active=true";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
 		query.setParameter(1, noteId);

@@ -26,6 +26,9 @@ public class GroupNoteLink extends AbstractModel<Integer> implements Serializabl
 	
 	private Integer noteId;
 	private Integer demographicNo;
+	private boolean anonymous;
+	private boolean active;
+	
 	
 	
 	@Override
@@ -39,11 +42,13 @@ public class GroupNoteLink extends AbstractModel<Integer> implements Serializabl
 		throw(new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
 
+	/*
 	@PreUpdate
 	protected void jpaPreventUpdate()
 	{
 		throw(new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
+	*/
 
 	public Integer getId() {
 		return id;
@@ -75,6 +80,22 @@ public class GroupNoteLink extends AbstractModel<Integer> implements Serializabl
 
 	public void setDemographicNo(Integer demographicNo) {
 		this.demographicNo = demographicNo;
+	}
+
+	public boolean isAnonymous() {
+		return anonymous;
+	}
+
+	public void setAnonymous(boolean anonymous) {
+		this.anonymous = anonymous;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }
