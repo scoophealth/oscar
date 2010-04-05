@@ -142,6 +142,24 @@ public class ProgramDao extends HibernateDaoSupport {
         return program;
     }
 
+    public Program getProgramForApptView(Integer programId) {
+        if (programId == null || programId <= 0) {
+            return null;
+        }
+        Program result = null;
+        String queryStr = "FROM Program p WHERE p.id = ? AND p.exclusiveView = 'appointment'";
+        List<Program> rs = getHibernateTemplate().find(queryStr, programId);
+
+        if (log.isDebugEnabled()) {
+            log.debug("isCommunityProgram: id=" + programId );
+        }
+        if (!rs.isEmpty()) {
+            result = rs.get(0);
+        }
+
+        return result;
+    }
+    
     public String getProgramName(Integer programId) {
         String name = null;
 
