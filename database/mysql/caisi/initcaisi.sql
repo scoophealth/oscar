@@ -2657,6 +2657,8 @@ create table OcanStaffForm
 	index(assessmentStatus),
 	startDate date NOT NULL,
 	completionDate date,
+	gender varchar(10) not null,
+	providerName varchar(100),
 	index(startDate),
 	index(completionDate)
 );
@@ -2690,6 +2692,7 @@ create table OcanClientForm
 	index(startDate),
 	index(completionDate),
 	assessmentStatus varchar(50),
+	providerName varchar(100),
 	index(assessmentStatus)
 );
 
