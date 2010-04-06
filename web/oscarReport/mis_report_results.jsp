@@ -1,6 +1,8 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.web.MisReportUIBean"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.util.WebUtils"%>
 <%-- 
 /*
 * Copyright (c) 2007-2009. CAISI, Toronto. All Rights Reserved.
@@ -31,6 +33,8 @@
 	int endMonth = Integer.parseInt(request.getParameter("endMonth"));
 
 	MisReportUIBean misReportUIBean=null;
+	ArrayList<String> reportIndividualProgramNames=null;
+	HashMap<MisReportUIBean.DataRow, ArrayList<MisReportUIBean.DataRow>> reportIndividualProgramDataRows=null;
 	
 	String reportBy=request.getParameter("reportBy");
 	if ("functionalCentre".equals(reportBy))
@@ -42,20 +46,24 @@
 	{
 		String[] programIds=request.getParameterValues("programIds");
 		misReportUIBean=new MisReportUIBean(programIds, startYear, startMonth, endYear, endMonth);
+
+		boolean reportProgramsIndividually=WebUtils.isChecked(request, "reportProgramsIndividually");
+		if (reportProgramsIndividually)
+		{
+			
+		}
 	}
 	else
 	{
 		throw(new IllegalStateException("missed a case : reportBy="+reportBy));
-	}
-
-	
+	}	
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <h3>MIS Report</h3>
 <span style="font-weight:bold">ReportBy : </span><%=misReportUIBean.getReportByDescription()%>
-<br />
+<br /><br />
 <span style="font-weight:bold">Dates : </span><%=misReportUIBean.getDateRangeForDisplay()%>
 
 <br /><br />
@@ -63,20 +71,29 @@
 <table class="genericTable borderedTableAndCells" style="font-size:12px">
 	<%
 		int rowCounter=0;
-		for (MisReportUIBean.DataRow dataRow : misReportUIBean.getDataRows())
+
+		// report as a single column summary i.e. normal reporting
+		if (reportIndividualProgramNames==null)
 		{
-			rowCounter++;
-			String backgroundColour;
-			if (rowCounter%2==0) backgroundColour="#eeeeee";
-			else backgroundColour="#dddddd";
-				
-			%>
-				<tr class="genericTableRow" style="background-color:<%=backgroundColour%>">
-					<td style="font-weight:bold"><%=dataRow.dataReportId%></td>
-					<td style="font-weight:bold"><%=StringEscapeUtils.escapeHtml(dataRow.dataReportDescription)%></td>
-					<td><%=dataRow.dataReportResult%></td>
-				</tr>
-			<%
+			for (MisReportUIBean.DataRow dataRow : misReportUIBean.getDataRows())
+			{
+				rowCounter++;
+				String backgroundColour;
+				if (rowCounter%2==0) backgroundColour="#eeeeee";
+				else backgroundColour="#dddddd";
+					
+				%>
+					<tr class="genericTableRow" style="background-color:<%=backgroundColour%>">
+						<td style="font-weight:bold"><%=dataRow.dataReportId%></td>
+						<td style="font-weight:bold"><%=dataRow.dataReportDescription%></td>
+						<td><%=dataRow.dataReportResult%></td>
+					</tr>
+				<%
+			}
+		}
+		else // report as multiple columns for programs
+		{
+			
 		}
 	%>
 </table>

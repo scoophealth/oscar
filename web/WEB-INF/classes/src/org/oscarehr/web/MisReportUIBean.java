@@ -64,7 +64,7 @@ public final class MisReportUIBean {
 
 		private DataRow(int dataReportId, String dataReportDescription, int dataReportResult) {
 			this.dataReportId = dataReportId;
-			this.dataReportDescription = dataReportDescription;
+			this.dataReportDescription = StringEscapeUtils.escapeHtml(dataReportDescription);
 			this.dataReportResult = dataReportResult;
 		}
 	}
