@@ -29,16 +29,32 @@
 	int startMonth = Integer.parseInt(request.getParameter("startMonth"));
 	int endYear = Integer.parseInt(request.getParameter("endYear"));
 	int endMonth = Integer.parseInt(request.getParameter("endMonth"));
-	
-	String functionalCentreId=request.getParameter("functionalCentreId");
 
-	MisReportUIBean misReportUIBean=new MisReportUIBean(functionalCentreId, startYear, startMonth, endYear, endMonth);
+	MisReportUIBean misReportUIBean=null;
+	
+	String reportBy=request.getParameter("reportBy");
+	if ("functionalCentre".equals(reportBy))
+	{
+		String functionalCentreId=request.getParameter("functionalCentreId");
+		misReportUIBean=new MisReportUIBean(functionalCentreId, startYear, startMonth, endYear, endMonth);
+	}
+	else if ("programs".equals(reportBy))
+	{
+		String[] programIds=request.getParameterValues("programIds");
+		misReportUIBean=new MisReportUIBean(programIds, startYear, startMonth, endYear, endMonth);
+	}
+	else
+	{
+		throw(new IllegalStateException("missed a case : reportBy="+reportBy));
+	}
+
+	
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <h3>MIS Report</h3>
-<span style="font-weight:bold">Functional Centre : </span><%=misReportUIBean.getFunctionalCentreDescription()%>
+<span style="font-weight:bold">ReportBy : </span><%=misReportUIBean.getReportByDescription()%>
 <br />
 <span style="font-weight:bold">Dates : </span><%=misReportUIBean.getDateRangeForDisplay()%>
 

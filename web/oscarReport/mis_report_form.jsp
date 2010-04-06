@@ -28,15 +28,21 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.text.DateFormatSymbols"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 <%
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
-
+	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.currentFacility.getId());
+	List<Program> programs=programDao.getProgramsByFacilityId(loggedInInfo.currentFacility.getId());
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
+
 
 <h1>MIS Reports</h1>
 				
@@ -56,18 +62,63 @@
 <form method="post" action="mis_report_results.jsp" onsubmit="return(validate(this))">
 	<table class="borderedTableAndCells">
 		<tr>
-			<td>Functional Centre to report on</td>
+			<td style="vertical-align:top">
+				<script type="text/javascript">
+					function showFunctionalCentreSelectionBlock()
+					{
+						document.getElementById("functionalCentreSelectionBlock").style.display="block";
+						document.getElementById("programsSelectionBlock").style.display="none";
+					}
+
+					function showProgramsSelectionBlock()
+					{
+						document.getElementById("functionalCentreSelectionBlock").style.display="none";
+						document.getElementById("programsSelectionBlock").style.display="block";
+					}
+				</script>
+			
+				Report By
+				<table style="border:none;border-collapse:collapse">
+					<tr>
+						<td style="border:none"><input type="radio" name="reportBy" value="functionalCentre" checked="checked" onclick="showFunctionalCentreSelectionBlock()" /></td>
+						<td style="border:none">Functional Centre</td>
+					</tr>
+					<tr>
+						<td style="border:none"><input type="radio" name="reportBy" value="programs" onclick="showProgramsSelectionBlock()" /></td>
+						<td style="border:none">Programs</td>
+					</tr>
+				</table>
+			</td>
 			<td>
-				<select name="functionalCentreId">
-					<%
-						for (FunctionalCentre functionalCentre : functionalCentres)
-						{
-							%>
-								<option value="<%=functionalCentre.getAccountId()%>"><%=functionalCentre.getAccountId()+", "+functionalCentre.getDescription()%></option>
-							<%
-						}
-					%>
-				</select>
+				<div id="functionalCentreSelectionBlock">
+					<select name="functionalCentreId">
+						<%
+							for (FunctionalCentre functionalCentre : functionalCentres)
+							{
+								%>
+									<option value="<%=functionalCentre.getAccountId()%>"><%=StringEscapeUtils.escapeHtml(functionalCentre.getAccountId()+", "+functionalCentre.getDescription())%></option>
+								<%
+							}
+						%>
+					</select>
+				</div>
+				<div id="programsSelectionBlock" style="display:none">
+					<select name="programIds" multiple='multiple' >
+						<%
+							for (Program program : programs)
+							{
+								if (program.isBed() || program.isService())
+								{
+									%>
+										<option value="<%=program.getId()%>"><%=StringEscapeUtils.escapeHtml(program.getName() + " ("+program.getType()+')')%></option>
+									<%
+								}
+							}
+						%>
+					</select>
+					<br />
+					<input type="checkbox" name="reportProgramsIndividually" /> Report Programs Separately
+				</div>
 			</td>
 		</tr>
 		<tr>

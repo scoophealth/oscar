@@ -69,10 +69,10 @@ public final class MisReportUIBean {
 		}
 	}
 
-	private FunctionalCentre functionalCentre = null;
+	private String reportByDescription = null;
 	private GregorianCalendar startDate = null;
 	private GregorianCalendar endDate = null;
-	private List<Program> programs = null;
+	private List<Program> selectedPrograms = null;
 	private List<Admission> admissions=null;
 	
 	/**
@@ -85,13 +85,40 @@ public final class MisReportUIBean {
 		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		functionalCentre = functionalCentreDao.find(functionalCentreId);
-		programs = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
+		FunctionalCentre functionalCentre = functionalCentreDao.find(functionalCentreId);
+		reportByDescription=StringEscapeUtils.escapeHtml(functionalCentre.getAccountId() + ", " + functionalCentre.getDescription());
+		selectedPrograms = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
+		
 		populateAdmissions();
 	}
 
-	public String getFunctionalCentreDescription() {
-		return (StringEscapeUtils.escapeHtml(functionalCentre.getAccountId() + ", " + functionalCentre.getDescription()));
+	/**
+	 * End dates should be treated as inclusive.
+	 */
+	public MisReportUIBean(String[] programIds, int startYear, int startMonth, int endYear, int endMonth) {
+
+		startDate = new GregorianCalendar(startYear, startMonth, 1);
+		endDate = new GregorianCalendar(endYear, endMonth, 1);
+		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
+
+		selectedPrograms=new ArrayList<Program>();
+		StringBuilder programNameList=new StringBuilder();
+		for (String programIdString : programIds)
+		{
+			int programId=Integer.parseInt(programIdString);
+			Program program=programDao.getProgram(programId);
+			selectedPrograms.add(program);
+			
+			if (programNameList.length()>0) programNameList.append(", ");
+			programNameList.append(program.getName());
+		}
+		reportByDescription=StringEscapeUtils.escapeHtml(programNameList.toString());
+		
+		populateAdmissions();
+	}
+	
+	public String getReportByDescription() {
+		return (reportByDescription);
 	}
 
 	public String getDateRangeForDisplay() {
@@ -100,12 +127,12 @@ public final class MisReportUIBean {
 		displayEndDate.add(GregorianCalendar.MONTH, -1);
 		return (StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime()) + " to " + simpleDateFormat.format(displayEndDate.getTime()) + " (inclusive)"));
 	}
-
+	
 	private void populateAdmissions() {
 
 		admissions = new ArrayList<Admission>();
 
-		for (Program program : programs) {
+		for (Program program : selectedPrograms) {
 			List<Admission> programAdmissions = admissionDao.getAdmissionsByProgramAndDate(program.getId(), startDate.getTime(), endDate.getTime());
 
 			logger.debug("corresponding mis admissions count:" + admissions.size());
@@ -131,7 +158,7 @@ public final class MisReportUIBean {
 	}
 
 	private boolean isProgramType(Integer programId, String programType) {
-		for (Program program : programs) {
+		for (Program program : selectedPrograms) {
 			if (program.getId().equals(programId)) {
 				return (programType.equals(program.getType()));
 			}
@@ -206,7 +233,7 @@ public final class MisReportUIBean {
 		int visitsCount=0;
 		
 		// count face to face notes in the system pertaining to the allowed programs during that time frame.
-		for (Program program : programs)
+		for (Program program : selectedPrograms)
 		{
 			visitsCount=visitsCount+countFaceToFaceNotesInProgram(program);
 		}
@@ -237,7 +264,7 @@ public final class MisReportUIBean {
 		int visitsCount=0;
 		
 		// count phone notes in the system pertaining to the allowed programs during that time frame.
-		for (Program program : programs)
+		for (Program program : selectedPrograms)
 		{
 			visitsCount=visitsCount+countPhoneNotesInProgram(program);
 		}
@@ -270,7 +297,7 @@ public final class MisReportUIBean {
 		HashSet<Integer> individuals=new HashSet<Integer>();
 		
 		// count face to face individuals in the system pertaining to the allowed programs during that time frame.
-		for (Program program : programs)
+		for (Program program : selectedPrograms)
 		{
 			addIndividualsSeenInProgram(individuals, program);
 		}
@@ -297,7 +324,7 @@ public final class MisReportUIBean {
 		HashSet<Integer> individuals=new HashSet<Integer>();
 		
 		// count individuals in the system pertaining to the allowed programs during that time frame.
-		for (Program program : programs)
+		for (Program program : selectedPrograms)
 		{
 			addIndividualsServedInProgram(individuals, program);
 		}
