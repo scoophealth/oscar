@@ -714,3 +714,28 @@ TABLE {
 	font-family: Verdana, Tahoma, Arial, sans-serif;
 	font-size: 100%;
 }
+
+table.mhTable {
+    width: 370px;
+    border-width: 1px ;
+    border-spacing: 2px;
+    border-style: outset;
+    border-color: gray;
+    border-collapse: collapse;
+}
+table.mhTable th {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    border-color: gray;
+    font-size:10pt;
+}
+table.mhTable td{
+    border-width: 1px;
+    border-style: inset;
+    border-color: gray;
+    font-style:normal;
+    margin:0;
+    font-family:sans-serif;
+    font-size:10pt;
+}
