@@ -386,7 +386,28 @@ public final class RxWriteScriptAction extends DispatchAction {
         p("=============END newCustomNote RxWriteScriptAction.java===============");
         return (mapping.findForward("newRx"));
     }
-
+   public ActionForward listPreviousInstructions(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        p("=============Start listPreviousInstructions RxWriteScriptAction.java===============");
+        String randomId=request.getParameter("randomId");
+        randomId=randomId.trim();
+        //get rx from randomId.
+        //if rx is normal drug, if din is not null, use din to find it
+                              //if din is null, use BN to find it
+        //if rx is custom drug, use customName to find it.
+        //append results to a list.
+        RxSessionBean bean=(RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+        if(bean==null){
+            response.sendRedirect("error.html");
+            return null;
+        }
+        // create Prescription
+        RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
+        List<HashMap<String,String>> retList=new ArrayList();
+        retList=RxUtil.getPreviousInstructions(rx);
+        System.out.println("previous instructions="+retList);
+        bean.setListMedHistory(retList);
+        return null;
+    }
     public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start newCustomDrug RxWriteScriptAction.java===============");
         Locale locale = getLocale(request);
