@@ -49,12 +49,19 @@ public class RxSessionBean {
     private String interactingDrugList="";//contains hash tables, each hashtable has the a
     private List<String> reRxDrugIdList=new ArrayList();
     private HashMap randomIdDrugIdPair=new HashMap();
+    private List<HashMap<String,String>> listMedHistory=new ArrayList();
 
 
 
 
 
     //--------------------------------------------------------------------------
+    public List<HashMap<String,String>> getListMedHistory(){
+        return listMedHistory;
+    }
+    public void setListMedHistory(List<HashMap<String,String>> l){
+        listMedHistory=l;
+    }
     public HashMap getRandomIdDrugIdPair(){
         return randomIdDrugIdPair;
     }
