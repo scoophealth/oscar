@@ -32,25 +32,31 @@
 	int endYear = Integer.parseInt(request.getParameter("endYear"));
 	int endMonth = Integer.parseInt(request.getParameter("endMonth"));
 
-	MisReportUIBean misReportUIBean=null;
-	ArrayList<String> reportIndividualProgramNames=null;
-	HashMap<MisReportUIBean.DataRow, ArrayList<MisReportUIBean.DataRow>> reportIndividualProgramDataRows=null;
+	GregorianCalendar startDate=new GregorianCalendar(startYear, startMonth, 1);
+	GregorianCalendar endDate=new GregorianCalendar(endYear, endMonth, 1);
+	GregorianCalendar actualEndDate=(GregorianCalendar)endDate.clone();
+	actualEndDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive of the 30/31 days of the month
+
+	MisReportUIBean misReportUIBean=null;	
 	
 	String reportBy=request.getParameter("reportBy");
 	if ("functionalCentre".equals(reportBy))
 	{
 		String functionalCentreId=request.getParameter("functionalCentreId");
-		misReportUIBean=new MisReportUIBean(functionalCentreId, startYear, startMonth, endYear, endMonth);
+		misReportUIBean=new MisReportUIBean(functionalCentreId, startDate, actualEndDate);
 	}
 	else if ("programs".equals(reportBy))
 	{
 		String[] programIds=request.getParameterValues("programIds");
-		misReportUIBean=new MisReportUIBean(programIds, startYear, startMonth, endYear, endMonth);
-
 		boolean reportProgramsIndividually=WebUtils.isChecked(request, "reportProgramsIndividually");
-		if (reportProgramsIndividually)
+
+		if (!reportProgramsIndividually)
 		{
-			
+			misReportUIBean=new MisReportUIBean(programIds, startDate, actualEndDate);
+		}
+		else
+		{
+			misReportUIBean=MisReportUIBean.getSplitProgramReports(programIds, startDate, actualEndDate);
 		}
 	}
 	else
@@ -61,10 +67,12 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-<h3>MIS Report</h3>
+
+<%@page import="org.oscarehr.web.MisReportUIBean.DataRow"%>
+<%@page import="java.util.GregorianCalendar"%><h3>MIS Report</h3>
 <span style="font-weight:bold">ReportBy : </span><%=misReportUIBean.getReportByDescription()%>
 <br /><br />
-<span style="font-weight:bold">Dates : </span><%=misReportUIBean.getDateRangeForDisplay()%>
+<span style="font-weight:bold">Dates : </span><%=MisReportUIBean.getDateRangeForDisplay(startDate, endDate)%>
 
 <br /><br />
 
@@ -72,28 +80,27 @@
 	<%
 		int rowCounter=0;
 
-		// report as a single column summary i.e. normal reporting
-		if (reportIndividualProgramNames==null)
+		for (MisReportUIBean.DataRow dataRow : misReportUIBean.getDataRows())
 		{
-			for (MisReportUIBean.DataRow dataRow : misReportUIBean.getDataRows())
-			{
-				rowCounter++;
-				String backgroundColour;
-				if (rowCounter%2==0) backgroundColour="#eeeeee";
-				else backgroundColour="#dddddd";
-					
-				%>
-					<tr class="genericTableRow" style="background-color:<%=backgroundColour%>">
-						<td style="font-weight:bold"><%=dataRow.dataReportId%></td>
-						<td style="font-weight:bold"><%=dataRow.dataReportDescription%></td>
-						<td><%=dataRow.dataReportResult%></td>
-					</tr>
-				<%
-			}
-		}
-		else // report as multiple columns for programs
-		{
-			
+			rowCounter++;
+			String backgroundColour;
+			if (rowCounter%2==0) backgroundColour="#eeeeee";
+			else backgroundColour="#dddddd";
+				
+			%>
+				<tr class="genericTableRow" style="background-color:<%=backgroundColour%>">
+					<td style="font-weight:bold"><%=dataRow.dataReportId%></td>
+					<td style="font-weight:bold"><%=dataRow.dataReportDescription%></td>
+					<%
+						for (Integer tempResult : dataRow.dataReportResult)
+						{
+							%>
+								<td><%=tempResult==null?"-":tempResult%></td>
+							<%
+						}
+					%>
+				</tr>
+			<%
 		}
 	%>
 </table>

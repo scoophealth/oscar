@@ -60,12 +60,12 @@ public final class MisReportUIBean {
 	public static class DataRow {
 		public int dataReportId;
 		public String dataReportDescription;
-		public int dataReportResult;
-
+		public ArrayList<Integer> dataReportResult=new ArrayList<Integer>();
+		
 		private DataRow(int dataReportId, String dataReportDescription, int dataReportResult) {
 			this.dataReportId = dataReportId;
 			this.dataReportDescription = StringEscapeUtils.escapeHtml(dataReportDescription);
-			this.dataReportResult = dataReportResult;
+			this.dataReportResult.add(dataReportResult);
 		}
 	}
 
@@ -74,15 +74,15 @@ public final class MisReportUIBean {
 	private GregorianCalendar endDate = null;
 	private List<Program> selectedPrograms = null;
 	private List<Admission> admissions=null;
+	private ArrayList<DataRow> dataRows=null;
 	
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public MisReportUIBean(String functionalCentreId, int startYear, int startMonth, int endYear, int endMonth) {
+	public MisReportUIBean(String functionalCentreId, GregorianCalendar startDate, GregorianCalendar endDate) {
 
-		startDate = new GregorianCalendar(startYear, startMonth, 1);
-		endDate = new GregorianCalendar(endYear, endMonth, 1);
-		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
+		this.startDate =startDate; 
+		this.endDate=endDate;
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		FunctionalCentre functionalCentre = functionalCentreDao.find(functionalCentreId);
@@ -90,16 +90,16 @@ public final class MisReportUIBean {
 		selectedPrograms = programDao.getProgramsByFacilityIdAndFunctionalCentreId(loggedInInfo.currentFacility.getId(), functionalCentreId);
 		
 		populateAdmissions();
+		generateDataRows();
 	}
 
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public MisReportUIBean(String[] programIds, int startYear, int startMonth, int endYear, int endMonth) {
+	public MisReportUIBean(String[] programIds, GregorianCalendar startDate, GregorianCalendar endDate) {
 
-		startDate = new GregorianCalendar(startYear, startMonth, 1);
-		endDate = new GregorianCalendar(endYear, endMonth, 1);
-		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
+		this.startDate =startDate; 
+		this.endDate=endDate;
 
 		selectedPrograms=new ArrayList<Program>();
 		StringBuilder programNameList=new StringBuilder();
@@ -115,17 +115,16 @@ public final class MisReportUIBean {
 		reportByDescription=StringEscapeUtils.escapeHtml(programNameList.toString());
 		
 		populateAdmissions();
+		generateDataRows();
 	}
 	
 	public String getReportByDescription() {
 		return (reportByDescription);
 	}
 
-	public String getDateRangeForDisplay() {
+	public static String getDateRangeForDisplay(GregorianCalendar startDate, GregorianCalendar endDate) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		GregorianCalendar displayEndDate = (GregorianCalendar) endDate.clone();
-		displayEndDate.add(GregorianCalendar.MONTH, -1);
-		return (StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime()) + " to " + simpleDateFormat.format(displayEndDate.getTime()) + " (inclusive)"));
+		return (StringEscapeUtils.escapeHtml(simpleDateFormat.format(startDate.getTime()) + " to " + simpleDateFormat.format(endDate.getTime()) + " (inclusive)"));
 	}
 	
 	private void populateAdmissions() {
@@ -144,19 +143,22 @@ public final class MisReportUIBean {
 		}
 	}
 
-	public ArrayList<DataRow> getDataRows() {
-		ArrayList<DataRow> results = new ArrayList<DataRow>();
+	public void generateDataRows() {
+		dataRows = new ArrayList<DataRow>();
 
-		addBedProgramInfo(results);
+		addBedProgramInfo(dataRows);
 		
-		results.add(getFaceToFace());
-		results.add(getPhone());
-		results.add(getIndividualsSeen());
-		results.add(getTotalIndividualsServed());
-		
-		return (results);
+		dataRows.add(getFaceToFace());
+		dataRows.add(getPhone());
+		dataRows.add(getIndividualsSeen());
+		dataRows.add(getTotalIndividualsServed());
 	}
 
+	public ArrayList<DataRow> getDataRows()
+	{
+		return(dataRows);
+	}
+	
 	private boolean isProgramType(Integer programId, String programType) {
 		for (Program program : selectedPrograms) {
 			if (program.getId().equals(programId)) {
@@ -341,4 +343,84 @@ public final class MisReportUIBean {
 			if (demographic!=null) individuals.add(demographic.getDemographicNo());
 		}
 	}
+	
+	public static MisReportUIBean getSplitProgramReports(String[] programIds, GregorianCalendar startDate, GregorianCalendar endDate)
+	{
+		ArrayList<MisReportUIBean> misReportBeans=new ArrayList<MisReportUIBean>();
+		StringBuilder description=new StringBuilder();
+		MisReportUIBean tempMisReportBean=null;
+		
+		for (String programIdString : programIds)
+		{
+			tempMisReportBean=new MisReportUIBean(new String[]{programIdString}, startDate, endDate);
+			
+			if (description.length()>0)
+			{
+				description.append(", ");
+				description.append(tempMisReportBean.getReportByDescription());
+			}
+		
+			misReportBeans.add(tempMisReportBean);
+		}
+		
+		tempMisReportBean.reportByDescription=description.toString();
+		tempMisReportBean.dataRows=combineDataSet(misReportBeans);
+		return(tempMisReportBean);
+	}
+
+	private static ArrayList<DataRow> combineDataSet(ArrayList<MisReportUIBean> misReportBeans) {
+		ArrayList<DataRow> combinedData=new ArrayList<DataRow>();
+		
+		combineDataIds(combinedData, misReportBeans);
+		combineDataResults(combinedData, misReportBeans);
+		
+		return(combinedData);
+	}
+
+	private static void combineDataIds(ArrayList<DataRow> combinedData, ArrayList<MisReportUIBean> misReportBeans) {
+		for (MisReportUIBean misReportUIBean : misReportBeans) combineDataIds(combinedData, misReportUIBean);
+	}
+
+	private static void combineDataIds(ArrayList<DataRow> combinedData, MisReportUIBean misReportUIBean) {
+		for (DataRow beanRow : misReportUIBean.getDataRows())
+		{
+			DataRow dataRow=getDataRowFromId(combinedData, beanRow.dataReportId);
+			if (dataRow==null) combinedData.add(new DataRow(beanRow.dataReportId, beanRow.dataReportDescription, 0));
+		}
+    }
+
+	private static DataRow getDataRowFromId(ArrayList<DataRow> combinedData, int dataReportId) {
+		for (DataRow dataRow : combinedData) 
+		{
+			if (dataRow.dataReportId==dataReportId) return(dataRow);
+		}
+		
+		return(null);
+	}
+
+	private static void combineDataResults(ArrayList<DataRow> combinedData, ArrayList<MisReportUIBean> misReportBeans) {
+		for (DataRow dataRow : combinedData)
+		{
+			combineDataResultsFromBeans(dataRow, misReportBeans);
+		}
+    }
+
+	private static void combineDataResultsFromBeans(DataRow combinedDataRow, ArrayList<MisReportUIBean> misReportBeans) {
+		ArrayList<Integer> tempResults=new ArrayList<Integer>();
+
+		for (MisReportUIBean reportBean : misReportBeans)
+		{
+			tempResults.add(getDataResultsFromArrayRows(reportBean.getDataRows(), combinedDataRow.dataReportId));
+		}
+		
+		combinedDataRow.dataReportResult=tempResults;
+	}
+
+	private static Integer getDataResultsFromArrayRows(ArrayList<DataRow> dataRows, int dataReportId) {
+		DataRow tempDataRow=getDataRowFromId(dataRows, dataReportId);
+		if (tempDataRow==null) return(null);
+		else return(tempDataRow.dataReportResult.get(0));
+		
+    }
+
 }
