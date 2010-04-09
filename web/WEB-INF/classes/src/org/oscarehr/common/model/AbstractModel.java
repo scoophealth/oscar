@@ -29,16 +29,19 @@ public abstract class AbstractModel<T> implements java.io.Serializable
 		return(getId().hashCode());
 	}
 	
-	public boolean equals(AbstractModel<T> o)
+	@Override
+	public boolean equals(Object o)
 	{
 		if (getClass()!=o.getClass()) return(false);
 
+		@SuppressWarnings("unchecked")
+		AbstractModel<T> abstractModel=(AbstractModel<T>)o;
 		if (getId() == null)
 		{
 			MiscUtils.getLogger().warn(OBJECT_NOT_YET_PERISTED, new Exception());
 		}
 
-		return(getId().equals(o.getId()));
+		return(getId().equals(abstractModel.getId()));
 	}
 
 	/**
