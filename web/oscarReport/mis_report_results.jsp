@@ -77,6 +77,17 @@
 <br /><br />
 
 <table class="genericTable borderedTableAndCells" style="font-size:12px">
+	<tr class="genericTableHeader">
+		<%
+			for (String header : misReportUIBean.getHeaderRow())
+			{
+				%>
+					<td><%=header%></td>
+				<%
+			}
+		%>
+	</tr>
+
 	<%
 		int rowCounter=0;
 

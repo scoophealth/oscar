@@ -75,6 +75,12 @@ public final class MisReportUIBean {
 	private List<Program> selectedPrograms = null;
 	private List<Admission> admissions=null;
 	private ArrayList<DataRow> dataRows=null;
+	private ArrayList<String> headerRow=new ArrayList<String>();
+	{
+		headerRow.add("Data Id");
+		headerRow.add("Data Description");
+		headerRow.add("Results");
+	}
 	
 	/**
 	 * End dates should be treated as inclusive.
@@ -116,6 +122,12 @@ public final class MisReportUIBean {
 		
 		populateAdmissions();
 		generateDataRows();
+	}
+	
+	
+	public ArrayList<String> getHeaderRow()
+	{
+		return(headerRow);
 	}
 	
 	public String getReportByDescription() {
@@ -350,6 +362,10 @@ public final class MisReportUIBean {
 		StringBuilder description=new StringBuilder();
 		MisReportUIBean tempMisReportBean=null;
 		
+		ArrayList<String> headerRow=new ArrayList<String>();
+		headerRow.add("Data Id");
+		headerRow.add("Data Description");
+
 		for (String programIdString : programIds)
 		{
 			tempMisReportBean=new MisReportUIBean(new String[]{programIdString}, startDate, endDate);
@@ -359,12 +375,15 @@ public final class MisReportUIBean {
 				description.append(", ");
 				description.append(tempMisReportBean.getReportByDescription());
 			}
+			
+			headerRow.add(tempMisReportBean.getReportByDescription());
 		
 			misReportBeans.add(tempMisReportBean);
 		}
 		
 		tempMisReportBean.reportByDescription=description.toString();
 		tempMisReportBean.dataRows=combineDataSet(misReportBeans);
+		tempMisReportBean.headerRow=headerRow;
 		return(tempMisReportBean);
 	}
 
