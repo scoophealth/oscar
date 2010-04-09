@@ -77,8 +77,8 @@ public final class MisReportUIBean {
 	private ArrayList<DataRow> dataRows=null;
 	private ArrayList<String> headerRow=new ArrayList<String>();
 	{
-		headerRow.add("Data Id");
-		headerRow.add("Data Description");
+		headerRow.add("Id");
+		headerRow.add("Description");
 		headerRow.add("Results");
 	}
 	
@@ -363,18 +363,15 @@ public final class MisReportUIBean {
 		MisReportUIBean tempMisReportBean=null;
 		
 		ArrayList<String> headerRow=new ArrayList<String>();
-		headerRow.add("Data Id");
-		headerRow.add("Data Description");
+		headerRow.add("Id");
+		headerRow.add("Description");
 
 		for (String programIdString : programIds)
 		{
 			tempMisReportBean=new MisReportUIBean(new String[]{programIdString}, startDate, endDate);
 			
-			if (description.length()>0)
-			{
-				description.append(", ");
-				description.append(tempMisReportBean.getReportByDescription());
-			}
+			if (description.length()>0) description.append(", ");
+			description.append(tempMisReportBean.getReportByDescription());
 			
 			headerRow.add(tempMisReportBean.getReportByDescription());
 		

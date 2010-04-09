@@ -119,3 +119,11 @@ function setEnabledAll(form, enabled){
 	}
 }
 
+function getSelectedRadioValue(radioGroup)
+{
+	for (var i=0; i<radioGroup.length; i++)
+	{
+		if (radioGroup[i].checked == true) return(radioGroup[i].value);
+	}
+}
+

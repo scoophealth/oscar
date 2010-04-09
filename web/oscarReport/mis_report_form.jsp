@@ -43,17 +43,38 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-
-<h1>MIS Reports</h1>
+<table style="width:100%">
+	<tr>
+		<td><h2>MIS Reports</h2></td>
+		<td style="text-align:right"><input type="button" value="back" onclick="history.go(-1)" /></td>
+	</tr>
+</table>
 				
 <script type="text/javascript">
 	function validate(form)
 	{
 		var fields = form.elements;
+		var reportBy=getSelectedRadioValue(fields.reportBy);
 
-		if (fields.functionalCentreId.value==null||fields.functionalCentreId.value=="")
+		if (reportBy=="functionalCentre")
 		{
-			alert('Please select a functional centre.');
+			if (fields.functionalCentreId.value==null||fields.functionalCentreId.value=="")
+			{
+				alert('Please select a functional centre.');
+				return(false);
+			}
+		}
+		else if (reportBy=="programs")
+		{
+			if (fields.programIds.value==null||fields.programIds.value=="")
+			{
+				alert('Please select one or more programs.');
+				return(false);
+			}
+		}
+		else
+		{
+			alert("error, missed an option : "+reportBy);
 			return(false);
 		}
 	}

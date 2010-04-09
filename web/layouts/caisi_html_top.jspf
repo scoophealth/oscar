@@ -1,6 +1,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css"	href="<%=request.getContextPath()%>/css/caisi_css.jsp" title="default" />
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title></title>
 </head>
 <body>

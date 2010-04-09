@@ -3,6 +3,8 @@
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.web.MisReportUIBean"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.oscarehr.web.MisReportUIBean.DataRow"%>
+<%@page import="java.util.GregorianCalendar"%>
 <%-- 
 /*
 * Copyright (c) 2007-2009. CAISI, Toronto. All Rights Reserved.
@@ -67,9 +69,13 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
+<table style="width:100%">
+	<tr>
+		<td><h2>MIS Report</h2></td>
+		<td style="text-align:right"><input type="button" value="back" onclick="history.go(-1)" /></td>
+	</tr>
+</table>
 
-<%@page import="org.oscarehr.web.MisReportUIBean.DataRow"%>
-<%@page import="java.util.GregorianCalendar"%><h3>MIS Report</h3>
 <span style="font-weight:bold">ReportBy : </span><%=misReportUIBean.getReportByDescription()%>
 <br /><br />
 <span style="font-weight:bold">Dates : </span><%=MisReportUIBean.getDateRangeForDisplay(startDate, endDate)%>
