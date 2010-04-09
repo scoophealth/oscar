@@ -1684,8 +1684,9 @@ function setSearchedDrug(drugId,name){
     name=encodeURIComponent(name);
     var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+drugId+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
     oscarLog(params);
-    new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
-
+    new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom,onSuccess:function(transport){
+                            updateCurrentInteractions();
+            }});
     $('searchString').value = "";
 }
 var counterRx=0;
