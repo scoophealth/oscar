@@ -1490,12 +1490,16 @@ public class RxUtil {
         for (int j = 0; j < beanRx.getStashSize(); j++) {
             try {
                 RxPrescriptionData.Prescription rxTemp = beanRx.getStashItem(j);
-                //p("BN rx  ",rx.getBrandName());
-                //p("BN in stash",rxTemp.getBrandName());
-                //p("GCN  ",""+rx.getGCN_SEQNO());
-                //p("GCN in stash",""+rxTemp.getGCN_SEQNO());
-                    if (rxTemp.isCustom() && rxTemp.getCustomName().equals(rx.getCustomName()) && rxTemp.isCustomNote()==rx.isCustomNote()) {
-                        p("unique turning false");
+                    //p(""+rxTemp.isCustom());
+                    //p(rxTemp.getCustomName());
+                    //p(rx.getCustomName());
+                    //p(""+rxTemp.isCustomNote());
+                    //p(""+rx.isCustomNote());
+                    //p(""+rxTemp.getRandomId());
+                    //p(""+rx.getRandomId());
+                    if (rxTemp.isCustom() && rxTemp.getCustomName().equals(rx.getCustomName()) && rxTemp.isCustomNote()==rx.isCustomNote()
+                            && rxTemp.getRandomId()!=rx.getRandomId()) {
+                        p("1unique turning false");
                     unique = false;
                 }
             } catch (Exception e) {
@@ -1506,12 +1510,14 @@ public class RxUtil {
             for (int j = 0; j < beanRx.getStashSize(); j++) {
                 try {
                     RxPrescriptionData.Prescription rxTemp = beanRx.getStashItem(j);
-                    //p("BN rx  ",rx.getBrandName());
-                    //p("BN in stash",rxTemp.getBrandName());
-                    //p("GCN  ",""+rx.getGCN_SEQNO());
-                    //p("GCN in stash",""+rxTemp.getGCN_SEQNO());
-                    if (rx.getBrandName()!=null && !rx.getBrandName().equalsIgnoreCase("null") && rx.getBrandName().equals(rxTemp.getBrandName()) && rx.getGCN_SEQNO() == rxTemp.getGCN_SEQNO()) {
-                        p("unique turning false");
+                    //p(rx.getBrandName());
+                    //p(rxTemp.getBrandName());
+
+                    //p(""+rxTemp.getRandomId());
+                    //p(""+rx.getRandomId());
+                    if (rx.getBrandName()!=null && !rx.getBrandName().equalsIgnoreCase("null") && rx.getBrandName().equals(rxTemp.getBrandName())
+                            &&  rxTemp.getRandomId()!=rx.getRandomId()) { //GCN_SWQNO changes when drugref database is updated
+                        p("2unique turning false");
                         unique = false;
                     }
                 } catch (Exception e) {
