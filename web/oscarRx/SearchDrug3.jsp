@@ -641,7 +641,7 @@ body {
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
                                             <td>
-                                                <input type="button" name="search" class="ControlPushButton" style="width:45px" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();"><input id="customDrug" type="button" class="ControlPushButton" style="width:75px" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" /><input id="customNote" type="button" class="ControlPushButton" style="width:74px"   onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgCustomNoteRx3"/>"/><input id="reset" type="button" class="ControlPushButton" style="width:39px" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/><input type="button" class="ControlPushButton" style="width:82px" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>"/>
+                                                <input type="button" name="search" class="ControlPushButton" style="width:48px" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();"><input id="customDrug" type="button" class="ControlPushButton" style="width:80px" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" /><input id="customNote" type="button" class="ControlPushButton" style="width:40px"   onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgNoteRx3"/>"/><input id="reset" type="button" class="ControlPushButton" style="width:42px" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/><input type="button" class="ControlPushButton" style="width:85px" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>"/>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
@@ -1059,10 +1059,11 @@ body {
             var data="randomId="+randomId+"&customDrugName="+customDrugName;
             new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,insertion: Insertion.Bottom,onSuccess:function(transport){
                     $('set_'+randomId).remove();
+
+                }});
                     <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
                       callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
                      </oscar:oscarPropertiesCheck>
-                }});
         }else{
             $("drugName_"+randomId).value=origDrugName;
         }
@@ -1994,11 +1995,3 @@ $("searchString").focus();
 
 </body>
 </html:html>
-
-
-
-
-
-
-
-
