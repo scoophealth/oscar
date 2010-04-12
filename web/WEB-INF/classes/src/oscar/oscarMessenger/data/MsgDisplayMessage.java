@@ -37,6 +37,7 @@ public class MsgDisplayMessage {
     public String sentto     = null;
     public String attach     = null;
     public String pdfAttach     = null;
+    public String demographic_no = null;
 
 
 }
