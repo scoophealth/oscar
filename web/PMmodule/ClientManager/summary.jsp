@@ -143,7 +143,7 @@ function openSurvey() {
 		<tr>
 			<th width="20%">Health Card</th>
 			<td>
-				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />
+				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />&nbsp;(<c:out value="${client.hcType}" />)
 				<%
 					// show the button even if integrator is disabled, this is to allow people to validate local data with integrator disabled.
 					if (loggedInInfo.currentFacility.isEnableHealthNumberRegistry())
