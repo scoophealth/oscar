@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
@@ -71,6 +72,18 @@ public class CdsForm4 {
 		Demographic demographic = demographicDao.getDemographicById(clientId);
 		if (demographic != null && demographic.getBirthDay() != null) {
 			return (DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getBirthDay()));
+		} else {
+			return (null);
+		}
+	}
+
+	public static String getClientGenderAsCdsOption(Integer clientId) {
+		Demographic demographic = demographicDao.getDemographicById(clientId);
+		if (demographic != null && demographic.getSex() != null) {
+			String gender=demographic.getSex();
+			if (Gender.F.equals(gender)) return("008-02");
+			else if (Gender.M.equals(gender)) return("008-01");
+			else return("008-03");
 		} else {
 			return (null);
 		}
@@ -185,7 +198,7 @@ public class CdsForm4 {
 	/**
 	 * This method is meant to return a bunch of html <input type="radio"> tags for each list element on a separate line (br delimited).
 	 */
-	public static String renderAsRadioOptions(Integer cdsClientFormId, String question, List<CdsFormOption> options) {
+	public static String renderAsRadioOptions(Integer cdsClientFormId, String question, List<CdsFormOption> options, String defaultSelected) {
 		List<CdsClientFormData> existingAnswers = getAnswers(cdsClientFormId, question);
 
 		StringBuilder sb = new StringBuilder();
@@ -193,7 +206,12 @@ public class CdsForm4 {
 		for (CdsFormOption option : options) {
 			String htmlEscapedName = StringEscapeUtils.escapeHtml(option.getCdsDataCategoryName());
 			String lengthLimitedEscapedName = limitLengthAndEscape(option.getCdsDataCategoryName());
-			String selected = (CdsClientFormData.containsAnswer(existingAnswers, option.getCdsDataCategory()) ? "checked=\"checked\"" : "");
+			
+			String selected ="";
+			if (CdsClientFormData.containsAnswer(existingAnswers, option.getCdsDataCategory()) || option.getCdsDataCategory().equals(defaultSelected))
+			{
+				selected="checked=\"checked\"";
+			}
 
 			sb.append("<div title=\"" + htmlEscapedName + "\"><input type=\"radio\" " + selected + " name=\"" + question + "\" value=\"" + StringEscapeUtils.escapeHtml(option.getCdsDataCategory()) + "\" /> " + lengthLimitedEscapedName + "</div>");
 		}
