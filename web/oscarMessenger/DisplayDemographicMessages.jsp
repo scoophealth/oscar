@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 
 <%
@@ -200,6 +201,17 @@ function unlink(){
 								<bean:message key="oscarMessenger.DisplayMessages.msgDate" />
 							</html:link> <%}%>
 							</th>
+                                                        <th align="left" bgcolor="#DDDDFF">
+                                                        <% if (moreMessages.equals("true")){%>
+                                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=linked&moreMessages=true">
+                                                            <bean:message key="oscarMessenger.DisplayMessages.msgLinked"/>
+                                                            </html:link>
+                                                        <%}else{%>
+                                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=linked&moreMessages=false">
+                                                            <bean:message key="oscarMessenger.DisplayMessages.msgLinked"/>
+                                                            </html:link>
+                                                        <%}%>
+                                                        </th>
 						</tr>
 						<% //java.util.Vector theMessages = new java.util.Vector() ;
                                    java.util.Vector theMessages2 = new java.util.Vector() ;
@@ -226,6 +238,9 @@ function unlink(){
 								href="<%=request.getContextPath()%>/oscarMessenger/ViewMessage.do?from=encounter&demographic_no=<%=demographic_no%>&msgCount=<%=msgCount%>&orderBy=<%=orderby%>&messageID=<%=dm.messageId%>&messagePosition=<%=dm.messagePosition%>">
 							<%=dm.thesubject%> </a></td>
 							<td bgcolor="#EEEEFF"><%= dm.thedate  %></td>
+                                                        <td bgcolor="#EEEEFF">
+                                                            <oscar:nameage demographicNo="<%=dm.demographic_no%>"></oscar:nameage>
+                                                        </td>
 						</tr>
 						<%}%>
 					</table>
