@@ -288,7 +288,7 @@ public class MsgDisplayMessagesBean {
   public String getOrderBy(String order){          
      String orderBy = null;
      if(order == null){        
-        orderBy="m.messageid desc";
+        orderBy=" m.messageid desc";
      }else{
         String desc = "";
         if (order.charAt(0) == '!'){
@@ -301,6 +301,7 @@ public class MsgDisplayMessagesBean {
         orderTable.put("subject","thesubject");
         orderTable.put("date","thedate");        
         orderTable.put("sentto", "sentto");
+        orderTable.put("linked", "isnull");
                                 
         orderBy = (String) orderTable.get(order);  
         if (orderBy == null){
@@ -331,11 +332,16 @@ public class MsgDisplayMessagesBean {
         
 /*        if (moreMessages.equals("false"))
         {messageLimit=" Limit "+initialDisplay;}
-*/        
+      
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
-                
+*/
+        String sql = new String("select map.messageID is null as isnull, map.demographic_no, ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        + " left outer join msgDemoMap map on map.messageID = m.messageid "
+        +" where ml.provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by " + getOrderBy(orderby));
+        System.out.println(sql);
         rs = db.GetSQL(sql);
         int idx = 0;
         while (rs.next()) {
@@ -348,8 +354,10 @@ public class MsgDisplayMessagesBean {
             dm.thedate    = db.getString(rs,"thedate");
             dm.theime    = db.getString(rs,"theime");
             dm.sentby     = db.getString(rs,"sentby");
+            dm.demographic_no = db.getString(rs,"demographic_no");
             String att    = db.getString(rs,"attachment");
-            String pdfAtt    = db.getString(rs,"pdfattachment");           
+            String pdfAtt    = db.getString(rs,"pdfattachment");
+            
             if (att == null || att.equals("null") ){
               dm.attach = "0";
             }else{
@@ -360,6 +368,7 @@ public class MsgDisplayMessagesBean {
             }else{
               dm.pdfAttach = "1";
             }
+
             msg.add(dm);
         }
 
@@ -392,7 +401,7 @@ public java.util.Vector estDemographicInbox(){
         //+" where map.demographic_no = '"+ demographic_no+"' and remoteLocation = '"+getCurrentLocationId()+"' "
         //+" and m.messageid = map.messageID and ml.message=m.messageid order by "+getOrderBy(orderby));
         
-        String sql = "select m.messageid, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  " +
+        String sql = "select map.messageID is null as isnull, map.demographic_no, m.messageid, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  " +
               "from  messagetbl m, msgDemoMap map where map.demographic_no = '"+ demographic_no+"'  " +
               "and m.messageid = map.messageID " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby);
         
@@ -410,6 +419,7 @@ public java.util.Vector estDemographicInbox(){
            dm.thedate    = db.getString(rs,"thedate");
            dm.theime    = db.getString(rs,"theime");
            dm.sentby     = db.getString(rs,"sentby");
+           dm.demographic_no = db.getString(rs, "demographic_no");
            
            String att    = db.getString(rs,"attachment");
            String pdfAtt    = db.getString(rs,"pdfattachment");
@@ -423,7 +433,6 @@ public java.util.Vector estDemographicInbox(){
               }else{
                 dm.pdfAttach = "1";
               }
-
            
            if(rs.isLast()){
                dm.isLastMsg = true;
@@ -465,10 +474,11 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        String sql = new String("select map.messageID is null as isnull, map.demographic_no, ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
+        + " left outer join msgDemoMap map on map.messageID = m.messageid "
         +" where provider_no = '"+ providerNo+"' and status like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
-                
+        
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
@@ -480,6 +490,8 @@ public java.util.Vector estDemographicInbox(){
            dm.thedate    = db.getString(rs,"thedate");
            dm.theime    = db.getString(rs,"theime");
            dm.sentby     = db.getString(rs,"sentby");
+           dm.demographic_no = db.getString(rs, "demographic_no");
+           
            String att    = db.getString(rs,"attachment");
            String pdfAtt    = db.getString(rs,"pdfattachment");
               if (att == null || att.equals("null") ){
@@ -492,8 +504,7 @@ public java.util.Vector estDemographicInbox(){
               }else{
                 dm.pdfAttach = "1";
               }
-           
-           msg.add(dm);
+              msg.add(dm);
 
            // System.out.println("message "+db.getString(rs,"message")+" status "+db.getString(rs,"status"));
 
@@ -594,7 +605,7 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select messageid as status, messageid as message , thedate, theime, thesubject, sentby, sentto, attachment, pdfattachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'  " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
+        String sql = new String("select map.messageID is null as isnull, map.demographic_no, m.messageid as status, m.messageid as message , thedate, theime, thesubject, sentby, sentto, attachment, pdfattachment from messagetbl m left outer join msgDemoMap map on map.messageID = m.messageid where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'  " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
 
         rs = db.GetSQL(sql);
 
@@ -608,6 +619,7 @@ public java.util.Vector estDemographicInbox(){
            dm.theime    = db.getString(rs,"theime");
            dm.sentby     = db.getString(rs,"sentby");
            dm.sentto     = db.getString(rs,"sentto");
+           dm.demographic_no = db.getString(rs, "demographic_no");
            String att    = db.getString(rs,"attachment");
            String pdfAtt    = db.getString(rs,"pdfattachment");           
               if (att == null || att.equals("null") ){
