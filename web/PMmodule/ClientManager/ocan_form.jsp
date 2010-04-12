@@ -13,6 +13,8 @@
 	
 	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel);		
 	
+	boolean printOnly=request.getParameter("print")!=null;
+	if (printOnly) request.setAttribute("noMenus", true);
 %>
 
 
@@ -246,7 +248,7 @@ $("document").ready(function(){
 </style>
 
 
-<form id="ocan_staff_form" action="ocan_form_action.jsp" onsubmit="return submitOcanForm()">
+<form id="ocan_staff_form" name="ocan_staff_form" action="ocan_form_action.jsp" onsubmit="return submitOcanForm()">
 	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
 	<h3>OCAN Staff Assessment (v1.2)</h3>
 
@@ -2892,15 +2894,43 @@ $("document").ready(function(){
 				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
 				Sign <input type="checkbox" name="signed" />
 				&nbsp;&nbsp;&nbsp;&nbsp;
+				<%
+					if (!printOnly)
+					{
+						%>
 				<input type="submit" name="submit" value="Submit"  onclick="document.getElementById('assessment_status').value='Complete';"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active'; document.getElementById('completionDate').value=''"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
+				<%
+					}
+				%>
 				<input type="button" value="Cancel" onclick="history.go(-1)" />
+				<%
+					if (printOnly)
+					{
+						%>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" name="print" value="Print" onclick="window.print()">
+						<%
+					}
+				%>
 			</td>
 		</tr>		
 	</table>
-	
+	<%
+		if (printOnly)
+		{
+			%>
+				<script>
+					setEnabledAll(document.ocan_staff_form, false);
+
+					document.getElementsByName('cancel')[0].disabled=false;
+					document.getElementsByName('print')[0].disabled=false;
+				</script>
+			<%
+		}
+	%>
 
 </form>
 

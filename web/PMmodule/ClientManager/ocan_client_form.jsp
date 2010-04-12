@@ -11,7 +11,8 @@
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
 	
 	OcanClientForm ocanClientForm=OcanForm.getOcanClientForm(currentDemographicId,prepopulationLevel);		
-	
+	boolean printOnly=request.getParameter("print")!=null;
+	if (printOnly) request.setAttribute("noMenus", true);
 %>
 
 <!-- 
@@ -46,7 +47,7 @@ function submitOcanClientForm() {
 </style>
 
 
-<form id="ocan_client_form" action="ocan_client_form_action.jsp" onsubmit="return submitOcanClientForm()">
+<form id="ocan_client_form" name="ocan_client_form" action="ocan_client_form_action.jsp" onsubmit="return submitOcanClientForm()">
 	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
 	
 	<h3>OCAN Consumer Self-Assessment (v1.2)</h3>
@@ -634,16 +635,43 @@ function submitOcanClientForm() {
 			<td colspan="2">
 				<br />
 				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
-				
+				<%
+					if (!printOnly)
+					{
+						%>
 				<input type="submit" name="submit" value="Submit" onclick="document.getElementById('assessment_status').value='Complete';"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="submit" name="submit" value="Save Draft"  onclick="document.getElementById('assessment_status').value='Active'; document.getElementById('completionDate').value=''"/>
-				&nbsp;&nbsp;&nbsp;&nbsp;				
-				<input type="button" value="Cancel" onclick="history.go(-1)" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<%
+					}
+				%>					
+				<input type="button" name="cancel" value="Cancel" onclick="history.go(-1)" />
+				<%
+					if (printOnly)
+					{
+						%>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" name="print" value="Print" onclick="window.print()">
+						<%
+					}
+				%>
 			</td>
 		</tr>		
 	</table>
-	
+	<%
+		if (printOnly)
+		{
+			%>
+				<script>
+					setEnabledAll(document.ocan_client_form, false);
+
+					document.getElementsByName('cancel')[0].disabled=false;
+					document.getElementsByName('print')[0].disabled=false;
+				</script>
+			<%
+		}
+	%>
 
 </form>
 
