@@ -97,7 +97,7 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">8. Gender</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "gender", CdsForm4.getCdsFormOptions("008"))%>
+				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "gender", CdsForm4.getCdsFormOptions("008"), CdsForm4.getClientGenderAsCdsOption(currentDemographicId))%>
 			</td>
 		</tr>
 		<tr>
@@ -115,13 +115,13 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">11. Aboriginal Origin</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "isAboriginal", CdsForm4.getCdsFormOptions("011"))%>
+				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "isAboriginal", CdsForm4.getCdsFormOptions("011"), null)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">12. Service Recipient Preferred Language</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "preferredLanguage", CdsForm4.getCdsFormOptions("012"))%>
+				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "preferredLanguage", CdsForm4.getCdsFormOptions("012"), null)%>
 			</td>
 		</tr>
 		<tr>
@@ -139,7 +139,7 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">15. Community Treatment Orders (CTOs)</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "hasCto", CdsForm4.getCdsFormOptions("015"))%>
+				<%=CdsForm4.renderAsRadioOptions(cdsClientForm.getId(), "hasCto", CdsForm4.getCdsFormOptions("015"), null)%>
 			</td>
 		</tr>
 		<tr>
