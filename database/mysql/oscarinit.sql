@@ -51,6 +51,7 @@ CREATE TABLE appointment (
   end_time time NOT NULL default '00:00:00',
   name varchar(50) default NULL,
   demographic_no int(10) default NULL,
+  program_id int default 0,
   notes varchar(80) default NULL,
   reason varchar(80) default NULL,
   location varchar(30) default NULL,
