@@ -68,31 +68,31 @@
             if(hm==null) {System.out.println("hm is null");}
             else{
              if(hm.get("show_current")!=null)
-             show_current=(Boolean)hm.get("show_current");
+                show_current=(Boolean)hm.get("show_current");
              else
                 show_current=false;
              if(hm.get("show_all")!=null)
-             show_all=(Boolean)hm.get("show_all");
+                show_all=(Boolean)hm.get("show_all");
              else
                  show_all=false;
              if(hm.get("active")!=null)
-             active=(Boolean)hm.get("active");
+                active=(Boolean)hm.get("active");
              else
                  active=false ;
              if(hm.get("inactive")!=null)
-             inactive=(Boolean)hm.get("inactive");
+                inactive=(Boolean)hm.get("inactive");
              else
                  inactive=false;
              if(hm.get("all")!=null)
-             all=(Boolean)hm.get("all");
+                all=(Boolean)hm.get("all");
              else
                  all=false;
              if(hm.get("longterm_acute")!=null)
-             longterm_acute=(Boolean)hm.get("longterm_acute");
+                longterm_acute=(Boolean)hm.get("longterm_acute");
              else
                 longterm_acute=false;
              if(hm.get("longterm_acute_inactive_external")!=null)
-             longterm_acute_inactive_external=(Boolean)hm.get("longterm_acute_inactive_external");
+                longterm_acute_inactive_external=(Boolean)hm.get("longterm_acute_inactive_external");
              else
                 longterm_acute_inactive_external=false;
             }
@@ -507,7 +507,7 @@ function checkFav(){
                    }
                </style>
 
-        <style type="text/css">
+<style type="text/css">
     .ControlPushButton{
         font-size:10.5px;
     }
@@ -646,7 +646,8 @@ body {
                                                 <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a>
                                                 <%}%>
                                                 <div class="buttonrow">
-                                                    <input id="saveButton" type="button"  onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveAndPrescribe"/>" />
+                                                    <input id="saveButton" type="button"  onclick="updateSaveAllDrugsPrint();" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" />
+                                                    <input id="saveOnlyButton" type="button"  onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveOnly"/>" />
                                                     <!--input id="testEvalJS" type="button"   onclick="functionOne();" value="testEvalJS" /-->
                                                 </div>
                                             </td>
@@ -917,12 +918,12 @@ body {
     }
     function addSpecialInstruction(content,randomId){
                 //oscarLog("in show hide spec inst="+randomId);
-        if($('siAutoComplete_'+randomId).getStyle('display')=='none'){
+                if($('siAutoComplete_'+randomId).getStyle('display')=='none'){
                   Effect.BlindDown('siAutoComplete_'+randomId);
-        }else{}
-        $('siInput_'+randomId).value=content;
+                }else{}
+                $('siInput_'+randomId).value=content;
                 $('siInput_'+randomId).setStyle({color:'black'});
-    }
+   }
    function hideMedHistory(){
        mb.hide();
    }
@@ -1061,9 +1062,9 @@ body {
                     $('set_'+randomId).remove();
 
                 }});
-                    <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
+            <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
                       callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
-                     </oscar:oscarPropertiesCheck>
+             </oscar:oscarPropertiesCheck>
         }else{
             $("drugName_"+randomId).value=origDrugName;
         }
@@ -1078,8 +1079,8 @@ body {
                $("searchString").focus();
     }
     function iterateStash(){
-                var url="<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=iterateStash";
-                var data="";
+        var url="<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=iterateStash";
+        var data="";
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,
             insertion: Insertion.Bottom,onSuccess:function(transport){
                 updateCurrentInteractions();
@@ -1114,7 +1115,7 @@ body {
                 if($('deleteOnCloseRxBox').value=='true'){
                     deleteRxOnCloseRxBox(randomId);
                 }
-                }});
+        }});
     }
 
     function deleteRxOnCloseRxBox(randomId){
@@ -1254,7 +1255,7 @@ body {
            posx = posx+'px';
            posy = posy+'px';
        }else{
-       var xy = Position.page($('drugProfile'));
+           var xy = Position.page($('drugProfile'));
            //oscarLog("xy="+xy);
            posx = (xy[0]+200)+'px';
            if(xy[1]>=0)
@@ -1308,7 +1309,7 @@ body {
                                             <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
                                               callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
                                              </oscar:oscarPropertiesCheck>
-                                                 //oscarLog("after calling mydrugrefinfo view");
+                                            //oscarLog("after calling mydrugrefinfo view");
                                         }});
                             }});
     }
@@ -1395,19 +1396,19 @@ function popForm2(){
                     h=h+(n-4)*100;
                 }
                 oscarLog("h="+h+"--n="+n);
-            var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp";
-                    oscarLog( "preview2 done");
-                    myLightWindow.activateWindow({
-                        href: url,
+                var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp";
+                oscarLog( "preview2 done");
+                myLightWindow.activateWindow({
+                    href: url,
                     width: 660,
                     height: h
-                    });
-                    var editRxMsg='<bean:message key="oscarRx.Preview.EditRx"/>';
-            $('lightwindow_title_bar_close_link').update(editRxMsg);
-            $('lightwindow_title_bar_close_link').onclick=updateDeleteOnCloseRxBox;
+                });
+                var editRxMsg='<bean:message key="oscarRx.Preview.EditRx"/>';
+                $('lightwindow_title_bar_close_link').update(editRxMsg);
+                $('lightwindow_title_bar_close_link').onclick=updateDeleteOnCloseRxBox;
             }});
 
-                }
+        }
         catch(er){
             oscarLog(er);
         }
@@ -1718,14 +1719,14 @@ function updateReRxDrugId(elementId){
                     updateCurrentInteractions();
                 }});
         }else if(drugId!=null){
-        var data="drugId="+drugId;
-        var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
-        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
-            insertion: Insertion.Bottom,onSuccess:function(transport){
-                updateCurrentInteractions();
-            }});
+            var data="drugId="+drugId;
+            var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribe2";
+            new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
+                insertion: Insertion.Bottom,onSuccess:function(transport){
+                    updateCurrentInteractions();
+                }});
 
-    }
+       }
     }
 
 function updateQty(element){
@@ -1954,12 +1955,8 @@ function findDataStr(ids){
     oscarLog(retVal);
     return retVal;
 }*/
-    function updateSaveAllDrugs(){
+    function updateSaveAllDrugsPrint(){
         var data=Form.serialize($('drugForm'));
-        //var uniqueIds=findUniqueRandomIds(data);
-        //var data2=findDataStr(uniqueIds);
-        //if(data2!='')
-          //  data+="&"+data2;
         oscarLog("data="+data);
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs";
         new Ajax.Request(url,
@@ -1969,6 +1966,20 @@ function findDataStr(ids){
                 callReplacementWebService("ListDrugs.jsp",'drugProfile');
                 popForm2();
                 resetReRxDrugList();
+            }});
+        return false;
+    }
+    function updateSaveAllDrugs(){
+        var data=Form.serialize($('drugForm'));
+        oscarLog("data="+data);
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs";
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,asynchronous:false,
+            onSuccess:function(transport){
+                oscarLog("successfully sent data "+url);
+                callReplacementWebService("ListDrugs.jsp",'drugProfile');
+                resetReRxDrugList();
+                resetStash();
             }});
         return false;
     }
