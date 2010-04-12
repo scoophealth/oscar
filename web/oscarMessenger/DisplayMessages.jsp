@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 
 <%
@@ -324,7 +325,7 @@ function checkAll(formId){
                    <%}%>
                     <tr>
                         <td>
-                            <table border="0" width="80%" cellspacing="1">
+                            <table border="0" width="90%" cellspacing="1">
                                 <tr>
                                     <th align="left" bgcolor="#DDDDFF" width="75">
                                        <input type="checkbox" name="checkAll2" onclick="checkAll('msgList')" id="checkA" />
@@ -391,7 +392,18 @@ function checkAll(formId){
                                             <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
                                             </html:link>
                                         <%}%>
-                                    </th>                                    
+                                    </th>
+                                    <th align="left" bgcolor="#DDDDFF">
+                                        <% if (moreMessages.equals("true")){%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=linked&moreMessages=true" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgLinked"/>
+                                            </html:link>
+                                        <%}else{%>
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=linked&moreMessages=false" paramId="boxType" paramName="pageType">
+                                            <bean:message key="oscarMessenger.DisplayMessages.msgLinked"/>
+                                            </html:link>
+                                        <%}%>
+                                    </th>
                                 </tr>
                                 
                                
@@ -449,6 +461,9 @@ function checkAll(formId){
                                     <td bgcolor="#EEEEFF">
                                     <%= dm.thedate  %>
                                     <%= dm.theime %>
+                                    </td>
+                                    <td bgcolor="#EEEEFF">
+                                        <oscar:nameage demographicNo="<%=dm.demographic_no%>"></oscar:nameage>
                                     </td>
                                 </tr>
                             <%}%>
