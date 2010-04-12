@@ -107,7 +107,7 @@ public class MsgCreateMessageAction extends Action {
             }
             
             //link msg and demogrpahic if both messageId and demographic_no are not null
-            if (demographic_no != null && demographic_no.equals("null")){
+            if (demographic_no != null && (demographic_no.equals("") || demographic_no.equals("null")) ){
                demographic_no = null;               
             }
             if(messageId!=null && demographic_no!=null){
