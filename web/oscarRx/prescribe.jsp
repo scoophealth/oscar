@@ -42,6 +42,7 @@ if(listRxDrugs!=null){
          String outsideProvOhip = rx.getOutsideProviderOhip();
          String brandName       = rx.getBrandName();
          String ATC             = rx.getAtcCode();
+         String genericName     = rx.getGenericName();
          if(ATC.trim().length()>0)
              ATC="ATC: "+ATC;
          String drugName;
@@ -139,7 +140,8 @@ if(listRxDrugs!=null){
         <label style="">Repeats:</label><input type="text" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
 
         <input  type="checkbox" id="longTerm_<%=rand%>"  name="longTerm_<%=rand%>" <%if(longTerm) {%> checked="true" <%}%> >Long Term Med </input>
-
+        <%if(genericName!=null&&!genericName.equalsIgnoreCase("null")){%>
+        <div><a>Ingredient:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=genericName%></a></div><%}%>
        <div class="rxStr" title="not what you mean?" >
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('method_<%=rand%>')">Method:</a><a   id="method_<%=rand%>" onclick="focusTo(this.id)" onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"><%=methodStr%></a>
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('route_<%=rand%>')">Route:</a><a id="route_<%=rand%>" onclick="focusTo(this.id)" onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=routeStr%></a>
