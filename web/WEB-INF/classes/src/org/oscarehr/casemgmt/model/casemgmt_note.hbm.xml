@@ -82,7 +82,7 @@
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
                 position as {cmn.position},
-		(select r.name from caisi_role r where r.role_id =
+		(select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
 		(select count(casemgmt_note.uuid) from casemgmt_note where
@@ -109,7 +109,7 @@
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
                 position as {cmn.position},
-		(select r.name from caisi_role r where r.role_id =
+		(select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
 		(select count(casemgmt_note.uuid) from casemgmt_note where
@@ -135,7 +135,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
-		(select r.name from caisi_role r where r.role_id =
+		(select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
 		(select count(n1.uuid) from casemgmt_note n1 where casemgmt_note.uuid
@@ -159,7 +159,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
-		(select r.name from caisi_role r where r.role_id =
+		(select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
 		(select count(n1.uuid) from casemgmt_note n1 where casemgmt_note.uuid
@@ -202,7 +202,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role},
 		reporter_program_team as {cmn.reporter_program_team}, history as
 		{cmn.history}, uuid as {cmn.uuid}, password as {cmn.password}, locked
-		as {cmn.locked}, (select r.name from caisi_role r where r.role_id =
+		as {cmn.locked}, (select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName}, (select p.name from program p
 		where p.id = program_no) as {cmn.programName}, (select count(n1.uuid)
 		from casemgmt_note n1 where casemgmt_note.uuid = n1.uuid) as
@@ -223,7 +223,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role},
 		reporter_program_team as {cmn.reporter_program_team}, history as
 		{cmn.history}, uuid as {cmn.uuid}, password as {cmn.password}, locked
-		as {cmn.locked}, (select r.name from caisi_role r where r.role_id =
+		as {cmn.locked}, (select r.role_name from secRole r where r.role_no =
 		reporter_caisi_role) as {cmn.roleName}, (select p.name from program p
 		where p.id = program_no) as {cmn.programName}, (select count(n1.uuid)
 		from casemgmt_note n1 where casemgmt_note.uuid = n1.uuid) as
