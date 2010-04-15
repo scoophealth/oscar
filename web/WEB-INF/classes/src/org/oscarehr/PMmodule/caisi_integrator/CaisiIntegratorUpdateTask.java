@@ -399,7 +399,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                                 pushMeasurements(facility, demographicService, demographicId);
                                 pushDxresearchs(facility, demographicService, demographicId);
                                 pushBillingItems(facility, demographicService, demographicId);
-                                pushEforms(facility, demographicService, demographicId);
+//                                pushEforms(facility, demographicService, demographicId);
 
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
