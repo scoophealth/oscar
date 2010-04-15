@@ -1527,7 +1527,6 @@ YAHOO.example.FnMultipleFields = function(){
                     //oscarLog(args[2]);
                     var arr = args[2];
                     //oscarLog('In yahoo----'+arr.name);
-                    //oscarLog('In yahoo----'+arr.id);
                     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                     var ran_number=Math.round(Math.random()*1000000);
                     var name=encodeURIComponent(arr.name);
@@ -1897,10 +1896,13 @@ function updateQty(element){
          function getRenalDosingInformation(divId,atcCode){
                var url = "RenalDosing.jsp";
                var ran_number=Math.round(Math.random()*1000000);
-               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode="+atcCode+"&divId="+divId+"&rand="+ran_number;  //hack to get around ie caching the page
-               //alert(params);
-               new Ajax.Updater(divId,url, {method:'get',parameters:params,asynchronous:true});
-               //alert(origRequest.responseText);
+               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode="+atcCode+"&divId="+divId+"&rand="+ran_number;
+               new Ajax.Updater(divId,url, {method:'get',parameters:params,insertion: Insertion.Bottom,asynchronous:true});
+         }
+         function getLUC(divId,randomId,din){
+             var url="LimitedUseCode.jsp";
+             var params="randomId="+randomId+"&din="+din;
+             new Ajax.Updater(divId,url,{method:'get',parameters:params,insertion:Insertion.Bottom,asynchronous:true});
          }
 
 /*
