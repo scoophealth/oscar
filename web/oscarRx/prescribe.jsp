@@ -184,28 +184,12 @@ if(listRxDrugs!=null){
        </div>
 
            <div id="renalDosing_<%=rand%>" ></div>
-
+           <div id="luc_<%=rand%>" style="margin-top:2px;">
+           <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
+            <script type="text/javascript">getRenalDosingInformation('renalDosing_<%=rand%>','<%=rx.getAtcCode()%>');</script>
+            </oscar:oscarPropertiesCheck>
            <oscar:oscarPropertiesCheck property="billregion" value="ON" >
-           <%
-            ArrayList<LimitedUseCode> luList = LimitedUseLookup.getLUInfoForDin(rx.getRegionalIdentifier());
-            if (luList != null){ System.out.println("inside luList size is "+luList.size()); %>
-            <div style="margin-top:2px;">
-            <table style="border-width: 1px; border-spacing: 2px; border-style: outset; border-color: black;">
-                        <tr>
-                                <th colspan="2" align="left">Limited Use Codes</th>
-                        </tr>
-
-                        <%for (LimitedUseCode limitedUseCode : luList){%>
-                        <tr>
-                            <td valign="top">
-                                <a onclick="javascript:addLuCode('instructions_<%=rand%>','<%=limitedUseCode.getUseId()%>')" href="javascript: return void();"><%=limitedUseCode.getUseId()%></a>&nbsp;
-                            </td>
-                            <td><%=limitedUseCode.getTxt()%></td>
-                        </tr>
-                        <%}%>
-            </table>
-            </div>
-            <%}%>
+               <script type="text/javascript">getLUC('luc_<%=rand%>','<%=rand%>','<%=rx.getRegionalIdentifier()%>');</script>
             </oscar:oscarPropertiesCheck>
 
 </fieldset>
@@ -259,9 +243,7 @@ if(listRxDrugs!=null){
 
             checkAllergy('<%=rand%>','<%=rx.getAtcCode()%>');
             checkIfInactive('<%=rand%>','<%=rx.getRegionalIdentifier()%>');
-            <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
-            getRenalDosingInformation('renalDosing_<%=rand%>','<%=rx.getAtcCode()%>');
-            </oscar:oscarPropertiesCheck>
+
             var isDiscontinuedLatest=<%=isDiscontinuedLatest%>;
             oscarLog("isDiscon "+isDiscontinuedLatest);
             //pause(1000);
