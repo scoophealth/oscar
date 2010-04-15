@@ -116,7 +116,7 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
     border-spacing: 0px; }
     
     tr.selected{ 
-    //background-color: #BEC8D1;
+    /*background-color: #BEC8D1;*/
     background-color: yellow;
     
     font-weight: bold;
