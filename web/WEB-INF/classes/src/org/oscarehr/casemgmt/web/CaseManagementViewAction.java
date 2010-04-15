@@ -781,8 +781,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     {
     	if (roles==null) return(false);
     	
+    	log.debug("Note Role : "+role);
+    	
     	for (SecUserRole roleTmp : roles)
     	{
+        	log.debug("Provider Roles : "+roleTmp.getRoleName());
     		if (roleTmp.getRoleName().equals(role)) return(true);
     	}
     	
@@ -803,7 +806,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					
 					// filter on issues to display
 					if (issueCodesToDisplay==null || hasIssueToBeDisplayed(cachedDemographicNote, issueCodesToDisplay)) {
-						
 						// filter on role based access
 						if (hasRole(roles, cachedDemographicNote.getRole())) {
 							notesToDisplay.add(new NoteDisplayIntegrator(cachedDemographicNote));
