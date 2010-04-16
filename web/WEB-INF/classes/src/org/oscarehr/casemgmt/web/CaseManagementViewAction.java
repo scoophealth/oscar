@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -516,6 +517,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, Integer.valueOf(programId));
 		addRemoteIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
 		
+		sortIssues(checkBoxBeanList);
        	request.setAttribute("Issues", checkBoxBeanList);
  	log.debug("Get issues time : " + (System.currentTimeMillis()-startTime));
     	
@@ -612,7 +614,21 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    log.debug("Apply sorting to notes " + (System.currentTimeMillis()-startTime));
     }
 
-    /**
+    private void sortIssues(ArrayList<CheckBoxBean> checkBoxBeanList) {
+    	Comparator<CheckBoxBean> cbbComparator=new Comparator<CheckBoxBean>() {
+			public int compare(CheckBoxBean o1, CheckBoxBean o2) {
+				if (o1.getIssueDisplay()!=null && o2.getIssueDisplay()!=null && o1.getIssueDisplay().code!=null)
+				{
+					return(o1.getIssueDisplay().code.compareTo(o2.getIssueDisplay().code));
+				}
+				else return(0);
+			}
+		};
+		
+		Collections.sort(checkBoxBeanList, cbbComparator);
+    }
+
+	/**
      * New CME
      */
 	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException,
