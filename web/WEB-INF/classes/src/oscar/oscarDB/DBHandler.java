@@ -28,6 +28,7 @@
 package oscar.oscarDB;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -66,7 +67,18 @@ public class DBHandler {
         rs = stmt.executeQuery(SQLStatement);
         return rs;
     }
-
+    synchronized public int RunSQL(String SQLStatement, String para1) throws SQLException {
+        PreparedStatement ps = getConnection().prepareStatement(SQLStatement); 
+        ps.setString(1,para1);
+        int result = ps.executeUpdate();
+        return result;
+    }
+    synchronized public java.sql.ResultSet GetPreSQL(String SQLStatement, String para1) throws SQLException {
+        PreparedStatement ps = getConnection().prepareStatement(SQLStatement); 
+        ps.setString(1,para1);
+        ResultSet result = ps.executeQuery();
+        return result;
+    }
     synchronized public boolean RunSQL(String SQLStatement) throws SQLException {
         boolean b = false;
         Statement stmt;

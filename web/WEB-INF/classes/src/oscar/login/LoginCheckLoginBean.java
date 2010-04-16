@@ -200,10 +200,10 @@ public class LoginCheckLoginBean {
 
     public String[] getPreferences() {
     	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){
-        String[] temp =  new String[] { "8", "18", "15", "a" ,"disabled","disabled"};
+        String[] temp =  new String[] { "8", "18", "15", "a" ,"disabled","disabled", "disabled"};
         ResultSet rs = null;
         try {
-            String strSQL = "select start_hour, end_hour, every_min, mygroup_no,new_tickler_warning_window,default_caisi_pmm from preference where provider_no = '"
+            String strSQL = "select start_hour, end_hour, every_min, mygroup_no,new_tickler_warning_window,default_caisi_pmm, default_new_oscar_cme from preference where provider_no = '"
                     + secBean.getProviderNo() + "'";
             rs = accessDB.searchDBRecord(strSQL);
             while (rs.next()) {
@@ -213,6 +213,7 @@ public class LoginCheckLoginBean {
                 temp[3] = accessDB.getString(rs,"mygroup_no");
                 temp[4] = accessDB.getString(rs,"new_tickler_warning_window");
                 temp[5] = accessDB.getString(rs,"default_caisi_pmm");
+                temp[6] = accessDB.getString(rs,"default_new_oscar_cme");
             }
             rs.close();
         } catch (SQLException e) {
@@ -224,6 +225,7 @@ public class LoginCheckLoginBean {
                 temp[3] = "a";
                 temp[4] = "disabled";
                 temp[5] = "disabled";
+                temp[6] = "disabled";
             }
         }
         return temp;

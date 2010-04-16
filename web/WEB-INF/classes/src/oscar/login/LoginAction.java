@@ -14,6 +14,9 @@
 package oscar.login;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -44,6 +48,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.oscarDB.DBHandler;
 import oscar.oscarSecurity.CRHelper;
 import oscar.util.AlertTimer;
 
@@ -165,6 +170,11 @@ public final class LoginAction extends DispatchAction {
                     session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
                     session.setAttribute("default_pmm", strPreferAuth[5]);
                     default_pmm = strPreferAuth[5];
+                    ArrayList<String> newDocArr = (ArrayList<String>)request.getSession().getServletContext().getAttribute("CaseMgmtUsers");    
+                    if("enabled".equals(strPreferAuth[6])) {
+                    	newDocArr.add(providerNo);
+                    	session.setAttribute("CaseMgmtUsers", newDocArr);
+                    }
                 }
             }
 
