@@ -6329,6 +6329,7 @@ CREATE TABLE preference (
   color_template varchar(10) default NULL,
   default_servicetype varchar(10) default NULL,
   default_caisi_pmm varchar(10) default 'disabled',
+  default_new_oscar_cme varchar(10) default 'disabled',
   PRIMARY KEY  (preference_no),
   KEY provider_no (provider_no)
 ) ;
