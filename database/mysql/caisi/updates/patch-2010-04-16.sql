@@ -1,0 +1,1 @@
+alter table preference add default_new_oscar_cme varchar(10) default 'disabled';
