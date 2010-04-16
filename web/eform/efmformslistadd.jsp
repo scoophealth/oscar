@@ -38,10 +38,12 @@
  * Ontario, Canada 
  */
 -->
-
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
+<%@include file="/common/webAppContextAndSuperMgr.jsp" %>
 <%
+String user = (String) session.getAttribute("user");
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + user;
     
 String orderByRequest = request.getParameter("orderby");
 String orderBy = "";
@@ -51,7 +53,14 @@ else if (orderByRequest.equals("form_date")) orderBy = EFormUtil.DATE;
 
 String groupView = request.getParameter("group_view");
 if (groupView == null) {
-    groupView = "";
+    UserPropertyDAO userPropDAO = (UserPropertyDAO)webApplicationContext.getBean("UserPropertyDAO");
+    UserProperty usrProp = userPropDAO.getProp(user, UserProperty.EFORM_FAVOURITE_GROUP);
+    if( usrProp != null ) {
+        groupView = usrProp.getValue();
+    }
+    else {
+        groupView = "";
+    }
 }
 %>
 
