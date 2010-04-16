@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
+import java.util.Hashtable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,6 +43,7 @@ import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
+import oscar.eform.EFormUtil;
 
 /**
  *
@@ -925,6 +927,80 @@ public class ProviderPropertyAction extends DispatchAction {
 
          return actionmapping.findForward("gen");
      }
+
+    public ActionForward viewFavouriteEformGroup(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        DynaActionForm frm = (DynaActionForm)actionform;
+        String provider = (String) request.getSession().getAttribute("user");
+        UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EFORM_FAVOURITE_GROUP);
+
+        if (prop == null){
+         prop = new UserProperty();
+        }
+
+        frm.set("dateProperty", prop);
+        ArrayList<Hashtable> groups = EFormUtil.getEFormGroups();
+        ArrayList groupList = new ArrayList();
+        String name;
+        groupList.add(new LabelValueBean("None",""));
+         for (Hashtable h: groups ){
+             name = (String)h.get("groupName");
+             groupList.add(new LabelValueBean(name,name));
+         }
+
+         request.setAttribute("dropOpts",groupList);
+
+         request.setAttribute("dateProperty",prop);
+
+         request.setAttribute("providertitle","provider.setFavEfrmGrp.title"); //=Set Favourite Eform Group
+         request.setAttribute("providermsgPrefs","provider.setFavEfrmGrp.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setFavEfrmGrp.msgProvider"); //=Default Eform Group
+         request.setAttribute("providermsgEdit","provider.setFavEfrmGrp.msgEdit"); //=Select your favourite Eform Group
+         request.setAttribute("providerbtnSubmit","provider.setFavEfrmGrp.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setFavEfrmGrp.msgSuccess"); //=Favourite Eform Group saved
+         request.setAttribute("method","saveFavouriteEformGroup");
+        return actionmapping.findForward("gen");
+    }
+
+    public ActionForward saveFavouriteEformGroup(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty prop = (UserProperty)frm.get("dateProperty");
+         String group = prop != null ? prop.getValue() : "";
+
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.EFORM_FAVOURITE_GROUP);
+
+         if( saveProperty == null ) {
+             saveProperty = new UserProperty();
+             saveProperty.setProviderNo(provider);
+             saveProperty.setName(UserProperty.EFORM_FAVOURITE_GROUP);
+         }         
+
+         if( group.equalsIgnoreCase("")) {
+             this.userPropertyDAO.delete(saveProperty);
+         }
+         else {
+            saveProperty.setValue(group);
+            this.userPropertyDAO.saveProp(saveProperty);
+         }
+
+         request.setAttribute("status", "success");
+         request.setAttribute("providertitle","provider.setFavEfrmGrp.title"); //=Set Favourite Eform Group
+         request.setAttribute("providermsgPrefs","provider.setFavEfrmGrp.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setFavEfrmGrp.msgProvider"); //=Default Eform Group
+         request.setAttribute("providermsgEdit","provider.setFavEfrmGrp.msgEdit"); //=Select your favourite Eform Group
+         request.setAttribute("providerbtnSubmit","provider.setFavEfrmGrp.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setFavEfrmGrp.msgSuccess"); //=Favourite Eform Group saved
+         request.setAttribute("method","saveFavouriteEformGroup");
+
+         return actionmapping.findForward("gen");
+    }
 
     /**
      * Creates a new instance of ProviderPropertyAction
