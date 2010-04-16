@@ -852,6 +852,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					
 					if (issueDisplay!=null)
 					{
+						if (existsIssueWithSameAttributes(issueDisplay, checkBoxBeanList)) continue;
+						
 						CheckBoxBean checkBoxBean=new CheckBoxBean();
 						checkBoxBean.setIssueDisplay(issueDisplay);
 			        	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(issueDisplay.getCode(), demographicNo));
@@ -864,6 +866,30 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		} catch (Exception e) {
 			log.error("Unexpected error.", e);
 		}
+	}
+	
+	private static boolean existsIssueWithSameAttributes(IssueDisplay issueDisplay, ArrayList<CheckBoxBean> checkBoxBeanList)
+	{
+		// must iterate through all items, can't stop at first hit
+		for (CheckBoxBean cbb : checkBoxBeanList)
+		{
+			IssueDisplay existingIssueDisplay=cbb.getIssueDisplay();
+			if (hasSameAttributes(existingIssueDisplay, issueDisplay)) return(true);
+		}
+		
+		return(false);
+	}
+	
+	public static boolean hasSameAttributes(IssueDisplay issueDisplay1, IssueDisplay issueDisplay2)
+	{
+		if (issueDisplay1.code!=null && !issueDisplay1.code.equals(issueDisplay2.code)) return(false);
+		if (issueDisplay1.acute!=null && !issueDisplay1.acute.equals(issueDisplay2.acute)) return(false);
+		if (issueDisplay1.certain!=null && !issueDisplay1.certain.equals(issueDisplay2.certain)) return(false);
+		if (issueDisplay1.major!=null && !issueDisplay1.major.equals(issueDisplay2.major)) return(false);
+		if (issueDisplay1.priority!=null && !issueDisplay1.priority.equals(issueDisplay2.priority)) return(false);
+		if (issueDisplay1.resolved!=null && !issueDisplay1.resolved.equals(issueDisplay2.resolved)) return(false);
+
+		return(true);
 	}
 
 	private IssueDisplay getIssueToDisplay(CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
