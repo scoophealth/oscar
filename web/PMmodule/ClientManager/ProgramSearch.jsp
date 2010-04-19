@@ -27,7 +27,9 @@
 <%@ include file="/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<html:html locale="true">
+
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Program Search</title>
@@ -141,7 +143,7 @@ if (!Array.prototype.indexOf)
 <div class="tabs" id="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
-		<th title="Programs">Search Results</th>
+		<th title="Programs">Local Facility Search Results</th>
 	</tr>
 </table>
 </div>
@@ -183,6 +185,14 @@ if (!Array.prototype.indexOf)
 			<a href="#javascript:void(0);"
 				onclick="selectRemoteProgram('<c:out value="${program.facilityIdIntegerCompositePk.integratorFacilityId}" />','<c:out value="${program.facilityIdIntegerCompositePk.caisiItemId}" />');"><c:out
 				value="${program.name}" /></a>
+		</display:column>
+		<display:column title="Facility Name">
+			<c:set var="integratorFacilityId" value="${program.facilityIdIntegerCompositePk.integratorFacilityId}" scope="request" />
+			<%
+				Integer integratorFacilityId=(Integer)request.getAttribute("integratorFacilityId");
+				CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(integratorFacilityId);
+			%>
+			<%=cachedFacility.getName()%>
 		</display:column>
 		<display:column property="type" sortable="true" title="Type"></display:column>
 		<display:column property="description" sortable="false"

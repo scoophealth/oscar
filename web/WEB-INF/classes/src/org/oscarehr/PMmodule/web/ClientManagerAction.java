@@ -1060,7 +1060,11 @@ public class ClientManagerAction extends BaseAction {
 		if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
 			try {
 				List<CachedProgram> results = CaisiIntegratorManager.getRemoteProgramsAcceptingReferrals();
+				
 				filterResultsByCriteria(results, criteria);
+				
+				removeCommunityPrograms(results);
+				
 				request.setAttribute("remotePrograms", results);
 			} catch (MalformedURLException e) {
 				logger.error("unexpected error", e);
@@ -1073,6 +1077,14 @@ public class ClientManagerAction extends BaseAction {
 
 		return mapping.findForward("search_programs");
 	}
+
+	private void removeCommunityPrograms(List<CachedProgram> results) {
+		Iterator<CachedProgram> it = results.iterator();
+		while (it.hasNext()) {
+			CachedProgram cachedProgram = it.next();
+			if ("community".equals(cachedProgram.getType())) it.remove();
+		}
+    }
 
 	private void filterResultsByCriteria(List<CachedProgram> results, Program criteria) {
 
