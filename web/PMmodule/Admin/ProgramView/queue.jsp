@@ -205,7 +205,7 @@ String reason ="";
 	<display:column property="notes" sortable="true"
 		title="Reason for referral" />
 	<display:column property="presentProblems" sortable="true"
-		title="Present problems" />
+		title="Presenting problems" />
 	<display:column property="headRecord" sortable="true" title="Family Id" />
 </display:table>
 <br />
@@ -317,6 +317,8 @@ String reason ="";
 		<display:column property="providerName" sortable="true"
 			title="Referring Provider" />
 		<display:column property="referral.reasonForReferral" sortable="true"
-			title="Notes" />
+			title="Reason for referral" />
+		<display:column property="referral.presentingProblem" sortable="true"
+			title="Presenting problems" />
 	</display:table>
 </c:if>
