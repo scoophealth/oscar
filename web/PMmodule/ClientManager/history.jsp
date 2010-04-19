@@ -57,7 +57,6 @@
 		AdmissionForHistoryTabDisplay admissionForDisplay = (AdmissionForHistoryTabDisplay) pageContext.getAttribute("admission");
 	%>
 	<%
-		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
 		ProgramProviderDAO ppd =(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 		
 	%>
@@ -94,9 +93,8 @@
     <display:column sortable="true" title="">	
 		<% if(bShowEncounterLink) {	
 			HttpSession se = request.getSession();			
-			Admission tempAdmission=(Admission)pageContext.getAttribute("admission");
-			String programId = String.valueOf(tempAdmission.getProgramId());
-			Integer demographic_no = tempAdmission.getClientId();
+			String programId = String.valueOf(admissionForDisplay.getProgramId());
+			Integer demographic_no = admissionForDisplay.getClientId();
 			
 			//Check program is in provider's program domain:
 			if(ppd.isThisProgramInProgramDomain(curUser_no,Integer.valueOf(programId))) {

@@ -42,7 +42,9 @@ public class AdmissionForHistoryTabDisplay {
 	private String facilityDischarge;
 	private int daysInProgram;
 	private String temporaryAdmission;
-
+	private Integer programId;
+	private Integer clientId;
+	
 	public AdmissionForHistoryTabDisplay(Admission admission) {
 		admissionId = admission.getId().intValue();
 		isFromIntegrator = false;
@@ -52,7 +54,9 @@ public class AdmissionForHistoryTabDisplay {
 
 		admissionDate = dateFormatter.format(admission.getAdmissionDate());
 		facilityAdmission = String.valueOf(!admission.isAdmissionFromTransfer());
-
+		programId = admission.getProgramId();
+		clientId = admission.getClientId();
+		
 		if (admission.getDischargeDate() != null) {
 			dischargeDate = dateFormatter.format(admission.getDischargeDate());
 			daysInProgram = DateUtils.calculateDayDifference(admission.getAdmissionDate(), admission.getDischargeDate());
@@ -144,5 +148,10 @@ public class AdmissionForHistoryTabDisplay {
 	public String getTemporaryAdmission() {
 		return temporaryAdmission;
 	}
-
+	public Integer getProgramId() {
+		return programId;
+	}
+	public Integer getClientId() {
+		return admissionId;
+	}
 }
