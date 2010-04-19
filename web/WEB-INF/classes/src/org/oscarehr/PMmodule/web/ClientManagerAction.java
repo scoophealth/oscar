@@ -710,8 +710,6 @@ public class ClientManagerAction extends BaseAction {
 		if (clientsJadm != null && clientsJadm.getHeadClientId() != null) {
 			isFamilyDependent = true;
 		}
-		System.out.println("ClientManagerAction.saveBedReservation(): isFamilyHead = " + isFamilyHead);
-		System.out.println("ClientManagerAction.saveBedReservation(): isFamilyDependent = " + isFamilyDependent);
 
 		if (!isFamilyHead && isFamilyDependent) {// when client is dependent of a family -> do not attempt to assign.
 			// Display message notifying that the client cannot be saved (assign or unassign) a room or a bed
@@ -1032,7 +1030,6 @@ public class ClientManagerAction extends BaseAction {
 		Long headInteger = new Long(headClientId);
 		Long clientInteger = new Long(clientId);
 
-		System.out.println("headClientId " + headClientId + " clientId " + clientId);
 
 		jadmission.setAdmissionDate(new Date());
 		jadmission.setHeadClientId(headInteger);
@@ -1040,7 +1037,6 @@ public class ClientManagerAction extends BaseAction {
 		jadmission.setClientId(clientInteger);
 		jadmission.setProviderNo((String) request.getSession().getAttribute("user"));
 		jadmission.setTypeId(new Long(type));
-		System.out.println(jadmission.toString());
 		clientManager.saveJointAdmission(jadmission);
 		setEditAttributes(form, request, (String) request.getParameter("clientId"));
 
@@ -1650,7 +1646,6 @@ public class ClientManagerAction extends BaseAction {
 				String demographic = (String) h.get("demographicNo");
 				Long demoLong = new Long(demographic);
 				JointAdmission demoJadm = clientManager.getJointAdmission(demoLong);
-				System.out.println("DEMO JADM: " + demoJadm);
 
 				// IS PERSON JOINTLY ADMITTED WITH ME, They will either have the same HeadClient or be my headClient
 				if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong) { // they're my head client
