@@ -39,7 +39,7 @@ public class ReferralSummaryDisplay {
 		programName = "local / "+clientReferral.getProgramName();
 		programType = clientReferral.getProgramType();
 		referralDate = dateFormatter.format(clientReferral.getReferralDate());
-		referringProvider = clientReferral.getProviderFormattedName();
+		referringProvider = clientReferral.getProviderFormattedName() + " / local";
 		daysInQueue = DateUtils.calculateDayDifference(clientReferral.getReferralDate(), new Date());
 	}
 
@@ -61,7 +61,7 @@ public class ReferralSummaryDisplay {
 		remoteProviderPk.setIntegratorFacilityId(referral.getSourceIntegratorFacilityId());
 		remoteProviderPk.setCaisiItemId(referral.getSourceCaisiProviderId());
 		CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(remoteProviderPk);
-		referringProvider = cachedProvider.getLastName()+", "+cachedProvider.getFirstName();
+		referringProvider = cachedProvider.getLastName()+", "+cachedProvider.getFirstName()+" / "+cachedFacility.getName();
 	}
 
 	public String getProgramName() {

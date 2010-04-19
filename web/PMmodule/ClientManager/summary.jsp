@@ -699,6 +699,6 @@ String reason ="";
 	<display:column property="programName" sortable="true" title="Facility / Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="referralDate" sortable="true" title="Referral Date" />
-	<display:column property="referringProvider" sortable="true" title="Referring Provider" />
+	<display:column property="referringProvider" sortable="true" title="Referring Provider/Facility" />
 	<display:column property="daysInQueue" sortable="true" title="Days in Queue" />
 </display:table>
