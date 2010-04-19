@@ -202,10 +202,6 @@ String reason ="";
 		title="Referral Date" />
 	<display:column property="providerFormattedName" sortable="true"
 		title="Referring Provider" />
-	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
-		<display:column property="temporaryAdmission" sortable="true"
-			title="Temporary Admission" />
-	</caisi:isModuleLoad>
 	<display:column property="notes" sortable="true"
 		title="Reason for referral" />
 	<display:column property="presentProblems" sortable="true"
