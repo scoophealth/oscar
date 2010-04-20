@@ -44,14 +44,14 @@ public class ReferralSummaryDisplay {
 	}
 
 	public ReferralSummaryDisplay(Referral referral) throws MalformedURLException {
-		CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(referral.getDestinationIntegratorFacilityId());
+		CachedFacility cachedDestinationFacility=CaisiIntegratorManager.getRemoteFacility(referral.getDestinationIntegratorFacilityId());
 		
 		FacilityIdIntegerCompositePk remoteProgramPk = new FacilityIdIntegerCompositePk();
 		remoteProgramPk.setIntegratorFacilityId(referral.getDestinationIntegratorFacilityId());
 		remoteProgramPk.setCaisiItemId(referral.getDestinationCaisiProgramId());
 		CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(remoteProgramPk);
 		
-		programName = cachedFacility.getName()+" / "+cachedProgram.getName();
+		programName = cachedDestinationFacility.getName()+" / "+cachedProgram.getName();
 		programType = cachedProgram.getType();
 
 		referralDate = dateFormatter.format(referral.getReferralDate());
@@ -61,7 +61,8 @@ public class ReferralSummaryDisplay {
 		remoteProviderPk.setIntegratorFacilityId(referral.getSourceIntegratorFacilityId());
 		remoteProviderPk.setCaisiItemId(referral.getSourceCaisiProviderId());
 		CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(remoteProviderPk);
-		referringProvider = cachedProvider.getLastName()+", "+cachedProvider.getFirstName()+" / "+cachedFacility.getName();
+		CachedFacility cachedSourceFacility=CaisiIntegratorManager.getRemoteFacility(referral.getSourceIntegratorFacilityId());
+		referringProvider = cachedProvider.getLastName()+", "+cachedProvider.getFirstName()+" / "+cachedSourceFacility.getName();
 	}
 
 	public String getProgramName() {
