@@ -148,7 +148,7 @@ public class ProgramManagerAction extends BaseAction {
 			return list(mapping, form, request, response);
 		}
 
-		if (id != null) {
+		if (id != null && id!="") {
 			Program program = programManager.getProgram(id);
 			
 			if (program == null) {
@@ -177,9 +177,11 @@ public class ProgramManagerAction extends BaseAction {
 		}
 
 		setEditAttributes(request, id);
-		request.setAttribute("service_restrictions", clientRestrictionManager.getActiveRestrictionsForProgram(Integer.valueOf(id), new Date()));
-		request.setAttribute("disabled_service_restrictions", clientRestrictionManager.getDisabledRestrictionsForProgram(Integer.valueOf(id), new Date()));
-
+		
+		if (id != null && id!="") {
+			request.setAttribute("service_restrictions", clientRestrictionManager.getActiveRestrictionsForProgram(Integer.valueOf(id), new Date()));
+			request.setAttribute("disabled_service_restrictions", clientRestrictionManager.getDisabledRestrictionsForProgram(Integer.valueOf(id), new Date()));
+		}
 		return mapping.findForward("edit");
 	}
 
@@ -912,7 +914,7 @@ public class ProgramManagerAction extends BaseAction {
 
 	private void setEditAttributes(HttpServletRequest request, String programId) {
 
-		if (programId != null) {
+		if (programId != null && programId!="") {
 			request.setAttribute("id", programId);
 			request.setAttribute("programName", programManager.getProgram(programId).getName());
 			request.setAttribute("providers", programManager.getProgramProviders(programId));
