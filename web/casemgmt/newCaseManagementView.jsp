@@ -620,7 +620,7 @@
 				if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
 				{
 				 	%> 
-				 	<div style="background-color:#ffcccc; text-align:right">Group Note - Note owner is <%=note.getLocation() %></div>
+				 	<div style="background-color:#ffcccc; text-align:right">Group Note - Editable note in this <a target="_blank" href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<%=note.getLocation() %>">client</a></div>
 					<%
 				}
 

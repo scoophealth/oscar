@@ -842,7 +842,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 						disp.setReadOnly(true);
 						disp.setGroupNote(true);
 						Demographic origDemographic = demographicDao.getDemographic(originaldemo);
-						disp.setLocation(origDemographic.getFormattedName());
+						disp.setLocation(String.valueOf(origDemographic.getDemographicNo()));
 						notesToDisplay.add(disp);
 					}
 //				}
