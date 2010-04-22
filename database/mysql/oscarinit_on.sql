@@ -1695,11 +1695,4 @@ CREATE TABLE `formLabReq07` (
 	PRIMARY KEY  (`ID`)
 ) ;
 
-CREATE TABLE IntegratorControl (
-        id int auto_increment,
-        facilityId int not null, foreign key (facilityId) references Facility(id),
-        control varchar(80),
-        execute boolean,
-        PRIMARY KEY (id)
-);
 
