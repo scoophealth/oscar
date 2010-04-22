@@ -76,7 +76,11 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.GroupNoteDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
@@ -95,7 +99,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
 	private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
 	private SecUserRoleDao secUserRoleDao=(SecUserRoleDao)SpringUtils.getBean("secUserRoleDao");
-
+	private static GroupNoteDao groupNoteDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao");
+	private static DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 		caseForm.setFilter_provider("");
@@ -516,6 +522,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		//addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, null);
 		addLocalIssues(checkBoxBeanList, demographicNo, hideInactiveIssues, Integer.valueOf(programId));
 		addRemoteIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
+		addGroupIssues(checkBoxBeanList, demographicNo, hideInactiveIssues);
 		
 		sortIssues(checkBoxBeanList);
        	request.setAttribute("Issues", checkBoxBeanList);
@@ -558,6 +565,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    // deal with remote notes
 		startTime = System.currentTimeMillis();
 	    addRemoteNotes(notesToDisplay, demographicNo, checkedCodeList);
+	    addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
 	    log.debug("Get remote notes. time="+(System.currentTimeMillis()-startTime));
 
 	    // not sure what everything else is after this
@@ -721,7 +729,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		ArrayList<NoteDisplay> notesToDisplay=new ArrayList<NoteDisplay>();
 		for (CaseManagementNote noteTemp : notes) notesToDisplay.add(new NoteDisplayLocal(noteTemp));
 		addRemoteNotes(notesToDisplay, Integer.parseInt(demoNo), null);
-
+		addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
+		
 		// sort the notes		
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");
@@ -807,7 +816,43 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     	
     	return(false);
     }
-    
+
+	private void addGroupNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		List<SecUserRole> roles=secUserRoleDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
+
+		if (!loggedInInfo.currentFacility.isEnableGroupNotes()) return;
+
+		List<GroupNoteLink> noteLinks = groupNoteDao.findLinksByDemographic(demographicNo);
+		for(GroupNoteLink noteLink:noteLinks) {
+			try {
+				
+				int orginalNoteId = noteLink.getNoteId();
+				CaseManagementNote note = this.caseManagementNoteDao.getNote(Long.valueOf(orginalNoteId));
+			
+				// filter on issues to display
+//				if (issueCodesToDisplay==null || hasIssueToBeDisplayed(note, issueCodesToDisplay)) {				
+					// filter on role based access
+				String roleName =this.roleMgr.getRole(note.getReporter_caisi_role()).getRoleName();
+					if (hasRole(roles, roleName)) {
+						String originaldemo = note.getDemographic_no();
+						
+						note.setDemographic_no(String.valueOf(demographicNo));				
+						NoteDisplayLocal disp = new NoteDisplayLocal(note);	
+						disp.setReadOnly(true);
+						disp.setGroupNote(true);
+						Demographic origDemographic = demographicDao.getDemographic(originaldemo);
+						disp.setLocation(origDemographic.getFormattedName());
+						notesToDisplay.add(disp);
+					}
+//				}
+			} catch (Exception e) {
+				log.error("Unexpected error.", e);
+			}						
+		}
+		
+	}
+	
 	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		List<SecUserRole> roles=secUserRoleDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
@@ -849,7 +894,57 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		
 		return(false);
 	}
+	
+	private boolean hasIssueToBeDisplayed(CaseManagementNote note, ArrayList<String> issueCodesToDisplay) {
+		// no issue selected means display all
+		if (issueCodesToDisplay==null || issueCodesToDisplay.size()==0) return(true);
+		
+		for (CaseManagementIssue noteIssue : note.getIssues())
+		{
+			// yes I know this is flawed in that it's ignoreing the code type.
+			// right now we don't support code type properly on the caisi side.
+			if (issueCodesToDisplay.contains(noteIssue.getIssue_id())) return(true);
+		}
+		
+		return(false);
+	}
 
+	protected void addGroupIssues(ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+		if (!loggedInInfo.currentFacility.isEnableGroupNotes()) return;
+
+		try {
+			//get all the issues for which we have group notes for
+			List<GroupNoteLink> links = this.groupNoteDao.findLinksByDemographic(demographicNo);
+			for(GroupNoteLink link:links) {
+				int noteId = link.getNoteId();
+				List<CaseManagementIssue> issues = this.caseManagementMgr.getIssuesByNote(noteId);
+			}
+			/*
+			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
+				try {
+						IssueDisplay issueDisplay=null;
+					
+					if (!hideInactiveIssues) issueDisplay=getIssueToDisplay(cachedDemographicIssue); 
+					else if (!cachedDemographicIssue.isResolved()) issueDisplay=getIssueToDisplay(cachedDemographicIssue);
+					
+					if (issueDisplay!=null)
+					{
+						CheckBoxBean checkBoxBean=new CheckBoxBean();
+						checkBoxBean.setIssueDisplay(issueDisplay);
+			        	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(issueDisplay.getCode(), demographicNo));
+						checkBoxBeanList.add(checkBoxBean);
+					}
+			} catch (Exception e) {
+					log.error("Unexpected error.", e);
+				}
+			}*/
+		} catch (Exception e) {
+			log.error("Unexpected error.", e);
+		}
+	}
+	
 	protected void addRemoteIssues(ArrayList<CheckBoxBean> checkBoxBeanList, int demographicNo, boolean hideInactiveIssues) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 

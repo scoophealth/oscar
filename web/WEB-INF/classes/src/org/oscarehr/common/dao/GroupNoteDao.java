@@ -14,6 +14,18 @@ public class GroupNoteDao extends AbstractDao<GroupNoteLink> {
 		super(GroupNoteLink.class);
 	}
 
+	public List<GroupNoteLink> findLinksByDemographic(Integer demographicNo) {
+		String sqlCommand = "select * from GroupNoteLink where demographicNo=?1 and active=true";
+
+		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+		query.setParameter(1, demographicNo);
+		
+		@SuppressWarnings("unchecked")
+		List<GroupNoteLink> results=query.getResultList();
+	
+		return (results);
+	}
+	
 	public List<GroupNoteLink> findLinksByNoteId(Integer noteId) {
 
 		String sqlCommand = "select * from GroupNoteLink where noteId=?1 and active=true";

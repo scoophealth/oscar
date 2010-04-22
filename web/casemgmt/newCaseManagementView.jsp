@@ -616,6 +616,13 @@
 				 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" /> <%=note.getLocation()%></div>
 					<%
 				}
+				
+				if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
+				{
+				 	%> 
+				 	<div style="background-color:#ffcccc; text-align:right">Group Note - Note owner is <%=note.getLocation() %></div>
+					<%
+				}
 
 				if (note.getRemoteFacilityId()==null) // only allow printing for local notes
 				{
@@ -626,15 +633,16 @@
 				
 			 	if (!note.isDocument()&&!note.isRxAnnotation())
 			 	{
-			 		if (note.getRemoteFacilityId()==null) // only allow editing for local notes
+			 		if (note.getRemoteFacilityId()==null ) // only allow editing for local notes
 					{
+			 			if(!note.isReadOnly()) {
 				 		%>
 				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" 
 				 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
 				 		<bean:message key="oscarEncounter.edit.msgEdit" />
 				 		</a> 
 						<%
-					}
+					} }
 			 	}else if(note.isRxAnnotation()){//prescription note
                                     System.out.println("note is rx annotation");
                                     String winName="dummie";
@@ -645,13 +653,14 @@
                                     
                                     if (note.getRemoteFacilityId()==null) // only allow editing for local notes
 					{
+                                    		if(!note.isReadOnly()) {
 						%>
 				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
 				 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
 				 		<bean:message key="oscarEncounter.edit.msgEdit" />
 				 		</a>
 				 		<%
-					}
+					} }
                                     if(rx!=null){
                                         String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
                                         //System.out.println("url="+url);
@@ -677,13 +686,14 @@
 			
 					if (note.getRemoteFacilityId()==null) // only allow editing for local notes
 					{
+						if(!note.isReadOnly()) {
 						%> 
 				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
 				 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
 				 		<bean:message key="oscarEncounter.edit.msgEdit" />
 				 		</a>
 				 		<%
-					}
+					}}
 			 		%>
 			 		
 			 		<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.docView" /> </a> <%
@@ -853,7 +863,7 @@
 		<script>
  function selectGroup() {
 	 	var noteId='<%=((CaseManagementEntryFormBean)session.getAttribute(frmName)).getNoteId()%>';
-    	alert(noteId);
+    	//alert(noteId);
     	popupPage(600,700,'group','groupNoteSelect.jsp?programId='+case_program_id + '&demographicNo='+demographicNo);
     
     }

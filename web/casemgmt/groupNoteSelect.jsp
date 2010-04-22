@@ -31,6 +31,11 @@
 		<title>Group Note - Select Clients</title>
 	</head>
 	<body>
+	
+	<%if(cform.getNoteId() == null) { %>
+		<h4>In order to use this page, you must have saved the note you want to make a group note, and have clicked the 'edit' button for it. Please try again.</h4>
+		<input type="button" onclick="window.close();" value="Close Window" />
+	<% } else { %>
 
 	<%if(noteId!=null&& noteId.length()>0) { 
 		List<GroupNoteLink> currentLinks = groupNoteLinkDao.findLinksByNoteId(Integer.parseInt(noteId));
@@ -100,6 +105,7 @@
 	<input type="button" value="cancel" onclick="window.close();"/> &nbsp;&nbsp; <input type="submit" value="Enter note into selected clients" onclick="return confirmGroupNote();"/>
 	<input type="hidden" name="programId" value="<%=request.getParameter("programId")%>"/>
 	</form>
+	<% } %>
 	</body>
 
 </html>

@@ -357,6 +357,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     		ArrayList<CheckBoxBean> checkBoxBeanList=new ArrayList<CheckBoxBean>();
     		caseManagementViewAction.addLocalIssues(checkBoxBeanList, demographicNo, false, programId);
     		caseManagementViewAction.addRemoteIssues(checkBoxBeanList, demographicNo, false);
+    		caseManagementViewAction.addGroupIssues(checkBoxBeanList, demographicNo, false);
     		
         	checkedList = checkBoxBeanList.toArray(new CheckBoxBean[0]);
         	

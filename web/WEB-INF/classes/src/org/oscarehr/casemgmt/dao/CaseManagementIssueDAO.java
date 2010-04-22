@@ -41,6 +41,11 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     public List<CaseManagementIssue> getIssuesByDemographicOrderActive(Integer demographic_no, Boolean resolved) {
         return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? "+(resolved!=null?" and cmi.resolved="+resolved:"")+" order by cmi.resolved", new Object[] {demographic_no.toString()});
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<CaseManagementIssue> getIssuesByNote(Integer noteId, Boolean resolved) {
+        return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.notes.id = ? "+(resolved!=null?" and cmi.resolved="+resolved:"")+" order by cmi.resolved", new Object[] {noteId});
+    }
 
     public CaseManagementIssue getIssuebyId(String demo, String id) {
         @SuppressWarnings("unchecked")

@@ -155,4 +155,10 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	{		
 		return(issueDescriptions);
 	}
+	
+	public boolean isReadOnly() {return true;}
+	
+	public boolean isGroupNote() {
+		return false;
+	}
 }

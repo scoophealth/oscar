@@ -307,6 +307,10 @@ public class CaseManagementManager {
 	public List<CaseManagementIssue> getIssues(int demographic_no) {
 		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no, null);
 	}
+	
+	public List<CaseManagementIssue> getIssuesByNote(int noteId) {
+		return caseManagementIssueDAO.getIssuesByNote(noteId,null);
+	}
 
 	public List<CaseManagementIssue> getIssues(int demographic_no, Boolean resolved) {
 		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no, resolved);

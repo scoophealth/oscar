@@ -13,6 +13,9 @@ import oscar.oscarRx.data.RxPrescriptionData;
 public class NoteDisplayLocal implements NoteDisplay {
 	private CaseManagementNote caseManagementNote;
 	private boolean editable=false;
+	private boolean readonly;
+	private boolean groupNote;
+	private String location;
 	
 	public NoteDisplayLocal(CaseManagementNote caseManagementNote)
 	{
@@ -20,6 +23,10 @@ public class NoteDisplayLocal implements NoteDisplay {
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		if (loggedInInfo!=null) editable=!caseManagementNote.isSigned() || (loggedInInfo.loggedInProvider.getProviderNo().equals(caseManagementNote.getProviderNo()) && !caseManagementNote.isLocked());
+	}
+	
+	public void setReadOnly(boolean ro) {
+		readonly = ro;
 	}
 
 	public String getEncounterType() {
@@ -31,6 +38,8 @@ public class NoteDisplayLocal implements NoteDisplay {
     }
 
 	public String getLocation() {
+		if(location != null)
+			return location;
 	    return("local");
     }
 
@@ -123,4 +132,18 @@ public class NoteDisplayLocal implements NoteDisplay {
 		
 		return(issueDescriptions);
     }
+	
+	public boolean isReadOnly() {return readonly;}
+
+	public boolean isGroupNote() {
+		return groupNote;
+	}
+
+	public void setGroupNote(boolean groupNote) {
+		this.groupNote = groupNote;
+	}
+	
+	public void setLocation(String location) {
+		this.location= location;
+	}
 }
