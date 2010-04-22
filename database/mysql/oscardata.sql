@@ -1069,7 +1069,7 @@ INSERT INTO oscarcommlocations VALUES (145,'Oscar Users',NULL,1,'<?xml version=\
 -- Dumping data for table 'preference'
 --
 
-INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue','','disabled');
+INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue','','disabled','disabled');
 
 --
 -- Dumping data for table 'prescribe'
@@ -1349,15 +1349,46 @@ insert into `secObjPrivilege` values('doctor','_eChart','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_eChart.verifyButton','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_flowsheet','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_masterLink','x',0,'999998');
-insert into `secObjPrivilege` values('doctor','_pmm.agencyInformation','x',0,'999998');
-insert into `secObjPrivilege` values('doctor','_pmm.caisiRoles','x',0,'999998');
-insert into `secObjPrivilege` values('doctor','_pmm.caseManagement','x',0,'999998');
-insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','x',0,'999998');
-insert into `secObjPrivilege` values('doctor','_pmm.mergeRecords','x',0,'999998');
-insert into `secObjPrivilege` values('doctor','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_rx','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_tasks','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_admin.reporting','x',0,999998);
+
+insert into `secObjPrivilege` values('doctor','_admin.facilityMessage','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.systemMessage','x',0,999998);
+
+insert into `secObjPrivilege` values('doctor','_admin.provider','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.security','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.securityLogReport','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.unlockAccount','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.cookieRevolver','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisi','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.lookupFieldEditor','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.issueEditor','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.caisiRoles','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_admin.userCreatedForms','x',0,999998);
+
+insert into `secObjPrivilege` values('doctor','_pmm.clientSearch','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.newClient','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.mergeRecords','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.caseManagement','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.agencyInformation','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.manageFacilities','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.staffList','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.programList','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.addProgram','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.globalRoleAccess','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm.caisiRoles','x',0,999998);
+
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.general','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.staff','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.functionUser','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.teams','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clients','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.queue','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.access','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.bedCheck','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clientStatus','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_pmm_editProgram.serviceRestrictions','x',0,999998);
 
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
@@ -1395,7 +1426,7 @@ insert into `secObjPrivilege` values('admin','_pmm_editProgram.queue','x',0,'999
 insert into `secObjPrivilege` values('admin','_pmm_editProgram.serviceRestrictions','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_pmm_editProgram.staff','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_pmm_editProgram.teams','x',0,'999998');
-
+insert into `secObjPrivilege` values('admin','_pmm.editor','x',0,999998);
 
 -- for role locum
 insert into `secObjPrivilege` values('locum', '_appointment', 'x', 0, '999998');

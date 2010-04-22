@@ -2744,3 +2744,11 @@ create table group_note_link (
         key(demographicNo)
 );
 
+
+CREATE TABLE IntegratorControl (
+        id int auto_increment,
+        facilityId int not null, foreign key (facilityId) references Facility(id),
+        control varchar(80),
+        execute boolean,
+        PRIMARY KEY (id)
+);
