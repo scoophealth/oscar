@@ -564,7 +564,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    
 	    // deal with remote notes
 		startTime = System.currentTimeMillis();
-	    addRemoteNotes(notesToDisplay, demographicNo, checkedCodeList);
+	    addRemoteNotes(notesToDisplay, demographicNo, checkedCodeList, programId);
 	    addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
 	    log.debug("Get remote notes. time="+(System.currentTimeMillis()-startTime));
 
@@ -728,7 +728,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		// add local and remote notes to the list
 		ArrayList<NoteDisplay> notesToDisplay=new ArrayList<NoteDisplay>();
 		for (CaseManagementNote noteTemp : notes) notesToDisplay.add(new NoteDisplayLocal(noteTemp));
-		addRemoteNotes(notesToDisplay, Integer.parseInt(demoNo), null);
+		addRemoteNotes(notesToDisplay, Integer.parseInt(demoNo), null, programId);
 		addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
 		
 		// sort the notes		
@@ -853,9 +853,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		
 	}
 	
-	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay) {
+	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay, String programId) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		List<SecUserRole> roles=secUserRoleDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 
@@ -868,7 +867,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					// filter on issues to display
 					if (issueCodesToDisplay==null || hasIssueToBeDisplayed(cachedDemographicNote, issueCodesToDisplay)) {
 						// filter on role based access
-						if (hasRole(roles, cachedDemographicNote.getRole())) {
+						if (caseManagementMgr.hasRole(cachedDemographicNote, programId)) {
 							notesToDisplay.add(new NoteDisplayIntegrator(cachedDemographicNote));
 						}
 					}

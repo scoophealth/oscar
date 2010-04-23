@@ -52,8 +52,8 @@ import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.AllergyDAO;
@@ -64,7 +64,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
-import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.dao.EchartDAO;
 import org.oscarehr.casemgmt.dao.EncounterFormDAO;
 import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
@@ -86,6 +85,7 @@ import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
+import org.oscarehr.casemgmt.web.NoteDisplay;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -1056,7 +1056,64 @@ public class CaseManagementManager {
 		return filteredNotes;
 	}
 	
-	public boolean isRoleIncludedInAccess(ProgramAccess pa, Secrole role) {
+    public boolean hasRole(CachedDemographicNote cachedDemographicNote, String programId) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    	
+		// Get Role - if no ProgramProvider record found, show no issues.
+		@SuppressWarnings("unchecked")
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		if (ppList == null || ppList.isEmpty()) {
+			return(false);
+		}
+
+		ProgramProvider pp = (ProgramProvider) ppList.get(0);
+		Secrole role = pp.getRole();
+
+		// Load up access list from program
+		@SuppressWarnings("unchecked")
+		List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
+		@SuppressWarnings("unchecked")
+		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
+
+		// iterate through the issue list
+		String noteRoleName = cachedDemographicNote.getRole();
+		if (noteRoleName!=null) noteRoleName=noteRoleName.toLowerCase();
+		ProgramAccess pa = null;
+		boolean add = false;
+
+		// write
+		pa = null;
+		// read
+		pa = (ProgramAccess) programAccessMap.get("read " + noteRoleName + " notes");
+		if (pa != null) {
+			if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
+				// filteredIssues.add(cmIssue);
+					return(true);
+			}
+		} else {
+			if (noteRoleName.equals(role.getRoleName().toLowerCase())) {
+				// default
+				return(true);
+			}
+		}
+
+		// apply defaults
+		if (!add) {
+			if (noteRoleName.equals(role.getRoleName().toLowerCase())) {
+				return(true);
+			}
+		}
+			
+		//global default role access
+		String accessName="read " + noteRoleName + " notes";
+		if(roleProgramAccessDAO.hasAccess(accessName,role.getId())) {
+				return(true);
+		}
+			
+		return(false);
+	}
+    
+    public boolean isRoleIncludedInAccess(ProgramAccess pa, Secrole role) {
 		boolean result = false;
 
 		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
