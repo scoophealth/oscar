@@ -27,7 +27,7 @@
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Caisi Roles</title>
+<title>Roles</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
@@ -72,7 +72,7 @@
 <table border="0" cellspacing="0" cellpadding="1" width="100%"
 	bgcolor="#CCCCFF">
 	<tr class="subject">
-		<th colspan="4">Caisi Roles</th>
+		<th colspan="4">Roles</th>
 	</tr>
 
 	<br />

@@ -37,7 +37,7 @@
 <html:link action="/issueAdmin.do?method=list">Issue Editor</html:link>
 <br />
 
-<html:link action="/CaisiRole">CAISI Roles</html:link>
+<html:link action="/CaisiRole">Roles</html:link>
 
 <caisi:isModuleLoad moduleName="survey">
 	<br />

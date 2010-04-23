@@ -125,7 +125,7 @@
 			</c:forEach>
 		</select>
 	</display:column>
-	<display:column sortable="false" title="CAISI Role">
+	<display:column sortable="false" title="Role">
 		<select name="x" onchange="assignRole('<c:out value="${provider.id}"/>',this);">
 			<option value="0">&nbsp;</option>
 			<c:forEach var="role" items="${roles}">

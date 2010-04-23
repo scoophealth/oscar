@@ -46,7 +46,7 @@
 			title="Delete"> Delete </a>
 	</display:column>
 	<display:column property="caisi_role.name" sortable="true"
-		title="CAISI Role" />
+		title="Role" />
 	<display:column property="access_type.name" sortable="true"
 		title="Access Type" />
 </display:table>

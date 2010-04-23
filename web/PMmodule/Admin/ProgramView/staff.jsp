@@ -55,5 +55,5 @@
 	<display:column property="provider.phone" sortable="true" title="Phone" />
 	<display:column property="provider.providerType" sortable="true"
 		title="OSCAR Role" />
-	<display:column property="role.name" sortable="true" title="CAISI Role" />
+	<display:column property="role.name" sortable="true" title="Role" />
 </display:table>
