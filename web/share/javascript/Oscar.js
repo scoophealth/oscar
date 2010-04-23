@@ -199,3 +199,9 @@ function isNumeric(sText){
    }
    return isNumber;
 }
+//remove leading and trailing white space
+function trim(str){
+   str=str.replace(/^\s+/g,"");
+   str=str.replace(/\s+$/g,"");//trim str
+   return str;
+}
