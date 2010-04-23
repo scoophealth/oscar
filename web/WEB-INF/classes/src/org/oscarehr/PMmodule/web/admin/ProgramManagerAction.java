@@ -623,7 +623,7 @@ public class ProgramManagerAction extends BaseAction {
 		String providerNo = (String) request.getSession().getAttribute("user");
 		programSignature.setProviderId(providerNo);
 		programSignature.setProviderName(providerManager.getProvider(providerNo).getFormattedName());
-		programSignature.setCaisiRoleName(providerManager.getProvider(providerNo).getProviderType());
+		programSignature.setCaisiRoleName("n/a");
 		Date now = new Date();
 		programSignature.setUpdateDate(now);
 		programManager.saveProgramSignature(programSignature);

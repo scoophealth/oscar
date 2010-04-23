@@ -108,7 +108,6 @@
 	</display:column>
 	<display:column property="provider.formattedName" sortable="true" title="Name" />
 	<display:column property="provider.phone" sortable="true" title="Phone" />
-	<display:column property="provider.providerType" sortable="true" title="OSCAR Role" />
 	<display:column sortable="false" title="Team">
 		<table width="100%" cellspacing="2" cellpadding="2">
 			<c:forEach var="team" items="${provider.teams}">
