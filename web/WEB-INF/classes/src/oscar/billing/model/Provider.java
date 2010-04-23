@@ -198,6 +198,7 @@ public class Provider {
 
     /**
      * @return
+   * @Deprecated no longer is use 2010-04-23, marked for future removal 
      */
     public int getProviderType() {
         return providerType;

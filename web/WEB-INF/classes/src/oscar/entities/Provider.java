@@ -129,6 +129,7 @@ public class Provider {
   /**
    * Gets the providerType
    * @return String providerType
+   * @Deprecated no longer is use 2010-04-23, marked for future removal 
    */
   public String getProviderType() {
     return (providerType != null ? providerType : "");

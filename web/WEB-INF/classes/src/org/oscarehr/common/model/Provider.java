@@ -167,6 +167,9 @@ public class Provider implements Serializable, Comparable<Provider>{
 		this.lastName = lastName;
 	}
 
+	/**
+    * @Deprecated no longer is use 2010-04-23, marked for future removal 
+	 */
 	public String getProviderType() {
 		return providerType;
 	}

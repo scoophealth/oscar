@@ -140,7 +140,7 @@ public class ManageConsent {
 	public String getPreviousConsentProvider()
 	{
 		Provider provider=providerDao.getProvider(previousConsentToView.getProviderNo());
-		return(provider.getFormattedName()+", "+provider.getProviderType());
+		return(provider.getFormattedName());
 	}
 	
 	public String getPreviousConsentDate()
