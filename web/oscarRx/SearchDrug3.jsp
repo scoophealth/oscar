@@ -474,15 +474,6 @@ function checkFav(){
         useFav2(favid);
     }else{}
 }
-//not used
-/*function checkRePrescribe(){
-    var drugId='<%--=reRxDrugId--%>';
-    oscarLog("drugId in checkrePrescribe: "+drugId);
-    if(drugId!=null && (drugId!='null')){
-              represcribeOnLoad(drugId);
-    }else{}
-}
-*/
 
      //not used , represcribe a drug
     function represcribeOnLoad(drugId){
@@ -636,8 +627,8 @@ body {
                                     <table border="0">
                                         <tr valign="top">
                                             <td style="width:320px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
-                                                <html:text styleId="searchString" property="searchString"   size="16" maxlength="16" style="width:248px;\" autocomplete=\"off"  />
-                                                <div id="autocomplete_choices"></div>
+                                                <html:text styleId="searchString" property="searchString" size="16" maxlength="16" onfocus="changeContainerHeight();" onblur="changeContainerHeight();" onclick="changeContainerHeight();" onkeydown="changeContainerHeight();" style="width:248px;\" autocomplete=\"off"  />
+                                                <div id="autocomplete_choices" style="overflow:auto;width:600px"></div>
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
                                             <td>
@@ -913,6 +904,14 @@ body {
                         }
 %>
 <script type="text/javascript">
+    function changeContainerHeight(ele){
+        var ss=$('searchString').value;
+        ss=trim(ss);
+        if(ss.length==0)
+            $('autocomplete_choices').setStyle({height:'0%'});
+        else
+            $('autocomplete_choices').setStyle({height:'100%'});
+    }
     function addInstruction(content,randomId){
         $('instructions_'+randomId).value=content;
     }
@@ -1443,59 +1442,6 @@ function popForm2(){
           </oscar:oscarPropertiesCheck>
           callReplacementWebService("ListDrugs.jsp",'drugProfile');
 
-/*
-YAHOO.example.BasicRemote = function() {
-    //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
-    var url = "<c:out value="${ctx}"/>" + "/oscarRx/searchDrug.do?method=jsonSearch";
-    var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ingoreStaleResponse'});
-    oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
-    // Define the schema of the delimited results
-    oDS.responseSchema = {
-        resultsList : "results",
-        fields : ["name", "id"]
-    };
-    // Enable caching
-    oDS.maxCacheEntries = 500;
-
-    oDS.connXhrMode ="cancelStaleRequests";
-                        /*  Not sure which one of these to use
-                        cancelStaleRequests
-                            If a request is already in progress, cancel it before sending the next request.
-                        ignoreStaleResponses
-                            Send all requests, but handle only the response for the most recently sent request.
-                        */
-    // Instantiate the AutoComplete
-  /*  var oAC = new YAHOO.widget.AutoComplete("searchString", "autocomplete_choices", oDS);
-    oAC.queryMatchSubset = true;
-    oAC.minQueryLength = 3;
-    oAC.maxResultsDisplayed = 25;
-    oAC.formatResult = resultFormatter;
-    //oAC.typeAhead = true;
-    //oAC.queryMatchContains = true;
-    oAC.itemSelectEvent.subscribe(function(type, args) {
- 		oscarLog(type+" :: "+args);
-                oscarLog(args[2]);
-                arr = args[2];
-                oscarLog('In yahoo----'+arr[1]);oscarLog('In yahoo----'+arr[0]);
-                var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
-                var ran_number=Math.round(Math.random()*1000000);
-                var name=encodeURIComponent(arr[0]);
-                var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr[1]+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
-               new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:false,evalScripts:true,
-                    insertion: Insertion.Bottom,onSuccess:function(transport){
-                        updateCurrentInteractions();
-                    }});
-
-                $('searchString').value = "";
-    });
-
-
-    return {
-        oDS: oDS,
-        oAC: oAC
-    };
-}();
-*/
 YAHOO.example.FnMultipleFields = function(){
     oscarLog("FnMultipleFields ");
     var url = "<c:out value="${ctx}"/>" + "/oscarRx/searchDrug.do?method=jsonSearch";
@@ -1518,12 +1464,12 @@ YAHOO.example.FnMultipleFields = function(){
     oAC.minQueryLength = 3;
     oAC.maxResultsDisplayed = 50;
     oAC.formatResult = resultFormatter2;
-
+    
     // Define an event handler to populate a hidden form field
     // when an item gets selected and populate the input field
     //var myHiddenField = YAHOO.util.Dom.get("myHidden");
     var myHandler = function(type, args) {
-                    oscarLog(type+" :: "+args);
+                    oscarLog("in myhandler--"+type+" :: "+args+"---------------------------------------------------------------------------------------------");
                     //oscarLog(args[2]);
                     var arr = args[2];
                     //oscarLog('In yahoo----'+arr.name);
@@ -1535,10 +1481,10 @@ YAHOO.example.FnMultipleFields = function(){
                         insertion: Insertion.Bottom,onSuccess:function(transport){
                             updateCurrentInteractions();
                         }});
-
+                    
                     $('searchString').value = "";
 
-    };
+   };
     oAC.itemSelectEvent.subscribe(myHandler);
 
     return {
