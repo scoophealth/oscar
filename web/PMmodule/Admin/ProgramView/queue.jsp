@@ -97,6 +97,12 @@
 		window.location="<%=request.getContextPath()%>/PMmodule/GenericIntake/Search.do?method=searchFromRemoteAdmit&remoteReferralId="+remoteReferralId;
 	}
 
+	function removeFromRemoteQueue(remoteReferralId) {
+        var form = document.programManagerViewForm;
+        form.elements['remoteReferralId'].value = remoteReferralId;
+        form.method.value='remove_remote_queue';
+        form.submit();
+	}
 </script>
 <html:hidden property="clientId" />
 <html:hidden property="queueId" />
@@ -307,8 +313,10 @@ String reason ="";
 		<display:setProperty name="basic.msg.empty_list"
 			value="Queue is empty." />
 		<display:column sortable="false" title="">
-			<input type="button" value="Admit"
-				onclick="admitFromRemote('<c:out value="${queue_entry.referral.referralId}"/>')" />
+			<input type="button" value="Admit" onclick="admitFromRemote('<c:out value="${queue_entry.referral.referralId}"/>')" />
+		</display:column>
+		<display:column sortable="false" title="">
+			<input type="button" value="Reject" onclick="removeFromRemoteQueue('<c:out value="${queue_entry.referral.referralId}"/>')" />
 		</display:column>
 		<display:column property="clientName" sortable="true"
 			title="Client Name" />

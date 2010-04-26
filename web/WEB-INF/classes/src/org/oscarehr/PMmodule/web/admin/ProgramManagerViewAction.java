@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.web.admin;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -31,6 +32,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,6 +65,7 @@ import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
+import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Demographic;
@@ -301,6 +304,21 @@ public class ProgramManagerViewAction extends BaseAction {
 
         return mapping.findForward("view");
     }
+
+	public ActionForward remove_remote_queue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		Integer remoteReferralId = Integer.valueOf(request.getParameter("remoteReferralId"));
+
+		try {
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
+			referralWs.removeReferral(remoteReferralId);
+		} catch (MalformedURLException e) {
+			log.error("Unexpected error", e);
+		} catch (WebServiceException e) {
+			log.error("Unexpected error", e);
+		}
+
+		return view(mapping, form, request, response);
+	}
 
 	public ActionForward viewBedReservationChangeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		Integer reservedBedId = Integer.valueOf(request.getParameter("reservedBedId"));
