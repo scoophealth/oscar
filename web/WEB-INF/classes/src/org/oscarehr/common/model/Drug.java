@@ -190,11 +190,11 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.brandName = brandName;
 	}
 
-	public int getGcnSeqNo() {
+	public Integer getGcnSeqNo() {
 		return gcnSeqNo;
 	}
 
-	public void setGcnSeqNo(int gcnSeqNo) {
+	public void setGcnSeqNo(Integer gcnSeqNo) {
 		this.gcnSeqNo = gcnSeqNo;
 	}
 
@@ -254,11 +254,11 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public int getRepeat() {
+	public Integer getRepeat() {
 		return repeat;
 	}
 
-	public void setRepeat(int repeat) {
+	public void setRepeat(Integer repeat) {
 		this.repeat = repeat;
 	}
 
@@ -324,11 +324,11 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.atc = atc;
 	}
 
-	public int getScriptNo() {
+	public Integer getScriptNo() {
 		return scriptNo;
 	}
 
-	public void setScriptNo(int scriptNo) {
+	public void setScriptNo(Integer scriptNo) {
 		this.scriptNo = scriptNo;
 	}
 
