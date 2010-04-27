@@ -20,7 +20,7 @@
  * Hamilton 
  * Ontario, Canada 
 --%><%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*"%>
+<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.text.DateFormatSymbols,java.io.*,org.apache.xmlrpc.*"%>
 <%
 
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");
@@ -45,34 +45,57 @@ if ( bean == null ){
     if ( pricesArray != null && pricesArray.length > 0){
         for (int i=0; i < pricesArray.length; i++){
             Hashtable ht = (Hashtable) pricesArray[i]; 
-            Enumeration en = ht.keys();
+           /* Enumeration en = ht.keys();
             
             while(en.hasMoreElements()){
                 Object s = en.nextElement();
                 System.out.println(s+" -- "+ht.get(s));
             }
-            
+            */
             System.out.println("\nName: "+ht.get("name")
             +"\nPrice: "+ht.get("cost")
-            +"\nRetailer: "+ht.get("reference"));%>
+            +"\nRetailer: "+ht.get("reference"));
+            String author=(String)ht.get("author");
+            if(author==null) author="";
+            Date updateTime=(Date)ht.get("updated_at");
+            String updateStr=getDateMonthYear(updateTime);
+            String content=((String) ht.get("body")).replaceAll("\n","<br>");
+    %>
 
-<div style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:10px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-<%=ht.get("name")%>&nbsp;&nbsp;&nbsp;&nbsp;: <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');" style="text-decoration: none;">CLOSE</a>
-<br/>
+<div id="treatment_<%=i%>" style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:10px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+    <table width="100%" cellspacing="0">
+    <tr>
+        <td align="left">
+            <strong><%=ht.get("name")%>&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
+        </td>
+        <td align="right">
+            <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');" style="text-decoration: none;font-size:larger">X</a>
+        </td>
+    </tr>
+    <tr>
+        <td align="right" style="font-size:10px">
+            <em>From:<%=author%></em>
+        </td>
+    </tr>
+    <tr>
+        <td align="right" style="font-size:10px">
+            <em>Last Update:<%=updateStr%></em>
+        </td>
+    </tr>
+</table>
 <%
 if (ht.get("drugs") != null){
     Vector<Hashtable> drugs = (Vector) ht.get("drugs");
     for(Hashtable drug :drugs){%>
 <%=DrugLing((String)drug.get("label"))%>  <a href="javascript:void(0);" onclick="$('searchString').value ='<%=drug.get("tc_atc")%>';hidepic('treatmentsMyD');$('searchString').focus();"><%=drug.get("tc_atc")%></a>  <%=drug.get("tc_atc_number")%> <br/>
   <%}
-}%>
-
-
-
-
-<%-- pre style="width:600px;" --%>
-<%=((String) ht.get("body")).replaceAll("\n","<br>")%>
-<%-- /pre --%>
+}          
+if(content.length()<100){%>
+            <%=content%>
+<%}else{  %>
+<%=content.substring(0,100)%><a id="addText_<%=i%>" style="display:none;padding:2px;"><%=content.substring(100)%></a>
+<div><a href="javascript:void(0);" id="addTextWord_<%=i%>" onclick="showAddText('<%=i%>');" ><span>more</span></a></div>
+<%}%>
 </div>
 
 <%}
@@ -97,7 +120,18 @@ MyDrug to MyDrug Price Service not available -- <a href="javascript: function my
 
 <%!
 
-
+ String getDateMonthYear(Date d){
+          if(d==null) return "";
+          Calendar cal=Calendar.getInstance();
+          cal.setTime(d);
+          Integer date=cal.get(Calendar.DATE);
+          Integer month=cal.get(Calendar.MONTH);
+          Integer year=cal.get(Calendar.YEAR);
+          String[] shortMonths = new DateFormatSymbols().getShortMonths();
+          String shortMonth=shortMonths[month];
+          String retStr=date+"-"+shortMonth+"-"+year;
+          return retStr;
+        }
 String DrugLing(String s){
        Hashtable h = new Hashtable();
        h.put("FLD","First Line");
