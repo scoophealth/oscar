@@ -344,11 +344,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			MiscUtils.checkShutdownSignaled();
 			logger.debug("Adding provider " + providerId + " for " + facility.getName());
 
-			ProviderTransfer providerTransfer=new ProviderTransfer();
-			
 			// copy provider basic data over
 			Provider provider = providerDao.getProvider(providerId);
+                        if (provider == null) continue;
 
+			ProviderTransfer providerTransfer=new ProviderTransfer();
 			CachedProvider cachedProvider = new CachedProvider();
 
 			BeanUtils.copyProperties(cachedProvider, provider);
@@ -500,7 +500,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			issues.add(cachedDemographicIssue);
 		}
 
-		if (issues.size() > 0) service.setCachedDemographicIssues(issues);
+                if (issues.size()>0) service.setCachedDemographicIssues(issues);
 	}
 
 	private void pushAdmissions(Facility facility, List<Program> programsInFacility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
@@ -534,7 +534,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAdmissions.add(cachedAdmission);
 		}
 
-		if (cachedAdmissions.size() > 0) demographicService.setCachedAdmissions(cachedAdmissions);	    
+                if (cachedAdmissions.size()>0) demographicService.setCachedAdmissions(cachedAdmissions);
         }
 
 	private boolean isProgramIdInProgramList(List<Program> programList, int programId) {
@@ -619,8 +619,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	            logger.error("Unexpected error. ProgramNo="+localNote.getProgram_no(), e);
             }
 		}
-		
-		if (notesToSend.size()>0) service.setCachedDemographicNotes(notesToSend);
+
+                if (notesToSend.size()>0) service.setCachedDemographicNotes(notesToSend);
 	}
 
 	private CachedDemographicNote makeRemoteNote(CaseManagementNote localNote, String issueType) {
@@ -657,7 +657,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	    return(note);
     }
 
-	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws ShutdownException {
+	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<Drug> drugs = drugDao.findByDemographicIdOrderByDate(demographicId, null);
@@ -713,7 +713,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 		}
 
-		if (drugsToSend.size() > 0) demogrpahicService.setCachedDemographicDrugs(drugsToSend);
+                if (drugsToSend.size()>0) demographicService.setCachedDemographicDrugs(drugsToSend);
 	}
 
 	private void pushAppointments(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
@@ -898,10 +898,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                     MiscUtils.checkShutdownSignaled();
                     CachedMeasurementExt cachedMeasurementExt = new CachedMeasurementExt();
                     FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
-                    fidIntegerCompositePk.setCaisiItemId(measurementExt.getId().intValue());
+                    fidIntegerCompositePk.setCaisiItemId(measurementExt.getId());
                     cachedMeasurementExt.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
 
-                    cachedMeasurementExt.setMeasurementId(measurementExt.getMeasurementId().intValue());
+                    cachedMeasurementExt.setMeasurementId(measurementExt.getMeasurementId());
                     cachedMeasurementExt.setKeyval(measurementExt.getKeyVal());
                     cachedMeasurementExt.setVal(measurementExt.getVal());
 
@@ -944,10 +944,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
                 }
             }
-            if (cachedMeasurements.size()>0)     demographicService.setCachedMeasurements(cachedMeasurements);
-            if (cachedMeasurementExts.size()>0)  demographicService.setCachedMeasurementExts(cachedMeasurementExts);
+            if (cachedMeasurements.size()>0) demographicService.setCachedMeasurements(cachedMeasurements);
+            if (cachedMeasurementExts.size()>0) demographicService.setCachedMeasurementExts(cachedMeasurementExts);
             if (cachedMeasurementTypes.size()>0) demographicService.setCachedMeasurementTypes(cachedMeasurementTypes);
-            if (cachedMeasurementMaps.size()>0)  demographicService.setCachedMeasurementMaps(cachedMeasurementMaps);
+            if (cachedMeasurementMaps.size()>0) demographicService.setCachedMeasurementMaps(cachedMeasurementMaps);
         }
 
         private boolean inList(Measurementtype measurementType, List<CachedMeasurementType> cachedMeasurementTypes) {
