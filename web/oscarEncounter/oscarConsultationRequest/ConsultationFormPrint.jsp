@@ -113,7 +113,8 @@
             clinic.setClinic_province(defaultSite.getProvince());
             clinic.setClinic_postal(defaultSite.getPostal());
             clinic.setClinic_phone(defaultSite.getPhone());
-            clinic.setClinic_fax(defaultSite.getFax()); 
+            clinic.setClinic_fax(defaultSite.getFax());
+            clinic.setClinic_name(defaultSite.getName());
    			defaultAddrName=defaultSite.getName();
         }
     } else
@@ -259,7 +260,7 @@
     	<% if(vecAddressName != null) {
     	    for(int i=0; i<vecAddressName.size(); i++) {%>
     	if(document.getElementById("addressSel").value=="<%=i%>") {
-        	//document.getElementById("clinicName").innerHTML="<%=vecAddressName.get(i)%>";
+        	document.getElementById("clinicName").innerHTML="<%=vecAddressName.get(i)%>";
         	document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
         	document.getElementById("clinicPhone").innerHTML="Tel: "+"<%=vecAddressPhone.get(i)%>";
         	document.getElementById("clinicFax").innerHTML="Fax: "+"<%=vecAddressFax.get(i)%>";
@@ -408,8 +409,12 @@
                     <br>
                     <font size="-1">
                         <b>
+                    <% if (bMultisites) { 
+							out.print("Please reply");
+                    } else { %>
                         <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart1"/>
-               <%=reqFrm.getClinicName()%>
+               			<%=reqFrm.getClinicName()%>
+               		<% } %>
                         <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPleaseReplyPart2"/>
                         </b>
                     </font>
