@@ -91,14 +91,7 @@
     Vector vecAddressBillingNo = null;
     String defaultAddrName = null;
     if (bMultisites) {
-    	String appt_no=(String)session.getAttribute("cur_appointment_no");
-    	String location = null;
-    	if (appt_no!=null) {
-    		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search", new Object[] {appt_no});
-    		if (resultList!=null) location = (String) resultList.get(0).get("location");
-    	}
-
-    	vecAddressName = new Vector();
+     	vecAddressName = new Vector();
         vecAddress = new Vector();
         vecAddressPhone = new Vector();
         vecAddressFax = new Vector();
@@ -106,17 +99,14 @@
         
     		SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
       		List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
- 			Site defaultSite = null;
+ 			Site defaultSite = sites.get(0);
       		for (Site s:sites) {
                 vecAddressName.add(s.getName());
                 vecAddress.add(s.getAddress() + ", " + s.getCity() + ", " + s.getProvince() + "  " + s.getPostal());
                 vecAddressPhone.add(s.getPhone());
                 vecAddressFax.add(s.getFax());      			
-                if (s.getName().equals(location))
-                	defaultSite = s;
       		}
             // default address
-            // 
         if (defaultSite!=null) {
             clinic.setClinic_address(defaultSite.getAddress());
             clinic.setClinic_city(defaultSite.getCity());
@@ -273,7 +263,7 @@
         	document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
         	document.getElementById("clinicPhone").innerHTML="Tel: "+"<%=vecAddressPhone.get(i)%>";
         	document.getElementById("clinicFax").innerHTML="Fax: "+"<%=vecAddressFax.get(i)%>";
-        }
+        } 
 		<% } }%>
     }
 
