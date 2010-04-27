@@ -1804,7 +1804,7 @@ public class ImportDemographicDataAction3 extends Action {
     
     void saveMeasurementsExt(Long measurementId, String key, String val) throws SQLException {
         if (measurementId!=null && Util.filled(key)) {
-            MeasurementsExt mx = new MeasurementsExt(measurementId);
+            MeasurementsExt mx = new MeasurementsExt(measurementId.intValue());
             mx.setKeyVal(key);
             mx.setVal(Util.noNull(val));
             ImportExportMeasurements.saveMeasurementsExt(mx);
