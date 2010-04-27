@@ -36,11 +36,7 @@ public class MeasurementsExt {
     
     /** Creates a new instance of Measurements */
     public MeasurementsExt(Integer mId) {
-	this.measurementId = mId;
-    }
-    
-    public MeasurementsExt(Long mId) {
-        this.measurementId = mId.intValue();
+        this.measurementId = mId;
     }
 
     public MeasurementsExt() {}
@@ -53,18 +49,12 @@ public class MeasurementsExt {
     public void setId(Integer id) {
 	this.id = id;
     }
-    public void setId(Long id) {
-	this.id = id.intValue();
-    }
     
     public Integer getMeasurementId() {
 	return this.measurementId;
     }
     public void setMeasurementId(Integer mId) {
 	this.measurementId = mId;
-    }
-    public void setMeasurementId(Long mId) {
-	this.measurementId = mId.intValue();
     }
 
     public String getKeyVal() {
