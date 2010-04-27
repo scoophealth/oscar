@@ -154,6 +154,7 @@ function newWindow(file,window) {
 				<option value="GrandFather">GrandFather</option>
 				<option value="GrandMother">GrandMother</option>
 				<option value="Guardian">Guardian</option>
+                                <option value="Foster Parent">Foster Parent</option>
 				<option value="Administrative Staff">Administrative Staff</option>
 				<option value="Care Giver">Care Giver</option>
 				<option value="Power of Attorney">Power of Attorney</option>
