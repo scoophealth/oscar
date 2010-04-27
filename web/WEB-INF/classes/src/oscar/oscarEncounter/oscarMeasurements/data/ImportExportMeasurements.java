@@ -149,7 +149,7 @@ public class ImportExportMeasurements {
 	pstmt.setString(3, mExt.getVal());
 	pstmt.executeUpdate();
 	ResultSet rs = pstmt.getGeneratedKeys();
-	if (rs.next()) mExt.setId(rs.getLong(1));
+	if (rs.next()) mExt.setId(rs.getInt(1));
 	pstmt.close();
 	conn.close();
     }
@@ -162,9 +162,9 @@ public class ImportExportMeasurements {
 	    ResultSet rs = db.GetSQL(sql);
 
 	    while (rs.next()) {
-		MeasurementsExt exts = new MeasurementsExt(measurementId);
-		exts.setId(rs.getLong("id"));
-		exts.setMeasurementId(rs.getLong("measurement_id"));
+		MeasurementsExt exts = new MeasurementsExt(measurementId.intValue());
+		exts.setId(rs.getInt("id"));
+		exts.setMeasurementId(rs.getInt("measurement_id"));
 		exts.setKeyVal(rs.getString("keyval"));
 		exts.setVal(rs.getString("val"));
 		extsList.add(exts);
@@ -182,9 +182,9 @@ public class ImportExportMeasurements {
 	    ResultSet rs = db.GetSQL(sql);
 
 	    if (rs.next()) {
-		measurementsExt = new MeasurementsExt(measurementId);
-		measurementsExt.setId(rs.getLong("id"));
-		measurementsExt.setMeasurementId(rs.getLong("measurement_id"));
+		measurementsExt = new MeasurementsExt(measurementId.intValue());
+		measurementsExt.setId(rs.getInt("id"));
+		measurementsExt.setMeasurementId(rs.getInt("measurement_id"));
 		measurementsExt.setKeyVal(rs.getString("keyval"));
 		measurementsExt.setVal(rs.getString("val"));
 	    }
