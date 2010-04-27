@@ -48,7 +48,7 @@ trusted truejava.lang.Boolean ? i think
 
 --%><%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils,java.util.Random"%>
+<%@ page import="java.util.*,oscar.oscarRx.data.*,java.text.DateFormatSymbols,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils,java.util.Random"%>
 
 <%
     Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");
@@ -64,7 +64,7 @@ trusted truejava.lang.Boolean ? i think
             Vector<Hashtable> commentsVec = (Vector) ht.get("comments");
             displayKeys(ht);
 
-            System.out.println("\nDrug: "+ht.get("name")+"\nEvidence: "+ht.get("evidence")+"\nSignificance: "+ht.get("significance")+"\nATC: "+ht.get("atc")+"\nReference: "+ht.get("reference")+"\nWarning: "+ht.get("body")+" trusted "+ht.get("trusted"));
+            //System.out.println("\nDrug: "+ht.get("name")+"\nEvidence: "+ht.get("evidence")+"\nSignificance: "+ht.get("significance")+"\nATC: "+ht.get("atc")+"\nReference: "+ht.get("reference")+"\nWarning: "+ht.get("body")+" trusted "+ht.get("trusted"));
             boolean trustedResource = trusted(ht.get("trusted"));
             boolean hideResource = false;
 
@@ -96,6 +96,8 @@ trusted truejava.lang.Boolean ? i think
             String elementId=ht.get("id")+"."+getTime(ht.get("updated_at"));
            // System.out.println("updated at:"+ht.get("updated_at"));
           //  System.out.println("elementId="+elementId);
+          Date lastUpdateTime=(Date)ht.get("updated_at");
+          String lastUpdateDate=getDateMonthYear(lastUpdateTime);
             %>
 
 <div id="<%=elementId%>"
@@ -105,7 +107,7 @@ trusted truejava.lang.Boolean ? i think
 	onclick="HideW('<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>','<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')">Hide</a></span>
         <%=interactStr%><br/>
 <b><%=ht.get("name")%></b> From:<%=s(ht.get("author"))%> <br/>
-
+Last Update:<%=s(lastUpdateDate)%><br/>
 
 <%if(bodyStr.length() > 90){%>
 <%=((String)ht.get("body")).substring(0,90)%><a id="addText_<%=rand%>" style="display:none;padding:2px;"><%=((String)ht.get("body")).substring(90)%>
@@ -215,7 +217,19 @@ resources</a></div>
             Date d = (Date) o;
             return d.getTime();
         }
-
+        String getDateMonthYear(Date d){
+          if(d==null) return "";
+          
+          Calendar cal=Calendar.getInstance();
+          cal.setTime(d);
+          Integer date=cal.get(Calendar.DATE);
+          Integer month=cal.get(Calendar.MONTH);
+          Integer year=cal.get(Calendar.YEAR);
+          String[] shortMonths = new DateFormatSymbols().getShortMonths();
+          String shortMonth=shortMonths[month];
+          String retStr=date+"-"+shortMonth+"-"+year;
+          return retStr;
+        }
 	String significance(String s){
        Hashtable h = new Hashtable();
        h.put("1","minor");
