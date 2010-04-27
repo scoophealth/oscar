@@ -25,6 +25,7 @@
 				<value>classpath:/org/oscarehr/dx/model</value>
 				<value>classpath:/oscar/oscarRx/model</value>
                                 <value>classpath:/org/oscarehr/decisionSupport/model</value>
+                                <value>classpath:/oscar/eform/model</value>
                                 <value>classpath:/oscar/oscarEncounter/oscarMeasurements/model</value>
                                 <value>classpath:/oscar/oscarBilling/ca/on/model</value>
                                 <value>classpath:/oscar/entities</value>
