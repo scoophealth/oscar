@@ -124,7 +124,7 @@
             	db.RunSQL(sql);
             } 
             	
-            	if(newDocArr!=null && !newDocArr.isEmpty()) {
+            	if(encTesters!=null && !encTesters.isEmpty()) {
             		sql = "update preference set default_new_oscar_cme='enabled' where provider_no= ?";
             	} else {
             		sql = "update preference set default_new_oscar_cme='disabled' where provider_no= ?";
