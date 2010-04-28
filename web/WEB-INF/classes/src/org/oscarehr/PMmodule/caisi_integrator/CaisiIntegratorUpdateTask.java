@@ -90,11 +90,13 @@ import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
@@ -148,15 +150,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 	private AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-        private AppointmentDao appointmentDao = (AppointmentDao) SpringUtils.getBean("appointmentDao");
-        private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
-        private MeasurementsHibernateDao measurementsDao = (MeasurementsHibernateDao) SpringUtils.getBean("measurementsDao");
-        private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
-        private MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
-        private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
-        private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
-        private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
-        private EformDao eformDao = (EformDao) SpringUtils.getBean("eformDao");
+    private AppointmentDao appointmentDao = (AppointmentDao) SpringUtils.getBean("appointmentDao");
+    private IntegratorControlDao integratorControlDao = (IntegratorControlDao) SpringUtils.getBean("integratorControlDao");
+    private MeasurementsHibernateDao measurementsDao = (MeasurementsHibernateDao) SpringUtils.getBean("measurementsDao");
+    private MeasurementsExtDao measurementsExtDao = (MeasurementsExtDao) SpringUtils.getBean("measurementsExtDao");
+    private MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
+    private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
+    private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
+    private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
+    private EformDao eformDao = (EformDao) SpringUtils.getBean("eformDao");
+    private GroupNoteDao groupNoteDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao");
+    	
 	private static TimerTask timerTask = null;
 
 	static {
@@ -617,10 +621,33 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				notesToSend.add(noteToSend);
 			} catch (NumberFormatException e) {
 	            logger.error("Unexpected error. ProgramNo="+localNote.getProgram_no(), e);
-            }
+		            }
 		}
 
-                if (notesToSend.size()>0) service.setCachedDemographicNotes(notesToSend);
+		//add group notes as well.
+		logger.info("checking for group notes for " + demographicId);
+		List<GroupNoteLink> noteLinks = groupNoteDao.findLinksByDemographic(demographicId);
+		logger.info("found " + noteLinks.size() + " group notes for " + demographicId);
+		for(GroupNoteLink noteLink:noteLinks) {
+			int orginalNoteId = noteLink.getNoteId();
+			CaseManagementNote localNote = caseManagementNoteDAO.getNote(Long.valueOf(orginalNoteId));
+			localNote.setDemographic_no(String.valueOf(demographicId));
+			
+			try {
+				// if it's locked or if it's not in this facility ignore it.
+				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
+	
+				CachedDemographicNote noteToSend=makeRemoteNote(localNote, issueType);
+				notesToSend.add(noteToSend);
+				logger.info("adding group note to send");
+			} catch (NumberFormatException e) {
+	            logger.error("Unexpected error. ProgramNo="+localNote.getProgram_no(), e);
+            }	
+			
+		}
+		
+		
+		if (notesToSend.size()>0) service.setCachedDemographicNotes(notesToSend);
 	}
 
 	private CachedDemographicNote makeRemoteNote(CaseManagementNote localNote, String issueType) {
@@ -628,7 +655,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		CachedDemographicNote note=new CachedDemographicNote();
 		
 		CachedDemographicNoteCompositePk pk=new CachedDemographicNoteCompositePk();
-		pk.setUuid(localNote.getUuid());
+		pk.setUuid(localNote.getUuid() + ":" + localNote.getDemographic_no());
 		note.setCachedDemographicNoteCompositePk(pk);
 		
 		note.setCaisiDemographicId(Integer.parseInt(localNote.getDemographic_no()));
