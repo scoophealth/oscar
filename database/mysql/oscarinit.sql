@@ -679,6 +679,7 @@ CREATE TABLE eform (
   form_creator varchar(255) default NULL,
   status tinyint(1) NOT NULL default '1',
   form_html text,
+  patient_independent boolean,
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
 ) ;
@@ -698,6 +699,7 @@ CREATE TABLE eform_data (
   form_time time default NULL,
   form_provider varchar(255) default NULL,
   form_data text,
+  patient_independent boolean,
   PRIMARY KEY  (fdid),
   UNIQUE KEY id (fdid),
   KEY `idx_eform_data_demographic_no` (`demographic_no`),
