@@ -50,6 +50,8 @@ if (request.getAttribute("submitted") != null) {
    if (curform.get("formHtml") == null) curform.put("formHtml", "");
    if (curform.get("formDate") == null) curform.put("formDate", "--");
    if (curform.get("formTime") == null) curform.put("formTime", "--");
+   if (curform.get("patientIndependent") ==null) curform.put("patientIndependent", false);
+   Boolean patientIndependent = (Boolean) curform.get("patientIndependent");
    
    String formHtmlRaw = (String) curform.get("formHtml");
    String formHtml = "";
@@ -97,11 +99,11 @@ function disablenupload() {
 		key="eform.edithtml.msgChangesSaved" /></font>
 	<% } %> <input type="hidden" name="fid" id="fid"
 		value="<%= curform.get("fid")%>">
-	<table width="100%" height="85%" class="maintable"
+        <table width="100%" height="85%" class="maintable"
 		<% if ((request.getAttribute("success") == null) || (errors.size() != 0)) {%>
 		style="margin-top: 19px;" <% } %>>
 		<tr class="highlight">
-			<th style="width: 150px;"><bean:message
+			<th style="width: 150px; text-align: right;"><bean:message
 				key="eform.uploadhtml.formName" />:</th>
 			<td><input type="text" name="formName"
 				value="<%= curform.get("formName") %>"
@@ -115,25 +117,28 @@ function disablenupload() {
 			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} else if (errors.containsKey("formNameExists")) { %>
 			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} %>
 			</td>
+			<th style="text-align: right;"><bean:message
+				key="eform.uploadhtml.patientIndependent" /><input type="checkbox" name="patientIndependent" value="true"
+                                   <%= patientIndependent?"checked":"" %> /></th>
 		</tr>
 		<tr class="highlight">
-			<th style="width: 150px;"><bean:message
+			<th style="text-align: right;"><bean:message
 				key="eform.uploadhtml.formSubject" />:</th>
-			<td><input type="text" name="formSubject"
+                        <td colspan="2"><input type="text" name="formSubject"
 				value="<%= curform.get("formSubject") %>" size="30" /></td>
 		</tr>
 		<tr class="highlight">
-			<th><bean:message key="eform.uploadhtml.formFileName" /> <sup>optional</sup>:</th>
-			<td><input type="text" name="formFileName"
+			<th style="text-align: right;"><bean:message key="eform.uploadhtml.formFileName" /> <sup>optional</sup>: </th>
+			<td colspan="2"><input type="text" name="formFileName"
 				value="<%= curform.get("formFileName")%>" size="50" /></td>
 		</tr>
 		<tr>
-			<th><bean:message key="eform.edithtml.msgLastModified" />:</th>
-			<td><%= curform.get("formDate")%> <%= curform.get("formTime") %></td>
+			<th style="text-align: right;"><bean:message key="eform.edithtml.msgLastModified" />:</th>
+			<td colspan="2"><%= curform.get("formDate")%> <%= curform.get("formTime") %></td>
 		</tr>
 		<tr>
-			<th><bean:message key="eform.edithtml.frmUploadFile" /> <sup>optional</sup>:</th>
-			<td><input type="file" name="uploadFile" size="40"
+			<th style="text-align: right;"><bean:message key="eform.edithtml.frmUploadFile" /> <sup>optional</sup>:</th>
+                        <td colspan="2"><input type="file" name="uploadFile" size="40"
 				<% if (errors.containsKey("uploadError")) { %> class="warning"
 				<% } %>> <input type="hidden" name="uploadMarker"
 				id="uploadMarker" value="false"> <input type="button"
@@ -146,13 +151,13 @@ function disablenupload() {
 			</td>
 		</tr>
 		<tr height="100%">
-			<th valign="top"><bean:message key="eform.edithtml.msgEditHtml" />:</th>
+			<th valign="top" style="text-align: right;"><bean:message key="eform.edithtml.msgEditHtml" />:</th>
 			<td colspan="2"><textarea style="width: 100%; height: 100%;"
 				wrap="off" name="formHtml"><%= formHtml%></textarea></td>
 		</tr>
 		<tr>
-			<th><bean:message key="eform.edithtml.frmSubmit" />:</th>
-			<td><input type="button"
+			<th style="text-align: right;"><bean:message key="eform.edithtml.frmSubmit" />:</th>
+			<td colspan="2"><input type="button"
 				value="<bean:message key="eform.edithtml.msgPreviewLast"/>"
 				<% if (((String) curform.get("fid")).length() == 0) {%> disabled
 				<%}%> name="previewlast" onclick="openLastSaved()"> <input

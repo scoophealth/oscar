@@ -137,7 +137,9 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                                         <tr><td class="fieldLabel"><bean:message key="eform.uploadhtml.formName" /></td><td class="fieldLabel"><bean:message key="eform.uploadhtml.formSubject" /></td></tr>
                                         <tr><td><input type="text" name="formName" size="30"></td><td><input type="text" name="formSubject" size="30"></td></tr>
                                         <tr><td colspan="2" style="text-align: left;"><input type="file" name="formHtml" size="50"></td></tr>
-                                        <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="<bean:message key="eform.uploadhtml.btnUpload"/>"></td>
+                                        <tr>
+                                            <td style="text-align: left; font-size: 12px"><input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/></td>
+                                            <td style="text-align: right;"><input type="submit" name="subm" value="<bean:message key="eform.uploadhtml.btnUpload"/>"></td>
                                         </tr>
                                 </html:form>
                         </table>
@@ -160,7 +162,8 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                                         <%}%>
                                         <tr><td class="fieldLabel">Zip File: </td></tr>
                                         <tr><td colspan="2" style="text-align: left;"><input type="file" name="zippedForm" size="50"></td></tr>
-                                        <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="Import" onclick="this.value = 'Importing...'; this.disabled = true;"></td></tr>
+                                        <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="Import" onclick="this.value = 'Importing...'; this.disabled = true;"></td>
+                                        </tr>
                                         <tr><td>&nbsp;</td></tr>
                                         </tr>
                                 </form>
