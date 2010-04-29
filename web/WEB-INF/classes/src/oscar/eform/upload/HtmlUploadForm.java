@@ -41,6 +41,7 @@ public class HtmlUploadForm extends ActionForm {
     private FormFile formHtml = null;
     private String formName;
     private String subject;
+    private Boolean patientIndependent = false;
     
     public HtmlUploadForm() {
     }
@@ -67,6 +68,14 @@ public class HtmlUploadForm extends ActionForm {
     
     public void setFormSubject(String subject) {
         this.subject = subject;
+    }
+
+    public Boolean getPatientIndependent() {
+        return patientIndependent;
+    }
+
+    public void setPatientIndependent(Boolean patientIndependent) {
+        this.patientIndependent = patientIndependent;
     }
     
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {

@@ -49,8 +49,9 @@ public class HtmlUploadAction extends Action {
             formHtmlStr = formHtmlStr.replaceAll("\\\\n", "\\\\\\\\n");
             String formName = fm.getFormName();
             String subject = fm.getSubject();
+            Boolean patientIndependent = fm.getPatientIndependent();
             String fileName = formHtml.getFileName();
-            String lastfid = EFormUtil.saveEForm(formName, subject, fileName, formHtmlStr);
+            String lastfid = EFormUtil.saveEForm(formName, subject, fileName, formHtmlStr, patientIndependent);
         } catch (Exception e) {
             e.printStackTrace();
         }
