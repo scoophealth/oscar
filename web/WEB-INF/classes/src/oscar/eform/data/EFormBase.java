@@ -45,6 +45,7 @@ public class EFormBase {
     protected String providerNo;
     protected String formDate;
     protected String formTime;
+    protected Boolean patientIndependent;
     
     public EFormBase() {
         
@@ -60,6 +61,17 @@ public class EFormBase {
         dateTimeStamp();
     }
     
+    public EFormBase(String fid, String formName, String formSubject,
+            String formFileName, String formHtml, Boolean patientIndependent) {
+        this.fid = fid;
+        this.formName = formName;
+        this.formSubject = formSubject;
+        this.formHtml = formHtml;
+        this.formFileName = formFileName;
+        this.patientIndependent = patientIndependent;
+        dateTimeStamp();
+    }
+
     public void setImagePath() {
         Properties prop = oscar.OscarProperties.getInstance();
         String projHome = prop.getProperty("project_home");
@@ -148,5 +160,12 @@ public class EFormBase {
     public String getFormCreator() {
         return this.formCreator;
     }
-    
+
+    public Boolean getPatientIndependent() {
+        return this.patientIndependent;
+    }
+
+    public void setPatientIndependent(Boolean patientIndependent) {
+        this.patientIndependent = patientIndependent;
+    }
 }

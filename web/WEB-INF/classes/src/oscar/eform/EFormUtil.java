@@ -54,12 +54,15 @@ public class EFormUtil {
    private EFormUtil() {}
 
    public static String saveEForm(EForm eForm) {
-       return saveEForm(eForm.getFormName(), eForm.getFormSubject(), eForm.getFormFileName(), eForm.getFormHtml(), eForm.getFormCreator());
+       return saveEForm(eForm.getFormName(), eForm.getFormSubject(), eForm.getFormFileName(), eForm.getFormHtml(), eForm.getFormCreator(), eForm.getPatientIndependent());
    }
    public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr) {
-       return saveEForm(formName, formSubject, fileName, htmlStr, null);
+       return saveEForm(formName, formSubject, fileName, htmlStr, null, null);
    }
-   public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator) {
+   public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, Boolean patientIndependent) {
+       return saveEForm(formName, formSubject, fileName, htmlStr, null, patientIndependent);
+   }
+   public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, Boolean patientIndependent) {
        //called by the upload action, puts the uploaded form into DB
        String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
        String nowTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
@@ -69,8 +72,8 @@ public class EFormUtil {
        fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(fileName);
        if (creator == null) creator = "NULL";
        else creator = "'" + creator + "'";
-       String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, form_creator, status, form_html) VALUES " +
-             "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', " + creator + ", 1, '" + htmlStr + "')";
+       String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, form_creator, status, form_html, patient_independent) VALUES " +
+             "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', " + creator + ", 1, '" + htmlStr + "', " + patientIndependent +")";
        return (runSQLinsert(sql));
    }
    
@@ -123,11 +126,11 @@ public class EFormUtil {
        //sends back a list of forms added to the patient
        String sql = "";
        if (deleted.equals("deleted")) {
-           sql = "SELECT * FROM eform_data where status=0 AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
+           sql = "SELECT * FROM eform_data where status=0 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
        } else if (deleted.equals("current")) {
-           sql = "SELECT * FROM eform_data where status=1 AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
+           sql = "SELECT * FROM eform_data where status=1 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
        } else if (deleted.equals("all")) {
-           sql = "SELECT * FROM eform_data WHERE demographic_no=" + demographic_no + " ORDER BY " + sortBy;
+           sql = "SELECT * FROM eform_data WHERE (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
        }
        ResultSet rs = getSQL(sql);
        ArrayList results = new ArrayList();
@@ -165,6 +168,7 @@ public class EFormUtil {
            curht.put("formTime", rsGetString(rs, "form_time"));
            curht.put("formCreator", rsGetString(rs, "form_creator"));
            curht.put("formHtml", rsGetString(rs, "form_html"));
+           curht.put("patientIndependent", rs.getBoolean("patient_independent"));
            rs.close();
        } catch (SQLException sqe) {
            curht.put("formName", "");
@@ -211,7 +215,8 @@ public class EFormUtil {
            "subject='" + formSubject + "', " +
            "form_date='" + updatedForm.getFormDate() + "', " +
            "form_time='" + updatedForm.getFormTime() + "', " +
-           "form_html='" + formHtml + "' " +
+           "form_html='" + formHtml + "', " +
+           "patient_independent=" + updatedForm.getPatientIndependent() + " " +
            "WHERE fid=" + updatedForm.getFid() + ";";
        runSQL(sql);
    }
@@ -241,6 +246,7 @@ public class EFormUtil {
        else if (Column.equalsIgnoreCase("formTime")) dbColumn = "form_time";
        else if (Column.equalsIgnoreCase("formStatus")) dbColumn = "status";
        else if (Column.equalsIgnoreCase("formHtml")) dbColumn = "form_html";
+       else if (Column.equalsIgnoreCase("patientIndependent")) dbColumn = "patient_independent";
        String sql = "SELECT " + dbColumn + " FROM eform WHERE fid=" + fid;
        ResultSet rs = getSQL(sql);
        try {
@@ -302,10 +308,10 @@ public class EFormUtil {
        //Adds an eform to the patient
        //open own connection - must be same connection for last_insert_id
        String html = charEscape(eForm.getFormHtml(), '\'');
-       String sql = "INSERT INTO eform_data (fid, form_name, subject, demographic_no, status, form_date, form_time, form_provider, form_data)" +
+       String sql = "INSERT INTO eform_data (fid, form_name, subject, demographic_no, status, form_date, form_time, form_provider, form_data, patient_independent)" +
        "VALUES ('" + eForm.getFid() + "', '" + eForm.getFormName() + "', '" + StringEscapeUtils.escapeSql(eForm.getFormSubject()) +
                "', '" + eForm.getDemographicNo() + "', 1, '" + eForm.getFormDate() + "', '" + eForm.getFormTime() + "', '" + eForm.getProviderNo() +
-               "', '" + html + "')";
+               "', '" + html + "', " + eForm.getPatientIndependent() + ")";
        try {           
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
@@ -484,13 +490,13 @@ public class EFormUtil {
        //sends back a list of forms added to the patient
        String sql = "";
        if (deleted.equals("deleted")) {
-           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=0 AND eform_data.demographic_no=" + demographic_no +
+           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=0 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND eform_data.demographic_no=" + demographic_no +
                  " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
        } else if (deleted.equals("current")) {
-           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=1 AND eform_data.demographic_no=" + demographic_no +
+           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=1 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND eform_data.demographic_no=" + demographic_no +
                  " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
        } else if (deleted.equals("all")) {
-           sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.demographic_no=" + demographic_no +
+           sql = "SELECT * FROM eform_data, eform_groups WHERE (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND eform_data.demographic_no=" + demographic_no +
                  " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
        }
        ResultSet rs = getSQL(sql);

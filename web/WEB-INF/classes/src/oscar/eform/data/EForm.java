@@ -70,6 +70,7 @@ public class EForm extends EFormBase {
         //formTime = curht.get("formTime");
         formDate = (String) ht.get("formDate");
         formHtml = (String) ht.get("formHtml");
+        patientIndependent = (Boolean) ht.get("patientIndependent");
     }
     
     public void loadEForm(String fid, String demographicNo) {
@@ -82,6 +83,7 @@ public class EForm extends EFormBase {
         this.formFileName = (String) loaded.get("formFileName");
         this.formCreator = (String) loaded.get("formCreator");
         this.demographicNo = demographicNo;
+        this.patientIndependent = (Boolean) loaded.get("patientIndependent");
     }
     
     public void setAction(String pAjaxId) {
