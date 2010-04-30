@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*"%>
+<%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*,org.oscarehr.common.model.*"%>
 <%@page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*" %>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.springframework.web.context.support.WebApplicationContextUtils, oscar.entities.*" %>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -93,6 +93,7 @@
   BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
   Billingmaster billingmaster = billingmasterDAO.getBillingMasterByBillingMasterNo(billNo);
   Billing bill = billingmasterDAO.getBilling(billingmaster.getBillingNo());
+  BillingCodeData bcd =  new BillingCodeData();//(BillingCodeData) ctx.getBean("billingCodeData");
 
   //fixes bug where invoice number is null when
   //bill changed to Private
@@ -303,9 +304,9 @@ function popup( height, width, url, windowName){
 function popFeeItemList(form,field){
      var width = 575;
      var height = 400;
-
+     var serviceDate = document.getElementById('serviceDate').value;
      var str = document.forms[form].elements[field].value;
-     var url = '<rewrite:reWrite jspPage="support/billingfeeitem.jsp"/>'+'?form=' +form+ '&field='+field+'&feeField=billingAmount&corrections=1&searchStr=' +str;
+     var url = '<rewrite:reWrite jspPage="support/billingfeeitem.jsp"/>'+'?form=' +form+ '&field='+field+'&feeField=billingAmount&corrections=1&searchStr=' +str+'&serviceDate='+serviceDate;
      var windowName = field;
      popup(height,width,url,windowName);
 }
@@ -322,6 +323,13 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 
+//Rounding function seems to use the right rules for MSP
+function calculateFee(){
+ var billValue = document.getElementById("billValue").value;
+ var billUnit  = document.getElementById("billingUnit").value;
+ var roundedValue = Math.round(billValue * billUnit * 100)/100;
+ document.getElementById("billingAmount").value = roundedValue;
+}
 
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -652,7 +660,9 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             <input type="text" name="facilitySubNum" value="<%=allFields.getProperty("facility_sub_no")%>" size="5" maxlength="5"/></td>
        </tr>
 </table>
-
+<%
+BillingService billService = bcd.getBillingCodeByCode(allFields.getProperty("billing_code"),billingmaster.getServiceDateAsDate());
+%>
 <table width="100%" border=1>
   <tr bgcolor="#CCCCFF">
     <td class="bCellData">Service Code</td>
@@ -668,19 +678,21 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
       <td  class="bCellData">
 
         <input type="text" style="font-size:80%;" name="service_code" value="<%=allFields.getProperty("billing_code")%>" size="10" >
-		 <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search/Update"/>
+        <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search/Update"/>
       </td>
       <td width="50%"  class="bCellData">
-        <%=billform.getServiceDesc(allFields.getProperty("billing_code"),billRegion)%>
+        <%=billform.getServiceDesc(allFields.getProperty("billing_code"),billRegion)%>   ($<span id="valueDisplay"><%=billService.getValue()%></span>)
+        <input type="hidden" value="<%=billService.getValue()%>" id="billValue"/>
+        <input type="button" value="Recalculate" onclick="calculateFee()"/>
       </td>
       <td  class="bCellData">
         <input type="hidden" name="billing_unit" value="<%=allFields.getProperty("billing_unit")%>">
-        <input type="text" style="font-size:80%;" name="billingUnit" value="<%=allFields.getProperty("billing_unit")%>" size="6" maxlength="6">
+        <input type="text" style="font-size:80%;" name="billingUnit" value="<%=allFields.getProperty("billing_unit")%>" size="6" maxlength="6" id="billingUnit">
       </td>
       <td   class="bCellData" nowrap>
         <div align="right">
            <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bill_amount")%>">
-           <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>" onChange="javascript:validateNum(this)">
+           <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>" onChange="javascript:validateNum(this)" id="billingAmount">
         </div>
       </td>
 	  <td>
