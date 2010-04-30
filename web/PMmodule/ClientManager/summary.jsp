@@ -678,8 +678,6 @@ String reason ="";
 		<display:column property="temporaryAdmission" sortable="true"
 			title="Temporary Admission" />
 	</caisi:isModuleLoad>
-	<display:column property="admissionNotes" sortable="true"
-		title="Admission Notes" />
 </display:table>
 
 <br />
