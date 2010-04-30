@@ -264,58 +264,70 @@ public class WCBTeleplanSubmission {
     
     
    private String Claim(String logNo, String billedAmount, String feeitem,String correspondenceCode,Billingmaster bm,WCB wcb) {
-       
+      StringBuffer dLine = new StringBuffer();
       log.debug("Demographic "+demographicDao+"   "+bm.getDemographicNo());
       Demographic d = demographicDao.getDemographic(""+bm.getDemographicNo()); 
        
-      return "C02"
-      + this.ClaimNote1Head(logNo,bm.getPayeeNo(),bm.getPractitionerNo()) 
-      + Misc.forwardZero("",10)
+      dLine.append("C02");
+      dLine.append( this.ClaimNote1Head(logNo,bm.getPayeeNo(),bm.getPractitionerNo()) );
+      dLine.append( Misc.forwardZero("",10));
       //+ Misc.zero(10)      //phn
-      + "0" //Misc.backwardSpace("", 1).toUpperCase()
-      + "0" //Misc.space(1)
-      + "00"//Misc.backwardSpace("", 2).toUpperCase()
-      + Misc.zero(2)
-      + Misc.forwardZero("1", 3)
-      + Misc.zero(2 + 2 + 1 + 2)  //clarification
-      + Misc.forwardZero(feeitem, 5)
-      + Misc.moneyFormatPaddedZeroNoDecimal(billedAmount, 7)
-      + Misc.zero(1)
-      + dateFormat(bm.getServiceDate())
-      + Misc.zero(2)
-      + "W"//Misc.zero(1) //Submission Code
-      + Misc.space(1)
-      + Misc.forwardZero(bm.getDxCode1(), 5)
-      + Misc.space(5 + 5 + 15)
-      + Misc.backwardSpace(bm.getServiceLocation(),1)// wcb.getW_servicelocation(), 1)
-      + Misc.zero(1 + 5 + 1 + 5 + 4 + 4 + 4 + 8)
-      + Misc.forwardZero(""+bm.getBillingmasterNo(), 7)
-      + Misc.forwardZero(correspondenceCode, 1) //correspondence code//+ Misc.zero(1)
-      + Misc.space(20)
-      + "N"
-      + Misc.zero(8 + 20 + 5 + 5)
-      + Misc.space(58) //Part II of Claim 1
-      +"WC"
+      dLine.append( "0" );//Misc.backwardSpace("", 1).toUpperCase()
+      dLine.append( "0" );//Misc.space(1)
+      dLine.append( "00");//Misc.backwardSpace("", 2).toUpperCase()
+      dLine.append( Misc.zero(2));
+      dLine.append( Misc.forwardZero("1", 3));
+      dLine.append( Misc.zero(2 + 2 + 1 + 2) ); //clarification
+      dLine.append( Misc.forwardZero(feeitem, 5));
+      dLine.append( Misc.moneyFormatPaddedZeroNoDecimal(billedAmount, 7));
+      dLine.append( Misc.zero(1));
+      dLine.append( dateFormat(bm.getServiceDate()));
+      dLine.append( Misc.zero(2));
+      dLine.append( "W");//Misc.zero(1) //Submission Code
+      dLine.append( Misc.space(1));
+      dLine.append( Misc.forwardZero(bm.getDxCode1(), 5));
+      dLine.append( Misc.space(5 + 5 + 15));
+      dLine.append( Misc.backwardSpace(bm.getServiceLocation(),1));// wcb.getW_servicelocation(), 1)
+
+      dLine.append(Misc.forwardZero(bm.getReferralFlag1(), 1));                   //p41   1
+      dLine.append(Misc.forwardZero(bm.getReferralNo1(),5));                      //p42   5
+      dLine.append(Misc.forwardZero(bm.getReferralFlag2(),1));                    //p44   1
+      dLine.append(Misc.forwardZero(bm.getReferralNo2(),5));                      //p46   5
+      dLine.append(Misc.forwardZero(bm.getTimeCall(),4));                         //p47   4
+      dLine.append(Misc.forwardZero(bm.getServiceStartTime(),4));                 //p48   4
+      dLine.append(Misc.forwardZero(bm.getServiceEndTime(),4));
+
+
+
+      dLine.append( Misc.zero(8));  //
+      dLine.append( Misc.forwardZero(""+bm.getBillingmasterNo(), 7));
+      dLine.append( Misc.forwardZero(correspondenceCode, 1)); //correspondence code//+ Misc.zero(1)
+      dLine.append( Misc.space(20));
+      dLine.append( "N");
+      dLine.append( Misc.zero(8 + 20 + 5 + 5));
+      dLine.append( Misc.space(58) );//Part II of Claim 1
+      dLine.append("WC");
       //+ Misc.backwardZero(wcb.getW_phn(), 12)
-      + Misc.backwardZero(d.getHin(), 12)
-      + Misc.forwardZero(bm.getBirthDate(),8)
+      dLine.append( Misc.backwardZero(d.getHin(), 12));
+      dLine.append( Misc.forwardZero(bm.getBirthDate(),8));
       //+ dateFormat(wcb.getW_dob())
       //+ Misc.backwardSpace(wcb.getW_fname(), 12)
-      + Misc.backwardSpace(d.getFirstName(), 12)
-      + Misc.backwardSpace(" ", 1)  // we don't store the middle name,  should i reference it from the WCB form??? or just send it as blank
+      dLine.append( Misc.backwardSpace(d.getFirstName(), 12));
+      dLine.append( Misc.backwardSpace(" ", 1));  // we don't store the middle name,  should i reference it from the WCB form??? or just send it as blank
       //+ Misc.backwardSpace(wcb.getW_mname(), 1)
       //+ Misc.backwardSpace(wcb.getW_lname(), 18)
-      + Misc.backwardSpace(d.getLastName(), 18)
+      dLine.append( Misc.backwardSpace(d.getLastName(), 18));
               
       
-      + Misc.backwardSpace(d.getSex(), 1)     //WHAT TO DO ABOUT TRANSGENDERED!!??   
+      dLine.append( Misc.backwardSpace(d.getSex(), 1) );    //WHAT TO DO ABOUT TRANSGENDERED!!??
               
       //+ Misc.backwardSpace(wcb.getW_gender(), 1)
-      + Misc.backwardSpace(dateFormat(wcb.getW_doi()), 25)
-      + Misc.backwardSpace(Misc.backwardSpace(wcb.getW_bp(), 5) + Misc.backwardSpace(wcb.getW_side(), 2),25)
-      + Misc.backwardSpace(wcb.getW_noi(), 25)
-      + Misc.backwardSpace(wcb.getW_wcbno(), 25)
-      + Misc.space(6);
+      dLine.append( Misc.backwardSpace(dateFormat(wcb.getW_doi()), 25));
+      dLine.append( Misc.backwardSpace(Misc.backwardSpace(wcb.getW_bp(), 5) + Misc.backwardSpace(wcb.getW_side(), 2),25));
+      dLine.append( Misc.backwardSpace(wcb.getW_noi(), 25));
+      dLine.append( Misc.backwardSpace(wcb.getW_wcbno(), 25));
+      dLine.append( Misc.space(6));
+      return dLine.toString();
    }
    private String ClaimNote1Head(String logNo,String w_payeeno, String w_pracno) {
       return Misc.forwardZero(OscarProperties.getInstance().getProperty("dataCenterId"),5)
