@@ -1,5 +1,5 @@
 <% response.setHeader("Cache-Control", "no-cache");%>
-<%@page import="java.math.*, java.util.*,  oscar.*, java.net.*,oscar.oscarBilling.ca.bc.data.*,org.oscarehr.common.model.*" %>
+<%@page import="java.math.*, java.util.*,  oscar.*, java.net.*,oscar.oscarBilling.ca.bc.data.*,org.oscarehr.common.model.*,oscar.util.*" %>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.springframework.web.context.support.WebApplicationContextUtils, oscar.entities.*" %><%
         if (session.getAttribute("user") == null) {
             response.sendRedirect("../../logout.jsp");
@@ -11,7 +11,13 @@
         String info = request.getParameter("info");
         String feeField = request.getParameter("feeField");
         String searchStr = request.getParameter("searchStr");
-        System.out.println(searchStr);
+        String serviceDate = request.getParameter("serviceDate");
+        Date serDate = UtilDateUtilities.StringToDate(serviceDate,"yyyyMMdd");
+        
+        if(serDate == null){
+           serDate = new Date();
+        }
+
         if (searchStr == null) {
             searchStr = "%";
         } else {
@@ -19,7 +25,7 @@
         }
         searchStr = oscar.Misc.mysqlEscape(searchStr);
         BillingCodeData bcd = new BillingCodeData();
-        List<BillingService> billServiceList = bcd.search(searchStr,new Date());
+        List<BillingService> billServiceList = bcd.search(searchStr,serDate);
         boolean color = false;
 %>
 
