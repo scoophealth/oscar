@@ -68,11 +68,12 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 		return list;
 	}
 
-	public List<BillingService> search(String str, String region) {
+	public List<BillingService> search(String str, String region,Date billingDate) {
 
-		Query query = entityManager.createQuery("select bs from BillingService bs where bs.region = (:region) and bs.serviceCode like (:searchString) or bs.description like (:searchString) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
+		Query query = entityManager.createQuery("select bs from BillingService bs where bs.region = (:region) and (bs.serviceCode like (:searchString) or bs.description like (:searchString)) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))");
 		query.setParameter("region", region);
 		query.setParameter("searchString", str);
+                query.setParameter("billDate", billingDate);
 		// String sql = "select * from billingservice where service_code like '"+str+"' or description like '%"+str+"%' ";
 
 		@SuppressWarnings("unchecked")
