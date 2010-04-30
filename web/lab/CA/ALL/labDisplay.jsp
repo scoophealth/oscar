@@ -226,6 +226,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <% } %>
 	}
 
+        function confirmAck() {
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        }
+
         </script>
 
     </head>
@@ -254,7 +258,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <% if ( !ackFlag ) { %>
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return confirmAck();">
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
