@@ -248,11 +248,9 @@ public class BillingReProcessBillAction extends Action {
       }
 
       double dblBillAmount = Double.parseDouble(codePrice);
-      double dblUnit = Double.parseDouble(billingUnit);
-      double amtTemp = dblBillAmount * dblUnit;
-      BigDecimal bdFee = new BigDecimal(""+amtTemp).setScale(2,RoundingMode.HALF_UP);
+      BigDecimal bdFee = new BigDecimal(""+dblBillAmount);//.setScale(2,RoundingMode.HALF_UP);
 
-   
+
 
       billingServicePrice = bdFee.toString();
     } catch(NumberFormatException e){
