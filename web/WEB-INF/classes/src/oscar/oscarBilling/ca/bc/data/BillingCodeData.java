@@ -81,6 +81,9 @@ public final class BillingCodeData implements Comparable      {
   //    fillCodeData(rs);
   //}
 
+  public List<BillingService> search(String str,Date date) {
+    return billingServiceDao.search(str,"BC",date);
+  }
 
   public boolean editBillingCode(String servicecode,String desc, String val, String codeId) {
     boolean retval = true;   
