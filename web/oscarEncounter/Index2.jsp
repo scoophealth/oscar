@@ -127,8 +127,10 @@ You have no rights to access the data!
             if( request.getParameter("noteBody") != null )
                 hrefurl += "&noteBody=" + request.getParameter("noteBody");
 
-            if( !response.isCommitted())
+            if( !response.isCommitted()) {
                 response.sendRedirect(hrefurl);
+                return;
+            }
         %>
 
 </caisi:isModuleLoad>
