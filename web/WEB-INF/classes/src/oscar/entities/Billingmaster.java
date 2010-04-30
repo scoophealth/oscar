@@ -36,6 +36,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import oscar.util.UtilDateUtilities;
 
 /**
  * Encapsulates data from table billingmaster
@@ -513,6 +514,16 @@ public class Billingmaster {
      */
     public String getServiceDate() {
         return (serviceDate != null ? serviceDate : "");
+    }
+
+    public Date getServiceDateAsDate(){
+        Date d = null;
+        try{
+           d = UtilDateUtilities.getDateFromString(serviceDate, "yyyyMMdd");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return d;
     }
 
     /**
