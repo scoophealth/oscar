@@ -74,6 +74,17 @@
                 self.close();
                 opener.document.<%=form%>.<%=field%>.value = code;
                 opener.document.<%=form%>.<%=feeField%>.value = fee;
+
+                var valueEle = opener.document.getElementById('billValue');
+                if (valueEle){
+                    valueEle.value = fee;
+                }
+
+                var valDisp = opener.document.getElementById('valueDisplay');
+                if (valDisp){
+                    valDisp.innerHTML = fee;
+                }
+
                 opener.document.focus();
             }
         <%}%>
