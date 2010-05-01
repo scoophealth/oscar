@@ -39,6 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.entities.WCB;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
+import oscar.util.UtilDateUtilities;
 
 /**
  * These Actions Handle of all the interactions with WCB Billing
@@ -91,6 +92,7 @@ public class WCBAction2 extends DispatchAction {
         if (request.getParameter("saveandbill") != null){
             request.setAttribute("WCBFormId",wcb.getId());
             request.setAttribute("icd9",wcb.getW_icd9());
+            request.setAttribute("serviceDate",UtilDateUtilities.DateToString(wcb.getW_servicedate()));
             List list = new ArrayList();
             String feeitem = wcb.getW_feeitem();
             String xfeeitem = wcb.getW_extrafeeitem();
