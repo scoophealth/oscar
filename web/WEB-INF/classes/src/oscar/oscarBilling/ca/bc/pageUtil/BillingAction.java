@@ -93,6 +93,10 @@ public final class BillingAction extends Action {
         }
         bean = new oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean();
         fillBean(request, bean);
+        if(request.getAttribute("serviceDate") != null){
+            System.out.println("service Date set to the appointment Date"+(String) request.getAttribute("serviceDate"));
+           bean.setApptDate((String) request.getAttribute("serviceDate"));
+        }
 
         request.getSession().setAttribute("billingSessionBean", bean);
  //       this.validateCodeLastBilled(request, errors,
