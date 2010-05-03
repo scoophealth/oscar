@@ -443,7 +443,7 @@ function changeSite(sel) {
 			<%
 			} else {
 			%>
-       <option value="all">All Providers</option>
+       <option value="">All Providers</option>
     <% for (int i = 0 ; i < pList.size(); i++) { 
 		String temp[] = ((String) pList.get(i)).split("\\|");
 	%>
