@@ -525,6 +525,19 @@ if(statusType.equals("_")) { %>
              <th>Filename</th>
           </tr>
 	<% //
+        ArrayList<String> aLProviders;
+        if( providerNo == null || providerNo.equals(""))  {
+            aLProviders = new ArrayList<String>(pList);
+        }
+        else {
+            aLProviders = new ArrayList<String>();
+            aLProviders.add(providerNo);
+        }
+        String[] provInfo;
+        for( int idx = 0; idx < aLProviders.size(); ++idx ) {
+            provInfo = aLProviders.get(idx).split("\\|");
+            providerNo = provInfo[0].trim();
+
 	BillingProviderData providerObj = (new JdbcBillingPageUtil()).getProviderObj(providerNo);
 	List lPat = (new JdbcBillingErrorRepImpl()).getErrorRecords(providerObj, startDate, endDate, filename);
     boolean nC = false;
@@ -563,7 +576,7 @@ if(statusType.equals("_")) { %>
     			</td>
     			<td id="<%=bObj.getId() %>"><%=bObj.getReport_name() %></td>
     		</tr>
-<% }} else { %>
+<% }}} else { %>
     <!--  div class="tableListing"-->
        <table width="100%" border="1" cellspacing="0" cellpadding="1">
           <tr class="myYellow"> 
