@@ -32,7 +32,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
-<%@page import="org.oscarehr.PMmodule.web.AdmissionForHistoryTabDisplay"%><script type="text/javascript">
+<%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%><script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
         url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_admission&admissionId="/>';
         window.open(url + admissionId, 'admission', 'width=600,height=600');
@@ -54,7 +54,7 @@
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
 	<%
-		AdmissionForHistoryTabDisplay admissionForDisplay = (AdmissionForHistoryTabDisplay) pageContext.getAttribute("admission");
+		AdmissionForDisplay admissionForDisplay = (AdmissionForDisplay) pageContext.getAttribute("admission");
 	%>
 	<%
 		ProgramProviderDAO ppd =(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");

@@ -1314,6 +1314,7 @@ public class ClientManagerAction extends BaseAction {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		Integer facilityId = loggedInInfo.currentFacility.getId();
 		ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
+		Integer demographicId=Integer.valueOf(demographicNo);
 
 		request.setAttribute("id", demographicNo);
 		request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
@@ -1363,15 +1364,14 @@ public class ClientManagerAction extends BaseAction {
 
 			// request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
 			// only allow bed/service programs show up.(not external program)
-			List currentAdmissionList = admissionManager.getCurrentAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId);
-			List bedServiceList = new ArrayList();
-			for (Iterator ad = currentAdmissionList.iterator(); ad.hasNext();) {
-				Admission admission1 = (Admission) ad.next();
-				if ("External".equalsIgnoreCase(programManager.getProgram(admission1.getProgramId()).getType())) {
-					continue;
+			List<Admission> currentAdmissionList = admissionManager.getCurrentAdmissionsByFacility(demographicId, facilityId);
+			ArrayList<AdmissionForDisplay> bedServiceList = new ArrayList<AdmissionForDisplay>();
+			for (Admission admission1 : currentAdmissionList) {
+				if (!"External".equalsIgnoreCase(programManager.getProgram(admission1.getProgramId()).getType())) {
+					bedServiceList.add(new AdmissionForDisplay(admission1));
 				}
-				bedServiceList.add(admission1);
 			}
+			addRemoteAdmissions(bedServiceList, demographicId);
 			request.setAttribute("admissions", bedServiceList);
 
 			Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntakeByFacility(Integer.valueOf(demographicNo), facilityId);
@@ -1395,27 +1395,14 @@ public class ClientManagerAction extends BaseAction {
 
 		/* history */
 		if (tabBean.getTab().equals("History")) {
-			ArrayList<AdmissionForHistoryTabDisplay> allResults = new ArrayList<AdmissionForHistoryTabDisplay>();
-
-			List<Admission> addLocalAdmissions = admissionManager.getAdmissionsByFacility(Integer.valueOf(demographicNo), facilityId);
+			ArrayList<AdmissionForDisplay> allResults = new ArrayList<AdmissionForDisplay>();
+			
+			List<Admission> addLocalAdmissions = admissionManager.getAdmissionsByFacility(demographicId, facilityId);
 			for (Admission admission : addLocalAdmissions)
-				allResults.add(new AdmissionForHistoryTabDisplay(admission));
+				allResults.add(new AdmissionForDisplay(admission));
 
-			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-
-				try {
-					DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-					List<CachedAdmission> cachedAdmissions = demographicWs.getLinkedCachedAdmissionsByDemographicId(Integer.parseInt(demographicNo));
-
-					for (CachedAdmission cachedAdmission : cachedAdmissions)
-						allResults.add(new AdmissionForHistoryTabDisplay(cachedAdmission));
-
-					Collections.sort(allResults, AdmissionForHistoryTabDisplay.ADMISSION_DATE_COMPARATOR);
-				} catch (Exception e) {
-					logger.error("Error retrieveing integrated admissions.", e);
-				}
-			}
-
+			addRemoteAdmissions(allResults, demographicId);
+			
 			request.setAttribute("admissionHistory", allResults);
 			request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, facilityId));
 		}
@@ -1691,6 +1678,26 @@ public class ClientManagerAction extends BaseAction {
 		}
 	}
 
+	private void addRemoteAdmissions(ArrayList<AdmissionForDisplay> admissionsForDisplay, Integer demographicId)
+	{
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+
+			try {
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+				List<CachedAdmission> cachedAdmissions = demographicWs.getLinkedCachedAdmissionsByDemographicId(demographicId);
+
+				for (CachedAdmission cachedAdmission : cachedAdmissions)
+					admissionsForDisplay.add(new AdmissionForDisplay(cachedAdmission));
+
+				Collections.sort(admissionsForDisplay, AdmissionForDisplay.ADMISSION_DATE_COMPARATOR);
+			} catch (Exception e) {
+				logger.error("Error retrieveing integrated admissions.", e);
+			}
+		}		
+	}
+	
 	private List<ReferralSummaryDisplay> getReferralsForSummary(int demographicNo, Integer facilityId) {
 		ArrayList<ReferralSummaryDisplay> allResults = new ArrayList<ReferralSummaryDisplay>();
 

@@ -18,10 +18,10 @@ import oscar.util.DateUtils;
 /**
  * This is a display object for the history tab of a clients admissions.
  */
-public class AdmissionForHistoryTabDisplay {
+public class AdmissionForDisplay {
 	
-	public static final Comparator<AdmissionForHistoryTabDisplay> ADMISSION_DATE_COMPARATOR=new Comparator<AdmissionForHistoryTabDisplay>() {
-		public int compare(AdmissionForHistoryTabDisplay arg0, AdmissionForHistoryTabDisplay arg1) {
+	public static final Comparator<AdmissionForDisplay> ADMISSION_DATE_COMPARATOR=new Comparator<AdmissionForDisplay>() {
+		public int compare(AdmissionForDisplay arg0, AdmissionForDisplay arg1) {
 			return(arg1.admissionDate.compareTo(arg0.admissionDate));
 		}
 	};
@@ -43,19 +43,17 @@ public class AdmissionForHistoryTabDisplay {
 	private int daysInProgram;
 	private String temporaryAdmission;
 	private Integer programId;
-	private Integer clientId;
 	
-	public AdmissionForHistoryTabDisplay(Admission admission) {
+	public AdmissionForDisplay(Admission admission) {
 		admissionId = admission.getId().intValue();
 		isFromIntegrator = false;
 		programName = admission.getProgramName();
 		programType = admission.getProgramType();
-		facilityName = "local facility";
+		facilityName = "local";
 
 		admissionDate = dateFormatter.format(admission.getAdmissionDate());
 		facilityAdmission = String.valueOf(!admission.isAdmissionFromTransfer());
 		programId = admission.getProgramId();
-		clientId = admission.getClientId();
 		
 		if (admission.getDischargeDate() != null) {
 			dischargeDate = dateFormatter.format(admission.getDischargeDate());
@@ -68,7 +66,7 @@ public class AdmissionForHistoryTabDisplay {
 		temporaryAdmission = String.valueOf(admission.isTemporaryAdmission());
 	}
 
-	public AdmissionForHistoryTabDisplay(CachedAdmission cachedAdmission) {
+	public AdmissionForDisplay(CachedAdmission cachedAdmission) {
 		isFromIntegrator = true;
 
 		FacilityIdIntegerCompositePk remoteProgramPk = new FacilityIdIntegerCompositePk();

@@ -33,7 +33,8 @@
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
-<%@page import="org.oscarehr.PMmodule.web.ClientManagerAction"%><input type="hidden" name="clientId" value="" />
+<%@page import="org.oscarehr.PMmodule.web.ClientManagerAction"%>
+<%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
@@ -620,63 +621,41 @@ String userfirstname = (String) session.getAttribute("userfirstname");;
 String userlastname = (String) session.getAttribute("userlastname");
 String reason ="";
 %>
-<display:table class="simple" cellspacing="2" cellpadding="3"
-	id="admission" name="admissions" export="false" pagesize="10"
-	requestURI="/PMmodule/ClientManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissions" export="false" pagesize="10"	requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list"
-		value="This client is not currently admitted to any programs." />
+	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
 
-	<display:column property="programName" sortable="true"
-		title="Program Name" />
-		
+	<display:column property="facilityName" sortable="true" title="Facility" />
+	<display:column property="programName" sortable="true" title="Program" />
 	<display:column sortable="true" title="">	
 		<% if(bShowEncounterLink) {	
 			HttpSession se = request.getSession();			
-			Admission tempAdmission=(Admission)pageContext.getAttribute("admission");
-			String programId = String.valueOf(tempAdmission.getProgramId());
+			AdmissionForDisplay tempAdmission=(AdmissionForDisplay)pageContext.getAttribute("admission");
 			
-			//Check program is in provider's program domain:
-			if(ppd.isThisProgramInProgramDomain(curUser_no,Integer.valueOf(programId))) {
-				String eURL = "../oscarEncounter/IncomingEncounter.do?programId="+programId+"&providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curUser_no+"&reason="+java.net.URLEncoder.encode(reason)+"&encType="+java.net.URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+java.net.URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate=null&appointmentDate=null&startTime=0:0"+"&status="+status+"&source=cm";
-		%>	
-		<logic:notEqual value="community" property="programType" name="admission">
-		
-		<a href=#
-			onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;"
-			title="<bean:message key="global.encounter"/>"> <bean:message
-			key="provider.appointmentProviderAdminDay.btnE" /></a> 
-		
-		</logic:notEqual>
-	<% 		} 
+			if (!tempAdmission.isFromIntegrator())
+			{
+				//Check program is in provider's program domain:
+				if(ppd.isThisProgramInProgramDomain(curUser_no,tempAdmission.getProgramId())) 
+				{
+					String eURL = "../oscarEncounter/IncomingEncounter.do?programId="+tempAdmission.getProgramId()+"&providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curUser_no+"&reason="+java.net.URLEncoder.encode(reason)+"&encType="+java.net.URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+java.net.URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate=null&appointmentDate=null&startTime=0:0"+"&status="+status+"&source=cm";
+					%>	
+					<logic:notEqual value="community" property="programType" name="admission">
+						<a href=# onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
+						   <bean:message key="provider.appointmentProviderAdminDay.btnE" />
+						</a> 
+					</logic:notEqual>
+					<% 		
+				}
+			}
 		}
 	%>
-		</display:column>
-	
-	<display:column property="programType" sortable="true"
-		title="Program Type" />
-	<display:column property="admissionDate"
-		format="{0, date, yyyy-MM-dd kk:mm}" sortable="true"
-		title="Admission Date" />
-	<display:column sortable="true" title="Days in Program">
-		<%
-			Admission tempAdmission=(Admission)pageContext.getAttribute("admission");
-					Date admissionDate=tempAdmission.getAdmissionDate();
-					Date dischargeDate=tempAdmission.getDischargeDate()!=null?tempAdmission.getDischargeDate():new Date();
-
-					long diff=dischargeDate.getTime()-admissionDate.getTime();
-					diff=diff/1000; // seconds
-					diff=diff/60; // minutes
-					diff=diff/60; // hours
-					diff=diff/24; // days
-
-					String numDays=String.valueOf(diff);
-		%>
-		<%=numDays%>
 	</display:column>
+
+	<display:column property="programType" sortable="true" title="Program Type" />
+	<display:column property="admissionDate" sortable="true" title="Admission Date" />
+	<display:column property="daysInProgram" sortable="true" title="Days in Program" />
 	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
-		<display:column property="temporaryAdmission" sortable="true"
-			title="Temporary Admission" />
+		<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
 	</caisi:isModuleLoad>
 </display:table>
 
