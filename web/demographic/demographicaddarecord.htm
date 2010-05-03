@@ -90,10 +90,10 @@ function checkTypeIn() {
 		A DEMOGRAPHIC RECORD</font></th>
 	</tr>
 </table>
+
+<form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="checkTypeIn()">
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
 	BGCOLOR="#C4D9E7">
-	<form method="post" name="titlesearch" action="demographiccontrol.jsp"
-		onSubmit="checkTypeIn()">
 	<tr valign="top">
 		<td rowspan="2" ALIGN="right" valign="middle"><font
 			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
@@ -128,12 +128,11 @@ function checkTypeIn() {
 			type="radio" name="search_mode" value="search_chart_no">
 		Chart No</font></td>
 	</tr>
-	</form>
 </table>
+</form>
 
+<form method="post" name="adddemographic" action="demographiccontrol.jsp" onSubmit="return(checkTypeIn())">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
-	<form method="post" name="adddemographic"
-		action="demographiccontrol.jsp" onSubmit="return(checkTypeIn())">
 	<tr>
 		<td align="right"><b>Last Name<font color="red">:</font> </b></td>
 		<td align="left"><input type="text" name="last_name"
@@ -335,8 +334,8 @@ function checkTypeIn() {
 			onclick=self.close();></div>
 		</td>
 	</tr>
-	</form>
 </table>
+</form>
 *
 <font face="Courier New, Courier, mono" size="-1">Date format:
 yyyy-mm-dd </font>
