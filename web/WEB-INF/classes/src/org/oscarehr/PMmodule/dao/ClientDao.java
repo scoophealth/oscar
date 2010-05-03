@@ -422,6 +422,11 @@ public class ClientDao extends HibernateDaoSupport {
 			criteria.add(Expression.eq("Sex", gender));
 		}
 		
+		//filter out non unique anonymous
+	//	criteria.add(Expression.ne("anonymous", "one-time-anonymous"));
+		//criteria.add(Expression.isNull("anonymous"));
+		
+		criteria.add(Expression.or(Expression.ne("anonymous", "one-time-anonymous"), Expression.isNull("anonymous")));
 		results = criteria.list();
 
 		if (log.isDebugEnabled()) {
