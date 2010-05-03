@@ -610,7 +610,7 @@
                     <html:submit onclick="return saveForm();">Save</html:submit>&nbsp;
                 </caisi:isModuleLoad>
                  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-                    <html:submit onclick="return saveDraft();">Save As Draft</html:submit>&nbsp;
+                    <!--<html:submit onclick="return saveDraft();">Save As Draft</html:submit>&nbsp; -->
                 </caisi:isModuleLoad>
                 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
                     <!--

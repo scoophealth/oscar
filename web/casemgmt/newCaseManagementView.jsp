@@ -620,7 +620,7 @@
 				if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
 				{
 				 	%> 
-				 	<div style="background-color:#ffcccc; text-align:right">Group Note - Editable note in this <a target="_blank" href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<%=note.getLocation() %>">client</a></div>
+				 	<div style="background-color:#33FFCC; text-align:right">Group Note - Editable note in this <a target="_blank" href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<%=note.getLocation() %>">client</a></div>
 					<%
 				}
 
@@ -863,7 +863,8 @@
 		<script>
  function selectGroup() {
 	 	var noteId='<%=((CaseManagementEntryFormBean)session.getAttribute(frmName)).getNoteId()%>';
-    	//alert(noteId);
+	 	var noteId = document.forms["caseManagementEntryForm"].noteId.value;
+    	alert(noteId);
     	popupPage(600,700,'group','groupNoteSelect.jsp?programId='+case_program_id + '&demographicNo='+demographicNo);
     
     }

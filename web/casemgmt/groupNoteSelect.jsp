@@ -33,7 +33,7 @@
 	<body>
 	
 	<%if(cform.getNoteId() == null) { %>
-		<h4>In order to use this page, you must have saved the note you want to make a group note, and have clicked the 'edit' button for it. Please try again.</h4>
+		<h4>In order to use this page, you must first save this note and then click on edit for this note then click on group icon to select client members of this group. Please try again.</h4>
 		<input type="button" onclick="window.close();" value="Close Window" />
 	<% } else { %>
 
