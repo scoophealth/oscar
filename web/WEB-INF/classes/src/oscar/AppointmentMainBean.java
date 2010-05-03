@@ -292,7 +292,7 @@ public class AppointmentMainBean {
   public void closePstmtConn() throws SQLException {
     dbPH.closePstmt();
   }
-  public String getString(ResultSet rs, String columnName) throws SQLException
+  public String getString(ResultSet rs, java.lang.String columnName) throws SQLException
   {
   	return Misc.getString(rs, columnName);
   }

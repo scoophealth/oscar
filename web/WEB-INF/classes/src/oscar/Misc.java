@@ -175,7 +175,7 @@ public static String toUpperLowerCase(String S){
   }
   return sb.toString();
 }
-public static String getShortStr(String s, String dflt, int nLimit){
+public static String getShortStr(java.lang.String s, java.lang.String dflt, int nLimit){
  	if(s==null) s = dflt;
  	int nLength = s.length();
  	if(nLength>nLimit) {

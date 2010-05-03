@@ -61,7 +61,7 @@ public class MyDateFormat {
 		return (hour<12?"am":"pm");
 	}
 //from 2001-01-01 12:00:00 to 2001-01-01
-	public static String getMyStandardDate(String aDate)
+	public static String getMyStandardDate(java.lang.String aDate)
 	{
 		if (aDate == null) return "";
 		if (aDate.indexOf(' ')<0) 
