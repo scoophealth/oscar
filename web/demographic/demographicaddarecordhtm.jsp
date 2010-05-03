@@ -976,7 +976,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				</td>
 			</tr>
 			<tr valign="top">
-				<td align="right"><b><bean:message
+                            <td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formPatientStatus" />:</b></td>
 				<td align="left">
 				<% if (vLocale.getCountry().equals("BR")) { %> <input type="text"
@@ -1012,15 +1012,23 @@ document.forms[1].r_doctor_ohip.value = refNo;
 			<%
     if (vLocale.getCountry().equals("BR")) { %>
 			<tr valign="top">
-				<td align="right"><b></b></td>
-				<td align="left"></td>
+				<td align="right"><b>&nbsp;</b></td>
+				<td align="left">&nbsp;</td>
 				<td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formChartAddress" />:</b></td>
 				<td align="left"><input type="text" name="chart_address"
 					value=""></td>
 			</tr>
-			<%}%>
-			<%
+ <% }
+   if (props.getProperty("clinic_name", "").trim().equalsIgnoreCase("IBD")) { %>
+                         <tr valign="top">
+                             <td align="right"><b>Meditech ID:</b></td>
+                             <td align="left"><input type="text" name="meditech_id" value=""></td>
+                             <td align="right"><b>&nbsp;</b></td>
+                             <td align="left">&nbsp;</td>
+                         </tr>
+<% }
+
         String wLReadonly = ""; 
         WaitingList wL = WaitingList.getInstance();
         if(!wL.getFound()){ 
