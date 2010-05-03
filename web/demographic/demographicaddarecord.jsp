@@ -269,18 +269,19 @@
        dem = apptMainBean.getString(rs,"demographic_no");
        DemographicExt dExt = new DemographicExt();
        String proNo = (String) session.getValue("user");
-       dExt.addKey(proNo,dem,"hPhoneExt",request.getParameter("hPhoneExt"),"");
-       dExt.addKey(proNo,dem,"wPhoneExt",request.getParameter("wPhoneExt"),"");
-       dExt.addKey(proNo,dem,"demo_cell",request.getParameter("cellphone"),"");
-       dExt.addKey(proNo,dem,"cytolNum",request.getParameter("cytolNum"),"");
+       dExt.addKey(proNo, dem, "hPhoneExt", request.getParameter("hPhoneExt"), "");
+       dExt.addKey(proNo, dem, "wPhoneExt", request.getParameter("wPhoneExt"), "");
+       dExt.addKey(proNo, dem, "demo_cell", request.getParameter("cellphone"), "");
+       dExt.addKey(proNo, dem, "cytolNum",  request.getParameter("cytolNum"),  "");
        
-       dExt.addKey(proNo,dem ,"ethnicity"    ,request.getParameter("ethnicity")    ,"");
-       dExt.addKey(proNo,dem ,"area"         ,request.getParameter("area")         ,"");
-       dExt.addKey(proNo,dem ,"statusNum",request.getParameter("statusNum"),"" );
-       dExt.addKey(proNo,dem ,"fNationCom",request.getParameter("fNationCom"),"" );
-       dExt.addKey(proNo,dem ,"given_consent",request.getParameter("given_consent"),"" );
-       
-       
+       dExt.addKey(proNo, dem, "ethnicity",     request.getParameter("ethnicity"),     "");
+       dExt.addKey(proNo, dem, "area",          request.getParameter("area"),          "");
+       dExt.addKey(proNo, dem, "statusNum",     request.getParameter("statusNum"),     "");
+       dExt.addKey(proNo, dem, "fNationCom",    request.getParameter("fNationCom"),    "");
+       dExt.addKey(proNo, dem, "given_consent", request.getParameter("given_consent"), "");
+
+       //for the IBD clinic
+       dExt.addKey(proNo, dem, "meditech_id", request.getParameter("meditech_id"), "");
      
        // customized key
        if(oscarVariables.getProperty("demographicExt") != null) {
@@ -349,13 +350,13 @@
 <h2><bean:message key="demographic.demographicaddarecord.msgSuccessful" /></h2>
     <a href="demographiccontrol.jsp?demographic_no=<%=dem%>&displaymode=edit&dboperation=search_detail"><bean:message key="demographic.demographicaddarecord.goToRecord"/></a>
 
-</p>
+
 <%
   } else {
 %>
 <p>
 <h1><bean:message key="demographic.demographicaddarecord.msgFailed" /></h1>
-</p>
+
 <%
   }
   apptMainBean.closePstmtConn();

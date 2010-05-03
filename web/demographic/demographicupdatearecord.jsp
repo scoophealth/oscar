@@ -205,6 +205,9 @@
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"fNationCom",request.getParameter("fNationCom"),request.getParameter("fNationComOrig") );
 
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"given_consent",request.getParameter("given_consent"),request.getParameter("given_consentOrig") );
+     
+     // for the IBD clinic
+     dExt.addKey(proNo, request.getParameter("demographic_no"), "meditech_id", request.getParameter("meditech_id"), request.getParameter("meditech_idOrig"));
     
      // customized key
      if(oscarVariables.getProperty("demographicExt") != null) {
