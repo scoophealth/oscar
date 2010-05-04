@@ -60,11 +60,12 @@ public class EFormExportZip {
             String directoryName = eForm.getFormName().replaceAll("\\s", "") + "/"; //formName with all spaces removed
             String html = eForm.getFormHtml();
             properties.setProperty("form.htmlFilename", fileName);
-            if (eForm.getFormName() != null && !eForm.getFormName().equals("")) properties.setProperty("form.name", eForm.getFormName());
-            if (eForm.getFormSubject() != null && !eForm.getFormSubject().equals("")) properties.setProperty("form.details", eForm.getFormSubject());
-            if (eForm.getFormCreator() != null && !eForm.getFormCreator().equals("")) properties.setProperty("form.creator", eForm.getFormCreator());
+            if (eForm.getFormName()!=null && !eForm.getFormName().equals("")) properties.setProperty("form.name", eForm.getFormName());
+            if (eForm.getFormSubject()!=null && !eForm.getFormSubject().equals("")) properties.setProperty("form.details", eForm.getFormSubject());
+            if (eForm.getFormCreator()!=null && !eForm.getFormCreator().equals("")) properties.setProperty("form.creator", eForm.getFormCreator());
             else properties.setProperty("form.creator", "Paul");
-            if (eForm.getFormDate() != null && !eForm.getFormDate().equals("")) properties.setProperty("form.date", eForm.getFormDate());
+            if (eForm.getFormDate()!=null && !eForm.getFormDate().equals("")) properties.setProperty("form.date", eForm.getFormDate());
+			if (eForm.getPatientIndependent().equals(true)) properties.setProperty("form.patientIndependent", eForm.getPatientIndependent().toString());
 
             //write properties file
             ZipEntry propertiesZipEntry = new ZipEntry(directoryName + "eform.properties");
@@ -249,6 +250,7 @@ public class EFormExportZip {
         eForm.setFormFileName(properties.getProperty("form.htmlFilename"));
         eForm.setFormCreator(properties.getProperty("form.creator"));
         eForm.setFormDate(properties.getProperty("form.date"));
+		eForm.setPatientIndependent(Boolean.valueOf(properties.getProperty("form.patientIndependent")));
         return eForm;
     }
 
