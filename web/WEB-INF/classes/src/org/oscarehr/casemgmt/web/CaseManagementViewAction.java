@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -88,6 +89,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.pageUtil.RxSessionBean;
+import oscar.util.OscarRoleObjectPrivilege;
 
 /*
  * Updated by Eugene Petruhin on 21 jan 2009 while fixing missing "New Note" link
@@ -1095,15 +1097,43 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
 		Collection notes = null;
+		
 
+		String[] codes = request.getParameterValues("issue_code");
+		
+		String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+	    
+		boolean a = true;		
+		if(codes[0].equalsIgnoreCase("OMeds")) {
+			a = hasPrivilege("_newCasemgmt.otherMeds", roleName);
+	    	if(!a) {
+	    		return mapping.findForward("success"); //The link of Other Meds won't show up on new CME screen.
+	    	}     		
+    	} else if(codes[0].equalsIgnoreCase("RiskFactors")){
+    		a = hasPrivilege("_newCasemgmt.riskFactors", roleName);
+	    	if(!a) {
+	    		return mapping.findForward("success"); //The link of Risk Factors won't show up on new CME screen.
+	    	}
+    	} else if(codes[0].equalsIgnoreCase("FamHistory")){
+    		a = hasPrivilege("_newCasemgmt.familyHistory", roleName);
+	    	if(!a) {
+	    		return mapping.findForward("success"); //The link of Family History won't show up on new CME screen.
+	    	}
+    	} else if(codes[0].equalsIgnoreCase("MedHistory")){
+    		a = hasPrivilege("_newCasemgmt.medicalHistory", roleName);
+	    	if(!a) {
+	    		return mapping.findForward("success"); //The link of Medical History won't show up on new CME screen.
+	    	}
+    	}
+		
+    	
 		// set save url to be used by ajax editor
 		String identUrl = request.getQueryString();
 		request.setAttribute("identUrl", identUrl);
-
+		
 		// filter the notes by the checked issues
 		// UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
-
-		String[] codes = request.getParameterValues("issue_code");
+		
 		List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, codes);
 		StringBuffer checked_issues = new StringBuffer();
                 StringBuffer cppIssues = new StringBuffer();
@@ -1389,4 +1419,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		
 		return view(mapping,form,request,response);
 	}		
+	
+	public boolean hasPrivilege(String objectName, String roleName) {
+		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
+		return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
+	}
 }

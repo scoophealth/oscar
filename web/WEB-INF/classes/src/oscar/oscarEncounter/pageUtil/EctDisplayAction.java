@@ -149,5 +149,5 @@ public class EctDisplayAction extends Action {
     public String getCmd() {
         return new String("");
     }
-        
+    
 }

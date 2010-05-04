@@ -27,6 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import org.apache.struts.util.MessageResources;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
 import oscar.util.DateUtils;
+import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
@@ -44,7 +46,16 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
     private static final String cmd = "measurements";
     
    public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {              
-        String menuId = "3"; //div id for popup menu
+        
+	 boolean a = true;
+     Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.measurements");
+     String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+     a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
+     if(!a) {
+     	return true; //Messurement link won't show up on new CME screen.
+     } else {
+	   
+	   String menuId = "3"; //div id for popup menu
        
         //set text for lefthand module title
         Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.measurements")); 
@@ -132,7 +143,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         }
         Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
         return true;
-        
+     }  
   }
    public String getCmd() {
        return cmd;

@@ -29,6 +29,8 @@ package oscar.oscarEncounter.pageUtil;
 import java.net.URLEncoder;
 import java.sql.ResultSet;
 import java.util.Date;
+import java.util.Properties;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,6 +38,7 @@ import org.apache.struts.util.MessageResources;
 
 import oscar.oscarTickler.TicklerData;
 import oscar.util.DateUtils;
+import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
@@ -44,7 +47,15 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     private static final String cmd = "tickler";
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-                      
+     
+	 boolean a = true;
+ 	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.viewTickler");
+     String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+     a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
+ 	if(!a) {
+ 		return true; //The link of tickler won't show up on new CME screen.
+ 	} else {
+ 	 
  try {         
 
     //Set lefthand module heading and link
@@ -106,7 +117,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
      return false;
  }
     return true;
-        
+ 	}      
   }
  
  public String getCmd() {

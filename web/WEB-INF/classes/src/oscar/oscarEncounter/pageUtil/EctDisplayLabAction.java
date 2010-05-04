@@ -28,6 +28,8 @@ package oscar.oscarEncounter.pageUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Properties;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,6 +38,7 @@ import org.apache.struts.util.MessageResources;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.DateUtils;
+import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
@@ -44,7 +47,8 @@ public class EctDisplayLabAction extends EctDisplayAction {
     private static final String cmd = "labs";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {          
-        CommonLabResultData comLab = new CommonLabResultData();
+     
+	  CommonLabResultData comLab = new CommonLabResultData();
         ArrayList labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
         Collections.sort(labs);               
 
@@ -110,7 +114,7 @@ public class EctDisplayLabAction extends EctDisplayAction {
             Dao.addItem(item);            
         }
 
-        return true;
+        return true;  	
   }
   
   public String getCmd() {
