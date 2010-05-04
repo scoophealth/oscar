@@ -56,12 +56,13 @@ String default_pmm=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
 	default_pmm = (String)session.getAttribute("default_pmm");
-}   
+}  
+
 %>
 
 <table  class="topnav" id="firstTable">
 	<tr>
-		<td>
+		<td valign="bottom">
 			<ul id="navlist">
 				<li>
     				<a href="<html:rewrite page="/provider/providercontrol.jsp"/>?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=0&displaymode=day&dboperation=searchappointmentday" TITLE="<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>"><u>T</u>oday</a>
@@ -134,5 +135,12 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 			<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Home</a> &nbsp;
 			<a href="<html:rewrite page="/logout.jsp"/>">Lo<u>g</u>out</a>
 		</td>
-	</tr>
+	</tr>	
+</table>
+<table width="100%" border="1">
+<tr>
+	<td width="50%"></td>
+	<td width="50%" align="right"><b>Hello &nbsp; <%=userfirstname %> &nbsp;<%=userlastname %></b>
+	</td>
+</tr>
 </table>
