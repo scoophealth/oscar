@@ -1331,6 +1331,28 @@ insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values(
 INSERT INTO `secObjectName` (`objectName`, `description`, `orgapplicable`) VALUES ('_team_schedule_only', 'Restrict schedule to only login provider and his team', '0');
 INSERT INTO `secObjectName` (`objectName`, `description`, `orgapplicable`) VALUES ('_team_billing_only', 'Restrict billing access to only login provider and his team', '0');
 
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.preventions');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.viewTickler');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.DxRegistry');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.forms');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.eForms');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.documents');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.labResult');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.oscarMsg');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.measurements');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.consultations');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.allergies');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.prescriptions');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.otherMeds');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.riskFactors');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.familyHistory');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.decisionSupportAlerts');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.medicalHistory');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.calculators');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.cpp');
+
+
+
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
@@ -1390,6 +1412,26 @@ insert into `secObjPrivilege` values('doctor','_pmm_editProgram.bedCheck','x',0,
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clientStatus','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.serviceRestrictions','x',0,999998);
 
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.preventions','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.viewTickler','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.DxRegistry','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.forms','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.eForms','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.documents','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.labResult','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.oscarMsg','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.measurements','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.consultations','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.allergies','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.prescriptions','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.otherMeds','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.riskFactors','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.familyHistory','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.decisionSupportAlerts','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.medicalHistory','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.calculators','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.cpp','x',0,'999998');
+
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
@@ -1427,6 +1469,26 @@ insert into `secObjPrivilege` values('admin','_pmm_editProgram.serviceRestrictio
 insert into `secObjPrivilege` values('admin','_pmm_editProgram.staff','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_pmm_editProgram.teams','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_pmm.editor','x',0,999998);
+insert into `secObjPrivilege` values('admin','_newCasemgmt.preventions','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.viewTickler','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.DxRegistry','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.forms','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.eForms','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.documents','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.labResult','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.oscarMsg','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.measurements','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.consultations','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.allergies','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.prescriptions','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.otherMeds','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.riskFactors','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.familyHistory','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.decisionSupportAlerts','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.medicalHistory','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.calculators','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.cpp','x',0,'999998');
+
 
 -- for role locum
 insert into `secObjPrivilege` values('locum', '_appointment', 'x', 0, '999998');
