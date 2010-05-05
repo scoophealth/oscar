@@ -15,30 +15,50 @@ public class EformDao extends HibernateDaoSupport {
 		getHibernateTemplate().merge(eformValue);
 	}
 
-        public List<EformData> getEformDatabyDemoNo(Integer demoNo) {
-            String queryStr = "FROM EformData e WHERE e.demographic_no = "+demoNo;
+	public List<EformData> getEformDatabyDemoNo(Integer demoNo) {
+		String queryStr = "FROM EformData e WHERE e.demographic_no = "+demoNo;
 
-            @SuppressWarnings("unchecked")
-            List<EformData> rs = getHibernateTemplate().find(queryStr);
+		@SuppressWarnings("unchecked")
+		List<EformData> rs = getHibernateTemplate().find(queryStr);
 
-            return rs;
-        }
+		return rs;
+	}
 
-        public List<EformValue> getEformValuebyDemoNo(Integer demoNo) {
-            String queryStr = "FROM EformValue e WHERE e.demographic_no = "+demoNo;
+	public List<EformData> getEformDatabyProvider(String providerNo) {
+		String queryStr = "FROM EformData e WHERE e.form_provider = "+providerNo;
 
-            @SuppressWarnings("unchecked")
-            List<EformValue> rs = getHibernateTemplate().find(queryStr);
+		@SuppressWarnings("unchecked")
+		List<EformData> rs = getHibernateTemplate().find(queryStr);
 
-            return rs;
-        }
+		return rs;
+	}
 
-        public List<EformData> getEformDatabyProvider(String providerNo) {
-            String queryStr = "FROM EformData e WHERE e.form_provider = "+providerNo;
+	public EformData getEformData(Integer eformDataId) {
+		EformData efd = null;
+		String queryStr = "FROM EformData e WHERE e.fdid = "+eformDataId;
 
-            @SuppressWarnings("unchecked")
-            List<EformData> rs = getHibernateTemplate().find(queryStr);
+		@SuppressWarnings("unchecked")
+		List<EformData> rs = getHibernateTemplate().find(queryStr);
+		if (rs.size()>0) efd = rs.get(0);
 
-            return rs;
-        }
+		return efd;
+	}
+
+	public List<EformValue> getEformValuebyDemoNo(Integer demoNo) {
+		String queryStr = "FROM EformValue e WHERE e.demographic_no = "+demoNo;
+
+		@SuppressWarnings("unchecked")
+		List<EformValue> rs = getHibernateTemplate().find(queryStr);
+
+		return rs;
+	}
+
+	public List<EformValue> getEformValuebyFdid(Integer eformDataId) {
+		String queryStr = "FROM EformValue e WHERE e.fdid = "+eformDataId;
+
+		@SuppressWarnings("unchecked")
+		List<EformValue> rs = getHibernateTemplate().find(queryStr);
+
+		return rs;
+	}
 }
