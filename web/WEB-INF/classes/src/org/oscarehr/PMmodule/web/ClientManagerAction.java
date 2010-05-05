@@ -112,6 +112,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
@@ -420,6 +421,7 @@ public class ClientManagerAction extends BaseAction {
 				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 				referralWs.makeReferral(remoteReferral);
 			} catch (Exception e) {
+				WebUtils.addErrorMessage(request.getSession(), "Error processing referral : "+e.getMessage());
 				logger.error("Unexpected Error.", e);
 			}
 		}
