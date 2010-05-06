@@ -528,6 +528,7 @@
  <taskdef file="tomcatTasks.properties">
     <classpath>
        <pathelement path="${catalina}/lib/catalina-ant.jar"/>
+       <pathelement path="${catalina}/server/lib/catalina-ant.jar"/>
     </classpath>
  </taskdef>
                                                                                                
