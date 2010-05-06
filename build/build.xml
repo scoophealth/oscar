@@ -8,11 +8,19 @@
   <property file="tomcat.properties" />
   <property name="webapp.name" value="oscar"/>
   
+  <condition  property="tomcat.lib" value="${catalina}/lib">
+      <available file="${catalina}/lib" type="dir"/>
+  </condition>
+  <condition property="tomcat.lib" value="${catalina}/common/lib">
+      <available file="${catalina}/common/lib" type="dir" />
+  </condition>
+  <property name="tomcat.lib.dir" location="${tomcat.lib}"/>
+
   <path id="classpath.path">
    <fileset dir="../web/WEB-INF/lib">
     <include name="*.jar"/>
    </fileset>
-   <fileset dir="${catalina}/lib">
+   <fileset dir="${tomcat.lib.dir}">
     <include name="*.jar"/>
    </fileset>
    <pathelement location="${classes}"/>
@@ -276,7 +284,7 @@
   <propertyfile file="../web/WEB-INF/classes/build.properties">
        <entry key="builddate" type="date" value="now"/>
    	   <entry key="builddate" operation="+" value=", branch : trunk" />
-           <entry key="buildtag" type="string" value="${env.BUILD_TAG}"/>
+           <entry key="buildtag" type="string" value="${env.JOB_NAME}-${env.BUILD_NUMBER}"/>
   </propertyfile>
   
   <war destfile="${build}/oscar.war" webxml="../web/WEB-INF/web.xml"> 
