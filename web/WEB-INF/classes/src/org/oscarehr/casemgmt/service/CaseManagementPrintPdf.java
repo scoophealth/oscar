@@ -146,7 +146,8 @@ public class CaseManagementPrintPdf {
             dummy.add("\n");
             upperYcoord -= phrase.leading();
         }
-        
+
+        dummy.add("\n");
         ct.setSimpleColumn(document.left(), upperYcoord, document.right()/2f, document.top());
         ct.addElement(phrase);
         ct.go();
@@ -169,7 +170,8 @@ public class CaseManagementPrintPdf {
         
         cb.moveTo(document.left(), upperYcoord);
         cb.lineTo(document.right(), upperYcoord);
-        cb.stroke();    
+        cb.stroke();
+        upperYcoord -= phrase.leading();
         
     }
 
