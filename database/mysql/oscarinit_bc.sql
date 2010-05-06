@@ -1,7 +1,7 @@
 -- MySQL dump 9.08
 --
 -- Host: localhost    Database: oscar_cvs_bc
----------------------------------------------------------
+-- -------------------------------------------------------
 -- Server version	4.0.14-standard
 
 
@@ -3035,8 +3035,8 @@ CREATE TABLE `hl7_pid` (
 create index  teleplanS00_t_officeno on teleplanS00 (t_officeno(7));
 create index  billingmaster_billingstatus on billingmaster (billingstatus(1));
 create index  billingmaster_billing_no on billingmaster (billing_no);
---create index  demographic_no on formBCBirthSumMo (demographic_no);
---create index  formCreated on formBCBirthSumMo (formCreated);
+-- create index  demographic_no on formBCBirthSumMo (demographic_no);
+-- create index  formCreated on formBCBirthSumMo (formCreated);
 
 --
 -- Table structure for table `teleplan_adj_codes`
