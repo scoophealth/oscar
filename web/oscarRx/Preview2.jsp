@@ -101,13 +101,15 @@ else {
     System.out.println("bean.getStashSize()="+bean.getStashSize());
 
     for( int idx = 0; idx < bean.getStashSize(); ++idx ) {
-        tmp = bean.getStashItem(idx).getRxDate();System.out.println("in else, tmp="+tmp);
+        tmp = bean.getStashItem(idx).getRxDate();
+        //System.out.println("in else, tmp="+tmp);
         if( tmp.after(rxDate) ) {
             rxDate = tmp;
         }
     }
     rePrint = "";
-    signingProvider = bean.getProviderNo();System.out.println("in else , signingProvider="+signingProvider);
+    signingProvider = bean.getProviderNo();
+    //System.out.println("in else , signingProvider="+signingProvider);
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
     System.out.println("in else, provider no="+provider.getProviderNo());
 }
@@ -187,7 +189,7 @@ System.out.println("==========================done first java part Preview2.jsp=
 				<c:when test="${empty infirmaryView_programAddress}">
 					<%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
 					<%= provider.getClinicAddress() %><br>
-					<%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<%= provider.getClinicCity() %>&nbsp;&nbsp;<%=provider.getClinicProvince()%>&nbsp;&nbsp;
         		    <%= provider.getClinicPostal() %><br>
 		            <bean:message key="RxPreview.msgTel"/>: <%= provider.getClinicPhone() %><br>
                             <oscar:oscarPropertiesCheck property="RXFAX" value="yes">
