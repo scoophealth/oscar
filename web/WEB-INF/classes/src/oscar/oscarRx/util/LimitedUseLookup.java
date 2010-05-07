@@ -34,6 +34,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
@@ -44,6 +46,8 @@ import org.jdom.input.SAXBuilder;
  * @author jay
  */
 public class LimitedUseLookup {
+
+    private static Log log = LogFactory.getLog(LimitedUseLookup.class);
 
     static Hashtable<String, ArrayList> luLookup = new Hashtable();
     static boolean loaded = false;
@@ -76,9 +80,9 @@ public class LimitedUseLookup {
         return "";
     }
     static private void loadLULookupInformation() {
-        System.out.println("current lookup size " + luLookup.size());
+        log.debug("current LU lookup size " + luLookup.size());
         if (!loaded) {
-            String dosing = "oscar/oscarRx/data_extract_20080930.xml";
+            String dosing = "oscar/oscarRx/data_extract_20100422.xml";
             LimitedUseLookup rdf = new LimitedUseLookup();
             InputStream is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
 
