@@ -39,4 +39,10 @@ echo loading icd${ICD}_issue_groups.sql...
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < icd${ICD}_issue_groups.sql
 echo loading measurementMapData.sql...
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < measurementMapData.sql
-echo ... done!
+echo loading expire_oscardoc.sql
+mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < expire_oscardoc.sql
+echo all done!
+echo the default user is oscardoc
+echo password mac2002
+echo pin 1117
+echo For security reasons these credentials are set to expire in a month!
