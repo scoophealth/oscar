@@ -66,7 +66,8 @@ public class ClientReferralDAO extends HibernateDaoSupport {
         return results;
     }
 
-    public List getReferralsByFacility(Long clientId, Integer facilityId) {
+    @SuppressWarnings("unchecked")
+    public List<ClientReferral> getReferralsByFacility(Long clientId, Integer facilityId) {
 
         if (clientId == null || clientId.longValue() <= 0) {
             throw new IllegalArgumentException();
@@ -77,7 +78,7 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
         String sSQL="from ClientReferral cr where cr.ClientId = ? " +
                     " and ( (cr.FacilityId=?) or (cr.ProgramId in (select s.id from Program s where s.facilityId=? or s.facilityId is null)))";
-        List results = this.getHibernateTemplate().find(sSQL, new Object[] { clientId, facilityId, facilityId });
+        List<ClientReferral> results = this.getHibernateTemplate().find(sSQL, new Object[] { clientId, facilityId, facilityId });
 //        		"from ClientReferral cr where cr.ClientId = ?", clientId);
 
         if (log.isDebugEnabled()) {

@@ -93,15 +93,15 @@ public class ClientManager {
         return dao.getMostRecentIntakeCProvider(Integer.valueOf(demographicNo));
     }
 
-    public List getReferrals() {
+    public List<ClientReferral> getReferrals() {
         return referralDAO.getReferrals();
     }
 
-    public List getReferrals(String clientId) {
+    public List<ClientReferral> getReferrals(String clientId) {
         return referralDAO.getReferrals(Long.valueOf(clientId));
     }
 
-    public List getReferralsByFacility(String clientId, Integer facilityId) {
+    public List<ClientReferral> getReferralsByFacility(String clientId, Integer facilityId) {
         return referralDAO.getReferralsByFacility(Long.valueOf(clientId), facilityId);
     }
 
