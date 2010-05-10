@@ -43,6 +43,10 @@
         window.open(url + referralId, 'referral', 'width=500,height=600');
     }
 </script>
+<%
+	try
+	{	
+%>
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
@@ -91,7 +95,7 @@
     <display:column property="programName" sortable="true" title="Program Name" />
     
     <display:column sortable="true" title="">	
-		<% if(bShowEncounterLink) {	
+		<% if(bShowEncounterLink && !admissionForDisplay.isFromIntegrator()) {	
 			HttpSession se = request.getSession();			
 			String programId = String.valueOf(admissionForDisplay.getProgramId());
 			Integer demographic_no = admissionForDisplay.getClientId();
@@ -154,3 +158,10 @@
 	<display:column property="completionNotes" sortable="false" title="Referring program/agency" />
 	<display:column property="notes" sortable="false" title="External" />
 </display:table>
+<%
+	}
+	catch (Exception e)
+	{
+		e.printStackTrace();
+	}
+%>
