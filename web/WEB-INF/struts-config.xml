@@ -652,7 +652,7 @@
         <action input="/oscarRx/EditFavorites.jsp" name="RxUpdateFavoriteForm" path="/oscarRx/updateFavorite" scope="request" type="oscar.oscarRx.pageUtil.RxUpdateFavoriteAction">
             <forward name="success" path="/oscarRx/EditFavorites.jsp" />
         </action>
-        <action input="/oscarRx/EditFavorites2.jsp" name="RxUpdateFavoriteForm" path="/oscarRx/updateFavorite2" scope="request" type="oscar.oscarRx.pageUtil.RxUpdateFavoriteAction">
+        <action input="/oscarRx/EditFavorites2.jsp" name="RxUpdateFavoriteForm" path="/oscarRx/updateFavorite2" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxUpdateFavoriteAction">
             <forward name="success" path="/oscarRx/EditFavorites2.jsp" />
         </action>
         <action input="/oscarRx/EditFavorites2.jsp" name="RxDeleteFavoriteForm" path="/oscarRx/deleteFavorite2" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteFavoriteAction">
