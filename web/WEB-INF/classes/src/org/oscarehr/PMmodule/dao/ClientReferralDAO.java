@@ -37,8 +37,9 @@ public class ClientReferralDAO extends HibernateDaoSupport {
 
     private Log log = LogFactory.getLog(getClass());
 
-    public List getReferrals() {
-        List results = this.getHibernateTemplate().find("from ClientReferral");
+    public List<ClientReferral> getReferrals() {
+        @SuppressWarnings("unchecked")
+    	List<ClientReferral> results = this.getHibernateTemplate().find("from ClientReferral");
 
         if (log.isDebugEnabled()) {
             log.debug("getReferrals: # of results=" + results.size());
@@ -47,13 +48,14 @@ public class ClientReferralDAO extends HibernateDaoSupport {
         return results;
     }
 
-    public List getReferrals(Long clientId) {
+    @SuppressWarnings("unchecked")
+    public List<ClientReferral> getReferrals(Long clientId) {
 
         if (clientId == null || clientId.longValue() <= 0) {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ClientId = ?", clientId);
+        List<ClientReferral> results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ClientId = ?", clientId);
 
         if (log.isDebugEnabled()) {
             log.debug("getReferrals: clientId=" + clientId + ",# of results=" + results.size());
