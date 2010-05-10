@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--
@@ -29,10 +30,14 @@
  * Ontario, Canada
  */
 -->
-
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/rx.js"/>"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/scriptaculous.js"/>"></script>
 <title>Edit Favorites</title>
 <html:base />
 
@@ -88,59 +93,59 @@ int i, j;
 </html:form>
 
 <script language=javascript>
-    function updateRow(rowId){
-        var put = document.forms.RxUpdateFavoriteForm;
+    function ajaxUpdateRow(rowId){
+        //var put = document.forms.RxUpdateFavoriteForm;
         var get = document.forms.DispForm;
-
         var err = false;
-
-        put.favoriteId.value = eval('get.fldFavoriteId' + rowId).value;
-        put.favoriteName.value = eval('get.fldFavoriteName' + rowId).value;
-        put.customName.value = eval('get.fldCustomName' + rowId).value;
-        put.takeMin.value = eval('get.fldTakeMin' + rowId).value;
-        put.takeMax.value = eval('get.fldTakeMax' + rowId).value;
-        put.frequencyCode.value = eval('get.fldFrequencyCode' + rowId).value;
-        put.duration.value = eval('get.fldDuration' + rowId).value;
-        put.durationUnit.value = eval('get.fldDurationUnit' + rowId).value;
-        put.quantity.value = eval('get.fldQuantity' + rowId).value;
-        put.repeat.value = eval('get.fldRepeat' + rowId).value;
-
-        put.nosubs.value = eval('get.fldNosubs' + rowId).checked;
-        put.prn.value = eval('get.fldPrn' + rowId).checked;
-        put.customInstr.value = eval('get.customInstr' + rowId).checked;
-
-        put.special.value = eval('get.fldSpecial' + rowId).value;
-
-        if(put.favoriteName.value==null || put.favoriteName.value.length < 1) {
+        var favoriteId       = eval('get.fldFavoriteId' + rowId).value;
+        var favoriteName     = eval('get.fldFavoriteName' + rowId).value;
+        var customName       = eval('get.fldCustomName' + rowId).value;
+        var takeMin          = eval('get.fldTakeMin' + rowId).value;
+        var takeMax          = eval('get.fldTakeMax' + rowId).value;
+        var frequencyCode    = eval('get.fldFrequencyCode' + rowId).value;
+        var duration         = eval('get.fldDuration' + rowId).value;
+        var durationUnit     = eval('get.fldDurationUnit' + rowId).value;
+        var quantity         = eval('get.fldQuantity' + rowId).value;
+        var repeat           = eval('get.fldRepeat' + rowId).value;
+        var nosubs           = eval('get.fldNosubs' + rowId).checked;
+        var prn              = eval('get.fldPrn' + rowId).checked;
+        var customInstr      = eval('get.customInstr' + rowId).checked;
+        var special          = eval('get.fldSpecial' + rowId).value;
+        if(favoriteName==null || favoriteName.length < 1) {
             alert('Please enter a favorite name.');
             err = true;
         }
-
-        if(put.takeMin.value.length < 1 || isNaN(put.takeMin.value)) {
+        if(takeMin.length < 1 || isNaN(takeMin)) {
             alert('Incorrect entry in field Take Min.');
             err = true;
         }
-        if(put.takeMax.value.length < 1 || isNaN(put.takeMax.value)) {
+        if(takeMax.length < 1 || isNaN(takeMax)) {
             alert('Incorrect entry in field Take Max.');
             err = true;
         }
-        if(put.duration.value.length < 1 || isNaN(put.duration.value)) {
+        if(duration.length < 1 || isNaN(duration)) {
             alert('Incorrect entry in field Duration.');
             err = true;
         }
-        if(put.quantity.value.length < 1) {
+        if(quantity.length < 1) {
             alert('Incorrect entry in field Quantity.');
             err = true;
         }
-        if(put.repeat.value.length < 1 || isNaN(put.repeat.value)) {
+        if(repeat.length < 1 || isNaN(repeat)) {
             alert('Incorrect entry in field Repeat.');
             err = true;
         }
 
         if(err == false) {
-            put.submit();
+            var data="favoriteId="+favoriteId+"&favoriteName="+favoriteName+"&customName="+customName+"&takeMin="+takeMin+"&takeMax="+takeMax+"&frequencyCode="+frequencyCode+
+                "&duration="+duration+"&durationUnit="+durationUnit+"&quantity="+quantity+"&repeat="+repeat+"&nosubs="+nosubs+"&prn="+prn+"&customInstr="+customInstr+"&special="+special;
+            var url="<c:out value="${ctx}"/>" + "/oscarRx/updateFavorite2.do?method=ajaxEditFavorite";
+            new Ajax.Request(url,{method:'post',postBody:data,onSuccess:function(transport){
+                    $("saveSuccess_"+rowId).show();
+        }});
         }
     }
+
 
     function deleteRow(rowId){
         var fId = eval('document.forms.DispForm.fldFavoriteId' + rowId).value;
@@ -223,8 +228,11 @@ int i, j;
 							name="fldFavoriteId<%= i%>" value="<%= f.getFavoriteId() %>" />
 						<input type=text size="50" name="fldFavoriteName<%= i%>"
 							class=tblRow size=80 value="<%= f.getFavoriteName() %>" />&nbsp;&nbsp;&nbsp;
-						</td>
-						<td colspan=5><a href="javascript:updateRow(<%= i%>);">Save
+                                                </td>
+                                                <td>
+                                                    <a id="saveSuccess_<%=i%>" style="display:none;color:red">Changes saved!</a>
+                                                </td>
+						<td colspan=5><a href="javascript:void(0);" onclick="javascript:ajaxUpdateRow(<%= i%>);">Save
 						Changes</a>&nbsp;&nbsp;&nbsp; <a href="javascript:deleteRow(<%= i%>);">Delete
 						Favorite</a></td>
 					</tr>
