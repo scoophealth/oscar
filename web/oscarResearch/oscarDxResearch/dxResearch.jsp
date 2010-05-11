@@ -117,8 +117,19 @@ function openNewPage(vheight,vwidth,varpage) {
   popup.focus();
 }
 
+document.onkeypress = processKey;
+
+function processKey(e) {
+	if (e==null) {
+		e = window.event;
+	} else if (e.keyCode==13) {
+		ResearchScriptAttach();
+	}
+}
+
+
 //-->
-</SCRIPT>
+</script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
@@ -176,10 +187,10 @@ function openNewPage(vheight,vwidth,varpage) {
 							<td>
 							<input type="hidden" name="forward" value="none" /> 
                                <%if(!disable) { %>                             
-                               <input type="button" name="button" class=mbttn
+                               <input type="button" name="codeSearch" class=mbttn
 								value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>"
 								onClick="javascript: ResearchScriptAttach();") > 
-                                                            <input type="button" name="button" class=mbttn
+                                                            <input type="button" name="codeAdd" class=mbttn
 								value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>"
 								onClick="javascript: submitform('','');">
 								<% } else { %>

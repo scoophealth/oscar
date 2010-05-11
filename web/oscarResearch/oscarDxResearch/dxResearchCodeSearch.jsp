@@ -56,38 +56,35 @@ function CodeAttach(File0) {
 }
 
 function CodesAttach() {
-      
-    var nbSearchCodes = document.codeSearchForm.searchCodes.length;
-    var i;
-    var j = 0;
-    //alert("nbSearchCodes: " + nbSearchCodes);
-    for(i=0; i< nbSearchCodes; i++){
-        if(document.codeSearchForm.searchCodes[i].checked == true){
-            //alert("checkbox: " + i + "is checked");
-            if (j==0){
-                self.opener.document.forms[0].xml_research1.value = document.codeSearchForm.searchCodes[i].value;
-                j++;
-            }
-            else if (j==1){
-                self.opener.document.forms[0].xml_research2.value = document.codeSearchForm.searchCodes[i].value;
-                j++;
-            }
-            else if (j==2){
-                self.opener.document.forms[0].xml_research3.value = document.codeSearchForm.searchCodes[i].value;
-                j++;
-            }
-            else if (j==3){
-                self.opener.document.forms[0].xml_research4.value = document.codeSearchForm.searchCodes[i].value;
-                j++;
-            }
-            else if (j==4){
-                self.opener.document.forms[0].xml_research5.value = document.codeSearchForm.searchCodes[i].value;
-                j++;
-            }
-            else
-                break;            
-        }
-    }
+
+    var nbSearchCodes = document.codeSearchForm.searchCodes;
+	if (nbSearchCodes.length==undefined) {
+		if (nbSearchCodes.checked) self.opener.document.forms[0].xml_research1.value = nbSearchCodes.value;
+	} else {
+		var j = 0;
+		for(var i=0; i<nbSearchCodes.length; i++){
+			if (nbSearchCodes[i].checked) {
+				if (j==0) {
+					self.opener.document.forms[0].xml_research1.value = nbSearchCodes[i].value;
+					j++;
+				} else if (j==1) {
+					self.opener.document.forms[0].xml_research2.value = nbSearchCodes[i].value;
+					j++;
+				} else if (j==2) {
+					self.opener.document.forms[0].xml_research3.value = nbSearchCodes[i].value;
+					j++;
+				} else if (j==3) {
+					self.opener.document.forms[0].xml_research4.value = nbSearchCodes[i].value;
+					j++;
+				} else if (j==4) {
+					self.opener.document.forms[0].xml_research5.value = nbSearchCodes[i].value;
+					j++;
+				} else {
+					break;
+				}
+			}
+		}
+	}
     self.close();
 }
 -->
@@ -165,6 +162,6 @@ function CodesAttach() {
 <p></p>
 <p>&nbsp;</p>
 <h3>&nbsp;</h3>
-</body>
 </form>
+</body>
 </html:html>
