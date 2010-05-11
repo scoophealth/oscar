@@ -45,7 +45,15 @@
 	href="#"
         onclick="return showIssueHistory('<c:out value="${param.demographicNo}"/>','<%=request.getAttribute("issueIds")%>');"><bean-el:message key="${param.title}" /></a></h3>
 </div>
-<div style="clear: both; height: 63px; overflow: auto;">
+        
+        <c:choose>
+            <c:when test='${param.title == "oscarEncounter.oMeds.title" || param.title == "oscarEncounter.riskFactors.title" || param.title == "oscarEncounter.famHistory.title"}'>
+                <div style="clear: both; overflow: auto;">
+            </c:when>
+            <c:otherwise>
+                <div style="clear: both; height: 100%; overflow: auto;">
+            </c:otherwise>
+        </c:choose>
 <ul style="margin-left: 5px;">
 <% List<CaseManagementNoteExt> noteExts = (List<CaseManagementNoteExt>)request.getAttribute("NoteExts"); %>
 	<nested:iterate indexId="noteIdx" id="note" name="Notes"
@@ -112,10 +120,11 @@
 		if (key.contains(" Date")) {
 		    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
 		} else {
-		    val = cme.getValue();
+		    val = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(cme.getValue());
 		}
 		if (strcme.length()>0) strcme.append(";");
 		strcme.append(key + ";" + val);
+                System.out.println("Note ID " + noteId + " Added key '" + key + "' val '" + val  + "'");
 	    }
 	}
 	return strcme.toString();
