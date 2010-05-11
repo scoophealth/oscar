@@ -40,7 +40,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 
 
 <%@page contentType="text/html"%>
-<%@page pageEncoding="UTF-8"%>
+<%@page pageEncoding="ISO-8859-1"%> 
 
 <%
 String editDocumentNo = "";

@@ -1,5 +1,5 @@
 <%@page contentType="text/html"%>
-<%@page pageEncoding="UTF-8"%>
+<%@page pageEncoding="ISO-8859-1"%> 
 <%
     String noteStr = (String)request.getAttribute("noteStr");
     Boolean raw = (Boolean)request.getAttribute("raw");

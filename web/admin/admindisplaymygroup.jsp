@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!--  
 /*
  * 

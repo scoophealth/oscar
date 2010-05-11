@@ -1,5 +1,5 @@
 <%@page contentType="text/html"%>
-<%@page pageEncoding="UTF-8"%>
+<%@page pageEncoding="ISO-8859-1"%> 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%--
 The taglib directive below imports the JSTL library. If you uncomment it,

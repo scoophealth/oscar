@@ -25,7 +25,7 @@
 // -----------------------------------------------------------------------------------------------------------------------
 --%>
 <%@page contentType="text/html"%>
-<%@page pageEncoding="UTF-8"%>
+<%@page pageEncoding="ISO-8859-1"%> 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@page import="org.oscarehr.casemgmt.model.*"%>
 <%@page import="java.util.ArrayList"%>

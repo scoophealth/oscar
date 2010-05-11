@@ -92,7 +92,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Service Code Search</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script LANGUAGE="JavaScript">
 <!--
 function CodeAttach(File0,dx1,dx2,dx3) {

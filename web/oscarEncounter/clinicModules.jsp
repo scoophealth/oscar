@@ -1,5 +1,5 @@
 <%@page contentType="text/html"%>
-<%-- <%@page pageEncoding="UTF-8"%> --%>
+<%-- <%@page pageEncoding="ISO-8859-1"%>  --%>
 
 <%@page import="java.net.URLEncoder"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

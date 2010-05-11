@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%><%
+<%@page contentType="text/html" pageEncoding="ISO-8859-1"%> <%
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
   String DONOTBOOK = "Do_Not_Book";

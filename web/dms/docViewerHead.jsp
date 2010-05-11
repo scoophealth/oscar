@@ -30,7 +30,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="dms.docViewerHead.title" /></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
 <body bgcolor="#486ebd" text="#000000" topmargin="0">

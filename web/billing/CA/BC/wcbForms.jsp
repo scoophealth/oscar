@@ -30,7 +30,7 @@
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="ISO-8859-1"%> 
 <%String demographicNo = request.getParameter("demographicNo");
   String wcbid = request.getParameter("wcbid");
   String billingcode = request.getParameter("billingcode");

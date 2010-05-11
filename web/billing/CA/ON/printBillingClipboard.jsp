@@ -62,7 +62,7 @@ function refresh() {
 
 //-->
 </script>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
 <body leftmargin="0" topmargin="5" rightmargin="0">

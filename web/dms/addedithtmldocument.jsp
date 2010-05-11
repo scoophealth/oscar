@@ -39,7 +39,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 	import="java.util.*, oscar.*, oscar.util.*, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderData"%>
 
 <%@page contentType="text/html"%>
-<%@page pageEncoding="UTF-8"%>
+<%@page pageEncoding="ISO-8859-1"%> 
 
 <%
 String mode = "";
