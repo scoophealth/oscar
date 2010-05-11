@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 --%>
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html; charset=ISO-8859-1"%>
 <%@ page language="java"%>
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -68,7 +68,7 @@
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta content="text/html;  charset=UTF-8" http-equiv="Content-Type">
+<meta content="text/html;  charset=ISO-8859-1" http-equiv="Content-Type">
 <title>Rourke2006 Record 1</title>
 <link rel="stylesheet" type="text/css" href="rourkeStyle.css">
 <!-- calendar stylesheet -->

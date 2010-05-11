@@ -14,12 +14,12 @@
 <% ArrayList dnl = new DoctorList().getDoctorNameList();%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page contentType="text/html;charset=windows-1252"%>
+<%@ page contentType="text/html;charset=ISO-8859-1"%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type"
-	content="text/html; charset=windows-1252" />
+	content="text/html; charset=ISO-8859-1" />
 <title>PatientList</title>
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"

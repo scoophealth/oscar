@@ -44,7 +44,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing History</title>
-<meta http-equiv="Content-Type" content="text/html; charset=big5">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <% String billNo = request.getParameter("billing_no");
  ResultSet rslocation = null;  

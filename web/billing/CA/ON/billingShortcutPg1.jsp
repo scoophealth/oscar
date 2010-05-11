@@ -348,7 +348,7 @@
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=ISO-8859-1" />
 <title>HospitalBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 

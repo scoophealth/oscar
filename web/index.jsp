@@ -55,7 +55,7 @@ response.addCookie(admCookie);
     <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
         <html:base/>
-        <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8">
+        <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=ISO-8859-1">
         <title>
             <% if (props.getProperty("logintitle", "").equals("")) { %>
             <bean:message key="loginApplication.title"/>

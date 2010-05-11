@@ -373,7 +373,7 @@
 <%@page import="org.apache.commons.lang.StringUtils"%><html>
 <head>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=ISO-8859-1" />
 <title>HospitalBilling</title>
 <style type="text/css">
 <!--

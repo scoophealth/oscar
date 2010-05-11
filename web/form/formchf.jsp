@@ -37,7 +37,7 @@
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Congestive Heart Failure Record</title>
 
 <style type="text/css" media="print">

@@ -124,7 +124,7 @@ String annotation_attrib = "anno"+now;
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta http-equiv="Cache-Control" content="no-cache">
 <title>Edit Document</title>
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>

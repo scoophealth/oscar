@@ -41,7 +41,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ page import="oscar.oscarLab.ca.all.Hl7textResultsData"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html; charset=ISO-8859-1"%>
 <%
 
 //preliminary JSP code
@@ -70,7 +70,7 @@ String[] docType = {"D","L"};
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta content="text/html;  charset=UTF-8" http-equiv="Content-Type">
+<meta content="text/html;  charset=ISO-8859-1" http-equiv="Content-Type">
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">

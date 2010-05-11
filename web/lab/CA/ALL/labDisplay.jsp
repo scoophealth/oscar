@@ -79,7 +79,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
     <head>
         <html:base/>
         <title><%=handler.getPatientName()+" Lab Results"%></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <script language="javascript" type="text/javascript" src="../../../share/javascript/Oscar.js" ></script>
         <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
         <style type="text/css">
