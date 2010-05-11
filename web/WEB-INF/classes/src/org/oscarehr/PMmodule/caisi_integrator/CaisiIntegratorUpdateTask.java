@@ -98,9 +98,12 @@ import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.OscarAppointment;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
+import org.oscarehr.dx.dao.DxResearchDAO;
+import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -108,9 +111,6 @@ import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import org.oscarehr.common.model.OscarAppointment;
-import org.oscarehr.dx.dao.DxResearchDAO;
-import org.oscarehr.dx.model.DxResearch;
 import oscar.appt.AppointmentDao;
 import oscar.eform.dao.EformDao;
 import oscar.eform.model.EformData;
@@ -502,6 +502,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			BeanUtils.copyProperties(cachedDemographicIssue, caseManagementIssue);
 			cachedDemographicIssue.setIssueDescription(issue.getDescription());
+			cachedDemographicIssue.setIssueRole(IntegratorRoleUtils.getIntegratorRole(issue.getRole()));
 
 			issues.add(cachedDemographicIssue);
 		}
