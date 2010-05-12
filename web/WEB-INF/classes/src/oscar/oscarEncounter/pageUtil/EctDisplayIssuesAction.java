@@ -36,6 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -95,9 +96,40 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 			navBarDisplayDAO.addItem(item);
 		}
 
-		// add integrator issues
+		
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			try {
+				
+		
+				List<CachedDemographicIssue> remoteIssues = CaisiIntegratorManager.getDemographicWs().getLinkedCachedDemographicIssuesByDemographicId(demographicId);
+				
+				for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
+					log.info(cachedDemographicIssue.getIssueDescription());
+					NavBarDisplayDAO.Item item = navBarDisplayDAO.Item();
+
+					String strTitle = StringUtils.maxLenString(cachedDemographicIssue.getIssueDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+					item.setTitle(strTitle);
+					
+					item.setLinkTitle(cachedDemographicIssue.getIssueDescription());
+					
+					// no link for now, will make this work later ... maybe
+					url = "return fasle;";
+					item.setURL(url);
+					
+					navBarDisplayDAO.addItem(item);	
+					
+				}
+			} catch(Exception e ) {
+				log.error("Unexpected error", e);
+			}
+		}
+		
+		
+		// add integrator issues
+		//LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+/*
 		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			try {
 				List<CachedDemographicNote> remoteNotes=CaisiIntegratorManager.getLinkedNotes(demographicId);
@@ -145,7 +177,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
 				log.error("Unexpected error", e);
 			}
 		}
-
+*/
 		return true;
 	}
 
