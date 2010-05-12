@@ -2752,3 +2752,19 @@ CREATE TABLE IntegratorControl (
         execute boolean,
         PRIMARY KEY (id)
 );
+
+
+CREATE TABLE `GroupNoteLink` (
+  `id` int(11) NOT NULL auto_increment,
+  `created` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `noteId` int(10) NOT NULL,
+  `demographicNo` int(10) NOT NULL,
+  `anonymous` tinyint(1) default NULL,
+  `active` tinyint(1) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `noteId` (`noteId`),
+  KEY `demographicNo` (`demographicNo`),
+  KEY `anonymous` (`anonymous`),
+  KEY `active` (`active`)
+);
+
