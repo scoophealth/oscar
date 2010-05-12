@@ -1406,7 +1406,7 @@ public class ClientManagerAction extends BaseAction {
 			addRemoteAdmissions(allResults, demographicId);
 			
 			request.setAttribute("admissionHistory", allResults);
-			request.setAttribute("referralHistory", clientManager.getReferralsByFacility(demographicNo, facilityId));
+			request.setAttribute("referralHistory", getReferralsForHistory(demographicId, facilityId));
 		}
 
 		List<?> currentAdmissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
@@ -1700,7 +1700,7 @@ public class ClientManagerAction extends BaseAction {
 		}		
 	}
 	
-	private List<ReferralSummaryDisplay> getReferralsForSummary(int demographicNo, Integer facilityId) {
+	private List<ReferralSummaryDisplay> getReferralsForSummary(Integer demographicNo, Integer facilityId) {
 		ArrayList<ReferralSummaryDisplay> allResults = new ArrayList<ReferralSummaryDisplay>();
 
 		List<ClientReferral> tempResults = clientManager.getActiveReferrals(String.valueOf(demographicNo), String.valueOf(facilityId));
@@ -1715,6 +1715,30 @@ public class ClientManagerAction extends BaseAction {
 				for (Referral referral : tempRemoteReferrals) allResults.add(new ReferralSummaryDisplay(referral));
 				
 				Collections.sort(allResults, ReferralSummaryDisplay.REFERRAL_DATE_COMPARATOR);
+			}
+			catch (Exception e)
+			{
+				logger.error("Unexpected error.", e);
+			}
+		}
+				
+		return (allResults);
+	}
+
+	private List<ReferralHistoryDisplay> getReferralsForHistory(Integer demographicNo, Integer facilityId) {
+		ArrayList<ReferralHistoryDisplay> allResults = new ArrayList<ReferralHistoryDisplay>();
+
+		for (ClientReferral clientReferral : clientManager.getReferralsByFacility(demographicNo, facilityId)) allResults.add(new ReferralHistoryDisplay(clientReferral));
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+			try {
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
+
+				List<Referral> tempRemoteReferrals = referralWs.getLinkedReferrals(demographicNo);
+				for (Referral referral : tempRemoteReferrals) allResults.add(new ReferralHistoryDisplay(referral));
+				
+				Collections.sort(allResults, ReferralHistoryDisplay.REFERRAL_DATE_COMPARATOR);
 			}
 			catch (Exception e)
 			{

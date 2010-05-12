@@ -101,8 +101,8 @@ public class ClientManager {
         return referralDAO.getReferrals(Long.valueOf(clientId));
     }
 
-    public List<ClientReferral> getReferralsByFacility(String clientId, Integer facilityId) {
-        return referralDAO.getReferralsByFacility(Long.valueOf(clientId), facilityId);
+    public List<ClientReferral> getReferralsByFacility(Integer clientId, Integer facilityId) {
+        return referralDAO.getReferralsByFacility(clientId.longValue(), facilityId);
     }
 
     public List<ClientReferral> getActiveReferrals(String clientId, String sourceFacilityId) {

@@ -143,16 +143,18 @@
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	
     <display:column sortable="false">
-        <a href="javascript:void(0)" title="Referral details" onclick="popupReferralInfo('<c:out value="${referral.id}" />')">
-            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
-        </a>
+    	<c:if test="${!referral.isRemoteReferral}">
+	        <a href="javascript:void(0)" title="Referral details" onclick="popupReferralInfo('<c:out value="${referral.id}" />')">
+	            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
+	        </a>
+        </c:if>
     </display:column>
-	<display:column property="programName" sortable="true" title="Program Name" />
-	<display:column property="programType" sortable="true" title="Program Type" />
-	<display:column property="referralDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Referral Date" />
-	<display:column property="completionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Completion Date" />
-	<display:column property="completionNotes" sortable="false" title="Referring program/agency" />
-	<display:column property="notes" sortable="false" title="External" />
+	<display:column property="destinationProgramName" sortable="true" title="Program Name" />
+	<display:column property="destinationProgramType" sortable="true" title="Program Type" />
+	<display:column property="referralDate" sortable="true" title="Referral Date" />
+	<display:column property="completionDate" sortable="true" title="Completion Date" />
+	<display:column property="sourceProgramName" sortable="false" title="Referring program/agency" />
+	<display:column property="external" sortable="false" title="External" />
 </display:table>
 <%
 	}
