@@ -52,6 +52,7 @@ public class RptDemographicColumnNames {
         hstbl.put("date_joined",new String("Date Joined"));
         hstbl.put("chart_no",new String("Chart #"));
         hstbl.put("provider_no",new String("Provider #"));
+        hstbl.put("provider_name",new String("Provider Name"));
         hstbl.put("sex",new String("Sex"));
         hstbl.put("end_date",new String("End Date"));
         hstbl.put("eff_date",new String("Eff. Date"));
@@ -82,7 +83,7 @@ public class RptDemographicColumnNames {
         backhash.put("Patient Status",new String("patient_status"));
         backhash.put("Date Joined",new String("date_joined"));
         backhash.put("Chart #",new String("chart_no"));
-        backhash.put("Provider #",new String("provider_no"));
+        backhash.put("Provider #",new String("provider_no"));        
         backhash.put("Sex",new String("sex"));
         backhash.put("End Date",new String("end_date"));
         backhash.put("Eff. Date",new String("eff_date"));
