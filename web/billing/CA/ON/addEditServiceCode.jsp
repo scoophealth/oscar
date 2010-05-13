@@ -57,13 +57,20 @@
     if(request.getParameter("action").startsWith("edit")) {
       	// update the service code
 		String serviceCode = request.getParameter("service_code");
+                String billingservice_no = request.getParameter("billingservice_no");
 		if(serviceCode.equals(request.getParameter("action").substring("edit".length()))) {
 			String	sql   = "update billingservice set description='" + StringEscapeUtils.escapeSql(request.getParameter("description")) + "', ";
 			sql += " value='" + valuePara + "', ";
 			sql += " percentage='" + request.getParameter("percentage") + "', ";
 			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "', ";
-            sql += " termination_date='" + request.getParameter("termination_date") + "' ";
-			sql += "where service_code='" + serviceCode + "'";
+                        sql += " termination_date='" + request.getParameter("termination_date") + "' ";
+                        if( billingservice_no == null ) {
+                            sql += " where service_code = '" + serviceCode + "'";
+                        }
+                        else {
+                            sql += " where billingservice_no = " + billingservice_no;
+                        }
+	
 			System.out.println(sql);
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
 				String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
