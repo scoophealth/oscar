@@ -324,6 +324,14 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
             Provider #
             </td>
         </tr>
+        <tr>
+            <td>
+            <html:multibox property="select" value="provider_name"/>
+            </td>
+            <td>
+            Provider Name
+            </td>
+        </tr>
       <tr>
             <td>
             <html:multibox property="select" value="sex"/>
