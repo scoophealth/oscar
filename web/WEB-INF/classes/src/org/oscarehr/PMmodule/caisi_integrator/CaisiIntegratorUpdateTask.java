@@ -77,6 +77,7 @@ import org.oscarehr.caisi_integrator.ws.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProviderTransfer;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
+import org.oscarehr.caisi_integrator.ws.Role;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
@@ -240,7 +241,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushAllDataForOneFacility(Facility facility) throws IOException, IllegalAccessException, InvocationTargetException, ShutdownException {
-		logger.info("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
+		logger.info("Start pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// set working facility
 		LoggedInInfo.loggedInInfo.get().currentFacility=facility;
@@ -276,6 +277,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 		// all things updated successfully
 		service.updateMyFacilityLastUpdateDate(currentUpdateDate);
+
+		logger.info("Finished pushing data for facility : " + facility.getId() + " : " + facility.getName());
 	}
 
 	private void pushFacility(Date lastDataUpdated) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
@@ -367,7 +370,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			List<SecUserRole> roles=secUserRoleDao.getUserRoles(providerId);
 			for (SecUserRole role : roles)
 			{
-				providerTransfer.getRoles().add(role.getRoleName());
+				Role integratorRole=IntegratorRoleUtils.getIntegratorRole(role.getRoleName());
+				if (integratorRole!=null) providerTransfer.getRoles().add(integratorRole);
 			}
 			
 			// add to list

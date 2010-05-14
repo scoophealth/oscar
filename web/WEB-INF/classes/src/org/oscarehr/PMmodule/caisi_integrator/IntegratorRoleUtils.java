@@ -9,17 +9,19 @@ public final class IntegratorRoleUtils {
 	 */
 	public static Role getIntegratorRole(String oscarRole)
 	{
+		if (oscarRole==null) return(null);
+		
 		try
 		{
-			return(Role.valueOf(oscarRole.toUpperCase()));
+			return(Role.valueOf(oscarRole.toUpperCase().replaceAll(" ", "_")));
 		}
 		catch (Exception e)
 		{
 			// just ignore it, we're just testing for direct matches, null and non matches are expected
 		}
-		
-		if ("Clinical Assistant".equals(oscarRole)) return(Role.CLINICAL_ASSISTANT);
-		else if ("Housing Worker".equals(oscarRole)) return(Role.HOUSING_WORKER);
+
+		// we can put special cases where mapping is not simple, like as an example :  
+		// if ("Front Desk Worker".equals(oscarRole)) return(Role.FDW);
 		
 		return(null);
 	}
