@@ -14,7 +14,7 @@
 		along with this program; if not, write to the Free Software *
 		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 		USA. * * * <OSCAR TEAM> * * This software was written for the *
-		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Department of Family Medicine * McMaster University * Hamilton *
 		Ontario, Canada */ CREATE TABLE `country_codes` ( `id` int(10) NOT
 		NULL auto_increment, `country_name` varchar(255) default NULL,
 		`country_id` char(4) default NULL, `c_locale` char(10) default NULL,

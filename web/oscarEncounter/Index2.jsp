@@ -19,7 +19,7 @@
  *
  * This software was written for the
  * Department of Family Medicine
- * McMaster Unviersity
+ * McMaster University
  * Hamilton
  * Ontario, Canada
  */
@@ -324,11 +324,11 @@ if (request.getParameter("casetoEncounter")==null)
         var text = request.responseText;
         text = text.replace(/\\u000A/g, "\u000A");
         text = text.replace(/\\u000D/g, "");
-        text = text.replace(/\\u003E/g, "\u003E");
-        text = text.replace(/\\u003C/g, "\u003C");
-        text = text.replace(/\\u005C/g, "\u005C");
-        text = text.replace(/\\u0022/g, "\u0022");
-        text = text.replace(/\\u0027/g, "\u0027");
+        text = text.replace(/\\u003E/g, ">");
+        text = text.replace(/\\u003C/g, "<");
+        text = text.replace(/\\u005C/g, "\");
+        text = text.replace(/\\u0022/g, """);
+        text = text.replace(/\\u0027/g, "'");
 
         document.encForm.enTextarea.value += "\n\n";
         var curPos = document.encForm.enTextarea.value.length;
@@ -387,11 +387,11 @@ if (request.getParameter("casetoEncounter")==null)
         // var x = window.confirm("<bean:message key="oscarEncounter.Index.insertTemplateConfirm"/>");
         // if(x) {
             document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
-            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003E/g, "\u003E");
-            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003C/g, "\u003C");
-            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u005C/g, "\u005C");
-            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0022/g, "\u0022");
-            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0027/g, "\u0027");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003E/g, ">");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u003C/g, "<");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u005C/g, "\");
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0022/g, """);
+            document.encForm.enTextarea.value = document.encForm.enTextarea.value.replace(/\\u0027/g, "'");
             window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated
             document.encForm.enTextarea.focus();
         // }

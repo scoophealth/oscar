@@ -19,7 +19,7 @@
 *
 * This software was written for the
 * Department of Family Medicine
-* McMaster Unviersity test2
+* McMaster University test2
 * Hamilton
 * Ontario, Canada
 */

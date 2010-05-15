@@ -67,7 +67,7 @@ if (props.getProperty("ar2_age", "").equals("") ) 	props.setProperty("ar2_age", 
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */

@@ -14,7 +14,7 @@
 		along with this program; if not, write to the Free Software *
 		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 		USA. * * * <OSCAR TEAM> * * This software was written for the *
-		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Department of Family Medicine * McMaster University * Hamilton *
 		Ontario, Canada */ private Date referalDate;// date YES private long
 		serviceId;// int(10) YES private long specId;// int(10) YES private
 		Date appointmentDate;// date YES private Date appointmentTime;// time

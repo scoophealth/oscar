@@ -14,7 +14,7 @@
 		along with this program; if not, write to the Free Software *
 		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 		USA. * * * <OSCAR TEAM> * * This software was written for the *
-		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Department of Family Medicine * McMaster University * Hamilton *
 		Ontario, Canada */ create table user_ds_message_prefs( id int(10)
 		primary key auto_increment, resource_type varchar(255), resource_id
 		varchar(255), resource_updated_date date, provider_no varchar(6),

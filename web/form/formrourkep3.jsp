@@ -38,7 +38,7 @@
 
  * Department of Family Medicine
 
- * McMaster Unviersity
+ * McMaster University
 
  * Hamilton
 

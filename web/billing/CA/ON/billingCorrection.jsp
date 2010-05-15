@@ -82,7 +82,7 @@ int curDay = now.get(Calendar.DAY_OF_MONTH);
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */

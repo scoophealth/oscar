@@ -137,7 +137,7 @@ if (props == null || (props.getProperty("pg2_medName1", "").equals("") && props.
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */

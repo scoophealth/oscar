@@ -19,7 +19,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -70,11 +70,11 @@ function write2Parent(text){
 		<script>
             var text = "<bean:write name="templateValue"/>";
             text = text.replace(/\\u000A/g, "\u000A");
-            text = text.replace(/\\u003E/g, "\u003E");
-            text = text.replace(/\\u003C/g, "\u003C");
-            text = text.replace(/\\u005C/g, "\u005C");
-            text = text.replace(/\\u0022/g, "\u0022");
-            text = text.replace(/\\u0027/g, "\u0027");
+            text = text.replace(/\\u003E/g, ">");
+            text = text.replace(/\\u003C/g, "<");
+            text = text.replace(/\\u005C/g, "\");
+            text = text.replace(/\\u0022/g, """);
+            text = text.replace(/\\u0027/g, "'");
             write2Parent(text);
         </script>
 	</tr>

@@ -296,7 +296,6 @@ function tbuttonMouseUp() {
 
 function Select(selectname){
   	var cursel = document.getElementById(selectname).selectedIndex;
-alert(cursel);
   	if (cursel != 0) { // First one is a label
     	var selected = document.getElementById(selectname).options[cursel].value;
     	if (window[cfg_editorname]) { window[cfg_editorname].document.execCommand(selectname, false, selected); } //if browser supports M$ conventions

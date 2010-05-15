@@ -48,7 +48,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
  *
  * This software was written for the
  * Department of Family Medicine
- * McMaster Unviersity
+ * McMaster University
  * Hamilton
  * Ontario, Canada
  */
