@@ -11,14 +11,6 @@ private String getSiteHTML(String scDate, String provider_no, List<Site> sites) 
 	 String _loc = jdbc.getLocationFromSchedule(scDate, provider_no);
 	 return "<span style='background-color:"+ApptUtil.getColorFromLocation(sites, _loc)+"'>"+ApptUtil.getShortNameFromLocation(sites, _loc)+"</span>";	
 }
-private String getCurScheduleMutlisite(String[] cur,int providerNo){
-    boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
-    if(bMultisites){
-        return cur[providerNo];
-    }
-    return "";
-}
-
 %>
 <% if (bMultisites) {
 SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
@@ -1149,7 +1141,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
-          <%= getCurScheduleMutlisite(curScheduleMultisite,nProvider) %>
+          <%=bMultisites?curScheduleMultisite[nProvider]:""%>
       <% } %>
 
           <% if (!userAvail) {%>
@@ -1462,7 +1454,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
-          <%= getCurScheduleMutlisite(curScheduleMultisite,nProvider) %>
+          <%=bMultisites?curScheduleMultisite[nProvider]:""%>
       <% } %>
 
           <% if(!userAvail) { %>
