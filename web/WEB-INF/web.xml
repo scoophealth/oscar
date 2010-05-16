@@ -37,6 +37,17 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext*.xml</param-value>
     </context-param>
+    <!--  filter to set character encoding on each request -->
+    <filter>
+        <filter-name>Set Character Encoding</filter-name>
+        <filter-class>filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>ISO-8859-1</param-value>
+            <param-name>ignore</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </filter>
     <filter>
 	<filter-name>ComponentFilter</filter-name>
 	<filter-class>
