@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%> 
 <%@ page language="java"%>
-<%@ page import="oscar.oscarProvider.data.*, oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
+<%@ page import="oscar.oscarProvider.data.*, oscar.oscarRx.data.*,oscar.oscarRx.data.RxPharmacyData.Pharmacy,oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -172,7 +172,7 @@ String comment = (String) request.getSession().getAttribute("comment");
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../share/javascript/Oscar.js"/>"></script>
-
+<!--test-->
 <script type="text/javascript">
     function resetStash(){
                var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearStash";
@@ -219,14 +219,14 @@ String comment = (String) request.getSession().getAttribute("comment");
             }
 <%       }
       }%>
-            document.getElementById("preview").contentWindow.document.getElementById("preview2Form").action = "../form/createcustomedpdf?__title=Rx&__method=" +
-                method+"&useSC="+useSC+"&scAddress="+scAddress+"&rxPageSize="+rxPageSize;
+              var action="../form/createcustomedpdf?__title=Rx&__method=" +  method+"&useSC="+useSC+"&scAddress="+scAddress+"&rxPageSize="+rxPageSize;
+            document.getElementById("preview").contentWindow.document.getElementById("preview2Form").action = action;
             document.getElementById("preview").contentWindow.document.getElementById("preview2Form").target="_blank";
             document.getElementById("preview").contentWindow.document.getElementById("preview2Form").submit();
        return true;
     }
 
-function setComment(){t
+function setComment(){
     frames['preview'].document.getElementById('additNotes').innerHTML = '<%=comment%>';
 }
 
@@ -296,10 +296,6 @@ function printPaste2Parent(){
 
 function addressSelect() {
    <% if(vecAddressName != null) {
-   //set address to satllite value.
-      // request.setAttribute("useSatelliteClinic", "yes");
-      // request.setAttribute("satelliteClinicAddress", vecAddress);
-
     %>
         setDefaultAddr();
    <%      for(int i=0; i<vecAddressName.size(); i++) {%>
@@ -332,7 +328,7 @@ function addressSelect() {
 		// dx>=0 means patient is enrolled in HSFO program
 		// dx==7 means patient has all 3 symptoms, according to hsfo requirement, stop showing the popup
 %>
-<script>
+<script type="text/javascript" language="javascript">
 function toggleView(form) {
   var dxCode = (form.hsfo_Hypertension.checked?1:0)+(form.hsfo_Diabetes.checked?2:0)+(form.hsfo_Dyslipidemia.checked?4:0);
   // send dx code to HsfoPreview.jsp so that it will be displayed and persisted there
@@ -372,7 +368,7 @@ function toggleView(form) {
 <div id="bodyView" style="display: none">
 <% } else { %>
 <div id="bodyView">
-<% } %> <!-- end of add -->
+<% } %>
 
 
 <table border="0" cellpadding="0" cellspacing="0"
@@ -417,6 +413,48 @@ function toggleView(form) {
                                     window.open("drugInfo.do?GN=" + escape(drug), "_blank",
                                         "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
                                 }
+
+                                 function printPharmacyInfo(){
+                                    $("listPharmacy").show();
+                                }
+                                function hidePharmacyInfo(){
+                                    $("listPharmacy").hide();
+                                }
+                                function printPharmacy(id,name){
+                                    //ajax call to get all info about a pharmacy
+                                    //use json to write to html
+                                    var url="<c:out value="${ctx}"/>"+"/oscarRx/managePharmacy2.do?";
+                                    var data="method=getPharmacyInfo&pharmacyId="+id;
+                                    new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
+                                        var json=transport.responseText.evalJSON();
+                                            oscarLog("json: "+json);
+                                            if(json!=null){
+                                                var text=json.name+"<br>"+json.address+"<br>"+json.city+","+json.province+","
+                                                    +json.postalCode+"<br>Tel:"+json.phone1+","+json.phone2+"<br>Fax:"+json.fax+"<br>Email:"+json.email+"<br>Note:"+json.notes;
+                                                    text+='<br><br><a style="text-align:center;" onclick="parent.reducePreview();" href="javascript:void(0);">Remove Pharmacy Info</a>';
+                                                expandPreview(text);
+                                            }
+                                        }});
+
+                                }
+                                function expandPreview(text){
+                                    oscarLog(text);
+                                    parent.document.getElementById('lightwindow_container').style.width="840px";
+                                    parent.document.getElementById('lightwindow_contents').style.width="820px";
+                                    document.getElementById('preview').style.width="580px";
+                                    frames['preview'].document.getElementById('pharmInfo').innerHTML=text;
+                                    //frames['preview'].document.getElementById('removePharm').show();
+                                    $("selectedPharmacy").innerHTML='<bean:message key="oscarRx.printPharmacyInfo.paperSizeWarning"/>';
+                                    $("listPharmacy").hide();
+                                }
+                                function reducePreview(){
+                                    parent.document.getElementById('lightwindow_container').style.width="680px";
+                                    parent.document.getElementById('lightwindow_contents').style.width="660px";
+                                    document.getElementById('preview').style.width="420px";
+                                    frames['preview'].document.getElementById('pharmInfo').innerHTML="";
+                                    $("selectedPharmacy").innerHTML="";
+                                    oscarLog(document.getElementById("selectedPharmacy").innerHTML);
+                                }
                             </script>
 
 				<table cellpadding=10 cellspacingp=0>
@@ -447,7 +485,7 @@ function toggleView(form) {
                                         <tr>
                                             <!--td width=10px></td-->
                                             <td>Size of Print PDF :
-                                                <select name="printPageSize" id="printPageSize" style="height:20px;font-size:10px">
+                                                <select name="printPageSize" id="printPageSize" style="height:20px;font-size:10px" >
                                                      <%
                                                      String rxPageSize=(String)request.getSession().getAttribute("rxPageSize");
                                                      for(int i=0;i<vecPageSizes.size();i++){
@@ -486,12 +524,23 @@ function toggleView(form) {
 							onClick="javascript:printIframe();" /></span></td>
 					</tr>
 					<tr>
-						<!--td width=10px></td-->
 						<td><span><input type=button
-							<%=reprint.equals("true")?"disabled='true'":""%>" value="<bean:message key="ViewScript.msgPrintPasteEmr"/>"
+							<%=reprint.equals("true")?"disabled='true'":""%> value="<bean:message key="ViewScript.msgPrintPasteEmr"/>"
 							class="ControlPushButton" style="width: 120px"
 							onClick="javascript:printPaste2Parent();" /></span></td>
 					</tr>
+                                        <tr>
+                                            <td><span><input id="selectPharmacyButton" type=button value="<bean:message key='oscarRx.printPharmacyInfo.selectPharmacyButton'/>" class="ControlPushButton" style="width:120px;"
+                                                             onclick="javascript:printPharmacyInfo();"/>
+                                                </span>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a id="selectedPharmacy" style="color:red"></a>
+                                            </td>
+                                        </tr>
 
                                         <%
                                         //System.out.println("reprint in additionalNotes="+request.getSession().getAttribute("rePrint"));
@@ -532,11 +581,6 @@ function toggleView(form) {
 				</table>
 				</td>
 			</tr>
-
-
-
-			<!----End new rows here-->
-
 			<tr height="100%">
 				<td></td>
 			</tr>
@@ -550,11 +594,22 @@ function toggleView(form) {
 	<tr>
 		<td width="100%" height="0%" colspan="2">&nbsp;</td>
 	</tr>
-	<!--tr>
-		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
-			colspan="2"></td>
-	</tr-->
 </table>
+
+<div id="listPharmacy" style="position: absolute; left: 1px; top: 1px; width: 300px; height: 311px; display:none; border:2px outset blue; z-index: 1; background-color: white;">
+    <bean:message key="oscarRx.printPharmacyInfo.selectPharmacyInfo"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="hidePharmacyInfo();" style="text-align:right;text-decoration:none" href="javascript:void(0);">X</a>
+    <br>
+  <%
+  RxPharmacyData pharmacy=new RxPharmacyData();
+  List<Pharmacy> pharmList=pharmacy.getAllPharmacies();
+  for(Pharmacy pharm:pharmList){
+    String name=pharm.name;
+    String id=pharm.ID;
+%>
+<a id="<%=id%>" onclick="printPharmacy('<%=id%>','<%=name%>')" href="javascript:void(0);"><%=name%></a><br/>
+    <%}%>
+
+</div>
 
 </div>
 </body>
