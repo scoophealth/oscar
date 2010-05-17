@@ -234,6 +234,20 @@
                 full.substring(matchindex + snippet.length);
            };
 
+           var highlightMatchInactiveMatchWord = function(full, snippet, matchindex) {
+               oscarLog(full+"--"+snippet+"--"+matchindex);
+                return "<span class=matchInactive>"+full.substring(0, matchindex) +
+                "<span class=match>" +
+                full.substr(matchindex, snippet.length) +
+                "</span>" +
+                full.substring(matchindex + snippet.length)+"</span>";
+           };
+           var highlightMatchInactive = function(full, snippet, matchindex) {
+                oscarLog(full+"--"+snippet+"--"+matchindex);
+                return "<span class=matchInactive>"+full.substring(0, matchindex) +
+                full.substr(matchindex, snippet.length) +
+                full.substring(matchindex + snippet.length)+"</span>";
+           };
            var resultFormatter = function(oResultData, sQuery, sResultMatch) {
                //oscarLog("oResultData, sQuery, sResultMatch="+oResultData+"--"+sQuery+"--"+sResultMatch);
                //oscarLog("oResultData[0]="+oResultData[0]);
@@ -259,13 +273,20 @@
                //oscarLog("oResultData.name="+oResultData.id);
                var query = sQuery.toUpperCase();
                var drugName = oResultData.name;
+               var isInactive=oResultData.isInactive;
+               //oscarLog("isInactive="+isInactive);
 
                var mIndex = drugName.toUpperCase().indexOf(query);
                var display = '';
-
-               if(mIndex > -1){
+               if(mIndex>-1 && (isInactive=='true'||isInactive==true)){ //match and inactive
+                   display=highlightMatchInactiveMatchWord(drugName,query,mIndex);
+               }
+               else if(mIndex > -1 && (isInactive=='false'||isInactive==false || isInactive==undefined || isInactive==null)){ //match and active
                    display = highlightMatch(drugName,query,mIndex);
-               }else{
+               }else if(mIndex<=-1 && (isInactive=='true'||isInactive==true)){//no match and inactive
+                   display=highlightMatchInactive(drugName,query,mIndex);
+               }
+               else{//active and no match
                    display = drugName;
                }
                return  display;
@@ -519,6 +540,9 @@ function checkFav(){
             }
             .match{
                 font-weight:bold;
+            }
+            .matchInactive{
+                background-color: #C0C0C0;
             }
 #myAutoComplete {
     width:25em; /* set width here or else widget will expand to fit its container */
@@ -1216,7 +1240,7 @@ body {
         var url="<c:out value="${ctx}"/>" + "/oscarRx/getInactiveDate.jsp"  ;
          var data="din="+dinNumber+"&id="+id;
          new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                 oscarLog("here");
+                 //oscarLog("here");
                  var json=transport.responseText.evalJSON();
 
                   oscarLog(new Date(json.vec[0].time));
@@ -1451,7 +1475,7 @@ YAHOO.example.FnMultipleFields = function(){
     // Define the schema of the delimited results
     oDS.responseSchema = {
         resultsList : "results",
-        fields : ["name", "id"]
+        fields : ["name", "id","isInactive"]
     };
     // Enable caching
     oDS.maxCacheEntries =0;
@@ -1470,7 +1494,7 @@ YAHOO.example.FnMultipleFields = function(){
     // when an item gets selected and populate the input field
     //var myHiddenField = YAHOO.util.Dom.get("myHidden");
     var myHandler = function(type, args) {
-                    oscarLog("in myhandler--"+type+" :: "+args+"---------------------------------------------------------------------------------------------");
+                    oscarLog(type+" :: "+args);
                     //oscarLog(args[2]);
                     var arr = args[2];
                     //oscarLog('In yahoo----'+arr.name);
@@ -1852,58 +1876,7 @@ function updateQty(element){
              new Ajax.Updater(divId,url,{method:'get',parameters:params,insertion:Insertion.Bottom,asynchronous:true});
          }
 
-/*
-function findUniqueRandomIds(str){
-    var retArr=new Array();
-    var arr1=str.split("&");
-    for(var i=0;i<arr1.length;i++){
-        var str2=arr1[i];
-        var arr2=str2.split("=");
-        var elementId=arr2[0];
-        var arr3=elementId.split("_");
-        var randomId=arr3[1];
-        if(randomId!=null)
-            retArr.push(randomId);
-    }
-    retArr=retArr.uniq();
 
-    return retArr;
-}
-
-function findDataStr(ids){
-    oscarLog("ids="+ids);
-    var retVal='';
-    for(var i=0;i<ids.length;i++){
-       var rand=ids[i];
-       var methodStr="method_"+rand;
-       var routeStr="route_"+rand;
-       var frequencyStr="frequency_"+rand;
-       var minimumStr="minimum_"+rand;
-       var maximumStr="maximum_"+rand;
-       var durationStr="duration_"+rand;
-       var durationUnitStr="durationUnit_"+rand;
-       var quantityStr="quantityStr_"+rand;
-       var unitNameStr="unitName_"+rand;
-       var prnStr="prn_"+rand;
-       var prnVal="prnVal_"+rand;
-       oscarLog("methodStr="+methodStr);
-       retVal+=methodStr+"="+$(methodStr).innerHTML+"&"+
-               routeStr+"="+$(routeStr).innerHTML+"&"+
-               frequencyStr+"="+$(frequencyStr).innerHTML+"&"+
-               minimumStr+"="+$(minimumStr).innerHTML+"&"+
-               maximumStr+"="+$(maximumStr).innerHTML+"&"+
-               durationStr+"="+$(durationStr).innerHTML+"&"+
-               durationUnitStr+"="+$(durationUnitStr).innerHTML+"&"+
-               quantityStr+"="+$(quantityStr).innerHTML+"&"+
-               unitNameStr+"="+$(unitNameStr).innerHTML+"&"+
-               prnStr+"="+$(prnStr).innerHTML+"&"+
-               prnVal+"="+$(prnVal).value;
-           if(i<ids.length-1)
-               retVal+="&";
-    }
-    oscarLog(retVal);
-    return retVal;
-}*/
     function updateSaveAllDrugsPrint(){
         var data=Form.serialize($('drugForm'));
         oscarLog("data="+data);
