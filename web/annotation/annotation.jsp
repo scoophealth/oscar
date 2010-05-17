@@ -135,6 +135,12 @@
         if(special!=null)
             note=special+"\nRx annotation: ";
     }
+    System.out.println("uuid="+uuid);
+    CaseManagementNote lastCmn=null;
+    if(uuid.length()>0){
+        lastCmn=cmm.getMostRecentNote(uuid);
+        //System.out.println("lastCmn="+lastCmn.getCreate_date());
+    }
 %>
 
 
@@ -167,6 +173,16 @@
 	<input type="hidden" name="saved" />
 	<table>
 	    <tr><td colspan="2"><%=display%> Annotation:</td></tr>
+            <%if(lastCmn!=null){%>
+            <tr>
+                <td>
+                Documentation Date: <%=lastCmn.getCreate_date()%><br>
+                </td>
+                <td>
+                Saved by <%=lastCmn.getProviderName()%>
+                </td>
+            </tr>
+            <%}%>
 	    <tr><td colspan="2">
 		    <textarea name="note" rows="10" cols="50"><%=note%></textarea>             
 		</td>
