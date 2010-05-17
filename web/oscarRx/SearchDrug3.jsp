@@ -205,12 +205,6 @@
             function buildRoute() {
 
                 pickRoute = "";
-              <%--  <oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
-                <%for (int i = 0; i < d_route.length; i++) {%>
-                        if (document.forms[2].route<%=i%>.checked) pickRoute += " "+document.forms[2].route<%=i%>.value;
-                <%}%>
-                        document.forms[2].searchRoute.value = pickRoute;
-                </oscar:oscarPropertiesCheck>--%>
             }
 
 
@@ -641,7 +635,6 @@ body {
 
                         <tr><!--put this left-->
                             <td valign="top" align="left">
-                                <%-- div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title" /></div --%>
 
                                 <html:form action="/oscarRx/searchDrug"  onsubmit="return checkEnterSendRx();" style="display: inline; margin-bottom:0;" styleId="drugForm">
                                     <div id="interactingDrugErrorMsg" style="display:none"></div>
@@ -667,15 +660,6 @@ body {
                                                     <!--input id="testEvalJS" type="button"   onclick="functionOne();" value="testEvalJS" /-->
                                                 </div>
                                             </td>
-                                           <%-- <td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
-                                                    <bean:message key="SearchDrug.drugSearchRouteLabel" />
-                                                    <br>
-                                                    <%for (int i = 0; i < d_route.length; i++) {%>
-                                                    <input type="checkbox" name="route" <%=i%> value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
-                                                    <%}%>
-                                                    <html:hidden property="searchRoute" />
-                                                </oscar:oscarPropertiesCheck>
-                                            </td>--%>
                                         </tr>
                                         <tr>
                                             <td colspan="3">
@@ -810,7 +794,7 @@ body {
 
 
 
-<div id="treatmentsMyD" style="position: absolute; left: 1px; top: 1px; width: 800px; height: 600px; visibility: hidden; z-index: 1">
+<div id="treatmentsMyD" style="position: absolute; left: 1px; top: 1px; width: 800px; height: 600px; display:none; z-index: 1">
        <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');" style="text-decoration: none;">X</a>
 </div>
 
@@ -1220,19 +1204,15 @@ body {
          var url="<c:out value="${ctx}"/>" + "/oscarRx/getAllergyData.jsp"  ;
          var data="atcCode="+atcCode+"&id="+id;
          new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                 oscarLog("here");
+                 //oscarLog("here");
                  var json=transport.responseText.evalJSON();
-
-                  oscarLog(json);
-                  oscarLog("here2 -- " +$('alleg_'+json.id));
-
-
-
+                  //oscarLog(json);
+                  //oscarLog("here2 -- " +$('alleg_'+json.id));
                  // var str = "Allergy: "+ json.alleg.DESCRIPTION + " Reaction: "+json.alleg.reaction;
-                 if(json.DESCRIPTION!=null&&json.reaction!=null){
+                 if(json!=null&&json.DESCRIPTION!=null&&json.reaction!=null){
                       var str = "Allergy: "+ json.DESCRIPTION + " Reaction: "+json.reaction;
                       $('alleg_'+json.id).innerHTML = str;
-                      oscarLog("-- "+ $('alleg_'+json.id).innerHTML);
+                      //oscarLog("-- "+ $('alleg_'+json.id).innerHTML);
                  }
             }});
    }
@@ -1243,14 +1223,13 @@ body {
                  //oscarLog("here");
                  var json=transport.responseText.evalJSON();
 
-                  oscarLog(new Date(json.vec[0].time));
-                  oscarLog("here inactive check 2 -- " +$('inactive_'+json.id));
-
-
-
-                  var str = "Inactive Drug Since: "+new Date(json.vec[0].time).toDateString();
-                  $('inactive_'+json.id).innerHTML = str;
-                  oscarLog("-- "+ $('inactive_'+json.id).innerHTML);
+                  //oscarLog(new Date(json.vec[0].time));
+                  //oscarLog("here inactive check 2 -- " +$('inactive_'+json.id));
+                if(json!=null){
+                    var str = "Inactive Drug Since: "+new Date(json.vec[0].time).toDateString();
+                    $('inactive_'+json.id).innerHTML = str;
+                }
+                  //oscarLog("-- "+ $('inactive_'+json.id).innerHTML);
             }});
    }
 
@@ -1398,9 +1377,11 @@ function saveCustomName(element){
             //output default instructions
             var json=transport.responseText.evalJSON();
                 oscarLog("json: "+json.instructions);
+            if(json!=null){
                 $(instruction).value=json.instructions;
                 $(quantity).value=json.quantity;
                 $(repeat).value=json.repeat;
+            }
             }});
 }
 function updateDeleteOnCloseRxBox(){
@@ -1419,9 +1400,9 @@ function popForm2(){
                 if(n>4){
                     h=h+(n-4)*100;
                 }
-                oscarLog("h="+h+"--n="+n);
+                //oscarLog("h="+h+"--n="+n);
                 var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp";
-                oscarLog( "preview2 done");
+                //oscarLog( "preview2 done");
                 myLightWindow.activateWindow({
                     href: url,
                     width: 660,
@@ -1480,7 +1461,7 @@ YAHOO.example.FnMultipleFields = function(){
     // Enable caching
     oDS.maxCacheEntries =0;
     oDS.connXhrMode ="cancelStaleRequests";
-    oscarLog(oDS.responseSchema);
+    //oscarLog(oDS.responseSchema);
     // Instantiate AutoComplete
     var oAC = new YAHOO.widget.AutoComplete("searchString", "autocomplete_choices", oDS);
     oAC.useShadow = true;
@@ -1501,6 +1482,7 @@ YAHOO.example.FnMultipleFields = function(){
                     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                     var ran_number=Math.round(Math.random()*1000000);
                     var name=encodeURIComponent(arr.name);
+                    //oscarLog("after encode="+name);
                     var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr.id+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
                    new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:false,evalScripts:true,
                         insertion: Insertion.Bottom,onSuccess:function(transport){
