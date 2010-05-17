@@ -40,6 +40,8 @@ import org.apache.commons.logging.LogFactory;
 
 import oscar.oscarSurveillance.SurveillanceMaster;
 
+import java.io.File;
+
 /**
  * This ContextListener is used to Initialize classes at startup - Initialize the DBConnection Pool.
  * 
@@ -47,6 +49,7 @@ import oscar.oscarSurveillance.SurveillanceMaster;
  */
 public class Startup implements ServletContextListener {
         private static Log log = LogFactory.getLog(Startup.class);
+        private oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 	public Startup() {}
 
 	public void contextInitialized(ServletContextEvent sc) {
@@ -78,7 +81,7 @@ public class Startup implements ServletContextListener {
 		char sep = System.getProperty("file.separator").toCharArray()[0];
 		propFileName = System.getProperty("user.home") + sep + propName;
         log.info("looking up " + propFileName);
-        oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+        // oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		try {
 			// This has been used to look in the users home directory that started tomcat
 			p.loader(propFileName);
@@ -146,10 +149,41 @@ public class Startup implements ServletContextListener {
 			System.out.println("Property file not found at:");
 			System.out.println(propFileName);
 		}
-		
-		System.out.println("LAST LINE IN contextInitialized");
-                
+
+                // CHECK FOR DEFAULT PROPERTIES
+		String baseDocumentDir = p.getProperty("BASE_DOCUMENT_DIR");
+                if (baseDocumentDir != null) {
+                    log.info("Found Base Document Dir: " + baseDocumentDir);
+                    checkAndSetProperty(baseDocumentDir, contextPath, "HOME_DIR", "/billing/download/");
+                    checkAndSetProperty(baseDocumentDir, contextPath, "DOCUMENT_DIR", "/document/");
+                    checkAndSetProperty(baseDocumentDir, contextPath, "eform_image", "/eform/images/");
+                    checkAndSetProperty(baseDocumentDir, contextPath, "oscarMeasurement_css", "/oscarEncounter/oscarMeasurements/styles/");
+                    checkAndSetProperty(baseDocumentDir, contextPath, "oscarMeasurement_css_upload_path", "/oscarEncounter/oscarMeasurements/styles/");
+                }
+
+		System.out.println("LAST LINE IN contextInitialized");      
 	}
+
+        // Checks for default property with name propName. If the property does not exist,
+        // the property is set with value equal to the base directory, plus /, plus the webapp context
+        // path and any further extensions. If the formed directory does not exist in the system,
+        // it is created.
+        private void checkAndSetProperty(String baseDir, String context, String propName, String endDir) {
+            String propertyDir = p.getProperty(propName);
+            if (propertyDir == null) {
+                if (propName.equals("oscarMeasurement_css")) {
+                    propertyDir = "/OscarDocument/" + context + endDir; // Special prefix for this property (property may be unnecessary)
+                } else propertyDir = baseDir + "/" + context + endDir;
+                log.info("Setting property " + propName + " with value " + propertyDir);
+                // Create directory if it does not exist
+                if (!(new File(propertyDir)).exists()) {
+                    log.info("Directory does not exist:  " + propertyDir);
+                    log.info("Creating...");
+                    boolean success = (new File(propertyDir)).mkdirs();
+                    if (!success) log.info("An error occured when creating " + propertyDir);
+                }
+            }
+        }
 
 	public void contextDestroyed(ServletContextEvent arg0) {}
 
