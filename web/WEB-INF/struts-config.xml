@@ -718,7 +718,7 @@
         <action input="/oscarRx/ManagePharacy.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxManagePharmacyAction">
             <forward name="success" path="/oscarRx/SelectPharmacy.jsp" />
         </action>
-        <action input="/oscarRx/ManagePharacy2.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy2" scope="request" type="oscar.oscarRx.pageUtil.RxManagePharmacyAction">
+        <action input="/oscarRx/ManagePharacy2.jsp" name="RxManagePharmacyForm" path="/oscarRx/managePharmacy2" scope="request" parameter="method" type="oscar.oscarRx.pageUtil.RxManagePharmacyAction">
             <forward name="success" path="/oscarRx/SelectPharmacy2.jsp" />
         </action>
         <action input="/oscarRx/SelectPharacy.jsp" path="/oscarRx/LinkPharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction">
