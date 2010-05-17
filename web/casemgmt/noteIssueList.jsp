@@ -174,7 +174,7 @@
 <table id="setIssueList" style="font-size: 8px;">
 	<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
 		<%
-			String winame = "window" + issueCheckList.getIssue().getIssue().getDescription();
+			String winame = "window" + issueCheckList.getIssueDisplay().getDescription();
 				winame = winame.replaceAll("\\s|\\/|\\*", "_");
 				winame = winame.replaceAll("'", "");
 				winame = StringEscapeUtils.escapeJavaScript(winame);
@@ -185,6 +185,8 @@
 			<%
 				}
 			%>
+
+
 			<td style="width: 50%; font-size: 8px; background-color: #CCCCFF;">
 				<%
 					String submitString = "this.form.method.value='issueChange';";
@@ -192,13 +194,16 @@
 					String id = "noteIssue" + ind;
 					org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
 					String programId = (String)request.getSession().getAttribute("case_program_id");
-					boolean writeAccess = cbb.getIssue().isWriteAccess(Integer.parseInt(programId));
+					boolean writeAccess = cbb.getIssueDisplay().isWriteAccess();
 					boolean disabled = !writeAccess;
 				%> 
+
+
 				<nested:checkbox styleId="<%=id%>" indexed="true" name="issueCheckList" property="checked" disabled="<%=disabled%>"></nested:checkbox> 
 				<a href="#" onclick="return displayIssue('<%=winame%>');">
-					<nested:write name="issueCheckList"	property="issue.issue.description" />
+					<nested:write name="issueCheckList"	property="issueDisplay.description" />
 				</a>
+
 				<nested:equal name="issueCheckList" property="used" value="false">
 					<%
 						String submitDelete = "removeIssue('" + winame + "');document.forms['caseManagementEntryForm'].deleteId.value=" + "'" + ind.intValue() + "';return ajaxUpdateIssues('issueDelete', $('noteIssues').up().id);";
@@ -217,18 +222,21 @@
 
 				<div id="<%=winame%>" style="margin-left: 20px; display: none;">
 					<div>
-						<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.acute" value="true" onchange="<%=submitString%>">acute</nested:radio></div>
-						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.acute" value="false" onchange="<%=submitString%>">chronic</nested:radio></div>
+						<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issueDisplay.acute" value="true" onchange="<%=submitString%>">acute</nested:radio></div>
+						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issueDisplay.acute" value="false" onchange="<%=submitString%>">chronic</nested:radio></div>
 						<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.certain" disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">certain</nested:radio></div>
-						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.certain" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">uncertain</nested:radio></div>
+						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issueDisplay.certain" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">uncertain</nested:radio></div>
 						<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.major" disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">major</nested:radio></div>
-						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.major" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">not major</nested:radio></div>
+						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issueDisplay.major" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">not major</nested:radio></div>
 						<div style="width: 50%; float: left; display: inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="true" onchange="<%=submitString%>">resolved</nested:radio></div>
-						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="false" onchange="<%=submitString%>">unresolved</nested:radio></div>
-						<div style="text-align: center;"><nested:text indexed="true" name="issueCheckList" property="issue.type" size="10" disabled="<%=disabled%>" /></div>
+						<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio indexed="true" name="issueCheckList" property="issueDisplay.resolved" value="false" onchange="<%=submitString%>">unresolved</nested:radio></div>
+						<div style="text-align: center;"><nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" size="10" disabled="<%=disabled%>" /></div>
 					</div>
 				</div>
+								
+
 			</td>
+			
 			<%
 				if (ind % 2 != 0)
 					{
