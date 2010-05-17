@@ -63,8 +63,21 @@ function hideDiv() {
       thisEForm = new EForm(fid, demographic_no);
       thisEForm.setProviderNo(provider_no);  //needs provider for the action
   }
- thisEForm.setImagePath();
- thisEForm.setDatabaseAPs();
- thisEForm.setAction();
- out.print(thisEForm.getFormHtml());
+
+  Hashtable sparam = new Hashtable();
+  if (request.getParameter("curProvider")!=null) {
+	  sparam.put(thisEForm.APPT_PROVIDER_NAME, request.getParameter("curProvider"));
+	  sparam.put(thisEForm.APPT_PROVIDER_ID, request.getParameter("curProvider"));
+	  sparam.put(thisEForm.RESIDENT_TFNOTES, request.getParameter("curProvider"));
+  }
+  if (request.getParameter("appointment")!=null) {
+	  sparam.put(thisEForm.APPT_MC_NO, request.getParameter("appointment"));
+  }
+  sparam.put(thisEForm.PATIENT_TFNOTES, "");
+
+  thisEForm.setImagePath();
+  thisEForm.setDatabaseAPs();
+  thisEForm.setAction();
+  thisEForm.setSpecial(sparam);
+  out.print(thisEForm.getFormHtml());
 %>
