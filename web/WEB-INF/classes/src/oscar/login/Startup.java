@@ -175,6 +175,7 @@ public class Startup implements ServletContextListener {
                     propertyDir = "/OscarDocument/" + context + endDir; // Special prefix for this property (property may be unnecessary)
                 } else propertyDir = baseDir + "/" + context + endDir;
                 log.info("Setting property " + propName + " with value " + propertyDir);
+                p.setProperty(propName, propertyDir);
                 // Create directory if it does not exist
                 if (!(new File(propertyDir)).exists()) {
                     log.info("Directory does not exist:  " + propertyDir);
