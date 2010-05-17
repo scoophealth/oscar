@@ -804,25 +804,27 @@ body {
     <div id="discontinueUI" style="position: absolute;display:none; width:500px;height:200px;background-color:white;padding:20px;border:1px solid grey">
         <h3>Discontinue :<span id="disDrug"></span></h3>
         <input type="hidden" name="disDrugId" id="disDrugId"/>
-        Reason: <select name="disReason" id="disReason">
-            <option value="doseChange">Dose change
-            <option value="adverseReaction">Adverse reaction</option>
-            <option value="allergy">Allergy</option>
-            <option value="ineffectiveTreatment">Ineffective treatment</option>
-            <option value="prescribingError">Prescribing error</option>
-            <option value="noLongerNecessary">No longer necessary</option>
-            <option value="simplifyingTreatment">Simplifying treatment</option>
-            <option value="patientRequest">Patient request</option>
-            <option value="newScientificEvidence">New scientific evidence</option>
-            <option value="increasedRiskBenefitRatio">Increased risk:benefit ratio</option>
-            <option value="discontinuedByAnotherPhysician">Discontinued by another physician</option>
-            <option value="cost">cost</option>
-            <option value="drugInteraction">Drug interaction</option>
+        <bean:message key="oscarRx.discontinuedReason.msgReason"/>
+        <select name="disReason" id="disReason">
+            <option value="doseChange"><bean:message key="oscarRx.discontinuedReason.DoseChange"/></option>
+            <option value="adverseReaction"><bean:message key="oscarRx.discontinuedReason.AdverseReaction"/></option>
+            <option value="allergy"><bean:message key="oscarRx.discontinuedReason.Allergy"/></option>
+            <option value="ineffectiveTreatment"><bean:message key="oscarRx.discontinuedReason.IneffectiveTreatment"/></option>
+            <option value="prescribingError"><bean:message key="oscarRx.discontinuedReason.PrescribingError"/></option>
+            <option value="noLongerNecessary"><bean:message key="oscarRx.discontinuedReason.NoLongerNecessary"/></option>
+            <option value="simplifyingTreatment"><bean:message key="oscarRx.discontinuedReason.SimplifyingTreatment"/></option>
+            <option value="patientRequest"><bean:message key="oscarRx.discontinuedReason.PatientRequest"/></option>
+            <option value="newScientificEvidence"><bean:message key="oscarRx.discontinuedReason.NewScientificEvidence"/></option>
+            <option value="increasedRiskBenefitRatio"><bean:message key="oscarRx.discontinuedReason.IncreasedRiskBenefitRatio"/></option>
+            <option value="discontinuedByAnotherPhysician"><bean:message key="oscarRx.discontinuedReason.DiscontinuedByAnotherPhysician"/></option>
+            <option value="cost"><bean:message key="oscarRx.discontinuedReason.Cost"/></option>
+            <option value="drugInteraction"><bean:message key="oscarRx.discontinuedReason.DrugInteraction"/></option>
+            <option value="other"><bean:message key="oscarRx.discontinuedReason.Other"/></option>
         </select>
 
 
         <br/>
-        Comment:<br/>
+        <bean:message key="oscarRx.discontinuedReason.msgComment"/><br/>
         <textarea id="disComment" rows="3" cols="45"></textarea><br/>
         <input type="button" onclick="$('discontinueUI').hide();" value="Cancel"/>
         <input type="button" onclick="Discontinue2($('disDrugId').value,$('disReason').value,$('disComment').value,$('disDrug').innerHTML);" value="Discontinue"/>
