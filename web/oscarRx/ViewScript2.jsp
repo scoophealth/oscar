@@ -171,6 +171,7 @@ String comment = (String) request.getSession().getAttribute("comment");
 <link rel="stylesheet" type="text/css" href="styles.css" />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../share/javascript/Oscar.js"/>"></script>
 
 <script type="text/javascript">
     function resetStash(){
@@ -271,15 +272,17 @@ function printPaste2Parent(){
          text += preview.document.forms[0].rx_no_newlines.value + "\n";
       }
       //console.log("2");
+      text+=document.getElementById('additionalNotes').value+"\n";
       text += "**********************************************************************************\n";
+      //oscarLog(text);
 
       //we support pasting into orig encounter and new casemanagement
       if( window.parent.opener.document.forms["caseManagementEntryForm"] != undefined ) {
-          //console.log("3");
+          //oscarLog("3");
         window.parent.opener.pasteToEncounterNote(text);
       }
       else if( window.parent.opener.document.encForm != undefined ){
-          //console.log("4");
+          //oscarLog("4");
         window.parent.opener.document.encForm.enTextarea.value = window.parent.opener.document.encForm.enTextarea.value + text;
       }
    }catch (e){
@@ -389,36 +392,11 @@ function toggleView(form) {
 		</td>
 	</tr>
 
-<%--	<tr>
-		<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-		<td width="100%" bgcolor="#000000" class="leftGreyLine" height="0%">
-		<table>
 			<tr>
-				<td><span class="ScreenTitle"> oscarRx </span></td>
-				<td width=10px></td>
-				<td><span style="color: #FFFFFF"> <b> <bean:message key="ViewScript.msgRightClick"/></b> </span></td>
-				<%-- right click on prescription<br>
-				and select "print" from the menu.
-
-			</tr>
-		</table>
-		</td>
-	</tr>  --%>
-	<tr>
-            <%--	<td></td>--%>
-
 		<td width="100%" class="leftGreyLine" height="100%" valign="top">
 		<table style="border-collapse: collapse" bordercolor="#111111"
 			width="100%" height="100%">
 
-			<!----Start new rows here-->
-		<%--	<tr>
-				<td colspan=2>
-				<div class="DivContentPadding"><span class="DivContentTitle"
-					valign="middle"> <bean:message key="ViewScript.title" /> </span></div>
-				</td>
-			</tr>
---%>
 			<tr>
 				<td width=420px>
 				<div class="DivContentPadding"><!-- src modified by vic, hsfo -->
