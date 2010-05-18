@@ -85,7 +85,7 @@ public class EctDisplayRxAction extends EctDisplayAction {
             if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
                 styleColor="style=\"color:orange;font-weight:bold;\"";
             }else if (drug.isCurrent() )  {
-                styleColor="style=\"color:red;\"";
+                styleColor="style=\"color:blue;\"";
             }else
                 continue;
 
