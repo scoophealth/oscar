@@ -1468,7 +1468,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         this.caseManagementMgr.saveNoteSimple(note);
         this.caseManagementMgr.getEditors(note);
-        addNewNoteLink(prevNoteId);
+
+        if( prevNoteId != null ) {
+            addNewNoteLink(prevNoteId);
+        }
 
         try {
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
