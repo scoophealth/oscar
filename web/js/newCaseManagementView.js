@@ -1737,9 +1737,10 @@ function showIssues(e) {
     showIssue = !showIssue;
 
     if( showIssue ) {
+        $("noteIssues").scrollIntoView(false);
         $("issueAutocomplete").focus();
-        scrollEncDown();
-    } else {
+    }
+    else {
         $(caseNote).focus();
     }
 
@@ -2274,12 +2275,12 @@ function autoSave(async) {
                                         okToClose = true;
 				},
                                 onSuccess: function(req) {
-                                                var nId = caseNote.substr(13);
+                                                /*var nId = caseNote.substr(13);
                                                 var sig = "sig" + nId;
 
                                                 if( $("autosaveTime") == null )
                                                     new Insertion.Bottom(sig, "<div id='autosaveTime' class='sig' style='text-align:center; margin:0px;'><\/div>");
-
+                                                    */
                                                 var d = new Date();
                                                 var min = d.getMinutes();
                                                 min = min < 10 ? "0" + min : min;
