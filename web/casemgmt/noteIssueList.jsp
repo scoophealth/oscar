@@ -249,7 +249,7 @@
 	</nested:iterate>
 </table>
 </div>
-
+<div id='autosaveTime' class='sig' style='text-align:center; margin:0px;'></div>
 <script type="text/javascript">   
     
     //check to see if we need to update div containers to most recent note id
