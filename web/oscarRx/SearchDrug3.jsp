@@ -221,26 +221,19 @@
            }
 
            var highlightMatch = function(full, snippet, matchindex) {
-            return full.substring(0, matchindex) +
-                "<span class=match>" +
-                full.substr(matchindex, snippet.length) +
-                "</span>" +
-                full.substring(matchindex + snippet.length);
+                return "<a title='"+full+"'>"+full.substring(0, matchindex) +
+                "<span class=match>" +full.substr(matchindex, snippet.length) + "</span>" + full.substring(matchindex + snippet.length)+"</a>";
            };
 
            var highlightMatchInactiveMatchWord = function(full, snippet, matchindex) {
-               oscarLog(full+"--"+snippet+"--"+matchindex);
-                return "<span class=matchInactive>"+full.substring(0, matchindex) +
-                "<span class=match>" +
-                full.substr(matchindex, snippet.length) +
-                "</span>" +
-                full.substring(matchindex + snippet.length)+"</span>";
+               //oscarLog(full+"--"+snippet+"--"+matchindex);
+                return "<a title='"+full+"'>"+"<span class=matchInactive>"+full.substring(0, matchindex) +
+                "<span class=match>" +full.substr(matchindex, snippet.length) +"</span>" + full.substring(matchindex + snippet.length)+"</span>"+"</a>";
            };
            var highlightMatchInactive = function(full, snippet, matchindex) {
-                oscarLog(full+"--"+snippet+"--"+matchindex);
-                return "<span class=matchInactive>"+full.substring(0, matchindex) +
-                full.substr(matchindex, snippet.length) +
-                full.substring(matchindex + snippet.length)+"</span>";
+                //oscarLog(full+"--"+snippet+"--"+matchindex);
+                return "<a title='"+full+"'>"+"<span class=matchInactive>"+full.substring(0, matchindex) +
+                full.substr(matchindex, snippet.length) +full.substring(matchindex + snippet.length)+"</span>"+"</a>";
            };
            var resultFormatter = function(oResultData, sQuery, sResultMatch) {
                //oscarLog("oResultData, sQuery, sResultMatch="+oResultData+"--"+sQuery+"--"+sResultMatch);
