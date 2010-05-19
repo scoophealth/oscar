@@ -157,10 +157,12 @@ public class Startup implements ServletContextListener {
                     checkAndSetProperty(baseDocumentDir, contextPath, "HOME_DIR", "/billing/download/");
                     checkAndSetProperty(baseDocumentDir, contextPath, "DOCUMENT_DIR", "/document/");
                     checkAndSetProperty(baseDocumentDir, contextPath, "eform_image", "/eform/images/");
-                    checkAndSetProperty(baseDocumentDir, contextPath, "oscarMeasurement_css", "/oscarEncounter/oscarMeasurements/styles/");
+                    // checkAndSetProperty("/OscarDocument", contextPath, "oscarMeasurement_css", "/oscarEncounter/oscarMeasurements/styles/");
                     checkAndSetProperty(baseDocumentDir, contextPath, "oscarMeasurement_css_upload_path", "/oscarEncounter/oscarMeasurements/styles/");
+                    checkAndSetProperty(baseDocumentDir, contextPath, "TMP_DIR", "/export/" );
+                    checkAndSetProperty(baseDocumentDir, contextPath, "form_record_path", "/form/records/");
                 }
-
+                
 		System.out.println("LAST LINE IN contextInitialized");      
 	}
 
@@ -171,9 +173,7 @@ public class Startup implements ServletContextListener {
         private void checkAndSetProperty(String baseDir, String context, String propName, String endDir) {
             String propertyDir = p.getProperty(propName);
             if (propertyDir == null) {
-                if (propName.equals("oscarMeasurement_css")) {
-                    propertyDir = "/OscarDocument/" + context + endDir; // Special prefix for this property (property may be unnecessary)
-                } else propertyDir = baseDir + "/" + context + endDir;
+                propertyDir = baseDir + "/" + context + endDir;
                 log.info("Setting property " + propName + " with value " + propertyDir);
                 p.setProperty(propName, propertyDir);
                 // Create directory if it does not exist
