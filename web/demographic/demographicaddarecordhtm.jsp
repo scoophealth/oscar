@@ -53,6 +53,26 @@
   CountryCodeDAO ccDAO =  (CountryCodeDAO) ctx.getBean("countryCodeDAO");
 
   List<CountryCode> countryList = ccDAO.getAllCountryCodes();
+
+  // Used to retrieve properties from user (i.e. HC_Type & default_sex)
+  UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+
+  String HCType = "";
+  // Determine if curUser has selected a default HC Type
+  UserProperty HCTypeProp = userPropertyDAO.getProp(curUser_no,  UserProperty.HC_TYPE);
+  if (HCTypeProp != null) {
+     HCType = HCTypeProp.getValue();
+  } else {
+     // If there is no user defined property, then determine if the hctype system property is activated
+     HCType = props.getProperty("hctype","");
+     if (HCType == null || HCType.equals("")) {
+           // The system property is not activated, so use the billregion
+           String billregion = props.getProperty("billregion", "");
+           HCType = billregion;
+     }
+  }
+  // Use this value as the default value for province, as well
+  String defaultProvince = HCType;
 %>
 <!--
 /*
@@ -491,87 +511,86 @@ function checkTitleSex() {
 				<% if (vLocale.getCountry().equals("BR")) { %> <input type="text"
 					name="province" value="<%=props.getProperty("billregion", "ON")%>">
 				<% } else { %> <select name="province">
-					<% String billregion = props.getProperty("billregion", ""); %>
 					<option value="OT"
-						<%=billregion.equals("")||billregion.equals("OT")?" selected":""%>>Other</option>
+						<%=defaultProvince.equals("")||defaultProvince.equals("OT")?" selected":""%>>Other</option>
 					<%-- <option value="">None Selected</option> --%>
 					<% if (pNames.isDefined()) {
                    for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                        String province = (String) li.next(); %>
 					<option value="<%=province%>"
-						<%=province.equals(billregion)?" selected":""%>><%=li.next()%></option>
+						<%=province.equals(defaultProvince)?" selected":""%>><%=li.next()%></option>
 					<% } %>
 					<% } else { %>
-					<option value="AB" <%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
-					<option value="BC" <%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
-					<option value="MB" <%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>
-					<option value="NB" <%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-					<option value="NL" <%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-					<option value="NT" <%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
-					<option value="NS" <%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-					<option value="NU" <%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
-					<option value="ON" <%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
-					<option value="PE" <%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-					<option value="QC" <%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
-					<option value="SK" <%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-					<option value="YT" <%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>
-					<option value="US" <%=billregion.equals("US")?" selected":""%>>US resident</option>
-					<option value="US-AK" <%=billregion.equals("US-AK")?" selected":""%>>US-AK-Alaska</option>
-					<option value="US-AL" <%=billregion.equals("US-AL")?" selected":""%>>US-AL-Alabama</option>
-					<option value="US-AR" <%=billregion.equals("US-AR")?" selected":""%>>US-AR-Arkansas</option>
-					<option value="US-AZ" <%=billregion.equals("US-AZ")?" selected":""%>>US-AZ-Arizona</option>
-					<option value="US-CA" <%=billregion.equals("US-CA")?" selected":""%>>US-CA-California</option>
-					<option value="US-CO" <%=billregion.equals("US-CO")?" selected":""%>>US-CO-Colorado</option>
-					<option value="US-CT" <%=billregion.equals("US-CT")?" selected":""%>>US-CT-Connecticut</option>
-					<option value="US-CZ" <%=billregion.equals("US-CZ")?" selected":""%>>US-CZ-Canal Zone</option>
-					<option value="US-DC" <%=billregion.equals("US-DC")?" selected":""%>>US-DC-District Of Columbia</option>
-					<option value="US-DE" <%=billregion.equals("US-DE")?" selected":""%>>US-DE-Delaware</option>
-					<option value="US-FL" <%=billregion.equals("US-FL")?" selected":""%>>US-FL-Florida</option>
-					<option value="US-GA" <%=billregion.equals("US-GA")?" selected":""%>>US-GA-Georgia</option>
-					<option value="US-GU" <%=billregion.equals("US-GU")?" selected":""%>>US-GU-Guam</option>
-					<option value="US-HI" <%=billregion.equals("US-HI")?" selected":""%>>US-HI-Hawaii</option>
-					<option value="US-IA" <%=billregion.equals("US-IA")?" selected":""%>>US-IA-Iowa</option>
-					<option value="US-ID" <%=billregion.equals("US-ID")?" selected":""%>>US-ID-Idaho</option>
-					<option value="US-IL" <%=billregion.equals("US-IL")?" selected":""%>>US-IL-Illinois</option>
-					<option value="US-IN" <%=billregion.equals("US-IN")?" selected":""%>>US-IN-Indiana</option>
-					<option value="US-KS" <%=billregion.equals("US-KS")?" selected":""%>>US-KS-Kansas</option>
-					<option value="US-KY" <%=billregion.equals("US-KY")?" selected":""%>>US-KY-Kentucky</option>
-					<option value="US-LA" <%=billregion.equals("US-LA")?" selected":""%>>US-LA-Louisiana</option>
-					<option value="US-MA" <%=billregion.equals("US-MA")?" selected":""%>>US-MA-Massachusetts</option>
-					<option value="US-MD" <%=billregion.equals("US-MD")?" selected":""%>>US-MD-Maryland</option>
-					<option value="US-ME" <%=billregion.equals("US-ME")?" selected":""%>>US-ME-Maine</option>
-					<option value="US-MI" <%=billregion.equals("US-MI")?" selected":""%>>US-MI-Michigan</option>
-					<option value="US-MN" <%=billregion.equals("US-MN")?" selected":""%>>US-MN-Minnesota</option>
-					<option value="US-MO" <%=billregion.equals("US-MO")?" selected":""%>>US-MO-Missouri</option>
-					<option value="US-MS" <%=billregion.equals("US-MS")?" selected":""%>>US-MS-Mississippi</option>
-					<option value="US-MT" <%=billregion.equals("US-MT")?" selected":""%>>US-MT-Montana</option>
-					<option value="US-NC" <%=billregion.equals("US-NC")?" selected":""%>>US-NC-North Carolina</option>
-					<option value="US-ND" <%=billregion.equals("US-ND")?" selected":""%>>US-ND-North Dakota</option>
-					<option value="US-NE" <%=billregion.equals("US-NE")?" selected":""%>>US-NE-Nebraska</option>
-					<option value="US-NH" <%=billregion.equals("US-NH")?" selected":""%>>US-NH-New Hampshire</option>
-					<option value="US-NJ" <%=billregion.equals("US-NJ")?" selected":""%>>US-NJ-New Jersey</option>
-					<option value="US-NM" <%=billregion.equals("US-NM")?" selected":""%>>US-NM-New Mexico</option>
-					<option value="US-NU" <%=billregion.equals("US-NU")?" selected":""%>>US-NU-Nunavut</option>
-					<option value="US-NV" <%=billregion.equals("US-NV")?" selected":""%>>US-NV-Nevada</option>
-					<option value="US-NY" <%=billregion.equals("US-NY")?" selected":""%>>US-NY-New York</option>
-					<option value="US-OH" <%=billregion.equals("US-OH")?" selected":""%>>US-OH-Ohio</option>
-					<option value="US-OK" <%=billregion.equals("US-OK")?" selected":""%>>US-OK-Oklahoma</option>
-					<option value="US-OR" <%=billregion.equals("US-OR")?" selected":""%>>US-OR-Oregon</option>
-					<option value="US-PA" <%=billregion.equals("US-PA")?" selected":""%>>US-PA-Pennsylvania</option>
-					<option value="US-PR" <%=billregion.equals("US-PR")?" selected":""%>>US-PR-Puerto Rico</option>
-					<option value="US-RI" <%=billregion.equals("US-RI")?" selected":""%>>US-RI-Rhode Island</option>
-					<option value="US-SC" <%=billregion.equals("US-SC")?" selected":""%>>US-SC-South Carolina</option>
-					<option value="US-SD" <%=billregion.equals("US-SD")?" selected":""%>>US-SD-South Dakota</option>
-					<option value="US-TN" <%=billregion.equals("US-TN")?" selected":""%>>US-TN-Tennessee</option>
-					<option value="US-TX" <%=billregion.equals("US-TX")?" selected":""%>>US-TX-Texas</option>
-					<option value="US-UT" <%=billregion.equals("US-UT")?" selected":""%>>US-UT-Utah</option>
-					<option value="US-VA" <%=billregion.equals("US-VA")?" selected":""%>>US-VA-Virginia</option>
-					<option value="US-VI" <%=billregion.equals("US-VI")?" selected":""%>>US-VI-Virgin Islands</option>
-					<option value="US-VT" <%=billregion.equals("US-VT")?" selected":""%>>US-VT-Vermont</option>
-					<option value="US-WA" <%=billregion.equals("US-WA")?" selected":""%>>US-WA-Washington</option>
-					<option value="US-WI" <%=billregion.equals("US-WI")?" selected":""%>>US-WI-Wisconsin</option>
-					<option value="US-WV" <%=billregion.equals("US-WV")?" selected":""%>>US-WV-West Virginia</option>
-					<option value="US-WY" <%=billregion.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
+					<option value="AB" <%=defaultProvince.equals("AB")?" selected":""%>>AB-Alberta</option>
+					<option value="BC" <%=defaultProvince.equals("BC")?" selected":""%>>BC-British Columbia</option>
+					<option value="MB" <%=defaultProvince.equals("MB")?" selected":""%>>MB-Manitoba</option>
+					<option value="NB" <%=defaultProvince.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+					<option value="NL" <%=defaultProvince.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+					<option value="NT" <%=defaultProvince.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
+					<option value="NS" <%=defaultProvince.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+					<option value="NU" <%=defaultProvince.equals("NU")?" selected":""%>>NU-Nunavut</option>
+					<option value="ON" <%=defaultProvince.equals("ON")?" selected":""%>>ON-Ontario</option>
+					<option value="PE" <%=defaultProvince.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+					<option value="QC" <%=defaultProvince.equals("QC")?" selected":""%>>QC-Quebec</option>
+					<option value="SK" <%=defaultProvince.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+					<option value="YT" <%=defaultProvince.equals("YT")?" selected":""%>>YT-Yukon</option>
+					<option value="US" <%=defaultProvince.equals("US")?" selected":""%>>US resident</option>
+					<option value="US-AK" <%=defaultProvince.equals("US-AK")?" selected":""%>>US-AK-Alaska</option>
+					<option value="US-AL" <%=defaultProvince.equals("US-AL")?" selected":""%>>US-AL-Alabama</option>
+					<option value="US-AR" <%=defaultProvince.equals("US-AR")?" selected":""%>>US-AR-Arkansas</option>
+					<option value="US-AZ" <%=defaultProvince.equals("US-AZ")?" selected":""%>>US-AZ-Arizona</option>
+					<option value="US-CA" <%=defaultProvince.equals("US-CA")?" selected":""%>>US-CA-California</option>
+					<option value="US-CO" <%=defaultProvince.equals("US-CO")?" selected":""%>>US-CO-Colorado</option>
+					<option value="US-CT" <%=defaultProvince.equals("US-CT")?" selected":""%>>US-CT-Connecticut</option>
+					<option value="US-CZ" <%=defaultProvince.equals("US-CZ")?" selected":""%>>US-CZ-Canal Zone</option>
+					<option value="US-DC" <%=defaultProvince.equals("US-DC")?" selected":""%>>US-DC-District Of Columbia</option>
+					<option value="US-DE" <%=defaultProvince.equals("US-DE")?" selected":""%>>US-DE-Delaware</option>
+					<option value="US-FL" <%=defaultProvince.equals("US-FL")?" selected":""%>>US-FL-Florida</option>
+					<option value="US-GA" <%=defaultProvince.equals("US-GA")?" selected":""%>>US-GA-Georgia</option>
+					<option value="US-GU" <%=defaultProvince.equals("US-GU")?" selected":""%>>US-GU-Guam</option>
+					<option value="US-HI" <%=defaultProvince.equals("US-HI")?" selected":""%>>US-HI-Hawaii</option>
+					<option value="US-IA" <%=defaultProvince.equals("US-IA")?" selected":""%>>US-IA-Iowa</option>
+					<option value="US-ID" <%=defaultProvince.equals("US-ID")?" selected":""%>>US-ID-Idaho</option>
+					<option value="US-IL" <%=defaultProvince.equals("US-IL")?" selected":""%>>US-IL-Illinois</option>
+					<option value="US-IN" <%=defaultProvince.equals("US-IN")?" selected":""%>>US-IN-Indiana</option>
+					<option value="US-KS" <%=defaultProvince.equals("US-KS")?" selected":""%>>US-KS-Kansas</option>
+					<option value="US-KY" <%=defaultProvince.equals("US-KY")?" selected":""%>>US-KY-Kentucky</option>
+					<option value="US-LA" <%=defaultProvince.equals("US-LA")?" selected":""%>>US-LA-Louisiana</option>
+					<option value="US-MA" <%=defaultProvince.equals("US-MA")?" selected":""%>>US-MA-Massachusetts</option>
+					<option value="US-MD" <%=defaultProvince.equals("US-MD")?" selected":""%>>US-MD-Maryland</option>
+					<option value="US-ME" <%=defaultProvince.equals("US-ME")?" selected":""%>>US-ME-Maine</option>
+					<option value="US-MI" <%=defaultProvince.equals("US-MI")?" selected":""%>>US-MI-Michigan</option>
+					<option value="US-MN" <%=defaultProvince.equals("US-MN")?" selected":""%>>US-MN-Minnesota</option>
+					<option value="US-MO" <%=defaultProvince.equals("US-MO")?" selected":""%>>US-MO-Missouri</option>
+					<option value="US-MS" <%=defaultProvince.equals("US-MS")?" selected":""%>>US-MS-Mississippi</option>
+					<option value="US-MT" <%=defaultProvince.equals("US-MT")?" selected":""%>>US-MT-Montana</option>
+					<option value="US-NC" <%=defaultProvince.equals("US-NC")?" selected":""%>>US-NC-North Carolina</option>
+					<option value="US-ND" <%=defaultProvince.equals("US-ND")?" selected":""%>>US-ND-North Dakota</option>
+					<option value="US-NE" <%=defaultProvince.equals("US-NE")?" selected":""%>>US-NE-Nebraska</option>
+					<option value="US-NH" <%=defaultProvince.equals("US-NH")?" selected":""%>>US-NH-New Hampshire</option>
+					<option value="US-NJ" <%=defaultProvince.equals("US-NJ")?" selected":""%>>US-NJ-New Jersey</option>
+					<option value="US-NM" <%=defaultProvince.equals("US-NM")?" selected":""%>>US-NM-New Mexico</option>
+					<option value="US-NU" <%=defaultProvince.equals("US-NU")?" selected":""%>>US-NU-Nunavut</option>
+					<option value="US-NV" <%=defaultProvince.equals("US-NV")?" selected":""%>>US-NV-Nevada</option>
+					<option value="US-NY" <%=defaultProvince.equals("US-NY")?" selected":""%>>US-NY-New York</option>
+					<option value="US-OH" <%=defaultProvince.equals("US-OH")?" selected":""%>>US-OH-Ohio</option>
+					<option value="US-OK" <%=defaultProvince.equals("US-OK")?" selected":""%>>US-OK-Oklahoma</option>
+					<option value="US-OR" <%=defaultProvince.equals("US-OR")?" selected":""%>>US-OR-Oregon</option>
+					<option value="US-PA" <%=defaultProvince.equals("US-PA")?" selected":""%>>US-PA-Pennsylvania</option>
+					<option value="US-PR" <%=defaultProvince.equals("US-PR")?" selected":""%>>US-PR-Puerto Rico</option>
+					<option value="US-RI" <%=defaultProvince.equals("US-RI")?" selected":""%>>US-RI-Rhode Island</option>
+					<option value="US-SC" <%=defaultProvince.equals("US-SC")?" selected":""%>>US-SC-South Carolina</option>
+					<option value="US-SD" <%=defaultProvince.equals("US-SD")?" selected":""%>>US-SD-South Dakota</option>
+					<option value="US-TN" <%=defaultProvince.equals("US-TN")?" selected":""%>>US-TN-Tennessee</option>
+					<option value="US-TX" <%=defaultProvince.equals("US-TX")?" selected":""%>>US-TX-Texas</option>
+					<option value="US-UT" <%=defaultProvince.equals("US-UT")?" selected":""%>>US-UT-Utah</option>
+					<option value="US-VA" <%=defaultProvince.equals("US-VA")?" selected":""%>>US-VA-Virginia</option>
+					<option value="US-VI" <%=defaultProvince.equals("US-VI")?" selected":""%>>US-VI-Virgin Islands</option>
+					<option value="US-VT" <%=defaultProvince.equals("US-VT")?" selected":""%>>US-VT-Vermont</option>
+					<option value="US-WA" <%=defaultProvince.equals("US-WA")?" selected":""%>>US-WA-Washington</option>
+					<option value="US-WI" <%=defaultProvince.equals("US-WI")?" selected":""%>>US-WI-Wisconsin</option>
+					<option value="US-WV" <%=defaultProvince.equals("US-WV")?" selected":""%>>US-WV-West Virginia</option>
+					<option value="US-WY" <%=defaultProvince.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
 					<% } %>
 				</select> <% } %>
 				</td>
@@ -695,11 +714,22 @@ function checkTitleSex() {
 				<td align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formSex" /><font
 					color="red">:</font></b></td>
+
+                                <% // Determine if curUser has selected a default sex in preferences
+                                   UserProperty sexProp = userPropertyDAO.getProp(curUser_no,  UserProperty.DEFAULT_SEX);
+                                   String sex = "";
+                                   if (sexProp != null) {
+                                       sex = sexProp.getValue();
+                                   } else {
+                                       // Access defaultsex system property
+                                       sex = props.getProperty("defaultsex","");
+                                   }
+                                %>
 				<td align="left"><select name="sex">
-					<option value="F" selected><bean:message
-						key="demographic.demographicaddrecordhtm.formF" /></option>
-					<option value="M"><bean:message
+					<option value="M"  <%= sex.equals("M") ? " selected": "" %>><bean:message
 						key="demographic.demographicaddrecordhtm.formM" /></option>
+					<option value="F"  <%= sex.equals("F") ? " selected": "" %>><bean:message
+						key="demographic.demographicaddrecordhtm.formF" /></option>
 				</select></td>
 			</tr>
 			<tr valign="top">
@@ -722,86 +752,86 @@ function checkTitleSex() {
 					key="demographic.demographicaddrecordhtm.formHCType" />: </b></td>
 				<td>
 				<% if(vLocale.getCountry().equals("BR")) { %> <input type="text"
-					name="hc_type" value=""> <% } else {%> <% String billregion = props.getProperty("billregion", ""); %>
+					name="hc_type" value=""> <% } else { %>
 				<select name="hc_type">
 					<option value="OT"
-						<%=billregion.equals("")||billregion.equals("OT")?" selected":""%>>Other</option>
+						<%=HCType.equals("")||HCType.equals("OT")?" selected":""%>>Other</option>
 					<% if (pNames.isDefined()) {
                    for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                        String province = (String) li.next(); %>
-                       <option value="<%=province%>"<%=province.equals(billregion)?" selected":""%>><%=li.next()%></option>
+                       <option value="<%=province%>"<%=province.equals(HCType)?" selected":""%>><%=li.next()%></option>
                    <% } %>
             <% } else { %>
-		<option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
-		<option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
-		<option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>
-		<option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-		<option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-		<option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
-		<option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-		<option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
-		<option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
-		<option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-		<option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
-		<option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-		<option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>
-		<option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option>
-		<option value="US-AK" <%=billregion.equals("US-AK")?" selected":""%>>US-AK-Alaska</option>
-		<option value="US-AL" <%=billregion.equals("US-AL")?" selected":""%>>US-AL-Alabama</option>
-		<option value="US-AR" <%=billregion.equals("US-AR")?" selected":""%>>US-AR-Arkansas</option>
-		<option value="US-AZ" <%=billregion.equals("US-AZ")?" selected":""%>>US-AZ-Arizona</option>
-		<option value="US-CA" <%=billregion.equals("US-CA")?" selected":""%>>US-CA-California</option>
-		<option value="US-CO" <%=billregion.equals("US-CO")?" selected":""%>>US-CO-Colorado</option>
-		<option value="US-CT" <%=billregion.equals("US-CT")?" selected":""%>>US-CT-Connecticut</option>
-		<option value="US-CZ" <%=billregion.equals("US-CZ")?" selected":""%>>US-CZ-Canal Zone</option>
-		<option value="US-DC" <%=billregion.equals("US-DC")?" selected":""%>>US-DC-District Of Columbia</option>
-		<option value="US-DE" <%=billregion.equals("US-DE")?" selected":""%>>US-DE-Delaware</option>
-		<option value="US-FL" <%=billregion.equals("US-FL")?" selected":""%>>US-FL-Florida</option>
-		<option value="US-GA" <%=billregion.equals("US-GA")?" selected":""%>>US-GA-Georgia</option>
-		<option value="US-GU" <%=billregion.equals("US-GU")?" selected":""%>>US-GU-Guam</option>
-		<option value="US-HI" <%=billregion.equals("US-HI")?" selected":""%>>US-HI-Hawaii</option>
-		<option value="US-IA" <%=billregion.equals("US-IA")?" selected":""%>>US-IA-Iowa</option>
-		<option value="US-ID" <%=billregion.equals("US-ID")?" selected":""%>>US-ID-Idaho</option>
-		<option value="US-IL" <%=billregion.equals("US-IL")?" selected":""%>>US-IL-Illinois</option>
-		<option value="US-IN" <%=billregion.equals("US-IN")?" selected":""%>>US-IN-Indiana</option>
-		<option value="US-KS" <%=billregion.equals("US-KS")?" selected":""%>>US-KS-Kansas</option>
-		<option value="US-KY" <%=billregion.equals("US-KY")?" selected":""%>>US-KY-Kentucky</option>
-		<option value="US-LA" <%=billregion.equals("US-LA")?" selected":""%>>US-LA-Louisiana</option>
-		<option value="US-MA" <%=billregion.equals("US-MA")?" selected":""%>>US-MA-Massachusetts</option>
-		<option value="US-MD" <%=billregion.equals("US-MD")?" selected":""%>>US-MD-Maryland</option>
-		<option value="US-ME" <%=billregion.equals("US-ME")?" selected":""%>>US-ME-Maine</option>
-		<option value="US-MI" <%=billregion.equals("US-MI")?" selected":""%>>US-MI-Michigan</option>
-		<option value="US-MN" <%=billregion.equals("US-MN")?" selected":""%>>US-MN-Minnesota</option>
-		<option value="US-MO" <%=billregion.equals("US-MO")?" selected":""%>>US-MO-Missouri</option>
-		<option value="US-MS" <%=billregion.equals("US-MS")?" selected":""%>>US-MS-Mississippi</option>
-		<option value="US-MT" <%=billregion.equals("US-MT")?" selected":""%>>US-MT-Montana</option>
-		<option value="US-NC" <%=billregion.equals("US-NC")?" selected":""%>>US-NC-North Carolina</option>
-		<option value="US-ND" <%=billregion.equals("US-ND")?" selected":""%>>US-ND-North Dakota</option>
-		<option value="US-NE" <%=billregion.equals("US-NE")?" selected":""%>>US-NE-Nebraska</option>
-		<option value="US-NH" <%=billregion.equals("US-NH")?" selected":""%>>US-NH-New Hampshire</option>
-		<option value="US-NJ" <%=billregion.equals("US-NJ")?" selected":""%>>US-NJ-New Jersey</option>
-		<option value="US-NM" <%=billregion.equals("US-NM")?" selected":""%>>US-NM-New Mexico</option>
-		<option value="US-NU" <%=billregion.equals("US-NU")?" selected":""%>>US-NU-Nunavut</option>
-		<option value="US-NV" <%=billregion.equals("US-NV")?" selected":""%>>US-NV-Nevada</option>
-		<option value="US-NY" <%=billregion.equals("US-NY")?" selected":""%>>US-NY-New York</option>
-		<option value="US-OH" <%=billregion.equals("US-OH")?" selected":""%>>US-OH-Ohio</option>
-		<option value="US-OK" <%=billregion.equals("US-OK")?" selected":""%>>US-OK-Oklahoma</option>
-		<option value="US-OR" <%=billregion.equals("US-OR")?" selected":""%>>US-OR-Oregon</option>
-		<option value="US-PA" <%=billregion.equals("US-PA")?" selected":""%>>US-PA-Pennsylvania</option>
-		<option value="US-PR" <%=billregion.equals("US-PR")?" selected":""%>>US-PR-Puerto Rico</option>
-		<option value="US-RI" <%=billregion.equals("US-RI")?" selected":""%>>US-RI-Rhode Island</option>
-		<option value="US-SC" <%=billregion.equals("US-SC")?" selected":""%>>US-SC-South Carolina</option>
-		<option value="US-SD" <%=billregion.equals("US-SD")?" selected":""%>>US-SD-South Dakota</option>
-		<option value="US-TN" <%=billregion.equals("US-TN")?" selected":""%>>US-TN-Tennessee</option>
-		<option value="US-TX" <%=billregion.equals("US-TX")?" selected":""%>>US-TX-Texas</option>
-		<option value="US-UT" <%=billregion.equals("US-UT")?" selected":""%>>US-UT-Utah</option>
-		<option value="US-VA" <%=billregion.equals("US-VA")?" selected":""%>>US-VA-Virginia</option>
-		<option value="US-VI" <%=billregion.equals("US-VI")?" selected":""%>>US-VI-Virgin Islands</option>
-		<option value="US-VT" <%=billregion.equals("US-VT")?" selected":""%>>US-VT-Vermont</option>
-		<option value="US-WA" <%=billregion.equals("US-WA")?" selected":""%>>US-WA-Washington</option>
-		<option value="US-WI" <%=billregion.equals("US-WI")?" selected":""%>>US-WI-Wisconsin</option>
-		<option value="US-WV" <%=billregion.equals("US-WV")?" selected":""%>>US-WV-West Virginia</option>
-		<option value="US-WY" <%=billregion.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
+		<option value="AB"<%=HCType.equals("AB")?" selected":""%>>AB-Alberta</option>
+		<option value="BC"<%=HCType.equals("BC")?" selected":""%>>BC-British Columbia</option>
+		<option value="MB"<%=HCType.equals("MB")?" selected":""%>>MB-Manitoba</option>
+		<option value="NB"<%=HCType.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+		<option value="NL"<%=HCType.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+		<option value="NT"<%=HCType.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
+		<option value="NS"<%=HCType.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+		<option value="NU"<%=HCType.equals("NU")?" selected":""%>>NU-Nunavut</option>
+		<option value="ON"<%=HCType.equals("ON")?" selected":""%>>ON-Ontario</option>
+		<option value="PE"<%=HCType.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+		<option value="QC"<%=HCType.equals("QC")?" selected":""%>>QC-Quebec</option>
+		<option value="SK"<%=HCType.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+		<option value="YT"<%=HCType.equals("YT")?" selected":""%>>YT-Yukon</option>
+		<option value="US"<%=HCType.equals("US")?" selected":""%>>US resident</option>
+		<option value="US-AK" <%=HCType.equals("US-AK")?" selected":""%>>US-AK-Alaska</option>
+		<option value="US-AL" <%=HCType.equals("US-AL")?" selected":""%>>US-AL-Alabama</option>
+		<option value="US-AR" <%=HCType.equals("US-AR")?" selected":""%>>US-AR-Arkansas</option>
+		<option value="US-AZ" <%=HCType.equals("US-AZ")?" selected":""%>>US-AZ-Arizona</option>
+		<option value="US-CA" <%=HCType.equals("US-CA")?" selected":""%>>US-CA-California</option>
+		<option value="US-CO" <%=HCType.equals("US-CO")?" selected":""%>>US-CO-Colorado</option>
+		<option value="US-CT" <%=HCType.equals("US-CT")?" selected":""%>>US-CT-Connecticut</option>
+		<option value="US-CZ" <%=HCType.equals("US-CZ")?" selected":""%>>US-CZ-Canal Zone</option>
+		<option value="US-DC" <%=HCType.equals("US-DC")?" selected":""%>>US-DC-District Of Columbia</option>
+		<option value="US-DE" <%=HCType.equals("US-DE")?" selected":""%>>US-DE-Delaware</option>
+		<option value="US-FL" <%=HCType.equals("US-FL")?" selected":""%>>US-FL-Florida</option>
+		<option value="US-GA" <%=HCType.equals("US-GA")?" selected":""%>>US-GA-Georgia</option>
+		<option value="US-GU" <%=HCType.equals("US-GU")?" selected":""%>>US-GU-Guam</option>
+		<option value="US-HI" <%=HCType.equals("US-HI")?" selected":""%>>US-HI-Hawaii</option>
+		<option value="US-IA" <%=HCType.equals("US-IA")?" selected":""%>>US-IA-Iowa</option>
+		<option value="US-ID" <%=HCType.equals("US-ID")?" selected":""%>>US-ID-Idaho</option>
+		<option value="US-IL" <%=HCType.equals("US-IL")?" selected":""%>>US-IL-Illinois</option>
+		<option value="US-IN" <%=HCType.equals("US-IN")?" selected":""%>>US-IN-Indiana</option>
+		<option value="US-KS" <%=HCType.equals("US-KS")?" selected":""%>>US-KS-Kansas</option>
+		<option value="US-KY" <%=HCType.equals("US-KY")?" selected":""%>>US-KY-Kentucky</option>
+		<option value="US-LA" <%=HCType.equals("US-LA")?" selected":""%>>US-LA-Louisiana</option>
+		<option value="US-MA" <%=HCType.equals("US-MA")?" selected":""%>>US-MA-Massachusetts</option>
+		<option value="US-MD" <%=HCType.equals("US-MD")?" selected":""%>>US-MD-Maryland</option>
+		<option value="US-ME" <%=HCType.equals("US-ME")?" selected":""%>>US-ME-Maine</option>
+		<option value="US-MI" <%=HCType.equals("US-MI")?" selected":""%>>US-MI-Michigan</option>
+		<option value="US-MN" <%=HCType.equals("US-MN")?" selected":""%>>US-MN-Minnesota</option>
+		<option value="US-MO" <%=HCType.equals("US-MO")?" selected":""%>>US-MO-Missouri</option>
+		<option value="US-MS" <%=HCType.equals("US-MS")?" selected":""%>>US-MS-Mississippi</option>
+		<option value="US-MT" <%=HCType.equals("US-MT")?" selected":""%>>US-MT-Montana</option>
+		<option value="US-NC" <%=HCType.equals("US-NC")?" selected":""%>>US-NC-North Carolina</option>
+		<option value="US-ND" <%=HCType.equals("US-ND")?" selected":""%>>US-ND-North Dakota</option>
+		<option value="US-NE" <%=HCType.equals("US-NE")?" selected":""%>>US-NE-Nebraska</option>
+		<option value="US-NH" <%=HCType.equals("US-NH")?" selected":""%>>US-NH-New Hampshire</option>
+		<option value="US-NJ" <%=HCType.equals("US-NJ")?" selected":""%>>US-NJ-New Jersey</option>
+		<option value="US-NM" <%=HCType.equals("US-NM")?" selected":""%>>US-NM-New Mexico</option>
+		<option value="US-NU" <%=HCType.equals("US-NU")?" selected":""%>>US-NU-Nunavut</option>
+		<option value="US-NV" <%=HCType.equals("US-NV")?" selected":""%>>US-NV-Nevada</option>
+		<option value="US-NY" <%=HCType.equals("US-NY")?" selected":""%>>US-NY-New York</option>
+		<option value="US-OH" <%=HCType.equals("US-OH")?" selected":""%>>US-OH-Ohio</option>
+		<option value="US-OK" <%=HCType.equals("US-OK")?" selected":""%>>US-OK-Oklahoma</option>
+		<option value="US-OR" <%=HCType.equals("US-OR")?" selected":""%>>US-OR-Oregon</option>
+		<option value="US-PA" <%=HCType.equals("US-PA")?" selected":""%>>US-PA-Pennsylvania</option>
+		<option value="US-PR" <%=HCType.equals("US-PR")?" selected":""%>>US-PR-Puerto Rico</option>
+		<option value="US-RI" <%=HCType.equals("US-RI")?" selected":""%>>US-RI-Rhode Island</option>
+		<option value="US-SC" <%=HCType.equals("US-SC")?" selected":""%>>US-SC-South Carolina</option>
+		<option value="US-SD" <%=HCType.equals("US-SD")?" selected":""%>>US-SD-South Dakota</option>
+		<option value="US-TN" <%=HCType.equals("US-TN")?" selected":""%>>US-TN-Tennessee</option>
+		<option value="US-TX" <%=HCType.equals("US-TX")?" selected":""%>>US-TX-Texas</option>
+		<option value="US-UT" <%=HCType.equals("US-UT")?" selected":""%>>US-UT-Utah</option>
+		<option value="US-VA" <%=HCType.equals("US-VA")?" selected":""%>>US-VA-Virginia</option>
+		<option value="US-VI" <%=HCType.equals("US-VI")?" selected":""%>>US-VI-Virgin Islands</option>
+		<option value="US-VT" <%=HCType.equals("US-VT")?" selected":""%>>US-VT-Vermont</option>
+		<option value="US-WA" <%=HCType.equals("US-WA")?" selected":""%>>US-WA-Washington</option>
+		<option value="US-WI" <%=HCType.equals("US-WI")?" selected":""%>>US-WI-Wisconsin</option>
+		<option value="US-WV" <%=HCType.equals("US-WV")?" selected":""%>>US-WV-West Virginia</option>
+		<option value="US-WY" <%=HCType.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
           <% } %>
           </select>
         <% }%>
