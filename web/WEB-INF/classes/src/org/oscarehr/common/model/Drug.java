@@ -39,7 +39,7 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "BN")
 	private String brandName = null;
 	@Column(name = "GCN_SEQNO")
-	private Integer gcnSeqNo = 0;
+	private int gcnSeqNo = 0;
 	private String customName=null;
 	@Column(name = "takemin")
 	private float takeMin = 0;
@@ -190,11 +190,11 @@ public class Drug extends AbstractModel<Integer> implements Serializable {
 		this.brandName = brandName;
 	}
 
-	public Integer getGcnSeqNo() {
+	public int getGcnSeqNo() {
 		return gcnSeqNo;
 	}
 
-	public void setGcnSeqNo(Integer gcnSeqNo) {
+	public void setGcnSeqNo(int gcnSeqNo) {
 		this.gcnSeqNo = gcnSeqNo;
 	}
 
