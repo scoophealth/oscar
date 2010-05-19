@@ -47,6 +47,8 @@ public class UserProperty implements Serializable {
     public final static String RX_USE_RX3 = "rx_use_rx3";
     public final static String DMFLOW_SHEET_VIEW = "DMFlowsheet_view";
     public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
+    public final static String HC_TYPE= "HC_Type";
+    public final static String DEFAULT_SEX= "default_sex";
     private long id;
     private String name;
     private String value;
