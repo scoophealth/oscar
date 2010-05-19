@@ -1098,6 +1098,36 @@ public final class RxWriteScriptAction extends DispatchAction {
         return null;
     }
 
+    
+    public ActionForward changeToLongTerm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException, Exception{
+        String strId=request.getParameter("ltDrugId");
+        if(strId!=null){
+                int drugId=Integer.parseInt(strId);
+                RxSessionBean bean=(RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+                if(bean==null){
+                    response.sendRedirect("error.html");
+                    return null;
+                }
+                RxPrescriptionData rxData=new RxPrescriptionData();
+                RxPrescriptionData.Prescription oldRx=rxData.getPrescription(drugId);
+                oldRx.setLongTerm(true);
+                boolean b=oldRx.Save();
+                HashMap hm = new HashMap();
+                if(b) hm.put("success", true);
+                else hm.put("success",false);
+                JSONObject jsonObject = JSONObject.fromObject(hm);
+                response.getOutputStream().write(jsonObject.toString().getBytes());
+                return null;
+        }else{
+                HashMap hm = new HashMap();
+                hm.put("success", false);
+                JSONObject jsonObject = JSONObject.fromObject(hm);
+                response.getOutputStream().write(jsonObject.toString().getBytes());
+                return null;
+        }
+    }
+    
     public void saveDrug(final HttpServletRequest request)
             throws IOException, ServletException, Exception {
         System.out.println("==========***### start save drug RxWriteScriptAction.java");
