@@ -45,6 +45,7 @@ import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import oscar.MyDateFormat;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
@@ -202,15 +203,15 @@ public class AddEditDocumentAction extends DispatchAction {
             String module=fm.getFunction().trim();
             String moduleId=fm.getFunctionId().trim();
             if(module.equals("demographic")){//doc is uploaded under a patient,moduleId become demo no.
-                    System.out.println("module is demographic");
+                    //System.out.println("module is demographic");
                     Date now=EDocUtil.getDmsDateTimeAsDate();
                     //System.out.println("here11");
                     String docDesc=EDocUtil.getLastDocumentDesc();
 
                     CaseManagementNote cmn=new CaseManagementNote();
                     cmn.setUpdate_date(now);
-                    //java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
-                    cmn.setObservation_date(now);
+                    java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
+                    cmn.setObservation_date(od1);
                     cmn.setDemographic_no(moduleId);
                     HttpSession se = request.getSession();
                     String user_no = (String) se.getAttribute("user");
@@ -218,8 +219,6 @@ public class AddEditDocumentAction extends DispatchAction {
                     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
                     CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
                     cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
-                 //   System.out.println("here");
-               //     System.out.println("here33 "+fm.getDocCreator());
 
                     String provFirstName=EDocUtil.getProviderInfo("first_name", fm.getDocCreator());
                     String provLastName=EDocUtil.getProviderInfo("last_name", fm.getDocCreator());
