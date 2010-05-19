@@ -1350,7 +1350,6 @@ insert into `secObjectName` (`objectName`) values ('_newCasemgmt.decisionSupport
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.medicalHistory');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.calculators');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.templates');
-UPDATE secObjectName SET objectName='_newCasemgmt.templates'WHERE oblectName = '_newCasemgmt.Templates';
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.cpp');
 
 
