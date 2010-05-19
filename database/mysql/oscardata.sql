@@ -1349,6 +1349,8 @@ insert into `secObjectName` (`objectName`) values ('_newCasemgmt.familyHistory')
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.decisionSupportAlerts');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.medicalHistory');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.calculators');
+insert into `secObjectName` (`objectName`) values ('_newCasemgmt.templates');
+UPDATE secObjectName SET objectName='_newCasemgmt.templates'WHERE oblectName = '_newCasemgmt.Templates';
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.cpp');
 
 
@@ -1430,6 +1432,7 @@ insert into `secObjPrivilege` values('doctor','_newCasemgmt.familyHistory','x',0
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.decisionSupportAlerts','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.medicalHistory','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.calculators','x',0,'999998');
+insert into `secObjPrivilege` values('doctor','_newCasemgmt.templates','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.cpp','x',0,'999998');
 
 
@@ -1487,6 +1490,7 @@ insert into `secObjPrivilege` values('admin','_newCasemgmt.familyHistory','x',0,
 insert into `secObjPrivilege` values('admin','_newCasemgmt.decisionSupportAlerts','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.medicalHistory','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.calculators','x',0,'999998');
+insert into `secObjPrivilege` values('admin','_newCasemgmt.templates','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.cpp','x',0,'999998');
 
 
