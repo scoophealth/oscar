@@ -118,7 +118,137 @@ public class ProviderPropertyAction extends DispatchAction {
          return actionmapping.findForward("success");
      }
 
+    public ActionForward viewDefaultSex(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.DEFAULT_SEX);
+
+         if (prop == null){
+             prop = new UserProperty();
+         }
+
+         ArrayList serviceList = new ArrayList();
+         serviceList.add(new LabelValueBean("M", "M"));
+         serviceList.add(new LabelValueBean("F", "F"));
+
+         request.setAttribute("dropOpts",serviceList);
+
+         request.setAttribute("dateProperty",prop);
+
+         request.setAttribute("providertitle","provider.setDefaultSex.title");
+         request.setAttribute("providermsgPrefs","provider.setDefaultSex.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.setDefaultSex.msgDefaultSex");
+         request.setAttribute("providermsgEdit","provider.setDefaultSex.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.setDefaultSex.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.setDefaultSex.msgSuccess");
+         request.setAttribute("method","saveDefaultSex");
+
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }
+
+    public ActionForward saveDefaultSex(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty prop = (UserProperty)frm.get("dateProperty");
+         String fmt = prop != null ? prop.getValue() : "";
+
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.DEFAULT_SEX);
+
+         if( saveProperty == null ) {
+             saveProperty = new UserProperty();
+             saveProperty.setProviderNo(provider);
+             saveProperty.setName(UserProperty.DEFAULT_SEX);
+         }
+
+         saveProperty.setValue(fmt);
+         this.userPropertyDAO.saveProp(saveProperty);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("providertitle","provider.setDefaultSex.title");
+         request.setAttribute("providermsgPrefs","provider.setDefaultSex.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.setDefaultSex.msgDefaultSex");
+         request.setAttribute("providermsgEdit","provider.setDefaultSex.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.setDefaultSex.msgSuccess");
+         request.setAttribute("method","saveDefaultSex");
+
+         return actionmapping.findForward("gen");
+    }
+    /////
+
+    public ActionForward viewHCType(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.HC_TYPE);
+
+         if (prop == null){
+             prop = new UserProperty();
+         }
+
+         // Add all provinces / states to serviceList
+         ArrayList serviceList = constructProvinceList();
+
+         request.setAttribute("dropOpts",serviceList);
+
+         request.setAttribute("dateProperty",prop);
+
+         request.setAttribute("providertitle","provider.setHCType.title");
+         request.setAttribute("providermsgPrefs","provider.setHCType.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.setHCType.msgHCType");
+         request.setAttribute("providermsgEdit","provider.setHCType.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.setHCType.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.setHCType.msgSuccess");
+         request.setAttribute("method","saveHCType");
+
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }
+
+    public ActionForward saveHCType(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty prop = (UserProperty)frm.get("dateProperty");
+         String fmt = prop != null ? prop.getValue() : "";
+
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.HC_TYPE);
+
+         if( saveProperty == null ) {
+             saveProperty = new UserProperty();
+             saveProperty.setProviderNo(provider);
+             saveProperty.setName(UserProperty.HC_TYPE);
+         }
+
+         saveProperty.setValue(fmt);
+         this.userPropertyDAO.saveProp(saveProperty);
+
+         request.setAttribute("status", "success");
+         request.setAttribute("providertitle","provider.setHCType.title");
+         request.setAttribute("providermsgPrefs","provider.setHCType.msgPrefs");
+         request.setAttribute("providermsgProvider","provider.setHCType.msgHCType");
+         request.setAttribute("providermsgEdit","provider.setHCType.msgEdit");
+         request.setAttribute("providerbtnSubmit","provider.setHCType.btnSubmit");
+         request.setAttribute("providermsgSuccess","provider.setHCType.msgSuccess");
+         request.setAttribute("method","saveHCType");
+
+         return actionmapping.findForward("gen");
+    }
     /////
 
     public ActionForward viewMyDrugrefId(ActionMapping actionmapping,
@@ -1000,6 +1130,86 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("method","saveFavouriteEformGroup");
 
          return actionmapping.findForward("gen");
+    }
+
+    // Constructs a list of LabelValueBeans, to be used as the dropdown list
+    // when viewing a HCType preference
+    public ArrayList constructProvinceList() {
+
+         ArrayList provinces = new ArrayList();
+
+         provinces.add(new LabelValueBean("AB-Alberta", "AB"));
+         provinces.add(new LabelValueBean("BC-British Columbia", "BC"));
+         provinces.add(new LabelValueBean("MB-Manitoba", "MB"));
+         provinces.add(new LabelValueBean("NB-New Brunswick", "NB"));
+         provinces.add(new LabelValueBean("NL-Newfoundland", "NL"));
+         provinces.add(new LabelValueBean("NT-Northwest Territory", "NT"));
+         provinces.add(new LabelValueBean("NS-Nova Scotia", "NS"));
+         provinces.add(new LabelValueBean("NU-Nunavut", "NU"));
+         provinces.add(new LabelValueBean("ON-Ontario", "ON"));
+         provinces.add(new LabelValueBean("PE-Prince Edward Island", "PE"));
+         provinces.add(new LabelValueBean("QC-Quebec", "QC"));
+         provinces.add(new LabelValueBean("SK-Saskatchewan", "SK"));
+         provinces.add(new LabelValueBean("YT-Yukon", "YK"));
+         provinces.add(new LabelValueBean("US resident", "US"));
+         provinces.add(new LabelValueBean("US-AK-Alaska", "US-AK"));
+         provinces.add(new LabelValueBean("US-AL-Alabama","US-AL"));
+         provinces.add(new LabelValueBean("US-AR-Arkansas","US-AR"));
+         provinces.add(new LabelValueBean("US-AZ-Arizona","US-AZ"));
+         provinces.add(new LabelValueBean("US-CA-California","US-CA"));
+         provinces.add(new LabelValueBean("US-CO-Colorado","US-CO"));
+         provinces.add(new LabelValueBean("US-CT-Connecticut","US-CT"));
+         provinces.add(new LabelValueBean("US-CZ-Canal Zone","US-CZ"));
+         provinces.add(new LabelValueBean("US-DC-District of Columbia","US-DC"));
+         provinces.add(new LabelValueBean("US-DE-Delaware","US-DE"));
+         provinces.add(new LabelValueBean("US-FL-Florida","US-FL"));
+         provinces.add(new LabelValueBean("US-GA-Georgia","US-GA"));
+         provinces.add(new LabelValueBean("US-GU-Guam","US-GU"));
+         provinces.add(new LabelValueBean("US-HI-Hawaii","US-HI"));
+         provinces.add(new LabelValueBean("US-IA-Iowa","US-IA"));
+         provinces.add(new LabelValueBean("US-ID-Idaho","US-ID"));
+         provinces.add(new LabelValueBean("US-IL-Illinois","US-IL"));
+         provinces.add(new LabelValueBean("US-IN-Indiana","US-IN"));
+         provinces.add(new LabelValueBean("US-KS-Kansas","US-KS"));
+         provinces.add(new LabelValueBean("US-KY-Kentucky","US-KY"));
+         provinces.add(new LabelValueBean("US-LA-Louisiana","US-LA"));
+         provinces.add(new LabelValueBean("US-MA-Massachusetts","US-MA"));
+         provinces.add(new LabelValueBean("US-MD-Maryland","US-MD"));
+         provinces.add(new LabelValueBean("US-ME-Maine","US-ME"));
+         provinces.add(new LabelValueBean("US-MI-Michigan","US-MI"));
+         provinces.add(new LabelValueBean("US-MN-Minnesota","US-MN"));
+         provinces.add(new LabelValueBean("US-MO-Missouri","US-MO"));
+         provinces.add(new LabelValueBean("US-MS-Mississippi","US-MS"));
+         provinces.add(new LabelValueBean("US-MT-Montana","US-MT"));
+         provinces.add(new LabelValueBean("US-NC-North Carolina","US-NC"));
+         provinces.add(new LabelValueBean("US-ND-North Dakota","US-ND"));
+         provinces.add(new LabelValueBean("US-NE-Nebraska","US-NE"));
+         provinces.add(new LabelValueBean("US-NH-New Hampshire","US-NH"));
+         provinces.add(new LabelValueBean("US-NJ-New Jersey","US-NJ"));
+         provinces.add(new LabelValueBean("US-NM-New Mexico","US-NM"));
+         provinces.add(new LabelValueBean("US-NU-Nunavut","US-NU"));
+         provinces.add(new LabelValueBean("US-NV-Nevada","US-NV"));
+         provinces.add(new LabelValueBean("US-NY-New York","US-NY"));
+         provinces.add(new LabelValueBean("US-OH-Ohio","US-OH"));
+         provinces.add(new LabelValueBean("US-OK-Oklahoma","US-OK"));
+         provinces.add(new LabelValueBean("US-OR-Oregon","US-OR"));
+         provinces.add(new LabelValueBean("US-PA-Pennsylvania","US-PA"));
+         provinces.add(new LabelValueBean("US-PR-Puerto Rico","US-PR"));
+         provinces.add(new LabelValueBean("US-RI-Rhode Island","US-RI"));
+         provinces.add(new LabelValueBean("US-SC-South Carolina","US-SC"));
+         provinces.add(new LabelValueBean("US-SD-South Dakota","US-SD"));
+         provinces.add(new LabelValueBean("US-TN-Tennessee","US-TN"));
+         provinces.add(new LabelValueBean("US-TX-Texas","US-TX"));
+         provinces.add(new LabelValueBean("US-UT-Utah","US-UT"));
+         provinces.add(new LabelValueBean("US-VA-Virginia","US-VA"));
+         provinces.add(new LabelValueBean("US-VI-Virgin Islands","US-VI"));
+         provinces.add(new LabelValueBean("US-VT-Vermont","US-VT"));
+         provinces.add(new LabelValueBean("US-WA-Washington","US-WA"));
+         provinces.add(new LabelValueBean("US-WI-Wisconsin","US-WI"));
+         provinces.add(new LabelValueBean("US-WV-West Virginia","US-WV"));
+         provinces.add(new LabelValueBean("US-WY-Wyoming","US-WY"));
+
+         return provinces;
     }
 
     /**
