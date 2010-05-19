@@ -196,7 +196,8 @@ public class EctValidation{
      }
      
      /*****************************************************************************************
-     * find the css path from the database and properties file
+     * find the css path from the database.
+     * Use commented code to find css path from properties file
      *
      * @return String
      ******************************************************************************************/
@@ -215,15 +216,24 @@ public class EctValidation{
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
                 rs = db.GetSQL(sql);
                 if(rs.next()){
-                    String downloadMethod = OscarProperties.getInstance().getProperty("oscarMeasurement_css_download_method");
-                    String place = ""; 
-                    if (downloadMethod != null && downloadMethod.equalsIgnoreCase("stream"))
-                        place = "StreamStyleSheet.do?cssfilename=";
-                    else {
-                        place = OscarProperties.getInstance().getProperty("oscarMeasurement_css");
-                        if(!place.endsWith("/"))
-                            place = new StringBuffer(place).insert(place.length(),"/").toString();
-                    }
+                    String place = "StreamStyleSheet.do?cssfilename="; // Streams by default
+
+                    // Use the following commented code in place of the above line to allow the
+                    // option of using the oscarMeasurement_css property to form the css path.
+                    // If using this code, also uncomment the line in oscar.login.Startup.java
+                    // that checks and sets that property.
+                    /*
+                     * String downloadMethod = OscarProperties.getInstance().getProperty("oscarMeasurement_css_download_method");
+                     * String place = "";
+                     * if (downloadMethod == null || !(downloadMethod.equalsIgnoreCase("stream"))) {
+                     *    place = OscarProperties.getInstance().getProperty("oscarMeasurement_css");
+                     *    if(!place.endsWith("/"))
+                     *       place = new StringBuffer(place).insert(place.length(),"/").toString();
+                     * } else {
+                     *    place = "StreamStyleSheet.do?cssfilename=";
+                     * }
+                     */
+
                     cssLocation = place+db.getString(rs,"location");
                 }
             }
