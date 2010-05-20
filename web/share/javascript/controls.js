@@ -432,7 +432,9 @@ Autocompleter.Local.prototype = Object.extend(new Autocompleter.Base(), {
             elem.toLowerCase().indexOf(entry.toLowerCase()) : 
             elem.indexOf(entry);
 
-          colour = instance.options.colours[elem] != undefined ? "color: " + instance.options.colours[elem] : "";
+		  if (instance.options.colours != undefined) {
+			  colour = instance.options.colours[elem] != undefined ? "color: " + instance.options.colours[elem] : "";
+		  }
           while (foundPos != -1) {
             if (foundPos == 0 && elem.length != entry.length) { 
               /*ret.push("<li><strong>" + elem.substr(0, entry.length) + "</strong>" + 
