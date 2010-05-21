@@ -61,7 +61,7 @@ public class EctConAddSpecialistAction extends Action {
         }
         else if (whichType == 2) // update
         {
-            String specId = addSpecailistForm.getSpecId();
+            Integer specId = Integer.parseInt(addSpecailistForm.getSpecId());
         	professionalSpecialist=professionalSpecialistDao.find(specId);
             populateFields(professionalSpecialist, addSpecailistForm);
             professionalSpecialistDao.merge(professionalSpecialist);
