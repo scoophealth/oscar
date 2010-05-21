@@ -227,21 +227,6 @@ public class Facility extends AbstractModel<Integer> implements Serializable {
 		lastUpdated = new Date();
 	}
 
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Facility facility = (Facility) o;
-
-		if (id != null ? !id.equals(facility.id) : facility.id != null) return false;
-
-		return true;
-	}
-
-	public int hashCode() {
-		return (id != null ? id.hashCode() : 0);
-	}
-
 	public boolean isEnableAnonymous() {
 		return enableAnonymous;
 	}
