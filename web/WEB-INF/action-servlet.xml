@@ -145,10 +145,6 @@
 		<property name="caseManagementManager" ref="caseManagementManager" />
 	</bean>
 
-	<bean name="/oscarEncounter/displayOMeds" class="oscar.oscarEncounter.pageUtil.EctDisplayOtherMedsAction" singleton="false">
-		<property name="caseManagementManager" ref="CaseManagementManager" />
-	</bean>
-
 	<!--  Vaccine -->
 	<bean name="/VaccineProviderReport" class="org.oscarehr.vaccine.VaccineProviderReportAction" singleton="false">
 		<property name="programManager" ref="programManager" />
