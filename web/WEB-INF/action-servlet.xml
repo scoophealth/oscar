@@ -217,10 +217,6 @@
                 <property name="userViewDAO" ref="UserViewDAO" />
         </bean>
 
-    <bean name="/oscarBilling/batchBillingbyCode" class="oscar.oscarBilling.ca.on.pageUtil.BatchBillingbyCodeAction" singleton="false">
-        <property name="providerMgr" ref="providerManager"/>
-    </bean>
-
         <bean name="/report/DxresearchReport" class="org.oscarehr.common.web.DxresearchReportAction" singleton="false">
             <property name="dxresearchdao" ref="DxresearchDAO" />
         </bean>
