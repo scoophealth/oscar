@@ -6371,17 +6371,18 @@ CREATE TABLE prescription (
 --
 
 CREATE TABLE professionalSpecialists (
-  specId int(10) NOT NULL auto_increment,
-  fName varchar(32) default NULL,
-  lName varchar(32) default NULL,
-  proLetters varchar(20) default NULL,
-  address varchar(255) default NULL,
-  phone varchar(30) default NULL,
-  fax varchar(30) default NULL,
-  website varchar(128) default NULL,
-  email varchar(128) default NULL,
-  specType varchar(128) default NULL,
-  PRIMARY KEY  (specId)
+  specId int(10) NOT NULL auto_increment primary key,
+  fName varchar(32),
+  lName varchar(32),
+  proLetters varchar(20),
+  address varchar(255),
+  phone varchar(30),
+  fax varchar(30),
+  website varchar(128),
+  email varchar(128),
+  specType varchar(128),
+  remoteHl7ReferralUrl varchar(255),
+  lastUpdated datetime not null
 ) ;
 
 --

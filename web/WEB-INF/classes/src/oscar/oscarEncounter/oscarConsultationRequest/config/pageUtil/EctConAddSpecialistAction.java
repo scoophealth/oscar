@@ -30,73 +30,85 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.util.MiscUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.oscarDB.DBHandler;
-import oscar.oscarMessenger.util.MsgStringQuote;
 
 public class EctConAddSpecialistAction extends Action {
     
+	private static final Logger logger=MiscUtils.getLogger();
+	
+	private ProfessionalSpecialistDao professionalSpecialistDao;
+	
+	@Autowired
+    public void setProfessionalSpecialistDao(ProfessionalSpecialistDao professionalSpecialistDao) {
+    	this.professionalSpecialistDao = professionalSpecialistDao;
+    }
+
+	@Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {        
+    	
+    	ProfessionalSpecialist professionalSpecialist=null;    	
         EctConAddSpecialistForm addSpecailistForm = (EctConAddSpecialistForm)form;
-        String fName = addSpecailistForm.getFirstName();
-        String lName = addSpecailistForm.getLastName();
-        String proLetters = addSpecailistForm.getProLetters();
-        String address = addSpecailistForm.getAddress();
         
-        StringBuffer stringBuffer = new java.lang.StringBuffer();              
+        int whichType = addSpecailistForm.getwhichType();
+        if(whichType == 1) //create
+        {
+        	professionalSpecialist=new ProfessionalSpecialist();
+            populateFields(professionalSpecialist, addSpecailistForm);
+            professionalSpecialistDao.persist(professionalSpecialist);
+        }
+        else if (whichType == 2) // update
+        {
+            String specId = addSpecailistForm.getSpecId();
+        	professionalSpecialist=professionalSpecialistDao.find(specId);
+            populateFields(professionalSpecialist, addSpecailistForm);
+            professionalSpecialistDao.merge(professionalSpecialist);
+        }
+        else
+        {
+        	logger.error("missed a case, whichType="+whichType);
+        }
+        
+        addSpecailistForm.resetForm();
+        
+        String added=""+professionalSpecialist.getFirstName()+" "+professionalSpecialist.getLastName();
+        request.setAttribute("Added", added);
+        return mapping.findForward("success");
+    }
+
+	private void populateFields(ProfessionalSpecialist professionalSpecialist, EctConAddSpecialistForm addSpecailistForm) {
+	    professionalSpecialist.setFirstName(addSpecailistForm.getFirstName());
+        professionalSpecialist.setLastName(addSpecailistForm.getLastName());
+        professionalSpecialist.setProfessionalLetters(addSpecailistForm.getProLetters());
+
+        String address = addSpecailistForm.getAddress();        
+        StringBuilder sb = new StringBuilder();              
         for (int i =0 ; i < address.length(); i++){
             int a = address.charAt(i);           
             if ( a == 13 || a == 10 ){
-                stringBuffer.append(" ");                                
+                sb.append(" ");                                
             }else{
-                stringBuffer.append((char)a);                
+                sb.append((char)a);                
             }            
         }
-        address = stringBuffer.toString();
+        address = sb.toString();        
+        professionalSpecialist.setStreetAddress(addSpecailistForm.getAddress());
         
-        String phone = addSpecailistForm.getPhone();
-        String fax = addSpecailistForm.getFax();
-        String website = addSpecailistForm.getWebsite();
-        String email = addSpecailistForm.getEmail();
-        String specType = addSpecailistForm.getSpecType();
-        String specId = addSpecailistForm.getSpecId();
-        int whichType = addSpecailistForm.getwhichType();
-        MsgStringQuote str = new MsgStringQuote();
-        
-        if(whichType == 1)
-            try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                String sql = "insert into professionalSpecialists (fName,lName,proLetters,address,phone,fax,website,email,specType) values ('"+str.q(fName)+"','"+str.q(lName)+"','"+str.q(proLetters)+"','"+str.q(address)+"','"+str.q(phone)+"','"+str.q(fax)+"','"+str.q(website)+"','"+str.q(email)+"','"+str.q(specType)+"')";
-                db.RunSQL(sql);
-            }
-            catch(SQLException e) {
-                System.out.println(e.getMessage());
-            }
-        else
-            if(whichType == 2) {
-                try {
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                String sql = String.valueOf(String.valueOf((new StringBuffer("update professionalSpecialists set fName = '")).append(str.q(fName)).append("',lName = '").append(str.q(lName)).append("', ").append(" proLetters = '").append(str.q(proLetters)).append("', address = '").append(str.q(address)).append("', phone = '").append(str.q(phone)).append("',").append(" fax = '").append(str.q(fax)).append("', website = '").append(str.q(website)).append("', email = '").append(str.q(email)).append("', specType = '").append(str.q(specType)).append("' ").append(" where specId = '").append(specId).append("'")));
-                    db.RunSQL(sql);
-                }
-                catch(SQLException e) {
-                    System.out.println(e.getMessage());
-                }
-                return mapping.findForward("edited");
-            }
-        addSpecailistForm.setFirstName("");
-        addSpecailistForm.setLastName("");
-        addSpecailistForm.setProLetters("");
-        addSpecailistForm.setAddress("");
-        addSpecailistForm.setPhone("");
-        addSpecailistForm.setFax("");
-        addSpecailistForm.setWebsite("");        addSpecailistForm.setEmail("");        addSpecailistForm.setSpecType("");        addSpecailistForm.setSpecId("");
-        addSpecailistForm.whichType = 0;        request.setAttribute("Added", String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(fName)))).append(" ").append(lName))));
-        return mapping.findForward("success");
+        professionalSpecialist.setPhoneNumber(addSpecailistForm.getPhone());
+        professionalSpecialist.setFaxNumber(addSpecailistForm.getFax());
+        professionalSpecialist.setWebSite(addSpecailistForm.getWebsite());
+        professionalSpecialist.setEmailAddress(addSpecailistForm.getEmail());
+        professionalSpecialist.setSpecialtyType(addSpecailistForm.getSpecType());
     }
 }
 

@@ -32,185 +32,174 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
 public final class EctConAddSpecialistForm extends ActionForm {
-   String fName;
-   String lName;
-   String proLetters;
-   String address;
-   String phone;
-   String fax;
-   String website;
-   String email;
-   String specType;
-   String transType;
-   String specId;
-   int whichType;
-   
-   public EctConAddSpecialistForm() {
-      whichType = 0;
-   }
-   
-   public int getwhichType() {
-      return whichType;
-   }
-   
-   public String getTransType() {
-      if(transType == null)
-         transType = new String();
-      return transType;
-   }
-   
-   public void setTransType(String str) {
-      System.out.println("setter transtype = ".concat(String.valueOf(String.valueOf(str))));
-      transType = str;
-   }
-   
-   public String getFirstName() {
-      if(fName == null)
-         fName = new String();
-      return fName;
-   }
-   
-   public void setFirstName(String str) {
-      fName = str;
-   }
-   
-   public String getLastName() {
-      if(lName == null)
-         lName = new String();
-      return lName;
-   }
-   
-   public void setLastName(String str) {
-      System.out.println("setter Last Name");
-      lName = str;
-   }
-   
-   public String getProLetters() {
-      if(proLetters == null)
-         proLetters = new String();
-      return proLetters;
-   }
-   
-   public void setProLetters(String str) {
-      proLetters = str;
-   }
-   
-   public String getAddress() {
-      if(address == null)
-         address = new String();
-      return address;
-   }
-   
-   public void setAddress(String str) {
-      address = str;
-   }
-   
-   public String getPhone() {
-      if(phone == null)
-         phone = new String();
-      return phone;
-   }
-   
-   public void setPhone(String str) {
-      phone = str;
-   }
-   
-   public String getFax() {
-      if(fax == null)
-         fax = new String();
-      return fax;
-   }
-   
-   public void setFax(String str) {
-      fax = str;
-   }
-   
-   public String getWebsite() {
-      if(website == null)
-         website = new String();
-      return website;
-   }
-   
-   public void setWebsite(String str) {
-      website = str;
-   }
-   
-   public String getEmail() {
-      if(email == null)
-         email = new String();
-      return email;
-   }
-   
-   public void setEmail(String str) {
-      email = str;
-   }
-   
-   public String getSpecType() {
-      if(specType == null)
-         specType = new String();
-      return specType;
-   }
-   
-   public void setSpecType(String str) {
-      specType = str;
-   }
-   
-   public String getSpecId() {
-      if(specId == null)
-         specId = new String();
-      return specId;
-   }
-   
-   public void setSpecId(String str) {
-      specId = str;
-   }
-   
-   public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-      System.out.println("Validating Add Spec Form");
-      ActionErrors errors = new ActionErrors();
-      if(fName == null || fName.length() == 0)
-         errors.add("fName", new ActionMessage("Errors.Firstname"));
-      if(lName == null || lName.length() == 0)
-         errors.add("lName", new ActionMessage("Errors.Lastname"));
-      if(phone == null || phone.length() == 0)
-         errors.add("phone", new ActionMessage("Errors.Phone"));
-      if(address == null || address.length() == 0)
-         errors.add("address", new ActionMessage("Errors.Address"));
-      if(!errors.isEmpty() && whichType == 2)
-         request.setAttribute("upd", "getterUpdating");
-      return errors;
-   }
-   
-   public void reset(ActionMapping mapping, HttpServletRequest request) {
-      System.out.println("RESETING FORM");
-      fName = null;
-      lName = null;
-      proLetters = null;
-      address = null;
-      phone = null;
-      fax = null;
-      website = null;
-      email = null;
-      specType = null;
-      transType = null;
-      specId = null;
-      whichType = 0;
-   }
-   
-   /**
-    * Returns the whichType.
-    * @return int
-    */
-   public int getWhichType() {
-      return whichType;
-   }
-   
-   /**
-    * Sets the whichType.
-    * @param whichType The whichType to set
-    */
-   public void setWhichType(int whichType) {
-      this.whichType = whichType;
-   }
-   
+	String fName;
+	String lName;
+	String proLetters;
+	String address;
+	String phone;
+	String fax;
+	String website;
+	String email;
+	String specType;
+	String transType;
+	String specId;
+	int whichType;
+
+	public EctConAddSpecialistForm() {
+		whichType = 0;
+	}
+
+	public int getwhichType() {
+		return whichType;
+	}
+
+	public String getTransType() {
+		if (transType == null) transType = new String();
+		return transType;
+	}
+
+	public void setTransType(String str) {
+		System.out.println("setter transtype = ".concat(String.valueOf(String.valueOf(str))));
+		transType = str;
+	}
+
+	public String getFirstName() {
+		if (fName == null) fName = new String();
+		return fName;
+	}
+
+	public void setFirstName(String str) {
+		fName = str;
+	}
+
+	public String getLastName() {
+		if (lName == null) lName = new String();
+		return lName;
+	}
+
+	public void setLastName(String str) {
+		System.out.println("setter Last Name");
+		lName = str;
+	}
+
+	public String getProLetters() {
+		if (proLetters == null) proLetters = new String();
+		return proLetters;
+	}
+
+	public void setProLetters(String str) {
+		proLetters = str;
+	}
+
+	public String getAddress() {
+		if (address == null) address = new String();
+		return address;
+	}
+
+	public void setAddress(String str) {
+		address = str;
+	}
+
+	public String getPhone() {
+		if (phone == null) phone = new String();
+		return phone;
+	}
+
+	public void setPhone(String str) {
+		phone = str;
+	}
+
+	public String getFax() {
+		if (fax == null) fax = new String();
+		return fax;
+	}
+
+	public void setFax(String str) {
+		fax = str;
+	}
+
+	public String getWebsite() {
+		if (website == null) website = new String();
+		return website;
+	}
+
+	public void setWebsite(String str) {
+		website = str;
+	}
+
+	public String getEmail() {
+		if (email == null) email = new String();
+		return email;
+	}
+
+	public void setEmail(String str) {
+		email = str;
+	}
+
+	public String getSpecType() {
+		if (specType == null) specType = new String();
+		return specType;
+	}
+
+	public void setSpecType(String str) {
+		specType = str;
+	}
+
+	public String getSpecId() {
+		if (specId == null) specId = new String();
+		return specId;
+	}
+
+	public void setSpecId(String str) {
+		specId = str;
+	}
+
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+		System.out.println("Validating Add Spec Form");
+		ActionErrors errors = new ActionErrors();
+		if (fName == null || fName.length() == 0) errors.add("fName", new ActionMessage("Errors.Firstname"));
+		if (lName == null || lName.length() == 0) errors.add("lName", new ActionMessage("Errors.Lastname"));
+		if (phone == null || phone.length() == 0) errors.add("phone", new ActionMessage("Errors.Phone"));
+		if (address == null || address.length() == 0) errors.add("address", new ActionMessage("Errors.Address"));
+		if (!errors.isEmpty() && whichType == 2) request.setAttribute("upd", "getterUpdating");
+		return errors;
+	}
+
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		resetForm();
+	}
+
+	public void resetForm() {
+		fName = null;
+		lName = null;
+		proLetters = null;
+		address = null;
+		phone = null;
+		fax = null;
+		website = null;
+		email = null;
+		specType = null;
+		transType = null;
+		specId = null;
+		whichType = 0;
+	}
+
+	/**
+	 * Returns the whichType.
+	 * 
+	 * @return int
+	 */
+	public int getWhichType() {
+		return whichType;
+	}
+
+	/**
+	 * Sets the whichType.
+	 * 
+	 * @param whichType The whichType to set
+	 */
+	public void setWhichType(int whichType) {
+		this.whichType = whichType;
+	}
+
 }
