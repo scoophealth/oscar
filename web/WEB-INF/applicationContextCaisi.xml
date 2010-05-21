@@ -44,24 +44,24 @@
 	<bean id="ratePageManager" class="org.oscarehr.PMmodule.service.impl.RatePageManagerImpl" autowire="byName" />
 	<!-- Generic Intake -->
 	<bean id="genericIntakeManager" class="org.oscarehr.PMmodule.service.GenericIntakeManager" autowire="byName" />
-	<bean id="intakeAManager" class="org.oscarehr.PMmodule.service.impl.IntakeAManagerImpl" lazy-init="default" dependency-check="default">
+	<bean id="intakeAManager" class="org.oscarehr.PMmodule.service.impl.IntakeAManagerImpl">
 		<property name="intakeADao" ref="intakeADao" />
 		<property name="clientDao" ref="clientDao" />
 		<property name="enabled" value="${intakea.enabled}" />
 		<property name="newClientForm" value="${intakea.newForm}" />
 	</bean>
-	<bean id="intakeCManager" class="org.oscarehr.PMmodule.service.impl.IntakeCManagerImpl" lazy-init="default" dependency-check="default">
+	<bean id="intakeCManager" class="org.oscarehr.PMmodule.service.impl.IntakeCManagerImpl">
 		<property name="intakeCDao" ref="intakeCDao" />
 		<property name="clientDao" ref="clientDao" />
 		<property name="enabled" value="${intakec.enabled}" />
 		<property name="newClientForm" value="${intakec.newForm}" />
 	</bean>
-	<bean id="streetHealthReportManager" class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl" lazy-init="default" dependency-check="default">
+	<bean id="streetHealthReportManager" class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl">
 		<property name="clientDao" ref="clientDao" />
 		<property name="genericIntakeManager" ref="genericIntakeManager" />
 	</bean>
 	<!-- Generic Intake -->
-	<bean id="healthSafetyManager" class="org.oscarehr.PMmodule.service.HealthSafetyManager" lazy-init="default" dependency-check="default">
+	<bean id="healthSafetyManager" class="org.oscarehr.PMmodule.service.HealthSafetyManager">
 		<property name="healthSafetyDao" ref="healthSafetyDao" />
 	</bean>
 
@@ -82,9 +82,9 @@
 		<property name="populationReportDao" ref="populationReportDao" />
 	</bean>
 	<!-- ========================= SCHEDULED JOBS ========================= -->
-	<bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
+	<bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
-			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask" lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask">
 				<property name="programManager" ref="programManager" />
 				<property name="bedManager" ref="bedManager" />
 				<property name="bedDemographicManager" ref="bedDemographicManager" />
@@ -94,9 +94,9 @@
 		<property name="period" value="3600000" />
 	</bean>
 
-	<bean id="scheduledErProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
+	<bean id="scheduledErProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
-			<bean class="org.oscarehr.PMmodule.task.ErProgramDischargeTask" lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.task.ErProgramDischargeTask">
 				<property name="admissionManager" ref="admissionManager" />
 				<property name="providerManager" ref="providerManager" />
 			</bean>
@@ -105,9 +105,9 @@
 		<property name="period" value="300000" />
 	</bean>
 	
-	<bean id="scheduledAnonymousClientDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
+	<bean id="scheduledAnonymousClientDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
-			<bean class="org.oscarehr.PMmodule.task.AnonymousClientDischargeTask" lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.task.AnonymousClientDischargeTask">
 			</bean>
 		</property>
 		
@@ -116,9 +116,9 @@
 		
 	</bean>
 
-	<bean id="scheduledOcanSubmissionTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
+	<bean id="scheduledOcanSubmissionTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
-			<bean class="oscar.ocan.task.OcanSubmissionTask" lazy-init="default" dependency-check="default">
+			<bean class="oscar.ocan.task.OcanSubmissionTask">
 				<property name="genericIntakeManager" ref="genericIntakeManager" />
 				<property name="ocanDataProcessor" ref="ocanDataProcessor" />
 				<property name="useTestData" value="true" />
@@ -129,7 +129,7 @@
 		<property name="period" value="36000000" />
 	</bean>
 
-	<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean" lazy-init="default" dependency-check="default">
+	<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="scheduledBedProgramDischargeTask" />
@@ -139,7 +139,7 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="QuestionTypes" class="org.oscarehr.survey.model.QuestionTypes" scope="singleton" lazy-init="default" dependency-check="default" />
+	<bean id="QuestionTypes" class="org.oscarehr.survey.model.QuestionTypes" scope="singleton" />
 	<!--
 		<bean id="UCRConfigurationManager" class="org.oscarehr.PMmodule.web.reports.custom.UCRConfigurationManager"> <property name="filename"> <value>org/oscarehr/PMmodule/web/reports/custom/test.xml</value> </property> </bean>
 	-->

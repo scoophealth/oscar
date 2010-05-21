@@ -5,9 +5,9 @@
 
 	<!-- hibernate session factory -->
 	<!-- 
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 	 -->
-	<bean id="sessionFactory" class="org.oscarehr.util.SpringHibernateLocalSessionFactoryBean" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="sessionFactory" class="org.oscarehr.util.SpringHibernateLocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="mappingDirectoryLocations">
 			<!-- only *.hbm.xml will be loaded -->
@@ -44,14 +44,14 @@
 		<property name="eventListeners">
 			<map>
 				<entry key="merge">
-					<bean class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener" lazy-init="default" autowire="default" dependency-check="default" />
+					<bean class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener" />
 				</entry>
 			</map>
 		</property>
 	</bean>
 
 
-	<bean id="auditSessionFactory" class="org.oscarehr.util.SpringHibernateLocalSessionFactoryBean" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="auditSessionFactory" class="org.oscarehr.util.SpringHibernateLocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="mappingDirectoryLocations">
 			<!-- only *.hbm.xml will be loaded -->

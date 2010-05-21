@@ -7,7 +7,7 @@
 		load properties from additional property files; oscar.properties is
 		already loaded
 	-->
-	<bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<value>/WEB-INF/classes/oscar_mcmaster.properties</value>
@@ -185,7 +185,7 @@
 	<!-- managers  -->
 
 	<bean id="agencyManager" class="org.oscarehr.PMmodule.service.AgencyManager" autowire="byName" />
-	<bean id="facilityMessageManager" class="org.caisi.service.FacilityMessageManager" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="facilityMessageManager" class="org.caisi.service.FacilityMessageManager">
 		<property name="facilityMessageDAO" ref="facilityMessageDAO" />
 	</bean>
 
