@@ -96,8 +96,8 @@ function BackToOscar() {
 			<tr>
 				<td>
 
-				<table>
-					<html:form action="/oscarEncounter/AddSpecialist">
+				<html:form action="/oscarEncounter/AddSpecialist">
+					<table>
 						<%
                            if (request.getAttribute("specId") != null ){
                            oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm thisForm;
@@ -178,8 +178,8 @@ function BackToOscar() {
 								value="<%=whichType%>" /> <input type="submit" name="transType"
 								value="<%=transactionType%>" /></td>
 						</tr>
-					</html:form>
-				</table>
+					</table>
+				</html:form>
 				</td>
 			</tr>
 			<!----End new rows here-->
