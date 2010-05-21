@@ -24,7 +24,6 @@
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,21 +37,14 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.MiscUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.SpringUtils;
 
 public class EctConAddSpecialistAction extends Action {
     
 	private static final Logger logger=MiscUtils.getLogger();
 	
-	private ProfessionalSpecialistDao professionalSpecialistDao;
+	private ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	
-	@Autowired
-    public void setProfessionalSpecialistDao(ProfessionalSpecialistDao professionalSpecialistDao) {
-    	this.professionalSpecialistDao = professionalSpecialistDao;
-    }
-
 	@Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {        

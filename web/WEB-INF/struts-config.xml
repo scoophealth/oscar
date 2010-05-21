@@ -2092,7 +2092,7 @@
         </action>
 
     </action-mappings>
-    <controller processorClass="org.springframework.web.struts.AutowiringTilesRequestProcessor" maxFileSize="20M"/>
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="20M"/>
     <message-resources parameter="oscarResources" null="false"/>
     <message-resources parameter="HelpResources" key="help"  null="false"/>
     <message-resources parameter="MessageResources_program" key="pmm"  null="false" />
