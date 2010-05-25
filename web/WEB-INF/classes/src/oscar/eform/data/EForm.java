@@ -47,6 +47,7 @@ public class EForm extends EFormBase {
 	public static String APPT_MC_NO = "appt_mc_no";
 	public static String PATIENT_TFNOTES = "patient_tfnotes";
 	public static String RESIDENT_TFNOTES = "resident_tfnotes";
+	private static String OSCAR_JS_PATH = "${oscar_javascript_path}";
     private static Log log = LogFactory.getLog(EForm.class);
     
     private String parentAjaxId = null;
@@ -412,16 +413,23 @@ public class EForm extends EFormBase {
         formHtml = html.toString();
 	}
 
+	public void setContextPath(String contextPath) {
+		if (contextPath==null) return;
+
+		String oscarJS = contextPath+"/share/javascript/";
+		formHtml = formHtml.replace(OSCAR_JS_PATH, oscarJS);
+	}
+
 	private DatabaseAP getSpecial(String apName, Hashtable sparam) {
 		DatabaseAP ap = null;
 		String sql = null;
 		String output = null;
 
 		if (apName.equalsIgnoreCase(APPT_PROVIDER_NAME)) {
-			sql = "SELECT last_name, first_name FROM provider WHERE provider_no = "+sparam.get(apName);
+			sql = "SELECT last_name, first_name FROM provider WHERE provider_no = '"+sparam.get(apName)+"'";
 			output = "${last_name}, ${first_name}";
 		} else if (apName.equalsIgnoreCase(APPT_PROVIDER_ID)) {
-			sql = "SELECT provider_no FROM provider WHERE provider_no = "+sparam.get(apName);
+			sql = "SELECT provider_no FROM provider WHERE provider_no = '"+sparam.get(apName)+"'";
 			output = "${provider_no}";
 		} else if (apName.equalsIgnoreCase(APPT_MC_NO)) {
 			sql = "SELECT value FROM appointmentExt WHERE appointment_no = "+sparam.get(apName);
@@ -441,7 +449,6 @@ public class EForm extends EFormBase {
     private StringBuffer putSpecialValue(DatabaseAP ap, String type, int pointer, StringBuffer html) {
         String sql = ap.getApSQL();
         String output = ap.getApOutput();
-        //replace ${demographic} with demogrpahicNo
         if (sql != null) {
             log.debug("SQL----" + sql);
             sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
