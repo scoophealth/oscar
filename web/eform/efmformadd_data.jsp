@@ -75,6 +75,7 @@ function hideDiv() {
   }
   sparam.put(thisEForm.PATIENT_TFNOTES, "");
 
+  thisEForm.setContextPath(request.getContextPath());
   thisEForm.setImagePath();
   thisEForm.setDatabaseAPs();
   thisEForm.setAction();
