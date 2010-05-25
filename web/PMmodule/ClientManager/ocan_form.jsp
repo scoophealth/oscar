@@ -2203,7 +2203,7 @@ $("document").ready(function(){
 		</tr>
 		
 		<tr>
-			<td class="genericTableHeader">3b. How much help with forming and maintaining close relationships does the person need from local services in organizing social contact?</td>
+			<td class="genericTableHeader">3b. How much help with forming and maintaining close relationships does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="16_3b" id="16_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "16_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
@@ -2271,7 +2271,7 @@ $("document").ready(function(){
 		</tr>
 		
 		<tr>
-			<td class="genericTableHeader">3b. How much help with problems in his or her sex life does the person need from local services in organizing social contact?</td>
+			<td class="genericTableHeader">3b. How much help with problems in his or her sex life does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="17_3b" id="17_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "17_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
@@ -2475,7 +2475,7 @@ $("document").ready(function(){
 		</tr>
 		
 		<tr>
-			<td class="genericTableHeader">3b. How much help with numeracy and literacy does the person need from local services in organizing social contact?</td>
+			<td class="genericTableHeader">3b. How much help with numeracy and literacy does the person need from local services?</td>
 			<td class="genericTableData">
 				<select name="20_3b" id="20_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "20_3b", OcanForm.getOcanFormOptions("Camberwell Help"),prepopulationLevel)%>
