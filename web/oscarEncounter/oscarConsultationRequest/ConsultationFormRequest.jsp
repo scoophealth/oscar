@@ -840,27 +840,19 @@ function fetchAttached() {
 				<!----Start new rows here-->
 				<tr>
 					<td colspan=2>
-					<%if (request.getAttribute("id") != null){ %> <input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>"
-						onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"
-						onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"
-						onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
-					<%}%> <%}else{%> <input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>"
-						onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"
-						onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"
-						onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
-					<%}%> <%}%>
+					<%if (request.getAttribute("id") != null){ %> 
+					<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+					<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
+						<%}%>
+					<%}else{%>
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
+						<%}%>
+					<%}%>
 					</td>
 
 				</tr>
