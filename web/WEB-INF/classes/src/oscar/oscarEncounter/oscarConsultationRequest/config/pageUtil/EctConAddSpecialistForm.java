@@ -44,7 +44,8 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String transType;
 	String specId;
 	int whichType;
-
+	String referralUrl;
+	
 	public EctConAddSpecialistForm() {
 		whichType = 0;
 	}
@@ -201,5 +202,13 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	public void setWhichType(int whichType) {
 		this.whichType = whichType;
 	}
+
+	public String getReferralUrl() {
+    	return referralUrl;
+    }
+
+	public void setReferralUrl(String referralUrl) {
+    	this.referralUrl = referralUrl;
+    }
 
 }

@@ -117,66 +117,47 @@ function BackToOscar() {
                         %>
 						<html:hidden name="EctConAddSpecialistForm" property="specId" />
 						<tr>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.firstName" />
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.firstName" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="firstName" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.lastName" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="lastName" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.professionalLetters" />
 							</td>
-							<td><html:text name="EctConAddSpecialistForm"
-								property="firstName" /></td>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.lastName" />
-							</td>
-							<td><html:text name="EctConAddSpecialistForm"
-								property="lastName" /></td>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.professionalLetters" />
-							</td>
-							<td><html:text name="EctConAddSpecialistForm"
-								property="proLetters" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="proLetters" /></td>
 						</tr>
 						<tr>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.address" />
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.address" />
 							</td>
-							<td colspan="5"><html:textarea
-								name="EctConAddSpecialistForm" property="address" cols="30"
-								rows="3" /> <%=oscarVariables.getProperty("consultation_comments","") %>
+							<td colspan="5"><html:textarea name="EctConAddSpecialistForm" property="address" cols="30" rows="3" /> <%=oscarVariables.getProperty("consultation_comments","") %>
 							</td>
 						</tr>
 						<tr>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.phone" />
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.phone" />
 							</td>
-							<td><html:text name="EctConAddSpecialistForm"
-								property="phone" /></td>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.fax" />
+							<td><html:text name="EctConAddSpecialistForm" property="phone" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.fax" />
 							</td>
-							<td colspan="4"><html:text name="EctConAddSpecialistForm"
-								property="fax" /></td>
+							<td colspan="4"><html:text name="EctConAddSpecialistForm" property="fax" /></td>
 						</tr>
 						<tr>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.website" />
-							</td>
-							<td><html:text name="EctConAddSpecialistForm"
-								property="website" /></td>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.email" />
-							</td>
-							<td colspan="4"><html:text name="EctConAddSpecialistForm"
-								property="email" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.website" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="website" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.email" /></td>
+							<td colspan="4"><html:text name="EctConAddSpecialistForm" property="email" /></td>
 						</tr>
 						<tr>
-							<td><bean:message
-								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.specialistType" />
-							</td>
-							<td colspan="5"><html:text name="EctConAddSpecialistForm"
-								property="specType" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.specialistType" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="specType" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralUrl" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="referralUrl" /></td>
+							<td></td>
+							<td></td>
 						</tr>
 						<tr>
-							<td colspan="6"><input type="hidden" name="whichType"
-								value="<%=whichType%>" /> <input type="submit" name="transType"
-								value="<%=transactionType%>" /></td>
+							<td colspan="6">
+								<input type="hidden" name="whichType" value="<%=whichType%>" /> 
+								<input type="submit" name="transType" value="<%=transactionType%>" />
+							</td>
 						</tr>
 					</table>
 				</html:form>
