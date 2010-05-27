@@ -40,7 +40,6 @@
 	<bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
 	<bean id="streetHealthDao" class="org.oscarehr.PMmodule.dao.StreetHealthDao" autowire="byName" />
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
-	<bean id="consultationRequestDAO" class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
         <bean id="billingOnItemDao" class="oscar.oscarBilling.ca.on.dao.BillingOnItemDao" autowire="byName" />
         <bean id="eformDao" class="oscar.eform.dao.EformDao" autowire="byName" />
