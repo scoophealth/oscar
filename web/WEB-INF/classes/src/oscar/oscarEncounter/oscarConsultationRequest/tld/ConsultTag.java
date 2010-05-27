@@ -30,13 +30,14 @@ package oscar.oscarEncounter.oscarConsultationRequest.tld;
 
 import java.util.Calendar;
 import java.util.Date;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
-import org.oscarehr.consultationRequest.dao.ConsultationRequestDAO;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
@@ -55,7 +56,7 @@ public class ConsultTag extends TagSupport {
             numNewLabs = 0;
 	    if(providerNo!=null){
                 try{
-	       ConsultationRequestDAO tcm = (ConsultationRequestDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("consultationRequestDAO");
+	       ConsultationRequestDao tcm = (ConsultationRequestDao) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("consultationRequestDao");
                UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(pageContext.getServletContext()).getBean("UserPropertyDAO");
                
                // There are to two properties that could be set. One is the referal date and the other is the team
@@ -98,9 +99,9 @@ public class ConsultTag extends TagSupport {
                
                
                if (allTeams){
-                   numNewLabs= tcm.getReferralsAfterCutOffDateAndNotCompleted(cutoffDate).size();
+                   numNewLabs= tcm.getCountReferralsAfterCutOffDateAndNotCompleted(cutoffDate);
                }else if (team != null){    
-                   numNewLabs= tcm.getReferralsAfterCutOffDateAndNotCompleted(cutoffDate, team).size();
+                   numNewLabs= tcm.getCountReferralsAfterCutOffDateAndNotCompleted(cutoffDate, team);
                }
 
                
