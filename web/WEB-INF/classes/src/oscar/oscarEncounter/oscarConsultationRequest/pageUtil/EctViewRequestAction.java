@@ -59,32 +59,16 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-public class EctViewRequestAction
-    extends Action {
+public class EctViewRequestAction extends Action {
 
-  public ActionForward execute(ActionMapping mapping, ActionForm form,
-                               HttpServletRequest request,
-                               HttpServletResponse response)
+	@Override
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse  response)	throws ServletException, IOException {
 
-      throws ServletException, IOException {
+		EctViewRequestForm frm = (EctViewRequestForm) form;
 
-    EctViewRequestForm frm = (EctViewRequestForm) form;
+		request.setAttribute("id", frm.getRequestId());
 
-    //EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-
-    /*if(bean == null) {
-        return mapping.findForward("eject");
-
-             } else {
-
-        bean.setConsultationRequestId(frm.getRequestId());*/
-
-    request.setAttribute("id", frm.getRequestId());
-
-    return mapping.findForward("success");
-
-    //}
-
-  }
+		return mapping.findForward("success");
+	}
 
 }

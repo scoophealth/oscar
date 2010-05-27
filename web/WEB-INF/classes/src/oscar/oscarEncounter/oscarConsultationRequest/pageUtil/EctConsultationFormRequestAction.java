@@ -32,11 +32,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
+import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.util.LocaleUtils;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -45,6 +52,8 @@ import oscar.util.ParameterActionForward;
 
 public class EctConsultationFormRequestAction extends Action {
 
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -85,7 +94,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 		MsgStringQuote str = new MsgStringQuote();
 
-		if (submission.equals("Submit Consultation Request") || submission.equals("Submit Consultation Request And Print Preview") || submission.equals("Submit And Fax")) {
+		if (submission.startsWith("Submit")) {
 
 			try {
 				DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -107,7 +116,8 @@ public class EctConsultationFormRequestAction extends Action {
 				        + str.q(clinicalInfo)
 				        + "','"
 				        + str.q(currentMeds)
-				        + "','" + str.q(allergies) + "','" + str.q(providerNo) + "','" + str.q(demographicNo) + "','" + str.q(status) + "','" + str.q(statusText) + "','" + str.q(sendTo) + "','" + str.q(concurrentProblems) + "','" + urg + "'," + pwb + ")";
+				        + "','"
+				        + str.q(allergies) + "','" + str.q(providerNo) + "','" + str.q(demographicNo) + "','" + str.q(status) + "','" + str.q(statusText) + "','" + str.q(sendTo) + "','" + str.q(concurrentProblems) + "','" + urg + "'," + pwb + ")";
 
 				db.RunSQL(sql);
 
@@ -153,7 +163,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 		} else
 
-		if (submission.equals("Update Consultation Request") || submission.equals("Update Consultation Request And Print Preview") || submission.equals("Update And Fax")) {
+		if (submission.startsWith("Update")) {
 
 			requestId = frm.getRequestId();
 
@@ -179,7 +189,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 		request.setAttribute("teamVar", sendTo);
 
-		if (submission.equals("Update Consultation Request And Print Preview") || submission.equals("Submit Consultation Request And Print Preview")) {
+		if (submission.endsWith("And Print Preview")) {
 
 			request.setAttribute("reqId", requestId);
 			if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_PDF")) {
@@ -190,22 +200,43 @@ public class EctConsultationFormRequestAction extends Action {
 				return mapping.findForward("print");
 			}
 
-		} else if (submission.equals("Update And Fax") || submission.equals("Submit And Fax")) {
+		} else if (submission.endsWith("And Fax")) {
 
 			request.setAttribute("reqId", requestId);
 
 			return mapping.findForward("fax");
 
-		} else {
-
-			ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
-
-			forward.addParameter("de", demographicNo);
-
-			return forward;
-
+		} 
+		else if (submission.endsWith("esend"))
+		{
+			// upon success continue as normal with success message
+			// upon failure, go to consultation update page with message
+			try {
+	            doHl7Send(Integer.parseInt(requestId));
+	            WebUtils.addResourceBundleInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
+            } catch (Exception e) {
+            	logger.error("Error contacting remote oscar instance.", e);
+            	
+	            WebUtils.addResourceBundleErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESendError");
+	    		ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
+	    		forward.addParameter("de", demographicNo);
+	    		forward.addParameter("requestId", requestId);
+	    		return forward;
+            }
 		}
+			
 
+		ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
+		forward.addParameter("de", demographicNo);
+		return forward;
 	}
+
+	private void doHl7Send(Integer consultationRequestId) {
+		
+	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
+	    
+	    throw(new UnsupportedOperationException("not finished yet"));
+    }
 
 }
