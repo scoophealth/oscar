@@ -30,7 +30,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.WebUtils"%><html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -76,6 +77,8 @@ function finishPage(secs){
 				<% }else if (type.equals("2")){ %> <bean:message
 					key="oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreated" />
 				<% } %>
+				
+				<%=WebUtils.popInfoMessagesAsHtml(session)%>
 				</td>
 			</tr>
 			<tr>

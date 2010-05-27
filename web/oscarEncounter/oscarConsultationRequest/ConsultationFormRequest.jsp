@@ -47,7 +47,8 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy
 %>
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.WebUtils"%><html:html locale="true">
 
 <%
 String demo = request.getParameter("de");
@@ -104,7 +105,9 @@ String formattedDate = year+"/"+mon+"/"+day;
 OscarProperties props = OscarProperties.getInstance();
 
 %><head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery_oscar_defaults.js"></script>
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
 </title>
@@ -286,7 +289,10 @@ function fillSpecialistSelect( aSelectedService ){
 	document.EctConsultationFormRequestForm.fax.value = ("");
 	document.EctConsultationFormRequestForm.address.value = ("");
 
-	if ( selectedIdx == 0){ return; }
+	if ( selectedIdx == 0)
+	{
+		return;
+	}
 
         var i = 1;
 	var specs = (services[makeNbr].specialists);
@@ -394,13 +400,17 @@ function initService(ser){
 //-------------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////////
-function GetExtensionOn(SelectedSpec)	{
+function onSelectSpecialist(SelectedSpec)	{
 	var selectedIdx = SelectedSpec.selectedIndex;
+	var form=document.EctConsultationFormRequestForm;
 
-	if ((SelectedSpec.options[ selectedIdx ]).value == "-1") {   		//if its the first item set everything to blank
-		document.EctConsultationFormRequestForm.phone.value = ("");
-		document.EctConsultationFormRequestForm.fax.value = ("");
-		document.EctConsultationFormRequestForm.address.value = ("");
+	if (selectedIdx==null || selectedIdx==-1 || (SelectedSpec.options[ selectedIdx ]).value == "-1") {   		//if its the first item set everything to blank
+		form.phone.value = ("");
+		form.fax.value = ("");
+		form.address.value = ("");
+
+		enableDisableRemoteReferralButton(form, true);
+		
 		return;
 	}
 	var selectedService = document.EctConsultationFormRequestForm.service.value;  				// get the service that is selected now
@@ -408,13 +418,22 @@ function GetExtensionOn(SelectedSpec)	{
         for( var idx = 0; idx < specs.length; ++idx ) {
             aSpeci = specs[idx];									// get the specialist Object for the currently selected spec
             if( aSpeci.specNbr == SelectedSpec.value ) {
-                document.EctConsultationFormRequestForm.phone.value = (aSpeci.phoneNum);
-                document.EctConsultationFormRequestForm.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
-                document.EctConsultationFormRequestForm.address.value = (aSpeci.specAddress);
-                break;
+            	form.phone.value = (aSpeci.phoneNum);
+            	form.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
+            	form.address.value = (aSpeci.specAddress);
+
+            	jQuery.getJSON("getProfessionalSpecialist.json", {id: aSpeci.specNbr}, 
+                    function(xml)
+                    {
+                		var hasUrl=!(xml.remoteHl7ReferralUrl==null||xml.remoteHl7ReferralUrl=="");
+                		enableDisableRemoteReferralButton(form, hasUrl);
+                	}
+            	);
+            	
+            	break;
             }
         }
-}
+	}
 //-----------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////////
@@ -435,12 +454,15 @@ function FillThreeBoxes(serNbr)	{
 }
 //-----------------------------------------------------------------
 
+function enableDisableRemoteReferralButton(form, disabled)
+{
+	var button=form.updateAndSendElectronically;		
+	if (button!=null) button.disabled=disabled;
+	button=form.submitAndSendElectronically;
+	if (button!=null) button.disabled=disabled;
+}
 
 //-->
-</SCRIPT>
-
-<script type="text/javascript" language="javascript">
-
 
 function BackToOscar() {
        window.close();
@@ -646,6 +668,7 @@ function fetchAttached() {
 }
 
 </script>
+<%=WebUtils.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF"
 	onload="window.focus();disableDateFields();fetchAttached();">
@@ -745,8 +768,7 @@ function fetchAttached() {
 					</td>
 				</tr>
 				<tr>
-					<td class="tite4" colspan="2"><bean:message
-						key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus" />
+					<td class="tite4" colspan="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus" />
 					</td>
 				</tr>
 				<tr>
@@ -755,8 +777,7 @@ function fetchAttached() {
 						<tr>
 							<td class="stat"><html:radio property="status" value="1" />
 							</td>
-							<td class="stat"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNoth" />:
+							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNoth" />:
 							</td>
 						</tr>
 					</table>
@@ -768,8 +789,7 @@ function fetchAttached() {
 						<tr>
 							<td class="stat"><html:radio property="status" value="2" />
 							</td>
-							<td class="stat"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSpecCall" />
+							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSpecCall" />
 							</td>
 						</tr>
 					</table>
@@ -781,8 +801,7 @@ function fetchAttached() {
 						<tr>
 							<td class="stat"><html:radio property="status" value="3" />
 							</td>
-							<td class="stat"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatCall" />
+							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatCall" />
 							</td>
 						</tr>
 					</table>
@@ -839,30 +858,11 @@ function fetchAttached() {
 
 				<!----Start new rows here-->
 				<tr>
-					<td colspan=2>
-					<%if (request.getAttribute("id") != null){ %> 
-					<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-					<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
-						<%}%>
-					<%}else{%>
-						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
-						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
-						<%}%>
-					<%}%>
-					</td>
-
-				</tr>
-				<tr>
 					<td>
 
 					<table border=0 width="100%">
 						<tr>
-							<td class="tite4"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
 							</td>
 							<td align="right" class="tite1">
 							<%if ( request.getAttribute("id") != null) {%> <html:text
@@ -872,11 +872,10 @@ function fetchAttached() {
 							</td>
 						</tr>
 						<tr>
-							<td class="tite4"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService" />:
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService" />:
 							</td>
-							<td align="right" class="tite1"><html:select
-								property="service" onchange="fillSpecialistSelect(this);">
+							<td align="right" class="tite1">
+								<html:select property="service" onchange="fillSpecialistSelect(this);">
 								<!-- <option value="-1">------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
 					<option/>
 				    	<option/>
@@ -885,11 +884,9 @@ function fetchAttached() {
 							</html:select></td>
 						</tr>
 						<tr>
-							<td class="tite4"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons" />:
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons" />:
 							</td>
-							<td align="right" class="tite2"><html:select
-								property="specialist" size="1" onchange="GetExtensionOn(this)">
+							<td align="right" class="tite2"><html:select property="specialist" size="1" onchange="onSelectSpecialist(this)">
 								<!-- <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
                                         <option/>
 	    				<option/>
@@ -904,32 +901,25 @@ function fetchAttached() {
 							<td align="right" class="tite2"><html:select
 								property="urgency">
 								<html:option value="2">
-									<bean:message
-										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent" />
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent" />
 								</html:option>
 								<html:option value="1">
-									<bean:message
-										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent" />
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent" />
 								</html:option>
 								<html:option value="3">
-									<bean:message
-										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn" />
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn" />
 								</html:option>
 							</html:select></td>
 						</tr>
 						<tr>
-							<td class="tite4"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPhone" />:
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPhone" />:
 							</td>
-							<td align="right" class="tite2"><input type="text"
-								name="phone" class="righty" /></td>
+							<td align="right" class="tite2"><input type="text" name="phone" class="righty" /></td>
 						</tr>
 						<tr>
-							<td class="tite4"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formFax" />:
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formFax" />:
 							</td>
-							<td align="right" class="tite3"><input type="text"
-								name="fax" class="righty" /></td>
+							<td align="right" class="tite3"><input type="text" name="fax" class="righty" /></td>
 						</tr>
 
 						<tr>
@@ -940,17 +930,15 @@ function fetchAttached() {
 								cols=20></textarea></td>
 						</tr>
 						<tr>
-							<td class="tite4"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPatientBook" />:</td>
-							<td align="right" class="tite3"><html:checkbox
-								property="patientWillBook" value="1"
-								onclick="disableDateFields()">
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPatientBook" />:</td>
+							<td align="right" class="tite3"><html:checkbox property="patientWillBook" value="1" onclick="disableDateFields()">
 							</html:checkbox></td>
 						</tr>
 						<tr>
 							<td class="tite4"><a
 								href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" />:</a>
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate"
+							/>:</a>
 
 							</td>
 							<td align="right" class="tite3">
@@ -1123,21 +1111,11 @@ if (requestId!=null) aburl1+="&requestId="+requestId; %>
 							<td width="30%" class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf" />:
 							</td>
-							<td><input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>"
-								onclick="importFromEnct('FamilyHistory',document.forms[0].clinicalInformation);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>"
-								onclick="importFromEnct('MedicalHistory',document.forms[0].clinicalInformation);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>"
-								onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>"
-								onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>"
-								onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
+							<td><input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
 							</td>
 						</tr>
 					</table>
@@ -1157,21 +1135,11 @@ if (requestId!=null) aburl1+="&requestId="+requestId; %>
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems" />:
 							<% } %>
 							</td>
-							<td><input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>"
-								onclick="importFromEnct('FamilyHistory',document.forms[0].concurrentProblems);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>"
-								onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>"
-								onclick="importFromEnct('ongoingConcerns',document.forms[0].concurrentProblems);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>"
-								onclick="importFromEnct('OtherMeds',document.forms[0].concurrentProblems);" />&nbsp;
-							<input type="button" class="btn"
-								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>"
-								onclick="importFromEnct('Reminders',document.forms[0].concurrentProblems);" />&nbsp;
+							<td><input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].concurrentProblems);" />&nbsp;
 							</td>
 						</tr>
 					</table>
@@ -1230,27 +1198,21 @@ System.out.println("requestId:"+requestId);
 
 				<tr>
 					<td colspan=2><input type="hidden" name="submission" value="">
-					<%if (request.getAttribute("id") != null){ %> <input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>"
-						onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"
-						onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"
-						onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
-					<%}%> <%}else{%> <input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>"
-						onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"
-						onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
-					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-					<input type="button"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"
-						onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
-					<%}%> <%}%>
+					<%if (request.getAttribute("id") != null){ %>
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+						<input name="updateAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
+						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
+						<%}%>
+					<%}else{%> 
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
+						<input name="submitAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
+						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
+						<%}%>
+					<%}%>
 					</td>
 				</tr>
 
@@ -1269,6 +1231,8 @@ System.out.println("requestId:"+requestId);
                 document.EctConsultationFormRequestForm.service.options.selectedIndex = 0;
                 document.EctConsultationFormRequestForm.specialist.options.selectedIndex = 0;
             <%}%>
+
+            onSelectSpecialist(document.EctConsultationFormRequestForm.specialist);
         //-->
         </script>
 

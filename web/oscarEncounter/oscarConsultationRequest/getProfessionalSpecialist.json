@@ -1,0 +1,14 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="net.sf.json.JSONSerializer"%>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%><%
+	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
+
+	ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(Integer.parseInt(request.getParameter("id")));
+
+	response.setContentType("text/x-json");
+    JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON(professionalSpecialist);
+    jsonArray.write(out);
+%>
