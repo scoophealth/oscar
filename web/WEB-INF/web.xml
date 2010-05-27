@@ -357,6 +357,10 @@
 	 	<servlet-name>ImageRenderingServlet</servlet-name>
 	 	<url-pattern>/imageRenderingServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
+        <url-pattern>*.json</url-pattern>
+    </servlet-mapping>
 
     <session-config>
     	<session-timeout>120</session-timeout> <!-- 120minutes -->
