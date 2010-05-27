@@ -47,25 +47,36 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "specId")
 	private Integer id;
+	
 	@Column(name = "fName")
 	private String firstName;
+	
 	@Column(name = "lName")
 	private String lastName;
+	
 	@Column(name = "proLetters")
 	private String professionalLetters;
+	
 	@Column(name = "address")
 	private String streetAddress;
+	
 	@Column(name = "phone")
 	private String phoneNumber;
+	
 	@Column(name = "fax")
 	private String faxNumber;
+	
 	@Column(name = "website")
 	private String webSite;
+	
 	@Column(name = "email")
 	private String emailAddress;
+	
 	@Column(name = "specType")
 	private String specialtyType;
+	
 	private String remoteHl7ReferralUrl;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
 	
