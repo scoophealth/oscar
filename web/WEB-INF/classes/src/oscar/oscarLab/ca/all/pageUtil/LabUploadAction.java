@@ -46,6 +46,7 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class LabUploadAction extends Action {
     protected static Logger logger = Logger.getLogger(LabUploadAction.class);
 
+    @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         LabUploadForm frm = (LabUploadForm) form;
         FormFile importFile = frm.getImportFile();
@@ -56,6 +57,7 @@ public class LabUploadAction extends Action {
         String outcome = "";
         String audit = "";
 
+        @SuppressWarnings("unchecked")
         ArrayList clientInfo = getClientInfo(service);
         PublicKey clientKey = (PublicKey) clientInfo.get(0);
         String type = (String) clientInfo.get(1);
@@ -63,16 +65,14 @@ public class LabUploadAction extends Action {
         try{
 
             InputStream is = decryptMessage(importFile.getInputStream(), key, clientKey);
-            Utilities u = new Utilities();
             String fileName = importFile.getFileName();
-            String filePath = u.saveFile(is, fileName);
+            String filePath = Utilities.saveFile(is, fileName);
             importFile.getInputStream().close();
             File file = new File(filePath);
 
             if (validateSignature(clientKey, signature, file)){
                 logger.debug("Validated Successfully");
-                HandlerClassFactory f = new HandlerClassFactory();
-                MessageHandler msgHandler = f.getHandler(type);
+                MessageHandler msgHandler = HandlerClassFactory.getHandler(type);
 
                 is = new FileInputStream(file);
                 FileUploadCheck fileC = new FileUploadCheck();

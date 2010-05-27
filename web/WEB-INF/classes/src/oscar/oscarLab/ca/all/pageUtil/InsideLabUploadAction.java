@@ -31,6 +31,7 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class InsideLabUploadAction extends Action {
     Logger logger = Logger.getLogger(InsideLabUploadAction.class);
     
+    @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         LabUploadForm frm = (LabUploadForm) form;
         FormFile importFile = frm.getImportFile();
@@ -59,8 +60,7 @@ public class InsideLabUploadAction extends Action {
             if (checkFileUploadedSuccessfully != FileUploadCheck.UNSUCCESSFUL_SAVE){
                 logger.info("filePath"+filePath);
                 logger.info("Type :"+type);
-                HandlerClassFactory f = new HandlerClassFactory();
-                MessageHandler msgHandler = f.getHandler(type);
+                MessageHandler msgHandler = HandlerClassFactory.getHandler(type);
                 if(msgHandler != null){
                    logger.info("MESSAGE HANDLER "+msgHandler.getClass().getName());
                 }

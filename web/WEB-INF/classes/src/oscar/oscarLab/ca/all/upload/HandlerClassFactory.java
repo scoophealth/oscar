@@ -15,25 +15,23 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.upload.handlers.DefaultHandler;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 
-/**
- *
- * @author wrighd
- */
-public class HandlerClassFactory {
+public final class HandlerClassFactory {
     
-    Logger logger = Logger.getLogger(HandlerClassFactory.class);
+    private static final Logger logger = MiscUtils.getLogger();
     
-    public HandlerClassFactory(){
+    private HandlerClassFactory(){
+    	// don't instantiate
     }
     
     /*
      *  Create and return the message handler corresponding to the message type
      */
-    public MessageHandler getHandler(String type) {
+    public static MessageHandler getHandler(String type) {
         Document doc = null;
         String msgType;
         String msgHandler = "";
@@ -43,11 +41,13 @@ public class HandlerClassFactory {
             return( new DefaultHandler());
         }
         try{
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
+            InputStream is = HandlerClassFactory.class.getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
             SAXBuilder parser = new SAXBuilder();
             doc = parser.build(is);
             
             Element root = doc.getRootElement();
+
+            @SuppressWarnings("unchecked")
             List items = root.getChildren();
             for (int i = 0; i < items.size(); i++){
                 Element e = (Element) items.get(i);
@@ -63,19 +63,13 @@ public class HandlerClassFactory {
             return( new DefaultHandler() );
         }else{
             try {
+                @SuppressWarnings("unchecked")
                 Class classRef = Class.forName(msgHandler);
                 MessageHandler mh = (MessageHandler) classRef.newInstance();
                 logger.debug("Message handler '"+msgHandler+"' created successfully");
                 return(mh);
-            } catch (ClassNotFoundException e) {
-                logger.debug("Could not find message handler: "+msgHandler+
-                        "\nUsing default message handler instead");
-                e.printStackTrace();
-                return(new DefaultHandler());
-            } catch (Exception e1){
-                logger.error("Could not create message handler: "+msgHandler+
-                        "\nUsing default message handler instead", e1);
-                e1.printStackTrace();
+            } catch (Exception e){
+                logger.error("Could not create message handler: "+msgHandler+", Using default message handler instead", e);
                 return(new DefaultHandler());
             }
         }
