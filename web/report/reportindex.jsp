@@ -48,6 +48,7 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -148,6 +149,37 @@ else if(r=='new') {
 	popupPageNew(600,750,x);
   }
 }
+
+function gonew(r) {
+//s.options[s.selectedIndex].value
+var s = document.report.provider_no.value ;
+var t = document.report.sdate.value ;
+var u = document.report.asdate.value ;
+var v = document.report.aedate.value ;
+var y = document.report.sTime.value ;
+var z = document.report.eTime.value ;
+var ro = document.report.rosteredOnly.checked;
+var w = 'reportdaysheet2.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
+var x = 'reportdaysheet2.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z ;
+var x2 = 'reportdaysheet2.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z + '&rosteredStatus=true';
+var y2 =  'tabulardaysheetreport.jsp?provider_no=' + s +'&sdate=' + document.report.tabDay.value.replace('/', '-');
+
+if (r=='tab')
+ {
+popupPage(600,750, y2);
+}
+else if(r=='new') {
+if(confirm("<bean:message key="report.reportindex.msgGoConfirm"/>") ) {
+popupPage(600,750,w);
+  }
+      }
+ else if( ro == true ) {
+ popupPage(600,750,x2);
+  }else {
+ popupPageNew(600,750,x);
+  }
+   }
+
 function ggo(r) {
 //s.options[s.selectedIndex].value
   var s = document.report.pprovider_no.value ;
@@ -276,7 +308,11 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 	<tr>
 		<td width="2"></td>
 		<td width="1">&nbsp;</td>
-                        <td width="300"><sup>*</sup><a HREF="#" ONCLICK="go('all')"><bean:message
+                        <td width="300">
+<oscar:oscarPropertiesCheck property="NEW_DAY_SHEET_STYLE" value="yes">
+                        <sup>*</sup><a HREF="#" ONCLICK="gonew('all')">Hospital Appointment</a><br>
+</oscar:oscarPropertiesCheck>
+                        <sup>*</sup><a HREF="#" ONCLICK="go('all')"><bean:message
 			key="report.reportindex.btnAllAppt" /></a><br>&nbsp;&nbsp; <bean:message key="report.reportindex.chkRostered"/> <input type="checkbox" id="rosteredOnly" value="true"> </td>
 		<td><a HREF="#"
 			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.asdate.value")%>')"><bean:message
