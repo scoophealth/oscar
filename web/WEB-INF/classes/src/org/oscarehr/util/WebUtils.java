@@ -28,11 +28,13 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
-public class WebUtils {
+public final class WebUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final String ERROR_MESSAGE_SESSION_KEY = WebUtils.class.getName() + ".ERROR_MESSAGE_SESSION_KEY";
+	private static final String INFO_MESSAGE_SESSION_KEY = WebUtils.class.getName() + ".INFO_MESSAGE_SESSION_KEY";
 
 	public static void dumpParameters(HttpServletRequest request) {
 		logger.error("--- Dump Request Parameters Start ---");
@@ -76,29 +78,99 @@ public class WebUtils {
 		return(sb.toString());
 	}
 
+	public static String popInfoMessagesAsHtml(HttpSession session) {
+		ArrayList<String> al = popInfoMessages(session);
+
+		StringBuilder sb = new StringBuilder();
+
+		if (al != null && al.size() > 0) {
+			sb.append("<ul style=\"color:#009900\">");
+			
+			for (String s : al)
+			{
+				sb.append("<li>");
+				sb.append(s);				
+				sb.append("</il>");
+			}
+			
+			sb.append("</ul>");
+		}
+
+		return(sb.toString());
+	}
+
+	public static String popErrorMessagesAsAlert(HttpSession session) {
+		ArrayList<String> al = popErrorMessages(session);
+
+		StringBuilder sb = new StringBuilder();
+
+		if (al != null && al.size() > 0) {
+			sb.append("<script type=\"text/javascript\">");
+			sb.append("alert('");
+			
+			for (String s : al)	sb.append(StringEscapeUtils.escapeJavaScript(s));				
+			
+			sb.append("');");
+			sb.append("</script>");
+		}
+
+		return(sb.toString());
+	}
+		
 	/**
 	 * @return an arrayList of error message or null if no messages, the messages are then removed from the session upon return from this call.
 	 */
 	public static ArrayList<String> popErrorMessages(HttpSession session) {
+		return(popMessages(session, ERROR_MESSAGE_SESSION_KEY));
+	}
+
+	public static void addErrorMessage(HttpSession session, String message) {
+		addMessage(session, ERROR_MESSAGE_SESSION_KEY, message);
+	}
+
+	public static void addResourceBundleErrorMessage(HttpServletRequest request, String key) {
+		String msg=LocaleUtils.getMessage(request, key);
+		addErrorMessage(request.getSession(), msg);
+	}
+
+	/**
+	 * @return an arrayList of error message or null if no messages, the messages are then removed from the session upon return from this call.
+	 */
+	public static ArrayList<String> popInfoMessages(HttpSession session) {
+		return(popMessages(session, INFO_MESSAGE_SESSION_KEY));
+	}
+
+	public static void addInfoMessage(HttpSession session, String message) {
+		addMessage(session, INFO_MESSAGE_SESSION_KEY, message);
+	}
+	
+	public static void addResourceBundleInfoMessage(HttpServletRequest request, String key) {
+		String msg=LocaleUtils.getMessage(request, key);
+		addInfoMessage(request.getSession(), msg);
+	}
+	/**
+	 * @return an arrayList of error message or null if no messages, the messages are then removed from the session upon return from this call.
+	 */
+	private static ArrayList<String> popMessages(HttpSession session, String type) {
 		synchronized (session) {
 			@SuppressWarnings("unchecked")
-			ArrayList<String> errors = (ArrayList<String>) (session.getAttribute(ERROR_MESSAGE_SESSION_KEY));
-			session.removeAttribute(ERROR_MESSAGE_SESSION_KEY);
+			ArrayList<String> errors = (ArrayList<String>) (session.getAttribute(type));
+			session.removeAttribute(type);
 			return (errors);
 		}
 	}
 
-	public static void addErrorMessage(HttpSession session, String errorMessage) {
+	private static void addMessage(HttpSession session, String type, String message) {
 		synchronized (session) {
 			@SuppressWarnings("unchecked")
-			ArrayList<String> errors = (ArrayList<String>) (session.getAttribute(ERROR_MESSAGE_SESSION_KEY));
+			ArrayList<String> errors = (ArrayList<String>) (session.getAttribute(type));
 
 			if (errors == null) {
 				errors = new ArrayList<String>();
-				session.setAttribute(ERROR_MESSAGE_SESSION_KEY, errors);
+				session.setAttribute(type, errors);
 			}
 
-			errors.add(errorMessage);
+			errors.add(message);
 		}
 	}
 }
