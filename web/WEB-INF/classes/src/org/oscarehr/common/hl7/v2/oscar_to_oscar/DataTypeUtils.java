@@ -23,10 +23,8 @@ public final class DataTypeUtils {
 		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(streetAddress));
 		xad.getCity().setValue(StringUtils.trimToNull(city));
 		xad.getStateOrProvince().setValue(StringUtils.trimToNull(province));
-		// HL7 0399 / iso 3166, 3 digit country code
 		xad.getCountry().setValue(StringUtils.trimToNull(country));
 		xad.getZipOrPostalCode().setValue(StringUtils.trimToNull(postalCode));
-		// HL7 0190 / O=Office
 		xad.getAddressType().setValue(addressType);
 	}
 }
