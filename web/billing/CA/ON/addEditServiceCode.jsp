@@ -80,16 +80,18 @@
 					bAdd = false;
 				}
 				if(bAdd) {
-					sqlMinMax = "insert into billingperclimit values('";
+					sqlMinMax = "insert into billingperclimit (service_code,min,max,effective_date) values('";
 					sqlMinMax += serviceCode + "', '";
 					sqlMinMax += request.getParameter("min") + "', '";
-					sqlMinMax += request.getParameter("max") + "' )";
+					sqlMinMax += request.getParameter("max") + "','";
+                                        sqlMinMax += request.getParameter("billingservice_date") + "' )";
 					dbObj.updateDBRecord(sqlMinMax);
 				} else {
 					sqlMinMax = "update billingperclimit set min='";
 					sqlMinMax += request.getParameter("min") + "', max='";
 					sqlMinMax += request.getParameter("max") + "' where service_code='";
-					sqlMinMax += serviceCode + "'";
+					sqlMinMax += serviceCode + "' and effective_date = '";
+                                        sqlMinMax += request.getParameter("billingservice_date") + "'";                                        
 					dbObj.updateDBRecord(sqlMinMax);
 				}
 			}
@@ -123,10 +125,11 @@
 			sql += request.getParameter("billingservice_date") + "',";
                         sql += "'','ON','00', '" + request.getParameter("termination_date") + "')";
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
-				String sqlMinMax = "insert into billingperclimit values('";
+				String sqlMinMax = "insert into billingperclimit (service_code, min, max, effective_date) values('";
 				sqlMinMax += serviceCode + "', '";
 				sqlMinMax += request.getParameter("min") + "', '";
-				sqlMinMax += request.getParameter("max") + "' )";
+				sqlMinMax += request.getParameter("max") + "', '";
+                                sqlMinMax += request.getParameter("billingservice_date") +"' )";
 				dbObj.updateDBRecord(sqlMinMax);
 			}
 			if(dbObj.updateDBRecord(sql) ) {
@@ -184,7 +187,7 @@ System.out.println(sql);
                         action = "edit" + serviceCode;
                         action2 = "add" + serviceCode;
 
-		    String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
+		    String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "' and effective_date = '" + prop.getProperty("billingservice_date") + "'";;
 System.out.println(sqlMinMax);
 			ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
 			if (rs2.next()) {
@@ -231,7 +234,7 @@ System.out.println(sql);
             action = "edit" + serviceCode;
             action2 = "add" + serviceCode;
 
-        String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
+        String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "' and effective_date = '" + prop.getProperty("billingservice_date") + "'";
 System.out.println(sqlMinMax);
             ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
             if (rs2.next()) {
