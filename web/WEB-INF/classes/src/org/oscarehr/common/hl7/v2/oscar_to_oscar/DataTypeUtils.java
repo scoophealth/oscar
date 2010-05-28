@@ -14,8 +14,8 @@ public final class DataTypeUtils {
 	 * @param xad
 	 * @param streetAddress i.e. 123 My St. unit 554
 	 * @param city
-	 * @param province 2 digit province / state code as defined by postal service, in canada it's in upper case.
-	 * @param country iso 3166 (3 digit version) / hl70399 code
+	 * @param province 2 digit province / state code as defined by postal service, in canada it's in upper case, i.e. BC, ON
+	 * @param country iso 3166, 3 digit version / hl70399 code, i.e. USA, CAN, AUS in upper case.
 	 * @param addressType hlt0190 code, i.e. O=office, H=Home
 	 * @throws DataTypeException
 	 */
