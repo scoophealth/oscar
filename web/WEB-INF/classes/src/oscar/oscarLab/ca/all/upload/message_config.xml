@@ -6,7 +6,8 @@
 	<handler name="ICL" className="ICLHandler" />
 	<handler name="MDS" className="MDSHandler" />
 	<handler name="PATHL7" className="PATHL7Handler" />
-        <handler name="HHSEMR" className="HHSEmrDownloadHandler"/>
-        <handler name="IHA" className="IHAHandler"/>
+    <handler name="HHSEMR" className="HHSEmrDownloadHandler"/>
+    <handler name="IHA" className="IHAHandler"/>
+    <handler name="OSCAR_TO_OSCAR_HL7_V2" className="OscarToOscarHl7V2Handler"/>
         
 </message-configuration>
