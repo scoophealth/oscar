@@ -7204,7 +7204,7 @@ create table oscarKeys(
 
 create table publicKeys(
 	service varchar(100) NOT NULL primary key,
-	type varchar(20) NOT NULL,
+	type varchar(100) NOT NULL,
 	pubKey text NOT NULL
 );
 
