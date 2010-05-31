@@ -204,7 +204,7 @@ System.out.println("out of here ##############");
         <td align="left"><%=Misc.toUpperLowerCase(rsdemo.getString("name"))%></td>
             <td align="center">&nbsp;<%=rsdemo.getString("dob")%>&nbsp;</td>
                 <td align="center">&nbsp;<%=rsdemo.getString("hin")+" "+rsdemo.getString("ver")%>&nbsp;</td>
-                    <td align="center">&nbsp;<%=rsdemo.getString("reason")%>&nbsp;</td>
+                    <td align="left">&nbsp;<%=rsdemo.getString("reason")%>&nbsp;</td>
                     </tr>
                     	<%
                     	  }
