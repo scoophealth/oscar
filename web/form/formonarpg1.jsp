@@ -333,14 +333,12 @@ function calToday(field) {
 function calByLMP(obj) {
 	if (document.forms[0].pg1_menLMP.value!="" && valDate(document.forms[0].pg1_menLMP)==true) {
 		var str_date = document.forms[0].pg1_menLMP.value;
-        var yyyy = str_date.substring(0, str_date.indexOf("/"));
-        var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
-        var dd  = str_date.substring(eval(str_date.lastIndexOf("/")+1));
-		var calDate=new Date();
-		calDate.setFullYear(yyyy);
-		calDate.setMonth(mm);
-		calDate.setDate(dd);
-		calDate.setHours("8");
+                var tmp = str_date.split("/", 3);
+                var yyyy = tmp[0];
+                var mm = tmp[1]; 
+                mm -= 1;
+                var dd  = tmp[2];
+		var calDate=new Date(yyyy,mm,dd,8,0,0,0);		                
 		var odate = new Date(calDate.getTime() + (280 * 86400000));
 		varMonth1 = odate.getMonth()+1;
 		varMonth1 = varMonth1>9? varMonth1 : ("0"+varMonth1);
