@@ -1,0 +1,1 @@
+alter table document add number_of_pages int(6) not null default 0;
