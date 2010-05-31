@@ -21,6 +21,14 @@
 			</td>								
 		</tr>
 		<tr>
+			<td class="genericTableHeader">Source of Information</td>
+			<td class="genericTableData">
+				<select name="medication_<%=medicationNumber%>_source_of_info">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "medication_"+medicationNumber+"_source_of_info", OcanForm.getOcanFormOptions("Source of Information"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
 			<td class="genericTableHeader">Dosage</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "medication_"+medicationNumber+"_dosage", 25,prepopulationLevel)%>	
