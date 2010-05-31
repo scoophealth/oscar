@@ -22,6 +22,8 @@
 
 package org.oscarehr.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -49,6 +51,25 @@ public final class WebUtils {
 		logger.error("--- Dump Request Parameters End ---");
 	}
 
+	/**
+	 * Be warned, this is a debugging method, it should not be called in production.
+	 * Calling this method will flush the input stream as servlet streams are not markable.
+	 * @param request
+	 * @throws IOException
+	 */
+	public static void dumpRequest(HttpServletRequest request) throws IOException {
+		logger.error("--- Dump Request Start ---");
+
+		InputStream is = request.getInputStream();
+			
+		StringBuilder sb=new StringBuilder();
+		int x=0;
+		while ((x=is.read())!=-1) sb.append((char)x);
+		logger.error(sb.toString());
+		
+		logger.error("--- Dump Request End ---");
+	}
+		
 	/**
 	 * This method is intended to be used to see if a check box was checked on a form submit
 	 */
