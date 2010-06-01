@@ -31,7 +31,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<html:html locale="true">
+
+<%@page import="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm"%><html:html locale="true">
 
 <%
   ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
@@ -100,8 +101,8 @@ function BackToOscar() {
 					<table>
 						<%
                            if (request.getAttribute("specId") != null ){
-                           oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm thisForm;
-                           thisForm = (oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm) request.getAttribute("EctConAddSpecialistForm");
+                           EctConAddSpecialistForm thisForm;
+                           thisForm = (EctConAddSpecialistForm) request.getAttribute("EctConAddSpecialistForm");
                            thisForm.setFirstName( (String) request.getAttribute("fName"));
                            thisForm.setLastName( (String) request.getAttribute("lName"));
                            thisForm.setProLetters( (String) request.getAttribute("proLetters"));
@@ -112,7 +113,9 @@ function BackToOscar() {
                            thisForm.setEmail( (String) request.getAttribute("email"));
                            thisForm.setSpecType( (String) request.getAttribute("specType"));
                            thisForm.setSpecId( (String) request.getAttribute("specId"));
-
+                           thisForm.seteReferralUrl( (String) request.getAttribute("eReferralUrl"));
+                           thisForm.seteReferralOscarKey( (String) request.getAttribute("eReferralOscarKey"));
+                           thisForm.seteReferralServiceKey( (String) request.getAttribute("eReferralServiceKey"));
                            }
                         %>
 						<html:hidden name="EctConAddSpecialistForm" property="specId" />
@@ -148,8 +151,31 @@ function BackToOscar() {
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.specialistType" /></td>
 							<td><html:text name="EctConAddSpecialistForm" property="specType" /></td>
-							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralUrl" /></td>
-							<td><html:text name="EctConAddSpecialistForm" property="referralUrl" /></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralUrl" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="eReferralUrl" /></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralOscarKey" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="eReferralOscarKey" /></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralServiceKey" /></td>
+							<td><html:text name="EctConAddSpecialistForm" property="eReferralServiceKey" /></td>
+							<td></td>
+							<td></td>
 							<td></td>
 							<td></td>
 						</tr>

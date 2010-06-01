@@ -6381,7 +6381,9 @@ CREATE TABLE professionalSpecialists (
   website varchar(128),
   email varchar(128),
   specType varchar(128),
-  remoteHl7ReferralUrl varchar(255),
+  eReferralUrl varchar(255),
+  eReferralOscarKey varchar(1024),
+  eReferralServiceKey varchar(1024),
   lastUpdated datetime not null
 ) ;
 

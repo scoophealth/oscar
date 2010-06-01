@@ -75,7 +75,9 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	@Column(name = "specType")
 	private String specialtyType;
 	
-	private String remoteHl7ReferralUrl;
+	private String eReferralUrl;
+	private String eReferralOscarKey;
+	private String eReferralServiceKey;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
@@ -170,11 +172,28 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
     	this.lastUpdated = lastUpdated;
     }
 
-	public String getRemoteHl7ReferralUrl() {
-    	return remoteHl7ReferralUrl;
+	
+	public String geteReferralUrl() {
+    	return eReferralUrl;
     }
 
-	public void setRemoteHl7ReferralUrl(String remoteHl7ReferralUrl) {
-    	this.remoteHl7ReferralUrl = StringUtils.trimToNull(remoteHl7ReferralUrl);
+	public void seteReferralUrl(String eReferralUrl) {
+    	this.eReferralUrl = StringUtils.trimToNull(eReferralUrl);
+    }
+
+	public String geteReferralOscarKey() {
+    	return eReferralOscarKey;
+    }
+
+	public void seteReferralOscarKey(String eReferralOscarKey) {
+    	this.eReferralOscarKey = StringUtils.trimToNull(eReferralOscarKey);
+    }
+
+	public String geteReferralServiceKey() {
+    	return eReferralServiceKey;
+    }
+
+	public void seteReferralServiceKey(String eReferralServiceKey) {
+    	this.eReferralServiceKey = StringUtils.trimToNull(eReferralServiceKey);
     }
 }

@@ -101,7 +101,9 @@ public class EctConAddSpecialistAction extends Action {
         professionalSpecialist.setWebSite(addSpecailistForm.getWebsite());
         professionalSpecialist.setEmailAddress(addSpecailistForm.getEmail());
         professionalSpecialist.setSpecialtyType(addSpecailistForm.getSpecType());
-        professionalSpecialist.setRemoteHl7ReferralUrl(addSpecailistForm.getReferralUrl());
+        professionalSpecialist.seteReferralUrl(addSpecailistForm.geteReferralUrl());
+        professionalSpecialist.seteReferralOscarKey(addSpecailistForm.geteReferralOscarKey());
+        professionalSpecialist.seteReferralServiceKey(addSpecailistForm.geteReferralServiceKey());
     }
 }
 

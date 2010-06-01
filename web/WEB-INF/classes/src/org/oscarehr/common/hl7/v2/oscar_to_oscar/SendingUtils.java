@@ -53,7 +53,6 @@ public final class SendingUtils {
 			fileOutputStream.flush();
 			fileOutputStream.close();
 
-//			MultipartRequestEntity multipartRequestEntity=new MultipartRequestEntity(parts, params);
 			MultipartPostMethod multipartPostMethod = new MultipartPostMethod(url);
 			multipartPostMethod.addParameter("importFile", tempFile.getName(), tempFile);
 			multipartPostMethod.addParameter("key", encodeBase64(encryptedSecretKey));

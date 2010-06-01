@@ -44,7 +44,9 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String transType;
 	String specId;
 	int whichType;
-	String referralUrl;
+	String eReferralUrl;
+	String eReferralOscarKey;
+	String eReferralServiceKey;
 	
 	public EctConAddSpecialistForm() {
 		whichType = 0;
@@ -60,7 +62,6 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	}
 
 	public void setTransType(String str) {
-		System.out.println("setter transtype = ".concat(String.valueOf(String.valueOf(str))));
 		transType = str;
 	}
 
@@ -79,7 +80,6 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	}
 
 	public void setLastName(String str) {
-		System.out.println("setter Last Name");
 		lName = str;
 	}
 
@@ -156,7 +156,6 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	}
 
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-		System.out.println("Validating Add Spec Form");
 		ActionErrors errors = new ActionErrors();
 		if (fName == null || fName.length() == 0) errors.add("fName", new ActionMessage("Errors.Firstname"));
 		if (lName == null || lName.length() == 0) errors.add("lName", new ActionMessage("Errors.Lastname"));
@@ -182,6 +181,9 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		specType = null;
 		transType = null;
 		specId = null;
+		eReferralUrl = null;
+		eReferralOscarKey = null;
+		eReferralServiceKey = null;
 		whichType = 0;
 	}
 
@@ -203,12 +205,29 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		this.whichType = whichType;
 	}
 
-	public String getReferralUrl() {
-    	return referralUrl;
+	public String geteReferralUrl() {
+		return eReferralUrl;
     }
 
-	public void setReferralUrl(String referralUrl) {
-    	this.referralUrl = referralUrl;
+	public void seteReferralUrl(String eReferralUrl) {
+    	this.eReferralUrl = eReferralUrl;
     }
 
+	public String geteReferralOscarKey() {
+    	return eReferralOscarKey;
+    }
+
+	public void seteReferralOscarKey(String eReferralOscarKey) {
+    	this.eReferralOscarKey = eReferralOscarKey;
+    }
+
+	public String geteReferralServiceKey() {
+    	return eReferralServiceKey;
+    }
+
+	public void seteReferralServiceKey(String eReferralServiceKey) {
+    	this.eReferralServiceKey = eReferralServiceKey;
+    }
+
+	
 }
