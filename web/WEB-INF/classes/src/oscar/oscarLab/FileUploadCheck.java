@@ -81,8 +81,7 @@ public class FileUploadCheck {
    public String getMd5Sum(InputStream is){  
       String md5sum = null;
       try{
-         MD5 md5 = new MD5();
-         md5sum = md5.getHashString(is);                  
+         md5sum = MD5.getHashString(is);                  
       }catch(Exception e){
          e.printStackTrace();
       }
