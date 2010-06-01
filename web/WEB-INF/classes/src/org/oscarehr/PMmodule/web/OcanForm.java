@@ -433,8 +433,8 @@ public class OcanForm {
 		renderSingleCheckbox(optionMap.get("013-16"),sb,question,existingAnswers);
 		sb.append("<h4>Other</h4>");
 		renderSingleCheckbox(optionMap.get("013-21"),sb,question,existingAnswers);
-		renderSingleCheckbox(optionMap.get("013-24"),sb,question,existingAnswers);
-		renderSingleCheckbox(optionMap.get("013-25"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("UNK"),sb,question,existingAnswers);
+		renderSingleCheckbox(optionMap.get("CDA"),sb,question,existingAnswers);
 		
 		
 		return(sb.toString());
