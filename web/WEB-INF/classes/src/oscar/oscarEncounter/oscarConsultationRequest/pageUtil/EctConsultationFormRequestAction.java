@@ -25,9 +25,16 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +46,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.LocaleUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -215,7 +225,7 @@ public class EctConsultationFormRequestAction extends Action {
 	            doHl7Send(Integer.parseInt(requestId));
 	            WebUtils.addResourceBundleInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
             } catch (Exception e) {
-            	logger.error("Error contacting remote oscar instance.", e);
+            	logger.error("Error contacting remote server.", e);
             	
 	            WebUtils.addResourceBundleErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESendError");
 	    		ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
@@ -231,10 +241,16 @@ public class EctConsultationFormRequestAction extends Action {
 		return forward;
 	}
 
-	private void doHl7Send(Integer consultationRequestId) {
+	private void doHl7Send(Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException {
 		
 	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
+	    ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
+
 	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
+	    ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
+	    
+	    byte[] dataBytes=("Stubbed test data, Consultation request id : "+consultationRequestId).getBytes();
+	    SendingUtils.send(dataBytes, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey());
 	    
 	    throw(new UnsupportedOperationException("not finished yet"));
     }
