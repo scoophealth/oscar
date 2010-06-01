@@ -158,26 +158,15 @@ function BackToOscar() {
 						</tr>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralUrl" /></td>
-							<td><html:text name="EctConAddSpecialistForm" property="eReferralUrl" /></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralUrl" /></td>
 						</tr>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralOscarKey" /></td>
-							<td><html:text name="EctConAddSpecialistForm" property="eReferralOscarKey" /></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralOscarKey" /></td>
 						</tr>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralServiceKey" /></td>
-							<td><html:text name="EctConAddSpecialistForm" property="eReferralServiceKey" /></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralServiceKey" /></td>
 						</tr>
 						<tr>
 							<td colspan="6">
