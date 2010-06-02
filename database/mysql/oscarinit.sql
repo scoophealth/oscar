@@ -7988,3 +7988,13 @@ CREATE TABLE `providersite` (
   `site_id` int(11) NOT NULL,
   PRIMARY KEY  (`provider_no`,`site_id`)
 ) TYPE=MyISAM;
+
+CREATE TABLE `other_id` (
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	table_name int NOT NULL,
+	table_id int NOT NULL,
+	other_key varchar(30) NOT NULL,
+	other_id varchar(30) NOT NULL,
+	deleted boolean NOT NULL
+);
+
