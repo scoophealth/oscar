@@ -250,7 +250,7 @@ $("document").ready(function(){
 
 <form id="ocan_staff_form" name="ocan_staff_form" action="ocan_form_action.jsp" onsubmit="return submitOcanForm()">
 	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
-	<h3>OCAN Staff Assessment (v1.2)</h3>
+	<h3>OCAN Staff Assessment (v2.0)</h3>
 
 	<br />
 	
@@ -1215,9 +1215,19 @@ $("document").ready(function(){
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Date (YYYY-MM) when Consumer first entered your Organization</td>
-			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "firstEntryDate",false,prepopulationLevel)%>				
+			<td class="genericTableData">
+			Year: 
+				<select name="year_firstEntryDate">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "year_firstEntryDate", OcanForm.getOcanFormOptions("Year of First Entry Date"),prepopulationLevel)%>
+				</select>
+			&nbsp;&nbsp;
+			Month:
+				<select name="month_firstEntryDate">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "month_firstEntryDate", OcanForm.getOcanFormOptions("Month of First Entry Date"),prepopulationLevel)%>
+				</select>		
 			</td>
+			
+			
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Date (YYYY-MM) when Consumer first entered your Organization</td>
@@ -1418,6 +1428,13 @@ $("document").ready(function(){
 				</select>					
 			</td>
 		</tr>		
+		
+		<tr>
+			<td class="genericTableHeader">Where do you live - Other</td>
+			<td class="genericTableData">
+				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(), "1_where_live_other", 25,prepopulationLevel)%>						
+			</td>
+		</tr>	
 				
 		<tr>
 			<td class="genericTableHeader">Do you receive any support?</td>
@@ -3276,6 +3293,12 @@ This information is collected from a variety of sources, including self-report, 
 			</td>
 		</tr>
 		
+		<tr>
+			<td class="genericTableHeader">What is your primary source of income - Other</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"income_source_type_other",5,30,prepopulationLevel)%>
+			</td>
+		</tr>
 		
 		<tr>
 			<td colspan="2">24. Benefits</td>

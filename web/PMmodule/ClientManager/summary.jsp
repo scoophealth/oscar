@@ -510,7 +510,7 @@ function openSurvey() {
 		{
 	%>
 	<tr>
-		<td width="20%">OCAN Staff Assessment</td>
+		<td width="20%">OCAN 2.0 Staff Assessment</td>
 		<c:if test="${ocanStaffForm != null}">
 			<td><c:out value="${ocanStaffForm.created}" /></td>
 			<td><c:out value="${ocanStaffForm.providerName}" /></td>
@@ -531,7 +531,7 @@ function openSurvey() {
 	</tr>
 	
 	<tr>
-		<td width="20%">OCAN Consumer Self-Assessment</td>
+		<td width="20%">OCAN 2.0 Consumer Self-Assessment</td>
 		<c:if test="${ocanClientForm != null}">
 			<td><c:out value="${ocanClientForm.created}" /></td>
 			<td><c:out value="${ocanClientForm.providerName}" /></td>
