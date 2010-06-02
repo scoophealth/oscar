@@ -17,6 +17,10 @@ import java.util.ArrayList;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
+import org.oscarehr.common.model.Hl7TextInfo;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -29,21 +33,21 @@ import oscar.util.UtilDateUtilities;
  *
  * @author wrighd
  */
-public class MessageUploader {
+public final class MessageUploader {
     
-    Logger logger = Logger.getLogger(MessageUploader.class);
+    private static final Logger logger = MiscUtils.getLogger();
     
-    /**
-     * Creates a new instance of MessageUploader
-     */
-    public MessageUploader() {
+    private MessageUploader() {
+    	// there's no reason to instantiate a class with no fields. 
     }
     
     /**
      *  Insert the lab into the proper tables of the database
      */
-    public String routeReport(String type, String hl7Body,int fileId) throws Exception{
+    public static String routeReport(String type, String hl7Body,int fileId) throws Exception{
         
+    	Hl7TextInfoDao hl7TextInfoDao=(Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+    	
         String retVal = "";
         try{
             Factory f = new Factory();
@@ -118,20 +122,27 @@ public class MessageUploader {
             pstmt.executeUpdate();
             
             ResultSet rs = pstmt.getGeneratedKeys();
-            String insertID = null;
-            if(rs.next())
-                insertID = db.getString(rs,1);
+            rs.next();
+            int insertID = Integer.parseInt(db.getString(rs,1));
             
-            insertStmt = "INSERT INTO hl7TextInfo (lab_no, last_name, first_name, sex, health_no, result_status, final_result_count, obr_date, priority, requesting_client, discipline, report_status, accessionNum)"+
-                    " VALUES ('"+insertID+"', '"+lastName.replaceAll("'", "\\\\'")+"', '"+firstName.replaceAll("'", "\\\\'")+"', '"+sex+"', '"+hin.replaceAll("'", "\\\\'")+"', '"+resultStatus+"', '"+finalResultCount+"', '"+obrDate.replaceAll("'", "\\\\'")+"', '"+priority+
-                    "', '"+requestingClient.replaceAll("'", "\\\\'")+"', '"+discipline.replaceAll("'", "\\\\'")+"', '"+reportStatus+"', '"+accessionNum.replaceAll("'", "\\\\'")+"')";
-            
-            pstmt = conn.prepareStatement(insertStmt);
-            pstmt.executeUpdate();
-            pstmt.close();
+            Hl7TextInfo hl7TextInfo=new Hl7TextInfo();
+            hl7TextInfo.setLabNumber(insertID);
+            hl7TextInfo.setLastName(lastName);
+            hl7TextInfo.setFirstName(firstName);
+            hl7TextInfo.setSex(sex);
+            hl7TextInfo.setHealthNumber(hin);
+            hl7TextInfo.setResultStatus(resultStatus);
+            hl7TextInfo.setFinalResultCount(finalResultCount);
+            hl7TextInfo.setObrDate(obrDate);
+            hl7TextInfo.setPriority(priority);
+            hl7TextInfo.setRequestingClient(requestingClient);
+            hl7TextInfo.setDiscipline(discipline);
+            hl7TextInfo.setReportStatus(reportStatus);
+            hl7TextInfo.setAccessionNumber(accessionNum);
+            hl7TextInfoDao.persist(hl7TextInfo);
             
             String demProviderNo = patientRouteReport( insertID, lastName, firstName, sex, dob, hin, DBHandler.getConnection());
-            providerRouteReport( insertID, docNums, DBHandler.getConnection(), demProviderNo, type);
+            providerRouteReport(String.valueOf(insertID), docNums, DBHandler.getConnection(), demProviderNo, type);
             retVal = h.audit();
         }catch(Exception e){
             logger.error("Error uploading lab to database");
@@ -145,7 +156,7 @@ public class MessageUploader {
     /**
      *  Attempt to match the doctors from the lab to a provider
      */
-    private void providerRouteReport(String labId, ArrayList docNums, Connection conn, String altProviderNo, String labType) throws Exception {
+    private static void providerRouteReport(String labId, ArrayList docNums, Connection conn, String altProviderNo, String labType) throws Exception {
         
         ArrayList providerNums = new ArrayList();
         PreparedStatement pstmt;
@@ -184,7 +195,7 @@ public class MessageUploader {
      *  Attempt to match the patient from the lab to a demographic, return the patients provider
      *  which is to be used then no other provider can be found to match the patient to.
      */
-    private String patientRouteReport(String labId, String lastName, String firstName, String sex, String dob, String hin, Connection conn) throws SQLException {
+    private static String patientRouteReport(int labId, String lastName, String firstName, String sex, String dob, String hin, Connection conn) throws SQLException {
         
         String sql;
         String demo = "0";
@@ -262,7 +273,7 @@ public class MessageUploader {
                 logger.info("Could not find patient for lab: "+labId+ " # of possible matches :"+count);
             }else{
                 Hl7textResultsData rd = new Hl7textResultsData();
-                rd.populateMeasurementsTable(labId, demo);
+                rd.populateMeasurementsTable(""+labId, demo);
             }
             
             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+demo+"', '"+labId+"','HL7')";
@@ -282,7 +293,7 @@ public class MessageUploader {
      *  Used when errors occur to clean the database of labs that have not been
      *  inserted into all of the necessary tables
      */
-    public void clean(int fileId){
+    public static void clean(int fileId){
         
         try{
             

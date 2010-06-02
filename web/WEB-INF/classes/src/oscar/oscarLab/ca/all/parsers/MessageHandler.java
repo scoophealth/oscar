@@ -183,7 +183,7 @@ public interface MessageHandler {
      *  Return a list of all possible headers retrieved from getObservationHeader
      *  each header will only occur once in the list
      */
-    public ArrayList getHeaders();
+    public ArrayList<String> getHeaders();
     
     /**
      *  Return the number of comments (usually NTE segments) that follow ith 

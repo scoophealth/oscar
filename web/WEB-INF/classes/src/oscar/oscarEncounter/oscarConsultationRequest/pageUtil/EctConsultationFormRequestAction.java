@@ -50,7 +50,6 @@ import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ProfessionalSpecialist;
-import org.oscarehr.util.LocaleUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
@@ -249,7 +248,8 @@ public class EctConsultationFormRequestAction extends Action {
 	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
 	    ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 	    
-	    byte[] dataBytes=("Stubbed test data, Consultation request id : "+consultationRequestId).getBytes();
+	    byte[] dataBytes=("Stubbed test data, Consultation request id : "+consultationRequestId+" : "+(new java.util.Date())).getBytes();
+	    
 	    SendingUtils.send(dataBytes, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey());
 	    
 	    throw(new UnsupportedOperationException("not finished yet"));

@@ -32,14 +32,13 @@ public class GDMLHandler implements MessageHandler  {
     public String parse(String fileName,int fileId){
         
         Utilities u = new Utilities();
-        MessageUploader uploader = new MessageUploader();
         int i = 0;
         try {
             ArrayList messages = u.separateMessages(fileName);
             for (i=0; i < messages.size(); i++){
                 
                 String msg = (String) messages.get(i);
-                uploader.routeReport("GDML", msg,fileId);
+                MessageUploader.routeReport("GDML", msg,fileId);
                 
             }
             
@@ -49,7 +48,7 @@ public class GDMLHandler implements MessageHandler  {
             updateLabStatus(messages.size());
             logger.info("Parsed OK");
         } catch (Exception e) {
-            uploader.clean(fileId);
+        	MessageUploader.clean(fileId);
             logger.error("Could not upload message", e);
             return null;
         }

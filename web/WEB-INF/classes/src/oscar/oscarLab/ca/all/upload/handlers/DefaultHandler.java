@@ -34,7 +34,6 @@ public class DefaultHandler implements MessageHandler {
     
     public String parse(String fileName,int fileId){
         Document xmlDoc = getXML(fileName);
-        MessageUploader uploader = new MessageUploader();
         
         /*
          *  If the message is in xml format parse through all the nodes looking for
@@ -51,11 +50,11 @@ public class DefaultHandler implements MessageHandler {
                     if (hl7Body != null && hl7Body.indexOf("\nPID|") > 0){
                         msgCount++;
                         logger.info("using xml HL7 Type "+getHl7Type());
-                        uploader.routeReport(getHl7Type(), hl7Body,fileId);
+                        MessageUploader.routeReport(getHl7Type(), hl7Body,fileId);
                     }
                 }
             }catch(Exception e){
-                uploader.clean(fileId);
+            	MessageUploader.clean(fileId);
                 logger.error("ERROR:", e);
                 return null;
             }
@@ -67,10 +66,10 @@ public class DefaultHandler implements MessageHandler {
                 for (i=0; i < messages.size(); i++){
                     String msg = (String) messages.get(i);
                     logger.info("using HL7 Type "+getHl7Type());
-                    uploader.routeReport(getHl7Type(), msg,fileId);
+                    MessageUploader.routeReport(getHl7Type(), msg,fileId);
                 }
             }catch(Exception e){
-                uploader.clean(fileId);
+            	MessageUploader.clean(fileId);
                 logger.error("ERROR:", e);
                 return null;
             }

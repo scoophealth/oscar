@@ -27,7 +27,6 @@ public class MDSHandler implements MessageHandler  {
     public String parse(String fileName,int fileId){
         
         Utilities u = new Utilities();
-        MessageUploader uploader = new MessageUploader();
         int i = 0;
         try {
 
@@ -36,7 +35,7 @@ public class MDSHandler implements MessageHandler  {
             for (i=0; i < messages.size(); i++){
                 
                 String msg = (String) messages.get(i);
-                String auditLine = uploader.routeReport("MDS", msg,fileId)+"\n";
+                String auditLine = MessageUploader.routeReport("MDS", msg,fileId)+"\n";
                 audit.append(auditLine);
 
             }
@@ -45,7 +44,7 @@ public class MDSHandler implements MessageHandler  {
             return(audit.toString());
 
         } catch (Exception e) {
-            uploader.clean(fileId);
+        	MessageUploader.clean(fileId);
             logger.error("Could not parse message", e);
             return null;
         }

@@ -23,7 +23,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.log4j.Logger;
@@ -31,17 +30,16 @@ import org.oscarehr.util.MiscUtils;
 
 public final class SendingUtils {
 
+	public static final String SERVICE_NAME = "OSCAR_TO_OSCAR_HL7_V2";
 	private static final Logger logger = MiscUtils.getLogger();
-	private static final String SERVICE_NAME = "OSCAR_TO_OSCAR_HL7_V2";
 	private static final int CONNECTION_TIME_OUT = 10000;
-	private static final Base64 base64 = new Base64();
 
 	public static int send(byte[] dataBytes, String url, String publicOscarKeyString, String publicServiceKeyString) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeySpecException {
-		PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(base64.decode(publicServiceKeyString.getBytes("UTF-8")));
+		PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(EncodingUtils.base64.decode(publicServiceKeyString.getBytes(EncodingUtils.ENCODING)));
 		KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
 		PrivateKey publicServiceKey = privKeyFactory.generatePrivate(privKeySpec);
 
-		X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(base64.decode(publicOscarKeyString.getBytes("UTF-8")));
+		X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(EncodingUtils.base64.decode(publicOscarKeyString.getBytes(EncodingUtils.ENCODING)));
 		KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
 		PublicKey publicOscarKey = pubKeyFactory.generatePublic(pubKeySpec);
 
@@ -108,7 +106,7 @@ public final class SendingUtils {
 	}
 
 	private static String encodeBase64(byte[] b) throws UnsupportedEncodingException {
-		return (new String(base64.encode(b), "UTF-8"));
+		return (new String(EncodingUtils.base64.encode(b), EncodingUtils.ENCODING));
 	}
 
 	public static void main(String... argv) throws Exception {

@@ -40,20 +40,19 @@ public class PATHL7Handler implements MessageHandler  {
         
         if (doc != null){
             int i = 0;
-            MessageUploader uploader = new MessageUploader();
             try{
                 Node messageSpec = doc.getFirstChild();
                 NodeList messages = messageSpec.getChildNodes();
                 for (i=0; i<messages.getLength(); i++){
                     
                     String hl7Body = messages.item(i).getFirstChild().getTextContent();
-                    uploader.routeReport("PATHL7", hl7Body,fileId);
+                    MessageUploader.routeReport("PATHL7", hl7Body,fileId);
                     
                 }
             }catch(Exception e){
                 logger.error("Could not upload PATHL7 message", e);
                 e.printStackTrace();
-                uploader.clean(fileId);
+                MessageUploader.clean(fileId);
                 return null;
             }
             return("success");

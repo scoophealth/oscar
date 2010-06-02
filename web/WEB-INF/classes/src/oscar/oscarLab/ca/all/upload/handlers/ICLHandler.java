@@ -29,21 +29,20 @@ public class ICLHandler implements MessageHandler  {
     public String parse(String fileName,int fileId){
         
         ICLUtilities u = new ICLUtilities();
-        MessageUploader uploader = new MessageUploader();
         int i = 0;
         try {
             ArrayList messages = u.separateMessages(fileName);
             for (i=0; i < messages.size(); i++){
                 
                 String msg = (String) messages.get(i);
-                uploader.routeReport("ICL", msg,fileId);
+                MessageUploader.routeReport("ICL", msg,fileId);
                 
             }
             
             updateLabStatus(messages.size());
         } catch (Exception e) {
 
-            uploader.clean(fileId);
+        	MessageUploader.clean(fileId);
             logger.error("Could not upload message", e);
             return null;
         }

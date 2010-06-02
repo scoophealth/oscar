@@ -23,14 +23,33 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.EncodingUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.oscarLab.ca.all.upload.MessageUploader;
 
 public class OscarToOscarHl7V2Handler implements MessageHandler {
 	private Logger logger = MiscUtils.getLogger();
 
 	public String parse(String fileName, int fileId) {
-	    logger.error("Not Implmented yet, OscarToOscarHl7V2Handler.parse(). filename="+fileName+", fileId="+fileId);
+		
+		try {
+	        byte[] dataBytes=FileUtils.readFileToByteArray(new File(fileName));
+	        String dataString=new String(dataBytes, EncodingUtils.ENCODING);
+	        
+			MessageUploader.routeReport(SendingUtils.SERVICE_NAME, dataString, fileId);
+
+logger.error("Not Implmented yet, OscarToOscarHl7V2Handler.parse(). filename="+fileName+", fileId="+fileId);
+		} catch (Exception e) {
+	        logger.error("Unexpected error.", e);
+	        throw(new RuntimeException(e));
+        }
+        
 	    return null;
     }
 }
