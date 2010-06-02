@@ -1,5 +1,5 @@
 <%@ page
-	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*"
+	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -108,17 +108,32 @@
 %>
 <p>
 <h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
-</p>
+
 <script LANGUAGE="JavaScript">
 	self.opener.refresh();
 	self.close();
 </script>
 <%
+		String[] param2 = new String[7];
+		param2[0]=param[0]; //provider_no
+		param2[1]=param[1]; //appointment_date
+		param2[2]=param[2]; //start_time
+		param2[3]=param[3]; //end_time
+		param2[4]=param[13]; //createdatetime
+		param2[5]=param[14]; //creator
+		param2[6]=param[16]; //demographic_no
+
+		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
+		if (resultList.size()>0) {
+			Integer apptNo = (Integer)resultList.get(0).get("appointment_no");
+			String mcNumber = request.getParameter("appt_mc_number");
+			new OtherIdManager().saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+		}
 	} else {
 %>
 <p>
 <h1><bean:message key="appointment.addappointment.msgAddFailure" /></h1>
-</p>
+
 <%  
 	}
 %>

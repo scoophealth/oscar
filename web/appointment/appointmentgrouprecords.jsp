@@ -7,7 +7,7 @@
 	boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 %>
 <%@ page
-	import="java.util.*, java.sql.*,java.net.*, oscar.*, oscar.util.*"
+	import="java.util.*, java.sql.*,java.net.*, oscar.*, oscar.util.*, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -40,6 +40,7 @@
 	    param[15]=request.getParameter("remarks");
 	    param[17]=(String)request.getSession().getAttribute("programId_oscarView");
 		
+		String[] param2 = new String[7];
         for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	        strbuf = new StringBuffer(e.nextElement().toString());
             if (strbuf.toString().indexOf("one")==-1 && strbuf.toString().indexOf("two")==-1) continue;
@@ -52,8 +53,22 @@
      	    	param[16]="0";
      	    }
 	    	rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", param);
-
             if (rowsAffected != 1) break;
+
+			param2[0]=param[0]; //provider_no
+			param2[1]=param[1]; //appointment_date
+			param2[2]=param[2]; //start_time
+			param2[3]=param[3]; //end_time
+			param2[4]=param[13]; //createdatetime
+			param2[5]=param[14]; //creator
+			param2[6]=param[16]; //demographic_no
+
+			List<Map> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", param2);
+			if (apptList.size()>0) {
+				Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
+				String mcNumber = request.getParameter("appt_mc_number");
+				new OtherIdManager().saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+			}
         }
         if (rowsAffected == 1) bSucc = true;
 	}
@@ -116,6 +131,23 @@
 		        
 		    	rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", paramu);
 
+				if (rowsAffected==1) {
+					String[] paramu2 = new String[7];
+					paramu2[0]=paramu[0]; //provider_no
+					paramu2[1]=paramu[1]; //appointment_date
+					paramu2[2]=paramu[2]; //start_time
+					paramu2[3]=paramu[3]; //end_time
+					paramu2[4]=paramu[13]; //createdatetime
+					paramu2[5]=paramu[14]; //creator
+					paramu2[6]=paramu[16]; //demographic_no
+
+					List<Map> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", paramu2);
+					if (apptList.size()>0) {
+						Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
+						String mcNumber = request.getParameter("appt_mc_number");
+						new OtherIdManager().saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+					}
+				}
 			}
             if (rowsAffected != 1) break;
 		}
@@ -136,7 +168,7 @@
 <p>
 <h1><bean:message
 	key="appointment.appointmentgrouprecords.msgAddFailure" /></h1>
-</p>
+
 <%  
 	}
 	return;
@@ -236,7 +268,7 @@ function onSub() {
   } 
 }
 //-->
-</SCRIPT>
+</script>
 </head>
 
 <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"

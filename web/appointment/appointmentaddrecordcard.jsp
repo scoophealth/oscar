@@ -1,4 +1,4 @@
-<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -73,7 +73,7 @@
 %>
 <p>
 <h3><bean:message key="appointment.addappointment.msgAddSuccess" /></h3>
-</p>
+
     </div>
 <form>
     <table border="1" bgcolor="white" >
@@ -143,11 +143,26 @@
        </td></tr>
 </table>
 <%
+		String[] param3 = new String[7];
+		param3[0]=param[0]; //provider_no
+		param3[1]=param[1]; //appointment_date
+		param3[2]=param[2]; //start_time
+		param3[3]=param[3]; //end_time
+		param3[4]=param[13]; //createdatetime
+		param3[5]=param[14]; //creator
+		param3[6]=param[16]; //demographic_no
+
+		List<Map> apptList = oscarSuperManager.find("appointmentDao", "search_appt_no", param3);
+		if (apptList.size()>0) {
+			Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
+			String mcNumber = request.getParameter("appt_mc_number");
+			new OtherIdManager().saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+		}
 	} else {
 %>
 <p>
 <h1><bean:message key="appointment.addappointment.msgAddFailure" /></h1>
-</p>
+
 <%
 	}
 %>
