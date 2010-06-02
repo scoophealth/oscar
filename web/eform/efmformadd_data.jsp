@@ -74,11 +74,11 @@ function hideDiv() {
 	  sparam.put(thisEForm.APPT_MC_NO, request.getParameter("appointment"));
   }
   sparam.put(thisEForm.PATIENT_TFNOTES, "");
+  thisEForm.special_params = sparam;
 
   thisEForm.setContextPath(request.getContextPath());
   thisEForm.setImagePath();
   thisEForm.setDatabaseAPs();
   thisEForm.setAction();
-  thisEForm.setSpecial(sparam);
   out.print(thisEForm.getFormHtml());
 %>
