@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. 
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
+package org.oscarehr.common.model;
+
+/**
+ * 
+ *	create table other_id (
+ *		id int not null auto_increment primary key,
+ *		table_name int not null,
+ *		table_id int not null,
+ *		other_key varchar(30) not null default '',
+ *		other_id varchar(30) not null default '',
+ *		deleted boolean not null
+ *	);
+ * 
+ * Uses
+ *    to annotate prescriptions, notes, scanned documents
+ *    
+ *
+ * @author Ronnie Cheng
+ */
+public class OtherId {
+    private Integer	id;
+    private Integer	tableName=0;
+    private Integer	tableId=0;
+    private String	otherKey="";
+    private String	otherId="";
+    private Boolean	deleted=false;
+
+	public OtherId() {}
+
+	public OtherId(Integer tableName, Integer tableId, String otherKey, String otherId) {
+		this.tableName = tableName;
+		this.tableId = tableId;
+		this.otherKey = otherKey;
+		this.otherId = otherId;
+	}
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(Integer tableName) {
+        this.tableName = tableName;
+    }
+
+    public Integer getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(Integer tableId) {
+        this.tableId = tableId;
+    }
+
+    public String getOtherKey() {
+        return otherKey;
+    }
+
+    public void setOtherKey(String otherKey) {
+        this.otherKey = otherKey;
+    }
+
+    public String getOtherId() {
+        return otherId;
+    }
+
+    public void setOtherId(String otherId) {
+        this.otherId = otherId;
+    }
+
+    public Boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+}
