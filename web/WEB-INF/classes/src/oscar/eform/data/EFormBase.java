@@ -34,6 +34,7 @@ import oscar.util.UtilDateUtilities;
 
 public class EFormBase {
     protected final String imageMarker = "${oscar_image_path}";
+	protected final String jsMarker = "${oscar_javascript_path}";
     protected String fdid;
     protected String fid; 
     protected String formName;
