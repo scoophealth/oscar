@@ -309,5 +309,31 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
 			WHERE d.demographic_no=${demographic} 
 			AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
                 <ap-output>${rxlist}</ap-output>
-        </databaseap>    
+        </databaseap>
+
+		<databaseap>
+			<ap-name>appt_provider_name</ap-name>
+			<ap-sql>SELECT last_name, first_name FROM provider WHERE provider_no=${appt_provider}</ap-sql>
+			<ap-output>${last_name}, ${first_name}</ap-output>
+		</databaseap>
+		<databaseap>
+			<ap-name>appt_provider_id</ap-name>
+			<ap-sql>SELECT IF(${appt_provider} IS NULL, '', ${appt_provider}) AS id</ap-sql>
+			<ap-output>${id}</ap-output>
+		</databaseap>
+		<databaseap>
+			<ap-name>patient_tfnotes</ap-name>
+			<ap-sql>SELECT count(0) FROM eform_data WHERE demographic_no=${demographic} AND fid=${eform_id}</ap-sql>
+			<ap-output>${count(0)}</ap-output>
+		</databaseap>
+		<databaseap>
+			<ap-name>resident_tfnotes</ap-name>
+			<ap-sql>SELECT count(0) FROM eform_values v , eform_data d WHERE var_name='residentId' AND var_value=${appt_provider} AND v.fdid=d.fdid AND d.status=1</ap-sql>
+			<ap-output>${count(0)}</ap-output>
+		</databaseap>
+		<databaseap>
+			<ap-name>appt_mc_number</ap-name>
+			<ap-sql>SELECT other_id FROM other_id WHERE table_name=${appt_table} and table_id=${appt_id} and other_key='appt_mc_number' and deleted=false order by id desc limit 1</ap-sql>
+			<ap-output>${other_id}</ap-output>
+		</databaseap>
 </eformap-config>
