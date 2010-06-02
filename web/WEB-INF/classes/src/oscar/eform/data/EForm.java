@@ -33,6 +33,7 @@ import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.OtherIdManager;
 
 import oscar.eform.EFormLoader;
 import oscar.eform.EFormUtil;
@@ -44,10 +45,11 @@ import oscar.util.UtilDateUtilities;
 public class EForm extends EFormBase {
 	public static String APPT_PROVIDER_ID = "appt_provider_id";
 	public static String APPT_PROVIDER_NAME = "appt_provider_name";
-	public static String APPT_MC_NO = "appt_mc_no";
+	public static String APPT_MC_NO = "appt_mc_number";
 	public static String PATIENT_TFNOTES = "patient_tfnotes";
 	public static String RESIDENT_TFNOTES = "resident_tfnotes";
-	private static String OSCAR_JS_PATH = "${oscar_javascript_path}";
+	public Hashtable special_params;
+
     private static Log log = LogFactory.getLog(EForm.class);
     
     private String parentAjaxId = null;
@@ -319,6 +321,7 @@ public class EForm extends EFormBase {
             if (providerNo != null){
                 sql = DatabaseAP.parserReplace("provider", providerNo, sql);
             }
+			sql = replaceSpecial(sql);
             log.debug("SQL----" + sql);
             ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
             sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
@@ -383,104 +386,24 @@ public class EForm extends EFormBase {
         return(WriteNewMeasurements.addMeasurements(names, values, demographicNo, providerNo));
     }
 
-	public void setSpecial(Hashtable sparam) {
-        String marker = EFormLoader.getInstance().getMarker();  //default: marker: "oscarDB="
-        StringBuffer html = new StringBuffer(formHtml);
-
-        int markerLoc;
-        int pointer = 0;
-        while ((markerLoc = StringBufferUtils.indexOfIgnoreCase(html, marker, pointer)) >= 0) {
-            log.debug("===============START CYCLE===========");
-            pointer = (markerLoc + marker.length());  //move to the AP string
-            String varName = getAPstr(html, pointer);  //gets varname from oscarDB=varname
-            pointer++;
-			if (!sparam.containsKey(varName)) continue;
-
-            DatabaseAP curAP = getSpecial(varName, sparam);
-            if (curAP == null) continue;
-
-            String fieldType = getFieldType(html, pointer); //textarea, text, hidden etc..
-            if ((fieldType.equals("")) || (curAP.getApName().equals(""))) continue;
-            //sets up the pointer where to write the value
-            if (!fieldType.equals("textarea")) {
-                pointer += curAP.getApName().length();
-            }
-            html = putSpecialValue(curAP, fieldType, pointer, html);
-            log.debug("Marker ==== " + markerLoc);
-            log.debug("FIELD TYPE ====" + fieldType);
-            log.debug("=================End Cycle==============");
-        }
-        formHtml = html.toString();
-	}
-
 	public void setContextPath(String contextPath) {
 		if (contextPath==null) return;
 
 		String oscarJS = contextPath+"/share/javascript/";
-		formHtml = formHtml.replace(OSCAR_JS_PATH, oscarJS);
+		formHtml = formHtml.replace(jsMarker, oscarJS);
 	}
 
-	private DatabaseAP getSpecial(String apName, Hashtable sparam) {
-		DatabaseAP ap = null;
-		String sql = null;
-		String output = null;
-
-		if (apName.equalsIgnoreCase(APPT_PROVIDER_NAME)) {
-			sql = "SELECT last_name, first_name FROM provider WHERE provider_no = '"+sparam.get(apName)+"'";
-			output = "${last_name}, ${first_name}";
-		} else if (apName.equalsIgnoreCase(APPT_PROVIDER_ID)) {
-			sql = "SELECT provider_no FROM provider WHERE provider_no = '"+sparam.get(apName)+"'";
-			output = "${provider_no}";
-		} else if (apName.equalsIgnoreCase(APPT_MC_NO)) {
-			sql = "SELECT value FROM appointmentExt WHERE appointment_no = "+sparam.get(apName);
-			output = "${value}";
-		} else if (apName.equalsIgnoreCase(PATIENT_TFNOTES)) {
-			sql = "SELECT count(0) FROM eform_data WHERE demographic_no="+demographicNo+" AND fid="+fid;
-			output = "${count(0)}";
-		} else if (apName.equalsIgnoreCase(RESIDENT_TFNOTES)) {
-			sql = "SELECT count(0) FROM eform_values v , eform_data d WHERE var_name='residentId' AND var_value='"+sparam.get(apName)+"' AND v.fdid=d.fdid AND d.status=1";
-			output = "${count(0)}";
+	private String replaceSpecial(String sql) {
+		if (special_params.containsKey(APPT_PROVIDER_NAME) ||
+			special_params.containsKey(APPT_PROVIDER_ID) ||
+			special_params.containsKey(RESIDENT_TFNOTES)) {
+			sql = DatabaseAP.parserReplace("appt_provider", (String)special_params.get(APPT_PROVIDER_NAME), sql);
+		} else if (special_params.containsKey(APPT_MC_NO)) {
+			sql = DatabaseAP.parserReplace("appt_table", new OtherIdManager().APPOINTMENT.toString(), sql);
+			sql = DatabaseAP.parserReplace("appt_id", (String)special_params.get(APPT_MC_NO), sql);
+		} else if (special_params.containsKey(PATIENT_TFNOTES)) {
+			sql = DatabaseAP.parserReplace("eform_id", (String)special_params.get(PATIENT_TFNOTES), sql);
 		}
-		if (sql!=null) ap = new DatabaseAP(apName, sql, output);
-
-		return ap;
+		return sql;
 	}
-
-    private StringBuffer putSpecialValue(DatabaseAP ap, String type, int pointer, StringBuffer html) {
-        String sql = ap.getApSQL();
-        String output = ap.getApOutput();
-        if (sql != null) {
-            log.debug("SQL----" + sql);
-            sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
-            ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
-            ArrayList values = EFormUtil.getValues(names, sql);
-            if (values.size() != names.size()) {
-                output = "";
-            } else {
-                for (int i=0; i<names.size(); i++) {
-                    output = DatabaseAP.parserReplace((String) names.get(i), (String) values.get(i), output);
-                }
-            }
-        }
-        if (type.equals("textarea")) {
-            pointer = html.indexOf(">", pointer) + 1;
-            html.insert(pointer, output);
-        } else if (type.equals("select")) {
-            int selectEnd = StringBufferUtils.indexOfIgnoreCase(html, "</select>", pointer);
-            if (selectEnd >= 0) {
-                int valueLoc = nextIndex(html, " value=" + output, " value=\"" + output, pointer);
-                if (valueLoc < 0 || valueLoc > selectEnd) {
-                    valueLoc = nextIndex(html, " VALUE=" + output, " VALUE=\"" + output, pointer);
-                }
-                log.debug("VALUELOC====" + output);
-                if (valueLoc < 0 || valueLoc > selectEnd) return html;
-                pointer = nextSpot(html, valueLoc);
-                html = html.insert(pointer, " selected");
-            }
-            pointer++;
-        } else {
-            html.insert(pointer, " value=\"" + output + "\"");
-        }
-        return(html);
-    }
 }
