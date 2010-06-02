@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="no">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="no">
 
 	<!--
 		load properties from additional property files; oscar.properties is
@@ -22,12 +22,12 @@
 	<import resource="classpath:spring_hibernate.xml" />
 
 	<!-- hibernated DAO -->
-    <bean id="demoDao" class="oscar.oscarEncounter.oscarMeasurements.dao.DemographicHibernateDao" autowire="byName"/>
-    <bean id="measurementsDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsHibernateDao" autowire="byName"/>
-    <bean id="measurementsExtDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao" autowire="byName"/>
-    <bean id="measurementTypeDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementTypeDao" autowire="byName"/>
-    <bean id="measurementMapDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao" autowire="byName"/>
-    	<bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName" />
+	<bean id="demoDao" class="oscar.oscarEncounter.oscarMeasurements.dao.DemographicHibernateDao" autowire="byName"/>
+	<bean id="measurementsDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsHibernateDao" autowire="byName"/>
+	<bean id="measurementsExtDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao" autowire="byName"/>
+	<bean id="measurementTypeDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementTypeDao" autowire="byName"/>
+	<bean id="measurementMapDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementMapDao" autowire="byName"/>
+	<bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName" />
 	<bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.ProgramQueueDao" autowire="byName" />
 	<bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName" />
 	<bean id="agencyDao" class="org.oscarehr.PMmodule.dao.AgencyDao" autowire="byName" />
@@ -41,11 +41,11 @@
 	<bean id="streetHealthDao" class="org.oscarehr.PMmodule.dao.StreetHealthDao" autowire="byName" />
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
-        <bean id="billingOnItemDao" class="oscar.oscarBilling.ca.on.dao.BillingOnItemDao" autowire="byName" />
-        <bean id="eformDao" class="oscar.eform.dao.EformDao" autowire="byName" />
-	<!-- 
-    <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
- -->
+	<bean id="billingOnItemDao" class="oscar.oscarBilling.ca.on.dao.BillingOnItemDao" autowire="byName" />
+	<bean id="eformDao" class="oscar.eform.dao.EformDao" autowire="byName" />
+	<bean id="otherIdDao" class="org.oscarehr.common.dao.OtherIdDAO" autowire="byName" />
+	
+	<!-- <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" /> -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
 	<bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
 	<bean id="caseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
@@ -99,10 +99,10 @@
 	<bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
 	<bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
 	<bean id="BillingmasterDAO" class="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" autowire="byName" />
-        <bean id="BillingDxCodeDAO" class="oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO" autowire="byName" />
-        <bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
-        <bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
-        <bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />
+	<bean id="BillingDxCodeDAO" class="oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO" autowire="byName" />
+	<bean id="BillingreferralDAO" class="org.oscarehr.common.dao.BillingreferralDao" autowire="byName" />
+	<bean id="DxresearchDAO" class="org.oscarehr.common.dao.DxresearchDAO" autowire="byName" />
+	<bean id="Icd9DAO" class="org.oscarehr.common.dao.Icd9Dao" autowire="byName" />
 
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
@@ -112,8 +112,8 @@
 	<bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
 	<bean id="rxCloneDao" class="oscar.oscarRx.dao.hibernate.RxCloneFavoritesDAOHibernate" autowire="byName" />
 	<bean id="providerInboxRoutingDAO" class="org.oscarehr.common.dao.ProviderInboxRoutingDao" autowire="byName"/>
-        <bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
-        <bean id="appointmentDao" class="oscar.appt.AppointmentDao" autowire="byName" />
+	<bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
+	<bean id="appointmentDao" class="oscar.appt.AppointmentDao" autowire="byName" />
 
 	<!-- Dao classes that implement OscarSuperDao -->
 	<bean id="appointmentSuperDao" class="oscar.dao.AppointmentDao" autowire="byName" />
@@ -121,23 +121,23 @@
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
 	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
 
-        <!-- OSCAR Desicion Support -->
-    <bean id="dsService" class="org.oscarehr.decisionSupport.service.DSServiceMyDrugref">
-        <property name="dsGuidelineDAO">
-            <ref bean="dsGuidelineDAO"/>
-        </property>
-        <property name="userPropertyDAO">
-            <ref bean="UserPropertyDAO"/>
-        </property>
-    </bean>
-    <bean id="dsGuidelineDAO" class="org.oscarehr.decisionSupport.dao.DSGuidelineDAO">
+	<!-- OSCAR Desicion Support -->
+	<bean id="dsService" class="org.oscarehr.decisionSupport.service.DSServiceMyDrugref">
+		<property name="dsGuidelineDAO">
+			<ref bean="dsGuidelineDAO"/>
+		</property>
+		<property name="userPropertyDAO">
+			<ref bean="UserPropertyDAO"/>
+		</property>
+	</bean>
+	<bean id="dsGuidelineDAO" class="org.oscarehr.decisionSupport.dao.DSGuidelineDAO">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>
 	</bean>
 
-    <!--Container for holding preventions -->
-    <bean id="preventionMgr" class="org.oscarehr.provider.model.PreventionManager"></bean>
+	<!--Container for holding preventions -->
+	<bean id="preventionMgr" class="org.oscarehr.provider.model.PreventionManager"></bean>
 
 	<!-- OcanDataProcessor is used to create the OCAN xml submission file based on intake data -->
 	<bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
@@ -166,23 +166,22 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
-                                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
-                                <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
+				<!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
 
 
-                    <!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
-                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
-		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
-                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
-                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdHypertensionFlowsheet.xml</value-->
-                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdDiabetesFlowsheet.xml</value>
+				<!--<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdHypertensionFlowsheet.xml</value-->
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdDiabetesFlowsheet.xml</value>
 
 			</list>
 		</property>
 	</bean>
 
 	<!-- managers  -->
-
 	<bean id="agencyManager" class="org.oscarehr.PMmodule.service.AgencyManager" autowire="byName" />
 	<bean id="facilityMessageManager" class="org.caisi.service.FacilityMessageManager">
 		<property name="facilityMessageDAO" ref="facilityMessageDAO" />
@@ -202,7 +201,7 @@
 	<bean id="roomDemographicManager" class="org.oscarehr.PMmodule.service.impl.RoomDemographicManagerImpl" autowire="byName" />
 	<bean id="roomManager" class="org.oscarehr.PMmodule.service.RoomManager" autowire="byName" />
 	<bean id="bedManager" class="org.oscarehr.PMmodule.service.BedManager" autowire="byName" />
- 	<bean id="caseManagementManager" class="org.oscarehr.casemgmt.service.CaseManagementManager">
+	<bean id="caseManagementManager" class="org.oscarehr.casemgmt.service.CaseManagementManager">
 		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
 		<property name="caseManagementNoteLinkDAO" ref="CaseManagementNoteLinkDAO" />
@@ -288,12 +287,11 @@
 	</bean>
 
 	<!-- Admin Start -->
-
 	<bean id="orgDao" class="com.quatro.dao.ORGDao" autowire="byName" />
-    <bean id="secobjprivilegeDao" class="com.quatro.dao.security.SecobjprivilegeDao" autowire="byName" />
-    <bean id="securityDao" class="com.quatro.dao.security.SecurityDao" autowire="byName" />
-    <bean id="secProviderDao" class="com.quatro.dao.security.SecProviderDao" autowire="byName" />
-    <bean id="secuserroleDao" class="com.quatro.dao.security.SecuserroleDao" autowire="byName" />
+	<bean id="secobjprivilegeDao" class="com.quatro.dao.security.SecobjprivilegeDao" autowire="byName" />
+	<bean id="securityDao" class="com.quatro.dao.security.SecurityDao" autowire="byName" />
+	<bean id="secProviderDao" class="com.quatro.dao.security.SecProviderDao" autowire="byName" />
+	<bean id="secuserroleDao" class="com.quatro.dao.security.SecuserroleDao" autowire="byName" />
 
 	<bean id="orgManager" class="com.quatro.service.ORGManager" autowire="byName">
 		<property name="orgDao" ref="orgDao" />
@@ -303,7 +301,7 @@
 		<property name="secobjprivilegeDao" ref="secobjprivilegeDao" />
 	</bean>
 
-    <bean id="usersManager" class="com.quatro.service.security.UsersManager" autowire="byName"/>
+	<bean id="usersManager" class="com.quatro.service.security.UsersManager" autowire="byName"/>
 	<bean id="onCallManager" class="org.oscarehr.casemgmt.service.OnCallManager">
 		<property name="onCallDao" ref="OnCallDAO" />
 	</bean>
