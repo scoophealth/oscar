@@ -135,7 +135,7 @@ public final class MessageUploader {
             hl7TextInfo.setFinalResultCount(finalResultCount);
             hl7TextInfo.setObrDate(obrDate);
             hl7TextInfo.setPriority(priority);
-            hl7TextInfo.setRequestingClient(requestingClient);
+            hl7TextInfo.setRequestingProvider(requestingClient);
             hl7TextInfo.setDiscipline(discipline);
             hl7TextInfo.setReportStatus(reportStatus);
             hl7TextInfo.setAccessionNumber(accessionNum);

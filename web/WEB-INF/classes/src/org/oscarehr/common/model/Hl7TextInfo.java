@@ -64,7 +64,7 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 	private String priority;
 
 	@Column(name = "requesting_client")
-	private String requestingClient;
+	private String requestingProvider;
 
 	private String discipline;
 
@@ -157,12 +157,12 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 		this.priority = StringUtils.trimToNull(priority);
 	}
 
-	public String getRequestingClient() {
-		return requestingClient;
+	public String getRequestingProvider() {
+		return requestingProvider;
 	}
 
-	public void setRequestingClient(String requestingClient) {
-		this.requestingClient = StringUtils.trimToNull(requestingClient);
+	public void setRequestingProvider(String requestingProvider) {
+		this.requestingProvider = StringUtils.trimToNull(requestingProvider);
 	}
 
 	public String getDiscipline() {
