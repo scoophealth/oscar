@@ -2,6 +2,7 @@
   if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
   String curProvider_no = request.getParameter("provider_no");
+  String appointment_no = request.getParameter("appointment_no");
   String curUser_no = (String) session.getAttribute("user");
   String userfirstname = (String) session.getAttribute("userfirstname");
   String userlastname = (String) session.getAttribute("userlastname");
@@ -13,7 +14,7 @@
 %>
 <%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page
-	import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*"
+	import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
 	errorPage="errorpage.jsp"%>
@@ -113,10 +114,10 @@ function onButCancel(){
    if (aptStat.indexOf('B') == 0){
        var agree = confirm("<bean:message key="appointment.editappointment.msgCanceledBilledConfirmation"/>") ; 
        if (agree){
-          window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>';
+          window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=appointment_no%>';
        }              
    }else{
-      window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>';
+      window.location='appointmentcontrol.jsp?buttoncancel=Cancel Appt&displaymode=Update Appt&appointment_no=<%=appointment_no%>';
    }
 }
 function upCaseCtrl(ctrl) {
@@ -224,7 +225,7 @@ function onCut() {
 
 	if (bFirstDisp) {
 		List<Map> resultList = oscarSuperManager.find("appointmentDao",
-				request.getParameter("dboperation"), new Object [] {request.getParameter("appointment_no")});
+				request.getParameter("dboperation"), new Object [] {appointment_no});
 		if (resultList.size() == 0) {
 %>
 <bean:message key="appointment.editappointment.msgNoSuchAppointment" /> 
@@ -413,7 +414,7 @@ function onCut() {
 				<td width="20%" ALIGN="LEFT"><font face="Times New Roman">
 				<textarea name="reason" tabindex="2" rows="2" wrap="virtual"
 					cols="18"><%=bFirstDisp?appt.get("reason"):request.getParameter("reason")%></textarea>
-				</font></TD>
+				</font></td>
 				<td width="5%"><font face="Times New Roman"> </font></td>
 				<td width="20%" ALIGN="LEFT">
 				<div align="right"><font face="arial"><bean:message
@@ -424,6 +425,16 @@ function onCut() {
 					cols="18"><%=bFirstDisp?appt.get("notes"):request.getParameter("notes")%></textarea>
 				</font></td>
 			</tr>
+<% if (pros.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) {
+		String mcNumber = new OtherIdManager().getApptOtherId(appointment_no, "appt_mc_number");
+%>
+			<tr valign="middle">
+				<td align="right">M/C number :</td>
+				<td><input type="text" name="appt_mc_number" tabindex="4"
+						value="<%=bFirstDisp?mcNumber:request.getParameter("appt_mc_number")%>" /></td>
+				<td colspan="3">&nbsp;</td>
+			</tr>
+<% } %>
 			<tr valign="middle">
 				<td width="20%" ALIGN="LEFT">
 				<div align="right"><font face="arial"><bean:message
@@ -505,7 +516,7 @@ if (bMultisites) { %>
 					VALUE="<%=userlastname+", "+userfirstname%>"> <INPUT
 					TYPE="hidden" NAME="remarks" VALUE=""> <INPUT TYPE="hidden"
 					NAME="appointment_no"
-					VALUE="<%=request.getParameter("appointment_no")%>"></td>
+					VALUE="<%=appointment_no%>"></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
@@ -539,7 +550,7 @@ if (bMultisites) { %>
 			onClick="onButCancel();"> <input type="button"
 			name="buttoncancel"
 			value="<bean:message key="appointment.editappointment.btnNoShow"/>"
-			onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=request.getParameter("appointment_no")%>'">
+			onClick="window.location='appointmentcontrol.jsp?buttoncancel=No Show&displaymode=Update Appt&appointment_no=<%=appointment_no%>'">
 		</td>
 		<td align="right" nowrap><input type="button" name="labelprint"
 			value="<bean:message key="appointment.editappointment.btnLabelPrint"/>"
