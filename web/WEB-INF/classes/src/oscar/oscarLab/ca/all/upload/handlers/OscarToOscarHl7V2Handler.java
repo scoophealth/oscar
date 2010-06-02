@@ -41,12 +41,12 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 		try {
 	        byte[] dataBytes=FileUtils.readFileToByteArray(new File(fileName));
 	        String dataString=new String(dataBytes, EncodingUtils.ENCODING);
+	        logger.debug("Incoming HL7 Message : \n"+dataString);
 	        
 			MessageUploader.routeReport(SendingUtils.SERVICE_NAME, dataString, fileId);
-
-logger.error("Not Implmented yet, OscarToOscarHl7V2Handler.parse(). filename="+fileName+", fileId="+fileId);
 		} catch (Exception e) {
 	        logger.error("Unexpected error.", e);
+	        MessageUploader.clean(fileId);
 	        throw(new RuntimeException(e));
         }
         
