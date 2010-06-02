@@ -1,4 +1,4 @@
-<%@ page import="java.sql.*, java.util.*, oscar.*, oscar.util.*"
+<%@ page import="java.sql.*, java.util.*, oscar.*, oscar.util.*, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -82,17 +82,21 @@
 <p>
 <h1><bean:message
 	key="appointment.appointmentupdatearecord.msgUpdateSuccess" /></h1>
-</p>
+
 <script LANGUAGE="JavaScript">
 	self.opener.refresh();
 	self.close();
-</script> <%  
+</script>
+<%
+	String apptNo = request.getParameter("appointment_no");
+	String mcNumber = request.getParameter("appt_mc_number");
+	new OtherIdManager().saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
   } else {
 %>
 <p>
 <h1><bean:message
 	key="appointment.appointmentupdatearecord.msgUpdateFailure" /></h1>
-</p>
+
 <%  
   }
 %>
