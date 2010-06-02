@@ -351,12 +351,9 @@ function checkFormTypeIn() {
 	return true;
 }
 
-function checkTitleSex() {
-    var title = document.adddemographic.title.selectedIndex;
-    if (title>0) {
-        if (title<=3 || title==12) document.adddemographic.sex.selectedIndex=0;
-        if (title==4 || title==5) document.adddemographic.sex.selectedIndex=1;
-    }
+function checkTitleSex(ttl) {
+    if (ttl=="MS" || ttl=="MISS" || ttl=="MRS" || ttl=="SR") document.adddemographic.sex.selectedIndex=1;
+	else if (ttl=="MR" || ttl=="MSSR") document.adddemographic.sex.selectedIndex=0;
 }
 
 </script>
@@ -403,7 +400,7 @@ function checkTitleSex() {
 	</td>
 	<td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoTitle"/><font color="red">:</font></b></td>
 	<td align="left">
-	    <select name="title" onchange="checkTitleSex();">
+	    <select name="title" onchange="checkTitleSex(value);">
                 <option value="" selected><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
                 <option value="MS"><bean:message key="demographic.demographicaddrecordhtm.msgMs"/></option>
                 <option value="MISS"><bean:message key="demographic.demographicaddrecordhtm.msgMiss"/></option>
