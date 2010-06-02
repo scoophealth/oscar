@@ -46,51 +46,28 @@
   List allStatus = apptStatusMgr.getAllActiveStatus();
 %>
 <!--  
-
 /*
-
  * 
-
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-
  * This software is published under the GPL GNU General Public License. 
-
  * This program is free software; you can redistribute it and/or 
-
  * modify it under the terms of the GNU General Public License 
-
  * as published by the Free Software Foundation; either version 2 
-
  * of the License, or (at your option) any later version. * 
-
  * This program is distributed in the hope that it will be useful, 
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-
  * along with this program; if not, write to the Free Software 
-
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-
  * 
-
  * <OSCAR TEAM>
-
  * 
-
  * This software was written for the 
-
  * Department of Family Medicine 
-
  * McMaster University 
-
  * Hamilton 
-
  * Ontario, Canada 
-
  */
 
 -->
@@ -105,159 +82,90 @@
 <script type="text/javascript">
 
 <!--
-
 function setfocus() {
-
 	this.focus();
-
   document.ADDAPPT.keyword.focus();
-
   document.ADDAPPT.keyword.select();
-
 }
 
 function upCaseCtrl(ctrl) {
-
 	ctrl.value = ctrl.value.toUpperCase();
-
 }
 
 function onBlockFieldFocus(obj) {
-
   obj.blur();
-
   document.ADDAPPT.keyword.focus();
-
   document.ADDAPPT.keyword.select();
-
   window.alert("<bean:message key="Appointment.msgFillNameField"/>");
-
 }
 
 function checkTypeNum(typeIn) {
-
 	var typeInOK = true;
-
 	var i = 0;
-
 	var length = typeIn.length;
-
 	var ch;
 
 	// walk through a string and find a number
-
 	if (length>=1) {
-
 	  while (i <  length) {
-
 		  ch = typeIn.substring(i, i+1);
-
 		  if (ch == ":") { i++; continue; }
-
 		  if ((ch < "0") || (ch > "9") ) {
-
 			  typeInOK = false;
-
 			  break;
-
 		  }
-
 	    i++;
-
-    }
-
+      }
 	} else typeInOK = false;
-
 	return typeInOK;
-
 }
 
 function checkTimeTypeIn(obj) {
-
   if(!checkTypeNum(obj.value) ) {
-
 	  alert ("<bean:message key="Appointment.msgFillTimeField"/>");
-
 	} else {
-
 	  if(obj.value.indexOf(':')==-1) {
-
 	    if(obj.value.length < 3) alert("<bean:message key="Appointment.msgFillValidTimeField"/>");
-
 	    obj.value = obj.value.substring(0, obj.value.length-2 )+":"+obj.value.substring( obj.value.length-2 );
-
 	  } 
-
 	}
-
 }
 
 function calculateEndTime() {
-
   var stime = document.ADDAPPT.start_time.value;
-
   var vlen = stime.indexOf(':')==-1?1:2;
-
- 
-
   var shour = stime.substring(0,2) ;
-
   var smin = stime.substring(stime.length-vlen) ;
-
   var duration = document.ADDAPPT.duration.value ;
 
   if(eval(duration) == 0) { duration =1; }
-
   if(eval(duration) < 0) { duration = Math.abs(duration) ; }
 
-  
-
   var lmin = eval(smin)+eval(duration)-1 ;
-
   var lhour = parseInt(lmin/60);
 
-  
-
   if((lmin) > 59) {
-
     shour = eval(shour) + eval(lhour);
-
     shour = shour<10?("0"+shour):shour;
-
     smin = lmin - 60*lhour;
-
   } else {
-
     smin = lmin;
-
   }
 
   smin = smin<10?("0"+ smin):smin;
-
   document.ADDAPPT.end_time.value = shour +":"+ smin;
 
-  
-
   if(shour > 23) {
-
     alert("<bean:message key="Appointment.msgCheckDuration"/>");
-
     return false;
-
   }
 
-  
-
   //no show
-
   if(document.ADDAPPT.keyword.value.substring(0,1)=="." && document.ADDAPPT.demographic_no.value=="" ) {
-
     document.ADDAPPT.status.value = 'N' ;
-
   }
 
   return true;
-
 }
 
 function onNotBook() {
@@ -265,11 +173,8 @@ function onNotBook() {
 }
 
 function onButRepeat() {
-
 	document.forms[0].action = "appointmentrepeatbooking.jsp" ;
-
 	if (calculateEndTime()) { document.forms[0].submit(); }
-
 }
 <% if(apptObj!=null) { %>
 function pasteAppt() {
@@ -462,7 +367,7 @@ function pasteAppt() {
 
      %> </font></TH>
 	</tr>
-</TABLE>
+</table>
 <% } %>
 <FORM NAME="ADDAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"
 	onsubmit="return(calculateEndTime())"><INPUT TYPE="hidden"
@@ -553,7 +458,7 @@ function pasteAppt() {
 					HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">
 				</td>
 				<td width="5%"><font size=-1><a href=#
-					onclick="onNotBook();">Not book</font></a></td>
+					onclick="onNotBook();">Not book</a></font></td>
 				<td width="20%">
 				<div align="right"><font face="arial"> <INPUT
 					TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
@@ -580,7 +485,7 @@ function pasteAppt() {
 				</td>
 				<td width="20%"><font face="Times New Roman"> <textarea
 					name="reason" tabindex="2" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("reason").equals("")?"":request.getParameter("reason")%></textarea>
-				</font></TD>
+				</font></td>
 				<td width="5%"><font face="Times New Roman"> </font></td>
 				<td width="20%">
 				<div align="right"><font face="arial"><bean:message
@@ -590,6 +495,15 @@ function pasteAppt() {
 					name="notes" tabindex="3" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("notes").equals("")?"":request.getParameter("notes")%></textarea>
 				</font></td>
 			</tr>
+<% if (pros.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) { %>
+			<tr valign="middle" BGCOLOR="#CCCCFF">
+				<td align="right">M/C number:</td>
+				<td><input type="text" name="appt_mc_number" tabindex="4" /></td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+<% } %>
 			<tr valign="middle" BGCOLOR="#EEEEFF">
 				<td width="20%">
 				<div align="right"><font face="arial"><bean:message
@@ -724,7 +638,7 @@ if (bMultisites) { %>
 			VALUE="<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();"> <input type="button"
 			value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()" <%=disabled%>></TD>
 	</tr>
-</TABLE>
+</table>
 </FORM>
 
 
