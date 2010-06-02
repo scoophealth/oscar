@@ -50,7 +50,7 @@
 <%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets,oscar.log.*"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
-<%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
+<%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.common.OtherIdManager"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
@@ -80,17 +80,18 @@
 	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 	String str = null;
 	int nStrShowLen = 20;
-        String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
+	String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 
-        LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DEMOGRAPHIC,  demographic_no , request.getRemoteAddr(),demographic_no);
+	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DEMOGRAPHIC,  demographic_no , request.getRemoteAddr(),demographic_no);
 
 
-        OscarProperties oscarProps = OscarProperties.getInstance();
+	OscarProperties oscarProps = OscarProperties.getInstance();
 
-        ProvinceNames pNames = ProvinceNames.getInstance();
-   oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
-   ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
-   Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
+	ProvinceNames pNames = ProvinceNames.getInstance();
+	oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
+	ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
+	Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
+	OtherIdManager oidManager = new OtherIdManager();
 
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
@@ -1034,13 +1035,13 @@ if ( PatStat.equals(Dead) ) {%>
 							<%}%>
 
 							</li>
-<% if (oscarProps.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) { %>
-                                                        <li>Meditech ID: <b><%=apptMainBean.getString(demoExt.get("meditech_id"))%></b>
-                                                        </li>
-<% } %>
 							<li><bean:message
 								key="demographic.demographiceditdemographic.formChartNo" />: <b><%=apptMainBean.getString(rs,"chart_no")%></b>
 							</li>
+<% if (oscarProps.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) { %>
+							<li>Meditech ID: <b><%=oidManager.getDemoOtherId(demographic_no, "meditech_id")%></b>
+							</li>
+<% } %>
 							<li><bean:message
 								key="demographic.demographiceditdemographic.cytolNum" />: <b>
 							<%=apptMainBean.getString(demoExt.get("cytolNum"))%></b></li>
@@ -1203,8 +1204,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							  <td align="right"> <b><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>: </b></td>
 							    <td align="left">
 					<% String title = apptMainBean.getString(rs,"title"); %>
-								<select name="title" onchange="checkTitleSex();">
-                                                                    <option value="" <%=title.equals("")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
+								<select name="title">
+									<option value="" <%=title.equals("")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
 								    <option value="MS" <%=title.equals("MS")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMs"/></option>
 								    <option value="MISS" <%=title.equals("MISS")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMiss"/></option>
 								    <option value="MRS" <%=title.equals("MRS")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMrs"/></option>
@@ -1918,11 +1919,11 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							</tr>
 <% if (oscarProps.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) { %>
                                                         <tr>
-                                                            <td align="right"><b>Meditech Id: </b></td>
-                                                            <td align="left"><input type="text" name="meditech_id"
-									size="30" value="<%=apptMainBean.getString(demoExt.get("meditech_id"))%>">
+                                                            <td align="right"><b>Meditech ID: </b></td>
+                                                            <td align="left"><input type="text" name="meditech_id" size="30"
+																value="<%=oidManager.getDemoOtherId(demographic_no, "meditech_id")%>">
                                                             <input type="hidden" name="meditech_idOrig"
-									value="<%=apptMainBean.getString(demoExt.get("meditech_id"))%>">
+																value="<%=oidManager.getDemoOtherId(demographic_no, "meditech_id")%>">
                                                             </td>
                                                         </tr>
 <% } %>

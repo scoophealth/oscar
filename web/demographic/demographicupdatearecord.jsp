@@ -1,5 +1,5 @@
 <%@ page
-	import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*, oscar.log.*"
+	import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*, oscar.log.*, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -56,6 +56,7 @@
 
   ResultSet rs = null;
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+  OtherIdManager oidManager = new OtherIdManager();
 
   //if action is good, then give me the result
     String[] param =new String[29];
@@ -188,26 +189,27 @@
               sbDate.append(reqTmp.trim());
           
 	  dtparam[3]=MyDateFormat.getSysDate(sbDate.toString());
- System.out.println("DATE '" + sbDate.toString() + "'");
+ //System.out.println("DATE '" + sbDate.toString() + "'");
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
      
   //DemographicExt
      DemographicExt dExt = new DemographicExt();
      String proNo = (String) session.getValue("user");
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"demo_cell",request.getParameter("demo_cell"),request.getParameter("demo_cellOrig") );
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"hPhoneExt",request.getParameter("hPhoneExt"),request.getParameter("hPhoneExtOrig") );
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"wPhoneExt",request.getParameter("wPhoneExt"),request.getParameter("wPhoneExtOrig") );
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"cytolNum",request.getParameter("cytolNum"),request.getParameter("cytolNumOrig") );
+	 String demoNo = request.getParameter("demographic_no");
+     dExt.addKey(proNo, demoNo, "demo_cell", request.getParameter("demo_cell"), request.getParameter("demo_cellOrig"));
+     dExt.addKey(proNo, demoNo, "hPhoneExt", request.getParameter("hPhoneExt"), request.getParameter("hPhoneExtOrig"));
+     dExt.addKey(proNo, demoNo, "wPhoneExt", request.getParameter("wPhoneExt"), request.getParameter("wPhoneExtOrig"));
+     dExt.addKey(proNo, demoNo, "cytolNum",  request.getParameter("cytolNum"),  request.getParameter("cytolNumOrig"));
      
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"ethnicity",request.getParameter("ethnicity"),request.getParameter("ethnicityOrig") );
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"area",request.getParameter("area"),request.getParameter("areaOrig") );
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"statusNum",request.getParameter("statusNum"),request.getParameter("statusNumOrig") );
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"fNationCom",request.getParameter("fNationCom"),request.getParameter("fNationComOrig") );
+     dExt.addKey(proNo, demoNo, "ethnicity",  request.getParameter("ethnicity"),  request.getParameter("ethnicityOrig"));
+     dExt.addKey(proNo, demoNo, "area",		  request.getParameter("area"),		  request.getParameter("areaOrig"));
+     dExt.addKey(proNo, demoNo, "statusNum",  request.getParameter("statusNum"),  request.getParameter("statusNumOrig"));
+     dExt.addKey(proNo, demoNo, "fNationCom", request.getParameter("fNationCom"), request.getParameter("fNationComOrig"));
 
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"given_consent",request.getParameter("given_consent"),request.getParameter("given_consentOrig") );
+     dExt.addKey(proNo, demoNo, "given_consent", request.getParameter("given_consent"), request.getParameter("given_consentOrig"));
      
      // for the IBD clinic
-     dExt.addKey(proNo, request.getParameter("demographic_no"), "meditech_id", request.getParameter("meditech_id"), request.getParameter("meditech_idOrig"));
+	 oidManager.saveIdDemographic(demoNo, "meditech_id", request.getParameter("meditech_id"));
     
      // customized key
      if(oscarVariables.getProperty("demographicExt") != null) {
