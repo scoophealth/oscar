@@ -50,7 +50,7 @@ function submitOcanClientForm() {
 <form id="ocan_client_form" name="ocan_client_form" action="ocan_client_form_action.jsp" onsubmit="return submitOcanClientForm()">
 	<input type="hidden" id="assessment_status" name="assessment_status" value=""/>
 	
-	<h3>OCAN Consumer Self-Assessment (v1.2)</h3>
+	<h3>OCAN Consumer Self-Assessment (v2.0)</h3>
 
 	<br />
 	
