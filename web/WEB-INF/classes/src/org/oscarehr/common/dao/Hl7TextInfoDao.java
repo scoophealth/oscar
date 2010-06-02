@@ -24,10 +24,6 @@
  */
 package org.oscarehr.common.dao;
 
-import java.util.List;
-
-import javax.persistence.Query;
-
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.springframework.stereotype.Repository;
 
@@ -37,15 +33,4 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 	public Hl7TextInfoDao() {
 		super(Hl7TextInfo.class);
 	}
-
-    public List<Hl7TextInfo> findAll()
-	{
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x");
-		
-		@SuppressWarnings("unchecked")
-		List<Hl7TextInfo> results=query.getResultList();
-		
-		return(results);
-	}
-
 }
