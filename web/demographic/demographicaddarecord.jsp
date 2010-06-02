@@ -1,5 +1,5 @@
 <%@ page
-	import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList"
+	import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.*"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
@@ -268,6 +268,8 @@
 
        dem = apptMainBean.getString(rs,"demographic_no");
        DemographicExt dExt = new DemographicExt();
+	   OtherIdManager oidManager = new OtherIdManager();
+	   
        String proNo = (String) session.getValue("user");
        dExt.addKey(proNo, dem, "hPhoneExt", request.getParameter("hPhoneExt"), "");
        dExt.addKey(proNo, dem, "wPhoneExt", request.getParameter("wPhoneExt"), "");
@@ -281,7 +283,7 @@
        dExt.addKey(proNo, dem, "given_consent", request.getParameter("given_consent"), "");
 
        //for the IBD clinic
-       dExt.addKey(proNo, dem, "meditech_id", request.getParameter("meditech_id"), "");
+		oidManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
      
        // customized key
        if(oscarVariables.getProperty("demographicExt") != null) {
