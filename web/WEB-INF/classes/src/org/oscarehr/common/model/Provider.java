@@ -52,6 +52,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 	private String firstName;
 	private String rmaNo;
     private Date SignedConfidentiality;
+    private String email;
 
 	private Set<Site> sites;
 
@@ -242,7 +243,15 @@ public class Provider implements Serializable, Comparable<Provider>{
 		this.rmaNo = rmaNo;
 	}
 
-    public Date getSignedConfidentiality() {
+    public String getEmail() {
+    	return email;
+    }
+
+	public void setEmail(String email) {
+    	this.email = email;
+    }
+
+	public Date getSignedConfidentiality() {
         return this.SignedConfidentiality;
     }
 
