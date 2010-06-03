@@ -25,6 +25,7 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
+<%@taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.casemgmt.model.*"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%>
@@ -54,6 +55,7 @@ String demo=request.getParameter("demographicNo");
 </script>
 
 <!--dummmy div to force browser to allocate space -->
+<caisi:isModuleLoad moduleName="caisi">
 <c:choose>
 				<c:when test="${not empty requestScope.image_exists}">
 					<c:set var="clientId" value="${demographicNo}"></c:set>
@@ -67,6 +69,8 @@ String demo=request.getParameter("demographicNo");
 						onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;" />
 				</c:otherwise>
 			</c:choose>
+</caisi:isModuleLoad>
+
 <div id="rightColLoader" style="width: 100%;">
 <h3 style="width: 100%; background-color: #CCCCFF;">
     <bean:message key="oscarEncounter.LeftNavBar.msgLoading"/></h3>
