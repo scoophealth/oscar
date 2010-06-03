@@ -80,6 +80,8 @@ public class FrmLabReq07Record extends FrmRecord {
 
     public Properties getFormCustRecord(Properties props, String provNo) throws SQLException {
         String demoProvider = props.getProperty("demoProvider", "");
+        String xmlSpecialtyCode = "<xml_p_specialty_code>";
+        String xmlSpecialtyCode2 = "</xml_p_specialty_code>";
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         ResultSet rs = null;
         String sql = null;
@@ -88,28 +90,46 @@ public class FrmLabReq07Record extends FrmRecord {
 
             if (demoProvider.equals(provNo) ) {
                 // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no, comments "
                         + "FROM provider WHERE provider_no = '" + provNo + "'";
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
+                    String comments = db.getString(rs,"comments");                    
+                    String strSpecialtyCode = "00";
+                    if( comments.indexOf(xmlSpecialtyCode) != -1 ) {
+                        strSpecialtyCode = comments.substring(comments.indexOf(xmlSpecialtyCode) + xmlSpecialtyCode.length(), comments.indexOf(xmlSpecialtyCode2));
+                        strSpecialtyCode = strSpecialtyCode.trim();
+                        if( strSpecialtyCode.equals("") ) {
+                            strSpecialtyCode = "00";
+                        }
+                    }
                     String num = db.getString(rs,"ohip_no");
                     props.setProperty("reqProvName", db.getString(rs,"provName"));
                     props.setProperty("provName", db.getString(rs,"provName"));
-                    props.setProperty("practitionerNo", "0000-" + num + "-00");
+                    props.setProperty("practitionerNo", "0000-" + num + "-" + strSpecialtyCode);
                 }
                 rs.close();
             } else {
                 // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = '"
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no, comments FROM provider WHERE provider_no = '"
                         + provNo + "'";
                 rs = db.GetSQL(sql);
                 
                 String num = "";
                 if (rs.next()) {
+                    String comments = db.getString(rs,"comments");
+                    String strSpecialtyCode = "00";
+                    if( comments.indexOf(xmlSpecialtyCode) != -1 ) {
+                        strSpecialtyCode = comments.substring(comments.indexOf(xmlSpecialtyCode)+xmlSpecialtyCode.length(), comments.indexOf(xmlSpecialtyCode2));
+                        strSpecialtyCode = strSpecialtyCode.trim();
+                        if( strSpecialtyCode.equals("") ) {
+                            strSpecialtyCode = "00";
+                        }
+                    }
                     num = db.getString(rs,"ohip_no");
                     props.setProperty("reqProvName", db.getString(rs,"provName"));                    
-                    props.setProperty("practitionerNo", "0000-" + num + "-00");
+                    props.setProperty("practitionerNo", "0000-" + num + "-" + strSpecialtyCode);
                 }
                 rs.close();
 
