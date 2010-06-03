@@ -54,7 +54,7 @@ public class OtherId {
 		this.tableName = tableName;
 		this.tableId = tableId;
 		this.otherKey = otherKey;
-		this.otherId = otherId;
+		this.otherId = otherId!=null ? otherId : "";
 	}
 
     public Integer getId() {
@@ -94,7 +94,7 @@ public class OtherId {
     }
 
     public void setOtherId(String otherId) {
-        this.otherId = otherId;
+        this.otherId = otherId!=null ? otherId : "";
     }
 
     public Boolean isDeleted() {
