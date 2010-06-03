@@ -20,7 +20,7 @@ import ca.uhn.hl7v2.parser.PipeParser;
 public final class RefI12 {
 	private enum REF_NTE_TYPE
 	{
-		APPOINTMENTT_NOTES,
+		APPOINTMENT_NOTES,
 		REASON_FOR_CONSULTATION,
 		CLINICAL_INFORMATION,
 		CONCURRENT_PROBLEMS,
@@ -60,7 +60,7 @@ public final class RefI12 {
 	{
 		// for each data section, we'll create a new NTE and we'll label the section some how...
 
-		DataTypeUtils.fillNte(referralMsg.getNTE(0), REF_NTE_TYPE.APPOINTMENTT_NOTES.name(), consultationRequest.getStatusText());
+		DataTypeUtils.fillNte(referralMsg.getNTE(0), REF_NTE_TYPE.APPOINTMENT_NOTES.name(), consultationRequest.getStatusText());
 		DataTypeUtils.fillNte(referralMsg.getNTE(1), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), consultationRequest.getReasonForReferral());
 		DataTypeUtils.fillNte(referralMsg.getNTE(2), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), consultationRequest.getClinicalInfo());
 		DataTypeUtils.fillNte(referralMsg.getNTE(3), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), consultationRequest.getConcurrentProblems());
