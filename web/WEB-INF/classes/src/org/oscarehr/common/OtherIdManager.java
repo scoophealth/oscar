@@ -98,14 +98,14 @@ public class OtherIdManager {
 	}
 
 	private boolean doNotSave(OtherId oid, String otherId) {
-		boolean notSave = false;
+		if (otherId==null) return true;
 		if (oid==null) {
-			if (otherId.trim().equals("")) notSave=true;
+			if (otherId.trim().equals("")) return true;
 		} else {
-			if (oid.getOtherId().equals(otherId)) notSave=true;
+			if (oid.getOtherId().equals(otherId)) return true;
 			else setDelete(oid);
 		}
-		return notSave;
+		return false;
 	}
 
 	private Integer getNumeric(String n) {
