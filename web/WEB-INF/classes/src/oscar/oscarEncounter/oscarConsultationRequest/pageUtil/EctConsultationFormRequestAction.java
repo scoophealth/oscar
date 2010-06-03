@@ -47,12 +47,19 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.StreetAddressDataHolder;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
+
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v25.message.REF_I12;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -240,7 +247,7 @@ public class EctConsultationFormRequestAction extends Action {
 		return forward;
 	}
 
-	private void doHl7Send(Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException {
+	private void doHl7Send(Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception {
 		
 	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
 	    ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
@@ -248,9 +255,10 @@ public class EctConsultationFormRequestAction extends Action {
 	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
 	    ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 	    
-	    byte[] dataBytes=("Stubbed test data, Consultation request id : "+consultationRequestId+" : "+(new java.util.Date())).getBytes();
+	    Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 	    
-	    SendingUtils.send(dataBytes, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey());
+	    REF_I12 refI12=RefI12.makeRefI12(facility.getName(), consultationRequest, new StreetAddressDataHolder());
+	    SendingUtils.send(refI12, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey());
 	    
 	    throw(new UnsupportedOperationException("not finished yet"));
     }

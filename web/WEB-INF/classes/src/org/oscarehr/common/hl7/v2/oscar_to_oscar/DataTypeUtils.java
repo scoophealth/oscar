@@ -1,5 +1,6 @@
 package org.oscarehr.common.hl7.v2.oscar_to_oscar;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -21,6 +22,7 @@ import ca.uhn.hl7v2.model.v25.datatype.XAD;
 import ca.uhn.hl7v2.model.v25.datatype.XPN;
 import ca.uhn.hl7v2.model.v25.datatype.XTN;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
+import ca.uhn.hl7v2.model.v25.segment.NTE;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import ca.uhn.hl7v2.model.v25.segment.PRD;
 import ca.uhn.hl7v2.model.v25.segment.SFT;
@@ -291,4 +293,31 @@ public final class DataTypeUtils {
 		else throw (new IllegalArgumentException("Missed gender : " + hl7Gender));
 	}
 
+	/**
+	 * @param nte
+	 * @param type should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
+	 * @param data should be UTF-8 String, if you have bytes, use base64 encoding first. Max Length is 65535
+	 * @throws HL7Exception 
+	 */
+	public static void fillNte(NTE nte, String type, String data) throws HL7Exception
+	{
+		if (type.length()>250) throw(new IllegalArgumentException("Type too long for NTE, type max length is 250, type.length()="+type.length()));
+		if (data.length()>65535) throw(new IllegalArgumentException("Data too long for NTE, data max length is 65535, data.length()="+data.length()));
+		
+		nte.getCommentType().getText().setValue(type);
+		nte.getComment(0).setValue(data);
+	}
+
+	/**
+	 * @param nte
+	 * @param type should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES"
+	 * @param data will be base64 encoded, the encoded length must still be less than 65535
+	 * @throws HL7Exception 
+	 * @throws UnsupportedEncodingException 
+	 */
+	public static void fillNte(NTE nte, String type, byte[] data) throws HL7Exception, UnsupportedEncodingException
+	{
+		String dataString=EncodingUtils.encodeBase64String(data); 
+		fillNte(nte, type, dataString);
+	}
 }
