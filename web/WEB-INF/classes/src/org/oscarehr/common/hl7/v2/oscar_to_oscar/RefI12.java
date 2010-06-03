@@ -15,7 +15,6 @@ import oscar.util.BuildInfo;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v25.message.REF_I12;
 import ca.uhn.hl7v2.model.v25.segment.RF1;
-import ca.uhn.hl7v2.parser.PipeParser;
 
 public final class RefI12 {
 	private enum REF_NTE_TYPE
