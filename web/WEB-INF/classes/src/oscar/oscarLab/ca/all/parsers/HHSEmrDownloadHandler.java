@@ -9,23 +9,11 @@
 
 package oscar.oscarLab.ca.all.parsers;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import oscar.util.UtilDateUtilities;
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.model.Segment;
-import ca.uhn.hl7v2.model.Structure;
-import ca.uhn.hl7v2.parser.Parser;
-import ca.uhn.hl7v2.parser.PipeParser;
-import ca.uhn.hl7v2.util.Terser;
-import ca.uhn.hl7v2.validation.impl.NoValidation;
+import oscar.Misc;
 
 /**
  *
@@ -166,7 +154,14 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        }
 //    }
 //    
-//    public String getOBRName(int i){
+      public String getOBRName(int i){
+          String addToEnd = "";
+          try{
+              addToEnd = " "+getString(terser.get("/.OBR-19-2"));
+          }catch(Exception e){}
+
+          return super.getOBRName(i) + addToEnd;
+      }
 //        
 //        String obrName;
 //        i++;
@@ -235,9 +230,9 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        return(getOBXField(i, j, 3, 0, 1));
 //    }
 //    
-//    public String getOBXName(int i, int j){
-//        return(getOBXField(i, j, 3, 0, 2));
-//    }
+    public String getOBXName(int i, int j){
+        return(getOBXField(i, j, 3, 0, 2));
+    }
 //    
 //    public String getOBXResult(int i, int j){
 //        return(getOBXField(i, j, 5, 0, 1));
@@ -479,7 +474,18 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //            return("");
 //        }
 //    }
-//    
+
+
+public String getAccessionNum(){
+        try{
+            String accessionNum = getString(terser.get("/.MSH-10-1"));
+            return accessionNum;
+        }catch(Exception e){
+            return("");
+        }
+    }
+
+
 //    public String getAccessionNum(){
 //        //usually a message type specific location
 //        return("");
@@ -512,25 +518,27 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //            return("");
 //        }
 //    }
-//    
-//    public ArrayList getDocNums(){
-//        ArrayList nums = new ArrayList();
-//        String docNum;
-//        try{
-//            if ((docNum = terser.get("/.OBR-16-1")) != null)
-//                nums.add(docNum);
-//            
-//            int i=0;
-//            while((docNum = terser.get("/.OBR-28("+i+")-1")) != null){
-//                nums.add(docNum);
-//                i++;
-//            }
-//            
-//        }catch(Exception e){
-//        }
-//        
-//        return(nums);
-//    }
+//
+
+    /*
+     * Custom segment added by medseek because the HL7 messages did not contain "who" that we can route to the right provider in oscar.
+     *
+     */
+    @Override
+    public ArrayList getDocNums(){
+        ArrayList nums = new ArrayList();
+        String docNum;
+        try{
+            if ((docNum = terser.get("/.Z01-1-1")) != null){
+                System.out.println("Adding doc Num"+Misc.forwardZero(docNum, 6));
+                nums.add(Misc.forwardZero(docNum, 6));
+            }
+            
+        }catch(Exception e){
+        }
+        
+        return(nums);
+    }
 //    
 //    
 //    public String audit(){
