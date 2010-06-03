@@ -89,7 +89,8 @@ public class Demographic implements Serializable {
 	private Integer headRecord = null;
 	private Set<Integer> subRecord = null;
 	private String anonymous=null;
-
+	private String spokenLanguage;
+	
 	private int activeCount = 0;
 	private int hsAlertCount = 0;
 
@@ -901,4 +902,13 @@ public class Demographic implements Serializable {
 
 		return (cal);
 	}
+
+	public String getSpokenLanguage() {
+    	return spokenLanguage;
+    }
+
+	public void setSpokenLanguage(String spokenLanguage) {
+    	this.spokenLanguage = spokenLanguage;
+    }
+	
 }
