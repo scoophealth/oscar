@@ -7989,6 +7989,29 @@ CREATE TABLE `providersite` (
   PRIMARY KEY  (`provider_no`,`site_id`)
 ) TYPE=MyISAM;
 
+DROP TABLE IF EXISTS queue;
+create table queue (
+    id int(10) not null auto_increment,
+    name varchar(40) not null ,
+    primary key(id),unique (name)
+);
+
+DROP TABLE IF EXISTS queue_provider_link;
+create table queue_provider_link (
+    id int(10) not null auto_increment,
+    queue_id int(10),
+    provider_id varchar(6),
+    primary key(id)
+);
+
+DROP TABLE IF EXISTS queue_document_link;
+create table queue_document_link (
+    id int(10) not null auto_increment,
+    queue_id int(10) not null,
+    document_id int(10) not null,
+    primary key (id)
+);
+
 CREATE TABLE `other_id` (
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	table_name int NOT NULL,
