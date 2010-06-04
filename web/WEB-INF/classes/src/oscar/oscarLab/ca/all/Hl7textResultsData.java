@@ -387,6 +387,19 @@ public class Hl7textResultsData {
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
                 lbData.labType = LabResultData.HL7TEXT;
                 lbData.segmentID = db.getString(rs,"lab_no");
+                //check if any demographic is linked to this lab
+                if(lbData.isMatchedToPatient()){
+                    //get matched demographic no
+                    String sql2="select * from patientLabRouting plr where plr.lab_no="+Integer.parseInt(lbData.segmentID)+" and plr.lab_type='"+lbData.labType+"'";
+                    System.out.println("sql2="+sql2);
+                    ResultSet rs2=db.GetSQL(sql2);
+                    if(rs2.next())
+                        lbData.setLabPatientId(db.getString(rs2, "demographic_no"));
+                    else
+                        lbData.setLabPatientId("-1");
+                }else{
+                    lbData.setLabPatientId("-1");
+                }
                 
                 if (demographicNo == null && !providerNo.equals("0")) {
                     lbData.acknowledgedStatus = db.getString(rs,"status");
