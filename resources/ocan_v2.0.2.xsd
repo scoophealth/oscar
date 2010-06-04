@@ -1,0 +1,4708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://oscarehr.org/ocan" xmlns:ocan="http://oscarehr.org/ocan"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified"> 
+	
+	<!-- 
+	============================================================================================
+	Program Name	: full_ocan_v2.0.4.xsd 
+	Description		: XML schema for the file submission of FULL OCAN assessment tool
+	Developed by	: Khaled Awad
+	History : 
+			2.0.0 : 04-Mar-2010 initial version
+			2.0.1 : 06-Apr-2010 revise column length and add few more fields
+			2.0.2 : 03-May-2010 breakdown contact information into multiple columns
+			2.0.3 : 14-May-2010 change UTF-16 to UTF-8
+			2.0.4 : 20-May-2010 make client name optional
+	============================================================================================
+	-->
+
+	<xsd:element name="OCANv2SubmissionFile">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence maxOccurs="unbounded">
+						<xsd:element ref="ocan:OCANv2SubmissionRecord"/>
+					</xsd:sequence>
+
+					<!-- OCAN Tool Version Number: it has to be a constant 2.0.3 -->
+					<xsd:attribute name="tool_revision" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="2.0.3"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Schema Version Number: it has to be a constant 2.0.4 -->
+					<xsd:attribute name="schema_version" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="2.0.4"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- File ID -->
+					<xsd:attribute name="ID" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Timestamp: on which the File is generated YYYY-MM-DDThh:mi:ssZ -->
+					<xsd:attribute name="timestamp" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:dateTime">
+								<xsd:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))T(([01][0-9])|(2[0-3]))(:[0-5][0-9]){2}(\.[0-9]+)?(([\+|\-]((0[0-9])|(1[0-2]))(:[0-5][0-9]))|(\+13(:[0-5][0-9])(:[0-5][0-9]))|\+14:00|Z)"/>
+								<xsd:minInclusive value="1900-01-01T00:00:00Z"/>
+								<xsd:maxInclusive value="2079-06-06T00:00:00Z"/>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+			</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="OCANv2SubmissionRecord">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:submitOrganizationRecord"/>
+						<xsd:element ref="ocan:clientRecord"/>
+						<xsd:element ref="ocan:OCANDomains"/>
+						<xsd:element ref="ocan:additionalElements"/>
+
+					</xsd:sequence>
+
+					<!-- 
+						There is a limitation regarding types such as xsd:dateTime and xsd:date in SQL Server 2005 
+						as well as their derived types. SQL Server 2005 always requires a timezone (whereas the XSD 
+						standard says values with or without a time zone should be accepted).
+						For this reason the following fields in this schema MUST BE suffixed by Z. And so they will
+						be formated as "YYYY-MM-DDZ". the fields are startDate, completionDate, clientDOB,
+						requestForServiceDate, serviceDecisionDate, serviceInitiationDate, exitDate, reviewDate. 
+					-->
+
+					<!-- OCAN Type: whether it is full, self and core, in this schema it will be a constant: FULL  -->
+					<xsd:attribute name="OCANType" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="FULL"/>	<!-- Full OCAN -->
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment Start Date: YYYY-MM-DDZ note the existence of the letter Z at the end of date value -->
+					<xsd:attribute name="startDate" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:date">
+								<xsd:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))(Z)"/>
+
+								<xsd:minInclusive value="1900-01-01Z"/>
+								<xsd:maxInclusive value="2079-06-06Z"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment Completion Date: YYYY-MM-DDZ note the existence of the letter Z at the end of date value -->
+					<xsd:attribute name="completionDate" use="required">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:date">
+								<xsd:pattern value="((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))(Z)"/>
+								<xsd:minInclusive value="1900-01-01Z"/>
+								<xsd:maxInclusive value="2079-06-06Z"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment ID: it has to be unique accross the file -->
+
+					<xsd:attribute name="assessmentID" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment Revision Number: this has been added to support IAR, if vendor software does not have it, then default it to 1 -->
+					<xsd:attribute name="assessmentRevision" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="12">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Assessment Status: only Completed assessments will be included in data submission -->
+					<xsd:attribute name="assessmentStatus" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="Complete"/>	<!-- Completed -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!--
+						This question does not appear on the Assessment. However, consent should collected 
+						as per Organizational Policies around Consent. This consent pertains to viewing of 
+						the Assessment on IAR only. It does not pertain to the submission of the Assessment 
+						Record to IAR. All completed Assessments are to be submitted to IAR. The system should 
+						have the ability to record consent outside of each Assessment but should be included 
+						in the Assessment record as part of the data submission.
+		
+						Valid Values:
+							- TRUE = Yes: Assessment is sent to IAR and is available for viewing.
+							- FALSE = No: Assessment is sent to IAR and NOT available for viewing.
+					-->
+					<xsd:attribute name="IARViewingConsent" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="submitOrganizationRecord">
+		<xsd:complexType>
+
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:submitOrg"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="submitOrg">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Submitting Organization Name -->
+					<xsd:attribute name="name" use="required">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Submitting Organization Number -->
+
+					<xsd:attribute name="number" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="clientRecord">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<xsd:element ref="ocan:clientID"/>
+						<xsd:element ref="ocan:completedByOCANLead"/>
+						<xsd:element ref="ocan:reasonForOCAN"/>
+						<xsd:element ref="ocan:consumerSelfAxCompleted"/>
+						<xsd:element ref="ocan:reasonConsumerSelfAxNotCompletedList" minOccurs="1"/>
+						<xsd:element ref="ocan:clientName"/>
+						<xsd:element ref="ocan:clientAddress"/>
+
+						<xsd:element ref="ocan:clientPhone"/>
+						<xsd:element ref="ocan:clientEmailAddress"/>
+						<xsd:element ref="ocan:clientDOB"/>
+						<xsd:element ref="ocan:clientHealthCardInfo"/>
+						<xsd:element ref="ocan:serviceRecipientLocation"/>
+						<xsd:element ref="ocan:serviceRecipientLHIN"/>
+						<xsd:element ref="ocan:gender"/>
+						<xsd:element ref="ocan:maritalStatus"/>
+						<xsd:element ref="ocan:serviceUseRecordList" minOccurs="1" maxOccurs="1"/>
+
+						<xsd:element ref="ocan:clientContact"/>
+						<xsd:element ref="ocan:clientCapacity"/>
+						<xsd:element ref="ocan:ageOnsetMental"/>
+						<xsd:element ref="ocan:ageHospitalization"/>
+						<xsd:element ref="ocan:firstEntryDate"/>
+						<xsd:element ref="ocan:clientCulture"/>
+						<xsd:element ref="ocan:aboriginalOrigin"/>
+						<xsd:element ref="ocan:citizenshipStatus"/>
+						<xsd:element ref="ocan:timeLivedInCanada"/>
+
+						<xsd:element ref="ocan:immigExpList" minOccurs="0"/>
+						<xsd:element ref="ocan:immigExpFreeText"/>
+						<xsd:element ref="ocan:discrimExpList" minOccurs="0"/>
+						<xsd:element ref="ocan:prefLang"/>
+						<xsd:element ref="ocan:serviceLang"/>
+						<xsd:element ref="ocan:legalIssues"/>
+						<xsd:element ref="ocan:legalStatusList" minOccurs="0"/>
+						<xsd:element ref="ocan:generalComments"/>
+
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client ID: this should be unique within the organization -->
+	<xsd:element name="clientID">
+		<xsd:complexType>
+
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="orgClientID" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- OCAN completed by OCAN Lead? -->
+	<xsd:element name="completedByOCANLead">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Reason for OCAN (select one) -->
+	<xsd:element name="reasonForOCAN">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="value" use="required">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="IA"/>		<!-- Initial OCAN -->
+								<xsd:enumeration value="RA"/>		<!-- Reassessment -->
+								<xsd:enumeration value="DIS"/>		<!-- (Prior to) discharge -->
+								<xsd:enumeration value="SC"/>		<!-- Significant Change -->
+								<xsd:enumeration value="REV"/>		<!-- Review -->
+
+								<xsd:enumeration value="REK"/>		<!-- Re-key -->
+								<xsd:enumeration value="OTHR"/>	<!-- Other (Consumer request) -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="other" use="required">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Was Consumer Self-Assessment Completed? -->
+	<xsd:element name="consumerSelfAxCompleted">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- If the Consumer Self-Assessment was not Completed, why not? (select all that apply) -->
+	<xsd:element name="reasonConsumerSelfAxNotCompletedList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element name="value" minOccurs="0" maxOccurs="unbounded">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:enumeration value=""/>		<!-- Null -->
+									<xsd:enumeration value="CMFLVL"/>	<!-- Comfort Level -->
+									<xsd:enumeration value="LOA"/>		<!-- Length of Assessment -->
+
+									<xsd:enumeration value="LIT"/>		<!-- Literacy -->
+									<xsd:enumeration value="MHC"/>		<!-- Mental Health Condition -->
+									<xsd:enumeration value="PYSCON"/>	<!-- Physical Condition -->
+									<xsd:enumeration value="LANG"/>	<!-- Language Barrier -->
+									<xsd:enumeration value="OTH"/>		<!-- Other -->
+								</xsd:restriction>
+
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherReason" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Name -->
+
+	<xsd:element name="clientName">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- First Name -->
+					<xsd:attribute name="first" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Middle Name -->
+					<xsd:attribute name="middle" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Last Name -->
+
+					<xsd:attribute name="last" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Preferred Name -->
+					<xsd:attribute name="preferred" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Address -->
+	<xsd:element name="clientAddress">
+		<xsd:complexType>
+			<xsd:complexContent>
+
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Address Line 1 -->
+					<xsd:attribute name="line1" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Address Line 2 -->
+					<xsd:attribute name="line2" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- City -->
+					<xsd:attribute name="city" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Province -->
+					<xsd:attribute name="province" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="AB"/>		<!-- Alberta -->
+								<xsd:enumeration value="BC"/>		<!-- British Columbia -->
+								<xsd:enumeration value="MB"/>		<!-- Manitoba -->
+								<xsd:enumeration value="NB"/>		<!-- New Brunswick -->
+
+								<xsd:enumeration value="NL"/>		<!-- Newfoundland and Labrador -->
+								<xsd:enumeration value="NT"/>		<!-- Northwest Territories -->
+								<xsd:enumeration value="NS"/>		<!-- Nova Scotia -->
+								<xsd:enumeration value="NU"/>		<!-- Nunavut -->
+								<xsd:enumeration value="ON"/>		<!-- Ontario -->
+								<xsd:enumeration value="PE"/>		<!-- Prince Edward Island -->
+
+								<xsd:enumeration value="QC"/>		<!-- Quebec -->
+								<xsd:enumeration value="SK"/>		<!-- Saskatchewan -->
+								<xsd:enumeration value="YT"/>		<!-- Yukon -->
+								<xsd:enumeration value="NA"/>		<!-- Not Applicable -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Postal Code -->
+					<xsd:attribute name="postalCode" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="8">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Phone Number -->
+	<xsd:element name="clientPhone">
+		<xsd:complexType>
+
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Phone Number -->
+					<xsd:attribute name="number" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Phone Extension -->
+					<xsd:attribute name="extension" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="16">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<!-- Client Email Address -->
+	<xsd:element name="clientEmailAddress">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="64">
+				</xsd:maxLength>
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Client Date of Birth: YYYY-MM-DDZ note the existence of the letter Z at the end of date value -->
+	<xsd:element name="clientDOB">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- DOB Value -->
+					<xsd:attribute name="value" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="11"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- DOB Type -->
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Actual -->
+								<xsd:enumeration value="EST"/>		<!-- Estimate -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Health Card Number -->
+
+	<xsd:element name="clientHealthCardInfo">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Health Card Number -->
+					<xsd:attribute name="number" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Health Card Version -->
+					<xsd:attribute name="version" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="8">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Issuing Territory -->
+
+					<xsd:attribute name="issuingTerritory" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="AB"/>		<!-- Alberta -->
+								<xsd:enumeration value="BC"/>		<!-- British Columbia -->
+								<xsd:enumeration value="MB"/>		<!-- Manitoba -->
+
+								<xsd:enumeration value="NB"/>		<!-- New Brunswick -->
+								<xsd:enumeration value="NL"/>		<!-- Newfoundland and Labrador -->
+								<xsd:enumeration value="NT"/>		<!-- Northwest Territories -->
+								<xsd:enumeration value="NS"/>		<!-- Nova Scotia -->
+								<xsd:enumeration value="NU"/>		<!-- Nunavut -->
+								<xsd:enumeration value="ON"/>		<!-- Ontario -->
+
+								<xsd:enumeration value="PE"/>		<!-- Prince Edward Island -->
+								<xsd:enumeration value="QC"/>		<!-- Quebec -->
+								<xsd:enumeration value="SK"/>		<!-- Saskatchewan -->
+								<xsd:enumeration value="YT"/>		<!-- Yukon -->
+								<xsd:enumeration value="NA"/>		<!-- Not Applicable -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Service Recipient Location (county, district, municipality) -->
+	<xsd:element name="serviceRecipientLocation">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="010-01"/>		<!-- Algoma District -->
+				<xsd:enumeration value="010-02"/>		<!-- Brant -->
+				<xsd:enumeration value="010-03"/>		<!-- Bruce -->
+				<xsd:enumeration value="010-04"/>		<!-- Cochrane District -->
+				<xsd:enumeration value="010-05"/>		<!-- Dufferin -->
+
+				<xsd:enumeration value="010-06"/>		<!-- Durham -->
+				<xsd:enumeration value="010-07"/>		<!-- Elgin -->
+				<xsd:enumeration value="010-08"/>		<!-- Essex -->
+				<xsd:enumeration value="010-09"/>		<!-- Frontenac -->
+				<xsd:enumeration value="010-10"/>		<!-- Grey -->
+				<xsd:enumeration value="010-11"/>		<!-- Haldimand-Norfolk -->
+
+				<xsd:enumeration value="010-12"/>		<!-- Haliburton -->
+				<xsd:enumeration value="010-13"/>		<!-- Halton -->
+				<xsd:enumeration value="010-14"/>		<!-- Hamilton -->
+				<xsd:enumeration value="010-15"/>		<!-- Hastings -->
+				<xsd:enumeration value="010-16"/>		<!-- Huron -->
+				<xsd:enumeration value="010-17"/>		<!-- Kenora and Kenora P.P. -->
+
+				<xsd:enumeration value="010-18"/>		<!-- Chatham-Kent -->
+				<xsd:enumeration value="010-19"/>		<!-- Lambton -->
+				<xsd:enumeration value="010-20"/>		<!-- Lanark -->
+				<xsd:enumeration value="010-21"/>		<!-- Leeds and Grenville -->
+				<xsd:enumeration value="010-22"/>		<!-- Lennox and Addington -->
+				<xsd:enumeration value="010-23"/>		<!-- Manitoulin District -->
+
+				<xsd:enumeration value="010-24"/>		<!-- Middlesex -->
+				<xsd:enumeration value="010-25"/>		<!-- Muskoka District Mun -->
+				<xsd:enumeration value="010-26"/>		<!-- Niagara -->
+				<xsd:enumeration value="010-27"/>		<!-- Nipissing District -->
+				<xsd:enumeration value="010-28"/>		<!-- Northumberland -->
+				<xsd:enumeration value="010-29"/>		<!-- Ottawa -->
+
+				<xsd:enumeration value="010-30"/>		<!-- Out Of Province -->
+				<xsd:enumeration value="010-31"/>		<!-- Oxford -->
+				<xsd:enumeration value="010-32"/>		<!-- Parry Sound District -->
+				<xsd:enumeration value="010-33"/>		<!-- Peel -->
+				<xsd:enumeration value="010-34"/>		<!-- Perth -->
+				<xsd:enumeration value="010-35"/>		<!-- Peterborough -->
+
+				<xsd:enumeration value="010-36"/>		<!-- Prescott and Russell -->
+				<xsd:enumeration value="010-37"/>		<!-- Prince Edward -->
+				<xsd:enumeration value="010-38"/>		<!-- Rainy River District -->
+				<xsd:enumeration value="010-39"/>		<!-- Renfrew -->
+				<xsd:enumeration value="010-40"/>		<!-- Simcoe -->
+				<xsd:enumeration value="010-41"/>		<!-- Stormont Dundas and Glengarry -->
+
+				<xsd:enumeration value="010-42"/>		<!-- Sudbury District -->
+				<xsd:enumeration value="010-43"/>		<!-- Sudbury Region -->
+				<xsd:enumeration value="010-44"/>		<!-- Thunder Bay District -->
+				<xsd:enumeration value="010-45"/>		<!-- Timiskaming District -->
+				<xsd:enumeration value="010-46"/>		<!-- Toronto -->
+				<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+
+				<xsd:enumeration value="010-48"/>		<!-- Kawartha Lakes -->
+				<xsd:enumeration value="010-49"/>		<!-- Waterloo -->
+				<xsd:enumeration value="010-50"/>		<!-- Wellington -->
+				<xsd:enumeration value="010-51"/>		<!-- York -->
+				<xsd:enumeration value="010-52"/>		<!-- Out of Country -->
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- LHIN Consumer Resides in-->
+	<xsd:element name="serviceRecipientLHIN">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="1"/>		<!-- Erie St.Clair -->
+				<xsd:enumeration value="2"/>		<!-- South West -->
+
+				<xsd:enumeration value="3"/>		<!-- Waterloo Wellington -->
+				<xsd:enumeration value="4"/>		<!-- Hamilton Niagara Haldimand Brant -->
+				<xsd:enumeration value="5"/>		<!-- Central West -->
+				<xsd:enumeration value="6"/>		<!-- Mississauga-Halton -->
+				<xsd:enumeration value="7"/>		<!-- Toronto Central -->
+				<xsd:enumeration value="8"/>		<!-- Central -->
+
+				<xsd:enumeration value="9"/>		<!-- Central East -->
+				<xsd:enumeration value="10"/>		<!-- South East -->
+				<xsd:enumeration value="11"/>		<!-- Champlain -->
+				<xsd:enumeration value="12"/>		<!-- North Simcoe Muskoka -->
+				<xsd:enumeration value="13"/>		<!-- North East -->
+				<xsd:enumeration value="14"/>		<!-- North West -->
+
+				<xsd:enumeration value="010-30"/>	<!-- Out of Province -->
+				<xsd:enumeration value="010-52"/>	<!-- Out of Country -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Gender (select one) -->
+
+	<xsd:element name="gender">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="M"/>	<!-- Male -->
+				<xsd:enumeration value="F"/>	<!-- Female -->
+				<xsd:enumeration value="OTH"/>	<!-- Other -->
+				<xsd:enumeration value="UNK"/>	<!-- Unknown -->
+
+				<xsd:enumeration value="CDA"/>	<!-- Client Declined to Answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Marital Status (select one) -->
+	<xsd:element name="maritalStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+
+				<xsd:enumeration value=""/>			<!-- Null -->
+				<xsd:enumeration value="125681006"/>	<!-- Single -->
+				<xsd:enumeration value="87915002"/>	<!-- Married or in common-law relationship -->
+				<xsd:enumeration value="42120006"/>	<!-- Partner or significant other -->
+				<xsd:enumeration value="33553000"/>	<!-- Widowed -->
+				<xsd:enumeration value="13184001"/>	<!-- Separated -->
+
+				<xsd:enumeration value="20295000"/>	<!-- Divorced -->
+				<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>			<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Service Use Record List -->
+
+	<xsd:element name="serviceUseRecordList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:serviceUseRecord" maxOccurs="unbounded" minOccurs="1"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="serviceUseRecord">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:OCANLead"/>
+
+						<xsd:element ref="ocan:staffWorker"/>
+						<xsd:element ref="ocan:serviceOrg"/>
+						<xsd:element ref="ocan:program"/>
+						<xsd:element ref="ocan:MISFunction"/>
+						<xsd:element ref="ocan:serviceDeliveryLHIN"/>
+						<xsd:element ref="ocan:referralSource"/>
+						<xsd:element ref="ocan:requestForServiceDate"/>
+						<xsd:element ref="ocan:serviceDecisionDate"/>
+						<xsd:element ref="ocan:accepted"/>
+
+						<xsd:element ref="ocan:serviceInitiationDate"/>
+						<xsd:element ref="ocan:exitDate"/>
+						<xsd:element ref="ocan:exitDisposition"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- OCAN Lead-->
+	<xsd:element name="OCANLead">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+			</xsd:restriction>
+		</xsd:simpleType>
+
+	</xsd:element>
+
+	<!-- Staff Worker -->
+	<xsd:element name="staffWorker">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Staff Worker Name -->
+					<xsd:attribute name="name" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Staff Worker Phone Number -->
+					<xsd:attribute name="phoneNumber" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Staff Worker Phone Extension -->
+					<xsd:attribute name="extension" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="16">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Service Organization -->
+	<xsd:element name="serviceOrg">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Service Organization LHIN -->
+					<xsd:attribute name="LHIN" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:enumeration value="1"/>		<!-- Erie St.Clair -->
+								<xsd:enumeration value="2"/>		<!-- South West -->
+								<xsd:enumeration value="3"/>		<!-- Waterloo Wellington -->
+								<xsd:enumeration value="4"/>		<!-- Hamilton Niagara Haldimand Brant -->
+								<xsd:enumeration value="5"/>		<!-- Central West -->
+								<xsd:enumeration value="6"/>		<!-- Mississauga-Halton -->
+
+								<xsd:enumeration value="7"/>		<!-- Toronto Central -->
+								<xsd:enumeration value="8"/>		<!-- Central -->
+								<xsd:enumeration value="9"/>		<!-- Central East -->
+								<xsd:enumeration value="10"/>		<!-- South East -->
+								<xsd:enumeration value="11"/>		<!-- Champlain -->
+								<xsd:enumeration value="12"/>		<!-- North Simcoe Muskoka -->
+
+								<xsd:enumeration value="13"/>		<!-- North East -->
+								<xsd:enumeration value="14"/>		<!-- North West -->
+								<xsd:enumeration value="010-30"/>	<!-- Out of Province -->
+								<xsd:enumeration value="010-52"/>	<!-- Out of Country -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Service Organization Name -->
+					<xsd:attribute name="name" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Service Organization Number -->
+					<xsd:attribute name="number" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Service Organization Name - Other -->
+					<xsd:attribute name="nameOther" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Service Organization Number - Other -->
+					<xsd:attribute name="numberOther" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Program -->
+	<xsd:element name="program">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Program Name -->
+					<xsd:attribute name="name" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Program Number -->
+					<xsd:attribute name="number" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Program Name - Other -->
+					<xsd:attribute name="nameOther" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Program Number - Other -->
+					<xsd:attribute name="numberOther" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- MIS Functional Centre (CDS Question) -->
+	<xsd:element name="MISFunction">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- MIS Functional Centre Code -->
+
+					<xsd:attribute name="value" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="725 09 76"/>		<!-- CM - Case Management -->
+								<xsd:enumeration value="725 10 76 12"/>	<!-- CT - Counseling and Treatment -->
+								<xsd:enumeration value="725 10 76 20"/>	<!-- ACT - Assertive Community Treatment Teams -->
+								<xsd:enumeration value="725 10 76 30"/>	<!-- CMH - Community Mental Health Clinic -->
+
+								<xsd:enumeration value="725 10 76 40"/>	<!-- EMP - Vocational, Employment -->
+								<xsd:enumeration value="725 10 76 41"/>	<!-- CLU - Clubhouses -->
+								<xsd:enumeration value="725 10 76 45"/>	<!-- CON - Concurrent Disorders -->
+								<xsd:enumeration value="725 10 76 50"/>	<!-- CHI - Child, Adolescent -->
+								<xsd:enumeration value="725 10 76 51"/>	<!-- EAR - Early Intervention -->
+								<xsd:enumeration value="725 10 76 55"/>	<!-- FOR - Forensic -->
+
+								<xsd:enumeration value="725 10 76 56"/>	<!-- DCS - Diversion and Court Support -->
+								<xsd:enumeration value="725 10 76 60"/>	<!-- AS - Abuse Services -->
+								<xsd:enumeration value="725 10 76 70"/>	<!-- EAT - Eating Disorder -->
+								<xsd:enumeration value="725 10 76 81"/>	<!-- SR - Social Rehabilitation, Recreation -->
+								<xsd:enumeration value="725 10 76 95"/>	<!-- DDx - Dual Diagnosis -->
+								<xsd:enumeration value="725 10 76 96"/>	<!-- GER - Psycho-geriatric -->
+
+								<xsd:enumeration value="725 15 76"/>		<!-- CRI - Mental Health Crisis Intervention -->
+								<xsd:enumeration value="725 20 76"/>		<!-- DN - Primary Day and Night Care -->
+								<xsd:enumeration value="725 40 76 10"/>	<!-- HSC - Homes for Special Care -->
+								<xsd:enumeration value="725 40 76 30"/>	<!-- SH - Supportive within Housing -->
+								<xsd:enumeration value="725 40 76 60"/>	<!-- CSB - Short term Res.Crisis Support Beds -->
+								<xsd:enumeration value="725 70 10"/>		<!-- IR - Community Service Information and Referral -->
+
+								<xsd:enumeration value="725 50 76 10"/>	<!-- HPA - Health Promotion, Education - Awareness -->
+								<xsd:enumeration value="725 50 76 30"/>	<!-- HPW - Health Promotion / Education - Women's Health (MH) -->
+								<xsd:enumeration value="725 50 76 40"/>	<!-- CD - Community Development -->
+								<xsd:enumeration value="725 51 76 11"/>	<!-- PSH - Peer, Self-help Initiatives -->
+								<xsd:enumeration value="725 51 76 12"/>	<!-- AB - Alternative Businesses -->
+								<xsd:enumeration value="725 51 76 20"/>	<!-- FI - Family Initiatives -->
+
+								<xsd:enumeration value="725 107 699"/>		<!-- OTH - Other MH services not elsewhere classified -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- MIS Functional Centre Name - Other -->
+					<xsd:attribute name="nameOther" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- MIS Functional Centre Number - Other -->
+					<xsd:attribute name="numberOther" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="16">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- MIS Sub Function -->
+					<xsd:attribute name="subFunction" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Service Delivery LHIN -->
+	<xsd:element name="serviceDeliveryLHIN">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="1"/>		<!-- Erie St.Clair -->
+
+				<xsd:enumeration value="2"/>		<!-- South West -->
+				<xsd:enumeration value="3"/>		<!-- Waterloo Wellington -->
+				<xsd:enumeration value="4"/>		<!-- Hamilton Niagara Haldimand Brant -->
+				<xsd:enumeration value="5"/>		<!-- Central West -->
+				<xsd:enumeration value="6"/>		<!-- Mississauga-Halton -->
+				<xsd:enumeration value="7"/>		<!-- Toronto Central -->
+
+				<xsd:enumeration value="8"/>		<!-- Central -->
+				<xsd:enumeration value="9"/>		<!-- Central East -->
+				<xsd:enumeration value="10"/>		<!-- South East -->
+				<xsd:enumeration value="11"/>		<!-- Champlain -->
+				<xsd:enumeration value="12"/>		<!-- North Simcoe Muskoka -->
+				<xsd:enumeration value="13"/>		<!-- North East -->
+
+				<xsd:enumeration value="14"/>		<!-- North West -->
+				<xsd:enumeration value="010-30"/>	<!-- Out of Province -->
+				<xsd:enumeration value="010-52"/>	<!-- Out of Country -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Who referred you to this service? (select one) -->
+	<xsd:element name="referralSource">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="018-01"/>		<!-- General Hospital -->
+				<xsd:enumeration value="018-02"/>		<!-- Psychiatric Hospital -->
+				<xsd:enumeration value="018-03"/>		<!-- Other institution -->
+
+				<xsd:enumeration value="018-05"/>		<!-- Other Community Agencies -->
+				<xsd:enumeration value="018-06"/>		<!-- Family Physicians -->
+				<xsd:enumeration value="018-07"/>		<!-- Psychiatrists -->
+				<xsd:enumeration value="018-08"/>		<!-- Mental Health Worker -->
+				<xsd:enumeration value="018-10"/>		<!-- Self, Family or Friend -->
+				<xsd:enumeration value="OTH"/>			<!-- Other -->
+
+				<xsd:enumeration value="0AS"/>			<!-- Abuse Services -->
+				<xsd:enumeration value="0AB"/>			<!-- Alternative Businesses -->
+				<xsd:enumeration value="ACT"/>			<!-- Assertive Community Treatment Teams -->
+				<xsd:enumeration value="0CM"/>			<!-- Case Management -->
+				<xsd:enumeration value="CHI"/>			<!-- Child/Adolescent -->
+				<xsd:enumeration value="CLU"/>			<!-- Clubhouses -->
+
+				<xsd:enumeration value="0CD"/>			<!-- Community Development -->
+				<xsd:enumeration value="CMH"/>			<!-- Community Mental Health Clinic -->
+				<xsd:enumeration value="0IR"/>			<!-- Community Service Information and Referral -->
+				<xsd:enumeration value="CON"/>			<!-- Concurrent Disorders -->
+				<xsd:enumeration value="0CT"/>			<!-- Counseling & Treatment -->
+				<xsd:enumeration value="DCS"/>			<!-- Diversion & Court Support -->
+
+				<xsd:enumeration value="DDx"/>			<!-- Dual Diagnosis -->
+				<xsd:enumeration value="EAR"/>			<!-- Early Intervention -->
+				<xsd:enumeration value="EAT"/>			<!-- Eating Disorder -->
+				<xsd:enumeration value="0FI"/>			<!-- Family Initiatives -->
+				<xsd:enumeration value="FOR"/>			<!-- Forensic -->
+				<xsd:enumeration value="HPA"/>			<!-- Health Promotion/Education – Awareness -->
+
+				<xsd:enumeration value="HPW"/>			<!-- Health Promotion/Education – Women's Health (MH) -->
+				<xsd:enumeration value="HSC"/>			<!-- Homes for Special Care -->
+				<xsd:enumeration value="CRI"/>			<!-- Mental Health Crisis Intervention -->
+				<xsd:enumeration value="PSH"/>			<!-- Peer/Self-help Initiatives -->
+				<xsd:enumeration value="0DN"/>			<!-- Primary Day/Night Care -->
+				<xsd:enumeration value="GER"/>			<!-- Psycho-Geriatric -->
+
+				<xsd:enumeration value="0SR"/>			<!-- Social Rehabilitation/Recreation -->
+				<xsd:enumeration value="0SH"/>			<!-- Supports within Housing -->
+				<xsd:enumeration value="EMP"/>			<!-- Vocational/Employment -->
+				<xsd:enumeration value="OMHS"/>		<!-- Other Mental Health Services -->
+				<xsd:enumeration value="OAS"/>			<!-- Other Addiction Services -->
+				<xsd:enumeration value="PSOR"/>		<!-- Police -->
+
+				<xsd:enumeration value="COLA"/>		<!-- Courts (includes jails and detention centres) -->
+				<xsd:enumeration value="CSOR"/>		<!-- Correctional Facilities (includes jails and detention centres) -->
+				<xsd:enumeration value="4155.1.PPOF"/>	<!-- Probation/Parole Officers -->
+				<xsd:enumeration value="CSB"/>			<!-- Short Term Residential Crisis Support Beds -->
+				<xsd:enumeration value="CJSS"/>		<!-- Criminal Justice System Source breakdown not available (use this category if above detailed breakdown" is not available) -->
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Request For Service Date: YYYY-MM-DDZ -->
+	<xsd:element name="requestForServiceDate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="11">
+				</xsd:maxLength>
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Service Decision Date: YYYY-MM-DDZ -->
+	<xsd:element name="serviceDecisionDate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="11">
+
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Accepted -->
+	<xsd:element name="accepted">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Service Initiation Date: YYYY-MM-DDZ -->
+	<xsd:element name="serviceInitiationDate">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="11">
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Exit Date: YYYY-MM-DDZ -->
+
+	<xsd:element name="exitDate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="11">
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Exit Disposition? (select one if applicable) -->
+	<xsd:element name="exitDisposition">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="019-01"/>	<!-- Completion without referral -->
+				<xsd:enumeration value="019-02"/>	<!-- Completion with referral -->
+
+				<xsd:enumeration value="019-03"/>	<!-- Suicides -->
+				<xsd:enumeration value="019-04"/>	<!-- Death -->
+				<xsd:enumeration value="019-05"/>	<!-- Relocation -->
+				<xsd:enumeration value="019-06"/>	<!-- Withdrawal -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Client Contact Information -->
+	<xsd:element name="clientContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:doctorContact"/>
+						<xsd:element ref="ocan:psychiatristContact"/>
+
+						<xsd:element ref="ocan:otherPractitionerContact" maxOccurs="unbounded" minOccurs="0"/>
+						<xsd:element ref="ocan:otherAgencyContact" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Family Doctor Information -->
+
+	<xsd:element name="doctorContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:contactInfo"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="doctor" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>			<!-- Null -->
+								<xsd:enumeration value="TRUE"/>		<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>		<!-- No -->
+								<xsd:enumeration value="NOTAVAIL"/>	<!-- None Available -->
+								<xsd:enumeration value="CDA"/>			<!-- Client Declined to Answer -->
+
+								<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="lastSeen" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+
+								<xsd:enumeration value="LS-1"/>	<!-- Within the last month -->
+								<xsd:enumeration value="LS-6"/>	<!-- Within the last six months -->
+								<xsd:enumeration value="LS-12"/>	<!-- Within the last year -->
+								<xsd:enumeration value="LS-13"/>	<!-- More than a year ago -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Psychiatrist Information-->
+	<xsd:element name="psychiatristContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:contactInfo"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="psychiatrist" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>			<!-- Null -->
+
+								<xsd:enumeration value="TRUE"/>		<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>		<!-- No -->
+								<xsd:enumeration value="NOTAVAIL"/>	<!-- None Available -->
+								<xsd:enumeration value="CDA"/>			<!-- Client Declined to Answer -->
+								<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="lastSeen" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="LS-1"/>	<!-- Within the last month -->
+
+								<xsd:enumeration value="LS-6"/>	<!-- Within the last six months -->
+								<xsd:enumeration value="LS-12"/>	<!-- Within the last year -->
+								<xsd:enumeration value="LS-13"/>	<!-- More than a year ago -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Other Practitioner Contacts -->
+	<xsd:element name="otherPractitionerContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:contactInfo"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherContact" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="practitionerType" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="3111"/>	<!-- Specialist Physicians -->
+								<xsd:enumeration value="3112"/>	<!-- General Practitioners and Family Physicians -->
+								<xsd:enumeration value="3113"/>	<!-- Dentists -->
+
+								<xsd:enumeration value="3121"/>	<!-- Optometrists -->
+								<xsd:enumeration value="3122"/>	<!-- Chiropractors -->
+								<xsd:enumeration value="3123"/>	<!-- Other Professional Occupations in Health Diagnosing and Treating -->
+								<xsd:enumeration value="3131"/>	<!-- Pharmacists -->
+								<xsd:enumeration value="3132"/>	<!-- Dieticians and Nutritionists -->
+								<xsd:enumeration value="3141"/>	<!-- Audiologists and Speech-Language Pathologists -->
+
+								<xsd:enumeration value="3142"/>	<!-- Physiotherapists -->
+								<xsd:enumeration value="3143"/>	<!-- Occupational Therapists -->
+								<xsd:enumeration value="3144"/>	<!-- Other Professional Occupations in Therapy and Assessment -->
+								<xsd:enumeration value="3152"/>	<!-- Registered Nurses -->
+								<xsd:enumeration value="3214"/>	<!-- Respiratory Therapists, Clinical Perfusionists and Cardio-Pulmonary Technologists -->
+								<xsd:enumeration value="3221"/>	<!-- Denturists -->
+
+								<xsd:enumeration value="3222"/>	<!-- Dental Hygienists and Dental Therapists -->
+								<xsd:enumeration value="3231"/>	<!-- Opticians -->
+								<xsd:enumeration value="3232"/>	<!-- Midwives and Practitioners of Natural Healing -->
+								<xsd:enumeration value="3233"/>	<!-- Licensed Practical Nurses -->
+								<xsd:enumeration value="3235"/>	<!-- Other Technical Occupations in Therapy and Assessment -->
+								<xsd:enumeration value="4151"/>	<!-- Psychologists -->
+
+								<xsd:enumeration value="4152"/>	<!-- Social Workers -->
+								<xsd:enumeration value="SIGOTHR"/>	<!-- Significant Other -->
+								<xsd:enumeration value="4153"/>	<!-- Family, Marriage and Other Related Counsellors -->
+								<xsd:enumeration value="4154"/>	<!-- Ministers of Religion -->
+								<xsd:enumeration value="4167"/>	<!-- Recreation, Sports and Fitness Program Supervisors and Consultants -->
+								<xsd:enumeration value="4212"/>	<!-- Community and Social Service Workers -->
+
+								<xsd:enumeration value="4213"/>	<!-- Employment Counsellors -->
+								<xsd:enumeration value="4215"/>	<!-- Instructors and Teachers of Persons with Disabilities -->
+								<xsd:enumeration value="4217"/>	<!-- Other Religious Occupations -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="lastSeen" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="LS-1"/>	<!-- Within the last month -->
+								<xsd:enumeration value="LS-6"/>	<!-- Within the last six months -->
+								<xsd:enumeration value="LS-12"/>	<!-- Within the last year -->
+								<xsd:enumeration value="LS-13"/>	<!-- More than a year ago -->
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Other Agency Contact -->
+
+	<xsd:element name="otherAgencyContact">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:contactInfo"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherAgency" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="lastSeen" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="LS-1"/>	<!-- Within the last month -->
+
+								<xsd:enumeration value="LS-6"/>	<!-- Within the last six months -->
+								<xsd:enumeration value="LS-12"/>	<!-- Within the last year -->
+								<xsd:enumeration value="LS-13"/>	<!-- More than a year ago -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Contact Information -->
+	<xsd:element name="contactInfo">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Contact Name -->
+					<xsd:attribute name="contactName" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Contact Address Line 1 -->
+					<xsd:attribute name="addressLine1" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Contact Address Line 2 -->
+					<xsd:attribute name="addressLine2" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Contact City -->
+					<xsd:attribute name="city" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Contact Province -->
+					<xsd:attribute name="province" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="AB"/>		<!-- Alberta -->
+								<xsd:enumeration value="BC"/>		<!-- British Columbia -->
+								<xsd:enumeration value="MB"/>		<!-- Manitoba -->
+								<xsd:enumeration value="NB"/>		<!-- New Brunswick -->
+
+								<xsd:enumeration value="NL"/>		<!-- Newfoundland and Labrador -->
+								<xsd:enumeration value="NT"/>		<!-- Northwest Territories -->
+								<xsd:enumeration value="NS"/>		<!-- Nova Scotia -->
+								<xsd:enumeration value="NU"/>		<!-- Nunavut -->
+								<xsd:enumeration value="ON"/>		<!-- Ontario -->
+								<xsd:enumeration value="PE"/>		<!-- Prince Edward Island -->
+
+								<xsd:enumeration value="QC"/>		<!-- Quebec -->
+								<xsd:enumeration value="SK"/>		<!-- Saskatchewan -->
+								<xsd:enumeration value="YT"/>		<!-- Yukon -->
+								<xsd:enumeration value="NA"/>		<!-- Not Applicable -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Contact Postal Code -->
+					<xsd:attribute name="postalCode" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="8">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Contact Phone Number -->
+					<xsd:attribute name="phoneNumber" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Contact Phone Extension -->
+					<xsd:attribute name="extension" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="16">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Contact Email Address -->
+					<xsd:attribute name="emailAddress" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="64">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Client Capacity (check all that apply) -->
+	<xsd:element name="clientCapacity">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:powerAttorneyPersonalCare"/>
+						<xsd:element ref="ocan:powerAttorneyProperty"/>
+
+						<xsd:element ref="ocan:legalGuardian"/>
+						<xsd:element ref="ocan:areasOfConcern"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Does the client have a Power of Attorney or a substitute decision maker for personal care? -->
+
+	<xsd:element name="powerAttorneyPersonalCare">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Power of Attorney exists? -->
+					<xsd:attribute name="personalCare" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Power of Attorney or SDM Name -->
+					<xsd:attribute name="name" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="256">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Address -->
+					<xsd:attribute name="address" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="256">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Phone Number -->
+					<xsd:attribute name="phoneNumber" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Phone Extension -->
+					<xsd:attribute name="extension" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="16">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Does the client have a Power of Attorney for property? -->
+	<xsd:element name="powerAttorneyProperty">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Power of Attorney exists? -->
+					<xsd:attribute name="property" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Power of Attorney Name -->
+
+					<xsd:attribute name="name" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="256">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Address -->
+					<xsd:attribute name="address" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="256">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Phone Number -->
+					<xsd:attribute name="phoneNumber" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Phone Extension -->
+					<xsd:attribute name="extension" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="16">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Does the client have a court appointed guardian? -->
+	<xsd:element name="legalGuardian">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Legal Guardian exists? -->
+					<xsd:attribute name="guardian" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Guardian Name -->
+					<xsd:attribute name="name" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="256">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Address -->
+					<xsd:attribute name="address" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="256"/>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Phone Number -->
+					<xsd:attribute name="phoneNumber" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="32">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Phone Extension -->
+					<xsd:attribute name="extension" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="16">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<!-- Areas of Concern -->
+	<xsd:element name="areasOfConcern">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Finance/Property -->
+					<xsd:attribute name="financeProperty" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Treatment Decisions -->
+					<xsd:attribute name="treatmentDecisions" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Age in Years for Onset of Mental Illness -->
+	<xsd:element name="ageOnsetMental">
+		<xsd:complexType>
+			<xsd:complexContent>
+
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Age in Years -->
+					<xsd:attribute name="years" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Age in Months -->
+					<xsd:attribute name="months" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+								<xsd:minInclusive value="0"/>
+								<xsd:maxInclusive value="11"/>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Age Type -->
+					<xsd:attribute name="ageType" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="EST"/>		<!-- Estimate -->
+
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="NA"/>		<!-- Not Applicable -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Age of first Psychiatric Hospitalization -->
+	<xsd:element name="ageHospitalization">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Age in Years -->
+					<xsd:attribute name="years" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Age in Months -->
+					<xsd:attribute name="months" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+								<xsd:minInclusive value="0"/>
+								<xsd:maxInclusive value="11"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Age Type -->
+					<xsd:attribute name="ageType" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="EST"/>		<!-- Estimate -->
+
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="NA"/>		<!-- Not Applicable -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Date when consumer first entered your organization -->
+	<xsd:element name="firstEntryDate">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Year they entered the system -->
+					<xsd:attribute name="entryYear" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Month they entered the system -->
+					<xsd:attribute name="entryMonth" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+								<xsd:minInclusive value="1"/>
+								<xsd:maxInclusive value="12"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Age Type -->
+					<xsd:attribute name="ageType" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="EST"/>		<!-- Estimate -->
+
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="NA"/>		<!-- Not Applicable -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- What culture do you (Consumer) identify with? -->
+	<xsd:element name="clientCulture">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>				<!-- Null -->
+
+				<xsd:enumeration value="88790004"/>		<!-- Abyssinians (Amharas) -->
+				<xsd:enumeration value="15086000"/>		<!-- African American -->
+				<xsd:enumeration value="413465009"/>		<!-- Afro-Caribbean -->
+				<xsd:enumeration value="413466005"/>		<!-- Afro-Caucasian -->
+				<xsd:enumeration value="66920001"/>		<!-- Amerind -->
+				<xsd:enumeration value="413569000"/>		<!-- Arab -->
+
+				<xsd:enumeration value="113169009"/>		<!-- Armenians -->
+				<xsd:enumeration value="315280000"/>		<!-- Asian -->
+				<xsd:enumeration value="43608005"/>		<!-- Australian aborigine -->
+				<xsd:enumeration value="68486007"/>		<!-- Austrian -->
+				<xsd:enumeration value="67931002"/>		<!-- Aztec -->
+				<xsd:enumeration value="186003008"/>		<!-- Bangladeshi -->
+
+				<xsd:enumeration value="45465003"/>		<!-- Basque -->
+				<xsd:enumeration value="56056003"/>		<!-- Belgian -->
+				<xsd:enumeration value="2852001"/>			<!-- Bhutanese -->
+				<xsd:enumeration value="315240009"/>		<!-- Black -->
+				<xsd:enumeration value="185993005"/>		<!-- Black - other African country -->
+				<xsd:enumeration value="185996002"/>		<!-- Black - other Asian -->
+
+				<xsd:enumeration value="275587000"/>		<!-- Black Arab -->
+				<xsd:enumeration value="185988007"/>		<!-- Black Caribbean -->
+				<xsd:enumeration value="275589002"/>		<!-- Black East African -->
+				<xsd:enumeration value="185995003"/>		<!-- Black Indian sub-continent -->
+				<xsd:enumeration value="275586009"/>		<!-- Black North African -->
+				<xsd:enumeration value="309644006"/>		<!-- Black West Indian -->
+
+				<xsd:enumeration value="185989004"/>		<!-- Black, other, non-mixed origin -->
+				<xsd:enumeration value="72337002"/>		<!-- Brazilian Indians -->
+				<xsd:enumeration value="47250000"/>		<!-- Bruneians -->
+				<xsd:enumeration value="29343004"/>		<!-- Bulgarian -->
+				<xsd:enumeration value="CAN"/>				<!-- Canadian -->
+				<xsd:enumeration value="14045001"/>		<!-- Caucasian -->
+
+				<xsd:enumeration value="33897005"/>		<!-- Chinese -->
+				<xsd:enumeration value="52075006"/>		<!-- Congolese -->
+				<xsd:enumeration value="286009"/>			<!-- Czech -->
+				<xsd:enumeration value="14176005"/>		<!-- Danish -->
+				<xsd:enumeration value="9533000"/>			<!-- Dutch -->
+				<xsd:enumeration value="1919006"/>			<!-- Egyptian -->
+
+				<xsd:enumeration value="25804004"/>		<!-- English -->
+				<xsd:enumeration value="18583004"/>		<!-- Estonian -->
+				<xsd:enumeration value="414152003"/>		<!-- European -->
+				<xsd:enumeration value="69865008"/>		<!-- Fijian -->
+				<xsd:enumeration value="76768002"/>		<!-- Filipinos -->
+				<xsd:enumeration value="10117001"/>		<!-- Finnish -->
+
+				<xsd:enumeration value="19434008"/>		<!-- French -->
+				<xsd:enumeration value="90822005"/>		<!-- Gambians -->
+				<xsd:enumeration value="32045009"/>		<!-- Georgian -->
+				<xsd:enumeration value="7695005"/>			<!-- German -->
+				<xsd:enumeration value="7474002"/>			<!-- Ghanaians -->
+				<xsd:enumeration value="1451003"/>			<!-- Greek -->
+
+				<xsd:enumeration value="40182006"/>		<!-- Gypsy -->
+				<xsd:enumeration value="20140003"/>		<!-- Hawaiians -->
+				<xsd:enumeration value="64693008"/>		<!-- Hungarian -->
+				<xsd:enumeration value="2720008"/>			<!-- Hututu -->
+				<xsd:enumeration value="72809004"/>		<!-- Icelandic -->
+				<xsd:enumeration value="55990000"/>		<!-- Inca -->
+
+				<xsd:enumeration value="186001005"/>		<!-- Indian (East Indian) -->
+				<xsd:enumeration value="64483007"/>		<!-- Indian (Hindi-speaking) -->
+				<xsd:enumeration value="21993009"/>		<!-- Indonesians -->
+				<xsd:enumeration value="69983001"/>		<!-- Irani -->
+				<xsd:enumeration value="27700004"/>		<!-- Iraqi -->
+				<xsd:enumeration value="31637002"/>		<!-- Italian -->
+
+				<xsd:enumeration value="414551003"/>		<!-- Japanese -->
+				<xsd:enumeration value="20449009"/>		<!-- Javanese -->
+				<xsd:enumeration value="11794009"/>		<!-- Kenyans -->
+				<xsd:enumeration value="53195006"/>		<!-- Kirghiz -->
+				<xsd:enumeration value="38361009"/>		<!-- Koreans -->
+				<xsd:enumeration value="67165000"/>		<!-- Lapps -->
+
+				<xsd:enumeration value="9158000"/>			<!-- Liberians -->
+				<xsd:enumeration value="21868006"/>		<!-- Madagascans -->
+				<xsd:enumeration value="1340002"/>			<!-- Malayans -->
+				<xsd:enumeration value="73736004"/>		<!-- Maori -->
+				<xsd:enumeration value="63457007"/>		<!-- Maya -->
+				<xsd:enumeration value="414661004"/>		<!-- Melanesian -->
+
+				<xsd:enumeration value="47327008"/>		<!-- Mexican Indians -->
+				<xsd:enumeration value="3698008"/>			<!-- Micronesians -->
+				<xsd:enumeration value="315239007"/>		<!-- Mixed ethnic group -->
+				<xsd:enumeration value="24812003"/>		<!-- Mongoloid -->
+				<xsd:enumeration value="41076003"/>		<!-- Mozambiquans -->
+				<xsd:enumeration value="186036009"/>		<!-- New Zealand European -->
+
+				<xsd:enumeration value="186039002"/>		<!-- New Zealand Maori -->
+				<xsd:enumeration value="88934004"/>		<!-- Nigerians -->
+				<xsd:enumeration value="17095009"/>		<!-- Norwegian -->
+				<xsd:enumeration value="18575005"/>		<!-- Oceanic -->
+				<xsd:enumeration value="414978006"/>		<!-- Oriental -->
+				<xsd:enumeration value="315281001"/>		<!-- Other Asian ethnic group -->
+
+				<xsd:enumeration value="186005001"/>		<!-- Other ethnic non-mixed group -->
+				<xsd:enumeration value="401214002"/>		<!-- Other white British ethnic group -->
+				<xsd:enumeration value="186002003"/>		<!-- Pakistani -->
+				<xsd:enumeration value="28562006"/>		<!-- Polish -->
+				<xsd:enumeration value="23517005"/>		<!-- Polynesians -->
+				<xsd:enumeration value="80208004"/>		<!-- Portuguese -->
+
+				<xsd:enumeration value="85163001"/>		<!-- Russian -->
+				<xsd:enumeration value="86275006"/>		<!-- Samoan -->
+				<xsd:enumeration value="3818007"/>			<!-- Senegalese -->
+				<xsd:enumeration value="50405005"/>		<!-- Senoy -->
+				<xsd:enumeration value="53460002"/>		<!-- Serbian -->
+				<xsd:enumeration value="28796001"/>		<!-- Siamese -->
+
+				<xsd:enumeration value="36329002"/>		<!-- Slovakian -->
+				<xsd:enumeration value="46110004"/>		<!-- Somalis -->
+				<xsd:enumeration value="108342005"/>		<!-- South Asian -->
+				<xsd:enumeration value="186044009"/>		<!-- South East Asian-->
+				<xsd:enumeration value="28409002"/>		<!-- Spanish -->
+				<xsd:enumeration value="88839008"/>		<!-- Sudanese -->
+
+				<xsd:enumeration value="81403004"/>		<!-- Swedish -->
+				<xsd:enumeration value="76574004"/>		<!-- Swiss -->
+				<xsd:enumeration value="59487007"/>		<!-- Syrian -->
+				<xsd:enumeration value="63736003"/>		<!-- Taiwanese -->
+				<xsd:enumeration value="12556008"/>		<!-- Tamils -->
+				<xsd:enumeration value="91066000"/>		<!-- Tatars -->
+
+				<xsd:enumeration value="83365001"/>		<!-- Thais -->
+				<xsd:enumeration value="44460002"/>		<!-- Turks -->
+				<xsd:enumeration value="14470009"/>		<!-- Tutsi -->
+				<xsd:enumeration value="76775001"/>		<!-- Ugandans -->
+				<xsd:enumeration value="62598008"/>		<!-- Venezuelan Indians -->
+				<xsd:enumeration value="312859007"/>		<!-- Vietnamese -->
+
+				<xsd:enumeration value="14999008"/>		<!-- Welsh -->
+				<xsd:enumeration value="8124001"/>			<!-- West Africans -->
+				<xsd:enumeration value="160531006"/>		<!-- West Indian -->
+				<xsd:enumeration value="185984009"/>		<!-- White -->
+				<xsd:enumeration value="CDA"/>				<!-- Consumer Declined to Answer -->
+				<xsd:enumeration value="UNK"/>				<!-- Unknown -->
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Aboriginal Origin (select one) -->
+	<xsd:element name="aboriginalOrigin">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="011-01"/>	<!-- Aboriginal -->
+
+				<xsd:enumeration value="011-02"/>	<!-- Non-aboriginal -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Citizenship Status (select one) -->
+
+	<xsd:element name="citizenshipStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="CDN"/>		<!-- Canadian Citizen -->
+				<xsd:enumeration value="PR"/>		<!-- Permanent Resident -->
+				<xsd:enumeration value="TR"/>		<!-- Temporary Resident -->
+
+				<xsd:enumeration value="REF"/>		<!-- Refugee -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Length of time lived in Canada (Number of years, months) -->
+
+	<xsd:element name="timeLivedInCanada">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="years" type="xsd:integer" use="optional"/>
+					<xsd:attribute name="months" type="xsd:integer" use="optional"/>
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Do you have any issues with your immigration experience?  (check all that apply) -->
+	<xsd:element name="immigExpList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<xsd:element name="value" minOccurs="0" maxOccurs="unbounded">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:enumeration value=""/>		<!-- None -->
+									<xsd:enumeration value="1"/>		<!-- Lack of understanding of the Canadian system,resources -->
+									<xsd:enumeration value="2"/>		<!-- Applying previous work experience,professional qualifications -->
+									<xsd:enumeration value="3"/>		<!-- Separation from family members,significant others -->
+
+									<xsd:enumeration value="4"/>		<!-- Family left behind in refugee camp -->
+									<xsd:enumeration value="EWIT"/>	<!-- Experience with war,incarceration,torture -->
+									<xsd:enumeration value="8"/>		<!-- Refugee camp -->
+									<xsd:enumeration value="6"/>		<!-- Experience with other trauma -->
+									<xsd:enumeration value="OTH"/>		<!-- Other -->
+									<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+
+									<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherImmigExp" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<!-- Can you tell me about your immigration experience? -->
+	<xsd:element name="immigExpFreeText">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="512">
+				</xsd:maxLength>
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Experience of Discrimination (check all that apply) -->
+	<xsd:element name="discrimExpList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<xsd:element name="value" minOccurs="0" maxOccurs="unbounded">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:enumeration value=""/>			<!-- Null -->
+									<xsd:enumeration value="21134002"/>	<!-- Disability -->
+									<xsd:enumeration value="397731000"/>	<!-- Ethnicity -->
+									<xsd:enumeration value="365873007"/>	<!-- Gender -->
+
+									<xsd:enumeration value="IMGR"/>		<!-- Immigration -->
+									<xsd:enumeration value="74732009"/>	<!-- Mental Illness -->
+									<xsd:enumeration value="415229000"/>	<!-- Race -->
+									<xsd:enumeration value="365577002"/>	<!-- Religion -->
+									<xsd:enumeration value="365956009"/>	<!-- Sexual Orientation -->
+									<xsd:enumeration value="OTH"/>			<!-- Other -->
+
+									<xsd:enumeration value="CDA"/>			<!-- Client declined to answer -->
+									<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherDiscrimExp" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Service Recipient Preferred Language -->
+	<xsd:element name="prefLang">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="eng"/>		<!-- English -->
+
+				<xsd:enumeration value="fra"/>		<!-- French -->
+				<xsd:enumeration value="alq"/>		<!-- Algonquin -->
+				<xsd:enumeration value="atj"/>		<!-- Atikamekw -->
+				<xsd:enumeration value="bla"/>		<!-- Blackfoot -->
+				<xsd:enumeration value="crx"/>		<!-- Carrier -->
+				<xsd:enumeration value="clc"/>		<!-- Chilcotin -->
+
+				<xsd:enumeration value="chp"/>		<!-- Chipewyan -->
+				<xsd:enumeration value="cre"/>		<!-- Cree -->
+				<xsd:enumeration value="dak"/>		<!-- Siouan languages (Dakota,Sioux) -->
+				<xsd:enumeration value="ath"/>		<!-- Athapaskan languages -->
+				<xsd:enumeration value="dgr"/>		<!-- Dogrib -->
+				<xsd:enumeration value="git"/>		<!-- Gitksan -->
+
+				<xsd:enumeration value="ikt"/>		<!-- Inuinnaqtun -->
+				<xsd:enumeration value="iku"/>		<!-- Inuktitut, n.i.e. -->
+				<xsd:enumeration value="gwi"/>		<!-- Kutchin-Gwich in (Loucheux) -->
+				<xsd:enumeration value="pqm"/>		<!-- Malecite -->
+				<xsd:enumeration value="mic"/>		<!-- Mi kmaq -->
+				<xsd:enumeration value="moh"/>		<!-- Mohawk -->
+
+				<xsd:enumeration value="moe"/>		<!-- Montagnais -->
+				<xsd:enumeration value="nks"/>		<!-- Naskapi -->
+				<xsd:enumeration value="ncg"/>		<!-- Nisga a -->
+				<xsd:enumeration value="scs"/>		<!-- North Slave (Hare) -->
+				<xsd:enumeration value="oji"/>		<!-- Ojibway -->
+				<xsd:enumeration value="alg"/>		<!-- Oji-Cree -->
+
+				<xsd:enumeration value="shs"/>		<!-- Shuswap -->
+				<xsd:enumeration value="xsl"/>		<!-- South Slave -->
+				<xsd:enumeration value="tli"/>		<!-- Tlingit -->
+				<xsd:enumeration value="ita"/>		<!-- Italian -->
+				<xsd:enumeration value="por"/>		<!-- Portuguese -->
+				<xsd:enumeration value="ron"/>		<!-- Romanian -->
+
+				<xsd:enumeration value="spa"/>		<!-- Spanish -->
+				<xsd:enumeration value="dan"/>		<!-- Danish -->
+				<xsd:enumeration value="nld"/>		<!-- Dutch -->
+				<xsd:enumeration value="vls"/>		<!-- Flemish -->
+				<xsd:enumeration value="fry"/>		<!-- Frisian -->
+				<xsd:enumeration value="deu"/>		<!-- German -->
+
+				<xsd:enumeration value="nor"/>		<!-- Norwegian -->
+				<xsd:enumeration value="swe"/>		<!-- Swedish -->
+				<xsd:enumeration value="yid"/>		<!-- Yiddish -->
+				<xsd:enumeration value="bos"/>		<!-- Bosnian -->
+				<xsd:enumeration value="bul"/>		<!-- Bulgarian -->
+				<xsd:enumeration value="hrv"/>		<!-- Croatian -->
+
+				<xsd:enumeration value="ces"/>		<!-- Czech -->
+				<xsd:enumeration value="mkd"/>		<!-- Macedonian -->
+				<xsd:enumeration value="pol"/>		<!-- Polish -->
+				<xsd:enumeration value="prg"/>		<!-- Russian -->
+				<xsd:enumeration value="srp"/>		<!-- Serbian -->
+				<xsd:enumeration value="hbs"/>		<!-- Serbo-Croatian -->
+
+				<xsd:enumeration value="slk"/>		<!-- Slovak -->
+				<xsd:enumeration value="slv"/>		<!-- Slovenian -->
+				<xsd:enumeration value="ukr"/>		<!-- Ukrainian -->
+				<xsd:enumeration value="lav"/>		<!-- Latvian -->
+				<xsd:enumeration value="lit"/>		<!-- Lithuanian -->
+				<xsd:enumeration value="est"/>		<!-- Estonian -->
+
+				<xsd:enumeration value="fin"/>		<!-- Finnish -->
+				<xsd:enumeration value="hun"/>		<!-- Hungarian -->
+				<xsd:enumeration value="ell"/>		<!-- Greek -->
+				<xsd:enumeration value="hye"/>		<!-- Armenian -->
+				<xsd:enumeration value="tur"/>		<!-- Turkish -->
+				<xsd:enumeration value="amh"/>		<!-- Amharic -->
+
+				<xsd:enumeration value="ara"/>		<!-- Arabic -->
+				<xsd:enumeration value="heb"/>		<!-- Hebrew -->
+				<xsd:enumeration value="mlt"/>		<!-- Maltese -->
+				<xsd:enumeration value="som"/>		<!-- Somali -->
+				<xsd:enumeration value="tir"/>		<!-- Tigrinya -->
+				<xsd:enumeration value="ben"/>		<!-- Bengali -->
+
+				<xsd:enumeration value="guj"/>		<!-- Gujarati -->
+				<xsd:enumeration value="hin"/>		<!-- Hindi -->
+				<xsd:enumeration value="kur"/>		<!-- Kurdish -->
+				<xsd:enumeration value="pan"/>		<!-- Panjabi (Punjabi) -->
+				<xsd:enumeration value="pus"/>		<!-- Pashto -->
+				<xsd:enumeration value="fas"/>		<!-- Persian (Farsi) -->
+
+				<xsd:enumeration value="snd"/>		<!-- Sindhi -->
+				<xsd:enumeration value="sin"/>		<!-- Sinhala (Sinhalese) -->
+				<xsd:enumeration value="urd"/>		<!-- Urdu -->
+				<xsd:enumeration value="mal"/>		<!-- Malayalam -->
+				<xsd:enumeration value="tam"/>		<!-- Tamil -->
+				<xsd:enumeration value="tel"/>		<!-- Telugu -->
+
+				<xsd:enumeration value="jpn"/>		<!-- Japanese -->
+				<xsd:enumeration value="kor"/>		<!-- Korean -->
+				<xsd:enumeration value="yue"/>		<!-- Cantonese -->
+				<xsd:enumeration value="zho"/>		<!-- Chinese, n.o.s. (2) -->
+				<xsd:enumeration value="cmn"/>		<!-- Mandarin -->
+				<xsd:enumeration value="nan"/>		<!-- Taiwanese -->
+
+				<xsd:enumeration value="lao"/>		<!-- Lao -->
+				<xsd:enumeration value="khm"/>		<!-- Khmer (Cambodian) -->
+				<xsd:enumeration value="khn"/>		<!-- Khmer (Cambodian) -->
+				<xsd:enumeration value="vie"/>		<!-- Vietnamese -->
+				<xsd:enumeration value="bsb"/>		<!-- Bisayan languages -->
+				<xsd:enumeration value="bsy"/>		<!-- Bisayan languages -->
+
+				<xsd:enumeration value="ilo"/>		<!-- ilocano -->
+				<xsd:enumeration value="zsm"/>		<!-- Malay -->
+				<xsd:enumeration value="tgl"/>		<!-- Tagalog (Pilipino, Filipino) -->
+				<xsd:enumeration value="aka"/>		<!-- Akan (Twi) -->
+				<xsd:enumeration value="swh"/>		<!-- Swahili -->
+				<xsd:enumeration value="crp"/>		<!-- Creoles -->
+
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Language of Service Provision -->
+	<xsd:element name="serviceLang">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="eng"/>		<!-- English -->
+				<xsd:enumeration value="fra"/>		<!-- French -->
+				<xsd:enumeration value="alq"/>		<!-- Algonquin -->
+				<xsd:enumeration value="atj"/>		<!-- Atikamekw -->
+				<xsd:enumeration value="bla"/>		<!-- Blackfoot -->
+
+				<xsd:enumeration value="crx"/>		<!-- Carrier -->
+				<xsd:enumeration value="clc"/>		<!-- Chilcotin -->
+				<xsd:enumeration value="chp"/>		<!-- Chipewyan -->
+				<xsd:enumeration value="cre"/>		<!-- Cree -->
+				<xsd:enumeration value="dak"/>		<!-- Siouan languages (Dakota,Sioux) -->
+				<xsd:enumeration value="ath"/>		<!-- Athapaskan languages -->
+
+				<xsd:enumeration value="dgr"/>		<!-- Dogrib -->
+				<xsd:enumeration value="git"/>		<!-- Gitksan -->
+				<xsd:enumeration value="ikt"/>		<!-- Inuinnaqtun -->
+				<xsd:enumeration value="iku"/>		<!-- Inuktitut, n.i.e. -->
+				<xsd:enumeration value="gwi"/>		<!-- Kutchin-Gwich in (Loucheux) -->
+				<xsd:enumeration value="pqm"/>		<!-- Malecite -->
+
+				<xsd:enumeration value="mic"/>		<!-- Mi kmaq -->
+				<xsd:enumeration value="moh"/>		<!-- Mohawk -->
+				<xsd:enumeration value="moe"/>		<!-- Montagnais -->
+				<xsd:enumeration value="nks"/>		<!-- Naskapi -->
+				<xsd:enumeration value="ncg"/>		<!-- Nisga a -->
+				<xsd:enumeration value="scs"/>		<!-- North Slave (Hare) -->
+
+				<xsd:enumeration value="oji"/>		<!-- Ojibway -->
+				<xsd:enumeration value="alg"/>		<!-- Oji-Cree -->
+				<xsd:enumeration value="shs"/>		<!-- Shuswap -->
+				<xsd:enumeration value="xsl"/>		<!-- South Slave -->
+				<xsd:enumeration value="tli"/>		<!-- Tlingit -->
+				<xsd:enumeration value="ita"/>		<!-- Italian -->
+
+				<xsd:enumeration value="por"/>		<!-- Portuguese -->
+				<xsd:enumeration value="ron"/>		<!-- Romanian -->
+				<xsd:enumeration value="spa"/>		<!-- Spanish -->
+				<xsd:enumeration value="dan"/>		<!-- Danish -->
+				<xsd:enumeration value="nld"/>		<!-- Dutch -->
+				<xsd:enumeration value="vls"/>		<!-- Flemish -->
+
+				<xsd:enumeration value="fry"/>		<!-- Frisian -->
+				<xsd:enumeration value="deu"/>		<!-- German -->
+				<xsd:enumeration value="nor"/>		<!-- Norwegian -->
+				<xsd:enumeration value="swe"/>		<!-- Swedish -->
+				<xsd:enumeration value="yid"/>		<!-- Yiddish -->
+				<xsd:enumeration value="bos"/>		<!-- Bosnian -->
+
+				<xsd:enumeration value="bul"/>		<!-- Bulgarian -->
+				<xsd:enumeration value="hrv"/>		<!-- Croatian -->
+				<xsd:enumeration value="ces"/>		<!-- Czech -->
+				<xsd:enumeration value="mkd"/>		<!-- Macedonian -->
+				<xsd:enumeration value="pol"/>		<!-- Polish -->
+				<xsd:enumeration value="prg"/>		<!-- Russian -->
+
+				<xsd:enumeration value="srp"/>		<!-- Serbian -->
+				<xsd:enumeration value="hbs"/>		<!-- Serbo-Croatian -->
+				<xsd:enumeration value="slk"/>		<!-- Slovak -->
+				<xsd:enumeration value="slv"/>		<!-- Slovenian -->
+				<xsd:enumeration value="ukr"/>		<!-- Ukrainian -->
+				<xsd:enumeration value="lav"/>		<!-- Latvian -->
+
+				<xsd:enumeration value="lit"/>		<!-- Lithuanian -->
+				<xsd:enumeration value="est"/>		<!-- Estonian -->
+				<xsd:enumeration value="fin"/>		<!-- Finnish -->
+				<xsd:enumeration value="hun"/>		<!-- Hungarian -->
+				<xsd:enumeration value="ell"/>		<!-- Greek -->
+				<xsd:enumeration value="hye"/>		<!-- Armenian -->
+
+				<xsd:enumeration value="tur"/>		<!-- Turkish -->
+				<xsd:enumeration value="amh"/>		<!-- Amharic -->
+				<xsd:enumeration value="ara"/>		<!-- Arabic -->
+				<xsd:enumeration value="heb"/>		<!-- Hebrew -->
+				<xsd:enumeration value="mlt"/>		<!-- Maltese -->
+				<xsd:enumeration value="som"/>		<!-- Somali -->
+
+				<xsd:enumeration value="tir"/>		<!-- Tigrinya -->
+				<xsd:enumeration value="ben"/>		<!-- Bengali -->
+				<xsd:enumeration value="guj"/>		<!-- Gujarati -->
+				<xsd:enumeration value="hin"/>		<!-- Hindi -->
+				<xsd:enumeration value="kur"/>		<!-- Kurdish -->
+				<xsd:enumeration value="pan"/>		<!-- Panjabi (Punjabi) -->
+
+				<xsd:enumeration value="pus"/>		<!-- Pashto -->
+				<xsd:enumeration value="fas"/>		<!-- Persian (Farsi) -->
+				<xsd:enumeration value="snd"/>		<!-- Sindhi -->
+				<xsd:enumeration value="sin"/>		<!-- Sinhala (Sinhalese) -->
+				<xsd:enumeration value="urd"/>		<!-- Urdu -->
+				<xsd:enumeration value="mal"/>		<!-- Malayalam -->
+
+				<xsd:enumeration value="tam"/>		<!-- Tamil -->
+				<xsd:enumeration value="tel"/>		<!-- Telugu -->
+				<xsd:enumeration value="jpn"/>		<!-- Japanese -->
+				<xsd:enumeration value="kor"/>		<!-- Korean -->
+				<xsd:enumeration value="yue"/>		<!-- Cantonese -->
+				<xsd:enumeration value="zho"/>		<!-- Chinese, n.o.s. (2) -->
+
+				<xsd:enumeration value="cmn"/>		<!-- Mandarin -->
+				<xsd:enumeration value="nan"/>		<!-- Taiwanese -->
+				<xsd:enumeration value="lao"/>		<!-- Lao -->
+				<xsd:enumeration value="khm"/>		<!-- Khmer (Cambodian) -->
+				<xsd:enumeration value="khn"/>		<!-- Khmer (Cambodian) -->
+				<xsd:enumeration value="vie"/>		<!-- Vietnamese -->
+
+				<xsd:enumeration value="bsb"/>		<!-- Bisayan languages -->
+				<xsd:enumeration value="bsy"/>		<!-- Bisayan languages -->
+				<xsd:enumeration value="ilo"/>		<!-- ilocano -->
+				<xsd:enumeration value="zsm"/>		<!-- Malay -->
+				<xsd:enumeration value="tgl"/>		<!-- Tagalog (Pilipino, Filipino) -->
+				<xsd:enumeration value="aka"/>		<!-- Akan (Twi) -->
+
+				<xsd:enumeration value="swh"/>		<!-- Swahili -->
+				<xsd:enumeration value="crp"/>		<!-- Creoles -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Do you currently have any legal issues? (select one) -->
+	<xsd:element name="legalIssues">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="Civil"/>		<!-- Civil -->
+				<xsd:enumeration value="Criminal"/>	<!-- Criminal -->
+				<xsd:enumeration value="None"/>		<!-- None -->
+
+				<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>			<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Current Legal Status (check all that apply) -->
+	<xsd:element name="legalStatusList">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:legalStatus" minOccurs="0" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<xsd:element name="legalStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="013-01"/>	<!-- Pre-charge Diversion -->
+				<xsd:enumeration value="013-02"/>	<!-- Court Diversion Program -->
+
+				<xsd:enumeration value="013-03"/>	<!-- Awaiting fitness assessment -->
+				<xsd:enumeration value="013-04"/>	<!-- Awaiting trial (with or without bail) -->
+				<xsd:enumeration value="013-05"/>	<!-- Awaiting Criminal Responsibility Assessment (NCR) -->
+				<xsd:enumeration value="013-06"/>	<!-- In community on own recognizance -->
+				<xsd:enumeration value="013-07"/>	<!-- Unfit to stand trial -->
+				<xsd:enumeration value="013-08"/>	<!-- Charges withdrawn -->
+
+				<xsd:enumeration value="013-09"/>	<!-- Stay of proceedings -->
+				<xsd:enumeration value="013-10"/>	<!-- Awaiting sentence -->
+				<xsd:enumeration value="013-11"/>	<!-- NCR -->
+				<xsd:enumeration value="013-12"/>	<!-- Conditional discharge -->
+				<xsd:enumeration value="013-13"/>	<!-- Conditional sentence -->
+				<xsd:enumeration value="013-14"/>	<!-- Restraining order -->
+
+				<xsd:enumeration value="013-15"/>	<!-- Peace bond -->
+				<xsd:enumeration value="013-16"/>	<!-- suspended sentence -->
+				<xsd:enumeration value="013-17"/>	<!-- ORB detained - community access -->
+				<xsd:enumeration value="013-18"/>	<!-- ORB conditional discharge -->
+				<xsd:enumeration value="013-19"/>	<!-- On parole -->
+				<xsd:enumeration value="013-20"/>	<!-- On probation -->
+
+				<xsd:enumeration value="013-21"/>	<!-- No legal problems (includes absolute discharge and end of sentence) -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- Comments -->
+
+	<xsd:element name="generalComments">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="4096">
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<xsd:element name="OCANDomains">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:domain" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="domain">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<!-- common for all domains -->
+
+						<xsd:element ref="ocan:needRating" minOccurs="1"/>
+						<xsd:element ref="ocan:informalHelpRecvd" minOccurs="1"/>
+						<xsd:element ref="ocan:formalHelpRecvd" minOccurs="1"/>
+						<xsd:element ref="ocan:formalHelpNeed" minOccurs="1"/>
+						<xsd:element ref="ocan:domainComments" minOccurs="1"/>
+						<xsd:element ref="ocan:domainActions" minOccurs="1"/>
+
+						<!-- 01: accommodation -->
+						<xsd:element ref="ocan:residenceType" minOccurs="0"/>
+
+						<xsd:element ref="ocan:residenceSupport" minOccurs="0"/>
+						<xsd:element ref="ocan:livingArrangementType" minOccurs="0"/>
+
+						<!-- 05: daytime activities -->
+						<xsd:element ref="ocan:employStatus" minOccurs="0"/>
+						<xsd:element ref="ocan:educationProgramStatus" minOccurs="0"/>
+						<xsd:element ref="ocan:barriersFindingWorkList" minOccurs="0"/>
+
+						<!-- 06: physical health -->
+						<xsd:element ref="ocan:medicalConditionList" minOccurs="0"/>
+
+						<xsd:element ref="ocan:physicalHealthConcern" minOccurs="0"/>
+						<xsd:element ref="ocan:concernAreaList" minOccurs="0"/>
+						<xsd:element ref="ocan:medicationList" minOccurs="0"/>
+
+						<!-- 07: psychotic symptoms -->
+						<xsd:element ref="ocan:hospitalizedPastTwoYears" minOccurs="0"/>
+						<xsd:element ref="ocan:totalAdmissions" minOccurs="0"/>
+						<xsd:element ref="ocan:totalHospitalDays" minOccurs="0"/>
+						<xsd:element ref="ocan:visitEmergencyDepartment" minOccurs="0"/>
+
+						<xsd:element ref="ocan:communityTreatOrder" minOccurs="0"/>
+						<xsd:element ref="ocan:psychiatricAdditionalInfo" minOccurs="0"/>
+						<xsd:element ref="ocan:symptomList" minOccurs="0"/>
+
+						<!-- 08: condition and treatment -->
+						<xsd:element ref="ocan:diagnosticList" minOccurs="0"/>
+						<xsd:element ref="ocan:otherIllnessList" minOccurs="0"/>
+
+						<!-- 10: safety to self -->
+						<xsd:element ref="ocan:suicideAttempt" minOccurs="0"/>
+
+						<xsd:element ref="ocan:suicideThoughts" minOccurs="0"/>
+						<xsd:element ref="ocan:safetyConcernSelf" minOccurs="0"/>
+						<xsd:element ref="ocan:safetyToSelfRiskList" minOccurs="0"/>
+
+						<!-- 12: alcohol -->
+						<xsd:element ref="ocan:drinkAlcohol" minOccurs="0"/>
+						<xsd:element ref="ocan:stageOfChangeAlcohol" minOccurs="0"/>
+						<xsd:element ref="ocan:drinkingImpact" minOccurs="0"/>
+
+						<!-- 13: drugs -->
+
+						<xsd:element ref="ocan:drugUseList" minOccurs="0"/>
+						<xsd:element ref="ocan:stageOfChangeDrugs" minOccurs="0"/>
+						<xsd:element ref="ocan:drugsImpact" minOccurs="0"/>
+
+						<!-- 14: other addictions -->
+						<xsd:element ref="ocan:addictionTypeList" minOccurs="0"/>
+						<xsd:element ref="ocan:stageOfChangeAddictions" minOccurs="0"/>
+						<xsd:element ref="ocan:addictionImpact" minOccurs="0"/>
+
+						<!-- 15: company -->
+
+						<xsd:element ref="ocan:changedSocialPatterns" minOccurs="0"/>
+
+						<!-- 20: basic education -->
+						<xsd:element ref="ocan:highestEducationLevel" minOccurs="0"/>
+
+						<!-- 23: money -->
+						<xsd:element ref="ocan:sourceOfIncome" minOccurs="0"/>
+
+					</xsd:sequence>
+
+					<xsd:attribute name="name" use="required">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="01-accommodation"/>
+								<xsd:enumeration value="02-food"/>
+								<xsd:enumeration value="03-looking after the home"/>
+								<xsd:enumeration value="04-self-care"/>
+								<xsd:enumeration value="05-daytime activities"/>
+								<xsd:enumeration value="06-physical health"/>
+								<xsd:enumeration value="07-psychotic symptoms"/>
+
+								<xsd:enumeration value="08-condition and treatment"/>
+								<xsd:enumeration value="09-psychological distress"/>
+								<xsd:enumeration value="10-safety to self"/>
+								<xsd:enumeration value="11-safety to others"/>
+								<xsd:enumeration value="12-alcohol"/>
+								<xsd:enumeration value="13-drugs"/>
+								<xsd:enumeration value="14-other addictions"/>
+								<xsd:enumeration value="15-company"/>
+								<xsd:enumeration value="16-intimate relationships"/>
+
+								<xsd:enumeration value="17-sexual expression"/>
+								<xsd:enumeration value="18-childcare"/>
+								<xsd:enumeration value="19-other dependents"/>
+								<xsd:enumeration value="20-basic education"/>
+								<xsd:enumeration value="21-telephone"/>
+								<xsd:enumeration value="22-transport"/>
+								<xsd:enumeration value="23-money"/>
+								<xsd:enumeration value="24-benefits"/>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="needRating">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+								<xsd:enumeration value="0"/>	<!-- No problem -->
+
+								<xsd:enumeration value="1"/>	<!-- No or moderate problem due to help given -->
+								<xsd:enumeration value="2"/>	<!-- Serious problem -->
+								<xsd:enumeration value="9"/>	<!-- Not known -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="client" use="required">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+								<xsd:enumeration value="-1"/>	<!-- Blank -->
+								<xsd:enumeration value="0"/>	<!-- No problem -->
+								<xsd:enumeration value="1"/>	<!-- No or moderate problem due to help given -->
+								<xsd:enumeration value="2"/>	<!-- Serious problem -->
+								<xsd:enumeration value="9"/>	<!-- Not known -->
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+
+	<xsd:element name="informalHelpRecvd">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+								<xsd:enumeration value="-1"/>	<!-- Blank -->
+
+								<xsd:enumeration value="0"/>	<!-- None -->
+								<xsd:enumeration value="1"/>	<!-- Low Help -->
+								<xsd:enumeration value="2"/>	<!-- Moderate Help -->
+								<xsd:enumeration value="3"/>	<!-- High Help -->
+								<xsd:enumeration value="9"/>	<!-- Not known -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="formalHelpRecvd">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+								<xsd:enumeration value="-1"/>	<!-- Blank -->
+
+								<xsd:enumeration value="0"/>	<!-- None -->
+								<xsd:enumeration value="1"/>	<!-- Low Help -->
+								<xsd:enumeration value="2"/>	<!-- Moderate Help -->
+								<xsd:enumeration value="3"/>	<!-- High Help -->
+								<xsd:enumeration value="9"/>	<!-- Not known -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="formalHelpNeed">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="staff" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:byte">
+								<xsd:enumeration value="-1"/>	<!-- Blank -->
+
+								<xsd:enumeration value="0"/>	<!-- None -->
+								<xsd:enumeration value="1"/>	<!-- Low Help -->
+								<xsd:enumeration value="2"/>	<!-- Moderate Help -->
+								<xsd:enumeration value="3"/>	<!-- High Help -->
+								<xsd:enumeration value="9"/>	<!-- Not known -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="domainComments">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Staff Comments -->
+					<xsd:attribute name="staff" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Consumer Comments -->
+					<xsd:attribute name="client" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- common for all domains -->
+	<xsd:element name="domainActions">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Action Text -->
+					<xsd:attribute name="actionText" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="512">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- By Whom -->
+					<xsd:attribute name="byWhom" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Review Date: YYYY-MM-DDZ -->
+					<xsd:attribute name="reviewDate" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="11">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 01: accommodation: Where do you live? (select one) -->
+
+	<xsd:element name="residenceType">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="value" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:enumeration value="024-01"/>	<!-- Approved Homes and Homes for Special Care -->
+								<xsd:enumeration value="024-02"/>	<!-- Correctional, Probation Facility -->
+								<xsd:enumeration value="024-03"/>	<!-- Domicillary Hostel -->
+								<xsd:enumeration value="024-04"/>	<!-- General Hospital -->
+								<xsd:enumeration value="024-05"/>	<!-- Psychiatric Hospital -->
+								<xsd:enumeration value="024-06"/>	<!-- Other Specialty Hospital -->
+
+								<xsd:enumeration value="024-07"/>	<!-- No fixed address -->
+								<xsd:enumeration value="024-08"/>	<!-- Hostel, Shelter -->
+								<xsd:enumeration value="024-09"/>	<!-- Long term care facility, Nursing Home -->
+								<xsd:enumeration value="024-10"/>	<!-- Municipal Non-Profit Housing -->
+								<xsd:enumeration value="024-11"/>	<!-- Private Non-Profit Housing -->
+								<xsd:enumeration value="024-12"/>	<!-- Private House, Apt. – SR Owned, Market Rent -->
+
+								<xsd:enumeration value="024-13"/>	<!-- Private House, Apt. – Other, Subsidized -->
+								<xsd:enumeration value="024-14"/>	<!-- Retirement Home, Senior's Residence -->
+								<xsd:enumeration value="024-15"/>	<!-- Rooming, Boarding House -->
+								<xsd:enumeration value="024-16"/>	<!-- Supportive Housing – Congregate Living -->
+								<xsd:enumeration value="024-17"/>	<!-- Supportive Housing - Assisted Living -->
+								<xsd:enumeration value="OTH"/>		<!-- Other -->
+
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="other" use="required">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 01: accommodation: Do you receive any support? (select one) -->
+	<xsd:element name="residenceSupport">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="24A-01"/>	<!-- Independent -->
+				<xsd:enumeration value="24A-02"/>	<!-- Assisted, Supported -->
+
+				<xsd:enumeration value="24A-03"/>	<!-- Supervised Nonfacility -->
+				<xsd:enumeration value="24A-04"/>	<!-- Supervised-Facility -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 01: accommodation: Do you live with anyone? (select one) -->
+	<xsd:element name="livingArrangementType">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="023-01"/>	<!-- Self -->
+				<xsd:enumeration value="023-02"/>	<!-- Spouse, Partner -->
+				<xsd:enumeration value="023-03"/>	<!-- Spouse, Partner and Others -->
+
+				<xsd:enumeration value="023-04"/>	<!-- Children -->
+				<xsd:enumeration value="023-05"/>	<!-- Parents -->
+				<xsd:enumeration value="023-06"/>	<!-- Relatives -->
+				<xsd:enumeration value="023-07"/>	<!-- Non-relatives -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 05: daytime activities: What is your current employment status? (select one) -->
+	<xsd:element name="employStatus">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="224363007"/>	<!-- Independent, Competitive -->
+
+				<xsd:enumeration value="ES-1"/>		<!-- Assisted, Supported -->
+				<xsd:enumeration value="ES-2"/>		<!-- Alternative businesses -->
+				<xsd:enumeration value="224366004"/>	<!-- Sheltered Workshop -->
+				<xsd:enumeration value="276061003"/>	<!-- Non-paid work experience -->
+				<xsd:enumeration value="ES-3"/>		<!-- No employment - other activity -->
+				<xsd:enumeration value="224364001"/>	<!-- Casual, Sporadic -->
+
+				<xsd:enumeration value="73438004"/>	<!-- No employment - of any kind -->
+				<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>			<!-- Client Declined to Answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 05: daytime activities: Are you currently in school? (select one) -->
+
+	<xsd:element name="educationProgramStatus">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="value" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:enumeration value="224304004"/>		<!-- Not in school -->
+								<xsd:enumeration value="224306002"/>		<!-- Elementary, Junior High School -->
+								<xsd:enumeration value="224308001"/>		<!-- Secondary, High School -->
+								<xsd:enumeration value="224860003"/>		<!-- Trade School -->
+								<xsd:enumeration value="54106008"/>		<!-- Vocational,Training Centre -->
+								<xsd:enumeration value="161125007"/>		<!-- Adult education -->
+
+								<xsd:enumeration value="224870001"/>		<!-- Community College -->
+								<xsd:enumeration value="224871002"/>		<!-- University -->
+								<xsd:enumeration value="OTH"/>				<!-- Other -->
+								<xsd:enumeration value="UNK"/>				<!-- Unknown -->
+								<xsd:enumeration value="CDA"/>				<!-- Client Declined to Answer -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="other" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 05: daytime activities: Barriers in finding and/or maintaining a work/volunteer/education role? (check all that apply) -->
+	<xsd:element name="barriersFindingWorkList">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:barriersFindingWork" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherBarriers" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="barriersComments" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="barriersFindingWork">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="ADD"/>		<!-- Addictions -->
+
+				<xsd:enumeration value="CAB"/>		<!-- Cognitive Abilities -->
+				<xsd:enumeration value="CON"/>		<!-- Confidence -->
+				<xsd:enumeration value="CTM"/>		<!-- Contemplative -->
+				<xsd:enumeration value="DIS"/>		<!-- Disclosure -->
+				<xsd:enumeration value="FOC"/>		<!-- Financial ODSP cut off -->
+				<xsd:enumeration value="FFT"/>		<!-- Funding for Training -->
+
+				<xsd:enumeration value="LOR"/>		<!-- Lack of Resume -->
+				<xsd:enumeration value="LGC"/>		<!-- Language Comprehension -->
+				<xsd:enumeration value="LIT"/>		<!-- Literacy -->
+				<xsd:enumeration value="MSE"/>		<!-- Medication Side Effects -->
+				<xsd:enumeration value="PHY"/>		<!-- Physical Health -->
+				<xsd:enumeration value="PCO"/>		<!-- Pre-contemplative -->
+
+				<xsd:enumeration value="STG"/>		<!-- Stigma -->
+				<xsd:enumeration value="SYM"/>		<!-- Symptoms -->
+				<xsd:enumeration value="TRN"/>		<!-- Transportation -->
+				<xsd:enumeration value="OTH"/>		<!-- Other -->
+				<xsd:enumeration value="CDA"/>		<!--Consumer declined to answer -->
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: Medical conditions (check all that apply) -->
+	<xsd:element name="medicalConditionList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<xsd:element ref="ocan:medicalCondition" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="autismDetail" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="otherDetail" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="comments" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="medicalCondition">
+		<xsd:simpleType>
+
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>				<!-- Null -->
+				<xsd:enumeration value="127294003"/>		<!-- Acquired Brain Injury (ABI) -->
+				<xsd:enumeration value="26929004"/>		<!-- Alzheimer’s -->
+				<xsd:enumeration value="3723001"/>			<!-- Arthritis -->
+				<xsd:enumeration value="408856003"/>		<!-- Autism -->
+
+				<xsd:enumeration value="386813002"/>		<!-- Breathing problems -->
+				<xsd:enumeration value="363346000"/>		<!-- Cancer -->
+				<xsd:enumeration value="19943007"/>		<!-- Cirrhosis -->
+				<xsd:enumeration value="191415002"/>		<!-- Communicable disease -->
+				<xsd:enumeration value="46635009"/>		<!-- Diabetes Type 1 -->
+				<xsd:enumeration value="44054006"/>		<!-- Diabetes Type 2 -->
+
+				<xsd:enumeration value="359939009"/>		<!-- Diabetes Type 3 -->
+				<xsd:enumeration value="73211009"/>		<!-- Diabetes Other -->
+				<xsd:enumeration value="72366004"/>		<!-- Eating disorder -->
+				<xsd:enumeration value="84757009"/>		<!-- Epilepsy -->
+				<xsd:enumeration value="15188001"/>		<!-- Hearing impairment -->
+				<xsd:enumeration value="301095005"/>		<!-- Heart condition -->
+
+				<xsd:enumeration value="40468003"/>		<!-- Hepatitis A -->
+				<xsd:enumeration value="66071002"/>		<!-- Hepatitis B -->
+				<xsd:enumeration value="50711007"/>		<!-- Hepatitis C -->
+				<xsd:enumeration value="424460009"/>		<!-- Hepatitis D -->
+				<xsd:enumeration value="86406008"/>		<!-- HIV -->
+				<xsd:enumeration value="38341003"/>		<!-- High blood pressure -->
+
+				<xsd:enumeration value="13644009"/>		<!-- High cholesterol -->
+				<xsd:enumeration value="228156007"/>		<!-- Intellectual disability -->
+				<xsd:enumeration value="45007003"/>		<!-- Low blood pressure -->
+				<xsd:enumeration value="282028001"/>		<!-- MRSA, C Difficile -->
+				<xsd:enumeration value="414916001"/>		<!-- Obesity -->
+				<xsd:enumeration value="64859006"/>		<!-- Osteoporosis -->
+
+				<xsd:enumeration value="118185001"/>		<!-- Pregnancy -->
+				<xsd:enumeration value="128613002"/>		<!-- Seizure -->
+				<xsd:enumeration value="8098009"/>			<!-- Sexually Transmitted Infection (STI) -->
+				<xsd:enumeration value="44186003"/>		<!-- Sleep Problems (e.g. Insomnia) -->
+				<xsd:enumeration value="95320005"/>		<!-- Skin conditions -->
+				<xsd:enumeration value="230690007"/>		<!-- Stroke -->
+
+				<xsd:enumeration value="14304000"/>		<!-- Thyroid -->
+				<xsd:enumeration value="397540003"/>		<!-- Vision impairment -->
+				<xsd:enumeration value="OTH"/>				<!-- Other -->
+				<xsd:enumeration value="UNK"/>				<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>				<!-- Client declined to answer -->
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: Do you have any concerns about your physical health? -->
+	<xsd:element name="physicalHealthConcern">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: If Yes, please indicate the areas where you have concerns (check all that apply) -->
+
+	<xsd:element name="concernAreaList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:concernArea" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherConcernArea" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="concernArea">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>			<!-- Null -->
+				<xsd:enumeration value="119415007"/>	<!-- Abdomen -->
+
+				<xsd:enumeration value="279084009"/>	<!-- Chest -->
+				<xsd:enumeration value="302293008"/>	<!-- Extremities (arms, legs, hands, feet) -->
+				<xsd:enumeration value="300479008"/>	<!-- Genital, urinary -->
+				<xsd:enumeration value="118254002"/>	<!-- Head and neck -->
+				<xsd:enumeration value="118230007"/>	<!-- Hearing -->
+				<xsd:enumeration value="118952005"/>	<!-- Joints -->
+
+				<xsd:enumeration value="365092005"/>	<!-- Mobility -->
+				<xsd:enumeration value="102957003"/>	<!-- Neurological -->
+				<xsd:enumeration value="106076001"/>	<!-- Skin -->
+				<xsd:enumeration value="118235002"/>	<!-- Vision -->
+				<xsd:enumeration value="410515003"/>	<!-- Other -->
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 06: physical health: List of all current medications (including prescribed and alternative/over the counter medication) -->
+	<xsd:element name="medicationList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<xsd:element ref="ocan:medicationDetail" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="additionalInfo" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="512">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="medicationDetail">
+		<xsd:complexType>
+
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Medication -->
+					<xsd:attribute name="medicationName" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Source of Information -->
+					<xsd:attribute name="sourceInfo" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:enumeration value=""/>			<!-- Null -->
+								<xsd:enumeration value="116154003"/>	<!-- Consumer -->
+								<xsd:enumeration value="HLTHP"/>		<!-- Health Provider -->
+								<xsd:enumeration value="42665001"/>	<!-- Homes of the Aged -->
+								<xsd:enumeration value="22232009"/>	<!-- Hospital (at discharge or hospital record) -->
+								<xsd:enumeration value="JUST"/>		<!-- Justice (e.g. Probation Order) -->
+
+								<xsd:enumeration value="LTCH"/>		<!-- Long Term Care Home -->
+								<xsd:enumeration value="264372000"/>	<!-- Pharmacy -->
+								<xsd:enumeration value="309343006"/>	<!-- Physician -->
+								<xsd:enumeration value="42120006"/>	<!-- Significant Other -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Dosage -->
+					<xsd:attribute name="dosage" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Taken as prescribed? -->
+					<xsd:attribute name="takenAsPrescribed" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Help is provided? -->
+					<xsd:attribute name="isHelpProvided" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Help is needed? -->
+					<xsd:attribute name="isHelpNeeded" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+
+								<xsd:enumeration value="FALSE"/>	<!-- No -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Have you been hospitalized due to your mental health during the past two years? (Select one) -->
+	<xsd:element name="hospitalizedPastTwoYears">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Total Number of Admissions (last two years) -->
+	<xsd:element name="totalAdmissions" type="xsd:integer"/>
+
+	<!-- 07: psychotic symptoms: Total Number of Hospitalization Days (last two years) -->
+	<xsd:element name="totalHospitalDays" type="xsd:integer"/>
+
+	<!-- 07: psychotic symptoms: How many times did you visit an Emergency Department in the last 6 months for Mental Health Reasons? -->
+	<xsd:element name="visitEmergencyDepartment">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="None"/>	<!-- None -->
+
+				<xsd:enumeration value="ED-1"/>	<!-- 1 -->
+				<xsd:enumeration value="ED-2"/>	<!-- 2-5 -->
+				<xsd:enumeration value="ED-6"/>	<!-- 6+ -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Community Treatment Order (CDS) -->
+	<xsd:element name="communityTreatOrder">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="015-01"/>	<!-- Issued CTO -->
+				<xsd:enumeration value="015-02"/>	<!-- No CTO -->
+
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Psychiatric History - Additional Information -->
+	<xsd:element name="psychiatricAdditionalInfo">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="512">
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 07: psychotic symptoms: Symptom checklist -->
+
+	<xsd:element name="symptomList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:symptom" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="symptomComments" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="symptom">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>			<!-- Null -->
+				<xsd:enumeration value="24199005"/>	<!-- Agitation -->
+
+				<xsd:enumeration value="20602000"/>	<!-- Apathy -->
+				<xsd:enumeration value="2073000"/>		<!-- Delusions -->
+				<xsd:enumeration value="424100000"/>	<!-- Difficulty in abstract thinking -->
+				<xsd:enumeration value="247640008"/>	<!-- Disorganized thinking -->
+				<xsd:enumeration value="225652009"/>	<!-- Emotional unresponsiveness -->
+				<xsd:enumeration value="247783009"/>	<!-- Grandiosity -->
+
+				<xsd:enumeration value="7011001"/>		<!-- Hallucinations -->
+				<xsd:enumeration value="79351003"/>	<!-- Hostility -->
+				<xsd:enumeration value="276306002"/>	<!-- Lack of Drive or initiative -->
+				<xsd:enumeration value="247905005"/>	<!-- Lack of Spontaneity -->
+				<xsd:enumeration value="43994002"/>	<!-- Physical Symptoms -->
+				<xsd:enumeration value="422517004"/>	<!-- Poor communication skills -->
+
+				<xsd:enumeration value="105411000"/>	<!-- Social Withdrawal -->
+				<xsd:enumeration value="78205008"/>	<!-- Stereotype Thinking -->
+				<xsd:enumeration value="22927000"/>	<!-- Suspiciousness -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 08: condition and treatment: Diagnostic categories (check all that apply) -->
+
+	<xsd:element name="diagnosticList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:diagnostic" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="diagnostic">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="17226007"/>	<!-- Adjustment Disorders -->
+				<xsd:enumeration value="197480006"/>	<!-- Anxiety Disorder -->
+
+				<xsd:enumeration value="2776000"/>		<!-- Delirium, Dementia, and Amnestic and Cognitive Disorders -->
+				<xsd:enumeration value="0DH"/>			<!-- Developmental Handicap -->
+				<xsd:enumeration value="DCA"/>			<!-- Disorder of Childhood, Adolescence -->
+				<xsd:enumeration value="44376007"/>	<!-- Dissociative Disorders -->
+				<xsd:enumeration value="72366004"/>	<!-- Eating Disorders -->
+				<xsd:enumeration value="50705009"/>	<!-- Factitious Disorders  -->
+
+				<xsd:enumeration value="66347000"/>	<!-- Impulse Control Disorders not elsewhere classified -->
+				<xsd:enumeration value="MDGMC"/>		<!-- Mental Disorders due to General Medical Conditions -->
+				<xsd:enumeration value="46206005"/>	<!-- Mood Disorder -->
+				<xsd:enumeration value="33449004"/>	<!-- Personality Disorders -->
+				<xsd:enumeration value="58214004"/>	<!-- Schizophrenia other Psychotic Disorders -->
+				<xsd:enumeration value="39898005"/>	<!-- Sexual and Gender Identity Disorders -->
+
+				<xsd:enumeration value="31297008"/>	<!-- Sleep Disorders -->
+				<xsd:enumeration value="87858002"/>	<!-- Somatoform Disorders  -->
+				<xsd:enumeration value="SRD"/>			<!-- Substance Related Disorders -->
+				<xsd:enumeration value="228156007"/>	<!-- Intellectual Disability or Impairment -->
+				<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>			<!-- Client declined to answer -->
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 08: condition and treatment: Other Illness Information (check all that apply) -->
+	<xsd:element name="otherIllnessList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:otherIllness" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="otherIllness">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="016A-01"/>	<!-- Concurrent Disorder (Substance Abuse) -->
+				<xsd:enumeration value="016A-02"/>	<!-- Dual Diagnosis (Development Disability) -->
+				<xsd:enumeration value="OCIL"/>	<!-- Other Chronic Illness -->
+				<xsd:enumeration value="OPD"/>		<!-- Other Physical Disabilities -->
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Have you attempted suicide in the past? (select one) -->
+	<xsd:element name="suicideAttempt">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Do you currently have suicidal thoughts? (select one) -->
+	<xsd:element name="suicideThoughts">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Do you have any concerns for your own safety? (select one) -->
+	<xsd:element name="safetyConcernSelf">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 10: safety to self: Risks (select all that apply) -->
+	<xsd:element name="safetyToSelfRiskList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:safetyToSelfRisk" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherSafetyToSelfRisk" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="safetyToSelfRisk">
+
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>			<!-- Null -->
+				<xsd:enumeration value="225915006"/>	<!-- Abuse , Neglect -->
+				<xsd:enumeration value="242056005"/>	<!-- Accidental self-harm -->
+				<xsd:enumeration value="401206008"/>	<!-- Deliberate self-harm -->
+				<xsd:enumeration value="417430008"/>	<!-- Exploitation risk -->
+
+				<xsd:enumeration value="OTH"/>			<!-- Other -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 12: alcohol: How often do you drink alcohol (i.e. number of drinks)? -->
+	<xsd:element name="drinkAlcohol">
+		<xsd:complexType>
+			<xsd:complexContent>
+
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="quantity" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="frequency" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>	<!-- Null -->
+								<xsd:enumeration value="1"/>	<!-- daily or almost every day. -->
+								<xsd:enumeration value="2"/>	<!-- two or three times a week -->
+								<xsd:enumeration value="3"/>	<!-- at least once a week -->
+
+								<xsd:enumeration value="4"/>	<!-- at least once a month -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 12: alcohol: Indicate the stage of change client is at – Optional (select one) -->
+	<xsd:element name="stageOfChangeAlcohol">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>	<!-- Null -->
+				<xsd:enumeration value="1"/>	<!-- Pre-contemplation -->
+				<xsd:enumeration value="2"/>	<!-- Contemplation -->
+
+				<xsd:enumeration value="3"/>	<!-- Action -->
+				<xsd:enumeration value="4"/>	<!-- Maintenance -->
+				<xsd:enumeration value="5"/>	<!-- Relapse Prevention -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 12: alcohol: How has drinking had an impact on your life? -->
+
+	<xsd:element name="drinkingImpact">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="512">
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 13: drugs: Which of the following drugs have you used? (check all that apply) -->
+	<xsd:element name="drugUseList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:drugUse" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<!-- Has the substance been injected? -->
+					<xsd:attribute name="injected" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>	<!-- Null -->
+								<xsd:enumeration value="5"/>	<!-- Past 6 months -->
+								<xsd:enumeration value="6"/>	<!-- Ever -->
+
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="drugUse">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="name" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>			<!-- Null -->
+
+								<xsd:enumeration value="398705004"/>	<!-- Marijuana -->
+								<xsd:enumeration value="288453002"/>	<!-- Cocaine (crack) -->
+								<xsd:enumeration value="229005006"/>	<!-- Hallucinogens (e.g. LSD, PCP) -->
+								<xsd:enumeration value="226059005"/>	<!-- Stimulants (e.g. amphetamines) -->
+								<xsd:enumeration value="226044004"/>	<!-- Opiates (e.g. heroin) -->
+								<xsd:enumeration value="372614000"/>	<!-- Sedatives (not prescribed or not taken as prescribed e.g. Valium) -->
+
+								<xsd:enumeration value="80288002"/>	<!-- Over-the-counter -->
+								<xsd:enumeration value="61010005"/>	<!-- Solvents -->
+								<xsd:enumeration value="OTH"/>			<!-- Other -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="frequency" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>	<!-- Null -->
+								<xsd:enumeration value="5"/>	<!-- Past 6 months -->
+								<xsd:enumeration value="6"/>	<!-- Ever -->
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- 13: drugs: Indicate the stage of change client is at – Optional (select one) -->
+	<xsd:element name="stageOfChangeDrugs">
+		<xsd:simpleType>
+
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>	<!-- Null -->
+				<xsd:enumeration value="1"/>	<!-- Pre-contemplation -->
+				<xsd:enumeration value="2"/>	<!-- Contemplation -->
+				<xsd:enumeration value="3"/>	<!-- Action -->
+				<xsd:enumeration value="4"/>	<!-- Maintenance -->
+
+				<xsd:enumeration value="5"/>	<!-- Relapse Prevention -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 13: drugs: How has the substance(s) of choice had an impact on your life? -->
+	<xsd:element name="drugsImpact">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+
+				<xsd:maxLength value="512">
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 14: other addictions: Type of addiction (check all that apply) -->
+	<xsd:element name="addictionTypeList">
+		<xsd:complexType>
+
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+						<xsd:element ref="ocan:addictionType" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherAddictionType" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<xsd:element name="addictionType">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value=""/>			<!-- Null -->
+				<xsd:enumeration value="105523009"/>	<!-- Gambling -->
+				<xsd:enumeration value="56294008"/>	<!-- Nicotine -->
+
+				<xsd:enumeration value="OTH"/>			<!-- Other -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 14: other addictions: Indicate the stage of change client is at – Optional (select one) -->
+	<xsd:element name="stageOfChangeAddictions">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+
+				<xsd:enumeration value=""/>	<!-- Null -->
+				<xsd:enumeration value="1"/>	<!-- Pre-contemplation -->
+				<xsd:enumeration value="2"/>	<!-- Contemplation -->
+				<xsd:enumeration value="3"/>	<!-- Action -->
+				<xsd:enumeration value="4"/>	<!-- Maintenance -->
+				<xsd:enumeration value="5"/>	<!-- Relapse Prevention -->
+
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 14: other addictions: How has the addiction had an impact on your life? -->
+	<xsd:element name="addictionImpact">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:maxLength value="512">
+
+				</xsd:maxLength>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 15: company: Have there been any changes to your social patterns recently? -->
+	<xsd:element name="changedSocialPatterns">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+
+				<xsd:enumeration value=""/>		<!-- Null -->
+				<xsd:enumeration value="TRUE"/>	<!-- Yes -->
+				<xsd:enumeration value="FALSE"/>	<!-- No -->
+				<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+				<xsd:enumeration value="CDA"/>		<!-- Client declined to answer -->
+			</xsd:restriction>
+
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 20: basic education: What is your highest level of education? (select one) -->
+	<xsd:element name="highestEducationLevel">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:enumeration value="224294005"/>	<!-- No Formal Schooling -->
+				<xsd:enumeration value="HLES-2"/>		<!-- Some Elementary, Junior High School -->
+
+				<xsd:enumeration value="224295006"/>	<!-- Elementary, Junior High School -->
+				<xsd:enumeration value="HLES-4"/>		<!-- Some Secondary, High School -->
+				<xsd:enumeration value="224297003"/>	<!-- Secondary, High School -->
+				<xsd:enumeration value="HLES-6"/>		<!-- Some College, University -->
+				<xsd:enumeration value="224302000"/>	<!-- College, University -->
+				<xsd:enumeration value="UNK"/>			<!-- Unknown -->
+
+				<xsd:enumeration value="CDA"/>			<!-- Client declined to answer -->
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+
+	<!-- 23: money: What is your primary source of income? (select one) -->
+	<xsd:element name="sourceOfIncome">
+		<xsd:complexType>
+			<xsd:complexContent>
+
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="value" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="031-01"/>	<!-- Employment -->
+								<xsd:enumeration value="031-02"/>	<!-- Employment Insurance -->
+
+								<xsd:enumeration value="031-03"/>	<!-- Pension -->
+								<xsd:enumeration value="031-04"/>	<!-- ODSP -->
+								<xsd:enumeration value="031-05"/>	<!-- Social Assistance -->
+								<xsd:enumeration value="031-06"/>	<!-- Disability Assistance -->
+								<xsd:enumeration value="031-07"/>	<!-- Family -->
+								<xsd:enumeration value="031-08"/>	<!-- No source of income -->
+
+								<xsd:enumeration value="OTH"/>		<!-- Other -->
+								<xsd:enumeration value="UNK"/>		<!-- Unknown -->
+								<xsd:enumeration value="CDA"/>		<!-- Client Declined to Answer -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="other" use="required">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="additionalElements">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<xsd:element ref="ocan:clientHopesForFuture"/>
+						<xsd:element ref="ocan:clientNeedToGetThere"/>
+						<xsd:element ref="ocan:clientViewMentalHealth"/>
+						<xsd:element ref="ocan:clientSpiritualityImportance"/>
+						<xsd:element ref="ocan:clientCultureHeritageImportance"/>
+						<xsd:element ref="ocan:presentingIssueList" minOccurs="1" maxOccurs="1"/>
+						<xsd:element ref="ocan:actionList" minOccurs="0" maxOccurs="1"/>
+						<xsd:element ref="ocan:referralList" minOccurs="0" maxOccurs="1"/>
+
+					</xsd:sequence>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- What are your hopes for the future? -->
+	<xsd:element name="clientHopesForFuture">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Staff -->
+					<xsd:attribute name="staff" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Consumer -->
+					<xsd:attribute name="client" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- What do you think you need in order to get there? -->
+	<xsd:element name="clientNeedToGetThere">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Staff -->
+					<xsd:attribute name="staff" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Consumer -->
+					<xsd:attribute name="client" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- How do you view your mental health? -->
+	<xsd:element name="clientViewMentalHealth">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Staff -->
+					<xsd:attribute name="staff" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Consumer -->
+					<xsd:attribute name="client" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Is spirituality an important part of your life? -->
+	<xsd:element name="clientSpiritualityImportance">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Staff -->
+					<xsd:attribute name="staff" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Consumer -->
+					<xsd:attribute name="client" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Is culture (heritage) an important part of your life? -->
+	<xsd:element name="clientCultureHeritageImportance">
+
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Staff -->
+					<xsd:attribute name="staff" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Consumer -->
+					<xsd:attribute name="client" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="4096">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Presenting Issues: this is mandatory, at least one issue should be listed -->
+	<xsd:element name="presentingIssueList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence>
+
+						<xsd:element ref="ocan:presentingIssue" minOccurs="1" maxOccurs="unbounded"/>
+					</xsd:sequence>
+
+					<xsd:attribute name="otherIssues" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="presentingIssue">
+		<xsd:complexType>
+
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence/>
+					<xsd:attribute name="type" use="required">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="017-11"/>	<!-- Activities of Daily Living -->
+								<xsd:enumeration value="ATMPS"/>	<!-- Attempted Suicide -->
+
+								<xsd:enumeration value="017-04"/>	<!-- Educational -->
+								<xsd:enumeration value="017-07"/>	<!-- Financial -->
+								<xsd:enumeration value="017-06"/>	<!-- Housing -->
+								<xsd:enumeration value="017-08"/>	<!-- Legal -->
+								<xsd:enumeration value="017-05"/>	<!-- Occupational / Employment / Vocational -->
+								<xsd:enumeration value="PHYSAB"/>	<!-- Physical Abuse -->
+
+								<xsd:enumeration value="PWA"/>		<!-- Problems with Addictions -->
+								<xsd:enumeration value="017-09"/>	<!-- Problems with relationships -->
+								<xsd:enumeration value="PWSA"/>	<!-- Problems with Substance Abuse -->
+								<xsd:enumeration value="SEXAB"/>	<!-- Sexual Abuse -->
+								<xsd:enumeration value="017-02"/>	<!-- Specific Symptom of Serious Mental Illness -->
+								<xsd:enumeration value="TTO"/>		<!-- Threat to Others -->
+
+								<xsd:enumeration value="TTS"/>		<!-- Threat to Self -->
+								<xsd:enumeration value="OTH"/>		<!-- Other -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+
+	</xsd:element>
+
+	<!-- Summary of actions -->
+	<xsd:element name="actionList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+						<xsd:element ref="ocan:action" maxOccurs="unbounded" minOccurs="0"/>
+
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="action">
+		<xsd:complexType>
+			<xsd:complexContent>
+
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<xsd:attribute name="priority" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+								<xsd:minInclusive value="1"/>
+								<xsd:maxInclusive value="24"/>
+							</xsd:restriction>
+
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="domain" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="01-accommodation"/>
+								<xsd:enumeration value="02-food"/>
+								<xsd:enumeration value="03-looking after the home"/>
+
+								<xsd:enumeration value="04-self-care"/>
+								<xsd:enumeration value="05-daytime activities"/>
+								<xsd:enumeration value="06-physical health"/>
+								<xsd:enumeration value="07-psychotic symptoms"/>
+								<xsd:enumeration value="08-condition and treatment"/>
+								<xsd:enumeration value="09-psychological distress"/>
+								<xsd:enumeration value="10-safety to self"/>
+								<xsd:enumeration value="11-safety to others"/>
+								<xsd:enumeration value="12-alcohol"/>
+
+								<xsd:enumeration value="13-drugs"/>
+								<xsd:enumeration value="14-other addictions"/>
+								<xsd:enumeration value="15-company"/>
+								<xsd:enumeration value="16-intimate relationships"/>
+								<xsd:enumeration value="17-sexual expression"/>
+								<xsd:enumeration value="18-childcare"/>
+								<xsd:enumeration value="19-other dependents"/>
+								<xsd:enumeration value="20-basic education"/>
+								<xsd:enumeration value="21-telephone"/>
+
+								<xsd:enumeration value="22-transport"/>
+								<xsd:enumeration value="23-money"/>
+								<xsd:enumeration value="24-benefits"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<xsd:attribute name="action" use="optional">
+						<xsd:simpleType>
+
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="512">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- Summary of referrals -->
+	<xsd:element name="referralList">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+					<xsd:sequence>
+
+						<xsd:element ref="ocan:referral" maxOccurs="unbounded" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="referral">
+		<xsd:complexType>
+
+			<xsd:complexContent>
+				<xsd:restriction base="xsd:anyType">
+
+					<xsd:sequence/>
+
+					<!-- Optimal Referral -->
+					<xsd:attribute name="optimal" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+
+								<xsd:enumeration value="0AS"/>		<!-- Abuse Services -->
+								<xsd:enumeration value="ADD"/>		<!-- Addictions -->
+								<xsd:enumeration value="0AB"/>		<!-- Alternative Businesses -->
+								<xsd:enumeration value="ACT"/>		<!-- Assertive Community Treatment Teams -->
+								<xsd:enumeration value="0CM"/>		<!-- Mental Health Case Management -->
+								<xsd:enumeration value="CHI"/>		<!-- Child, Adolescent -->
+
+								<xsd:enumeration value="CLU"/>		<!-- Clubhouses -->
+								<xsd:enumeration value="0CD"/>		<!-- Community Development -->
+								<xsd:enumeration value="CMH"/>		<!-- Community Mental Health Clinic -->
+								<xsd:enumeration value="0IR"/>		<!-- Community Service Information and Referral -->
+								<xsd:enumeration value="CON"/>		<!-- Concurrent Disorders -->
+								<xsd:enumeration value="C&amp;T"/>	<!-- Counseling and Treatment -->
+
+								<xsd:enumeration value="DDx"/>		<!-- Dual Diagnosis -->
+								<xsd:enumeration value="EAR"/>		<!-- Early Intervention -->
+								<xsd:enumeration value="EAT"/>		<!-- Eating Disorder -->
+								<xsd:enumeration value="0FI"/>		<!-- Family Initiatives -->
+								<xsd:enumeration value="FOR"/>		<!-- Forensic DCS Diversion and Court Support -->
+								<xsd:enumeration value="HPA"/>		<!-- Health Promotion, Education – Awareness -->
+
+								<xsd:enumeration value="HPW"/>		<!-- Health Promotion, Education – Womens Mental Health -->
+								<xsd:enumeration value="HSC"/>		<!-- Homes for Special Care -->
+								<xsd:enumeration value="CRI"/>		<!-- Mental Health Crisis Intervention -->
+								<xsd:enumeration value="PSH"/>		<!-- Peer, Self-help Initiatives -->
+								<xsd:enumeration value="0DN"/>		<!-- Primary Day, Night Care -->
+								<xsd:enumeration value="GER"/>		<!-- Psycho-geriatric -->
+
+								<xsd:enumeration value="CSB"/>		<!-- Short term Res. Crisis Support Beds -->
+								<xsd:enumeration value="0SR"/>		<!-- Social Rehabilitation, Recreation -->
+								<xsd:enumeration value="0SH"/>		<!-- Support within Housing -->
+								<xsd:enumeration value="EMP"/>		<!-- Vocational, Employment -->
+								<xsd:enumeration value="CAC"/>		<!-- CCAC -->
+								<xsd:enumeration value="CMS"/>		<!-- Church, mosque, synagogue, etc. -->
+
+								<xsd:enumeration value="DNT"/>		<!-- Dentist -->
+								<xsd:enumeration value="FHG"/>		<!-- Family help groups (Other than MH) -->
+								<xsd:enumeration value="AGS"/>		<!-- Older adult and geriatric services -->
+								<xsd:enumeration value="OPT"/>		<!-- Optometrists -->
+								<xsd:enumeration value="POL"/>		<!-- Police -->
+								<xsd:enumeration value="PRI"/>		<!-- Primary care – CHC, FHT, FHG, FHN, GP -->
+
+								<xsd:enumeration value="SCH"/>		<!-- School -->
+								<xsd:enumeration value="SHG"/>		<!-- Self help groups (Other than MH) -->
+								<xsd:enumeration value="0SC"/>		<!-- Service clubs -->
+								<xsd:enumeration value="SSs"/>		<!-- Social Services - ODSP, CPP, EI, etc. -->
+								<xsd:enumeration value="YSs"/>		<!-- Youth services -->
+								<xsd:enumeration value="0CP"/>		<!-- Community psychiatry -->
+
+								<xsd:enumeration value="0PP"/>		<!-- Private practitioners -->
+								<xsd:enumeration value="FBS"/>		<!-- Food bank, soup kitchens -->
+								<xsd:enumeration value="0LC"/>		<!-- Legal counsel -->
+								<xsd:enumeration value="0IS"/>		<!-- Immigration services -->
+								<xsd:enumeration value="FCP"/>		<!-- Financial-credit counseling, financial planning -->
+								<xsd:enumeration value="FIT"/>		<!-- Fitness -->
+
+								<xsd:enumeration value="AHO"/>		<!-- Alternative healing options: chiropractic, acupuncture, meditation, herbalist, etc. -->
+								<xsd:enumeration value="PSC"/>		<!-- Parenting supports: child care -->
+								<xsd:enumeration value="CAS"/>		<!-- CAS, CCAS, JCFS -->
+								<xsd:enumeration value="HOS"/>		<!-- Hospital -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Specify more details about Optimal Referral -->
+					<xsd:attribute name="specifyOptimal" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+
+					</xsd:attribute>
+
+					<!-- Actual Referral -->
+					<xsd:attribute name="actual" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="0AS"/>		<!-- Abuse Services -->
+
+								<xsd:enumeration value="ADD"/>		<!-- Addictions -->
+								<xsd:enumeration value="0AB"/>		<!-- Alternative Businesses -->
+								<xsd:enumeration value="ACT"/>		<!-- Assertive Community Treatment Teams -->
+								<xsd:enumeration value="0CM"/>		<!-- Mental Health Case Management -->
+								<xsd:enumeration value="CHI"/>		<!-- Child, Adolescent -->
+								<xsd:enumeration value="CLU"/>		<!-- Clubhouses -->
+
+								<xsd:enumeration value="0CD"/>		<!-- Community Development -->
+								<xsd:enumeration value="CMH"/>		<!-- Community Mental Health Clinic -->
+								<xsd:enumeration value="0IR"/>		<!-- Community Service Information and Referral -->
+								<xsd:enumeration value="CON"/>		<!-- Concurrent Disorders -->
+								<xsd:enumeration value="C&amp;T"/>	<!-- Counseling and Treatment -->
+								<xsd:enumeration value="DDx"/>		<!-- Dual Diagnosis -->
+
+								<xsd:enumeration value="EAR"/>		<!-- Early Intervention -->
+								<xsd:enumeration value="EAT"/>		<!-- Eating Disorder -->
+								<xsd:enumeration value="0FI"/>		<!-- Family Initiatives -->
+								<xsd:enumeration value="FOR"/>		<!-- Forensic DCS Diversion and Court Support -->
+								<xsd:enumeration value="HPA"/>		<!-- Health Promotion, Education – Awareness -->
+								<xsd:enumeration value="HPW"/>		<!-- Health Promotion, Education – Womens Mental Health -->
+
+								<xsd:enumeration value="HSC"/>		<!-- Homes for Special Care -->
+								<xsd:enumeration value="CRI"/>		<!-- Mental Health Crisis Intervention -->
+								<xsd:enumeration value="PSH"/>		<!-- Peer, Self-help Initiatives -->
+								<xsd:enumeration value="0DN"/>		<!-- Primary Day, Night Care -->
+								<xsd:enumeration value="GER"/>		<!-- Psycho-geriatric -->
+								<xsd:enumeration value="CSB"/>		<!-- Short term Res. Crisis Support Beds -->
+
+								<xsd:enumeration value="0SR"/>		<!-- Social Rehabilitation, Recreation -->
+								<xsd:enumeration value="0SH"/>		<!-- Support within Housing -->
+								<xsd:enumeration value="EMP"/>		<!-- Vocational, Employment -->
+								<xsd:enumeration value="CAC"/>		<!-- CCAC -->
+								<xsd:enumeration value="CMS"/>		<!-- Church, mosque, synagogue, etc. -->
+								<xsd:enumeration value="DNT"/>		<!-- Dentist -->
+
+								<xsd:enumeration value="FHG"/>		<!-- Family help groups (Other than MH) -->
+								<xsd:enumeration value="AGS"/>		<!-- Older adult and geriatric services -->
+								<xsd:enumeration value="OPT"/>		<!-- Optometrists -->
+								<xsd:enumeration value="POL"/>		<!-- Police -->
+								<xsd:enumeration value="PRI"/>		<!-- Primary care – CHC, FHT, FHG, FHN, GP -->
+								<xsd:enumeration value="SCH"/>		<!-- School -->
+
+								<xsd:enumeration value="SHG"/>		<!-- Self help groups (Other than MH) -->
+								<xsd:enumeration value="0SC"/>		<!-- Service clubs -->
+								<xsd:enumeration value="SSs"/>		<!-- Social Services - ODSP, CPP, EI, etc. -->
+								<xsd:enumeration value="YSs"/>		<!-- Youth services -->
+								<xsd:enumeration value="0CP"/>		<!-- Community psychiatry -->
+								<xsd:enumeration value="0PP"/>		<!-- Private practitioners -->
+
+								<xsd:enumeration value="FBS"/>		<!-- Food bank, soup kitchens -->
+								<xsd:enumeration value="0LC"/>		<!-- Legal counsel -->
+								<xsd:enumeration value="0IS"/>		<!-- Immigration services -->
+								<xsd:enumeration value="FCP"/>		<!-- Financial-credit counseling, financial planning -->
+								<xsd:enumeration value="FIT"/>		<!-- Fitness -->
+								<xsd:enumeration value="AHO"/>		<!-- Alternative healing options: chiropractic, acupuncture, meditation, herbalist, etc. -->
+
+								<xsd:enumeration value="PSC"/>		<!-- Parenting supports: child care -->
+								<xsd:enumeration value="CAS"/>		<!-- CAS, CCAS, JCFS -->
+								<xsd:enumeration value="HOS"/>		<!-- Hospital -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Specify more details about Actual Referral -->
+
+					<xsd:attribute name="specifyActual" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:maxLength value="128">
+								</xsd:maxLength>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Reason for Difference -->
+					<xsd:attribute name="differenceReason" use="optional">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="RD-1"/>	<!-- Service does not exist -->
+								<xsd:enumeration value="RD-2"/>	<!-- Service not available locally -->
+
+								<xsd:enumeration value="RD-3"/>	<!-- Service not available due to language issues -->
+								<xsd:enumeration value="RD-4"/>	<!-- Service not available due to financial issues -->
+								<xsd:enumeration value="RD-5"/>	<!-- Service not available due to physical barriers – physical, vision, hearing -->
+								<xsd:enumeration value="RD-6"/>	<!-- Exclusionary criteria -->
+								<xsd:enumeration value="RD-7"/>	<!-- Excessive wait times for service -->
+								<xsd:enumeration value="RD-8"/>	<!-- Wait list closed -->
+
+								<xsd:enumeration value="RD-9"/>	<!-- Need exists but service not identified by client/staff -->
+								<xsd:enumeration value="RD-10"/>	<!-- Service available but only partially meets client’s need -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+					<!-- Referral Status -->
+					<xsd:attribute name="status" use="optional">
+
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value=""/>		<!-- Null -->
+								<xsd:enumeration value="RS-1"/>	<!-- Received -->
+								<xsd:enumeration value="RS-2"/>	<!-- Accepted onto waitlist -->
+								<xsd:enumeration value="RS-3"/>	<!-- Accepted into service -->
+								<xsd:enumeration value="RS-4"/>	<!-- Rejected -->
+
+								<xsd:enumeration value="RS-5"/>	<!-- Withdrawn (by the client) -->
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+
+				</xsd:restriction>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
