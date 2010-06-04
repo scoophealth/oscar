@@ -44,12 +44,16 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
@@ -57,6 +61,17 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.util.UtilDateUtilities;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import oscar.dms.EDocUtil;
+import oscar.oscarEncounter.data.EctProgram;
+import com.lowagie.text.pdf.PdfReader;
+import java.io.IOException;
+import java.util.HashMap;
+import net.sf.json.JSONObject;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
+
 
 /**
  *
@@ -79,15 +94,17 @@ public class ManageDocumentAction extends DispatchAction {
     }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        //System.out.println("AddEditDocumentAction - unspecified");
+        //System.out.println("ManageDocumentAciton - unspecified");
         return null;//execute2(mapping, form, request, response);
     }
 
     //public ActionForward multifast(
     //public ActionForward documentUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    public ActionForward documentUpdate(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form, javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) {
+    public ActionForward documentUpdate(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form,
+            javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) {
         //System.out.println("In here DocumentUpdate");
-        String ret = "";
+         String ret = "";
+       // providerInboxRoutingDAO=new ProviderInboxRoutingDao();
 
 
         String observationDate = request.getParameter("observationDate");// :2008-08-22<
@@ -97,22 +114,27 @@ public class ManageDocumentAction extends DispatchAction {
 
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, documentId, request.getRemoteAddr());
 
-        String demog = request.getParameter("demog");// :22<
-        String demographicKeyword = request.getParameter("demographicKeyword");// :ABLE, ALEX<
-        String[] flagproviders = request.getParameterValues("flagproviders");//:999998<
-        System.out.println("DOCUMNET " + documentDAO);
-        System.out.println("link to prov "+request.getParameter("demoLink")+" demo "+demog);
+        String demog = request.getParameter("demog");// get demo number
+        String demographicKeyword = request.getParameter("demographicKeyword");// get demo name
+        String[] flagproviders = request.getParameterValues("flagproviders");//get all flagged providers
+        String demoLink=request.getParameter("demoLink");//value of  'send to MRP'
+        //System.out.println("DOCUMNET " + documentDAO);
+        //System.out.println("link to prov "+demoLink+" demo "+demog);
+        
+        //TODO: if demoLink is "on", check if msp is in flagproviders, if not save to providerInboxRouting, if yes, don't save.
+
         //DONT COPY THIS !!!
          if (flagproviders !=null && flagproviders.length > 0){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
-
-            for(String proNo:flagproviders){
-               providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, "DOC");
-               //try{
-               //String docLab = "insert into providerLabRouting (provider_no,lab_no,status,timestamp,lab_type)  values ('"+proNo+"','"+documentId+"','N',now(),\"DOC\")";
-               //DBHandler dbh = new DBHandler(DBHandler.OSCAR_DATA);
-               //dbh.RunSQL(docLab);
-               //}catch(Exception ee ){ee.printStackTrace();}
-            }
+             try{
+                for(String proNo:flagproviders){
+                    //System.out.println("flagproviders="+flagproviders.length+"; flagproviders="+flagproviders);
+                    for(int i=0;i<flagproviders.length;i++){
+                        System.out.println("element="+flagproviders[i]);
+                    }
+                    System.out.println("proNo="+proNo+"; documentId="+documentId);
+                    providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
+                }
+             }catch(Exception e){e.printStackTrace();}
         }
         //// END COPY
 
@@ -128,11 +150,6 @@ public class ManageDocumentAction extends DispatchAction {
         if (obDate != null) {
             d.setObservationdate(obDate);
         }
-
-
-
-
-
         //System.out.println("bbb " + d);
         documentDAO.save(d);
         //System.out.println("Document " + d.getDocfilename() + " desc " + d.getDocdesc());
@@ -149,16 +166,17 @@ public class ManageDocumentAction extends DispatchAction {
 
             //System.out.println("1" + ctlDocument.toString());
             documentDAO.saveCtlDocument(ctlDocument);
-            //System.out.println("2" + ctlDocument.toString());
-        //ret = "{\"success\": \"yes\", \"docId\" : \""+documentId+"\"}";
+            //save a document created note
+            if(ctlDocument.isDemographicDocument()){
+                //save note
+                saveDocNote(request,d.getDocdesc(),demog,documentId);
+                //save patient routing table
+               // savePatientLabRouting(demog,documentId,LabResultData.DOCUMENT);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
-
         if (flagproviders != null) {
             for (String str : flagproviders) {
                 //System.out.println("str " + str);
@@ -169,6 +187,48 @@ public class ManageDocumentAction extends DispatchAction {
         }
         return null;//execute2(mapping, form, request, response);
     }
+
+    private void saveDocNote(final HttpServletRequest request,String docDesc,String demog,String documentId){
+
+                    Date now=EDocUtil.getDmsDateTimeAsDate();
+                    //String docDesc=d.getDocdesc();
+                    CaseManagementNote cmn=new CaseManagementNote();
+                    cmn.setUpdate_date(now);
+                    cmn.setObservation_date(now);
+                    cmn.setDemographic_no(demog);
+                    HttpSession se = request.getSession();
+                    String user_no = (String) se.getAttribute("user");
+                    String prog_no = new EctProgram(se).getProgram(user_no);
+                    WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+                    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+                    cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
+                    String provFirstName=EDocUtil.getProviderInfo("first_name", user_no);
+                    String provLastName=EDocUtil.getProviderInfo("last_name", user_no);
+                    String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
+                    //System.out.println("here0 "+strNote);
+                   // String strNote="Document"+" "+docDesc+" "+  "created at "+now+".";
+                    cmn.setNote(strNote);
+                    cmn.setSigned(true);
+                    cmn.setSigning_provider_no("-1");
+                    cmn.setProgram_no(prog_no);
+                    cmn.setReporter_caisi_role("1");
+                    cmn.setReporter_program_team("0");
+                    cmn.setPassword("NULL");
+                    cmn.setLocked(false);
+                    cmn.setHistory(strNote);
+                    cmn.setPosition(0);
+                    cmm.saveNoteSimple(cmn);
+                    //Add a noteLink to casemgmt_note_link
+                    CaseManagementNoteLink cmnl=new CaseManagementNoteLink();
+                    cmnl.setTableName(cmnl.DOCUMENT);
+                    cmnl.setTableId(Long.parseLong(documentId));
+                    cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
+                    EDocUtil.addCaseMgmtNoteLink(cmnl);
+    }
+    /*private void savePatientLabRouting(String demog,String docId,String docType){
+                CommonLabResultData.updatePatientLabRouting(docId, demog, docType);
+    }*/
+
     private File getDocumentCacheDir(String docdownload){
         //File cacheDir = new File(docdownload+"_cache");
         File docDir = new File(docdownload);
@@ -198,7 +258,7 @@ public class ManageDocumentAction extends DispatchAction {
         File documentDir = new File(docdownload);
         File documentCacheDir = getDocumentCacheDir(docdownload);
         log.debug("Document Dir is a dir"+documentDir.isDirectory());
-
+        //System.out.println("getdocfilename: "+d.getDocfilename());
         File file = new File(documentDir,d.getDocfilename());
 
         RandomAccessFile raf = new RandomAccessFile(file, "r");
@@ -238,7 +298,9 @@ public class ManageDocumentAction extends DispatchAction {
     }
     //PNG version
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        String doc_no = request.getParameter("doc_no");
+        //System.out.println("in managedocumentaction--view");
+       try{
+           String doc_no = request.getParameter("doc_no");
            log.debug("Document No :"+doc_no);
 
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
@@ -269,16 +331,24 @@ public class ManageDocumentAction extends DispatchAction {
         int data;
         while ((data = bfis.read()) != -1) {
             outs.write(data);
-            outs.flush();
+            //outs.flush();
         }
 
         bfis.close();
         outs.flush();
         outs.close();
+       } 
+       catch(java.net.SocketException se){
+            se.printStackTrace();
+       }
+       catch(Exception e){
+           e.printStackTrace();
+       }
         return null;
     }
 
     public ActionForward view2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        //System.out.println("in managedocumentaction--view2222");
         //TODO: NEED TO CHECK FOR ACCESS
         String doc_no = request.getParameter("doc_no");
            log.debug("Document No :"+doc_no);
@@ -334,9 +404,31 @@ public class ManageDocumentAction extends DispatchAction {
     }
 
 
+    public ActionForward getDocPageNumber(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        //System.out.println("in getDocPageNumber");
+        String doc_no=request.getParameter("doc_no");
+        String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        //File documentDir = new File(docdownload);
+        Document d = documentDAO.getDocument(doc_no);
+        String filePath=docdownload+d.getDocfilename();
+        //System.out.println("filePath="+filePath);
+        int numOfPage=0;
+        try{
+            PdfReader reader =new PdfReader(filePath);
+            numOfPage=reader.getNumberOfPages();
+            //System.out.println("num of pages="+numOfPage);
+            HashMap hm = new HashMap();
+            hm.put("numOfPage", numOfPage);
+            JSONObject jsonObject = JSONObject.fromObject(hm);
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+        }catch(IOException e){
+            e.printStackTrace();
+        }
 
+        return null;//execute2(mapping, form, request, response);
+    }
         public ActionForward display(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
-
+        //System.out.println("in managedocumentaction--display");
         String doc_no = request.getParameter("doc_no");
            log.debug("Document No :"+doc_no);
 
