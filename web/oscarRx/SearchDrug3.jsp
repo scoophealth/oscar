@@ -915,17 +915,18 @@ function changeLt(drugId){
            new Ajax.Request(url,{method: 'post',parameters:data,onSuccess:function(transport){
                    var json=transport.responseText.evalJSON();
                    if(json!=null && (json.success=='true'||json.success==true) ){
-                        $("notLongTermDrug").innerHTML="*";
-                        $("notLongTermDrug").setStyle({
+                        $("notLongTermDrug_"+drugId).innerHTML="*";
+                        $("notLongTermDrug_"+drugId).setStyle({
                             textDecoration: 'none',
-                            color: 'black'
+                            color: 'red'
                         });
+                        $("notLongTermDrug_"+drugId).setAttribute("onclick","");
+                        $("notLongTermDrug_"+drugId).setAttribute("href","");
                     }else{
                     }
                }});
        }
 }
-
     function checkReRxLongTerm(){
         var url=window.location.href;
         var match=url.indexOf('ltm=true');
