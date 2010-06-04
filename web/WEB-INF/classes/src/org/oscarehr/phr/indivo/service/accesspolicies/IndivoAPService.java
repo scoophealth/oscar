@@ -97,7 +97,7 @@ public class IndivoAPService extends IndivoServiceImpl {
     }
     
     public void approveAccessPolicy(PHRAction action) {
-        action.setStatus(PHRAction.STATUS_ON_HOLD);
+        action.setStatus(PHRAction.STATUS_SEND_PENDING);
         phrActionDAO.update(action);
     }
     
@@ -105,14 +105,11 @@ public class IndivoAPService extends IndivoServiceImpl {
         this.denyAction(action);
     }
     
-    public void packageAccessPolicy(PHRAction action) {
-        
-    }
     
     //user who is giving permissions must be authenticated with the indivo server (valid auth object)
     //permissionRecipientId is the user to whom permissions will be granted
     //queues as an action, awaits provider approval
-    public void packageAccessPolicy(PHRAuthentication auth, PHRAction action) throws Exception {
+    public PHRAction packageAccessPolicy(PHRAuthentication auth, PHRAction action) throws Exception {
         //PHRAction action = phrActionDAO.getActionById(actionId);
         
         //action.getDocContent stores the permissionRecipient Indivo ID and permissionType
@@ -129,12 +126,14 @@ public class IndivoAPService extends IndivoServiceImpl {
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
         byte[] newPolicyDocBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(newPolicyDoc), docContext);
         String newPolicyDocStr = new String(newPolicyDocBytes);
+        //log.debug("PolicyFile: " + newPolicyDocStr);
         action.setReceiverPhr(receiverPhr);
         action.setStatus(PHRAction.STATUS_SEND_PENDING);
         action.setDocContent(newPolicyDocStr);
         action.setDateQueued(new Date());  //reset date
         action.setPhrIndex(newPolicyDoc.getDocumentHeader().getDocumentIndex());
         phrActionDAO.update(action);
+        return action;
     }
     
     //PROVIDER needs to be authed with the indivoServer, and providerNo must be set in the auth object

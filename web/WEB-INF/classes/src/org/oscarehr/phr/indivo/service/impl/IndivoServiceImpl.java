@@ -31,6 +31,7 @@ package org.oscarehr.phr.indivo.service.impl;
 
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -356,7 +357,7 @@ public class IndivoServiceImpl  implements PHRService{
     public void sendQueuedDocuments(PHRAuthentication auth,String providerNo) throws Exception {
         //package sharing
         IndivoAPService apService = new IndivoAPService(this);
-        apService.packageAllAccessPolicies(auth);
+        //apService.packageAllAccessPolicies(auth);
         
         List<PHRAction> actions = phrActionDAO.getQueuedActions(providerNo);
         
@@ -453,7 +454,10 @@ public class IndivoServiceImpl  implements PHRService{
 
 
                 } else if (action.getActionType() == PHRAction.ACTION_UPDATE) {
-                    if (action.getPhrIndex() == null) throw new Exception("Error: PHR index not set");
+                    if (action.getPhrIndex() == null && !action.getPhrClassification().equals(constants.DOCTYPE_ACCESSPOLICIES())) throw new Exception("Error: PHR index not set");
+                    
+                    if (action.getPhrClassification().equals(constants.DOCTYPE_ACCESSPOLICIES()))
+                        action = apService.packageAccessPolicy(auth, action);
                     IndivoDocumentType doc = action.getIndivoDocument();
                     if (action.getPhrClassification().equals(constants.DOCTYPE_BINARYDATA()))
                         doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
@@ -501,6 +505,12 @@ public class IndivoServiceImpl  implements PHRService{
                 //assuming connection problems - in this case log the user off to take load off the server
                 log.debug("IndivoException thrown");
                 throw new Exception(ie);
+            } catch (Exception e) {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+                log.error("Exception Thrown that is not due to connection or Authorization...probably jaxb problem " + formatter.format(new Date()) , e);
+                updated = false;
+                action.setStatus(PHRAction.STATUS_OTHER_ERROR);
+                phrActionDAO.update(action);
             }
             if (updated) {
                 action.setStatus(PHRAction.STATUS_SENT);
