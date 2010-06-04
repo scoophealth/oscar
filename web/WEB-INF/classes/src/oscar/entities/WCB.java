@@ -810,10 +810,10 @@ public class WCB {
     DR38a  3 of 4 N01  P22   WCB-Clinical-info-part-1       Yes    Yes 
     DR38b  4 of 4 N01  P22   WCB-Clinical-info-part-2       Yes    Yes 
     DR40   1 of 4 N01  P22   WCB-Full-Duties                Yes    Yes 
-    DR41   2 of 4 N01  P22   WCB-Restrictions               Yes if DR40 = ‘N’ Yes 
-    DR42   1 of 4 N01  P22   WCB-Estimated-time-off         Yes if DR40 = ‘N’ Yes 
+    DR41   2 of 4 N01  P22   WCB-Restrictions               Yes if DR40 = N Yes 
+    DR42   1 of 4 N01  P22   WCB-Estimated-time-off         Yes if DR40 = N Yes 
     DR43   1 of 4 N01  P22   WCB-Rehab-Ready                Yes 
-    DR44   1 of 4 N01  P22   WCB-Rehab-Program              Yes if DR43 = ‘Y’ Yes 
+    DR44   1 of 4 N01  P22   WCB-Rehab-Program              Yes if DR43 = Y Yes 
     DR45   1 of 4 N01  P22   WCB-Consult-with-WCB                  Yes 
     DR46   1 of 4 N01  P22   WCB-MMR-Date                          Yes     
     DR47   1 of 4 N01  P22   WCB-Additional-Info                   Yes 
@@ -843,14 +843,14 @@ public class WCB {
         checkNullOrBlankValue(w_clinicinfo, errors, "oscar.billing.CA.BC.billingBC.wcb.error.w_ClinicalInfo");//DR38a  3 of 4 N01  P22   WCB-Clinical-info-part-1       Yes    Yes w_clinicinfo
 
         if ("N".equals(w_capability)) {
-            checkNullOrBlankValue(w_capreason, errors, "oscar.billing.CA.BC.billingBC.wcb.error.w_capreason");//DR41   2 of 4 N01  P22   WCB-Restrictions               Yes if DR40 = ‘N’ Yes  w_capreason
-            checkNullOrBlankValue(w_estimate, errors, "oscar.billing.CA.BC.billingBC.wcb.error.w_estimate");//DR42   1 of 4 N01  P22   WCB-Estimated-time-off         Yes if DR40 = ‘N’ Yes  w_estimate
+            checkNullOrBlankValue(w_capreason, errors, "oscar.billing.CA.BC.billingBC.wcb.error.w_capreason");//DR41   2 of 4 N01  P22   WCB-Restrictions               Yes if DR40 = N Yes  w_capreason
+            checkNullOrBlankValue(w_estimate, errors, "oscar.billing.CA.BC.billingBC.wcb.error.w_estimate");//DR42   1 of 4 N01  P22   WCB-Estimated-time-off         Yes if DR40 = N Yes  w_estimate
         } else if (w_capability == null) {
             errors.add("oscar.billing.CA.BC.billingBC.wcb.error.w_capability");//DR40   1 of 4 N01  P22   WCB-Full-Duties                Yes    Yes w_capability
         }
 
         if ("Y".equals(w_rehab)) {
-            checkNullOrBlankValue(w_rehabtype, errors, "oscar.billing.CA.BC.billingBC.wcb.error.w_rehabtype");//DR44   1 of 4 N01  P22   WCB-Rehab-Program              Yes if DR43 = ‘Y’ Yes  w_rehabtype
+            checkNullOrBlankValue(w_rehabtype, errors, "oscar.billing.CA.BC.billingBC.wcb.error.w_rehabtype");//DR44   1 of 4 N01  P22   WCB-Rehab-Program              Yes if DR43 = Y Yes  w_rehabtype
         } else if (w_rehab == null) {
             errors.add("oscar.billing.CA.BC.billingBC.wcb.error.w_rehab");//DR43   1 of 4 N01  P22   WCB-Rehab-Ready                Yes                   w_rehab
         }
