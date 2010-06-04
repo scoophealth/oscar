@@ -61,7 +61,7 @@ public class PathnetLabTest {
     
     
     public String pName = "";          //  5. Patient: First name
-    public String pSex = "";                //  7. Sex ‘F’ or ‘M’
+    public String pSex = "";                //  7. Sex F or M
     public String pHealthNum = "";          //  8. Patient: Health number
     public String pDOB = "";                //  9. Patient: Birth date
     public String pPhone = "";
@@ -346,13 +346,13 @@ public class PathnetLabTest {
         public String notUsed1 = null;    //  3. Not used ?
         public String notUsed2 = null;    //  4. Not used ?
         public String testName = null;    //  5. Test name
-        public String abn  = null;     //  6. Normal/Abnormal ‘N’ or ‘A’
+        public String abn  = null;     //  6. Normal/Abnormal N or A
         public String minimum = null;     //  7. Minimum
         public String maximum = null;     //  8. Maximum
         public String units = null;       //  9. Units
         public String result = null;      // 10. Result
         public String locationId = "";  // 11. Location Id (Test performed at …)
-        public String last = null;        // 12. Last ‘Y’ or ‘N’
+        public String last = null;        // 12. Last Y or N
         
         public String timeStamp = "";
         public String resultStatus = "";
@@ -360,7 +360,7 @@ public class PathnetLabTest {
         //String notUsed1 = null;    // 3. not used ?
         public String description = null; // 4. Description/Comment
         //String locationId = null;  // 5. Location Id
-        //String last = null;        // 6. Last ‘Y’ or ‘N’
+        //String last = null;        // 6. Last Y or N
         
         public String notes = null;
         
