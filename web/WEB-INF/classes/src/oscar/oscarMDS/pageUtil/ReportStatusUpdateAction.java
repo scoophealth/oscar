@@ -62,6 +62,7 @@ public class ReportStatusUpdateAction extends Action {
         char status = request.getParameter("status").charAt(0);
         String comment = request.getParameter("comment");
         String lab_type = request.getParameter("labType");
+        String ajaxcall=request.getParameter("ajaxcall");
         Properties props = OscarProperties.getInstance();
 
         
@@ -99,7 +100,10 @@ public class ReportStatusUpdateAction extends Action {
                 }
                 
             }
-            return mapping.findForward("success");
+            if(ajaxcall!=null&&ajaxcall.equals("yes"))
+                return null;
+            else
+                return mapping.findForward("success");
         } catch (Exception e) {
             logger.error("exception in ReportStatusUpdateAction",e);
             return mapping.findForward("failure");
