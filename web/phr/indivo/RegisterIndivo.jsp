@@ -4,7 +4,7 @@
     Author     : apavel
 --%>
 
-<%@page contentType="text/html" pageEncoding="ISO-8859-1"%> 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
    
@@ -38,9 +38,9 @@ if (wPhoneExt != null)
 
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Register Indivo</title>
-        <link rel="stylesheet" type="text/css" href="../phr.css">
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/phr/phr.css">
         <style type="text/css" language="JavaScript">
             .headingTop {
                 width: 100%;
@@ -95,8 +95,8 @@ if (wPhoneExt != null)
     <body>
         <phr:IfNotPHRAuthenticated>
             <jsp:include page="../AuthInclude.jsp">
-                <jsp:param name="forwardto" value="<%="indivo/RegisterIndivo.jsp?demographicNo=" + demographicNo%>"/>
-                <jsp:param name="pathtophr" value="../"/>
+                <jsp:param name="forwardto" value="<%=\"/phr/indivo/RegisterIndivo.jsp?demographicNo=\" + demographicNo%>"/>
+                <jsp:param name="pathtophr" value="<%=request.getContextPath() + \"/phr\"%>"/>
             </jsp:include>
         </phr:IfNotPHRAuthenticated>
         <html-el:form action="/phr/UserManagement" styleId="registrationForm" method="POST">
@@ -165,7 +165,7 @@ if (wPhoneExt != null)
                     </tr>
                     <tr>
                         <td>Date of Birth</td>
-                        <td><html-el:text property="dob" value="<%=demographic.getDob("/")%>" size="10"/></td>
+                        <td><html-el:text property="dob" value="<%=demographic.getDob(\"/\")%>" size="10"/></td>
                     </tr>
                 </table>
             </div>

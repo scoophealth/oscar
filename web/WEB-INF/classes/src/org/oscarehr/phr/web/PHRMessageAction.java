@@ -142,6 +142,7 @@ public class PHRMessageAction extends DispatchAction {
         statusList.add(PHRAction.STATUS_ON_HOLD);
         statusList.add(PHRAction.STATUS_NOT_AUTHORIZED);
         statusList.add(PHRAction.STATUS_SEND_PENDING);
+        statusList.add(PHRAction.STATUS_OTHER_ERROR);
         otherActions.addAll(phrActionDAO.getActionsByStatus(statusList, providerNo, phrConstants.DOCTYPE_ACCESSPOLICIES()));
         request.getSession().setAttribute("indivoSentMessages", docs);
         request.getSession().setAttribute("indivoMessageActions", messageActions);

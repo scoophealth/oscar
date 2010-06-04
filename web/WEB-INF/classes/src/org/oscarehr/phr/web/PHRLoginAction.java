@@ -117,7 +117,8 @@ public class PHRLoginAction extends DispatchAction {
        Calendar cal = Calendar.getInstance();
        cal.roll(Calendar.HOUR_OF_DAY, false);
        session.setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
+       ActionRedirect arr = new ActionRedirect(forwardTo);
        log.debug("Correct user/pass, auth success");
-       return ar;
+       return arr;
     } 
 }

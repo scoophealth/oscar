@@ -30,7 +30,8 @@ providerData.setProviderNo(providerNo);
 String providerPhrId = providerData.getMyOscarId();
 PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
 //this particular <logic:present statement does not search parameters in request scope for some reason
-request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginErrorMsg")); 
+pageContext.setAttribute("phrUserLoginErrorMsg", request.getAttribute("phrUserLoginErrorMsg"));
+pageContext.setAttribute("phrTechLoginErrorMsg", request.getAttribute("phrTechLoginErrorMsg"));
 %>
 
    <style type="text/css">
@@ -96,6 +97,7 @@ request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginE
                 </logic:notPresent>
                 Status: <b>Not logged in</b><br/>
                 <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"> <a href="javascript: document.forms['phrLogin'].submit()">Login</a>
+                <script type="text/javascript" language="JavaScript">document.getElementById('phrPassword').focus()</script>
                 <input type="hidden" name="forwardto" value="<%=(String) request.getParameter("forwardto")%>">
             </form>
         </div>

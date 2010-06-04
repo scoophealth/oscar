@@ -42,6 +42,7 @@ PHRActionDAO phrActionDAO = (PHRActionDAO) WebApplicationContextUtils.getWebAppl
         		pageContext.getServletContext()).getBean("phrActionDAO");
 
 //some phrAction static constants
+pageContext.setAttribute("STATUS_OTHER_ERROR", PHRAction.STATUS_OTHER_ERROR);
 pageContext.setAttribute("STATUS_NOT_AUTHORIZED", PHRAction.STATUS_NOT_AUTHORIZED);
 pageContext.setAttribute("STATUS_SENT", PHRAction.STATUS_SENT);
 pageContext.setAttribute("STATUS_SEND_PENDING", PHRAction.STATUS_SEND_PENDING);
@@ -410,6 +411,7 @@ request.setAttribute("pageMethod",pageMethod);
                                 <c:when test="${otherAction.status == STATUS_ON_HOLD}">class="onHold"</c:when>
                                 <c:when test="${otherAction.status == STATUS_SEND_PENDING}">class="sendPending"</c:when>
                                 <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">class="notAuthorized"</c:when>
+                                <c:when test="${otherAction.status == STATUS_OTHER_ERROR}">class="notAuthorized"</c:when>
                                 <c:otherwise>class="normal"</c:otherwise>
                             </c:choose>
                         >
@@ -422,6 +424,7 @@ request.setAttribute("pageMethod",pageMethod);
                                     <c:when test="${otherAction.status == STATUS_ON_HOLD}">Waiting to send...</c:when>
                                     <c:when test="${otherAction.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
                                     <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>
+                                    <c:when test="${otherAction.status == STATUS_OTHER_ERROR}">Unknown Error</c:when>
                                     <c:otherwise>Unknown</c:otherwise>
                                 </c:choose>
                             </td>
@@ -462,7 +465,7 @@ request.setAttribute("pageMethod",pageMethod);
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${otherAction.id}">Resend</html-el:link></c:when>
+                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED || otherAction.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${otherAction.id}">Resend</html-el:link></c:when>
                                     <c:otherwise>&nbsp;</c:otherwise>
                                 </c:choose>
                             </td>
@@ -478,6 +481,7 @@ request.setAttribute("pageMethod",pageMethod);
                             <c:choose>
                                 <c:when test="${actionMessage.status == STATUS_SEND_PENDING}">class="sendPending"</c:when>
                                 <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}">class="notAuthorized"</c:when>
+                                <c:when test="${actionMessage.status == STATUS_OTHER_ERROR}">class="notAuthorized"</c:when>
                                 <c:otherwise>class="normal"</c:otherwise>
                             </c:choose>
                         >
@@ -488,6 +492,7 @@ request.setAttribute("pageMethod",pageMethod);
                                 <c:choose>
                                     <c:when test="${actionMessage.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
                                     <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>
+                                    <c:when test="${actionMessage.status == STATUS_OTHER_ERROR}">Unknown Error</c:when>
                                     <c:otherwise>Unknown</c:otherwise>
                                 </c:choose>
                             </td>
@@ -503,7 +508,7 @@ request.setAttribute("pageMethod",pageMethod);
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${actionMessage.id}">Resend</html-el:link></c:when>
+                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED || actionMessage.status == STATUS_OTHER_ERROR}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${actionMessage.id}">Resend</html-el:link></c:when>
                                     <c:otherwise>&nbsp;</c:otherwise>
                                 </c:choose>
                             </td>
