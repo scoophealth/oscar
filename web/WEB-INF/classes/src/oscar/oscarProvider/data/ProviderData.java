@@ -570,7 +570,71 @@ public class ProviderData {
             return null;
         }        
     }
+   public static List searchProvider(String searchStr){
+       String sql="select provider_no, first_name, last_name from provider where ";
+       List retList=new ArrayList();
+       String firstname=null;
+       String lastname=null;
+       if(searchStr.indexOf(",")!=-1){
+            String[] array=new String[2];
+            array=searchStr.split(",");
+            lastname=array[0].trim();
+            firstname=array[1].trim();
+       }else{
+           lastname=searchStr.trim();
+       }
+       if(lastname!=null && firstname==null)
+           sql+="last_name like '"+lastname+"%' ";
+       if(lastname!=null && firstname!=null)
+           sql+="last_name like '"+lastname+ "%' AND first_name like '"+firstname+"%' ";
+       try{
+           DBHandler db=new DBHandler(DBHandler.OSCAR_DATA);
+           ResultSet rs=db.GetSQL(sql);
+           while(rs.next()){
+               Hashtable provider=new Hashtable();
+               provider.put("providerNo", db.getString(rs, "provider_no"));
+               provider.put("firstName", db.getString(rs, "first_name"));
+               provider.put("lastName", db.getString(rs, "last_name"));
+               retList.add(provider);
+           }
+           return retList;
+       }catch(SQLException se){
+           se.printStackTrace();
+           return null;
+       }
    
+
+   }
+   public static ArrayList getProviderListOfAllTypes (boolean inactive) {
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ArrayList result = new ArrayList();
+            String active = " status = '1' ";
+            if (inactive){
+               active = "";
+            }
+
+            String sql = "select provider_no, first_name, last_name, ohip_no from provider where "+active+" order by last_name , first_name";
+            ResultSet rs = db.GetSQL(sql);
+            while ( rs.next() ) {
+                Hashtable provider = new Hashtable();
+                provider.put("providerNo",db.getString(rs,"provider_no"));
+                provider.put("firstName",db.getString(rs,"first_name"));
+                provider.put("lastName",db.getString(rs,"last_name"));
+		provider.put("ohipNo",db.getString(rs,"ohip_no"));
+                result.add(provider);
+            }
+            return result;
+        }catch(Exception e){
+            System.out.println("exception in ProviderData:"+e);
+            return null;
+        }
+    }
+
+   public static ArrayList getProviderListOfAllTypes () {
+      return getProviderListOfAllTypes (false);
+   }
+
    public static ArrayList getProviderList () {
       return getProviderList (false); 
    }
