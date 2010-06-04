@@ -93,14 +93,28 @@ public class LabResultData implements Comparable{
         
     }
     
+    public String getLabPatientId(){
+        return this.labPatientId;
+    }
+    public void setLabPatientId(String lpi){
+        this.labPatientId=lpi;
+    }
+    public String getSegmentID(){
+        return this.segmentID;
+    }
+    public void setSegmentID(String sid){
+        this.segmentID=sid;
+    }
     
     public boolean isAbnormal(){
         if (EXCELLERIS.equals(this.labType)){
+            //System.out.println("excelleris is doc type");
             PathnetResultsData prd = new PathnetResultsData();
             if (prd.findPathnetAdnormalResults(this.segmentID) > 0){
                 this.abn= true;
             }
         }else if(CML.equals(this.labType)){
+            //System.out.println("cml is doc type");
             CMLLabTest cml = new CMLLabTest();
             if (cml.findCMLAdnormalResults(this.segmentID) > 0){
                 this.abn= true;
@@ -198,7 +212,11 @@ public class LabResultData implements Comparable{
 //          this.isMatchedToPatient = prd.isLabLinkedWithPatient(this.segmentID);
 //       }
         CommonLabResultData commonLabResultData = new CommonLabResultData();
-        this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
+        System.out.println("in ismatchedtopatient, "+this.segmentID+"--"+this.labType);
+        if(this.labType.equals("DOC"))
+            this.isMatchedToPatient=commonLabResultData.isDocLinkedWithPatient(this.segmentID,this.labType);
+        else
+            this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
         return this.isMatchedToPatient;
     }
     
@@ -231,7 +249,13 @@ public class LabResultData implements Comparable{
         return count;
     }
     
+    public String getAcknowledgedStatus(){
+        return this.acknowledgedStatus;
+    }
     
+    public void setAcknowledgedStatus(String as){
+        this.acknowledgedStatus=as;
+    }
     public String getReportStatus(){
        /* if (EXCELLERIS.equals(this.labType)){
             PathnetResultsData prd = new PathnetResultsData();
