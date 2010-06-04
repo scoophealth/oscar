@@ -23,8 +23,10 @@
 
 package oscar.dms.actions;
 
+import com.lowagie.text.pdf.PdfReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Hashtable;
@@ -41,6 +43,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
+import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -62,10 +65,10 @@ public class AddEditDocumentAction extends DispatchAction {
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
 
         FormFile docFile = fm.getFiledata();
-
+        int numberOfPages=0;
          String fileName = docFile.getFileName();
 	 String user = (String)request.getSession().getAttribute("user");
-            EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
+            EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1",0);
             newDoc.setDocPublic("0");
             fileName = newDoc.getFileName();
             //save local file;
@@ -73,12 +76,14 @@ public class AddEditDocumentAction extends DispatchAction {
                 errors.put("uploaderror", "dms.error.uploadError");
                 throw new FileNotFoundException();
             }
-            writeLocalFile(docFile, fileName);
+            writeLocalFile(docFile, fileName);//write file to local dir
             newDoc.setContentType(docFile.getContentType());
             if (fileName.endsWith(".PDF") || fileName.endsWith(".pdf")){
                 newDoc.setContentType("application/pdf");
+                //get number of pages when document is pdf;
+                numberOfPages=countNumOfPages(fileName);
             }
-
+            newDoc.setNumberOfPages(numberOfPages);
             String doc_no = EDocUtil.addDocumentSQL(newDoc);
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
 
@@ -88,7 +93,17 @@ public class AddEditDocumentAction extends DispatchAction {
             String proNo = request.getParameter("provider");
             providerInboxRoutingDao.addToProviderInbox(proNo,doc_no,"DOC");
         }
-
+        //add to queuelinkdocument
+            String queueId=request.getParameter("queue");
+            System.out.println("queueId="+queueId);
+        if ( queueId !=null &&!queueId.equals("-1")){
+            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+            QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) ctx.getBean("queueDocumentLinkDAO");
+            Integer qid=Integer.parseInt(queueId.trim());
+            Integer did=Integer.parseInt(doc_no.trim());
+            queueDocumentLinkDAO.addToQueueDocumentLink(qid,did);
+            request.getSession().setAttribute("preferredQueue", queueId);
+        }
         if (docFile != null){
             System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());
         }
@@ -97,6 +112,22 @@ public class AddEditDocumentAction extends DispatchAction {
 
     }
 
+    public int countNumOfPages(String fileName){//count number of pages in a local pdf file
+         //System.out.println("in countNumOfPages");
+         int numOfPage=0;
+         String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+         String filePath=docdownload+fileName;
+         //System.out.println("filePath="+filePath);
+         try{
+            PdfReader reader =new PdfReader(filePath);
+            numOfPage=reader.getNumberOfPages();
+            reader.close();
+            //System.out.println("num of pages="+numOfPage);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+         return numOfPage;
+    }
     public ActionForward fastUpload(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
         Hashtable errors = new Hashtable();
@@ -210,8 +241,8 @@ public class AddEditDocumentAction extends DispatchAction {
 
                     CaseManagementNote cmn=new CaseManagementNote();
                     cmn.setUpdate_date(now);
-                    java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
-                    cmn.setObservation_date(od1);
+            java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
+            cmn.setObservation_date(od1);
                     cmn.setDemographic_no(moduleId);
                     HttpSession se = request.getSession();
                     String user_no = (String) se.getAttribute("user");
@@ -245,7 +276,7 @@ public class AddEditDocumentAction extends DispatchAction {
                     System.out.println("ValuesSavedInCaseManagementNoteLink: ");
                     System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
                     EDocUtil.addCaseMgmtNoteLink(cmnl);
-            } 
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
