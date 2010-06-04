@@ -245,6 +245,8 @@
             <form-property name="rxDefaultQuantityProperty" type="org.oscarehr.common.model.UserProperty" />
             <form-property name="rxProfileViewProperty" type="org.oscarehr.common.model.UserProperty" />
             <form-property name="rxUseRx3Property" type="org.oscarehr.common.model.UserProperty" />
+            <form-property name="existingDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
+            <form-property name="newDefaultDocQueueProperty" type="org.oscarehr.common.model.UserProperty" />
         </form-bean>
         <form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
             <form-property name="myOscarLoginId" type="java.lang.String" />
@@ -595,8 +597,10 @@
             <forward name="newRx" path="/oscarRx/prescribe.jsp" />
         </action>
 
+
         <action name="FrmForm" path="/dms/inboxManage" scope="request"  parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
-            <forward name="success" path="/dms/inboxManager.jsp" />
+            <forward name="success" path="/dms/listDocument.jsp" />
+            <forward name="addProviderQueue" path="/dms/addProviderQueue.jsp" />
         </action>
 
         <action input="/oscarRx/ChooseDrug.jsp" path="/oscarRx/chooseDrug" scope="request" type="oscar.oscarRx.pageUtil.RxChooseDrugAction">
@@ -884,6 +888,7 @@
             <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp" />
         </action>
         <action input="/oscarConsultationRequest/ViewConsultationRequests.jsp" name="EctViewRequestForm" path="/oscarEncounter/ViewRequest" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewRequestAction">
+            <forward name="failESend" path="/oscarEncounter/ViewRequest.do" />
             <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" />
         </action>
         <action input="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" name="EctConsultationFormRequestForm" path="/oscarEncounter/RequestConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestAction">
@@ -1189,6 +1194,7 @@
             <forward name="genRxDefaultQuantity"     path="/provider/setGenRxDefaultQuantityProperty.jsp"/>
             <forward name="genRxProfileView"     path="/provider/setGenRxProfileViewProperty.jsp"/>
             <forward name="genRxUseRx3"     path="/provider/setToUseRx3.jsp"/>
+            <forward name="genDefaultDocQueue"     path="/provider/setDocDefaultQueue.jsp"/>
         </action>
         <action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
             <forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
@@ -1377,6 +1383,8 @@
 
         <action name="FrmForm" path="/demographic/SearchDemographic" scope="request" type="org.oscarehr.common.web.SearchDemographicAutoCompleteAction">
             <forward name="success" path="/demographic/autocomplete.jsp" />
+        </action>
+        <action name="FrmForm" path="/provider/SearchProvider" scope="request" type="org.oscarehr.common.web.SearchProviderAutoCompleteAction">
         </action>
 
         <action input="/demographic/AddAlternateContact.jsp" name="FrmForm" path="/demographic/AddRelation" scope="request" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction">
