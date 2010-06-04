@@ -32,7 +32,7 @@ import java.io.Serializable;
  * @author rjonasz
  */
 public class UserProperty implements Serializable {
-    
+
     public final static String STALE_NOTEDATE = "cme_note_date";
     public final static String MYDRUGREF_ID = "mydrugref_id";
     public final static String ONTARIO_MD_USERNAME = "ontario_md_username";
@@ -46,9 +46,12 @@ public class UserProperty implements Serializable {
     public final static String RX_PROFILE_VIEW = "rx_profile_view";
     public final static String RX_USE_RX3 = "rx_use_rx3";
     public final static String DMFLOW_SHEET_VIEW = "DMFlowsheet_view";
-    public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
+    public final static String DOC_DEFAULT_QUEUE="doc_default_queue";
     public final static String HC_TYPE= "HC_Type";
     public final static String DEFAULT_SEX= "default_sex";
+
+    public final static String EFORM_FAVOURITE_GROUP = "favourite_eform_group";
+
     private long id;
     private String name;
     private String value;
@@ -75,38 +78,38 @@ public class UserProperty implements Serializable {
     public String getProviderNo() {
         return this.providerNo;
     }
-    
+
     public void setProviderNo(String providerNo) {
         this.providerNo = providerNo;
     }
-    
+
     public String getValue() {
         return this.value;
     }
-    
+
     public void setValue(String value) {
         this.value = value;
-    }    
-    
+    }
+
     public String getName() {
         return this.name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public long getId() {
         return this.id;
     }
-    
+
     public void setId(long id) {
         this.id = id;
     }
-    
-    
+
+
     /** Creates a new instance of UserProperty */
     public UserProperty() {
     }
-    
+
 }
