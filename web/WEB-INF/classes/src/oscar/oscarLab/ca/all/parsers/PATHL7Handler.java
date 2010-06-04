@@ -162,14 +162,23 @@ public class PATHL7Handler implements MessageHandler {
      */
     public String getAccessionNum(){
         try{
-            String accessionNum = getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getORC().getFillerOrderNumber().getEntityIdentifier().getValue());
+            //System.out.println("msg="+msg);
+            String str=msg.getRESPONSE().getORDER_OBSERVATION(0).getORC().getFillerOrderNumber().getEntityIdentifier().getValue();
+            //System.out.println("input acnm ="+str);
+            String accessionNum = getString(str);
+            //System.out.println("accessionNum str="+accessionNum);
             String[] nums = accessionNum.split("-");
             if (nums.length == 3){
                 return nums[0];
             }else if (nums.length == 5){
                 return nums[0]+"-"+nums[1]+"-"+nums[2];
             }else{
-                return nums[1];
+                //System.out.println("nums.length="+nums.length);
+               // System.out.println("nums[0]="+nums[0]);
+                if(nums.length>1)
+                    return nums[1];
+                else
+                    return "";
             }    
         }catch(Exception e){
             logger.error("Could not return accession number", e);
