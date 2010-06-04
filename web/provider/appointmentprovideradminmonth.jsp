@@ -368,7 +368,7 @@ function refreshTabAlerts(id) {
 			<security:oscarSec roleName="<%=roleName$%>"
 				objectName="_appointment.doctorLink" rights="r">
 				<li><a HREF="#"
-					ONCLICK="popupOscarRx(600,900,'../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;"
+					ONCLICK="popupOscarRx(600,900,'../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.inbox"/>');return false;"
 					TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
 				<span id="oscar_new_lab"></span> </a> <oscar:newUnclaimedLab>
 					<a class="tabalert" HREF="#"
