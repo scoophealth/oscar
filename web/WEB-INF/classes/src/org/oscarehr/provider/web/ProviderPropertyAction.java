@@ -28,6 +28,8 @@ package org.oscarehr.provider.web;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 import java.util.Hashtable;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +43,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import oscar.dms.data.QueueData;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
 import oscar.eform.EFormUtil;
@@ -114,10 +117,8 @@ public class ProviderPropertyAction extends DispatchAction {
          this.userPropertyDAO.saveProp(prop);
 
          request.setAttribute("status", "success");
-
          return actionmapping.findForward("success");
-     }
-
+    }
     public ActionForward viewDefaultSex(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
@@ -159,7 +160,6 @@ public class ProviderPropertyAction extends DispatchAction {
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty prop = (UserProperty)frm.get("dateProperty");
          String fmt = prop != null ? prop.getValue() : "";
-
          String provider = (String) request.getSession().getAttribute("user");
          UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.DEFAULT_SEX);
 
@@ -249,6 +249,9 @@ public class ProviderPropertyAction extends DispatchAction {
 
          return actionmapping.findForward("gen");
     }
+
+
+
     /////
 
     public ActionForward viewMyDrugrefId(ActionMapping actionmapping,
@@ -315,7 +318,8 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("providermsgSuccess","provider.setRxPageSize.msgSuccess"); //=Rx Script Page Size saved
          request.setAttribute("method","saveRxPageSize");
 
-         frm.set("rxPageSizeProperty", prop);System.out.println("Finish in viewRxPageSize");
+         frm.set("rxPageSizeProperty", prop);
+         System.out.println("Finish in viewRxPageSize");
          return actionmapping.findForward("genRxPageSize");
      }
 
@@ -350,6 +354,87 @@ public class ProviderPropertyAction extends DispatchAction {
          return actionmapping.findForward("genRxPageSize");
     }
 
+      public ActionForward saveDefaultDocQueue(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+
+        String provider=(String) request.getSession().getAttribute("user");
+
+        DynaActionForm frm=(DynaActionForm)actionform;
+        UserProperty existingQ=(UserProperty)frm.get("existingDefaultDocQueueProperty");
+        UserProperty newQ=(UserProperty)frm.get("newDefaultDocQueueProperty");
+        String mode=request.getParameter("chooseMode");
+        String defaultQ="";
+        if(mode.equalsIgnoreCase("new")&&newQ!=null)
+            defaultQ=newQ.getValue();
+        else if(mode.equalsIgnoreCase("existing")&&existingQ!=null)
+            defaultQ=existingQ.getValue();
+        else{
+                 request.setAttribute("status", "success");
+                 request.setAttribute("providertitle","provider.setDefaultDocumentQueue.title"); //=Set Default Document Queue
+                 request.setAttribute("providermsgPrefs","provider.setDefaultDocumentQueue.msgPrefs"); //=Preferences
+                 request.setAttribute("providermsgProvider","provider.setDefaultDocumentQueue.msgProfileView"); //=Default Document Queue
+                 request.setAttribute("providermsgSuccess","provider.setDefaultDocumentQueue.msgNotSaved"); //=Default Document Queue has NOT been saved
+                 request.setAttribute("method","saveDefaultDocQueue");
+                 System.out.println("Finish in saveDefaultDocQueue");
+                 return actionmapping.findForward("genDefaultDocQueue");
+        }
+        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.DOC_DEFAULT_QUEUE);
+        if(prop==null){
+            prop=new UserProperty();
+            prop.setName(UserProperty.DOC_DEFAULT_QUEUE);
+            prop.setProviderNo(provider);
+        }
+        System.out.println("defaultQ="+defaultQ);
+        if(mode.equals("new")){
+            //save and get most recent id
+            QueueData.addNewQueue(defaultQ);
+            String lastId=QueueData.getLastId();
+            prop.setValue(lastId);
+            this.userPropertyDAO.saveProp(prop);
+        }else{
+            prop.setValue(defaultQ);
+            this.userPropertyDAO.saveProp(prop);
+        }
+         request.setAttribute("status", "success");
+         request.setAttribute("defaultDocQueueProperty",prop);
+         request.setAttribute("providertitle","provider.setDefaultDocumentQueue.title"); //=Set Default Document Queue
+         request.setAttribute("providermsgPrefs","provider.setDefaultDocumentQueue.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setDefaultDocumentQueue.msgProfileView"); //=Default Document Queue
+         request.setAttribute("providermsgSuccess","provider.setDefaultDocumentQueue.msgSuccess"); //=Default Document Queue saved
+         request.setAttribute("method","saveDefaultDocQueue");
+         System.out.println("Finish in saveDefaultDocQueue");
+         return actionmapping.findForward("genDefaultDocQueue");
+    }
+    //public ActionForward viewDefaultDocQueue(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+    //    return actionmapping.findForward("genDefaultDocQueue");
+    //}
+    public ActionForward viewDefaultDocQueue(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+        DynaActionForm frm=(DynaActionForm)actionform;
+        String provider=(String)request.getSession().getAttribute("user");
+        UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.DOC_DEFAULT_QUEUE);
+        UserProperty propNew=new UserProperty();
+        String propValue="";
+        if(prop==null){
+            prop=new UserProperty();
+        }
+        List<Hashtable> queues= QueueData.getQueues();
+        Collection viewChoices=new ArrayList();
+        viewChoices.add(new LabelValueBean("None","-1"));
+        for(Hashtable ht:queues){
+            viewChoices.add(new LabelValueBean((String)ht.get("queue"),(String)ht.get("id")));
+        }
+         request.setAttribute("viewChoices", viewChoices);
+         request.setAttribute("providertitle","provider.setDefaultDocumentQueue.title"); //=Set Default Document Queue
+         request.setAttribute("providermsgPrefs","provider.setDefaultDocumentQueue.msgPrefs"); //=Preferences
+         request.setAttribute("providermsgProvider","provider.setDefaultDocumentQueue.msgProfileView"); //=Default Document Queue
+         request.setAttribute("providermsgEditFromExisting","provider.setDefaultDocumentQueue.msgEditFromExisting"); //=Choose a default queue from existing queues
+         request.setAttribute("providermsgEditSaveNew","provider.setDefaultDocumentQueue.msgEditSaveNew"); //=Save a new default queue
+         request.setAttribute("providerbtnSubmit","provider.setDefaultDocumentQueue.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setDefaultDocumentQueue.msgSuccess"); //=Default Document Queue saved
+         request.setAttribute("method","saveDefaultDocQueue");
+         frm.set("existingDefaultDocQueueProperty", prop);
+         frm.set("newDefaultDocQueueProperty", propNew);
+        return actionmapping.findForward("genDefaultDocQueue");
+    }
 
    public ActionForward viewRxProfileView(ActionMapping actionmapping,
                                ActionForm actionform,
@@ -429,7 +514,7 @@ public class ProviderPropertyAction extends DispatchAction {
         this.userPropertyDAO.saveProp(prop);
 
          request.setAttribute("status", "success");
-         request.setAttribute("rxProfileViewProperty",prop);
+         request.setAttribute("defaultDocQueueProperty",prop);
          request.setAttribute("providertitle","provider.setRxProfileView.title"); //=Set Rx Profile View
          request.setAttribute("providermsgPrefs","provider.setRxProfileView.msgPrefs"); //=Preferences
          request.setAttribute("providermsgProvider","provider.setRxProfileView.msgProfileView"); //=Rx Profile View
@@ -1057,81 +1142,6 @@ public class ProviderPropertyAction extends DispatchAction {
 
          return actionmapping.findForward("gen");
      }
-
-    public ActionForward viewFavouriteEformGroup(ActionMapping actionmapping,
-                               ActionForm actionform,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
-        DynaActionForm frm = (DynaActionForm)actionform;
-        String provider = (String) request.getSession().getAttribute("user");
-        UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EFORM_FAVOURITE_GROUP);
-
-        if (prop == null){
-         prop = new UserProperty();
-        }
-
-        frm.set("dateProperty", prop);
-        ArrayList<Hashtable> groups = EFormUtil.getEFormGroups();
-        ArrayList groupList = new ArrayList();
-        String name;
-        groupList.add(new LabelValueBean("None",""));
-         for (Hashtable h: groups ){
-             name = (String)h.get("groupName");
-             groupList.add(new LabelValueBean(name,name));
-         }
-
-         request.setAttribute("dropOpts",groupList);
-
-         request.setAttribute("dateProperty",prop);
-
-         request.setAttribute("providertitle","provider.setFavEfrmGrp.title"); //=Set Favourite Eform Group
-         request.setAttribute("providermsgPrefs","provider.setFavEfrmGrp.msgPrefs"); //=Preferences"); //
-         request.setAttribute("providermsgProvider","provider.setFavEfrmGrp.msgProvider"); //=Default Eform Group
-         request.setAttribute("providermsgEdit","provider.setFavEfrmGrp.msgEdit"); //=Select your favourite Eform Group
-         request.setAttribute("providerbtnSubmit","provider.setFavEfrmGrp.btnSubmit"); //=Save
-         request.setAttribute("providermsgSuccess","provider.setFavEfrmGrp.msgSuccess"); //=Favourite Eform Group saved
-         request.setAttribute("method","saveFavouriteEformGroup");
-        return actionmapping.findForward("gen");
-    }
-
-    public ActionForward saveFavouriteEformGroup(ActionMapping actionmapping,
-                               ActionForm actionform,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
-
-         DynaActionForm frm = (DynaActionForm)actionform;
-         UserProperty prop = (UserProperty)frm.get("dateProperty");
-         String group = prop != null ? prop.getValue() : "";
-
-         String provider = (String) request.getSession().getAttribute("user");
-         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.EFORM_FAVOURITE_GROUP);
-
-         if( saveProperty == null ) {
-             saveProperty = new UserProperty();
-             saveProperty.setProviderNo(provider);
-             saveProperty.setName(UserProperty.EFORM_FAVOURITE_GROUP);
-         }         
-
-         if( group.equalsIgnoreCase("")) {
-             this.userPropertyDAO.delete(saveProperty);
-         }
-         else {
-            saveProperty.setValue(group);
-            this.userPropertyDAO.saveProp(saveProperty);
-         }
-
-         request.setAttribute("status", "success");
-         request.setAttribute("providertitle","provider.setFavEfrmGrp.title"); //=Set Favourite Eform Group
-         request.setAttribute("providermsgPrefs","provider.setFavEfrmGrp.msgPrefs"); //=Preferences"); //
-         request.setAttribute("providermsgProvider","provider.setFavEfrmGrp.msgProvider"); //=Default Eform Group
-         request.setAttribute("providermsgEdit","provider.setFavEfrmGrp.msgEdit"); //=Select your favourite Eform Group
-         request.setAttribute("providerbtnSubmit","provider.setFavEfrmGrp.btnSubmit"); //=Save
-         request.setAttribute("providermsgSuccess","provider.setFavEfrmGrp.msgSuccess"); //=Favourite Eform Group saved
-         request.setAttribute("method","saveFavouriteEformGroup");
-
-         return actionmapping.findForward("gen");
-    }
-
     // Constructs a list of LabelValueBeans, to be used as the dropdown list
     // when viewing a HCType preference
     public ArrayList constructProvinceList() {
@@ -1210,6 +1220,82 @@ public class ProviderPropertyAction extends DispatchAction {
          provinces.add(new LabelValueBean("US-WY-Wyoming","US-WY"));
 
          return provinces;
+    }
+
+
+
+    public ActionForward viewFavouriteEformGroup(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        DynaActionForm frm = (DynaActionForm)actionform;
+        String provider = (String) request.getSession().getAttribute("user");
+        UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.EFORM_FAVOURITE_GROUP);
+
+        if (prop == null){
+         prop = new UserProperty();
+        }
+
+        frm.set("dateProperty", prop);
+        ArrayList<Hashtable> groups = EFormUtil.getEFormGroups();
+        ArrayList groupList = new ArrayList();
+        String name;
+        groupList.add(new LabelValueBean("None",""));
+         for (Hashtable h: groups ){
+             name = (String)h.get("groupName");
+             groupList.add(new LabelValueBean(name,name));
+         }
+
+         request.setAttribute("dropOpts",groupList);
+
+         request.setAttribute("dateProperty",prop);
+
+         request.setAttribute("providertitle","provider.setFavEfrmGrp.title"); //=Set Favourite Eform Group
+         request.setAttribute("providermsgPrefs","provider.setFavEfrmGrp.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setFavEfrmGrp.msgProvider"); //=Default Eform Group
+         request.setAttribute("providermsgEdit","provider.setFavEfrmGrp.msgEdit"); //=Select your favourite Eform Group
+         request.setAttribute("providerbtnSubmit","provider.setFavEfrmGrp.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setFavEfrmGrp.msgSuccess"); //=Favourite Eform Group saved
+         request.setAttribute("method","saveFavouriteEformGroup");
+        return actionmapping.findForward("gen");
+    }
+
+    public ActionForward saveFavouriteEformGroup(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty prop = (UserProperty)frm.get("dateProperty");
+         String group = prop != null ? prop.getValue() : "";
+
+         String provider = (String) request.getSession().getAttribute("user");
+         UserProperty saveProperty = this.userPropertyDAO.getProp(provider,UserProperty.EFORM_FAVOURITE_GROUP);
+
+         if( saveProperty == null ) {
+             saveProperty = new UserProperty();
+             saveProperty.setProviderNo(provider);
+             saveProperty.setName(UserProperty.EFORM_FAVOURITE_GROUP);
+         }
+
+         if( group.equalsIgnoreCase("")) {
+             this.userPropertyDAO.delete(saveProperty);
+         }
+         else {
+            saveProperty.setValue(group);
+            this.userPropertyDAO.saveProp(saveProperty);
+         }
+
+         request.setAttribute("status", "success");
+         request.setAttribute("providertitle","provider.setFavEfrmGrp.title"); //=Set Favourite Eform Group
+         request.setAttribute("providermsgPrefs","provider.setFavEfrmGrp.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setFavEfrmGrp.msgProvider"); //=Default Eform Group
+         request.setAttribute("providermsgEdit","provider.setFavEfrmGrp.msgEdit"); //=Select your favourite Eform Group
+         request.setAttribute("providerbtnSubmit","provider.setFavEfrmGrp.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setFavEfrmGrp.msgSuccess"); //=Favourite Eform Group saved
+         request.setAttribute("method","saveFavouriteEformGroup");
+
+         return actionmapping.findForward("gen");
     }
 
     /**
