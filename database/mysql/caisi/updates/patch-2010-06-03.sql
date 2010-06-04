@@ -298,6 +298,16 @@ INSERT INTO OcanFormOption VALUES (1200,'1.2','OCAN Type','CORE','CORE OCAN');
 INSERT INTO OcanFormOption VALUES (1201,'1.2','OCAN Type','SELF','CORE + SELF OCAN');
 INSERT INTO OcanFormOption VALUES (1202,'1.2','OCAN Type','FULL','FULL OCAN');
 
+update OcanFormOption set ocanDataCategoryValue="OTH" where id=570;
+update OcanFormOption set ocanDataCategoryValue="OTH" where id=711;
+update OcanFormOption set ocanDataCategory="Referral Source" where id=711;
+update OcanFormOption set ocanDataCategoryValue="OTH" where id=180;
+update OcanFormOption set ocanDataCategoryValue="UNK" where id=181;
+
+update OcanFormOption set ocanDataCategoryValue="OTH" where ocanDataCategoryName="Other";
+update OcanFormOption set ocanDataCategoryValue="UNK" where ocanDataCategoryName="Unknown";
+
+
 update OcanFormOption set ocanDataCategoryName="Consumer Declined to Answer" where ocanDataCategoryName="Client declined to answer";
 update OcanFormOption set ocanDataCategoryName="Consumer Declined to Answer" where ocanDataCategoryName="Client Declined to Answer";
 
