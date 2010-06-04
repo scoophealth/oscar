@@ -53,6 +53,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 	private String rmaNo;
     private Date SignedConfidentiality;
     private String email;
+    private String title;
 
 	private Set<Site> sites;
 
@@ -259,6 +260,14 @@ public class Provider implements Serializable, Comparable<Provider>{
         this.SignedConfidentiality = SignedConfidentiality;
     }
 
+	public String getTitle() {
+    	return title;
+    }
+
+	public void setTitle(String title) {
+    	this.title = title;
+    }
+
 	public ComparatorName ComparatorName() {
 		return new ComparatorName();
 	}
@@ -271,7 +280,8 @@ public class Provider implements Serializable, Comparable<Provider>{
 		}
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		if (providerNo==null) return(super.hashCode());
 		else return(providerNo.hashCode());
 	}

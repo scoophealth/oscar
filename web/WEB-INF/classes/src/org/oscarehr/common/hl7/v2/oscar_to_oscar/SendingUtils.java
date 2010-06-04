@@ -30,20 +30,17 @@ import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
-import ca.uhn.hl7v2.parser.PipeParser;
 
 public final class SendingUtils {
 
-	public static final String SERVICE_NAME = "OSCAR_TO_OSCAR_HL7_V2";
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final int CONNECTION_TIME_OUT = 10000;
-	private static final PipeParser pipeParser=new PipeParser();
 	
 	public static int send(AbstractMessage message, String url, String publicOscarKeyString, String publicServiceKeyString) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeySpecException, HL7Exception {
 		PrivateKey publicServiceKey = getPublicServiceKey(publicServiceKeyString);
 		PublicKey publicOscarKey = getPublicOscarKey(publicOscarKeyString);
 
-		byte[] dataBytes=pipeParser.encode(message).getBytes();
+		byte[] dataBytes=OscarToOscarUtils.pipeParser.encode(message).getBytes();
 		
 		return (send(dataBytes, url, publicOscarKey, publicServiceKey));
 	}
@@ -54,7 +51,7 @@ public final class SendingUtils {
 		byte[] encryptedBytes = encryptData(dataBytes, senderSecretKey);
 		byte[] encryptedSecretKey = encryptEncryptionKey(senderSecretKey, receiverOscarKey);
 
-		return (postData(url, encryptedBytes, encryptedSecretKey, signature, SERVICE_NAME));
+		return (postData(url, encryptedBytes, encryptedSecretKey, signature, OscarToOscarUtils.SERVICE_NAME));
 	}
 
 	private static int postData(String url, byte[] encryptedBytes, byte[] encryptedSecretKey, byte[] signature, String serviceName) throws IOException {
@@ -67,8 +64,8 @@ public final class SendingUtils {
 
 			MultipartPostMethod multipartPostMethod = new MultipartPostMethod(url);
 			multipartPostMethod.addParameter("importFile", tempFile.getName(), tempFile);
-			multipartPostMethod.addParameter("key", EncodingUtils.encodeBase64String(encryptedSecretKey));
-			multipartPostMethod.addParameter("signature", EncodingUtils.encodeBase64String(signature));
+			multipartPostMethod.addParameter("key", OscarToOscarUtils.encodeBase64String(encryptedSecretKey));
+			multipartPostMethod.addParameter("signature", OscarToOscarUtils.encodeBase64String(signature));
 			multipartPostMethod.addParameter("service", serviceName);
 
 			HttpClient httpClient = new HttpClient();
@@ -108,7 +105,7 @@ public final class SendingUtils {
 	}
 
 	public static PublicKey getPublicOscarKey(String publicOscarKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(EncodingUtils.base64.decode(publicOscarKeyString.getBytes(EncodingUtils.ENCODING)));
+	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(OscarToOscarUtils.base64.decode(publicOscarKeyString.getBytes(OscarToOscarUtils.ENCODING)));
 		KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
 		PublicKey publicOscarKey = pubKeyFactory.generatePublic(pubKeySpec);
 	    return publicOscarKey;
@@ -119,7 +116,7 @@ public final class SendingUtils {
 	 * because it's a key we give out to other people.
 	 */
 	public static PrivateKey getPublicServiceKey(String publicServiceKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(EncodingUtils.base64.decode(publicServiceKeyString.getBytes(EncodingUtils.ENCODING)));
+	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(OscarToOscarUtils.base64.decode(publicServiceKeyString.getBytes(OscarToOscarUtils.ENCODING)));
 		KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
 		PrivateKey publicServiceKey = privKeyFactory.generatePrivate(privKeySpec);
 	    return publicServiceKey;

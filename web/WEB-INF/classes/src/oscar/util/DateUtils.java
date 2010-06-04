@@ -53,10 +53,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-public class DateUtils {
+public final class DateUtils {
 
 	private static Logger logger = LogManager.getLogger(DateUtils.class);
 
@@ -64,6 +65,11 @@ public class DateUtils {
 
 	private static String formatDate = "dd/MM/yyyy";
 
+	public static String getISODateTimeFormatNoT(Calendar cal)
+	{
+		return(DateFormatUtils.ISO_DATETIME_FORMAT.format(cal).replace('T', ' '));
+	}
+	
 	public static SimpleDateFormat getDateFormatter() {
 
 		if (sdf == null) {

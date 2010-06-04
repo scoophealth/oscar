@@ -24,233 +24,206 @@
 package oscar.oscarLab.ca.all.parsers;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.ChainnedMessageAdapter;
+import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.RefI12Handler;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.AbstractMessage;
+import ca.uhn.hl7v2.model.v25.message.REF_I12;
+import ca.uhn.hl7v2.model.v25.segment.MSH;
+import ca.uhn.hl7v2.model.v25.segment.PID;
 
-public class OscarToOscarHl7V2Handler implements MessageHandler {
-	private Logger logger = MiscUtils.getLogger();
-
+public final class OscarToOscarHl7V2Handler implements MessageHandler {
+	private static Logger logger = MiscUtils.getLogger();
+	
+	private ChainnedMessageAdapter<? extends AbstractMessage> chainnedMessageAdapter;
+	
 	public void init(String hl7Body) throws HL7Exception {
-		logger.error("not finished : " + hl7Body);
+		AbstractMessage message=(AbstractMessage) OscarToOscarUtils.pipeParser.parse(hl7Body.replaceAll( "\n", "\r\n" ));
+
+		logger.debug("Received hl7 message type : "+message.getClass().getName());
+		
+		if (message instanceof REF_I12) chainnedMessageAdapter=new RefI12Handler((REF_I12) message);
 	}
 
 	public String audit() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.audit();
+    }
 
 	public String getAccessionNum() {
-		// TODO Auto-generated method stub
-		logger.error("stubbed test data");
-		String result = "1";
-		return (result);
-	}
+	    return chainnedMessageAdapter.getAccessionNum();
+    }
 
 	public String getAge() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getAge();
+    }
 
 	public String getCCDocs() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getCCDocs();
+    }
 
 	public String getClientRef() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getClientRef();
+    }
 
 	public String getDOB() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getDOB();
+    }
 
 	public String getDocName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getDocName();
+    }
 
-	public ArrayList getDocNums() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public ArrayList<String> getDocNums() {
+	    return chainnedMessageAdapter.getDocNums();
+    }
 
 	public String getFirstName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getFirstName();
+    }
 
 	public ArrayList<String> getHeaders() {
-		// TODO Auto-generated method stub
-		logger.error("stubbed test data");
-		ArrayList<String> results=new ArrayList<String>();
-		results.add("referral test");
-		return(results);
-	}
+	    return chainnedMessageAdapter.getHeaders();
+    }
 
 	public String getHealthNum() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getHealthNum();
+    }
 
 	public String getHomePhone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getHomePhone();
+    }
 
 	public String getLastName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getLastName();
+    }
+
+	public String getMessageCategory() {
+	    return chainnedMessageAdapter.getMessageCategory();
+    }
 
 	public String getMsgDate() {
-		// TODO Auto-generated method stub
-		logger.error("stubbed test data");
-		String result = DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()).replace('T', ' ');
-		return (result);
-	}
+	    return chainnedMessageAdapter.getMsgDate();
+    }
 
 	public String getMsgPriority() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getMsgPriority();
+    }
 
 	public String getMsgType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getMsgType();
+    }
+
+	public MSH getMsh() {
+	    return chainnedMessageAdapter.getMsh();
+    }
 
 	public String getOBRComment(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getOBRComment(i, j);
+    }
 
 	public int getOBRCommentCount(int i) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    return chainnedMessageAdapter.getOBRCommentCount(i);
+    }
 
 	public int getOBRCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    return chainnedMessageAdapter.getOBRCount();
+    }
 
 	public String getOBRName(int i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXAbnormalFlag(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXComment(int i, int j, int k) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getOBXCommentCount(int i, int j) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public int getOBXCount(int i) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public int getOBXFinalResultCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public String getOBXIdentifier(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXName(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXReferenceRange(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXResult(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXResultStatus(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXUnits(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getOBXValueType(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getOBRName(i);
+    }
 
 	public String getObservationHeader(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getObservationHeader(i, j);
+    }
+
+	public String getOBXAbnormalFlag(int i, int j) {
+	    return chainnedMessageAdapter.getOBXAbnormalFlag(i, j);
+    }
+
+	public String getOBXComment(int i, int j, int k) {
+	    return chainnedMessageAdapter.getOBXComment(i, j, k);
+    }
+
+	public int getOBXCommentCount(int i, int j) {
+	    return chainnedMessageAdapter.getOBXCommentCount(i, j);
+    }
+
+	public int getOBXCount(int i) {
+	    return chainnedMessageAdapter.getOBXCount(i);
+    }
+
+	public int getOBXFinalResultCount() {
+	    return chainnedMessageAdapter.getOBXFinalResultCount();
+    }
+
+	public String getOBXIdentifier(int i, int j) {
+	    return chainnedMessageAdapter.getOBXIdentifier(i, j);
+    }
+
+	public String getOBXName(int i, int j) {
+	    return chainnedMessageAdapter.getOBXName(i, j);
+    }
+
+	public String getOBXReferenceRange(int i, int j) {
+	    return chainnedMessageAdapter.getOBXReferenceRange(i, j);
+    }
+
+	public String getOBXResult(int i, int j) {
+	    return chainnedMessageAdapter.getOBXResult(i, j);
+    }
+
+	public String getOBXResultStatus(int i, int j) {
+	    return chainnedMessageAdapter.getOBXResultStatus(i, j);
+    }
+
+	public String getOBXUnits(int i, int j) {
+	    return chainnedMessageAdapter.getOBXUnits(i, j);
+    }
+
+	public String getOBXValueType(int i, int j) {
+	    return chainnedMessageAdapter.getOBXValueType(i, j);
+    }
 
 	public String getOrderStatus() {
-		// TODO Auto-generated method stub
-		logger.error("stubbed test data");
-		String result = "1";
-		return (result);
-	}
+	    return chainnedMessageAdapter.getOrderStatus();
+    }
 
 	public String getPatientLocation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getPatientLocation();
+    }
 
 	public String getPatientName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getPatientName();
+    }
+
+	public PID getPid() {
+	    return chainnedMessageAdapter.getPid();
+    }
 
 	public String getServiceDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getServiceDate();
+    }
 
 	public String getSex() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getSex();
+    }
 
 	public String getTimeStamp(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getTimeStamp(i, j);
+    }
 
 	public String getWorkPhone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return chainnedMessageAdapter.getWorkPhone();
+    }
 
 	public boolean isOBXAbnormal(int i, int j) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	    return chainnedMessageAdapter.isOBXAbnormal(i, j);
+    }
 
 }

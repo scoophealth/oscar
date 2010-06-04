@@ -259,8 +259,6 @@ public class EctConsultationFormRequestAction extends Action {
 	    
 	    REF_I12 refI12=RefI12.makeRefI12(facility.getName(), consultationRequest, new StreetAddressDataHolder());
 	    SendingUtils.send(refI12, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey());
-	    
-	    throw(new UnsupportedOperationException("not finished yet"));
     }
 
 }

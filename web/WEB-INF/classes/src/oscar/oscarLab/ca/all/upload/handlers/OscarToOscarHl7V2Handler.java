@@ -27,8 +27,7 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.EncodingUtils;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.upload.MessageUploader;
@@ -40,10 +39,10 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 		
 		try {
 	        byte[] dataBytes=FileUtils.readFileToByteArray(new File(fileName));
-	        String dataString=new String(dataBytes, EncodingUtils.ENCODING);
+	        String dataString=new String(dataBytes, OscarToOscarUtils.ENCODING);
 	        logger.debug("Incoming HL7 Message : \n"+dataString);
 	        
-			MessageUploader.routeReport(SendingUtils.SERVICE_NAME, dataString, fileId);
+			MessageUploader.routeReport(OscarToOscarUtils.SERVICE_NAME, dataString, fileId);
 		} catch (Exception e) {
 	        logger.error("Unexpected error.", e);
 	        MessageUploader.clean(fileId);

@@ -7,15 +7,16 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.hnr.ws.Gender;
 import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.datatype.CX;
+import ca.uhn.hl7v2.model.v25.datatype.DTM;
 import ca.uhn.hl7v2.model.v25.datatype.PLN;
 import ca.uhn.hl7v2.model.v25.datatype.TS;
 import ca.uhn.hl7v2.model.v25.datatype.XAD;
@@ -39,10 +40,28 @@ public final class DataTypeUtils {
 		// not meant to be instantiated by anyone, it's a util class
 	}
 
-	public static String getAsFormattedString(Date date) {
+	public static String getAsHl7FormattedString(Date date) {
 		synchronized (dateTimeFormatter) {
 			return (dateTimeFormatter.format(date));
 		}
+	}
+	
+	public static GregorianCalendar getCalendarFromDTM(DTM dtm) throws DataTypeException
+	{
+		GregorianCalendar cal=new GregorianCalendar();
+		// zero out fields we don't use
+		cal.setTimeInMillis(0);
+		cal.set(GregorianCalendar.YEAR, dtm.getYear());
+		cal.set(GregorianCalendar.MONTH, dtm.getMonth()-1);
+		cal.set(GregorianCalendar.DAY_OF_MONTH, dtm.getDay());
+		cal.set(GregorianCalendar.HOUR_OF_DAY, dtm.getHour());
+		cal.set(GregorianCalendar.MINUTE, dtm.getMinute());
+		cal.set(GregorianCalendar.SECOND, dtm.getSecond());
+		
+		// force materialisation of values
+		cal.getTimeInMillis();
+		
+		return(cal);
 	}
 
 	/**
@@ -69,13 +88,15 @@ public final class DataTypeUtils {
 	 * @param facilityName facility.getName();
 	 * @param messageCode i.e. "REF"
 	 * @param triggerEvent i.e. "I12"
-	 * @param messageStructure i.e. "REF I12"
+	 * @param messageStructure i.e. "REF_I12"
+	 * @param hl7VersionId is the version of hl7 in use, i.e. "2.5"
 	 */
-	public static void fillMsh(MSH msh, Date dateOfMessage, String facilityName, String messageCode, String triggerEvent, String messageStructure) throws DataTypeException {
+	public static void fillMsh(MSH msh, Date dateOfMessage, String facilityName, String messageCode, String triggerEvent, String messageStructure, String hl7VersionId) throws DataTypeException {
 		msh.getFieldSeparator().setValue("|");
 		msh.getEncodingCharacters().setValue("^~\\&");
+		msh.getVersionID().getVersionID().setValue(hl7VersionId);
 
-		msh.getDateTimeOfMessage().getTime().setValue(getAsFormattedString(dateOfMessage));
+		msh.getDateTimeOfMessage().getTime().setValue(getAsHl7FormattedString(dateOfMessage));
 
 		msh.getSendingApplication().getNamespaceID().setValue("OSCAR");
 
@@ -118,7 +139,7 @@ public final class DataTypeUtils {
 		XPN xpn = prd.getProviderName(0);
 		xpn.getFamilyName().getSurname().setValue(provider.getLastName());
 		xpn.getGivenName().setValue(provider.getFirstName());
-		xpn.getPrefixEgDR().setValue("DR");
+		xpn.getPrefixEgDR().setValue(provider.getTitle());
 
 		XAD xad = prd.getProviderAddress(0);
 		fillXAD(xad, officeStreetAddressDataHolder, "O");
@@ -221,7 +242,7 @@ public final class DataTypeUtils {
 		// U Unknown
 		// A Ambiguous
 		// N Not applicable
-		pid.getAdministrativeSex().setValue(oscarToHl7Gender(demographic.getSex()));
+		pid.getAdministrativeSex().setValue(getHl7GenderFromOscarGender(demographic.getSex()));
 
 		XAD address = pid.getPatientAddress(0);
 		StreetAddressDataHolder streetAddressDataHolder=new StreetAddressDataHolder();
@@ -244,7 +265,7 @@ public final class DataTypeUtils {
 	/**
 	 * Given an oscar gender, this will return an hl7 gender.
 	 */
-	public static String oscarToHl7Gender(String oscarGender) {
+	public static String getHl7GenderFromOscarGender(String oscarGender) {
 		Gender gender = null;
 
 		try {
@@ -256,13 +277,13 @@ public final class DataTypeUtils {
 			logger.error("Missed gender or dirty data in database. demographic.sex=" + oscarGender);
 		}
 
-		return (oscarToHl7Gender(gender));
+		return (getHl7GenderFromOscarGender(gender));
 	}
 
 	/**
 	 * Given an oscar gender, this will return an hl7 gender.
 	 */
-	public static String oscarToHl7Gender(Gender oscarGender) {
+	public static String getHl7GenderFromOscarGender(Gender oscarGender) {
 		if (oscarGender == null) return ("U");
 
 		if (Gender.M == oscarGender) return ("M");
@@ -279,7 +300,7 @@ public final class DataTypeUtils {
 	/**
 	 * Given an hl7 gender, this will return an oscarGender
 	 */
-	public static Gender hl7ToOscarGender(String hl7Gender) {
+	public static Gender getOscarGenderFromHl7Gender(String hl7Gender) {
 		if (hl7Gender == null) return (null);
 
 		hl7Gender = hl7Gender.toUpperCase();
@@ -317,7 +338,7 @@ public final class DataTypeUtils {
 	 */
 	public static void fillNte(NTE nte, String type, byte[] data) throws HL7Exception, UnsupportedEncodingException
 	{
-		String dataString=EncodingUtils.encodeBase64String(data); 
+		String dataString=OscarToOscarUtils.encodeBase64String(data); 
 		fillNte(nte, type, dataString);
 	}
 }

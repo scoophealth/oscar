@@ -31,7 +31,7 @@ public final class RefI12 {
 	{
 		REF_I12 referralMsg=new REF_I12();
 
-		DataTypeUtils.fillMsh(referralMsg.getMSH(), new Date(), facilityName, "REF", "I12", "REF I12");
+		DataTypeUtils.fillMsh(referralMsg.getMSH(), new Date(), facilityName, "REF", "I12", "REF_I12", "2.5");
 		DataTypeUtils.fillSft(referralMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
 
 		fillRf1(referralMsg.getRF1(), null, null, null, null, consultationRequest.getId(), consultationRequest.getReferralDate(), null, null);
@@ -97,7 +97,7 @@ public final class RefI12 {
 		rf1.getOriginatingReferralIdentifier().getEntityIdentifier().setValue(oscarReferralId.toString());
 		
 		// date referral is effective
-		rf1.getEffectiveDate().getTime().setValue(DataTypeUtils.getAsFormattedString(referralDate));
+		rf1.getEffectiveDate().getTime().setValue(DataTypeUtils.getAsHl7FormattedString(referralDate));
 
 		//Value Description
 		//-----------------
