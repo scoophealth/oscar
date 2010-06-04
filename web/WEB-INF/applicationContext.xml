@@ -112,6 +112,9 @@
 	<bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
 	<bean id="rxCloneDao" class="oscar.oscarRx.dao.hibernate.RxCloneFavoritesDAOHibernate" autowire="byName" />
 	<bean id="providerInboxRoutingDAO" class="org.oscarehr.common.dao.ProviderInboxRoutingDao" autowire="byName"/>
+
+        <bean id="queueDocumentLinkDAO" class="org.oscarehr.common.dao.QueueDocumentLinkDao" autowire="byName"/>
+        <bean id="queueProviderLinkDAO" class="org.oscarehr.common.dao.QueueProviderLinkDao" autowire="byName"/>
 	<bean id="integratorControlDao" class="oscar.facility.IntegratorControlDao" autowire="byName" />
 	<bean id="appointmentDao" class="oscar.appt.AppointmentDao" autowire="byName" />
 
