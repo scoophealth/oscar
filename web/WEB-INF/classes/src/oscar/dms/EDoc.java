@@ -61,12 +61,14 @@ public class EDoc extends TagObject implements Comparable {
     private String reviewDateTime = null;
     private String indivoIdx = null;
     private boolean indivoRegistered = false;
+    private int numberOfPages=0;
     
     /** Creates a new instance of EDoc */
     public EDoc() {
     }
     
-    public EDoc(String description, String type, String fileName, String html, String creatorId, String responsibleId, String source, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId) {
+    public EDoc(String description, String type, String fileName, String html, String creatorId,
+            String responsibleId, String source, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId) {
         this.setDescription(description.trim());
         this.setType(type.trim());
         this.setFileName(fileName.trim());
@@ -80,6 +82,23 @@ public class EDoc extends TagObject implements Comparable {
         this.setObservationDate(observationDate);
 	this.setReviewerId(reviewerId);
 	this.setReviewDateTime(reviewDateTime);
+        preliminaryProcessing();
+    }
+    public EDoc(String description, String type, String fileName, String html, String creatorId, String responsibleId, String source, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId,int numberOfPages) {
+        this.setDescription(description.trim());
+        this.setType(type.trim());
+        this.setFileName(fileName.trim());
+        this.setHtml(html);
+        this.setCreatorId(creatorId);
+	this.setResponsibleId(responsibleId);
+	this.setSource(source);
+        this.setStatus(status);
+        this.setModule(module.trim());
+        this.setModuleId(moduleId.trim());
+        this.setObservationDate(observationDate);
+	this.setReviewerId(reviewerId);
+	this.setReviewDateTime(reviewDateTime);
+        this.setNumberOfPages(numberOfPages);
         preliminaryProcessing();
     }
 
@@ -371,5 +390,11 @@ public class EDoc extends TagObject implements Comparable {
     
     public void setReviewDateTime(String reviewDateTime) {
 	this.reviewDateTime = reviewDateTime;
+    }
+    public int getNumberOfPages(){
+        return numberOfPages;
+}
+    public void setNumberOfPages(int n){
+        this.numberOfPages=n;
     }
 }
