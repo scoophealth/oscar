@@ -153,7 +153,9 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 	}
 
 	public ArrayList<String> getHeaders() {
-		return (new ArrayList());
+		ArrayList<String> headers=new ArrayList<String>();
+		headers.add(getMessageCategory());
+		return (headers);
 	}
 
 	public int getOBRCommentCount(int i) {

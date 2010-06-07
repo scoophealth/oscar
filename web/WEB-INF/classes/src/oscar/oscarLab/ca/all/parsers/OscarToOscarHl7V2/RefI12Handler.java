@@ -47,15 +47,38 @@ logger.error("Not finished yet, need to save referral some where.", new Exceptio
 	@Override
 	public String getDocName() {
 		// look through provider records for the referring provider
+		
+		logger.debug("hl7Message.getPROVIDER_CONTACTReps()="+hl7Message.getPROVIDER_CONTACTReps());
 		for (int i = 0; i < hl7Message.getPROVIDER_CONTACTReps(); i++) {
 			try {
 	            REF_I12_PROVIDER_CONTACT providerContact = hl7Message.getPROVIDER_CONTACT(i);
 
 	            PRD prd = providerContact.getPRD();
 
-	            if ("RP".equals(prd.getProviderRole(0).getIdentifier())) {
+	            logger.debug("prd.getProviderRole(0).getIdentifier()='"+prd.getProviderRole(0).getIdentifier()+'\'');
+	            if ("RP".equals(prd.getProviderRole(0).getIdentifier().getValue())) {
 	            	XPN xpn = prd.getProviderName(0);
-	            	String name = xpn.getPrefixEgDR().getValue() + ' ' + xpn.getGivenName().getValue() + ' ' + xpn.getFamilyName().getSurname().getValue();
+	            	StringBuilder sb=new StringBuilder();
+	            	
+	            	String temp= xpn.getPrefixEgDR().getValue();
+	            	if (temp!=null)
+	            	{
+	            		sb.append(temp);
+	            		sb.append(' ');
+	            	}
+	            	
+	            	temp=xpn.getGivenName().getValue();
+	            	if (temp!=null)
+	            	{
+	            		sb.append(temp);
+	            		sb.append(' ');
+	            	}
+	            	
+	            	temp=xpn.getFamilyName().getSurname().getValue();
+	            	if (temp!=null) sb.append(temp);
+	            	
+	            	String name=sb.toString();
+	            	logger.debug("xpn/name="+name);
 	            	return (name);
 	            }
             } catch (HL7Exception e) {

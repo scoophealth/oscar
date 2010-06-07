@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import oscar.oscarDB.DBHandler;
@@ -353,9 +354,9 @@ public class Hl7textResultsData {
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
         if ( patientLastName == null) { patientLastName = ""; }
-        if ( patientHealthNumber == null) { patientHealthNumber = ""; }
         if ( status == null ) { status = ""; }
         
+        patientHealthNumber=StringUtils.trimToNull(patientHealthNumber);
         
         ArrayList labResults =  new ArrayList();
         String sql = "";
@@ -370,7 +371,11 @@ public class Hl7textResultsData {
                         " where info.lab_no = providerLabRouting.lab_no "+
                         " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
                         " AND providerLabRouting.lab_type = 'HL7' " +
-                        " AND info.first_name like '"+patientFirstName+"%' AND info.last_name like '"+patientLastName+"%' AND info.health_no like '%"+patientHealthNumber+"%' ORDER BY info.lab_no DESC";
+                        " AND info.first_name like '"+patientFirstName+"%' AND info.last_name like '"+patientLastName+"%'";
+                
+                if (patientHealthNumber!=null) sql=sql+" AND info.health_no like '%"+patientHealthNumber+"%'";
+                
+                sql=sql+" ORDER BY info.lab_no DESC";
                 
             } else {
                 
