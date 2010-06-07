@@ -13,6 +13,11 @@ public final class OscarToOscarUtils {
 	public static final Base64 base64=new Base64();
 	public static final PipeParser pipeParser=initialisePipeParser();
 	
+	public enum CategoryType
+	{
+		REFERRAL
+	}
+	
 	private static PipeParser initialisePipeParser()
 	{
 		PipeParser pipeParser=new PipeParser();

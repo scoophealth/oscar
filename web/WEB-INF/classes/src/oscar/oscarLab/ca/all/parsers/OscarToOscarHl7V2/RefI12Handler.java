@@ -24,6 +24,8 @@
 package oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType;
 import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -90,8 +92,8 @@ logger.error("Not finished yet, need to save referral some where.", new Exceptio
 	}
 
 	@Override
-	public String getMessageCategory() {
-		return ("Referral");
+	public CategoryType getMessageCategory() {
+		return (OscarToOscarUtils.CategoryType.REFERRAL);
 	}
 
 	@Override

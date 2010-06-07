@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
@@ -75,7 +76,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 	/**
 	 * The message category is just a random string representing what this hl7 message was about. As an example for REF I12 you might return "Referral".
 	 */
-	public abstract String getMessageCategory();
+	public abstract CategoryType getMessageCategory();
 
 	public String getMsgType() {
 		return (OscarToOscarUtils.SERVICE_NAME);
@@ -121,7 +122,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 	}
 
 	public String getObservationHeader(int i, int j) {
-		return (getMessageCategory());
+		return (getMessageCategory().name());
 	}
 
 	public String getOBXIdentifier(int i, int j) {
@@ -154,7 +155,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 
 	public ArrayList<String> getHeaders() {
 		ArrayList<String> headers=new ArrayList<String>();
-		headers.add(getMessageCategory());
+		headers.add(getMessageCategory().name());
 		return (headers);
 	}
 

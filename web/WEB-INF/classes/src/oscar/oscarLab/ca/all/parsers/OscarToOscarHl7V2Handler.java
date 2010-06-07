@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.ChainnedMessageAdapter;
@@ -100,10 +101,6 @@ public final class OscarToOscarHl7V2Handler implements MessageHandler {
 
 	public String getLastName() {
 	    return chainnedMessageAdapter.getLastName();
-    }
-
-	public String getMessageCategory() {
-	    return chainnedMessageAdapter.getMessageCategory();
     }
 
 	public String getMsgDate() {

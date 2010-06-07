@@ -882,18 +882,19 @@ function wrapUp() {
                                     <span class="white">
                                      <% if (ackStatus.equals("N")) {%>
                                            <bean:message key="oscarMDS.index.msgNewLabReportsFor"/>
-                                        <%} else if (ackStatus.equals("A")) {%>
+                                     <%} else if (ackStatus.equals("A")) {%>
                                            <bean:message key="oscarMDS.index.msgAcknowledgedLabReportsFor"/>
-                                        <%} else {%>
+                                     <%} else {%>
                                            <bean:message key="oscarMDS.index.msgAllLabReportsFor"/>
-                                        <%}%>&nbsp;
+                                     <%}%>&nbsp;
+                                     
                                      <% if (searchProviderNo.equals("")) {%>
                                             <bean:message key="oscarMDS.index.msgAllPhysicians"/>
-                                        <%} else if (searchProviderNo.equals("0")) {%>
+                                     <%} else if (searchProviderNo.equals("0")) {%>
                                             <bean:message key="oscarMDS.index.msgUnclaimed"/>
-                                        <%} else {%>
+                                     <%} else {%>
                                             <%=ProviderData.getProviderName(searchProviderNo)%>
-                                        <%}%>
+                                     <%}%>
                                         &nbsp;&nbsp;&nbsp;
                                         Page : <%=pageNum%>
                                      </span>
