@@ -54,13 +54,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 public class EctViewRequestAction extends Action {
-
+	
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	@Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse  response)	throws ServletException, IOException {
 
@@ -68,6 +72,9 @@ public class EctViewRequestAction extends Action {
 
 		request.setAttribute("id", frm.getRequestId());
 
+		logger.debug("Id:"+frm.getRequestId());
+		logger.debug("SegmentId:"+request.getParameter("segmentId"));
+		
 		return mapping.findForward("success");
 	}
 

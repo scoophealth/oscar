@@ -42,8 +42,6 @@ public final class RefI12Handler extends ChainnedMessageAdapter<REF_I12> {
 
 	public RefI12Handler(REF_I12 hl7Message) {
 	    super(hl7Message);
-	    
-logger.error("Not finished yet, need to save referral some where.", new Exception());
     }	
 	
 	@Override

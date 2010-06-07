@@ -25,7 +25,7 @@
 -->
 <%@ page language="java" %>
 <%@ page import="java.util.*" %>
-<%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*,oscar.util.StringUtils, oscar.util.UtilDateUtilities" %>
+<%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*,oscar.util.StringUtils,oscar.util.UtilDateUtilities" %>
 <%@ page import="org.apache.commons.collections.MultiHashMap" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -212,7 +212,11 @@
     }
 %>
 
-<html>
+
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%><html>
 <head>
     <!-- main calendar program -->
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
@@ -866,7 +870,17 @@ function wrapUp() {
                                 oscarLog('currentbold='+currentBold+'---ele.id='+ele.id);
                             }
 
-
+                            function popupConsultation(segmentId) {
+                            	  var page = '<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?segmentId='+segmentId;
+                            	  windowprops = "height=960,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+                            	  var popup=window.open(page, "<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgConsReq"/>", windowprops);
+                            	  if (popup != null) {
+                            	    if (popup.opener == null) {
+                            	      popup.opener = self;
+                            	    }
+                            	  }
+                            	}
+                            
 </script>
 </head>
 
@@ -1047,9 +1061,32 @@ function wrapUp() {
                                     <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getPatientName()%></a>
                                     <% }else if (result.isCML()){ %>
                                     <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
-                                    <% }else if (result.isHL7TEXT()){ %>
-                                    <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
-                                    <% }else if (result.isDocument()){ %>
+                                    <% }else if (result.isHL7TEXT())
+                                   	{ 
+                                    	OscarToOscarUtils.CategoryType categoryType=null;
+                                    	try
+                                    	{
+                                    		categoryType=OscarToOscarUtils.CategoryType.valueOf(result.getDiscipline());
+                                    	}
+                                    	catch (Exception e)
+                                    	{
+                                    		// this okay, it means it's not a special category
+                                    	}
+                                   		
+                                    	if (categoryType==OscarToOscarUtils.CategoryType.REFERRAL)
+                                    	{
+	                                    	%>
+                                    		<a href="javascript:popupConsultation('<%=segmentID%>')"><%=(String) result.getPatientName()%></a>
+                                    		<%                                    		
+                                    	}
+                                    	else
+                                    	{
+	                                    	%>
+	                                    		<a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+	                                    	<%
+                                    	}
+                                    }
+                                    else if (result.isDocument()){ %>
                                     <a href="javascript:reportWindow('../dms/DocumentDisplay3.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ')"><%=(String) result.getPatientName()%></a>
                                     <% }else {%>
                                     <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
