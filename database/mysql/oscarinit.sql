@@ -6961,7 +6961,7 @@ CREATE TABLE preventionsExt (
 
 CREATE TABLE `secRole` (
   `role_no` int(3) NOT NULL auto_increment,
-  `role_name` varchar(30) NOT NULL default '',
+  `role_name` varchar(60) NOT NULL default '',
   `description` varchar(60),
   PRIMARY KEY  (`role_no`),
   UNIQUE KEY `role_name` (`role_name`)
