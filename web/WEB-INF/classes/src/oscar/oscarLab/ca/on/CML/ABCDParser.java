@@ -495,7 +495,7 @@ public class ABCDParser {
       String maximum = null;     //  8. Maximum
       String units = null;       //  9. Units
       String result = null;      // 10. Result
-      String locationId = null;  // 11. Location Id (Test performed at …)
+      String locationId = null;  // 11. Location Id (Test performed at )
       String last = null;        // 12. Last Y or N
    }
 

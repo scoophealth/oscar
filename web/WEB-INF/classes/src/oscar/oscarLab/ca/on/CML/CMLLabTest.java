@@ -52,9 +52,9 @@ public class CMLLabTest {
     public String locationId = null; //  2. (e.g. 70 = CML Mississauga)
     public String printDate  = null; //  3. YYYYMMDD
     public String printTime  = null; //  4. HH:MM
-    public String totalBType = null; //  5. number of ‘B-type’ lines (= # of reports)
-    public String totalCType = null; //  6. number of ‘C-type’ lines
-    public String totalDType = null; //  7. number of ‘D-type’ lines
+    public String totalBType = null; //  5. number of B-type lines (= # of reports)
+    public String totalCType = null; //  6. number of C-type lines
+    public String totalDType = null; //  7. number of D-type lines
     
     
     public String accessionNum = null;        //  2. CML Accession number (minus first char)
@@ -62,10 +62,10 @@ public class CMLLabTest {
     public String serviceDate = null;         //  4. YYYYMMDD
     public String pFirstName = null;          //  5. Patient: First name
     public String pLastName = null;           //  6. Patient: Last name
-    public String pSex = null;                //  7. Sex ‘F’ or ‘M’
+    public String pSex = null;                //  7. Sex F or M
     public String pHealthNum = null;          //  8. Patient: Health number
     public String pDOB = null;                //  9. Patient: Birth date
-    public String status = null;              // 10. Final or Partial ‘F’ or ‘P’
+    public String status = null;              // 10. Final or Partial F or P
     public String docNum = null;              // 11. Physician: Number
     public String docName = null;             // 12. Physician: Name
     public String docAddr1 = null;            // 13. Physician: Address line 1
@@ -344,20 +344,20 @@ public class CMLLabTest {
         public String notUsed1 = null;    //  3. Not used ?
         public String notUsed2 = null;    //  4. Not used ?
         public String testName = null;    //  5. Test name
-        public String abn  = null;     //  6. Normal/Abnormal ‘N’ or ‘A’
+        public String abn  = null;     //  6. Normal/Abnormal N or A
         public String minimum = null;     //  7. Minimum
         public String maximum = null;     //  8. Maximum
         public String units = null;       //  9. Units
         public String result = null;      // 10. Result
         public String locationId = null;  // 11. Location Id (Test performed at …)
-        public String last = null;        // 12. Last ‘Y’ or ‘N’
+        public String last = null;        // 12. Last Y or N
         
         
         //String title = null;       // 2. Title
         //String notUsed1 = null;    // 3. not used ?
         public String description = null; // 4. Description/Comment
         //String locationId = null;  // 5. Location Id
-        //String last = null;        // 6. Last ‘Y’ or ‘N’
+        //String last = null;        // 6. Last Y or N
         
         ///
         public String getReferenceRange(){
