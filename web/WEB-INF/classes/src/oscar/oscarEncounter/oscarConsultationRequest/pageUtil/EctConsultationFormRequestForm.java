@@ -57,155 +57,66 @@ import org.apache.struts.action.ActionMessage;
 
 public final class EctConsultationFormRequestForm extends ActionForm {
 
-	public String getProviderNo() {
+	String allergies;
 
-		if (providerNo == null) {
+	String appointmentDay;
 
-			providerNo = new String();
+	String appointmentHour;
 
-		}
-		return providerNo;
+	String appointmentMinute;
 
-	}
+	String appointmentMonth;
 
-	public void setProviderNo(String str) {
+	String appointmentNotes;
 
-		System.out.println("providerNo date has been set");
+	String appointmentPm;
 
-		providerNo = str;
+	String appointmentTime;
 
-	}
+	String appointmentYear;
 
-	public String getDemographicNo() {
+	String clinicalInformation;
 
-		if (demographicNo == null) {
+	String concurrentProblems;
 
-			demographicNo = new String();
+	String currentMedications;
 
-		}
-		return demographicNo;
+	String demographicNo;
 
-	}
+	// Documents attached to this consultation
+	String documents;
 
-	public void setDemographicNo(String str) {
+	// Patient Will Book Field, can be either "1" or "0"
+	String patientWillBook;
 
-		System.out.println("demographicNo date has been set");
+	String providerNo;
 
-		demographicNo = str;
+	String reasonForConsultation;
 
-	}
+	String referalDate;
 
-	public String getRequestId() {
+	String requestId;
 
-		if (requestId == null) {
+	String sendTo;
 
-			requestId = new String();
+	String service;
 
-		}
-		return requestId;
+	String specialist;
 
-	}
+	String status;
 
-	public void setRequestId(String str) {
+	String submission;
 
-		System.out.println("requestId date has been set");
+	String urgency;
 
-		requestId = str;
+	public String getAllergies() {
 
-	}
+		if (allergies == null) {
 
-	public String getReferalDate() {
-
-		if (referalDate == null) {
-
-			referalDate = new String();
+			allergies = new String();
 
 		}
-		return referalDate;
-
-	}
-
-	public void setReferalDate(String str) {
-
-		System.out.println("referal date has been set");
-
-		referalDate = str;
-
-	}
-
-	public String getService() {
-
-		if (service == null) {
-
-			service = new String();
-
-		}
-		return service;
-
-	}
-
-	public void setService(String str) {
-
-		System.out.println("service has been set");
-
-		service = str;
-
-	}
-
-	public String getSpecialist() {
-
-		if (specialist == null) {
-
-			specialist = new String();
-
-		}
-		return specialist;
-
-	}
-
-	public void setSpecialist(String str) {
-
-		System.out.println("specialist setter");
-
-		specialist = str;
-
-	}
-
-	public String getAppointmentYear() {
-
-		if (appointmentYear == null) {
-
-			appointmentYear = new String();
-
-		}
-		return appointmentYear;
-
-	}
-
-	public void setAppointmentYear(String str) {
-
-		System.out.println("appointmentYear setter");
-
-		appointmentYear = str;
-
-	}
-
-	public String getAppointmentMonth() {
-
-		if (appointmentMonth == null) {
-
-			appointmentMonth = new String();
-
-		}
-		return appointmentMonth;
-
-	}
-
-	public void setAppointmentMonth(String str) {
-
-		System.out.println("appointmentMonth setter");
-
-		appointmentMonth = str;
+		return allergies;
 
 	}
 
@@ -220,181 +131,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	}
 
-	public void setAppointmentDay(String str) {
-
-		System.out.println("appointmentDay setter");
-
-		appointmentDay = str;
-
-	}
-
-	public String getAppointmentTime() {
-
-		if (appointmentTime == null) {
-
-			appointmentTime = new String();
-
-		}
-		return appointmentTime;
-
-	}
-
-	public void setAppointmentTime(String str) {
-
-		System.out.println("appointmentTime setter");
-
-		appointmentTime = str;
-
-	}
-
-	public String getReasonForConsultation() {
-
-		if (reasonForConsultation == null) {
-
-			reasonForConsultation = new String();
-
-		}
-		return reasonForConsultation;
-
-	}
-
-	public void setReasonForConsultation(String str) {
-
-		System.out.println("reasonForConsultation setter");
-
-		reasonForConsultation = str;
-
-	}
-
-	public String getClinicalInformation() {
-
-		if (clinicalInformation == null) {
-
-			clinicalInformation = new String();
-
-		}
-		return clinicalInformation;
-
-	}
-
-	public void setClinicalInformation(String str) {
-
-		System.out.println("clinicalInformation setter");
-
-		clinicalInformation = str;
-
-	}
-
-	public String getConcurrentProblems() {
-
-		if (concurrentProblems == null) {
-
-			concurrentProblems = new String();
-
-		}
-		return concurrentProblems;
-
-	}
-
-	public void setConcurrentProblems(String str) {
-
-		System.out.println("concurrentProblems setter");
-
-		concurrentProblems = str;
-
-	}
-
-	public String getCurrentMedications() {
-
-		if (currentMedications == null) {
-
-			currentMedications = new String();
-
-		}
-		return currentMedications;
-
-	}
-
-	public void setCurrentMedications(String str) {
-
-		System.out.println("currentMedications setter");
-
-		currentMedications = str;
-
-	}
-
-	public String getAllergies() {
-
-		if (allergies == null) {
-
-			allergies = new String();
-
-		}
-		return allergies;
-
-	}
-
-	public void setAllergies(String str) {
-
-		System.out.println("allergies setter = ".concat(String.valueOf(String.valueOf(str))));
-
-		allergies = str;
-
-	}
-
-	public String getSendTo() {
-
-		if (sendTo == null) {
-
-			sendTo = new String();
-
-		}
-		return sendTo;
-
-	}
-
-	public void setSendTo(String str) {
-
-		System.out.println("sendTo setter");
-
-		sendTo = str;
-
-	}
-
-	public String getStatus() {
-
-		if (status == null) {
-
-			status = new String();
-
-		}
-		return status;
-
-	}
-
-	public void setStatus(String str) {
-
-		status = str;
-
-	}
-
-	public String getSubmission() {
-
-		if (submission == null) {
-
-			submission = new String();
-
-		}
-		return submission;
-
-	}
-
-	public void setSubmission(String str) {
-
-		submission = str;
-
-	}
-
 	public String getAppointmentHour() {
 
 		if (appointmentHour == null) {
@@ -403,12 +139,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 		}
 		return appointmentHour;
-
-	}
-
-	public void setAppointmentHour(String str) {
-
-		appointmentHour = str;
 
 	}
 
@@ -423,26 +153,14 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	}
 
-	public void setAppointmentMinute(String str) {
+	public String getAppointmentMonth() {
 
-		appointmentMinute = str;
+		if (appointmentMonth == null) {
 
-	}
-
-	public String getAppointmentPm() {
-
-		if (appointmentPm == null) {
-
-			appointmentPm = new String();
+			appointmentMonth = new String();
 
 		}
-		return appointmentPm;
-
-	}
-
-	public void setAppointmentPm(String str) {
-
-		appointmentPm = str;
+		return appointmentMonth;
 
 	}
 
@@ -457,9 +175,187 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	}
 
-	public void setAppointmentNotes(String str) {
+	public String getAppointmentPm() {
 
-		appointmentNotes = str;
+		if (appointmentPm == null) {
+
+			appointmentPm = new String();
+
+		}
+		return appointmentPm;
+
+	}
+
+	public String getAppointmentTime() {
+
+		if (appointmentTime == null) {
+
+			appointmentTime = new String();
+
+		}
+		return appointmentTime;
+
+	}
+
+	public String getAppointmentYear() {
+
+		if (appointmentYear == null) {
+
+			appointmentYear = new String();
+
+		}
+		return appointmentYear;
+
+	}
+
+	public String getClinicalInformation() {
+
+		if (clinicalInformation == null) {
+
+			clinicalInformation = new String();
+
+		}
+		return clinicalInformation;
+
+	}
+
+	public String getConcurrentProblems() {
+
+		if (concurrentProblems == null) {
+
+			concurrentProblems = new String();
+
+		}
+		return concurrentProblems;
+
+	}
+
+	public String getCurrentMedications() {
+
+		if (currentMedications == null) {
+
+			currentMedications = new String();
+
+		}
+		return currentMedications;
+
+	}
+
+	public String getDemographicNo() {
+
+		if (demographicNo == null) {
+
+			demographicNo = new String();
+
+		}
+		return demographicNo;
+
+	}
+
+	public String getDocuments() {
+		return documents;
+	}
+
+	public String getPatientWillBook() {
+		return patientWillBook;
+	}
+
+	public String getProviderNo() {
+
+		if (providerNo == null) {
+
+			providerNo = new String();
+
+		}
+		return providerNo;
+
+	}
+
+	public String getReasonForConsultation() {
+
+		if (reasonForConsultation == null) {
+
+			reasonForConsultation = new String();
+
+		}
+		return reasonForConsultation;
+
+	}
+
+	public String getReferalDate() {
+
+		if (referalDate == null) {
+
+			referalDate = new String();
+
+		}
+		return referalDate;
+
+	}
+
+	public String getRequestId() {
+
+		if (requestId == null) {
+
+			requestId = new String();
+
+		}
+		return requestId;
+
+	}
+
+	public String getSendTo() {
+
+		if (sendTo == null) {
+
+			sendTo = new String();
+
+		}
+		return sendTo;
+
+	}
+
+	public String getService() {
+
+		if (service == null) {
+
+			service = new String();
+
+		}
+		return service;
+
+	}
+
+	public String getSpecialist() {
+
+		if (specialist == null) {
+
+			specialist = new String();
+
+		}
+		return specialist;
+
+	}
+
+	public String getStatus() {
+
+		if (status == null) {
+
+			status = new String();
+
+		}
+		return status;
+
+	}
+
+	public String getSubmission() {
+
+		if (submission == null) {
+
+			submission = new String();
+
+		}
+		return submission;
 
 	}
 
@@ -474,19 +370,193 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	}
 
+	@Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
+
+		System.out.println("\nReseting ConsultationFormRequestForm\n");
+
+	}
+
+	public void setAllergies(String str) {
+
+		System.out.println("allergies setter = ".concat(String.valueOf(String.valueOf(str))));
+
+		allergies = str;
+
+	}
+
+	public void setAppointmentDay(String str) {
+
+		System.out.println("appointmentDay setter");
+
+		appointmentDay = str;
+
+	}
+
+	public void setAppointmentHour(String str) {
+
+		appointmentHour = str;
+
+	}
+
+	public void setAppointmentMinute(String str) {
+
+		appointmentMinute = str;
+
+	}
+
+	public void setAppointmentMonth(String str) {
+
+		System.out.println("appointmentMonth setter");
+
+		appointmentMonth = str;
+
+	}
+
+	public void setAppointmentNotes(String str) {
+
+		appointmentNotes = str;
+
+	}
+
+	public void setAppointmentPm(String str) {
+
+		appointmentPm = str;
+
+	}
+
+	public void setAppointmentTime(String str) {
+
+		System.out.println("appointmentTime setter");
+
+		appointmentTime = str;
+
+	}
+
+	public void setAppointmentYear(String str) {
+
+		System.out.println("appointmentYear setter");
+
+		appointmentYear = str;
+
+	}
+
+	public void setClinicalInformation(String str) {
+
+		System.out.println("clinicalInformation setter");
+
+		clinicalInformation = str;
+
+	}
+
+	public void setConcurrentProblems(String str) {
+
+		System.out.println("concurrentProblems setter");
+
+		concurrentProblems = str;
+
+	}
+
+	public void setCurrentMedications(String str) {
+
+		System.out.println("currentMedications setter");
+
+		currentMedications = str;
+
+	}
+
+	public void setDemographicNo(String str) {
+
+		System.out.println("demographicNo date has been set");
+
+		demographicNo = str;
+
+	}
+
+	public void setDocuments(String doc) {
+		documents = doc;
+	}
+
+	public void setPatientWillBook(String str) {
+		this.patientWillBook = str;
+
+	}
+
+	public void setProviderNo(String str) {
+
+		System.out.println("providerNo date has been set");
+
+		providerNo = str;
+
+	}
+
+	public void setReasonForConsultation(String str) {
+
+		System.out.println("reasonForConsultation setter");
+
+		reasonForConsultation = str;
+
+	}
+
+	public void setReferalDate(String str) {
+
+		System.out.println("referal date has been set");
+
+		referalDate = str;
+
+	}
+
+	public void setRequestId(String str) {
+
+		System.out.println("requestId date has been set");
+
+		requestId = str;
+
+	}
+
+	public void setSendTo(String str) {
+
+		System.out.println("sendTo setter");
+
+		sendTo = str;
+
+	}
+
+	public void setService(String str) {
+
+		System.out.println("service has been set");
+
+		service = str;
+
+	}
+
+	public void setSpecialist(String str) {
+
+		System.out.println("specialist setter");
+
+		specialist = str;
+
+	}
+
+	public void setStatus(String str) {
+
+		status = str;
+
+	}
+
+	public void setSubmission(String str) {
+
+		submission = str;
+
+	}
 	public void setUrgency(String str) {
 
 		urgency = str;
 
 	}
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-
-		System.out.println("\nReseting ConsultationFormRequestForm\n");
-
-	}
-
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+	@Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 
 		ActionErrors errors = new ActionErrors();
 
@@ -524,73 +594,5 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		return errors;
 
 	}
-
-	public String getPatientWillBook() {
-		return patientWillBook;
-	}
-
-	public void setPatientWillBook(String str) {
-		this.patientWillBook = str;
-
-	}
-
-	public String getDocuments() {
-		return documents;
-	}
-
-	public void setDocuments(String doc) {
-		documents = doc;
-	}
-
-	String providerNo;
-
-	String demographicNo;
-
-	String requestId;
-
-	String referalDate;
-
-	String service;
-
-	String specialist;
-
-	String appointmentYear;
-
-	String appointmentMonth;
-
-	String appointmentDay;
-
-	String appointmentTime;
-
-	String reasonForConsultation;
-
-	String clinicalInformation;
-
-	String concurrentProblems;
-
-	String currentMedications;
-
-	String allergies;
-
-	String sendTo;
-
-	String status;
-
-	String submission;
-
-	String appointmentHour;
-
-	String appointmentMinute;
-
-	String appointmentPm;
-
-	String appointmentNotes;
-
-	String urgency;
-	// Patient Will Book Field, can be either "1" or "0"
-	String patientWillBook;
-
-	// Documents attached to this consultation
-	String documents;
 
 }
