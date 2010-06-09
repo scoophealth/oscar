@@ -17,6 +17,7 @@ import org.oscarehr.util.MiscUtils;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.datatype.CX;
+import ca.uhn.hl7v2.model.v25.datatype.DT;
 import ca.uhn.hl7v2.model.v25.datatype.DTM;
 import ca.uhn.hl7v2.model.v25.datatype.PLN;
 import ca.uhn.hl7v2.model.v25.datatype.TS;
@@ -46,6 +47,20 @@ public final class DataTypeUtils {
 			return (dateTimeFormatter.format(date));
 		}
 	}
+
+	private static GregorianCalendar getCalendarFromDT(DT dt) throws DataTypeException {
+		GregorianCalendar cal = new GregorianCalendar();
+		// zero out fields we don't use
+		cal.setTimeInMillis(0);
+		cal.set(GregorianCalendar.YEAR, dt.getYear());
+		cal.set(GregorianCalendar.MONTH, dt.getMonth() - 1);
+		cal.set(GregorianCalendar.DAY_OF_MONTH, dt.getDay());
+
+		// force materialisation of values
+		cal.getTimeInMillis();
+
+		return (cal);
+    }
 
 	public static GregorianCalendar getCalendarFromDTM(DTM dtm) throws DataTypeException {
 		GregorianCalendar cal = new GregorianCalendar();
@@ -197,6 +212,8 @@ public final class DataTypeUtils {
 		CX cx = pid.getPatientIdentifierList(0);
 		// health card string, excluding version code
 		cx.getIDNumber().setValue(demographic.getHin());
+		// blank for everyone but ontario use version code
+		cx.getCheckDigit().setValue(demographic.getVer());
 		// province
 		cx.getAssigningJurisdiction().getIdentifier().setValue(demographic.getHcType());
 
@@ -206,9 +223,6 @@ public final class DataTypeUtils {
 
 		tempCalendar.setTime(demographic.getHcRenewDate());
 		cx.getExpirationDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
-
-		// blank for everyone but ontario use version code
-		cx.getCheckDigit().setValue(demographic.getVer());
 
 		XPN xpn = pid.getPatientName(0);
 		xpn.getFamilyName().getSurname().setValue(demographic.getLastName());
@@ -260,6 +274,49 @@ public final class DataTypeUtils {
 
 		// ISO table 3166.
 		pid.getCitizenship(0).getIdentifier().setValue(demographic.getCitizenship());
+	}
+	
+	/**
+	 * This method returns a non-persisted, detached demographic model object.
+	 * @throws HL7Exception 
+	 */
+	public static Demographic parsePid(PID pid) throws HL7Exception
+	{
+		Demographic demographic=new Demographic();
+		
+		XAD xad=pid.getPatientAddress(0);
+		demographic.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
+		demographic.setCity(xad.getCity().getValue());
+		demographic.setProvince(xad.getStateOrProvince().getValue());
+		demographic.setPostal(xad.getZipOrPostalCode().getValue());
+
+		GregorianCalendar birthDate=DataTypeUtils.getCalendarFromDTM(pid.getDateTimeOfBirth().getTime());
+		demographic.setBirthDay(birthDate);
+		
+		CX cx = pid.getPatientIdentifierList(0);
+		// health card string, excluding version code
+		demographic.setHin(cx.getIDNumber().getValue());
+		// blank for everyone but ontario use version code
+		demographic.setVer(cx.getCheckDigit().getValue());
+		// province
+		demographic.setHcType(cx.getAssigningJurisdiction().getIdentifier().getValue());
+		// valid
+		GregorianCalendar tempCalendar = DataTypeUtils.getCalendarFromDT(cx.getEffectiveDate());
+		demographic.setEffDate(tempCalendar.getTime());
+		// expire
+		tempCalendar = DataTypeUtils.getCalendarFromDT(cx.getExpirationDate());
+		demographic.setHcRenewDate(tempCalendar.getTime());
+
+		XPN xpn = pid.getPatientName(0);
+		demographic.setLastName(xpn.getFamilyName().getSurname().getValue());
+		demographic.setFirstName(xpn.getGivenName().getValue());
+
+		XTN phone = pid.getPhoneNumberHome(0);
+		demographic.setPhone(phone.getUnformattedTelephoneNumber().getValue());
+	
+		demographic.setSex(getOscarGenderFromHl7Gender(pid.getAdministrativeSex().getValue()).name());
+		
+		return(demographic);
 	}
 
 	/**

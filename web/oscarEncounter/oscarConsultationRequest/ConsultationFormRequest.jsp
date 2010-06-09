@@ -1045,43 +1045,43 @@ function fetchAttached() {
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatient" />:
 							</td>
-							<td class="tite1"><%=consultUtil.patientName%></td>
+							<td class="tite1"><%=thisForm.getPatientName()%></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgAddress" />:
 							</td>
-							<td class="tite1"><%=consultUtil.patientAddress%></td>
+							<td class="tite1"><%=thisForm.getPatientAddress()%></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPhone" />:
 							</td>
-							<td class="tite2"><%=consultUtil.patientPhone%></td>
+							<td class="tite2"><%=thisForm.getPatientPhone()%></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgWPhone" />:
 							</td>
-							<td class="tite2"><%=consultUtil.patientWPhone%></td>
+							<td class="tite2"><%=thisForm.getPatientWPhone()%></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgBirthDate" />:
 							</td>
-							<td class="tite2"><%=consultUtil.patientDOB%></td>
+							<td class="tite2"><%=thisForm.getPatientDOB()%></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSex" />:
 							</td>
-							<td class="tite3"><%=consultUtil.patientSex%></td>
+							<td class="tite3"><%=thisForm.getPatientSex()%></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgHealthCard" />:
 							</td>
-							<td class="tite3"><%=consultUtil.patientHealthNum%>&nbsp;<%=consultUtil.patientHealthCardVersionCode%>&nbsp;<%=consultUtil.patientHealthCardType%>
+							<td class="tite3"><%=thisForm.getPatientHealthNum()%>&nbsp;<%=thisForm.getPatientHealthCardVersionCode()%>&nbsp;<%=thisForm.getPatientHealthCardType()%>
 							</td>
 						</tr>
 						<tr>

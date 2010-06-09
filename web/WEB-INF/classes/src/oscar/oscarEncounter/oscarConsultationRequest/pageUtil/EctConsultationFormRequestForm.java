@@ -50,6 +50,7 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -109,147 +110,66 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	String urgency;
 
+	private String patientName;
+	private String patientAddress;
+	private String patientPhone;
+	private String patientWPhone;
+	private String patientDOB;
+	private String patientSex;
+	private String patientHealthNum;
+	private String patientHealthCardVersionCode;
+	private String patientHealthCardType;
+
 	public String getAllergies() {
-
-		if (allergies == null) {
-
-			allergies = new String();
-
-		}
-		return allergies;
-
+		return(StringUtils.trimToEmpty(allergies));
 	}
 
 	public String getAppointmentDay() {
-
-		if (appointmentDay == null) {
-
-			appointmentDay = new String();
-
-		}
-		return appointmentDay;
-
+		return(StringUtils.trimToEmpty(appointmentDay));
 	}
 
 	public String getAppointmentHour() {
-
-		if (appointmentHour == null) {
-
-			appointmentHour = new String();
-
-		}
-		return appointmentHour;
-
+		return(StringUtils.trimToEmpty(appointmentHour));
 	}
 
 	public String getAppointmentMinute() {
-
-		if (appointmentMinute == null) {
-
-			appointmentMinute = new String();
-
-		}
-		return appointmentMinute;
-
+		return(StringUtils.trimToEmpty(appointmentMinute));
 	}
 
 	public String getAppointmentMonth() {
-
-		if (appointmentMonth == null) {
-
-			appointmentMonth = new String();
-
-		}
-		return appointmentMonth;
-
+		return(StringUtils.trimToEmpty(appointmentMonth));
 	}
 
 	public String getAppointmentNotes() {
-
-		if (appointmentNotes == null) {
-
-			appointmentNotes = new String();
-
-		}
-		return appointmentNotes;
-
+		return(StringUtils.trimToEmpty(appointmentNotes));
 	}
 
 	public String getAppointmentPm() {
-
-		if (appointmentPm == null) {
-
-			appointmentPm = new String();
-
-		}
-		return appointmentPm;
-
+		return(StringUtils.trimToEmpty(appointmentPm));
 	}
 
 	public String getAppointmentTime() {
-
-		if (appointmentTime == null) {
-
-			appointmentTime = new String();
-
-		}
-		return appointmentTime;
-
+		return(StringUtils.trimToEmpty(appointmentTime));
 	}
 
 	public String getAppointmentYear() {
-
-		if (appointmentYear == null) {
-
-			appointmentYear = new String();
-
-		}
-		return appointmentYear;
-
+		return(StringUtils.trimToEmpty(appointmentYear));
 	}
 
 	public String getClinicalInformation() {
-
-		if (clinicalInformation == null) {
-
-			clinicalInformation = new String();
-
-		}
-		return clinicalInformation;
-
+		return(StringUtils.trimToEmpty(clinicalInformation));
 	}
 
 	public String getConcurrentProblems() {
-
-		if (concurrentProblems == null) {
-
-			concurrentProblems = new String();
-
-		}
-		return concurrentProblems;
-
+		return(StringUtils.trimToEmpty(concurrentProblems));
 	}
 
 	public String getCurrentMedications() {
-
-		if (currentMedications == null) {
-
-			currentMedications = new String();
-
-		}
-		return currentMedications;
-
+		return(StringUtils.trimToEmpty(currentMedications));
 	}
 
 	public String getDemographicNo() {
-
-		if (demographicNo == null) {
-
-			demographicNo = new String();
-
-		}
-		return demographicNo;
-
+		return(StringUtils.trimToEmpty(demographicNo));
 	}
 
 	public String getDocuments() {
@@ -261,216 +181,99 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getProviderNo() {
-
-		if (providerNo == null) {
-
-			providerNo = new String();
-
-		}
-		return providerNo;
-
+		return(StringUtils.trimToEmpty(providerNo));
 	}
 
 	public String getReasonForConsultation() {
-
-		if (reasonForConsultation == null) {
-
-			reasonForConsultation = new String();
-
-		}
-		return reasonForConsultation;
-
+		return(StringUtils.trimToEmpty(reasonForConsultation));
 	}
 
 	public String getReferalDate() {
-
-		if (referalDate == null) {
-
-			referalDate = new String();
-
-		}
-		return referalDate;
-
+		return(StringUtils.trimToEmpty(referalDate));
 	}
 
 	public String getRequestId() {
-
-		if (requestId == null) {
-
-			requestId = new String();
-
-		}
-		return requestId;
-
+		return(StringUtils.trimToEmpty(requestId));
 	}
 
 	public String getSendTo() {
-
-		if (sendTo == null) {
-
-			sendTo = new String();
-
-		}
-		return sendTo;
-
+		return(StringUtils.trimToEmpty(sendTo));
 	}
 
 	public String getService() {
-
-		if (service == null) {
-
-			service = new String();
-
-		}
-		return service;
-
+		return(StringUtils.trimToEmpty(service));
 	}
 
 	public String getSpecialist() {
-
-		if (specialist == null) {
-
-			specialist = new String();
-
-		}
-		return specialist;
-
+		return(StringUtils.trimToEmpty(specialist));
 	}
 
 	public String getStatus() {
-
-		if (status == null) {
-
-			status = new String();
-
-		}
-		return status;
-
+		return(StringUtils.trimToEmpty(status));
 	}
 
 	public String getSubmission() {
-
-		if (submission == null) {
-
-			submission = new String();
-
-		}
-		return submission;
-
+		return(StringUtils.trimToEmpty(submission));
 	}
 
 	public String getUrgency() {
-
-		if (urgency == null) {
-
-			urgency = new String();
-
-		}
-		return urgency;
-
+		return(StringUtils.trimToEmpty(urgency));
 	}
 
 	@Override
-    public void reset(ActionMapping mapping, HttpServletRequest request) {
-
-		System.out.println("\nReseting ConsultationFormRequestForm\n");
-
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
 	}
 
 	public void setAllergies(String str) {
-
-		System.out.println("allergies setter = ".concat(String.valueOf(String.valueOf(str))));
-
 		allergies = str;
-
 	}
 
 	public void setAppointmentDay(String str) {
-
-		System.out.println("appointmentDay setter");
-
 		appointmentDay = str;
-
 	}
 
 	public void setAppointmentHour(String str) {
-
 		appointmentHour = str;
-
 	}
 
 	public void setAppointmentMinute(String str) {
-
 		appointmentMinute = str;
-
 	}
 
 	public void setAppointmentMonth(String str) {
-
-		System.out.println("appointmentMonth setter");
-
 		appointmentMonth = str;
-
 	}
 
 	public void setAppointmentNotes(String str) {
-
 		appointmentNotes = str;
-
 	}
 
 	public void setAppointmentPm(String str) {
-
 		appointmentPm = str;
-
 	}
 
 	public void setAppointmentTime(String str) {
-
-		System.out.println("appointmentTime setter");
-
 		appointmentTime = str;
-
 	}
 
 	public void setAppointmentYear(String str) {
-
-		System.out.println("appointmentYear setter");
-
 		appointmentYear = str;
-
 	}
 
 	public void setClinicalInformation(String str) {
-
-		System.out.println("clinicalInformation setter");
-
 		clinicalInformation = str;
-
 	}
 
 	public void setConcurrentProblems(String str) {
-
-		System.out.println("concurrentProblems setter");
-
 		concurrentProblems = str;
-
 	}
 
 	public void setCurrentMedications(String str) {
-
-		System.out.println("currentMedications setter");
-
 		currentMedications = str;
-
 	}
 
 	public void setDemographicNo(String str) {
-
-		System.out.println("demographicNo date has been set");
-
 		demographicNo = str;
-
 	}
 
 	public void setDocuments(String doc) {
@@ -479,84 +282,50 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	public void setPatientWillBook(String str) {
 		this.patientWillBook = str;
-
 	}
 
 	public void setProviderNo(String str) {
-
-		System.out.println("providerNo date has been set");
-
 		providerNo = str;
-
 	}
 
 	public void setReasonForConsultation(String str) {
-
-		System.out.println("reasonForConsultation setter");
-
 		reasonForConsultation = str;
-
 	}
 
 	public void setReferalDate(String str) {
-
-		System.out.println("referal date has been set");
-
 		referalDate = str;
-
 	}
 
 	public void setRequestId(String str) {
-
-		System.out.println("requestId date has been set");
-
 		requestId = str;
-
 	}
 
 	public void setSendTo(String str) {
-
-		System.out.println("sendTo setter");
-
 		sendTo = str;
-
 	}
 
 	public void setService(String str) {
-
-		System.out.println("service has been set");
-
 		service = str;
-
 	}
 
 	public void setSpecialist(String str) {
-
-		System.out.println("specialist setter");
-
 		specialist = str;
-
 	}
 
 	public void setStatus(String str) {
-
 		status = str;
-
 	}
 
 	public void setSubmission(String str) {
-
 		submission = str;
-
 	}
+
 	public void setUrgency(String str) {
-
 		urgency = str;
-
 	}
 
 	@Override
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 
 		ActionErrors errors = new ActionErrors();
 
@@ -594,5 +363,77 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		return errors;
 
 	}
+
+	public String getPatientName() {
+		return(StringUtils.trimToEmpty(patientName));
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public String getPatientAddress() {
+		return(StringUtils.trimToEmpty(patientAddress));
+	}
+
+	public void setPatientAddress(String patientAddress) {
+		this.patientAddress = patientAddress;
+	}
+
+	public String getPatientPhone() {
+		return(StringUtils.trimToEmpty(patientPhone));
+	}
+
+	public void setPatientPhone(String patientPhone) {
+		this.patientPhone = patientPhone;
+	}
+
+	public String getPatientWPhone() {
+		return(StringUtils.trimToEmpty(patientWPhone));
+	}
+
+	public void setPatientWPhone(String patientWPhone) {
+		this.patientWPhone = patientWPhone;
+	}
+
+	public String getPatientDOB() {
+		return(StringUtils.trimToEmpty(patientDOB));
+	}
+
+	public void setPatientDOB(String patientDOB) {
+		this.patientDOB = patientDOB;
+	}
+
+	public String getPatientSex() {
+		return(StringUtils.trimToEmpty(patientSex));
+	}
+
+	public void setPatientSex(String patientSex) {
+		this.patientSex = patientSex;
+	}
+
+	public String getPatientHealthNum() {
+		return(StringUtils.trimToEmpty(patientHealthNum));
+	}
+
+	public void setPatientHealthNum(String patientHealthNum) {
+		this.patientHealthNum = patientHealthNum;
+	}
+
+	public String getPatientHealthCardVersionCode() {
+		return(StringUtils.trimToEmpty(patientHealthCardVersionCode));
+    }
+
+	public void setPatientHealthCardVersionCode(String patientHealthCardVersionCode) {
+    	this.patientHealthCardVersionCode = patientHealthCardVersionCode;
+    }
+
+	public String getPatientHealthCardType() {
+		return(StringUtils.trimToEmpty(patientHealthCardType));
+    }
+
+	public void setPatientHealthCardType(String patientHealthCardType) {
+    	this.patientHealthCardType = patientHealthCardType;
+    }
 
 }

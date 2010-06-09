@@ -55,6 +55,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -63,12 +64,14 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.util.DateUtils;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v25.message.REF_I12;
+import ca.uhn.hl7v2.model.v25.segment.PID;
 
 public class EctViewRequestAction extends Action {
 	
@@ -111,6 +114,18 @@ public class EctViewRequestAction extends Action {
         if( !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
             consultUtil.teamVec.add(consultUtil.sendTo);
         }
+        
+        //---
+        
+        thisForm.setPatientAddress(consultUtil.patientAddress);
+        thisForm.setPatientDOB(consultUtil.patientDOB);
+        thisForm.setPatientHealthNum(consultUtil.patientHealthNum);
+        thisForm.setPatientHealthCardVersionCode(consultUtil.patientHealthCardVersionCode);
+        thisForm.setPatientHealthCardType(consultUtil.patientHealthCardType);
+        thisForm.setPatientName(consultUtil.patientName);
+        thisForm.setPatientPhone(consultUtil.patientPhone);
+        thisForm.setPatientSex(consultUtil.patientSex);
+        thisForm.setPatientWPhone(consultUtil.patientWPhone);
 	}
 	
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception
@@ -123,8 +138,8 @@ public class EctViewRequestAction extends Action {
         thisForm.setClinicalInformation(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CLINICAL_INFORMATION));
         thisForm.setCurrentMedications(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CURRENT_MEDICATIONS));
         
-        GregorianCalendar cal=DataTypeUtils.getCalendarFromDTM(refI12.getRF1().getEffectiveDate().getTime());
-        thisForm.setReferalDate(DateUtils.getISODateTimeFormatNoT(cal));
+        GregorianCalendar referralDate=DataTypeUtils.getCalendarFromDTM(refI12.getRF1().getEffectiveDate().getTime());
+        thisForm.setReferalDate(DateUtils.getISODateTimeFormatNoT(referralDate));
 
 //        thisForm.setSendTo();
 //        thisForm.setService(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
@@ -145,6 +160,29 @@ public class EctViewRequestAction extends Action {
 //        if( !consultUtil.teamVec.contains(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES)) ) {
 //            consultUtil.teamVec.add(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
 //        }
+        
+        //---
+        
+        
+        PID pid=refI12.getPID();
+        Demographic demographic=DataTypeUtils.parsePid(pid);
+        
+        StringBuilder address=new StringBuilder();
+        if (demographic.getAddress()!=null) address.append(demographic.getAddress()).append(", ");
+        if (demographic.getCity()!=null) address.append(demographic.getCity()).append(", ");
+        if (demographic.getProvince()!=null) address.append(demographic.getProvince());
+        thisForm.setPatientAddress(address.toString());
+        
+        thisForm.setPatientDOB(DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getBirthDay()));
+        
+        thisForm.setPatientHealthNum(demographic.getHin());
+        thisForm.setPatientHealthCardType(demographic.getHcType());
+        thisForm.setPatientHealthCardVersionCode(demographic.getVer());
+        
+        thisForm.setPatientName(demographic.getFirstName()+' '+demographic.getLastName());
+        thisForm.setPatientPhone(demographic.getPhone());
+        thisForm.setPatientSex(demographic.getSex());
+//        thisForm.setPatientWPhone(patientAddress);
 	}
 	
 }
