@@ -398,10 +398,12 @@ public class EForm extends EFormBase {
 			special_params.containsKey(APPT_PROVIDER_ID) ||
 			special_params.containsKey(RESIDENT_TFNOTES)) {
 			sql = DatabaseAP.parserReplace("appt_provider", (String)special_params.get(APPT_PROVIDER_NAME), sql);
-		} else if (special_params.containsKey(APPT_MC_NO)) {
+		}
+		if (special_params.containsKey(APPT_MC_NO)) {
 			sql = DatabaseAP.parserReplace("appt_table", new OtherIdManager().APPOINTMENT.toString(), sql);
 			sql = DatabaseAP.parserReplace("appt_id", (String)special_params.get(APPT_MC_NO), sql);
-		} else if (special_params.containsKey(PATIENT_TFNOTES)) {
+		}
+		if (special_params.containsKey(PATIENT_TFNOTES)) {
 			sql = DatabaseAP.parserReplace("eform_id", (String)special_params.get(PATIENT_TFNOTES), sql);
 		}
 		return sql;
