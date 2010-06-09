@@ -55,548 +55,542 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
-public final class EctConsultationFormRequestForm
-    extends ActionForm {
+public final class EctConsultationFormRequestForm extends ActionForm {
 
-  public String getProviderNo() {
+	public String getProviderNo() {
 
-    if (providerNo == null) {
+		if (providerNo == null) {
 
-      providerNo = new String();
+			providerNo = new String();
 
-    }
-    return providerNo;
+		}
+		return providerNo;
 
-  }
+	}
 
-  public void setProviderNo(String str) {
+	public void setProviderNo(String str) {
 
-    System.out.println("providerNo date has been set");
+		System.out.println("providerNo date has been set");
 
-    providerNo = str;
+		providerNo = str;
 
-  }
+	}
 
-  public String getDemographicNo() {
+	public String getDemographicNo() {
 
-    if (demographicNo == null) {
+		if (demographicNo == null) {
 
-      demographicNo = new String();
+			demographicNo = new String();
 
-    }
-    return demographicNo;
+		}
+		return demographicNo;
 
-  }
+	}
 
-  public void setDemographicNo(String str) {
+	public void setDemographicNo(String str) {
 
-    System.out.println("demographicNo date has been set");
+		System.out.println("demographicNo date has been set");
 
-    demographicNo = str;
+		demographicNo = str;
 
-  }
+	}
 
-  public String getRequestId() {
+	public String getRequestId() {
 
-    if (requestId == null) {
+		if (requestId == null) {
 
-      requestId = new String();
+			requestId = new String();
 
-    }
-    return requestId;
+		}
+		return requestId;
 
-  }
+	}
 
-  public void setRequestId(String str) {
+	public void setRequestId(String str) {
 
-    System.out.println("requestId date has been set");
+		System.out.println("requestId date has been set");
 
-    requestId = str;
+		requestId = str;
 
-  }
+	}
 
-  public String getReferalDate() {
+	public String getReferalDate() {
 
-    if (referalDate == null) {
+		if (referalDate == null) {
 
-      referalDate = new String();
+			referalDate = new String();
 
-    }
-    return referalDate;
+		}
+		return referalDate;
 
-  }
+	}
 
-  public void setReferalDate(String str) {
+	public void setReferalDate(String str) {
 
-    System.out.println("referal date has been set");
+		System.out.println("referal date has been set");
 
-    referalDate = str;
+		referalDate = str;
 
-  }
+	}
 
-  public String getService() {
+	public String getService() {
 
-    if (service == null) {
+		if (service == null) {
 
-      service = new String();
+			service = new String();
 
-    }
-    return service;
+		}
+		return service;
 
-  }
+	}
 
-  public void setService(String str) {
+	public void setService(String str) {
 
-    System.out.println("service has been set");
+		System.out.println("service has been set");
 
-    service = str;
+		service = str;
 
-  }
+	}
 
-  public String getSpecialist() {
+	public String getSpecialist() {
 
-    if (specialist == null) {
+		if (specialist == null) {
 
-      specialist = new String();
+			specialist = new String();
 
-    }
-    return specialist;
+		}
+		return specialist;
 
-  }
+	}
 
-  public void setSpecialist(String str) {
+	public void setSpecialist(String str) {
 
-    System.out.println("specialist setter");
+		System.out.println("specialist setter");
 
-    specialist = str;
+		specialist = str;
 
-  }
+	}
 
-  public String getAppointmentYear() {
+	public String getAppointmentYear() {
 
-    if (appointmentYear == null) {
+		if (appointmentYear == null) {
 
-      appointmentYear = new String();
+			appointmentYear = new String();
 
-    }
-    return appointmentYear;
+		}
+		return appointmentYear;
 
-  }
+	}
 
-  public void setAppointmentYear(String str) {
+	public void setAppointmentYear(String str) {
 
-    System.out.println("appointmentYear setter");
+		System.out.println("appointmentYear setter");
 
-    appointmentYear = str;
+		appointmentYear = str;
 
-  }
+	}
 
-  public String getAppointmentMonth() {
+	public String getAppointmentMonth() {
 
-    if (appointmentMonth == null) {
+		if (appointmentMonth == null) {
 
-      appointmentMonth = new String();
+			appointmentMonth = new String();
 
-    }
-    return appointmentMonth;
+		}
+		return appointmentMonth;
 
-  }
+	}
 
-  public void setAppointmentMonth(String str) {
+	public void setAppointmentMonth(String str) {
 
-    System.out.println("appointmentMonth setter");
+		System.out.println("appointmentMonth setter");
 
-    appointmentMonth = str;
+		appointmentMonth = str;
 
-  }
+	}
 
-  public String getAppointmentDay() {
+	public String getAppointmentDay() {
 
-    if (appointmentDay == null) {
+		if (appointmentDay == null) {
 
-      appointmentDay = new String();
+			appointmentDay = new String();
 
-    }
-    return appointmentDay;
+		}
+		return appointmentDay;
 
-  }
+	}
 
-  public void setAppointmentDay(String str) {
+	public void setAppointmentDay(String str) {
 
-    System.out.println("appointmentDay setter");
+		System.out.println("appointmentDay setter");
 
-    appointmentDay = str;
+		appointmentDay = str;
 
-  }
+	}
 
-  public String getAppointmentTime() {
+	public String getAppointmentTime() {
 
-    if (appointmentTime == null) {
+		if (appointmentTime == null) {
 
-      appointmentTime = new String();
+			appointmentTime = new String();
 
-    }
-    return appointmentTime;
+		}
+		return appointmentTime;
 
-  }
+	}
 
-  public void setAppointmentTime(String str) {
+	public void setAppointmentTime(String str) {
 
-    System.out.println("appointmentTime setter");
+		System.out.println("appointmentTime setter");
 
-    appointmentTime = str;
+		appointmentTime = str;
 
-  }
+	}
 
-  public String getReasonForConsultation() {
+	public String getReasonForConsultation() {
 
-    if (reasonForConsultation == null) {
+		if (reasonForConsultation == null) {
 
-      reasonForConsultation = new String();
+			reasonForConsultation = new String();
 
-    }
-    return reasonForConsultation;
+		}
+		return reasonForConsultation;
 
-  }
+	}
 
-  public void setReasonForConsultation(String str) {
+	public void setReasonForConsultation(String str) {
 
-    System.out.println("reasonForConsultation setter");
+		System.out.println("reasonForConsultation setter");
 
-    reasonForConsultation = str;
+		reasonForConsultation = str;
 
-  }
+	}
 
-  public String getClinicalInformation() {
+	public String getClinicalInformation() {
 
-    if (clinicalInformation == null) {
+		if (clinicalInformation == null) {
 
-      clinicalInformation = new String();
+			clinicalInformation = new String();
 
-    }
-    return clinicalInformation;
+		}
+		return clinicalInformation;
 
-  }
+	}
 
-  public void setClinicalInformation(String str) {
+	public void setClinicalInformation(String str) {
 
-    System.out.println("clinicalInformation setter");
+		System.out.println("clinicalInformation setter");
 
-    clinicalInformation = str;
+		clinicalInformation = str;
 
-  }
+	}
 
-  public String getConcurrentProblems() {
+	public String getConcurrentProblems() {
 
-    if (concurrentProblems == null) {
+		if (concurrentProblems == null) {
 
-      concurrentProblems = new String();
+			concurrentProblems = new String();
 
-    }
-    return concurrentProblems;
+		}
+		return concurrentProblems;
 
-  }
+	}
 
-  public void setConcurrentProblems(String str) {
+	public void setConcurrentProblems(String str) {
 
-    System.out.println("concurrentProblems setter");
+		System.out.println("concurrentProblems setter");
 
-    concurrentProblems = str;
+		concurrentProblems = str;
 
-  }
+	}
 
-  public String getCurrentMedications() {
+	public String getCurrentMedications() {
 
-    if (currentMedications == null) {
+		if (currentMedications == null) {
 
-      currentMedications = new String();
+			currentMedications = new String();
 
-    }
-    return currentMedications;
+		}
+		return currentMedications;
 
-  }
+	}
 
-  public void setCurrentMedications(String str) {
+	public void setCurrentMedications(String str) {
 
-    System.out.println("currentMedications setter");
+		System.out.println("currentMedications setter");
 
-    currentMedications = str;
+		currentMedications = str;
 
-  }
+	}
 
-  public String getAllergies() {
+	public String getAllergies() {
 
-    if (allergies == null) {
+		if (allergies == null) {
 
-      allergies = new String();
+			allergies = new String();
 
-    }
-    return allergies;
+		}
+		return allergies;
 
-  }
+	}
 
-  public void setAllergies(String str) {
+	public void setAllergies(String str) {
 
-    System.out.println("allergies setter = ".concat(String.valueOf(String.
-        valueOf(str))));
+		System.out.println("allergies setter = ".concat(String.valueOf(String.valueOf(str))));
 
-    allergies = str;
+		allergies = str;
 
-  }
+	}
 
-  public String getSendTo() {
+	public String getSendTo() {
 
-    if (sendTo == null) {
+		if (sendTo == null) {
 
-      sendTo = new String();
+			sendTo = new String();
 
-    }
-    return sendTo;
+		}
+		return sendTo;
 
-  }
+	}
 
-  public void setSendTo(String str) {
+	public void setSendTo(String str) {
 
-    System.out.println("sendTo setter");
+		System.out.println("sendTo setter");
 
-    sendTo = str;
+		sendTo = str;
 
-  }
+	}
 
-  public String getStatus() {
+	public String getStatus() {
 
-    if (status == null) {
+		if (status == null) {
 
-      status = new String();
+			status = new String();
 
-    }
-    return status;
+		}
+		return status;
 
-  }
+	}
 
-  public void setStatus(String str) {
+	public void setStatus(String str) {
 
-    status = str;
+		status = str;
 
-  }
+	}
 
-  public String getSubmission() {
+	public String getSubmission() {
 
-    if (submission == null) {
+		if (submission == null) {
 
-      submission = new String();
+			submission = new String();
 
-    }
-    return submission;
+		}
+		return submission;
 
-  }
+	}
 
-  public void setSubmission(String str) {
+	public void setSubmission(String str) {
 
-    submission = str;
+		submission = str;
 
-  }
+	}
 
-  public String getAppointmentHour() {
+	public String getAppointmentHour() {
 
-    if (appointmentHour == null) {
+		if (appointmentHour == null) {
 
-      appointmentHour = new String();
+			appointmentHour = new String();
 
-    }
-    return appointmentHour;
+		}
+		return appointmentHour;
 
-  }
+	}
 
-  public void setAppointmentHour(String str) {
+	public void setAppointmentHour(String str) {
 
-    appointmentHour = str;
+		appointmentHour = str;
 
-  }
+	}
 
-  public String getAppointmentMinute() {
+	public String getAppointmentMinute() {
 
-    if (appointmentMinute == null) {
+		if (appointmentMinute == null) {
 
-      appointmentMinute = new String();
+			appointmentMinute = new String();
 
-    }
-    return appointmentMinute;
+		}
+		return appointmentMinute;
 
-  }
+	}
 
-  public void setAppointmentMinute(String str) {
+	public void setAppointmentMinute(String str) {
 
-    appointmentMinute = str;
+		appointmentMinute = str;
 
-  }
+	}
 
-  public String getAppointmentPm() {
+	public String getAppointmentPm() {
 
-    if (appointmentPm == null) {
+		if (appointmentPm == null) {
 
-      appointmentPm = new String();
+			appointmentPm = new String();
 
-    }
-    return appointmentPm;
+		}
+		return appointmentPm;
 
-  }
+	}
 
-  public void setAppointmentPm(String str) {
+	public void setAppointmentPm(String str) {
 
-    appointmentPm = str;
+		appointmentPm = str;
 
-  }
+	}
 
-  public String getAppointmentNotes() {
+	public String getAppointmentNotes() {
 
-    if (appointmentNotes == null) {
+		if (appointmentNotes == null) {
 
-      appointmentNotes = new String();
+			appointmentNotes = new String();
 
-    }
-    return appointmentNotes;
+		}
+		return appointmentNotes;
 
-  }
+	}
 
-  public void setAppointmentNotes(String str) {
+	public void setAppointmentNotes(String str) {
 
-    appointmentNotes = str;
+		appointmentNotes = str;
 
-  }
+	}
 
-  public String getUrgency() {
+	public String getUrgency() {
 
-    if (urgency == null) {
+		if (urgency == null) {
 
-      urgency = new String();
+			urgency = new String();
 
-    }
-    return urgency;
+		}
+		return urgency;
 
-  }
+	}
 
-  public void setUrgency(String str) {
+	public void setUrgency(String str) {
 
-    urgency = str;
+		urgency = str;
 
-  }
+	}
 
-  public void reset(ActionMapping mapping, HttpServletRequest request) {
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
 
-    System.out.println("\nReseting ConsultationFormRequestForm\n");
+		System.out.println("\nReseting ConsultationFormRequestForm\n");
 
-  }
+	}
 
-  public ActionErrors validate(ActionMapping mapping,
-                               HttpServletRequest request) {
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 
-    ActionErrors errors = new ActionErrors();
+		ActionErrors errors = new ActionErrors();
 
-    if (this.patientWillBook==null||!this.patientWillBook.equals("1")) {
-    this.patientWillBook = "0";
-   }
+		if (this.patientWillBook == null || !this.patientWillBook.equals("1")) {
+			this.patientWillBook = "0";
+		}
 
+		if (service == null || service.length() == 0) {
 
-    if (service == null || service.length() == 0) {
+			errors.add("service", new ActionMessage("Errors.service.null"));
 
-      errors.add("service", new ActionMessage("Errors.service.null"));
+		}
+		try {
 
-    }
-    try {
+			int temp = Integer.parseInt(service);
 
-      int temp = Integer.parseInt(service);
+			if (temp < 0) {
 
-      if (temp < 0) {
+				errors.add("service", new ActionMessage("Errors.service.noServiceSelected"));
 
-        errors.add("service",
-                   new ActionMessage("Errors.service.noServiceSelected"));
+			}
+		}
 
-      }
-    }
+		catch (Exception e) {
 
-    catch (Exception e) {
+			errors.add("fName", new ActionMessage("Errors.service.notNum"));
 
-      errors.add("fName", new ActionMessage("Errors.service.notNum"));
+		}
 
-    }
+		if (!errors.isEmpty()) {
 
-    if (!errors.isEmpty()) {
+			request.setAttribute("validateError", "blah");
 
-      request.setAttribute("validateError", "blah");
+		}
+		return errors;
 
-    }
-    return errors;
+	}
 
-  }
+	public String getPatientWillBook() {
+		return patientWillBook;
+	}
 
-  public String getPatientWillBook() {
-    return patientWillBook;
-  }
+	public void setPatientWillBook(String str) {
+		this.patientWillBook = str;
 
-  public void setPatientWillBook(String str) {
-    this.patientWillBook = str;
+	}
 
-  }
-  
-  public String getDocuments() {
-    return documents;
-  }
-  
-  public void setDocuments(String doc) {
-      documents = doc;
-  }
+	public String getDocuments() {
+		return documents;
+	}
 
-  String providerNo;
+	public void setDocuments(String doc) {
+		documents = doc;
+	}
 
-  String demographicNo;
+	String providerNo;
 
-  String requestId;
+	String demographicNo;
 
-  String referalDate;
+	String requestId;
 
-  String service;
+	String referalDate;
 
-  String specialist;
+	String service;
 
-  String appointmentYear;
+	String specialist;
 
-  String appointmentMonth;
+	String appointmentYear;
 
-  String appointmentDay;
+	String appointmentMonth;
 
-  String appointmentTime;
+	String appointmentDay;
 
-  String reasonForConsultation;
+	String appointmentTime;
 
-  String clinicalInformation;
+	String reasonForConsultation;
 
-  String concurrentProblems;
+	String clinicalInformation;
 
-  String currentMedications;
+	String concurrentProblems;
 
-  String allergies;
+	String currentMedications;
 
-  String sendTo;
+	String allergies;
 
-  String status;
+	String sendTo;
 
-  String submission;
+	String status;
 
+	String submission;
 
-  String appointmentHour;
+	String appointmentHour;
 
-  String appointmentMinute;
+	String appointmentMinute;
 
-  String appointmentPm;
+	String appointmentPm;
 
-  String appointmentNotes;
+	String appointmentNotes;
 
-  String urgency;
-  //Patient Will Book Field, can be either "1" or "0"
-  String patientWillBook;
-  
-  //Documents attached to this consultation
-  String documents;
+	String urgency;
+	// Patient Will Book Field, can be either "1" or "0"
+	String patientWillBook;
+
+	// Documents attached to this consultation
+	String documents;
 
 }
