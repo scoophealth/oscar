@@ -134,20 +134,16 @@ public final class RefI12 {
 	{
 		logger.debug("Looking for nte comment type : "+nteType.name());
 		logger.debug("Number of NTE segments : "+referralMsg.getNTEReps());
-		for (int i=0; i<10; i++)
+		for (int i=0; i<referralMsg.getNTEReps(); i++)
 		{
-			try {
-	            NTE nte=referralMsg.getNTE(i);
-	            String nteCommentType=nte.getCommentType().getText().getValue();
+            NTE nte=referralMsg.getNTE(i);
+            String nteCommentType=nte.getCommentType().getText().getValue();
 
-	            logger.debug("NTE segment type : "+nteCommentType);
+            logger.debug("NTE segment type : "+nteCommentType);
 
-	            if (nteType.name().equals(nteCommentType))
-	            {
-	            	return(nte.getComment(0).getValue());
-	            }
-            } catch (Exception e) {
-            	logger.error("Unexpected error", e);
+            if (nteType.name().equals(nteCommentType))
+            {
+            	return(nte.getComment(0).getValue());
             }
 		}
 		

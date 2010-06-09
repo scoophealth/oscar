@@ -49,6 +49,7 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
+import java.util.GregorianCalendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -59,11 +60,13 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.util.DateUtils;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v25.message.REF_I12;
 
@@ -116,26 +119,31 @@ public class EctViewRequestAction extends Action {
 		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(hl7Message);
 		
         thisForm.setAllergies(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setReasonForConsultation(consultUtil.reasonForConsultation);
-//        thisForm.setClinicalInformation(consultUtil.clinicalInformation);
-//        thisForm.setCurrentMedications(consultUtil.currentMedications);
-//        thisForm.setReferalDate(consultUtil.referalDate);
-//        thisForm.setSendTo(consultUtil.sendTo);
-//        thisForm.setService(consultUtil.service);
-//        thisForm.setStatus(consultUtil.status);
-//        thisForm.setAppointmentDay(consultUtil.appointmentDay);
-//        thisForm.setAppointmentMonth(consultUtil.appointmentMonth);
-//        thisForm.setAppointmentYear(consultUtil.appointmentYear);
-//        thisForm.setAppointmentHour(consultUtil.appointmentHour);
-//        thisForm.setAppointmentMinute(consultUtil.appointmentMinute);
-//        thisForm.setAppointmentPm(consultUtil.appointmentPm);
-//        thisForm.setConcurrentProblems(consultUtil.concurrentProblems);
-//        thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
-//        thisForm.setUrgency(consultUtil.urgency);
-//        thisForm.setPatientWillBook(consultUtil.pwb);
+        thisForm.setReasonForConsultation(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.REASON_FOR_CONSULTATION));
+        thisForm.setClinicalInformation(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CLINICAL_INFORMATION));
+        thisForm.setCurrentMedications(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CURRENT_MEDICATIONS));
+        
+        GregorianCalendar cal=DataTypeUtils.getCalendarFromDTM(refI12.getRF1().getEffectiveDate().getTime());
+        thisForm.setReferalDate(DateUtils.getISODateTimeFormatNoT(cal));
+
+//        thisForm.setSendTo();
+//        thisForm.setService(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setStatus(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setAppointmentDay(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setAppointmentMonth(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setAppointmentYear(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setAppointmentHour(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setAppointmentMinute(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setAppointmentPm(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+
+        thisForm.setConcurrentProblems(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CONCURRENT_PROBLEMS));
+        thisForm.setAppointmentNotes(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.APPOINTMENT_NOTES));
+
+//        thisForm.setUrgency(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setPatientWillBook(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
 //
-//        if( !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
-//            consultUtil.teamVec.add(consultUtil.sendTo);
+//        if( !consultUtil.teamVec.contains(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES)) ) {
+//            consultUtil.teamVec.add(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
 //        }
 	}
 	

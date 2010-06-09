@@ -1,6 +1,7 @@
 package org.oscarehr.common.hl7.v2.oscar_to_oscar;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -45,23 +46,22 @@ public final class DataTypeUtils {
 			return (dateTimeFormatter.format(date));
 		}
 	}
-	
-	public static GregorianCalendar getCalendarFromDTM(DTM dtm) throws DataTypeException
-	{
-		GregorianCalendar cal=new GregorianCalendar();
+
+	public static GregorianCalendar getCalendarFromDTM(DTM dtm) throws DataTypeException {
+		GregorianCalendar cal = new GregorianCalendar();
 		// zero out fields we don't use
 		cal.setTimeInMillis(0);
 		cal.set(GregorianCalendar.YEAR, dtm.getYear());
-		cal.set(GregorianCalendar.MONTH, dtm.getMonth()-1);
+		cal.set(GregorianCalendar.MONTH, dtm.getMonth() - 1);
 		cal.set(GregorianCalendar.DAY_OF_MONTH, dtm.getDay());
 		cal.set(GregorianCalendar.HOUR_OF_DAY, dtm.getHour());
 		cal.set(GregorianCalendar.MINUTE, dtm.getMinute());
 		cal.set(GregorianCalendar.SECOND, dtm.getSecond());
-		
+
 		// force materialisation of values
 		cal.getTimeInMillis();
-		
-		return(cal);
+
+		return (cal);
 	}
 
 	/**
@@ -245,11 +245,11 @@ public final class DataTypeUtils {
 		pid.getAdministrativeSex().setValue(getHl7GenderFromOscarGender(demographic.getSex()));
 
 		XAD address = pid.getPatientAddress(0);
-		StreetAddressDataHolder streetAddressDataHolder=new StreetAddressDataHolder();
-		streetAddressDataHolder.streetAddress=demographic.getAddress();
-		streetAddressDataHolder.city=demographic.getCity();
-		streetAddressDataHolder.province=demographic.getProvince();
-		streetAddressDataHolder.postalCode=demographic.getPostal();
+		StreetAddressDataHolder streetAddressDataHolder = new StreetAddressDataHolder();
+		streetAddressDataHolder.streetAddress = demographic.getAddress();
+		streetAddressDataHolder.city = demographic.getCity();
+		streetAddressDataHolder.province = demographic.getProvince();
+		streetAddressDataHolder.postalCode = demographic.getPostal();
 		fillXAD(address, streetAddressDataHolder, "H");
 
 		XTN phone = pid.getPhoneNumberHome(0);
@@ -318,13 +318,12 @@ public final class DataTypeUtils {
 	 * @param nte
 	 * @param type should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
 	 * @param data should be UTF-8 String, if you have bytes, use base64 encoding first. Max Length is 65535
-	 * @throws HL7Exception 
+	 * @throws HL7Exception
 	 */
-	public static void fillNte(NTE nte, String type, String data) throws HL7Exception
-	{
-		if (type.length()>250) throw(new IllegalArgumentException("Type too long for NTE, type max length is 250, type.length()="+type.length()));
-		if (data.length()>65535) throw(new IllegalArgumentException("Data too long for NTE, data max length is 65535, data.length()="+data.length()));
-		
+	public static void fillNte(NTE nte, String type, String data) throws HL7Exception {
+		if (type.length() > 250) throw (new IllegalArgumentException("Type too long for NTE, type max length is 250, type.length()=" + type.length()));
+		if (data.length() > 65535) throw (new IllegalArgumentException("Data too long for NTE, data max length is 65535, data.length()=" + data.length()));
+
 		nte.getCommentType().getText().setValue(type);
 		nte.getComment(0).setValue(data);
 	}
@@ -333,12 +332,11 @@ public final class DataTypeUtils {
 	 * @param nte
 	 * @param type should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES"
 	 * @param data will be base64 encoded, the encoded length must still be less than 65535
-	 * @throws HL7Exception 
-	 * @throws UnsupportedEncodingException 
+	 * @throws HL7Exception
+	 * @throws UnsupportedEncodingException
 	 */
-	public static void fillNte(NTE nte, String type, byte[] data) throws HL7Exception, UnsupportedEncodingException
-	{
-		String dataString=OscarToOscarUtils.encodeBase64String(data); 
+	public static void fillNte(NTE nte, String type, byte[] data) throws HL7Exception, UnsupportedEncodingException {
+		String dataString = OscarToOscarUtils.encodeBase64String(data);
 		fillNte(nte, type, dataString);
 	}
 }
