@@ -2,6 +2,7 @@ package org.oscarehr.common.hl7.v2.oscar_to_oscar;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
@@ -9,15 +10,22 @@ import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.util.BuildInfo;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.DataTypeException;
+import ca.uhn.hl7v2.model.v25.group.REF_I12_PATIENT_VISIT;
 import ca.uhn.hl7v2.model.v25.message.REF_I12;
+import ca.uhn.hl7v2.model.v25.segment.NTE;
+import ca.uhn.hl7v2.model.v25.segment.PV1;
 import ca.uhn.hl7v2.model.v25.segment.RF1;
 
 public final class RefI12 {
-	private enum REF_NTE_TYPE
+	private static final Logger logger=MiscUtils.getLogger();
+	
+	public enum REF_NTE_TYPE
 	{
 		APPOINTMENT_NOTES,
 		REASON_FOR_CONSULTATION,
@@ -50,11 +58,24 @@ public final class RefI12 {
 		Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());		
 		DataTypeUtils.fillPid(referralMsg.getPID(), 1, demographic);
 
+		addEmptyPV1(referralMsg);
+		
 		fillReferralNotes(referralMsg, consultationRequest);
 				
 		return(referralMsg);
 	}
 	
+	/**
+	 * An empty PV1 segment helps the parser get the NTE's in the right spot, otherwise sometimes the NTE's end up in the OBR segment instead of it's own
+	 * top level segment. This is a glitch with the HAPI parser.
+	 * @throws DataTypeException 
+	 */
+	private static void addEmptyPV1(REF_I12 referralMsg) throws DataTypeException {
+		REF_I12_PATIENT_VISIT pv=referralMsg.getPATIENT_VISIT();
+		PV1 pv1=pv.getPV1();
+		pv1.getPatientClass().setValue("N"); // N is not applicable
+    }
+
 	private static void fillReferralNotes(REF_I12 referralMsg, ConsultationRequest consultationRequest) throws HL7Exception
 	{
 		// for each data section, we'll create a new NTE and we'll label the section some how...
@@ -107,5 +128,29 @@ public final class RefI12 {
 		//  W    Work Load
 		rf1.getReferralReason(0).getIdentifier().setValue(referralReasonId);
 		rf1.getReferralReason(0).getText().setValue(referralReasonDescription);
+	}
+	
+	public static String getNteValue(REF_I12 referralMsg, REF_NTE_TYPE nteType) throws HL7Exception
+	{
+		logger.debug("Looking for nte comment type : "+nteType.name());
+		logger.debug("Number of NTE segments : "+referralMsg.getNTEReps());
+		for (int i=0; i<10; i++)
+		{
+			try {
+	            NTE nte=referralMsg.getNTE(i);
+	            String nteCommentType=nte.getCommentType().getText().getValue();
+
+	            logger.debug("NTE segment type : "+nteCommentType);
+
+	            if (nteType.name().equals(nteCommentType))
+	            {
+	            	return(nte.getComment(0).getValue());
+	            }
+            } catch (Exception e) {
+            	logger.error("Unexpected error", e);
+            }
+		}
+		
+		return(null);
 	}
 }
