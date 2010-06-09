@@ -59,7 +59,13 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.oscarLab.ca.all.parsers.Factory;
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v25.message.REF_I12;
 
 public class EctViewRequestAction extends Action {
 	
@@ -78,4 +84,59 @@ public class EctViewRequestAction extends Action {
 		return mapping.findForward("success");
 	}
 
+	public static void fillFormValues(EctConsultationFormRequestForm thisForm, EctConsultationFormRequestUtil consultUtil)
+	{
+        thisForm.setAllergies(consultUtil.allergies);
+        thisForm.setReasonForConsultation(consultUtil.reasonForConsultation);
+        thisForm.setClinicalInformation(consultUtil.clinicalInformation);
+        thisForm.setCurrentMedications(consultUtil.currentMedications);
+        thisForm.setReferalDate(consultUtil.referalDate);
+        thisForm.setSendTo(consultUtil.sendTo);
+        thisForm.setService(consultUtil.service);
+        thisForm.setStatus(consultUtil.status);
+        thisForm.setAppointmentDay(consultUtil.appointmentDay);
+        thisForm.setAppointmentMonth(consultUtil.appointmentMonth);
+        thisForm.setAppointmentYear(consultUtil.appointmentYear);
+        thisForm.setAppointmentHour(consultUtil.appointmentHour);
+        thisForm.setAppointmentMinute(consultUtil.appointmentMinute);
+        thisForm.setAppointmentPm(consultUtil.appointmentPm);
+        thisForm.setConcurrentProblems(consultUtil.concurrentProblems);
+        thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
+        thisForm.setUrgency(consultUtil.urgency);
+        thisForm.setPatientWillBook(consultUtil.pwb);
+
+        if( !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
+            consultUtil.teamVec.add(consultUtil.sendTo);
+        }
+	}
+	
+	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception
+	{
+		String hl7Message=Factory.getHL7Body(segmentId);
+		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(hl7Message);
+		
+        thisForm.setAllergies(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
+//        thisForm.setReasonForConsultation(consultUtil.reasonForConsultation);
+//        thisForm.setClinicalInformation(consultUtil.clinicalInformation);
+//        thisForm.setCurrentMedications(consultUtil.currentMedications);
+//        thisForm.setReferalDate(consultUtil.referalDate);
+//        thisForm.setSendTo(consultUtil.sendTo);
+//        thisForm.setService(consultUtil.service);
+//        thisForm.setStatus(consultUtil.status);
+//        thisForm.setAppointmentDay(consultUtil.appointmentDay);
+//        thisForm.setAppointmentMonth(consultUtil.appointmentMonth);
+//        thisForm.setAppointmentYear(consultUtil.appointmentYear);
+//        thisForm.setAppointmentHour(consultUtil.appointmentHour);
+//        thisForm.setAppointmentMinute(consultUtil.appointmentMinute);
+//        thisForm.setAppointmentPm(consultUtil.appointmentPm);
+//        thisForm.setConcurrentProblems(consultUtil.concurrentProblems);
+//        thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
+//        thisForm.setUrgency(consultUtil.urgency);
+//        thisForm.setPatientWillBook(consultUtil.pwb);
+//
+//        if( !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
+//            consultUtil.teamVec.add(consultUtil.sendTo);
+//        }
+	}
+	
 }
