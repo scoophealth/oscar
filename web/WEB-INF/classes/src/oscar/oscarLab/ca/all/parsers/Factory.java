@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -27,21 +28,19 @@ import oscar.oscarDB.DBHandler;
  *
  * @author wrighd
  */
-public class Factory {
+public final class Factory {
     
-    Logger logger = Logger.getLogger(Factory.class);
-    
-    public Factory getInstance(){
-        return( new Factory());
+    private static Logger logger = MiscUtils.getLogger();
+        
+    private Factory() {
+    	// static methods no need for instance
     }
     
-    public Factory() {
-    }
     /**
      *  Find the lab corresponding to segmentID and return the appropriate
      *  MessageHandler for it
      */
-    public MessageHandler getHandler(String segmentID){
+    public static MessageHandler getHandler(String segmentID){
         String type = "";
         String hl7Body = "";
         String getMessage = "SELECT type, message from hl7TextMessage where lab_id = '"+segmentID+"';";
@@ -69,7 +68,7 @@ public class Factory {
     }
     
     
-    public String getHL7Body(String segmentID){
+    public static String getHL7Body(String segmentID){
         String getMessage = "SELECT type, message from hl7TextMessage where lab_id = '"+segmentID+"';";
         String ret = null;
         try{
@@ -90,7 +89,7 @@ public class Factory {
     /*
      *  Create and return the message handler corresponding to the message type
      */
-    public MessageHandler getHandler(String type, String hl7Body){
+    public static MessageHandler getHandler(String type, String hl7Body){
         Document doc = null;
         String msgType;
         String msgHandler = "";
@@ -105,7 +104,7 @@ public class Factory {
                 return(handler);
             }
             
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
+            InputStream is = Factory.class.getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
             
             if (OscarProperties.getInstance().getProperty("LAB_TYPES") != null){
                 String filename = OscarProperties.getInstance().getProperty("LAB_TYPES");

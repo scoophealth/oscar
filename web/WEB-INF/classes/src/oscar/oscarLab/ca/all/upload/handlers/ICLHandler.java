@@ -62,8 +62,7 @@ public class ICLHandler implements MessageHandler  {
             
             // only recheck the result status if it is not already set to abnormal
             if (!db.getString(rs,"result_status").equals("A")){
-                Factory f = new Factory();
-                oscar.oscarLab.ca.all.parsers.MessageHandler h = f.getInstance().getHandler(db.getString(rs,"lab_no"));
+                oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler(db.getString(rs,"lab_no"));
                 int i=0;
                 int j=0;
                 String resultStatus = "";

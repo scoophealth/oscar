@@ -233,12 +233,11 @@ public class CommonLabTestValues {
         ArrayList labList = new ArrayList();
         String sql = "SELECT lab_no FROM patientLabRouting WHERE demographic_no='"+demographic+"' AND lab_type='HL7'";
         logger.info(sql);
-        Factory f = new Factory();
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                MessageHandler h = f.getHandler(db.getString(rs,"lab_no"));
+                MessageHandler h = Factory.getHandler(db.getString(rs,"lab_no"));
                 for (int i=0; i < h.getOBRCount(); i++){
                     for (int j=0; j < h.getOBXCount(i); j++){
                         
@@ -561,8 +560,7 @@ public class CommonLabTestValues {
                 while(rs.next()){
                     String lab_no = db.getString(rs,"lab_no");
                     
-                    Factory f = new Factory();
-                    MessageHandler handler = f.getHandler(lab_no);
+                    MessageHandler handler = Factory.getHandler(lab_no);
                     
                     Hashtable h = new Hashtable();
                     int i=0;

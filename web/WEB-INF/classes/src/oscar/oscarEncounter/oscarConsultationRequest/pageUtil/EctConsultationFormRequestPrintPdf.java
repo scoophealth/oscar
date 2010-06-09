@@ -299,8 +299,7 @@ public class EctConsultationFormRequestPrintPdf {
             while(rs.next()){
                 String segmentId = db.getString(rs,"lab_no");
                 request.setAttribute("segmentID", segmentId);
-                Factory f = new Factory();
-                MessageHandler handler = f.getHandler(segmentId);
+                MessageHandler handler = Factory.getHandler(segmentId);
                 String fileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";
                 OutputStream os = new FileOutputStream(fileName);
                 LabPDFCreator pdf = new LabPDFCreator(request, os);

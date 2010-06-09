@@ -56,12 +56,11 @@ if (ackList != null){
         }
     }
 }
-Factory f = new Factory();
-MessageHandler handler = f.getHandler(segmentID);
+MessageHandler handler = Factory.getHandler(segmentID);
 Hl7textResultsData data = new Hl7textResultsData();
 String multiLabId = data.getMatchingLabs(segmentID);
 
-String hl7 = f.getHL7Body(segmentID);
+String hl7 = Factory.getHL7Body(segmentID);
 
 // check for errors printing
 if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){

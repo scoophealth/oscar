@@ -50,8 +50,7 @@ public final class MessageUploader {
     	
         String retVal = "";
         try{
-            Factory f = new Factory();
-            MessageHandler h = f.getHandler(type, hl7Body);
+            MessageHandler h = Factory.getHandler(type, hl7Body);
             Base64 base64 = new Base64();
             
             String firstName = h.getFirstName();

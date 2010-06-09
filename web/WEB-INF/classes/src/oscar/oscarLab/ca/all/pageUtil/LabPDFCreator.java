@@ -108,8 +108,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         }
         
         // create handler
-        Factory f = new Factory();
-        this.handler = f.getHandler(id);
+        this.handler = Factory.getHandler(id);
         
         // determine lab version
         Hl7textResultsData data = new Hl7textResultsData();

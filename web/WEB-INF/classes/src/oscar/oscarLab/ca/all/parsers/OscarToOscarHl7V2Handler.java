@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.ChainnedMessageAdapter;
@@ -44,7 +43,7 @@ public final class OscarToOscarHl7V2Handler implements MessageHandler {
 	private ChainnedMessageAdapter<? extends AbstractMessage> chainnedMessageAdapter;
 	
 	public void init(String hl7Body) throws HL7Exception {
-		AbstractMessage message=(AbstractMessage) OscarToOscarUtils.pipeParser.parse(hl7Body.replaceAll( "\n", "\r\n" ));
+		AbstractMessage message=OscarToOscarUtils.pipeParserParse(hl7Body);
 
 		logger.debug("Received hl7 message type : "+message.getClass().getName());
 		

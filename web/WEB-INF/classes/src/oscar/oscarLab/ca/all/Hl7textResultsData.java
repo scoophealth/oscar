@@ -40,8 +40,7 @@ public class Hl7textResultsData {
     }
     
     public void populateMeasurementsTable(String lab_no, String demographic_no){
-        Factory f = new Factory();
-        MessageHandler h = f.getInstance().getHandler(lab_no);
+        MessageHandler h = Factory.getHandler(lab_no);
         
         java.util.Calendar calender = java.util.Calendar.getInstance();
         String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));

@@ -60,8 +60,7 @@ public class PrintLabsAction extends Action{
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
         
         try {
-            Factory f = new Factory();
-            MessageHandler handler = f.getHandler(request.getParameter("segmentID"));
+            MessageHandler handler = Factory.getHandler(request.getParameter("segmentID"));
             response.setContentType("application/pdf");  //octet-stream
             response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.pdf\"");
             LabPDFCreator pdf = new LabPDFCreator(request, response.getOutputStream());
