@@ -35,75 +35,84 @@
 <%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
 <!-- end -->
 
-<%@page
-	import="java.util.ArrayList, java.util.Collections, java.util.List, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
-<%@page
-	import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.casemgmt.model.CaseManagementNote, org.oscarehr.casemgmt.model.Issue, org.oscarehr.common.model.UserProperty, org.oscarehr.common.dao.UserPropertyDAO, org.springframework.web.context.support.*,org.springframework.web.context.*"%>
-
 <%
-    if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
-    response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
-    response.setHeader("Pragma","no-cache"); //HTTP 1.0
-    response.setDateHeader ("Expires", 0); //prevents caching at the proxy
+	if (session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
+	response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); //HTTP 1.0
+	response.setDateHeader("Expires", 0); //prevents caching at the proxy
 %>
 
 
-<%@page import="org.oscarehr.util.WebUtils"%><html:html locale="true">
+<%@page
+	import="java.util.ArrayList,java.util.Collections,java.util.List,oscar.dms.*,oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*,oscar.OscarProperties,oscar.util.StringUtils,oscar.oscarLab.ca.on.*"%>
+<%@page
+	import="org.oscarehr.casemgmt.service.CaseManagementManager,org.oscarehr.casemgmt.model.CaseManagementNote,org.oscarehr.casemgmt.model.Issue,org.oscarehr.common.model.UserProperty,org.oscarehr.common.dao.UserPropertyDAO,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
+
+<%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm"%>
+<%@page import="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil"%>
+<%@page import="oscar.oscarDemographic.data.DemographicData"%>
+<%@page import="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewRequestAction"%>
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 
 <%
-String demo = request.getParameter("de");
-String requestId = request.getParameter("requestId");
-String team = (String) request.getParameter("teamVar");
-String providerNo = (String) session.getAttribute("user");
-oscar.oscarDemographic.data.DemographicData demoData = null;
-oscar.oscarDemographic.data.DemographicData.Demographic demographic = null;
+	String demo = request.getParameter("de");
+		String requestId = request.getParameter("requestId");
+		// segmentId is != null when viewing a remote consultation request from an hl7 source
+		String segmentId = request.getParameter("segmentId");
+		String team = request.getParameter("teamVar");
+		String providerNo = (String)session.getAttribute("user");
+		DemographicData demoData = null;
+		DemographicData.Demographic demographic = null;
 
-oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
-consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
+		EctConsultationFormRequestUtil consultUtil = new EctConsultationFormRequestUtil();
 
-if( requestId != null ) consultUtil.estRequestFromId(requestId);
-if( demo == null ) demo = consultUtil.demoNo;
+		if (requestId != null) consultUtil.estRequestFromId(requestId);
+		if (demo == null) demo = consultUtil.demoNo;
 
-ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
-boolean useNewCmgmt = false;
-WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-CaseManagementManager cmgmtMgr = null;
-if( users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, providerNo)>=0)) {
-        useNewCmgmt = true;
-        cmgmtMgr = (CaseManagementManager)ctx.getBean("caseManagementManager");
-}
+		ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+		boolean useNewCmgmt = false;
+		WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+		CaseManagementManager cmgmtMgr = null;
+		if (users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, providerNo) >= 0))
+		{
+			useNewCmgmt = true;
+			cmgmtMgr = (CaseManagementManager)ctx.getBean("caseManagementManager");
+		}
 
-UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
-UserProperty fmtProperty = userPropertyDAO.getProp(providerNo,UserProperty.CONSULTATION_REQ_PASTE_FMT);
-String pasteFmt = fmtProperty != null ? fmtProperty.getValue() : null;
+		UserPropertyDAO userPropertyDAO = (UserPropertyDAO)ctx.getBean("UserPropertyDAO");
+		UserProperty fmtProperty = userPropertyDAO.getProp(providerNo, UserProperty.CONSULTATION_REQ_PASTE_FMT);
+		String pasteFmt = fmtProperty != null?fmtProperty.getValue():null;
 
-if (demo != null ){
-    demoData = new oscar.oscarDemographic.data.DemographicData();
-    demographic = demoData.getDemographic(demo);
-}
-else if(requestId==null){
-    response.sendRedirect("../error.jsp");
+		if (demo != null)
+		{
+			demoData = new oscar.oscarDemographic.data.DemographicData();
+			demographic = demoData.getDemographic(demo);
+		}
+		else if (requestId == null && segmentId==null)
+		{
+			MiscUtils.getLogger().error("Missing both requestId and segmentId.");
+		}
 
-}
-if (demo != null) consultUtil.estPatient(demo);
-consultUtil.estActiveTeams();
+		if (demo != null) consultUtil.estPatient(demo);
+		consultUtil.estActiveTeams();
 
-if (request.getParameter("error") != null){
-    %>
+		if (request.getParameter("error") != null)
+		{
+%>
 <SCRIPT LANGUAGE="JavaScript">
         alert("The form could not be printed due to an error. Please refer to the server logs for more details.");
     </SCRIPT>
 <%
-}
+	}
 
-java.util.Calendar calender = java.util.Calendar.getInstance();
-String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
-String mon =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
-String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
-String formattedDate = year+"/"+mon+"/"+day;
+		java.util.Calendar calender = java.util.Calendar.getInstance();
+		String day = Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
+		String mon = Integer.toString(calender.get(java.util.Calendar.MONTH) + 1);
+		String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
+		String formattedDate = year + "/" + mon + "/" + day;
 
-OscarProperties props = OscarProperties.getInstance();
-
+		OscarProperties props = OscarProperties.getInstance();
 %><head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
@@ -195,11 +204,9 @@ var servicesName = new Array();   		// used as a cross reference table for name 
 var services = new Array();				// the following are used as a 2D table for makes and models
 var specialists = new Array();
 
-<%
-oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData configScript;
-configScript = new oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData();
-out.println(configScript.getJavascript());
-%>
+<%oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData configScript;
+				configScript = new oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData();
+				out.println(configScript.getJavascript());%>
 
 /////////////////////////////////////////////////////////////////////
 function initMaster() {
@@ -527,109 +534,119 @@ function importFromEnct(reqInfo,txtArea)
     switch( reqInfo )
     {
         case "MedicalHistory":
-            <%
-
-                String value = "";
-                if( demo != null )
-                {
-                     if( useNewCmgmt ) {
-                        value = listNotes(cmgmtMgr, "MedHistory", providerNo, demo);
-                    }
-                    else {
-                        value = demographic.EctInfo.getMedicalHistory();
-                    }
-                    if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
-                        value = StringUtils.lineBreaks(value);
-                    }
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("info = '" + value + "'");
-                }
-             %>
+            <%String value = "";
+				if (demo != null)
+				{
+					if (useNewCmgmt)
+					{
+						value = listNotes(cmgmtMgr, "MedHistory", providerNo, demo);
+					}
+					else
+					{
+						value = demographic.EctInfo.getMedicalHistory();
+					}
+					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
+					{
+						value = StringUtils.lineBreaks(value);
+					}
+					value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+					out.println("info = '" + value + "'");
+				}%>
              break;
           case "ongoingConcerns":
-             <%
-                 if( demo != null )
-                 {
-                     if( useNewCmgmt ) {
-                        value = listNotes(cmgmtMgr, "Concerns", providerNo, demo);
-                    }
-                    else {
-                        value = demographic.EctInfo.getOngoingConcerns();
-                    }
-                    if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
-                        value = StringUtils.lineBreaks(value);
-                    }
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("info = '" + value + "'");
-                 }
-             %>
+             <%if (demo != null)
+				{
+					if (useNewCmgmt)
+					{
+						value = listNotes(cmgmtMgr, "Concerns", providerNo, demo);
+					}
+					else
+					{
+						value = demographic.EctInfo.getOngoingConcerns();
+					}
+					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
+					{
+						value = StringUtils.lineBreaks(value);
+					}
+					value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+					out.println("info = '" + value + "'");
+				}%>
              break;
            case "FamilyHistory":
-              <%
-                 if( demo != null )
-                 {
-                   if(OscarProperties.getInstance().getBooleanProperty("caisi","on")) {
-                		 value = demographic.EctInfo.getFamilyHistory();
-                   }else{
-					if( useNewCmgmt ) {
-                        value = listNotes(cmgmtMgr, "SocHistory", providerNo, demo);
-                    }
-                    else {
-                        value = demographic.EctInfo.getSocialHistory();
-                    }
-				  }
-                    if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
-                        value = StringUtils.lineBreaks(value);
-                    }
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("info = '" + value + "'");
-                 }
-              %>
+              <%if (demo != null)
+				{
+					if (OscarProperties.getInstance().getBooleanProperty("caisi", "on"))
+					{
+						value = demographic.EctInfo.getFamilyHistory();
+					}
+					else
+					{
+						if (useNewCmgmt)
+						{
+							value = listNotes(cmgmtMgr, "SocHistory", providerNo, demo);
+						}
+						else
+						{
+							value = demographic.EctInfo.getSocialHistory();
+						}
+					}
+					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
+					{
+						value = StringUtils.lineBreaks(value);
+					}
+					value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+					out.println("info = '" + value + "'");
+				}%>
               break;
             case "OtherMeds":
-              <%
-                 if( demo != null )
-                 {
-                  if(OscarProperties.getInstance().getBooleanProperty("caisi","on")) {
-                		 value = "";
-                  }else{
-					if( useNewCmgmt ) {
-                        value = listNotes(cmgmtMgr, "OMeds", providerNo, demo);
-                    }
-                    else {
-                    //family history was used as bucket for Other Meds in old encounter
-                        value = demographic.EctInfo.getFamilyHistory();
-                    }
-				  }
-                    if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
-                        value = StringUtils.lineBreaks(value);
-                    }
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("info = '" + value + "'");
+              <%if (demo != null)
+				{
+					if (OscarProperties.getInstance().getBooleanProperty("caisi", "on"))
+					{
+						value = "";
+					}
+					else
+					{
+						if (useNewCmgmt)
+						{
+							value = listNotes(cmgmtMgr, "OMeds", providerNo, demo);
+						}
+						else
+						{
+							//family history was used as bucket for Other Meds in old encounter
+							value = demographic.EctInfo.getFamilyHistory();
+						}
+					}
+					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
+					{
+						value = StringUtils.lineBreaks(value);
+					}
+					value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+					out.println("info = '" + value + "'");
 
-                }
-              %>
+				}%>
                 break;
             case "Reminders":
-              <%
-                 if( demo != null )
-                 {
-                     if( useNewCmgmt ) {
-                        value = listNotes(cmgmtMgr, "Reminders", providerNo, demo);
-                    }
-                    else {
-                        value = demographic.EctInfo.getReminders();
-                    }
-                    //if( !value.equals("") ) {
-                    if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
-                        value = StringUtils.lineBreaks(value);
-                    }
+              <%if (demo != null)
+				{
+					if (useNewCmgmt)
+					{
+						value = listNotes(cmgmtMgr, "Reminders", providerNo, demo);
+					}
+					else
+					{
+						value = demographic.EctInfo.getReminders();
+					}
+					//if( !value.equals("") ) {
+					if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single"))
+					{
+						value = StringUtils.lineBreaks(value);
+					}
 
-                        value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                        out.println("info = '" + value + "'");
-                    //}
-                 }
-              %>
+					value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+					out.println("info = '" + value + "'");
+					//}
+				}%>
     } //end switch
 
     if( txtArea.value.length > 0 && info.length > 0 )
@@ -677,60 +694,44 @@ function fetchAttached() {
 <html:form action="/oscarEncounter/RequestConsultation"
 	onsubmit="alert('HTHT'); return false;">
 	<%
-        oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm thisForm;
-        thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
-        //System.out.println("Requested ID :"+requestId);
-        if (requestId !=null ){
-
-                thisForm.setAllergies(consultUtil.allergies);
-                thisForm.setReasonForConsultation(consultUtil.reasonForConsultation);
-                thisForm.setClinicalInformation(consultUtil.clinicalInformation);
-                thisForm.setCurrentMedications(consultUtil.currentMedications);
-                thisForm.setReferalDate(consultUtil.referalDate);
-                thisForm.setSendTo(consultUtil.sendTo);
-                thisForm.setService(consultUtil.service);
-                thisForm.setStatus(consultUtil.status);
-                thisForm.setAppointmentDay(consultUtil.appointmentDay);
-                thisForm.setAppointmentMonth(consultUtil.appointmentMonth);
-                thisForm.setAppointmentYear(consultUtil.appointmentYear);
-//                thisForm.setAppointmentTime(consultUtil.appointmentTime);
-                thisForm.setAppointmentHour(consultUtil.appointmentHour);
-                thisForm.setAppointmentMinute(consultUtil.appointmentMinute);
-                thisForm.setAppointmentPm(consultUtil.appointmentPm);
-                thisForm.setConcurrentProblems(consultUtil.concurrentProblems);
-                thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
-                thisForm.setUrgency(consultUtil.urgency);
-                thisForm.setPatientWillBook(consultUtil.pwb);
-
-                if( !consultUtil.teamVec.contains(consultUtil.sendTo) ) {
-                    consultUtil.teamVec.add(consultUtil.sendTo);
-                }
-                // System.out.println("this is from in the form setter "+ consultUtil.patientName);
-
-
-        }else if(request.getAttribute("validateError") == null){
-            //  new request
-            if( demo != null ) {
-                        thisForm.setAllergies(demographic.RxInfo.getAllergies());
-
-			if(props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications")) {
-                            thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
-			} else {
-                            thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
+		EctConsultationFormRequestForm thisForm;
+		thisForm = (EctConsultationFormRequestForm)request.getAttribute("EctConsultationFormRequestForm");
+	
+		if (requestId != null)
+		{
+			EctViewRequestAction.fillFormValues(thisForm, consultUtil);
+		}
+		else if (segmentId != null)
+		{
+			EctViewRequestAction.fillFormValues(thisForm, segmentId);
+		}
+		else if (request.getAttribute("validateError") == null)
+		{
+			//  new request
+			if (demo != null)
+			{
+				thisForm.setAllergies(demographic.RxInfo.getAllergies());
+	
+				if (props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications"))
+				{
+					thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
+				}
+				else
+				{
+					thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
+				}
+	
+				team = consultUtil.getProviderTeam(consultUtil.mrp);
 			}
-
-                        team = consultUtil.getProviderTeam(consultUtil.mrp);
-            }
-
-                thisForm.setStatus("1");
-                
-                thisForm.setSendTo(team);
-                //thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
-        	thisForm.setAppointmentYear(year);
-
-	}
-
-        %>
+	
+			thisForm.setStatus("1");
+	
+			thisForm.setSendTo(team);
+			//thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
+			thisForm.setAppointmentYear(year);
+	
+		}
+	%>
 
 	<input type="hidden" name="providerNo" value="<%=providerNo%>">
 	<input type="hidden" name="demographicNo" value="<%=demo%>">
@@ -761,7 +762,7 @@ function fetchAttached() {
 							<td class="stat" colspan="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCreated" />:</td>
 						</tr>
 						<tr>
-							<td class="stat" colspan="2" align="right" nowrap><%=consultUtil.getProviderName(consultUtil.providerNo) %>
+							<td class="stat" colspan="2" align="right" nowrap><%=consultUtil.getProviderName(consultUtil.providerNo)%>
 							</td>
 						</tr>
 					</table>
@@ -865,10 +866,19 @@ function fetchAttached() {
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
 							</td>
 							<td align="right" class="tite1">
-							<%if ( request.getAttribute("id") != null) {%> <html:text
-								styleClass="righty" property="referalDate" /> <%}else{%> <html:text
+							<%
+								if (request.getAttribute("id") != null)
+										{
+							%> <html:text
+								styleClass="righty" property="referalDate" /> <%
+ 	}
+ 			else
+ 			{
+ %> <html:text
 								styleClass="righty" property="referalDate"
-								value="<%=formattedDate%>" /> <%}%>
+								value="<%=formattedDate%>" /> <%
+ 	}
+ %>
 							</td>
 						</tr>
 						<tr>
@@ -936,7 +946,7 @@ function fetchAttached() {
 						</tr>
 						<tr>
 							<td class="tite4"><a
-								href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message
+								href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName()%>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate"
 							/>:</a>
 
@@ -952,20 +962,34 @@ function fetchAttached() {
 									<td class="tite3"><html:text size="5" maxlength="4"
 										property="appointmentYear" /></td>
 									<td class="tite3"><html:select property="appointmentMonth">
-										<% for (int i=1; i < 13; i = i + 1){
-                                    String month = Integer.toString(i);
-                                    if (i < 10){ month = "0"+month; }
-                                %>
+										<%
+											for (int i = 1; i < 13; i = i + 1)
+														{
+															String month = Integer.toString(i);
+															if (i < 10)
+															{
+																month = "0" + month;
+															}
+										%>
 										<html:option value="<%=month%>"><%=month%></html:option>
-										<%}%>
+										<%
+											}
+										%>
 									</html:select></td>
 									<td class="tite3"><html:select property="appointmentDay">
-										<% for (int i=1; i < 32; i = i + 1){
-                                    String dayOfWeek = Integer.toString(i);
-                                    if (i < 10){ dayOfWeek = "0"+dayOfWeek;}
-                                %>
+										<%
+											for (int i = 1; i < 32; i = i + 1)
+														{
+															String dayOfWeek = Integer.toString(i);
+															if (i < 10)
+															{
+																dayOfWeek = "0" + dayOfWeek;
+															}
+										%>
 										<html:option value="<%=dayOfWeek%>"><%=dayOfWeek%></html:option>
-										<%}%>
+										<%
+											}
+										%>
 
 									</html:select></td>
 								</tr>
@@ -980,19 +1004,30 @@ function fetchAttached() {
 							<table>
 								<tr>
 									<td><html:select property="appointmentHour">
-										<% for (int i=1; i < 13; i = i + 1){
-                                    String hourOfday = Integer.toString(i);
-                                %>
+										<%
+											for (int i = 1; i < 13; i = i + 1)
+														{
+															String hourOfday = Integer.toString(i);
+										%>
 										<html:option value="<%=hourOfday%>"><%=hourOfday%></html:option>
-										<%}%>
+										<%
+											}
+										%>
 									</html:select></td>
 									<td><html:select property="appointmentMinute">
-										<% for (int i=0; i < 60; i = i + 1){
-                                    String minuteOfhour = Integer.toString(i);
-                                    if (i < 10){ minuteOfhour = "0"+minuteOfhour;}
-                                %>
+										<%
+											for (int i = 0; i < 60; i = i + 1)
+														{
+															String minuteOfhour = Integer.toString(i);
+															if (i < 10)
+															{
+																minuteOfhour = "0" + minuteOfhour;
+															}
+										%>
 										<html:option value="<%=minuteOfhour%>"><%=minuteOfhour%></html:option>
-										<%}%>
+										<%
+											}
+										%>
 									</html:select></td>
 									<td><html:select property="appointmentPm">
 										<html:option value="AM">AM</html:option>
@@ -1056,11 +1091,15 @@ function fetchAttached() {
 							<td class="tite3"><html:select property="sendTo">
 								<html:option value="-1">---- <bean:message
 										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgTeams" /> ----</html:option>
-								<% for (int i =0; i < consultUtil.teamVec.size();i++){
-                            String te = (String) consultUtil.teamVec.elementAt(i);
-                        %>
+								<%
+									for (int i = 0; i < consultUtil.teamVec.size(); i++)
+												{
+													String te = (String)consultUtil.teamVec.elementAt(i);
+								%>
 								<html:option value="<%=te%>"><%=te%></html:option>
-								<%}%>
+								<%
+									}
+								%>
 							</html:select></td>
 						</tr>
 
@@ -1069,8 +1108,9 @@ function fetchAttached() {
 <special:SpecialEncounterTag moduleName="eyeform">
 
 <%
-String aburl1="/EyeForm.do?method=addCC&demographicNo="+demo;
-if (requestId!=null) aburl1+="&requestId="+requestId; %>
+	String aburl1 = "/EyeForm.do?method=addCC&demographicNo=" + demo;
+					if (requestId != null) aburl1 += "&requestId=" + requestId;
+%>
 <plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl1 %>"></plugin:include>
 </special:SpecialEncounterTag>
 </plugin:hideWhenCompExists>
@@ -1129,11 +1169,18 @@ if (requestId!=null) aburl1+="&requestId="+requestId; %>
 					<table width="100%">
 						<tr>
 							<td width="30%" class="tite4">
-							<% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) {
-                                    out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
-                                } else { %> <bean:message
+							<%
+								if (props.getProperty("significantConcurrentProblemsTitle", "").length() > 1)
+										{
+											out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
+										}
+										else
+										{
+							%> <bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems" />:
-							<% } %>
+							<%
+ 	}
+ %>
 							</td>
 							<td><input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].concurrentProblems);" />&nbsp;
 							<input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
@@ -1155,9 +1202,10 @@ if (requestId!=null) aburl1+="&requestId="+requestId; %>
  <!--add for special encounter-->
 <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
 <special:SpecialEncounterTag moduleName="eyeform">
-<%String aburl2="/EyeForm.do?method=specialConRequest&demographicNo="+demo+"&appNo="+request.getParameter("appNo");
-if (requestId!=null) aburl2+="&requestId="+requestId;
-System.out.println("requestId:"+requestId);
+<%
+	String aburl2 = "/EyeForm.do?method=specialConRequest&demographicNo=" + demo + "&appNo=" + request.getParameter("appNo");
+					if (requestId != null) aburl2 += "&requestId=" + requestId;
+					System.out.println("requestId:" + requestId);
 %>
 <html:hidden property="specialencounterFlag" value="true"/>
 <plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl2 %>"></plugin:include>
@@ -1168,11 +1216,18 @@ System.out.println("requestId:"+requestId);
 					<table width="100%">
 						<tr>
 							<td width="30%" class="tite4">
-							<% if(props.getProperty("currentMedicationsTitle", "").length() > 1) {
-                                    out.print(props.getProperty("currentMedicationsTitle", ""));
-                               } else { %> <bean:message
+							<%
+								if (props.getProperty("currentMedicationsTitle", "").length() > 1)
+										{
+											out.print(props.getProperty("currentMedicationsTitle", ""));
+										}
+										else
+										{
+							%> <bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications" />:
-							<% } %>
+							<%
+ 	}
+ %>
 							</td>
 							<td><input type="button" class="btn"
 								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>"
@@ -1198,21 +1253,40 @@ System.out.println("requestId:"+requestId);
 
 				<tr>
 					<td colspan=2><input type="hidden" name="submission" value="">
-					<%if (request.getAttribute("id") != null){ %>
+					<%
+						if (request.getAttribute("id") != null)
+								{
+					%>
 						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
 						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
 						<input name="updateAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
-						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+						<%
+							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
+										{
+						%>
 						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
-						<%}%>
-					<%}else{%> 
+						<%
+							}
+						%>
+					<%
+						}
+								else
+								{
+					%> 
 						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
 						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
 						<input name="submitAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
-						<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+						<%
+							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
+										{
+						%>
 						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>" onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
-						<%}%>
-					<%}%>
+						<%
+							}
+						%>
+					<%
+						}
+					%>
 					</td>
 				</tr>
 
@@ -1224,10 +1298,13 @@ System.out.println("requestId:"+requestId);
             document.EctConsultationFormRequestForm.phone.value = ("");
         	document.EctConsultationFormRequestForm.fax.value = ("");
         	document.EctConsultationFormRequestForm.address.value = ("");
-            <%if (request.getAttribute("id") != null){%>
+            <%if (request.getAttribute("id") != null)
+					{%>
                 setSpec('<%=consultUtil.service%>','<%=consultUtil.specialist%>');
                 FillThreeBoxes('<%=consultUtil.specialist%>');
-            <%}else{%>
+            <%}
+					else
+					{%>
                 document.EctConsultationFormRequestForm.service.options.selectedIndex = 0;
                 document.EctConsultationFormRequestForm.specialist.options.selectedIndex = 0;
             <%}%>
@@ -1262,25 +1339,25 @@ System.out.println("requestId:"+requestId);
 </script>
 </html:html>
 
-<%!
-    protected String listNotes(CaseManagementManager cmgmtMgr, String code, String providerNo, String demoNo) {
-         // filter the notes by the checked issues
-        List<Issue> issues = cmgmtMgr.getIssueInfoByCode(providerNo, code);
+<%!protected String listNotes(CaseManagementManager cmgmtMgr, String code, String providerNo, String demoNo)
+	{
+		// filter the notes by the checked issues
+		List<Issue> issues = cmgmtMgr.getIssueInfoByCode(providerNo, code);
 
-        String[] issueIds = new String[issues.size()];
-        int idx = 0;
-        for(Issue issue: issues) {
-            issueIds[idx] = String.valueOf(issue.getId());
-        }
+		String[] issueIds = new String[issues.size()];
+		int idx = 0;
+		for (Issue issue : issues)
+		{
+			issueIds[idx] = String.valueOf(issue.getId());
+		}
 
-        // need to apply issue filter
-        List<CaseManagementNote>notes = cmgmtMgr.getNotes(demoNo, issueIds);
-        StringBuffer noteStr = new StringBuffer();
-        for(CaseManagementNote n: notes) {
-            if( !n.isLocked() )
-                noteStr.append(n.getNote() + "\n");
-        }
+		// need to apply issue filter
+		List<CaseManagementNote> notes = cmgmtMgr.getNotes(demoNo, issueIds);
+		StringBuffer noteStr = new StringBuffer();
+		for (CaseManagementNote n : notes)
+		{
+			if (!n.isLocked()) noteStr.append(n.getNote() + "\n");
+		}
 
-        return noteStr.toString();
-    }
-%>
+		return noteStr.toString();
+	}%>
