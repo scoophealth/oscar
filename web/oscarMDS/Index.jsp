@@ -1077,8 +1077,6 @@ function wrapUp() {
                                     	{
 	                                    	%>
                                       			<a href="javascript:popupConsultation('<%=segmentID%>')"><%=(String) result.getPatientName()%></a>
-|
-	                                    		<a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                                     		<%                                    		
                                     	}
                                     	else

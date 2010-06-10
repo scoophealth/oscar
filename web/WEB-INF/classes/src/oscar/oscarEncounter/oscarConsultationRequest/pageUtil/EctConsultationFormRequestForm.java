@@ -119,6 +119,61 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private String patientHealthNum;
 	private String patientHealthCardVersionCode;
 	private String patientHealthCardType;
+	private String patientAge;
+	private String providerName;
+	private String professionalSpecialistName;
+	private String professionalSpecialistPhone;
+	private String professionalSpecialistAddress;
+	
+	private boolean viewOnly=false;
+	
+	public String getProfessionalSpecialistName() {
+    	return(StringUtils.trimToEmpty(professionalSpecialistName));
+    }
+
+	public void setProfessionalSpecialistName(String professionalSpecialistName) {
+    	this.professionalSpecialistName = professionalSpecialistName;
+    }
+
+	public String getProfessionalSpecialistPhone() {
+    	return(StringUtils.trimToEmpty(professionalSpecialistPhone));
+    }
+
+	public void setProfessionalSpecialistPhone(String professionalSpecialistPhone) {
+    	this.professionalSpecialistPhone = professionalSpecialistPhone;
+    }
+
+	public String getProfessionalSpecialistAddress() {
+    	return(StringUtils.trimToEmpty(professionalSpecialistAddress));
+    }
+
+	public void setProfessionalSpecialistAddress(String professionalSpecialistAddress) {
+    	this.professionalSpecialistAddress = professionalSpecialistAddress;
+    }
+
+	public boolean isViewOnly() {
+    	return viewOnly;
+    }
+
+	public void setViewOnly(boolean viewOnly) {
+    	this.viewOnly = viewOnly;
+    }
+
+	public String getProviderName() {
+    	return(StringUtils.trimToEmpty(providerName));
+    }
+
+	public void setProviderName(String providerName) {
+    	this.providerName = providerName;
+    }
+
+	public String getPatientAge() {
+    	return(StringUtils.trimToEmpty(patientAge));
+    }
+
+	public void setPatientAge(String patientAge) {
+    	this.patientAge = patientAge;
+    }
 
 	public String getAllergies() {
 		return(StringUtils.trimToEmpty(allergies));

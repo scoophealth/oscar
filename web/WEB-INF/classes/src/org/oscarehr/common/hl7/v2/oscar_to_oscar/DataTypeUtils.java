@@ -1,7 +1,6 @@
 package org.oscarehr.common.hl7.v2.oscar_to_oscar;
 
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -166,6 +165,32 @@ public final class DataTypeUtils {
 		PLN pln = prd.getProviderIdentifiers(0);
 		pln.getIDNumber().setValue(provider.getProviderNo());
 	}
+	
+	/**
+	 * @return a detached and non-persisted Provider model object with data filed in from the PRD.
+	 * @throws HL7Exception 
+	 */
+	public static Provider parsePrdAsProvider(PRD prd) throws HL7Exception
+	{
+		Provider provider=new Provider();
+		
+		XPN xpn = prd.getProviderName(0);
+		provider.setLastName(xpn.getFamilyName().getSurname().getValue());
+		provider.setFirstName(xpn.getGivenName().getValue());
+		provider.setTitle(xpn.getPrefixEgDR().getValue());
+		
+		XAD xad=prd.getProviderAddress(0);
+		provider.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
+
+		XTN xtn = prd.getProviderCommunicationInformation(0);
+		provider.setWorkPhone(xtn.getUnformattedTelephoneNumber().getValue());
+		provider.setEmail(xtn.getEmailAddress().getValue());
+		
+		PLN pln = prd.getProviderIdentifiers(0);
+		provider.setProviderNo(pln.getIDNumber().getValue());
+
+		return(provider);
+	}
 
 	/**
 	 * @param prd
@@ -199,6 +224,25 @@ public final class DataTypeUtils {
 		pln.getIDNumber().setValue(professionalSpecialist.getId().toString());
 	}
 
+	public static ProfessionalSpecialist parsePrdAsProfessionalSpecialist(PRD prd) throws HL7Exception
+	{
+		ProfessionalSpecialist professionalSpecialist=new ProfessionalSpecialist();
+		
+		XPN xpn = prd.getProviderName(0);
+		professionalSpecialist.setLastName(xpn.getFamilyName().getSurname().getValue());
+		professionalSpecialist.setFirstName(xpn.getGivenName().getValue());
+		professionalSpecialist.setProfessionalLetters(xpn.getPrefixEgDR().getValue());
+		
+		XAD xad = prd.getProviderAddress(0);
+		professionalSpecialist.setStreetAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
+		
+		XTN xtn = prd.getProviderCommunicationInformation(0);
+		professionalSpecialist.setPhoneNumber(xtn.getUnformattedTelephoneNumber().getValue());
+		professionalSpecialist.setEmailAddress(xtn.getEmailAddress().getValue());
+
+		return(professionalSpecialist);
+	}
+	
 	/**
 	 * @param pid
 	 * @param pidNumber pass in the # of this pid for the sequence, i.e. normally it's 1 if you only have 1 pid entry. if this is a list of pids, then the first one is 1, second is 2 etc..
@@ -218,11 +262,17 @@ public final class DataTypeUtils {
 		cx.getAssigningJurisdiction().getIdentifier().setValue(demographic.getHcType());
 
 		GregorianCalendar tempCalendar = new GregorianCalendar();
-		tempCalendar.setTime(demographic.getEffDate());
-		cx.getEffectiveDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
-
-		tempCalendar.setTime(demographic.getHcRenewDate());
-		cx.getExpirationDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
+		if (demographic.getEffDate()!=null)
+		{
+			tempCalendar.setTime(demographic.getEffDate());
+			cx.getEffectiveDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
+		}
+		
+		if (demographic.getHcRenewDate()!=null)
+		{
+			tempCalendar.setTime(demographic.getHcRenewDate());
+			cx.getExpirationDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));			
+		}
 
 		XPN xpn = pid.getPatientName(0);
 		xpn.getFamilyName().getSurname().setValue(demographic.getLastName());
@@ -244,9 +294,12 @@ public final class DataTypeUtils {
 		// U Unspecified
 		xpn.getNameTypeCode().setValue("L");
 
-		TS bday = pid.getDateTimeOfBirth();
-		tempCalendar = demographic.getBirthDay();
-		bday.getTime().setDatePrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
+		if (demographic.getBirthDay()!=null)
+		{
+			TS bday = pid.getDateTimeOfBirth();
+			tempCalendar = demographic.getBirthDay();
+			bday.getTime().setDatePrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));		
+		}
 
 		// Value Description
 		// -----------------

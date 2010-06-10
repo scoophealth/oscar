@@ -49,6 +49,7 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.servlet.ServletException;
@@ -65,13 +66,16 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
-import oscar.util.DateUtils;
+import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v25.message.REF_I12;
 import ca.uhn.hl7v2.model.v25.segment.PID;
+import ca.uhn.hl7v2.model.v25.segment.PRD;
 
 public class EctViewRequestAction extends Action {
 	
@@ -126,6 +130,11 @@ public class EctViewRequestAction extends Action {
         thisForm.setPatientPhone(consultUtil.patientPhone);
         thisForm.setPatientSex(consultUtil.patientSex);
         thisForm.setPatientWPhone(consultUtil.patientWPhone);
+        thisForm.setPatientAge(consultUtil.patientAge);
+        
+        thisForm.setProviderName(consultUtil.getProviderName(consultUtil.providerNo));
+        
+        thisForm.setViewOnly(false);
 	}
 	
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception
@@ -139,7 +148,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setCurrentMedications(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CURRENT_MEDICATIONS));
         
         GregorianCalendar referralDate=DataTypeUtils.getCalendarFromDTM(refI12.getRF1().getEffectiveDate().getTime());
-        thisForm.setReferalDate(DateUtils.getISODateTimeFormatNoT(referralDate));
+        thisForm.setReferalDate(DateFormatUtils.ISO_DATE_FORMAT.format(referralDate));
 
 //        thisForm.setSendTo();
 //        thisForm.setService(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
@@ -168,21 +177,39 @@ public class EctViewRequestAction extends Action {
         Demographic demographic=DataTypeUtils.parsePid(pid);
         
         StringBuilder address=new StringBuilder();
-        if (demographic.getAddress()!=null) address.append(demographic.getAddress()).append(", ");
+        if (demographic.getAddress()!=null) address.append(demographic.getAddress()).append("<br />");
         if (demographic.getCity()!=null) address.append(demographic.getCity()).append(", ");
         if (demographic.getProvince()!=null) address.append(demographic.getProvince());
         thisForm.setPatientAddress(address.toString());
-        
-        thisForm.setPatientDOB(DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getBirthDay()));
+
+        if (demographic.getBirthDay()!=null)
+        {
+	        thisForm.setPatientDOB(DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getBirthDay()));
+	        String ageString=UtilDateUtilities.calcAgeAtDate(demographic.getBirthDay().getTime(), new Date());
+	        thisForm.setPatientAge(ageString);
+        }
         
         thisForm.setPatientHealthNum(demographic.getHin());
         thisForm.setPatientHealthCardType(demographic.getHcType());
         thisForm.setPatientHealthCardVersionCode(demographic.getVer());
         
-        thisForm.setPatientName(demographic.getFirstName()+' '+demographic.getLastName());
+        thisForm.setPatientName(demographic.getLastName()+','+demographic.getFirstName());
         thisForm.setPatientPhone(demographic.getPhone());
         thisForm.setPatientSex(demographic.getSex());
 //        thisForm.setPatientWPhone(patientAddress);
-	}
-	
+        
+        // referring provider
+        PRD referringPrd=RefI12.getPrdByRoleId(refI12, "RP");
+        Provider provider=DataTypeUtils.parsePrdAsProvider(referringPrd);
+        thisForm.setProviderName(provider.getLastName()+", "+provider.getFirstName());
+
+        thisForm.setViewOnly(true);
+
+        // referredTo specialist
+        PRD referredToPrd=RefI12.getPrdByRoleId(refI12, "RT");
+        ProfessionalSpecialist professionalSpecialist=DataTypeUtils.parsePrdAsProfessionalSpecialist(referredToPrd);
+        thisForm.setProfessionalSpecialistName(professionalSpecialist.getLastName()+", "+professionalSpecialist.getFirstName());
+        thisForm.setProfessionalSpecialistAddress(professionalSpecialist.getStreetAddress());
+        thisForm.setProfessionalSpecialistPhone(professionalSpecialist.getPhoneNumber());
+	}	
 }

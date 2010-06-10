@@ -19,6 +19,7 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v25.group.REF_I12_PATIENT_VISIT;
 import ca.uhn.hl7v2.model.v25.message.REF_I12;
 import ca.uhn.hl7v2.model.v25.segment.NTE;
+import ca.uhn.hl7v2.model.v25.segment.PRD;
 import ca.uhn.hl7v2.model.v25.segment.PV1;
 import ca.uhn.hl7v2.model.v25.segment.RF1;
 
@@ -52,7 +53,7 @@ public final class RefI12 {
 		ProfessionalSpecialist referredToProfessionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 		StreetAddressDataHolder referredToOfficeStreetAddress=new StreetAddressDataHolder();
 		referredToOfficeStreetAddress.streetAddress=referredToProfessionalSpecialist.getStreetAddress();
-		DataTypeUtils.fillPrd(referralMsg.getPROVIDER_CONTACT(1).getPRD(), referredToProfessionalSpecialist, "RT", "Referred to Provider", referringOfficeStreetAddress);
+		DataTypeUtils.fillPrd(referralMsg.getPROVIDER_CONTACT(1).getPRD(), referredToProfessionalSpecialist, "RT", "Referred to Provider", referredToOfficeStreetAddress);
 
 		DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
 		Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());		
@@ -149,4 +150,34 @@ public final class RefI12 {
 		
 		return(null);
 	}
+	
+	/**
+	 * Get the first PRD entry with the matching providerRoleId, the id is the 2 letter abbreviation.
+	 * Value Description
+	 * -----------------
+	 * RP Referring Provider
+	 * PP Primary Care Provider
+	 * CP Consulting Provider
+	 * RT Referred to Provider
+	 */
+	public static PRD getPrdByRoleId(REF_I12 referralMsg, String providerRoleId) throws HL7Exception
+	{
+		logger.debug("Looking for prd roleId : "+providerRoleId);
+		logger.debug("Number of prd segments : "+referralMsg.getPROVIDER_CONTACTReps());
+		for (int i=0; i<referralMsg.getPROVIDER_CONTACTReps(); i++)
+		{
+            PRD prd=referralMsg.getPROVIDER_CONTACT(i).getPRD();
+            String prdRoleId=prd.getProviderRole(0).getIdentifier().getValue();
+
+            logger.debug("prd role Id : "+prdRoleId);
+
+            if (providerRoleId.equals(prdRoleId))
+            {
+            	return(prd);
+            }
+		}
+		
+		return(null);
+	}
+	
 }

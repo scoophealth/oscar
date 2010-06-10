@@ -49,8 +49,8 @@ public class EctConsultationFormRequestUtil {
                         "," + db.getString(rs, "province") + "," + db.getString(rs, "postal");
                 patientPhone = db.getString(rs, "phone");
                 patientWPhone = db.getString(rs, "phone2");
-                patientDOB = db.getString(rs, "year_of_birth") + "/" +
-                        db.getString(rs, "month_of_birth") + "/" + db.getString(rs, "date_of_birth");
+                patientDOB = db.getString(rs, "year_of_birth") + "-" +
+                        db.getString(rs, "month_of_birth") + "-" + db.getString(rs, "date_of_birth");
                 patientHealthNum = db.getString(rs, "hin");
                 patientSex = db.getString(rs, "sex");
                 patientHealthCardType = db.getString(rs, "hc_type");
@@ -62,7 +62,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             verdict = false;
         }
         return verdict;
@@ -84,7 +84,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             verdict = false;
         }
         return verdict;
@@ -107,7 +107,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             verdict = false;
         }
         return verdict;
@@ -168,7 +168,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             verdict = false;
         }
         return verdict;
@@ -203,7 +203,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return retval;
 
@@ -226,7 +226,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return retval;
     }
@@ -242,7 +242,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return retval;
     }
@@ -258,7 +258,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return retval;
     }
@@ -274,7 +274,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return retval;
     }
@@ -290,7 +290,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return retval;
     }
@@ -306,7 +306,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return retval;
     }
