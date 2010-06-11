@@ -46,7 +46,7 @@ public class FrmStudyPING_DiabetesRecord extends FrmStudyRecord {
 				props.setProperty("demographic_no", rs.getString("demographic_no"));
 				props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
 				props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("birthDate", (dob!=null?UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"):null));
+                props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
 				props.setProperty("pName", db.getString(rs, "pName"));
 			}
             rs.close();
