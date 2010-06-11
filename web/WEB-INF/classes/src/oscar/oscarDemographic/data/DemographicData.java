@@ -181,12 +181,19 @@ public class DemographicData {
 	}
 
 	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String dob) {
-		Date bDate = UtilDateUtilities.StringToDate(dob, "yyyy-MM-dd");
-		String year_of_birth = UtilDateUtilities.DateToString(bDate, "yyyy");
-		String month_of_birth = UtilDateUtilities.DateToString(bDate, "MM");
-		String date_of_birth = UtilDateUtilities.DateToString(bDate, "dd");
-		// System.out.println("lastname "+lastname+" firstname "+firstname+" year_of_birth "+year_of_birth+" month "+month_of_birth+" date "+date_of_birth);
-		return getDemographicWithLastFirstDOB(lastname, firstname, year_of_birth, month_of_birth, date_of_birth);
+		if (dob!=null)
+		{
+			Date bDate = UtilDateUtilities.StringToDate(dob, "yyyy-MM-dd");
+			String year_of_birth = UtilDateUtilities.DateToString(bDate, "yyyy");
+			String month_of_birth = UtilDateUtilities.DateToString(bDate, "MM");
+			String date_of_birth = UtilDateUtilities.DateToString(bDate, "dd");
+			// System.out.println("lastname "+lastname+" firstname "+firstname+" year_of_birth "+year_of_birth+" month "+month_of_birth+" date "+date_of_birth);
+			return getDemographicWithLastFirstDOB(lastname, firstname, year_of_birth, month_of_birth, date_of_birth);
+		}
+		else 
+		{
+			return(getDemographicWithLastFirstDOB(lastname, firstname, null,null,null));
+		}
 	}
 
 	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
