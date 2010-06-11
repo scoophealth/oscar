@@ -388,7 +388,7 @@ public class ImportDemographicDataAction2 extends Action {
 
 		    String cDemoNo = dd.getDemoNoByNamePhoneEmail(cFirstName, cLastName, homePhone, workPhone, cEmail);
 		    if (cDemoNo.equals("")) {   //add new demographic
-			demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, "0001", "01", "01", "", "",
+			demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, null, null, null, "", "",
 						"", "", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
 			cDemoNo = demoRes.getId();
 			if (!workExt.equals("")) dExt.addKey("", cDemoNo, "wPhoneExt", workExt);
