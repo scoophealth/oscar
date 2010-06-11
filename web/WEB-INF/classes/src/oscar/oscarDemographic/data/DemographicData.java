@@ -194,7 +194,11 @@ public class DemographicData {
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "SELECT demographic_no FROM demographic " + " WHERE last_name like '" + lastname + "%' and first_name like '" + lastname + "%'  and year_of_birth = '" + year_of_birth + "' and month_of_birth = '" + month_of_birth + "' and date_of_birth = '" + date_of_birth + "'";
+			String sql = "SELECT demographic_no FROM demographic " + " WHERE last_name like '" + lastname + "%' and first_name like '" + lastname + "%'";
+			if (year_of_birth!=null) sql=sql+"  and year_of_birth = '" + year_of_birth + "'";
+			if (month_of_birth!=null) sql=sql+" and month_of_birth = '" + month_of_birth + "'";
+			if (date_of_birth!=null) sql=sql+" and date_of_birth = '" + date_of_birth + "'";
+			
 			rs = db.GetSQL(sql);
 			while (rs.next()) {
 				String demoNo = db.getString(rs, "demographic_no");
