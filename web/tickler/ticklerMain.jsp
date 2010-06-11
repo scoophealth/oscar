@@ -40,26 +40,14 @@
   String providerview;
   String assignedTo;
   if( request.getParameter("providerview")==null ) {
-      //v = viewMap.get("providerview");
-      //if( v != null ) {
-      //    providerview = v.getValue();
-      //}
-      //else {
           providerview = "all";
-      //}
   }
   else {
       providerview = request.getParameter("providerview");
   }
   
   if( request.getParameter("assignedTo") == null ) {
-      //v = viewMap.get("assignedTo");
-      //if( v!= null ) {
-      //    assignedTo = v.getValue();
-      //}
-      //else {
           assignedTo = "all";
-      //}
   }
   else {
       assignedTo = request.getParameter("assignedTo");
@@ -75,47 +63,27 @@ GregorianCalendar now=new GregorianCalendar();
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   %>
-<% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
-  //String ticklerview=request.getParameter("ticklerview")==null?"A":request.getParameter("ticklerview");
-   String ticklerview;
+<%
+ String ticklerview;
    if( request.getParameter("ticklerview") == null ) {
-      //v = viewMap.get("ticklerview");
-      //if( v!= null ) {
-      //    ticklerview = v.getValue();
-      //}
-      //else {
           ticklerview = "A";
-      //}
   }
   else {
       ticklerview = request.getParameter("ticklerview");
   }
 
   
-  //String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
   String xml_vdate;
    if( request.getParameter("xml_vdate") == null ) {
-      //v = viewMap.get("dateBegin");
-      //if( v!= null ) {
-      //    xml_vdate = v.getValue();
-      //}
-      //else {
           xml_vdate = "";
-      //}
   }
   else {
       xml_vdate = request.getParameter("xml_vdate");
   }
-  //String xml_appointment_date = request.getParameter("xml_appointment_date")==null?MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay):request.getParameter("xml_appointment_date");
+
   String xml_appointment_date;
    if( request.getParameter("xml_appointment_date") == null ) {
-      //v = viewMap.get("dateEnd");
-      //if( v!= null ) {
-      //    xml_appointment_date = v.getValue();
-      //}
-      //else {
           xml_appointment_date = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-      //}
   }
   else {
       xml_appointment_date = request.getParameter("xml_appointment_date");
@@ -649,38 +617,10 @@ function changeSite(sel) {
                             String provider;
                             String taskAssignedTo = "";
                             if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-                            if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+                            if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // any early start date should suffice for selecting since the beginning
                             ResultSet rs=null ;
-                            /*String[] param =new String[5];
-                            boolean bodd=false;
-                            param[0] = ticklerview;
-                            
-                            param[1] = dateBegin;
-                            param[2] = dateEnd;
-                            param[3] = request.getParameter("providerview")==null?"%": request.getParameter("providerview");
-                            param[4] = request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo");
-                            System.out.println(request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo"));
-                            
-                            rs = apptMainBean.queryResults(param, "search_tickler");
-                            while (rs.next()) {
-                            nItems = nItems +1;
-                            
-                            if (apptMainBean.getString(rs,"provider_last")==null || apptMainBean.getString(rs,"provider_first")==null){
-                            provider = "";
-                            }
-                            else{
-                            provider = apptMainBean.getString(rs,"provider_last") + ", " + apptMainBean.getString(rs,"provider_first");
-                            }
-                            
-                            if (apptMainBean.getString(rs,"assignedLast")==null || apptMainBean.getString(rs,"assignedFirst")==null){
-                            taskAssignedTo = "";
-                            }
-                            else{
-                            taskAssignedTo = apptMainBean.getString(rs,"assignedLast") + ", " + apptMainBean.getString(rs,"assignedFirst");
-                            }
-                            bodd=bodd?false:true;
-                            vGrantdate = apptMainBean.getString(rs,"service_date")+ ".0";*/
-			    String[] param =new String[6];
+
+			    			String[] param =new String[6];
                             boolean bodd=false;
                             param[0] = ticklerview;
                             
@@ -691,8 +631,7 @@ function changeSite(sel) {
                             				"(p.provider_no='"+user_no+"' or p.team=(select pp.team from provider pp where pp.provider_no='"+user_no+"'))" 
                             				: "d.provider_no like '%'") 
                             		: "d.provider_no like '"+providerview+"'"; 
-                            param[4] = assignedTo.equals("all") ? "%" : assignedTo; //request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo");
-                            //System.out.println(request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo"));
+                            param[4] = assignedTo.equals("all") ? "%" : assignedTo; 
                             
                             String colNames[] = new String[] {"last_name", "provider_last", "service_date", "update_date", "priority", "assignedLast", "status", "message"}; 
                             v = null;
@@ -717,7 +656,7 @@ function changeSite(sel) {
                             java.sql.PreparedStatement ps =  db.getConnection().prepareStatement(sql);
                               
                             rs = db.GetSQL(sql);
-                            //rs = apptMainBean.queryResults(param, "search_ticklerOrdered");
+                            
                             while (rs.next()) {
                             nItems = nItems +1;
                             
