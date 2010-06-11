@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import oscar.oscarDB.DBHandler;
@@ -843,15 +844,9 @@ public class DemographicData {
 		// "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)"
 		// },
 
-		if (end_date != null && end_date.equals("")) {
-			end_date = "0001-01-01";
-		}
-		if (eff_date != null && eff_date.equals("")) {
-			eff_date = "0001-01-01";
-		}
-		if (hc_renew_date != null && hc_renew_date.equals("")) {
-			hc_renew_date = "0001-01-01";
-		}
+		end_date=StringUtils.trimToNull(end_date);
+		eff_date=StringUtils.trimToNull(eff_date);
+		hc_renew_date=StringUtils.trimToNull(hc_renew_date);
 
 		ArrayList demos = new ArrayList();
 		if (hin != null && !hin.trim().equals("")) {
