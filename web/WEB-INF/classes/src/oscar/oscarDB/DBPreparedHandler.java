@@ -152,7 +152,8 @@ public class DBPreparedHandler {
         for (int i = 0; i < params.length; i++) {
         	DBPreparedHandlerParam param = params[i];
         	
-        	if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){
+        	if (param==null) preparedStmt.setString(i+1, null);
+        	else if(DBPreparedHandlerParam.PARAM_STRING.equals(param.getParamType())){
                     preparedStmt.setString(i+1, param.getStringValue());
         	}else if (DBPreparedHandlerParam.PARAM_DATE.equals(param.getParamType())){
                     preparedStmt.setDate(i+1, param.getDateValue());
