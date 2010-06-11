@@ -328,10 +328,10 @@ function loadPage() {
         Calendar cal = Calendar.getInstance();
         cal.set(Integer.parseInt(startDate.substring(0,4)), Integer.parseInt(startDate.substring(5,startDate.lastIndexOf('-'))) , Integer.parseInt(startDate.substring(startDate.lastIndexOf('-')+1)) );
         cal.add(Calendar.YEAR,-1);
-        paramI[0]=sdf.format(cal.getTime()); //"0001-01-01";
+        paramI[0]=sdf.format(cal.getTime());
         cal.set(Integer.parseInt(endDate.substring(0,4)), Integer.parseInt(endDate.substring(5,endDate.lastIndexOf('-'))) , Integer.parseInt(endDate.substring(endDate.lastIndexOf('-')+1)) );
         cal.add(Calendar.YEAR, 1);
-        paramI[1]=sdf.format(cal.getTime()); //"0001-01-01";
+        paramI[1]=sdf.format(cal.getTime());
         rs = reportMainBean.queryResults(paramI, "select_maxformar_id");
         System.out.println("sdate " + paramI[0] + " edate " + paramI[1]);
         while (rs.next()) {
@@ -341,13 +341,13 @@ function loadPage() {
         Properties demoProp = new Properties();
         
         String[] param =new String[2];
-        param[0]=startDate; //"0001-01-01";
-        param[1]=endDate; //"0001-01-01";
+        param[0]=startDate; 
+        param[1]=endDate; 
         String[] paramb = new String[4];
-        paramb[0]=startDate; //"0001-01-01";
-        paramb[1]=endDate; //"0001-01-01";
-        paramb[2]=startDate; //"0001-01-01";
-        paramb[3]=endDate; //"0001-01-01";
+        paramb[0]=startDate; 
+        paramb[1]=endDate; 
+        paramb[2]=startDate; 
+        paramb[3]=endDate; 
         int[] itemp1 = new int[2];
         itemp1[1] = Integer.parseInt(strLimit1);
         itemp1[0] = Integer.parseInt(strLimit2);
@@ -380,7 +380,7 @@ function loadPage() {
         %>
 		<tr bgcolor="<%=bodd?weakcolor:"white"%>">
 			<td><%=nItems%></td>
-			<td align="center" nowrap><%=reportMainBean.getString(rs,"c_finalEDB")!=null?reportMainBean.getString(rs,"c_finalEDB").replace('-','/'):"0001/01/01"%></td>
+			<td align="center" nowrap><%=reportMainBean.getString(rs,"c_finalEDB")!=null?reportMainBean.getString(rs,"c_finalEDB").replace('-','/'):"----/--/--"%></td>
 			<td><%=reportMainBean.getString(rs,"c_pName")%></td>
 			<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
 			<td><%=reportMainBean.getString(rs,"pg1_age")%></td>
