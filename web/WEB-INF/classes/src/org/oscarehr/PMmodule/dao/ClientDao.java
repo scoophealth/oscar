@@ -488,18 +488,6 @@ public class ClientDao extends HibernateDaoSupport {
 			throw new IllegalArgumentException();
 		}
 
-		if (client.getYearOfBirth() != null && client.getYearOfBirth().equals("")) {
-			client.setYearOfBirth("0001");
-		}
-
-		if (client.getMonthOfBirth() != null && client.getMonthOfBirth().equals("")) {
-			client.setMonthOfBirth("01");
-		}
-
-		if (client.getDateOfBirth() != null && client.getDateOfBirth().equals("")) {
-			client.setDateOfBirth("01");
-		}
-
 		this.getHibernateTemplate().saveOrUpdate(client);
 
 		if (log.isDebugEnabled()) {
