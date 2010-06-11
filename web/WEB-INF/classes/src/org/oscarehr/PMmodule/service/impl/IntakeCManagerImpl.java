@@ -78,13 +78,13 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 			client.setPin("");
 			
 			if (form.getYearOfBirth().equals("")) {
-				form.setYearOfBirth("0001");
+				form.setYearOfBirth(null);
 			}
 			if (form.getMonthOfBirth().equals("")) {
-				form.setMonthOfBirth("01");
+				form.setMonthOfBirth(null);
 			}
 			if (form.getDayOfBirth().equals("")) {
-				form.setDayOfBirth("01");
+				form.setDayOfBirth(null);
 			}
 			
 			client.setYearOfBirth(form.getYearOfBirth());

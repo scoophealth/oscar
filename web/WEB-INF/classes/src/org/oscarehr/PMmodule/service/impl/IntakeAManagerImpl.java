@@ -98,13 +98,13 @@ public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAMana
 			client.setPcnIndicator("");
 			client.setPin("");
 			if(form.getYear().equals("")) {
-				form.setYear("0001");
+				form.setYear(null);
 			}
 			if(form.getMonth().equals("")) {
-				form.setMonth("01");
+				form.setMonth(null);
 			}
 			if(form.getDay().equals("")){
-				form.setDay("01");
+				form.setDay(null);
 			}
 			client.setYearOfBirth(form.getYear());
 			client.setMonthOfBirth(form.getMonth());
