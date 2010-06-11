@@ -613,6 +613,8 @@ public class DemographicData {
 		}
 
 		public String getDob(String seperator) {
+			if (getYearOfBirth()==null || getMonthOfBirth()==null || getDateOfBirth()==null) return(null);
+			
 			return this.getYearOfBirth() + seperator + this.getMonthOfBirth() + seperator + this.getDateOfBirth();
 		}
 
