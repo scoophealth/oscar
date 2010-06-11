@@ -100,6 +100,8 @@ public class UtilDateUtilities {
      * @return age string ( ie 2 months, 4 years .etc )
      */    
     public static String calcAgeAtDate(Date DOB,Date pointInTime)    {
+    	if (DOB==null) return(null);
+    	
         GregorianCalendar now = new GregorianCalendar();
         now.setTime(pointInTime);
         int curYear = now.get(Calendar.YEAR);

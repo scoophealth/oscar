@@ -62,7 +62,7 @@ public class UtilDateUtilities {
         return DateToString(date, defaultPattern, locale);
     }
     public static String DateToString(Date date, String spattern)    {
-        return DateToString(date, spattern, defaultLocale);
+    	return DateToString(date, spattern, defaultLocale);
     }
     public static String DateToString(Date date, String spattern, Locale locale)    {
         if(date != null) {
@@ -102,6 +102,8 @@ public class UtilDateUtilities {
     }
     
     public static Date calcDate(String s, String s1, String s2)    {
+    	if (s==null || s1==null || s2==null) return(null);
+    	
         int i = Integer.parseInt(s);
         int j = Integer.parseInt(s1) - 1;
         int k = Integer.parseInt(s2);
@@ -121,6 +123,8 @@ public class UtilDateUtilities {
      * @return age string ( ie 2 months, 4 years .etc )
      */    
     public static String calcAgeAtDate(Date DOB,Date pointInTime)    {
+    	if (DOB==null) return(null);
+    	
         GregorianCalendar now = new GregorianCalendar();
         now.setTime(pointInTime);
         int curYear = now.get(Calendar.YEAR);
