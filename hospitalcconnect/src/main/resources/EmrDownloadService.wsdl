@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="EmrDownloadServiceImplService" targetNamespace="http://service.emr.medseek.com/" xmlns:ns1="http://cxf.apache.org/bindings/xformat" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://service.emr.medseek.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xs:schema elementFormDefault="unqualified" targetNamespace="http://service.emr.medseek.com/" version="1.0" xmlns:tns="http://service.emr.medseek.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:element name="deleteFile" type="tns:deleteFile" />
+            <xs:element name="deleteFileResponse" type="tns:deleteFileResponse" />
+            <xs:element name="downloadFile" type="tns:downloadFile" />
+            <xs:element name="downloadFileResponse" type="tns:downloadFileResponse" />
+            <xs:element name="generateFile" type="tns:generateFile" />
+            <xs:element name="generateFileResponse" type="tns:generateFileResponse" />
+            <xs:element name="listFiles" type="tns:listFiles" />
+            <xs:element name="listFilesResponse" type="tns:listFilesResponse" />
+            <xs:complexType name="listFiles">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg1" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="listFilesResponse">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:generatedFileInfo" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="generatedFileInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="comment" type="xs:string" />
+                    <xs:element minOccurs="0" name="contentType" type="xs:string" />
+                    <xs:element minOccurs="0" name="createdDate" type="xs:dateTime" />
+                    <xs:element minOccurs="0" name="downloadDate" type="xs:dateTime" />
+                    <xs:element name="empty" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="fileName" type="xs:string" />
+                    <xs:element minOccurs="0" name="id" type="xs:long" />
+                    <xs:element minOccurs="0" name="transactionId" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="downloadFile">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg1" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg2" type="xs:long" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="downloadFileResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:generatedFile" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="generatedFile">
+                <xs:complexContent>
+                    <xs:extension base="tns:generatedFileInfo">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="data" type="xs:base64Binary" />
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="generateFile">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg1" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg2" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg3" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="generateFileResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="xs:long" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="deleteFile">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg1" type="xs:string" />
+                    <xs:element minOccurs="0" name="arg2" type="xs:long" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="deleteFileResponse">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="deleteFileResponse">
+        <wsdl:part element="tns:deleteFileResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="downloadFileResponse">
+        <wsdl:part element="tns:downloadFileResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="listFiles">
+        <wsdl:part element="tns:listFiles" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="generateFileResponse">
+        <wsdl:part element="tns:generateFileResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="listFilesResponse">
+        <wsdl:part element="tns:listFilesResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="generateFile">
+        <wsdl:part element="tns:generateFile" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="downloadFile">
+        <wsdl:part element="tns:downloadFile" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="deleteFile">
+        <wsdl:part element="tns:deleteFile" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="EmrDownloadService">
+        <wsdl:operation name="listFiles">
+            <wsdl:input message="tns:listFiles" name="listFiles">
+            </wsdl:input>
+            <wsdl:output message="tns:listFilesResponse" name="listFilesResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="downloadFile">
+            <wsdl:input message="tns:downloadFile" name="downloadFile">
+            </wsdl:input>
+            <wsdl:output message="tns:downloadFileResponse" name="downloadFileResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="generateFile">
+            <wsdl:input message="tns:generateFile" name="generateFile">
+            </wsdl:input>
+            <wsdl:output message="tns:generateFileResponse" name="generateFileResponse">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFile">
+            <wsdl:input message="tns:deleteFile" name="deleteFile">
+            </wsdl:input>
+            <wsdl:output message="tns:deleteFileResponse" name="deleteFileResponse">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="EmrDownloadServiceImplServiceSoapBinding" type="tns:EmrDownloadService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="listFiles">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="listFiles">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="listFilesResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="downloadFile">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="downloadFile">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="downloadFileResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteFile">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="deleteFile">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="deleteFileResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="generateFile">
+            <soap:operation soapAction="" style="document" />
+            <wsdl:input name="generateFile">
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output name="generateFileResponse">
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="EmrDownloadServiceImplService">
+        <wsdl:port binding="tns:EmrDownloadServiceImplServiceSoapBinding" name="EmrDownloadServiceImplPort">
+            <soap:address location="https://archer-workstation.medseek.com/emr-delivery/services/EmrDownloadService" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
