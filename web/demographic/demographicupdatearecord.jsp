@@ -40,7 +40,8 @@
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
-<html:html locale="true">
+
+<%@page import="org.apache.commons.lang.StringUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script></head>
 
@@ -90,106 +91,57 @@
 	  param[27]=request.getParameter("official_lang");
 	  param[28]=request.getParameter("spoken_lang");
 	
-          java.sql.Date [] dtparam = new java.sql.Date[4];
-          StringBuffer sbDate = new StringBuffer();
-          String reqTmp;
-          reqTmp = request.getParameter("date_joined_year");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("0001");
-          else
-              sbDate.append(reqTmp.trim());
-          
-          sbDate.append("-");
-          reqTmp = request.getParameter("date_joined_month");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
-          
-          sbDate.append("-");
-          
-          reqTmp = request.getParameter("date_joined_date");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
+		java.sql.Date [] dtparam = new java.sql.Date[4];
 
-	  dtparam[0]=MyDateFormat.getSysDate(sbDate.toString());
+		String yearTmp=StringUtils.trimToNull(request.getParameter("date_joined_year"));
+		String monthTmp=StringUtils.trimToNull(request.getParameter("date_joined_month"));
+		String dayTmp=StringUtils.trimToNull(request.getParameter("date_joined_date"));
+		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
+		{
+			dtparam[0]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+		}
+		else
+		{
+			dtparam[0]=null;
+		}
+		
+		yearTmp=StringUtils.trimToNull(request.getParameter("end_date_year"));
+		monthTmp=StringUtils.trimToNull(request.getParameter("end_date_month"));
+		dayTmp=StringUtils.trimToNull(request.getParameter("end_date_date"));
+		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
+		{
+			dtparam[1]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+		}
+		else
+		{
+			dtparam[1]=null;
+		}
           
-          sbDate = new StringBuffer();
-          reqTmp = request.getParameter("end_date_year");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("0001");
-          else
-              sbDate.append(reqTmp.trim());
+		yearTmp=StringUtils.trimToNull(request.getParameter("eff_date_year"));
+		monthTmp=StringUtils.trimToNull(request.getParameter("eff_date_month"));
+		dayTmp=StringUtils.trimToNull(request.getParameter("eff_date_date"));
+		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
+		{
+			dtparam[2]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+		}
+		else
+		{
+			dtparam[2]=null;
+		}
+
+		yearTmp=StringUtils.trimToNull(request.getParameter("hc_renew_date_year"));
+		monthTmp=StringUtils.trimToNull(request.getParameter("hc_renew_date_month"));
+		dayTmp=StringUtils.trimToNull(request.getParameter("hc_renew_date_date"));
+		if( yearTmp != null && monthTmp!=null && dayTmp!=null )
+		{
+			dtparam[3]=MyDateFormat.getSysDate(yearTmp+'-'+monthTmp+'-'+dayTmp);
+		}
+		else
+		{
+			dtparam[3]=null;
+		}
           
-          sbDate.append("-");
-          reqTmp = request.getParameter("end_date_month");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
           
-          sbDate.append("-");
-          
-          reqTmp = request.getParameter("end_date_date");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
-                   
-          
-	  dtparam[1]=MyDateFormat.getSysDate(sbDate.toString());
-          
-          sbDate = new StringBuffer();
-          reqTmp = request.getParameter("eff_date_year");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("0001");
-          else
-              sbDate.append(reqTmp.trim());
-          
-          sbDate.append("-");
-          reqTmp = request.getParameter("eff_date_month");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
-          
-          sbDate.append("-");
-          
-          reqTmp = request.getParameter("eff_date_date");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
-                   
-	  dtparam[2]=MyDateFormat.getSysDate(sbDate.toString());
-          
-          sbDate = new StringBuffer();
-          reqTmp = request.getParameter("hc_renew_date_year");
-          
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("0001");
-          else
-              sbDate.append(reqTmp.trim());
-          
-          sbDate.append("-");
-          reqTmp = request.getParameter("hc_renew_date_month");
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
-          
-          sbDate.append("-");
-          
-          reqTmp = request.getParameter("hc_renew_date_date");          
-          if( reqTmp == null || reqTmp.trim().equals("") )
-              sbDate.append("01");
-          else
-              sbDate.append(reqTmp.trim());
-          
-	  dtparam[3]=MyDateFormat.getSysDate(sbDate.toString());
- //System.out.println("DATE '" + sbDate.toString() + "'");
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
      
   //DemographicExt
