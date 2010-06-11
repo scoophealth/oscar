@@ -224,6 +224,8 @@ public class UtilDateUtilities {
      * @return the number of months
      */    
     public static int getNumMonths(Date dStart, Date dEnd) {
+    	if (dStart==null || dEnd==null) return(0);
+    	
        int i = 0;
        Calendar calendar = Calendar.getInstance();
        calendar.setTime(dStart);
@@ -245,7 +247,9 @@ public class UtilDateUtilities {
      * @return the number of months
      */
     public static long getNumDays(Date dStart, Date dEnd) {
-       long msDifference = dEnd.getTime() - dStart.getTime();
+    	if (dStart==null || dEnd==null) return(0);
+
+    	long msDifference = dEnd.getTime() - dStart.getTime();
        long daysDifference = msDifference / (1000*60*60*24);
        return daysDifference;
    }
@@ -257,6 +261,8 @@ public class UtilDateUtilities {
      * @return Number of year between
      */    
    public static int getNumYears(Date dStart,Date dEnd){
+	   if (dStart==null || dEnd==null) return(0);
+
         GregorianCalendar now = new GregorianCalendar();
         now.setTime(dEnd);
         int curYear = now.get(Calendar.YEAR);
