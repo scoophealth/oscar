@@ -318,7 +318,7 @@ public class Demographic implements Serializable {
 	 * @param monthOfBirth the month_of_birth value
 	 */
 	public void setMonthOfBirth(String monthOfBirth) {
-		this.monthOfBirth = monthOfBirth;
+		this.monthOfBirth = StringUtils.trimToNull(monthOfBirth);
 	}
 
 	/**
@@ -350,7 +350,7 @@ public class Demographic implements Serializable {
 	 * @param dateOfBirth the date_of_birth value
 	 */
 	public void setDateOfBirth(String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
+		this.dateOfBirth = StringUtils.trimToNull(dateOfBirth);
 	}
 
 	/**
@@ -590,7 +590,7 @@ public class Demographic implements Serializable {
 	 * @param yearOfBirth the year_of_birth value
 	 */
 	public void setYearOfBirth(String yearOfBirth) {
-		this.yearOfBirth = yearOfBirth;
+		this.yearOfBirth = StringUtils.trimToNull(yearOfBirth);
 	}
 
 	/**
