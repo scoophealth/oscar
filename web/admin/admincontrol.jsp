@@ -226,7 +226,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Provider_Delete" , "providerdelete.jsp"},
     {"Provider_Update_Record" , "providerupdate.jsp"},
     {"Demographic_Search" , "demographicsearchresults.jsp"},
-    {"Demographic_Add_Record" , "demographicaddarecord.jsp"},
     {"Demographic_Edit" , "demographiceditdemographic.jsp"},
     {"Demographic_Edit2" , "../demographic/demographiceditdemographic.jsp"},
     {"Demographic_Update" , "demographicupdatearecord.jsp"},
