@@ -190,7 +190,7 @@ public class ImportDemographicDataAction2 extends Action {
 	    }
 	    String birthDate = getDateFullPartial(demo.getDateOfBirth());
 	    if (!filled(birthDate)) {
-		birthDate = "0001-01-01";
+		birthDate = null;
 		dataGood = "No";
 		errorImport = appendLine(errorImport,"No Date Of Birth");
 	    }
@@ -313,10 +313,16 @@ public class ImportDemographicDataAction2 extends Action {
 		providerNo = writeProviderData(personName, personOHIP);
 	    }
 	    
-	    Date bDate = UtilDateUtilities.StringToDate(birthDate,"yyyy-MM-dd");
-	    String year_of_birth = UtilDateUtilities.DateToString(bDate,"yyyy");
-	    String month_of_birth = UtilDateUtilities.DateToString(bDate,"MM");
-	    String date_of_birth = UtilDateUtilities.DateToString(bDate,"dd");
+	    String year_of_birth = null;
+	    String month_of_birth = null;
+	    String date_of_birth = null;
+	    if (birthDate!=null)
+	    {
+	    	Date bDate = UtilDateUtilities.StringToDate(birthDate,"yyyy-MM-dd");
+		    year_of_birth = UtilDateUtilities.DateToString(bDate,"yyyy");
+		    month_of_birth = UtilDateUtilities.DateToString(bDate,"MM");
+		    date_of_birth = UtilDateUtilities.DateToString(bDate,"dd");
+	    }
 	    
 	    DemographicData dd = new DemographicData();
 	    DemographicExt dExt = new DemographicExt();
