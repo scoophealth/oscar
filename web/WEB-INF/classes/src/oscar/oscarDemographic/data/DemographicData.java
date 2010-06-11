@@ -605,8 +605,9 @@ public class DemographicData {
 			Date date = null;
 			try {
 				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-				date = (Date) formatter.parse(addZero(year_of_birth, 4) + "-" + addZero(month_of_birth, 2) + "-" + addZero(date_of_birth, 2));
+				date = formatter.parse(addZero(year_of_birth, 4) + "-" + addZero(month_of_birth, 2) + "-" + addZero(date_of_birth, 2));
 			} catch (Exception eg) {
+				// this is okay, it means the date is not set or invalid data was set.
 			}
 			return date;
 		}
@@ -736,6 +737,8 @@ public class DemographicData {
 		}
 
 		public String addZero(String text, int num) {
+			if (text==null) return(null);
+			
 			text = text.trim();
 			String zero = "0";
 			for (int i = text.length(); i < num; i++) {
