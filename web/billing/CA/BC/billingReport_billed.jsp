@@ -24,12 +24,13 @@
  */
 -->
 
-<table width="100%" border="2" valign="top">
+
+<%@page import="org.apache.commons.lang.StringUtils"%><table width="100%" border="2" valign="top">
 	<% 
- String dateBegin = request.getParameter("xml_vdate");
-   String dateEnd = request.getParameter("xml_appointment_date");
-   if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+ String dateBegin = StringUtils.trimToNull(request.getParameter("xml_vdate"));
+   String dateEnd = StringUtils.trimToNull(request.getParameter("xml_appointment_date"));
+   if (dateEnd==null) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+   if (dateBegin==null) dateBegin="1950-01-01"; // set to any really early time, effectively search everything. 
  ResultSet rs=null ;
   String[] param =new String[3];
   param[0] = request.getParameter("providerview");
