@@ -79,6 +79,8 @@ public class UtilDateUtilities {
     }
 
     public static Date calcDate(String s, String s1, String s2)    {
+    	if (s==null || s1==null || s2==null) return(null);
+    	
         int i = Integer.parseInt(s);
         int j = Integer.parseInt(s1) - 1;
         int k = Integer.parseInt(s2);

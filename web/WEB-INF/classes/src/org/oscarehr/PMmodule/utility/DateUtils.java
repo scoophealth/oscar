@@ -611,13 +611,13 @@ public static int compareDateForIntakeB(String currDate, String enteredDate)
   		java.util.Date currDateObj = null;
   		java.util.Date enteredDateObj = null;
       	
-      	if(currDateParams != null)
+      	if(currDateParams != null && currDateParams[0]!= null && currDateParams[1]!= null && currDateParams[2]!= null)
       	{
       		currDateObj = UtilDateUtilities.calcDate(
       			       currDateParams[0], currDateParams[1], currDateParams[2]);
       	}
       
-      	if(enteredDateParams != null)
+      	if(enteredDateParams != null && enteredDateParams[0] != null && enteredDateParams[1] != null && enteredDateParams[2] !=null)
       	{
       		enteredDateObj = UtilDateUtilities.calcDate(
       			enteredDateParams[0], enteredDateParams[1], enteredDateParams[2]);
