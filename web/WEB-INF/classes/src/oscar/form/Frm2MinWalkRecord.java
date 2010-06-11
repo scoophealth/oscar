@@ -56,7 +56,7 @@ public class Frm2MinWalkRecord extends FrmRecord {
 					UtilDateUtilities.DateToString(
 						UtilDateUtilities.Today(),
 						_dateFormat));	
-								props.setProperty("dob", (dob!=null?UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"):null));
+								props.setProperty("dob", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                                 props.setProperty("sex", db.getString(rs,"sex"));
                                 props.setProperty("phone", db.getString(rs,"phone"));
 			}

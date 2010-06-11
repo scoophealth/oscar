@@ -44,45 +44,19 @@ public class FrmAdfRecord extends FrmRecord {
 					+ demographicNo;
 			ResultSet rs = db.GetSQL(sql);
 			if (rs.next()) {
-				java.util.Date date =
-					UtilDateUtilities.calcDate(
-						db.getString(rs,"year_of_birth"),
-						db.getString(rs,"month_of_birth"),
-						db.getString(rs,"date_of_birth"));
-				props.setProperty(
-					"demographic_no",
-					db.getString(rs,"demographic_no"));
-				props.setProperty(
-					"formCreated",
-					UtilDateUtilities.DateToString(
-						UtilDateUtilities.Today(),
-						_dateFormat));
-				//props.setProperty("formEdited",
+				java.util.Date date = UtilDateUtilities.calcDate(db.getString(rs, "year_of_birth"), db.getString(rs, "month_of_birth"), db.getString(rs, "date_of_birth"));
+				props.setProperty("demographic_no", db.getString(rs, "demographic_no"));
+				props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
+				// props.setProperty("formEdited",
 				// UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
-				props.setProperty("c_surname", db.getString(rs,"last_name"));
-				props.setProperty("c_givenName", db.getString(rs,"first_name"));
-				props.setProperty(
-					"c_address",
-					db.getString(rs,"address")
-						+ ", "
-						+ db.getString(rs,"city")
-						+ ", "
-						+ db.getString(rs,"province")
-						+ " "
-						+ db.getString(rs,"postal"));
-				props.setProperty("c_phn", db.getString(rs,"hin"));
-				props.setProperty(
-					"pg1_dateOfBirth",
-					UtilDateUtilities.DateToString(date, _dateFormat));
-				props.setProperty(
-					"pg1_age",
-					String.valueOf(UtilDateUtilities.calcAge(date)));
-				props.setProperty("c_phone", db.getString(rs,"phone"));
-				props.setProperty(
-					"sigDate",
-					UtilDateUtilities.DateToString(
-						UtilDateUtilities.Today(),
-						_dateFormat));
+				props.setProperty("c_surname", db.getString(rs, "last_name"));
+				props.setProperty("c_givenName", db.getString(rs, "first_name"));
+				props.setProperty("c_address", db.getString(rs, "address") + ", " + db.getString(rs, "city") + ", " + db.getString(rs, "province") + " " + db.getString(rs, "postal"));
+				props.setProperty("c_phn", db.getString(rs, "hin"));
+				props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
+				props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(date)));
+				props.setProperty("c_phone", db.getString(rs, "phone"));
+				props.setProperty("sigDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), _dateFormat));
 			}
 			rs.close();
 		} else {
