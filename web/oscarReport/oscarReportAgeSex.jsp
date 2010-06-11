@@ -214,7 +214,7 @@ function refresh() {
       String dateBegin = request.getParameter("xml_vdate");
       String dateEnd = request.getParameter("xml_appointment_date");
       if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-      if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+      if (dateBegin.compareTo("") == 0) dateBegin="1950-01-01"; // set to any early date to start search from beginning
 
       ResultSet rs;
       ResultSet rs2;
