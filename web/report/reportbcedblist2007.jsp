@@ -139,7 +139,7 @@ reportMainBean.doConfigure(dbQueries);
     nItems++; 
 %>
 	<tr bgcolor="<%=bodd?weakcolor:"white"%>">
-		<td align="center" nowrap><%=reportMainBean.getString(rs,"c_EDD")!=null?reportMainBean.getString(rs,"c_EDD").replace('-','/'):"0001/01/01"%></td>
+		<td align="center" nowrap><%=reportMainBean.getString(rs,"c_EDD")!=null?reportMainBean.getString(rs,"c_EDD").replace('-','/'):"----/--/--"%></td>
 		<td><%=reportMainBean.getString(rs,"c_surname") + ", " + reportMainBean.getString(rs,"c_givenName")%></td>
 		<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
 		<td><%=reportMainBean.getString(rs,"pg1_dateOfBirth")!=null?reportMainBean.getString(rs,"pg1_dateOfBirth"):""%></td>
