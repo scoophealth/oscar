@@ -42,20 +42,13 @@ public class FrmStudyPING_DiabetesRecord extends FrmStudyRecord {
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(rs
-                        .getString("year_of_birth"), rs
-                        .getString("month_of_birth"), rs
-                        .getString("date_of_birth"));
-                props.setProperty("demographic_no", rs
-                        .getString("demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities
-                        .DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("formEdited", UtilDateUtilities.DateToString(
-                        UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("birthDate", UtilDateUtilities.DateToString(
-                        dob, "yyyy/MM/dd"));
-                props.setProperty("pName", db.getString(rs,"pName"));
-            }
+				Date dob = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
+				props.setProperty("demographic_no", rs.getString("demographic_no"));
+				props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+				props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                props.setProperty("birthDate", (dob!=null?UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"):null));
+				props.setProperty("pName", db.getString(rs, "pName"));
+			}
             rs.close();
         } else {
             String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no = "
