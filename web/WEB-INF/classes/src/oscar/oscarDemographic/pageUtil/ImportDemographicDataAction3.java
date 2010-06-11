@@ -240,7 +240,7 @@ import org.oscarehr.util.SpringUtils;
 		}
 		String birthDate = dateFullPartial(demo.getDateOfBirth());
 		if (Util.empty(birthDate)) {
-			birthDate = "0001-01-01";
+			birthDate = null;
 			err_data.add("Error! No Date Of Birth");
 		}
 		String roster_status = demo.getEnrollmentStatus()!=null ? demo.getEnrollmentStatus().toString() : "";
@@ -382,11 +382,17 @@ import org.oscarehr.util.SpringUtils;
 			err_data.add("Error! No Primary Physician; patient assigned to \"doctor oscardoc\"");
 		}
 
-		Date bDate = UtilDateUtilities.StringToDate(birthDate,"yyyy-MM-dd");
-		String year_of_birth = UtilDateUtilities.DateToString(bDate,"yyyy");
-		String month_of_birth = UtilDateUtilities.DateToString(bDate,"MM");
-		String date_of_birth = UtilDateUtilities.DateToString(bDate,"dd");
-
+		String year_of_birth = null;
+		String month_of_birth = null;
+		String date_of_birth = null;
+		if (birthDate!=null)
+		{			
+			Date bDate = UtilDateUtilities.StringToDate(birthDate,"yyyy-MM-dd");
+			year_of_birth = UtilDateUtilities.DateToString(bDate,"yyyy");
+			month_of_birth = UtilDateUtilities.DateToString(bDate,"MM");
+			date_of_birth = UtilDateUtilities.DateToString(bDate,"dd");
+		}
+	
 		DemographicData dd = new DemographicData();
 		DemographicExt dExt = new DemographicExt();
 		demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone,
@@ -453,8 +459,8 @@ import org.oscarehr.util.SpringUtils;
 				String contactNote = contt[i].getNote();
 				String cDemoNo = dd.getDemoNoByNamePhoneEmail(cFirstName, cLastName, homePhone, workPhone, cEmail);
 				if (cDemoNo.equals("")) {   //add new demographic
-					demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, "0001", "01",
-					"01", "", "", "", "", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
+					demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, null, null,
+					null, "", "", "", "", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
 					cDemoNo = demoRes.getId();
 					if (Util.filled(contactNote)) dd.addDemographiccust(cDemoNo, contactNote);
 
@@ -752,8 +758,8 @@ import org.oscarehr.util.SpringUtils;
 				description = Util.noNull(aaReactArray[i].getOffendingAgentDescription());
 				entryDate = dateFullPartial(aaReactArray[i].getRecordedDate());
 				startDate = dateFullPartial(aaReactArray[i].getStartDate());
-				if (Util.empty(entryDate)) entryDate = "0001-01-01";
-				if (Util.empty(startDate)) startDate = "0001-01-01";
+				if (Util.empty(entryDate)) entryDate = null;
+				if (Util.empty(startDate)) startDate = null;
 
 				if (aaReactArray[i].getCode()!=null) regionalId = Util.noNull(aaReactArray[i].getCode().getValue());
 				reaction = Util.appendLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
@@ -812,8 +818,8 @@ import org.oscarehr.util.SpringUtils;
 				longTerm		= getYN(medArray[i].getLongTermMedication()).equals("Yes");
 				pastMed			= getYN(medArray[i].getPastMedications()).equals("Yes");
 
-				rxDate = Util.filled(rxDate) ? rxDate : "0001-01-01";
-				endDate = Util.filled(endDate) ? endDate : "0001-01-01";
+				rxDate = Util.filled(rxDate) ? rxDate : null;
+				endDate = Util.filled(endDate) ? endDate : null;
 
 				String pc = getYN(medArray[i].getPatientCompliance());
 				if (pc.equals("Yes")) patientCompliance = 1;
