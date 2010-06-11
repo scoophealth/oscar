@@ -131,7 +131,7 @@
         Calendar cal = Calendar.getInstance();
         cal.set(Integer.parseInt(startDate.substring(0,4)), Integer.parseInt(startDate.substring(5,startDate.lastIndexOf('-'))) , Integer.parseInt(startDate.substring(startDate.lastIndexOf('-')+1)) );
         cal.add(Calendar.YEAR,-1);
-        paramI[0]=sdf.format(cal.getTime()); //"0001-01-01";
+        paramI[0]=sdf.format(cal.getTime()); 
         cal.set(Integer.parseInt(endDate.substring(0,4)), Integer.parseInt(endDate.substring(5,endDate.lastIndexOf('-'))) , Integer.parseInt(endDate.substring(endDate.lastIndexOf('-')+1)) );
         cal.add(Calendar.YEAR, 1);
         paramI[1]=sdf.format(cal.getTime()); //;
@@ -139,27 +139,21 @@
         while (rs.next()) {
         arMaxId.setProperty(""+rs.getInt("max(ID)"), "1");
         }
-        System.out.println("0001-01-01");
         Properties demoProp = new Properties();
         
         String[] param =new String[2];
-        param[0]=startDate; //"0001-01-01";
-        param[1]=endDate; //"0001-01-01";
+        param[0]=startDate; 
+        param[1]=endDate;
         int[] itemp1 = new int[2];
         itemp1[1] = Integer.parseInt(strLimit1);
         itemp1[0] = Integer.parseInt(strLimit2);
         boolean bodd=false;
         int nItems=0;
-        System.out.println(strLimit2+endDate + "00  01-01-01:" + startDate);
         rs = reportMainBean.queryResults(param,itemp1, "select_formar");
-        System.out.println("0 0  01-01-01");
         while (rs.next()) {
-        System.out.println("0001-01-  01");
         if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
-        System.out.println("0001 -01-  01");
         if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
         else demoProp.setProperty(reportMainBean.getString(rs,"demographic_no"), "1");
-        System.out.println("0001-01-  01");
         
         String providerNo = "0";
         // filter the "IN" patient from the list
@@ -174,7 +168,7 @@
         %>
 		<tr bgcolor="<%=bodd?weakcolor:"white"%>">
 			<td><%=nItems%></td>
-			<td align="center" nowrap><%=reportMainBean.getString(rs,"c_finalEDB")!=null?reportMainBean.getString(rs,"c_finalEDB").replace('-','/'):"0001/01/01"%></td>
+			<td align="center" nowrap><%=reportMainBean.getString(rs,"c_finalEDB")!=null?reportMainBean.getString(rs,"c_finalEDB").replace('-','/'):"----/--/--"%></td>
 			<td><%=reportMainBean.getString(rs,"c_pName")%></td>
 			<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
 			<td><%=reportMainBean.getString(rs,"pg1_age")%></td>
