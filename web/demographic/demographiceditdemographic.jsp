@@ -102,7 +102,8 @@
 
 
 
-<%@page import="org.oscarehr.util.SpringUtils"%><html:html locale="true">
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.apache.commons.lang.StringUtils"%><html:html locale="true">
 <head>
 <title><bean:message
 	key="demographic.demographiceditdemographic.title" /></title>
@@ -1567,15 +1568,22 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								</td>
 								<td align="left">
 								<%
-                                 // Put 0 on the left on dates
-                                 DecimalFormat decF = new DecimalFormat();
-                                 // Year
-                                 decF.applyPattern("0000");
-                                 String effDateYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"eff_date")));
-                                 // Month and Day
-                                 decF.applyPattern("00");
-                                 String effDateMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"eff_date")));
-                                 String effDateDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"eff_date")));
+								String effDate=StringUtils.trimToNull(apptMainBean.getString(rs,"eff_date"));
+                                // Put 0 on the left on dates
+                                DecimalFormat decF = new DecimalFormat();
+								String effDateYear="";
+								String effDateMonth="";
+								String effDateDay="";
+								if (effDate!=null)
+								{
+	                                 // Year
+	                                 decF.applyPattern("0000");
+	                                 effDateYear = decF.format(MyDateFormat.getYearFromStandardDate(effDate));
+	                                 // Month and Day
+	                                 decF.applyPattern("00");
+	                                 effDateMonth = decF.format(MyDateFormat.getMonthFromStandardDate(effDate));
+	                                 effDateDay = decF.format(MyDateFormat.getDayFromStandardDate(effDate));
+								}
                               %> <input type="text" name="eff_date_year"
 									size="4" maxlength="4" value="<%= effDateYear%>"> <input
 									type="text" name="eff_date_month" size="2" maxlength="2"
@@ -2048,12 +2056,20 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									key="demographic.demographiceditdemographic.formEndDate" />: </b></td>
 								<td align="left">
 								<%
-                                 // Format year
-                                 decF.applyPattern("0000");
-                                 String endYear = decF.format(MyDateFormat.getYearFromStandardDate(apptMainBean.getString(rs,"end_date")));
-                                 decF.applyPattern("00");
-                                 String endMonth = decF.format(MyDateFormat.getMonthFromStandardDate(apptMainBean.getString(rs,"end_date")));
-                                 String endDay = decF.format(MyDateFormat.getDayFromStandardDate(apptMainBean.getString(rs,"end_date")));
+								String endDate=StringUtils.trimToNull(apptMainBean.getString(rs,"end_date"));
+								String endYear="";
+								String endMonth="";
+								String endDay="";
+								
+								if (endDate!=null)
+								{
+	                                 // Format year
+	                                 decF.applyPattern("0000");
+	                                 endYear = decF.format(MyDateFormat.getYearFromStandardDate(endDate));
+	                                 decF.applyPattern("00");
+	                                 endMonth = decF.format(MyDateFormat.getMonthFromStandardDate(endDate));
+	                                 endDay = decF.format(MyDateFormat.getDayFromStandardDate(endDate));
+								}
                               %> <input type="text" name="end_date_year"
 									size="4" maxlength="4" value="<%= endYear %>"> <input
 									type="text" name="end_date_month" size="2" maxlength="2"
