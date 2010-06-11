@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -291,8 +292,12 @@ public class IntakeAReport1Action extends BaseAction {
         while (listIterator.hasNext()) {
             intakeA = (Formintakea) listIterator.next();
             try {
-                if (intakeA.getYear() != null && intakeA.getMonth() != null && intakeA.getDay() != null && !intakeA.getYear().equals("") && !intakeA.getYear().equals("0001") && !intakeA.getMonth().equals("") && !intakeA.getDay().equals("")) {
-                    dob = UtilDateUtilities.calcAge(intakeA.getYear(), intakeA.getMonth(), intakeA.getDay());
+            	String yearTmp=StringUtils.trimToNull(intakeA.getYear());
+            	String monthTmp=StringUtils.trimToNull(intakeA.getMonth());
+            	String dayTmp=StringUtils.trimToNull(intakeA.getDay());
+            	
+                if ( yearTmp!= null && monthTmp != null && dayTmp != null) {
+                    dob = UtilDateUtilities.calcAge(yearTmp, monthTmp, dayTmp);
                     totalDOB += dob;
                     num++;
                 }
