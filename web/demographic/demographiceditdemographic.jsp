@@ -1589,13 +1589,19 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                  decF.applyPattern("0000");
 
 								 GregorianCalendar hcRenewalCal=new GregorianCalendar();
-								 hcRenewalCal.setTime(demographic.getHcRenewDate());
+								 String renewDateYear="";
+								 String renewDateMonth="";
+								 String renewDateDay="";
+								 if (demographic.getHcRenewDate()!=null)
+								 {
+									 hcRenewalCal.setTime(demographic.getHcRenewDate());
+	                                 renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
+	                                 // Month and Day
+	                                 decF.applyPattern("00");
+	                                 renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
+	                                 renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
+								 }
 								 
-                                 String renewDateYear = decF.format(hcRenewalCal.get(GregorianCalendar.YEAR));
-                                 // Month and Day
-                                 decF.applyPattern("00");
-                                 String renewDateMonth = decF.format(hcRenewalCal.get(GregorianCalendar.MONTH)+1);
-                                 String renewDateDay = decF.format(hcRenewalCal.get(GregorianCalendar.DAY_OF_MONTH));
                               %> 
 								<input type="text" name="hc_renew_date_year" size="4" maxlength="4" value="<%=renewDateYear%>">
 								<input type="text" name="hc_renew_date_month" size="2" maxlength="2" value="<%=renewDateMonth%>">
