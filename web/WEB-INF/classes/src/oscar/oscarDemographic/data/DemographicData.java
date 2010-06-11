@@ -865,7 +865,7 @@ public class DemographicData {
 		} else { // Duplicate HIN
 			for (int i = 0; i < demos.size(); i++) {
 				Demographic d = (Demographic) demos.get(i);
-				if (last_name.equalsIgnoreCase(d.getLastName()) && first_name.equalsIgnoreCase(d.getFirstName()) && year_of_birth.equals(d.getYearOfBirth()) && month_of_birth.equals(d.getMonthOfBirth()) && date_of_birth.equals(d.getDateOfBirth())) {
+				if (last_name.equalsIgnoreCase(d.getLastName()) && first_name.equalsIgnoreCase(d.getFirstName()) && year_of_birth!=null && year_of_birth.equals(d.getYearOfBirth()) && month_of_birth!=null && month_of_birth.equals(d.getMonthOfBirth()) && date_of_birth!=null && date_of_birth.equals(d.getDateOfBirth())) {
 					// DUP don't add
 					// System.out.println("NOT ADDING becuase of dup with same hin");
 					duplicateRecord = true;
