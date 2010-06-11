@@ -93,7 +93,8 @@ public class CMLLabTest {
     }
     
     public String getAge(){
-        return getAge(this.pDOB);
+    	if (pDOB==null) return("");
+    	else return getAge(this.pDOB);
     }
     
     public String getAge(String s){
