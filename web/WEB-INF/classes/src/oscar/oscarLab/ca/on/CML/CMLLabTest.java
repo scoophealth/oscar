@@ -93,8 +93,7 @@ public class CMLLabTest {
     }
     
     public String getAge(){
-    	if (pDOB==null) return("");
-    	else return getAge(this.pDOB);
+    	return getAge(this.pDOB);
     }
     
     public String getAge(String s){
@@ -104,7 +103,8 @@ public class CMLLabTest {
             DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
             java.util.Date date = (java.util.Date)formatter.parse(s);
             age = UtilDateUtilities.calcAge(date);
-        } catch (ParseException e) {
+        } catch (Exception e) {
+        	// this is okay, either null or invalid format
         }
         return age;
     }
