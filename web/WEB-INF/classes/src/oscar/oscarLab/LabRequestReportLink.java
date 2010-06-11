@@ -69,10 +69,14 @@ public class LabRequestReportLink {
     }
     
     public static void save(String requestTable, Long requestId, String requestDate, String reportTable, Long reportId) throws SQLException {
-	if (requestDate==null || ("").equals(requestDate)) requestDate="0001-01-01";
+	if (requestDate==null || ("").equals(requestDate)) requestDate=null;
+	
+	String requestDateString="null";
+	if (requestDate!=null) requestDateString="'"+requestDate+"'";
+	
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	String sql = "INSERT INTO labRequestReportLink (request_table,request_id,request_date,report_table,report_id) VALUES ('" +
-		     requestTable+"',"+requestId+",'"+requestDate+"','"+reportTable+"',"+reportId+")";
+		     requestTable+"',"+requestId+","+requestDateString+",'"+reportTable+"',"+reportId+")";
 	db.RunSQL(sql);
     }
     
