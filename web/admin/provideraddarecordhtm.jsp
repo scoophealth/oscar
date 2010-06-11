@@ -199,8 +199,7 @@ for (int i=0; i<sites.size(); i++) {
 			<td align="right"><bean:message key="admin.provider.formDOB" />(<font
 				size="-1"><i><bean:message
 				key="admin.provideraddrecordhtm.dateFormat" /></i></font>):</td>
-			<td><input type="text" name="dob" value="0001-01-01"
-				maxlength="11"></td>
+			<td><input type="text" name="dob" maxlength="11"></td>
 		</tr>
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formAddress" />:

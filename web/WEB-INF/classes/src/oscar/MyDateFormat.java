@@ -28,6 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.quatro.common.KeyConstants;
 
 public class MyDateFormat {
@@ -168,7 +170,10 @@ public class MyDateFormat {
 
 	public static java.sql.Date getSysDate(String pDate)
     {
-        if (pDate == null || "".equals(pDate)) return null;
+		pDate=StringUtils.trimToNull(pDate);
+		
+        if (pDate == null) return null;
+        
         if ("TODAY".equals(pDate.toUpperCase())) return new java.sql.Date(new Date().getTime());
         try
         {
