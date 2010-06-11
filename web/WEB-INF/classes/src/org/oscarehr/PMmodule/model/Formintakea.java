@@ -26,6 +26,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This is the object class that relates to the formintakea table.
  * Any customizations belong here.
@@ -637,7 +639,7 @@ public class Formintakea implements Serializable {
 	 * Return the value associated with the column: day
      */
     public String getDay () {
-        return _day;
+        return(StringUtils.trimToEmpty(_day));
     }
 
     /**
@@ -1732,7 +1734,7 @@ public class Formintakea implements Serializable {
 	 * Return the value associated with the column: month
      */
     public String getMonth () {
-        return _month;
+        return(StringUtils.trimToEmpty(_month));
     }
 
     /**
@@ -2467,7 +2469,7 @@ public class Formintakea implements Serializable {
 	 * Return the value associated with the column: year
      */
     public String getYear () {
-        return _year;
+        return(StringUtils.trimToEmpty(_year));
     }
 
     /**

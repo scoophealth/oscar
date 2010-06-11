@@ -24,6 +24,8 @@ package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This is the object class that relates to the formintakec table.
  * Any customizations belong here.
@@ -1103,7 +1105,7 @@ public class Formintakec implements Serializable {
      * Return the value associated with the column: dayOfBirth
      */
     public String getDayOfBirth () {
-        return _dayOfBirth;
+        return(StringUtils.trimToEmpty(_dayOfBirth));
     }
 
     /**
@@ -2667,7 +2669,7 @@ public class Formintakec implements Serializable {
      * Return the value associated with the column: monthOfBirth
      */
     public String getMonthOfBirth () {
-        return _monthOfBirth;
+    	return(StringUtils.trimToEmpty(_monthOfBirth));
     }
 
     /**
@@ -3240,9 +3242,7 @@ public class Formintakec implements Serializable {
      * Return the value associated with the column: yearOfBirth
      */
     public String getYearOfBirth () {
-        if (_yearOfBirth!=""&&_yearOfBirth!=null)
-            return _yearOfBirth;
-        else return"0000";
+    	return(StringUtils.trimToEmpty(_yearOfBirth));
     }
 
     /**
