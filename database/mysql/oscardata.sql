@@ -1214,8 +1214,9 @@ INSERT INTO scheduletemplatecode VALUES ('a','Administrative Work','15','#BFEFFF
 INSERT INTO scheduletemplatecode VALUES ('t','Travel','',NULL,'N',1);
 INSERT INTO scheduletemplatecode VALUES ('m','Meeting','',NULL,'N',1);
 INSERT INTO scheduletemplatecode VALUES ('1','15 Minute Appointment','15','#BFEFFF','N',1);
-INSERT INTO scheduletemplatecode VALUES ('s','Same Day','15','FFF68F','N',1);
-INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F','N',1);
+INSERT INTO scheduletemplatecode VALUES ('s','Same Day','15','FFF68F','Day',1);
+INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F','Day',1);
+INSERT INTO scheduletemplatecode VALUES ('W','Same Week','15','FFF68F','Wk','1');
 
 --
 -- Dumping data for table 'security'
