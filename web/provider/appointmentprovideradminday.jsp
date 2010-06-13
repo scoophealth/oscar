@@ -223,7 +223,24 @@ formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM
 }
 String strYear=""+year;
 String strMonth=month>9?(""+month):("0"+month);
-String strDay=day>9?(""+day):("0"+day);    
+String strDay=day>9?(""+day):("0"+day);
+Calendar apptDate = Calendar.getInstance();
+apptDate.set(year, month-1 , day);
+Calendar minDate = Calendar.getInstance();
+minDate.set( minDate.get(Calendar.YEAR), minDate.get(Calendar.MONTH), minDate.get(Calendar.DATE) );
+String allowDay = "";
+if (apptDate.equals(minDate)) {
+    allowDay = "Yes";
+    } else {
+    allowDay = "No";
+}
+minDate.add(Calendar.DATE, 7);
+String allowWeek = "";
+if (apptDate.before(minDate)) {
+    allowWeek = "Yes";
+    } else {
+    allowWeek = "No";
+}
 %>
 <!--
 /*
@@ -328,15 +345,31 @@ function toggleReason() {
         }
     }
 }
-
-function confirmPopupPage(height, width, queryString, doConfirm){
-if (doConfirm == "Yes"){
-if (confirm("Are you sure you would like to book an apointment here.")){
- popupPage(height, width, queryString);
-}
-}else{
-popupPage(height, width, queryString);
-}
+function confirmPopupPage(height, width, queryString, doConfirm, allowDay, allowWeek){
+        if (doConfirm == "Yes") {
+                if (confirm("<bean:message key="provider.appointmentProviderAdminDay.confirmBooking"/>")){
+                 popupPage(height, width, queryString);
+                }
+        }
+        else if (doConfirm == "Day"){
+                if (allowDay == "No") {
+                        alert("<bean:message key="provider.appointmentProviderAdminDay.sameDay"/>");
+                }
+                else {
+                        popupPage(height, width, queryString);
+                }
+        }
+        else if (doConfirm == "Wk"){
+                if (allowWeek == "No") {
+                        alert("<bean:message key="provider.appointmentProviderAdminDay.sameWeek"/>");
+                }
+                else {
+                        popupPage(height, width, queryString);
+                }
+        }
+        else {
+                popupPage(height, width, queryString);
+        }
 }
 
 function setfocus() {
@@ -1200,7 +1233,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
         %>
           <tr>
             <td align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b><font face="verdana,arial,helvetica" size="2">
-             <a href=# onClick="confirmPopupPage(400,780,'../appointment/addappointment.jsp?programId_oscarView=<%=programId_oscarView %>&provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>','<%= dateTimeCodeBean.get("confirm"+hourmin.toString()) %>');return false;"
+             <a href=# onClick="confirmPopupPage(400,780,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>','<%= dateTimeCodeBean.get("confirm"+hourmin.toString()) %>','<%= allowDay %>','<%= allowWeek %>');return false;"
   title='<%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+ (minuteCursor<10?"0":"")+minuteCursor)%> - <%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+((minuteCursor+depth-1)<10?"0":"")+(minuteCursor+depth-1))%>' class="adhour">
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></font></b></td>
             <td width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font></td>
