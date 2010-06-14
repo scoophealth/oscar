@@ -97,7 +97,7 @@ public class Hl7textResultsData {
                     if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
                         continue;
                     
-                    logger.info("obx("+j+") should be inserted");
+                    logger.debug("obx("+j+") should be inserted");
                     String identifier = h.getOBXIdentifier(i,j);
                     String name = h.getOBXName(i,j);
 		    String unit = h.getOBXUnits(i,j);
@@ -127,12 +127,12 @@ public class Hl7textResultsData {
                         measType = db.getString(rs,"ident_code");
                         measInst = db.getString(rs,"measuringInstruction");
                     }else{
-                       logger.info("CODE:"+identifier+ " needs to be mapped"); 
+                       logger.debug("CODE:"+identifier+ " needs to be mapped"); 
                     }
                     
                     
                     sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES (?, ?, '0', ?, ?, ?, ?)";
-                    logger.info(sql);
+                    logger.debug(sql);
                     pstmt = conn.prepareStatement(sql);
                     pstmt.setString(1,measType);
                     pstmt.setString(2,demographic_no);
@@ -150,49 +150,49 @@ public class Hl7textResultsData {
                     
                     pstmt = conn.prepareStatement(measurementExt);
                     
-                    logger.info("Inserting into measurementsExt id "+insertID+ " lab_no "+ lab_no);
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " lab_no "+ lab_no);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "lab_no");
                     pstmt.setString(3, lab_no);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
                     
-                    logger.info("Inserting into measurementsExt id "+insertID+ " abnormal "+ abnormal);
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " abnormal "+ abnormal);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "abnormal");
                     pstmt.setString(3, abnormal);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
                     
-                    logger.info("Inserting into measurementsExt id "+insertID+ " identifier "+ identifier);
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " identifier "+ identifier);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "identifier");
                     pstmt.setString(3, identifier);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
                     
-                    logger.info("Inserting into measurementsExt id "+insertID+ " name "+ name);
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " name "+ name);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "name");
                     pstmt.setString(3, name);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
                     
-                    logger.info("Inserting into measurementsExt id "+insertID+ " labname "+ labname);
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " labname "+ labname);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "labname");
                     pstmt.setString(3, labname);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
 		    
-                    logger.info("Inserting into measurementsExt id "+insertID+ " accession "+ accession);
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " accession "+ accession);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "accession");
                     pstmt.setString(3, accession);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
 		    
-                    logger.info("Inserting into measurementsExt id "+insertID+ " datetime "+ datetime);
+                    logger.debug("Inserting into measurementsExt id "+insertID+ " datetime "+ datetime);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "datetime");
                     pstmt.setString(3, datetime);
@@ -200,7 +200,7 @@ public class Hl7textResultsData {
                     pstmt.clearParameters();
 		    
 		    if (unit!=null && unit.length()>0) {
-			logger.info("Inserting into measurementsExt id "+insertID+ " unit "+ unit);
+			logger.debug("Inserting into measurementsExt id "+insertID+ " unit "+ unit);
 			pstmt.setString(1, insertID);
 			pstmt.setString(2, "unit");
 			pstmt.setString(3, unit);
@@ -209,7 +209,7 @@ public class Hl7textResultsData {
 		    }
 		    
 		    if (refRange[0].length()>0) {
-			logger.info("Inserting into measurementsExt id "+insertID+ " range "+ refRange[0]);
+			logger.debug("Inserting into measurementsExt id "+insertID+ " range "+ refRange[0]);
 			pstmt.setString(1, insertID);
 			pstmt.setString(2, "range");
 			pstmt.setString(3, refRange[0]);
@@ -217,7 +217,7 @@ public class Hl7textResultsData {
 			pstmt.clearParameters();
 		    } else {
 			if (refRange[1].length()>0) {
-			    logger.info("Inserting into measurementsExt id "+insertID+ " minimum "+ refRange[1]);
+			    logger.debug("Inserting into measurementsExt id "+insertID+ " minimum "+ refRange[1]);
 			    pstmt.setString(1, insertID);
 			    pstmt.setString(2, "minimum");
 			    pstmt.setString(3, refRange[1]);
@@ -225,7 +225,7 @@ public class Hl7textResultsData {
 			    pstmt.clearParameters();
 			}
 			if (refRange[2].length()>0) {
-			    logger.info("Inserting into measurementsExt id "+insertID+ " maximum "+ refRange[2]);
+			    logger.debug("Inserting into measurementsExt id "+insertID+ " maximum "+ refRange[2]);
 			    pstmt.setString(1, insertID);
 			    pstmt.setString(2, "maximum");
 			    pstmt.setString(3, refRange[2]);
@@ -235,7 +235,7 @@ public class Hl7textResultsData {
 		    }
 		    
 		    if (comments!=null && comments.length()>0) {
-			logger.info("Inserting into measurementsExt id "+insertID+ " comments "+ comments);
+			logger.debug("Inserting into measurementsExt id "+insertID+ " comments "+ comments);
 			pstmt.setString(1, insertID);
 			pstmt.setString(2, "comments");
 			pstmt.setString(3, comments);
@@ -276,8 +276,8 @@ public class Hl7textResultsData {
                 }else{
                     monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
                 }
-                logger.info("monthsBetween: "+monthsBetween);
-                logger.info("lab_no: "+db.getString(rs,"lab_no")+" lab: "+lab_no);
+                logger.debug("monthsBetween: "+monthsBetween);
+                logger.debug("lab_no: "+db.getString(rs,"lab_no")+" lab: "+lab_no);
                 if (monthsBetween < 4){
                     if(ret.equals(""))
                         ret = db.getString(rs,"lab_no");
@@ -384,7 +384,7 @@ public class Hl7textResultsData {
                         " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";
             }
             
-            logger.info(sql);
+            logger.debug(sql);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
 
