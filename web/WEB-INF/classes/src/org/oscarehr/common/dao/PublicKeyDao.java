@@ -22,60 +22,15 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.common.model;
+package org.oscarehr.common.dao;
 
-import java.io.Serializable;
+import org.oscarehr.common.model.PublicKey;
+import org.springframework.stereotype.Repository;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+@Repository
+public class PublicKeyDao extends AbstractDao<PublicKey> {
 
-@Entity
-@Table(name = "oscarKeys")
-public class OscarKey extends AbstractModel<String> implements Serializable {
-
-	@Id
-	private String name;
-
-	@Column(name = "pubKey")
-	private String publicKey;
-
-	@Column(name = "privKey")
-	private String privateKey;
-
-	@Override
-	public String getId() {
-		return (name);
+	public PublicKeyDao() {
+		super(PublicKey.class);
 	}
-
-	/**
-	 * The OscarKey name is the ID
-	 * @param id
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName()
-	{
-		return(name);
-	}
-	
-	public String getPublicKey() {
-		return publicKey;
-	}
-
-	public void setPublicKey(String publicKey) {
-		this.publicKey = publicKey;
-	}
-
-	public String getPrivateKey() {
-		return privateKey;
-	}
-
-	public void setPrivateKey(String privateKey) {
-		this.privateKey = privateKey;
-	}
-
 }

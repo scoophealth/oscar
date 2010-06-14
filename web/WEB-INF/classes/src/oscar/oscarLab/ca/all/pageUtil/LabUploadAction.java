@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.OscarKeyDao;
+import org.oscarehr.common.dao.PublicKeyDao;
 import org.oscarehr.common.model.OscarKey;
 import org.oscarehr.util.SpringUtils;
 
@@ -178,27 +179,25 @@ public class LabUploadAction extends Action {
    /*
     *  Retrieve the clients public key from the database
     */
-    public static ArrayList getClientInfo(String service){
+    public static ArrayList<Object> getClientInfo(String service){
 
         PublicKey Key = null;
         Base64 base64 = new Base64();
         String keyString = "";
         String type = "";
         byte[] publicKey;
-        ArrayList info = new ArrayList();
+        ArrayList<Object> info = new ArrayList<Object>();
 
         try{
+        	PublicKeyDao publicKeyDao=(PublicKeyDao)SpringUtils.getBean("publicKeyDao");
+            org.oscarehr.common.model.PublicKey publicKeyObject=publicKeyDao.find(service);
 
-            String query = "SELECT pubKey, type FROM publicKeys WHERE service='"+service+"';";
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs = db.GetSQL(query);
-
-            while(rs.next()){
-                keyString = db.getString(rs,"pubKey");
-                type = db.getString(rs,"type");
+            if (publicKeyObject!=null)
+            {
+                keyString = publicKeyObject.getPublicKey();
+                type = publicKeyObject.getType();            	
             }
-
-            rs.close();
+            
             publicKey = base64.decode(keyString.getBytes("ASCII"));;
             X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");

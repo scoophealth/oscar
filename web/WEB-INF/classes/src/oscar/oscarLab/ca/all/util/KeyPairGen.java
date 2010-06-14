@@ -1,47 +1,33 @@
-/*
- * KeyPairGen.java
- *
- * Created on June 15, 2007, 12:10 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package oscar.oscarLab.ca.all.util;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.OscarKeyDao;
+import org.oscarehr.common.dao.PublicKeyDao;
 import org.oscarehr.common.model.OscarKey;
+import org.oscarehr.common.model.PublicKey;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
-
-
-
-/**
- *
- * @author wrighd
- */
-public class KeyPairGen {
+public final class KeyPairGen {
     
-    Logger logger = Logger.getLogger(KeyPairGen.class);
+    private static Logger logger = MiscUtils.getLogger();
     
     /**
      * Creates a new instance of KeyPairGen
      */
-    public KeyPairGen() {
+    private KeyPairGen() {
+    	// utility class needs no instantiation
     }
         
     /**
      *  Create a key pair for the specified service and store it in the database
      */
-    public String createKeys(String name, String type){
+    public static String createKeys(String name, String type){
         byte[] pubKey;
         byte[] privKey;
         Base64 base64 = new Base64();
@@ -61,7 +47,7 @@ public class KeyPairGen {
             	
             	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
             	OscarKey oscarKey=new OscarKey();
-            	oscarKey.setId("oscar");
+            	oscarKey.setName("oscar");
             	oscarKey.setPublicKey(new String(pubKey, "ASCII"));
             	oscarKey.setPrivateKey(new String(privKey, "ASCII"));
 
@@ -71,11 +57,15 @@ public class KeyPairGen {
                 // indicate the operation completed successfully
                 return("success");
             }else{
-                // insert the public key into that database
-                String insertStmt = "INSERT INTO publicKeys (service, type, pubKey) VALUES ('"+name+"', '"+type+"', '"+(new String(pubKey, "ASCII"))+"');";
-                if(!runInsertStmt(insertStmt))
-                    return null;
-                                
+            	
+            	PublicKeyDao publicKeyDao=(PublicKeyDao)SpringUtils.getBean("publicKeyDao");
+                PublicKey publicKeyObject=new PublicKey();
+                publicKeyObject.setService(name);
+                publicKeyObject.setType(type);
+                publicKeyObject.setPublicKey(new String(pubKey, "ASCII"));
+                
+                publicKeyDao.persist(publicKeyObject);
+                
                 return(new String(privKey, "ASCII"));
             }
             
@@ -93,7 +83,7 @@ public class KeyPairGen {
     /**
      *  Retrieve oscars public key and return it as a string
      */
-    public String getPublic(){
+    public static String getPublic(){
         try{
         	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
         	OscarKey oscarKey=oscarKeyDao.find("oscar");
@@ -110,7 +100,7 @@ public class KeyPairGen {
      *  Check if the specified service name has already been used to create a key
      *  pair, return 'true' if it has and 'false' otherwise.
      */
-    public boolean checkName(String name){
+    public static boolean checkName(String name){
         if (name.equals("oscar"))
         {
         	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
@@ -119,41 +109,9 @@ public class KeyPairGen {
         }
         else
         {
-            String result = "";
-            
-            String query = "SELECT service FROM publicKeys WHERE service='"+name+"';";
-            try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                ResultSet rs = db.GetSQL(query);
-                
-                while(rs.next()){
-                    result = db.getString(rs,0);
-                }
-                rs.close();
-            }catch(Exception e){
-                logger.error("Could not retrieve service name from database: ",e);
-                return true;
-            }
-        	
-            if (result.equals(""))
-                return false;
-            else
-                return true;
-        }        
-    }
-    
-    /**
-     *  Connect to the database and run the specified insert statement
-     */
-    private boolean runInsertStmt(String insertStmt){
-        try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            db.RunSQL(insertStmt);
-            return true;
-        }catch(Exception e){
-            logger.error("Could not save insert key(s) into the database", e);
-            return false;
+        	PublicKeyDao publicKeyDao=(PublicKeyDao)SpringUtils.getBean("publicKeyDao");
+            PublicKey publicKeyObject=publicKeyDao.find(name);
+            return(publicKeyObject!=null);
         }
-    }
-    
+    }    
 }

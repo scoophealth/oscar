@@ -32,36 +32,33 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "oscarKeys")
-public class OscarKey extends AbstractModel<String> implements Serializable {
+@Table(name = "publicKeys")
+public class PublicKey extends AbstractModel<String> implements Serializable {
 
 	@Id
-	private String name;
+	private String service;
+
+	private String type;
 
 	@Column(name = "pubKey")
 	private String publicKey;
 
-	@Column(name = "privKey")
-	private String privateKey;
-
 	@Override
 	public String getId() {
-		return (name);
+		return (service);
 	}
+
+	public String getService() {
+    	return service;
+    }
 
 	/**
-	 * The OscarKey name is the ID
-	 * @param id
+	 * The public key service name is this objects id
 	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+	public void setService(String service) {
+    	this.service = service;
+    }
 
-	public String getName()
-	{
-		return(name);
-	}
-	
 	public String getPublicKey() {
 		return publicKey;
 	}
@@ -70,12 +67,12 @@ public class OscarKey extends AbstractModel<String> implements Serializable {
 		this.publicKey = publicKey;
 	}
 
-	public String getPrivateKey() {
-		return privateKey;
+	public String getType() {
+		return type;
 	}
 
-	public void setPrivateKey(String privateKey) {
-		this.privateKey = privateKey;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

@@ -26,25 +26,22 @@ String error = "false";
 
 if (name != null){
     if (name.equals("oscar")){
-        KeyPairGen k = new KeyPairGen();
-        if(k.checkName(name)){
+        if(KeyPairGen.checkName(name)){
             message = "Failed: The oscar key pair has already been created";
             error = "true";
-        }else if(k.createKeys(name, null).equals("success")){
+        }else if(KeyPairGen.createKeys(name, null).equals("success")){
             message = "Oscar key pair created successfully";
         }else{
             message = "Failed: Could not create the oscar key pair";
             error = "true";
         }
     }else{
-
-        KeyPairGen k = new KeyPairGen();
-        if(k.checkName(name)){
+        if(KeyPairGen.checkName(name)){
             message = "Failed: Key pair has already been created for the service '"+name+"'";
             error = "true";
         }else{
-            String clientKey = k.createKeys(name, type);
-            String oscarKey = k.getPublic();
+            String clientKey = KeyPairGen.createKeys(name, type);
+            String oscarKey = KeyPairGen.getPublic();
 
             if (clientKey == null){
                 message = "Failed: Could not create key pair";
