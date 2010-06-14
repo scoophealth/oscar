@@ -275,17 +275,23 @@ function disableEditing()
 		form.currentMedications.disabled = disableFields;	
 		form.allergies.disabled = disableFields;	
 
-		form.update.disabled = disableFields;	
-		form.updateAndPrint.disabled = disableFields;	
-		form.updateAndSendElectronically.disabled = disableFields;	
-		form.updateAndFax.disabled = disableFields;	
+		disableIfExists(form.update, disableFields);	
+		disableIfExists(form.updateAndPrint, disableFields);	
+		disableIfExists(form.updateAndSendElectronically, disableFields);	
+		disableIfExists(form.updateAndFax, disableFields);	
 
-		form.submitSaveOnly.disabled = disableFields;	
-		form.submitAndPrint.disabled = disableFields;	
-		form.submitAndSendElectronically.disabled = disableFields;	
-		form.submitAndFax.disabled = disableFields;	
+		disableIfExists(form.submitSaveOnly, disableFields);	
+		disableIfExists(form.submitAndPrint, disableFields);	
+		disableIfExists(form.submitAndSendElectronically, disableFields);	
+		disableIfExists(form.submitAndFax, disableFields);	
 	}	
 }
+
+function disableIfExists(item, disabled)
+{
+	if (item!=null) item.disabled=disabled;
+}
+
 //------------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////
 // create car model objects and fill arrays
