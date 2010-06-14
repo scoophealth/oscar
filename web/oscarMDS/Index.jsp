@@ -60,7 +60,7 @@
         LabResultData data=(LabResultData)labs.get(i);
         List<String> segIDs=new ArrayList();
         String labPatientId=data.getLabPatientId();
-        System.out.println(labPatientId+"--"+data.patientName);
+        MiscUtils.getLogger().debug(labPatientId+"--"+data.patientName);
         if(data.isAbnormal()){
             List<String> abns=ab_NormalDoc.get("abnormal");
             if(abns==null){
@@ -81,7 +81,7 @@
             ab_NormalDoc.put("normal",ns);
         }
         if(patientDocs.containsKey(labPatientId)) {
-            System.out.println(labPatientId+"--"+patientDocs);
+            MiscUtils.getLogger().debug(labPatientId+"--"+patientDocs);
             segIDs=(List)patientDocs.get(labPatientId);
             segIDs.add(data.getSegmentID());
             patientDocs.put(labPatientId,segIDs);
@@ -93,7 +93,7 @@
         docStatus.put(data.getSegmentID(), data.getAcknowledgedStatus());
         docType.put(data.getSegmentID(), data.labType);
     }
-    System.out.println("docType="+docType);
+    MiscUtils.getLogger().debug("docType="+docType);
     Integer totalDocs=0;
     Integer totalHL7=0;
     Hashtable<String,List<String>> typeDocLab=new Hashtable();
@@ -143,15 +143,15 @@
     //Hashtable<String,String> docPatient=new Hashtable();
     //patientIds=patientDocs.keys();
     //while
-    System.out.println("patientDocs="+patientDocs);
-    System.out.println("patientNumDoc="+patientNumDoc);
-    System.out.println("docStatus="+docStatus);
-    System.out.println("typeDocLab="+typeDocLab);
-    System.out.println("ab_NormalDoc="+ab_NormalDoc);
+    MiscUtils.getLogger().debug("patientDocs="+patientDocs);
+    MiscUtils.getLogger().debug("patientNumDoc="+patientNumDoc);
+    MiscUtils.getLogger().debug("docStatus="+docStatus);
+    MiscUtils.getLogger().debug("typeDocLab="+typeDocLab);
+    MiscUtils.getLogger().debug("ab_NormalDoc="+ab_NormalDoc);
     List<String> normals=ab_NormalDoc.get("normal");
     List<String> abnormals=ab_NormalDoc.get("abnormal");
 
-    System.out.println("labs.size="+labs.size());
+    MiscUtils.getLogger().debug("labs.size="+labs.size());
     HashMap labMap = new HashMap();
     LinkedHashMap accessionMap = new LinkedHashMap();
     LabResultData result;
@@ -216,7 +216,8 @@
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
-<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%><html>
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
     <!-- main calendar program -->
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
@@ -1045,7 +1046,7 @@ function wrapUp() {
                                 String discipline=result.getDiscipline();
                                 if(discipline==null || discipline.equalsIgnoreCase("null"))
                                     discipline="";
-                                System.out.println("result.isAbnormal()="+result.isAbnormal());
+                                MiscUtils.getLogger().debug("result.isAbnormal()="+result.isAbnormal());
                                 %>
 
                                 <tr bgcolor="<%=bgcolor%>" <%if(result.isDocument()){%> name="scannedDoc" <%} else{%> name="notScannedDoc" <%}%>style="display:hidden" class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
