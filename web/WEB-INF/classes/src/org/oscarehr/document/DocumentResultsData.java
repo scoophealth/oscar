@@ -120,7 +120,7 @@ public class DocumentResultsData {
                         " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";
             }
             
-            logger.info(sql);
+            logger.debug(sql);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 
@@ -156,7 +156,7 @@ public class DocumentResultsData {
                 }
                 if(lbData.getPatientName().equalsIgnoreCase("Not, Assigned"))
                     lbData.setLabPatientId("-1");
-                System.out.println("DOCU<ENT "+lbData.isMatchedToPatient());
+                logger.debug("DOCU<ENT "+lbData.isMatchedToPatient());
                 rscd.close();
                 //dbh.CloseConn();
                 //END BAD
