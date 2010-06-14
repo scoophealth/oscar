@@ -156,16 +156,20 @@ public class MiscUtils {
 		String configLocation = System.getProperty("log4j.override.configuration");
 		if (configLocation != null)
 		{
-			if (contextPath != null)
-			{
-				if (contextPath.length() > 0 && contextPath.charAt(0) == '/') contextPath = contextPath.substring(1);
-				if (contextPath.length() > 0 && contextPath.charAt(contextPath.length() - 1) == '/')
-					contextPath = contextPath.substring(0, contextPath.length() - 2);
+			if (configLocation.contains("${contextName}"))
+			{	
+				if (contextPath != null)
+				{
+					if (contextPath.length() > 0 && contextPath.charAt(0) == '/') contextPath = contextPath.substring(1);
+					if (contextPath.length() > 0 && contextPath.charAt(contextPath.length() - 1) == '/')
+						contextPath = contextPath.substring(0, contextPath.length() - 2);
+				}
+				
+				configLocation=configLocation.replace("${contextName}", contextPath);
 			}
-
-			String resolvedLocation = configLocation.replace("${contextName}", contextPath);
-			getLogger().info("loading additional override logging configuration from : "+resolvedLocation);
-			DOMConfigurator.configureAndWatch(resolvedLocation);
+			
+			getLogger().info("loading additional override logging configuration from : "+configLocation);
+			DOMConfigurator.configureAndWatch(configLocation);
 		}
 	}
 
