@@ -225,64 +225,23 @@ function K( serviceNumber, service ){
 //-------------------------------------------------------------------
 
 //-----------------disableDateFields() disables date fields if "Patient Will Book" selected
-var disableFields=false;
-
 function disableDateFields(){
 	if(document.forms[0].patientWillBook.checked){
-		setDisabledDateFields(document.forms[0], true);
+		document.forms[0].appointmentYear.disabled = true;
+		document.forms[0].appointmentMonth.disabled = true;
+		document.forms[0].appointmentDay.disabled = true;
+		document.forms[0].appointmentHour.disabled = true;
+		document.forms[0].appointmentMinute.disabled = true;
+		document.forms[0].appointmentPm.disabled = true;
 	}
 	else{
-		setDisabledDateFields(document.forms[0], false);
+		document.forms[0].appointmentYear.disabled = false;
+		document.forms[0].appointmentMonth.disabled = false;
+		document.forms[0].appointmentDay.disabled = false;
+		document.forms[0].appointmentHour.disabled = false;
+		document.forms[0].appointmentMinute.disabled = false;
+		document.forms[0].appointmentPm.disabled = false;
 	}
-}
-
-function setDisabledDateFields(form, disabled)
-{
-	form.appointmentYear.disabled = disabled;
-	form.appointmentMonth.disabled = disabled;
-	form.appointmentDay.disabled = disabled;
-	form.appointmentHour.disabled = disabled;
-	form.appointmentMinute.disabled = disabled;
-	form.appointmentPm.disabled = disabled;	
-}
-
-function disableEditing()
-{
-	if (disableFields)
-	{
-		form=document.forms[0];
-
-		setDisabledDateFields(form, disableFields);
-
-		form.status[0].disabled = disableFields;	
-		form.status[1].disabled = disableFields;	
-		form.status[2].disabled = disableFields;	
-		form.status[3].disabled = disableFields;	
-		
-		form.referalDate.disabled = disableFields;	
-		form.service.disabled = disableFields;	
-		form.urgency.disabled = disableFields;	
-		form.phone.disabled = disableFields;	
-		form.fax.disabled = disableFields;	
-		form.address.disabled = disableFields;	
-		form.patientWillBook.disabled = disableFields;	
-		form.sendTo.disabled = disableFields;	
-
-		form.appointmentNotes.disabled = disableFields;	
-		form.reasonForConsultation.disabled = disableFields;	
-		form.clinicalInformation.disabled = disableFields;	
-		form.concurrentProblems.disabled = disableFields;	
-		form.currentMedications.disabled = disableFields;	
-		form.allergies.disabled = disableFields;	
-
-		form.update.disabled = disableFields;	
-		form.updateAndPrint.disabled = disableFields;	
-		form.updateAndSendElectronically.disabled = disableFields;	
-
-		form.submit.disabled = disableFields;	
-		form.submitAndPrint.disabled = disableFields;	
-		form.submitAndSendElectronically.disabled = disableFields;	
-	}	
 }
 //------------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////
@@ -729,7 +688,7 @@ function fetchAttached() {
 <%=WebUtils.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF"
-	onload="window.focus();disableDateFields();fetchAttached();disableEditing()">
+	onload="window.focus();disableDateFields();fetchAttached();">
 <html:errors />
 
 <html:form action="/oscarEncounter/RequestConsultation"
@@ -770,15 +729,6 @@ function fetchAttached() {
 			//thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
 			thisForm.setAppointmentYear(year);
 
-		}
-		
-		if (thisForm.isViewOnly())
-		{
-			%>
-				<SCRIPT LANGUAGE="JavaScript">
-					disableFields=true;
-				</SCRIPT>
-			<%
 		}
 	%>
 
