@@ -131,7 +131,7 @@ public class MiscUtils {
 	}
 
 	/**
-	 * This method should only really be called once per context in the context startup listener.	 * @param contextPath
+	 * This method should only really be called once per context in the context startup listener.
 	 */
 	protected static void addLoggingOverrideConfiguration(String contextPath)
 	{
