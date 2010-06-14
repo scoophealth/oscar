@@ -387,7 +387,19 @@ public class Hl7textResultsData {
             logger.info(sql);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                
+
+            	if (logger.isDebugEnabled())
+            	{
+            		int columns=rs.getMetaData().getColumnCount();
+            		StringBuilder sb=new StringBuilder();
+            		for (int i=0; i<columns; i++)
+            		{
+            			sb.append(rs.getString(i+1));
+            			sb.append(", ");
+            		}
+            		logger.debug("Record found : "+sb.toString());
+            	}
+            	
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
                 lbData.labType = LabResultData.HL7TEXT;
                 lbData.segmentID = db.getString(rs,"lab_no");
@@ -395,7 +407,7 @@ public class Hl7textResultsData {
                 if(lbData.isMatchedToPatient()){
                     //get matched demographic no
                     String sql2="select * from patientLabRouting plr where plr.lab_no="+Integer.parseInt(lbData.segmentID)+" and plr.lab_type='"+lbData.labType+"'";
-                    System.out.println("sql2="+sql2);
+                    logger.debug("sql2="+sql2);
                     ResultSet rs2=db.GetSQL(sql2);
                     if(rs2.next())
                         lbData.setLabPatientId(db.getString(rs2, "demographic_no"));
