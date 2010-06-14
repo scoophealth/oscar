@@ -11,7 +11,7 @@ import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 public final class OscarToOscarUtils {
-	public static final String SERVICE_NAME = "OSCAR_TO_OSCAR_HL7_V2";
+	public static final String UPLOAD_MESSAGE_TYPE = "OSCAR_TO_OSCAR_HL7_V2";
 	public static final String ENCODING="UTF-8";
 	public static final Base64 base64=new Base64();
 	public static final PipeParser pipeParser=initialisePipeParser();

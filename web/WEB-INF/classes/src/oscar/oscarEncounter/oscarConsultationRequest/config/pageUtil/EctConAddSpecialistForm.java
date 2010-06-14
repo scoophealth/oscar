@@ -47,7 +47,8 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String eReferralUrl;
 	String eReferralOscarKey;
 	String eReferralServiceKey;
-	
+	String eReferralServiceName;
+
 	public EctConAddSpecialistForm() {
 		whichType = 0;
 	}
@@ -207,27 +208,34 @@ public final class EctConAddSpecialistForm extends ActionForm {
 
 	public String geteReferralUrl() {
 		return eReferralUrl;
-    }
+	}
 
 	public void seteReferralUrl(String eReferralUrl) {
-    	this.eReferralUrl = eReferralUrl;
-    }
+		this.eReferralUrl = eReferralUrl;
+	}
 
 	public String geteReferralOscarKey() {
-    	return eReferralOscarKey;
-    }
+		return eReferralOscarKey;
+	}
 
 	public void seteReferralOscarKey(String eReferralOscarKey) {
-    	this.eReferralOscarKey = eReferralOscarKey;
-    }
+		this.eReferralOscarKey = eReferralOscarKey;
+	}
 
 	public String geteReferralServiceKey() {
-    	return eReferralServiceKey;
-    }
+		return eReferralServiceKey;
+	}
 
 	public void seteReferralServiceKey(String eReferralServiceKey) {
-    	this.eReferralServiceKey = eReferralServiceKey;
-    }
+		this.eReferralServiceKey = eReferralServiceKey;
+	}
 
-	
+	public String geteReferralServiceName() {
+		return eReferralServiceName;
+	}
+
+	public void seteReferralServiceName(String eReferralServiceName) {
+		this.eReferralServiceName = eReferralServiceName;
+	}
+
 }

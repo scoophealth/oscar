@@ -6385,6 +6385,7 @@ CREATE TABLE professionalSpecialists (
   eReferralUrl varchar(255),
   eReferralOscarKey varchar(1024),
   eReferralServiceKey varchar(1024),
+  eReferralServiceName varchar(255),
   lastUpdated datetime not null
 ) ;
 

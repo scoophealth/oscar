@@ -104,6 +104,7 @@ public class EctConAddSpecialistAction extends Action {
         professionalSpecialist.seteReferralUrl(addSpecailistForm.geteReferralUrl());
         professionalSpecialist.seteReferralOscarKey(addSpecailistForm.geteReferralOscarKey());
         professionalSpecialist.seteReferralServiceKey(addSpecailistForm.geteReferralServiceKey());
+        professionalSpecialist.seteReferralServiceName(addSpecailistForm.geteReferralServiceName());
     }
 }
 

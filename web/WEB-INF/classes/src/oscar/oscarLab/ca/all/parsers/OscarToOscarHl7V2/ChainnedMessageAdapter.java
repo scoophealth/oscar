@@ -79,7 +79,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 	public abstract CategoryType getMessageCategory();
 
 	public String getMsgType() {
-		return (OscarToOscarUtils.SERVICE_NAME);
+		return (OscarToOscarUtils.UPLOAD_MESSAGE_TYPE);
 	}
 
 	public String getMsgDate() {

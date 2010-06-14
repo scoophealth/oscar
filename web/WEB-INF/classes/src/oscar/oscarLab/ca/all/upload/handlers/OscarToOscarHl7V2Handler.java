@@ -42,7 +42,7 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 	        String dataString=new String(dataBytes, OscarToOscarUtils.ENCODING);
 	        logger.debug("Incoming HL7 Message : \n"+dataString);
 	        
-			MessageUploader.routeReport(OscarToOscarUtils.SERVICE_NAME, dataString, fileId);
+			MessageUploader.routeReport(OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
 		} catch (Exception e) {
 	        logger.error("Unexpected error.", e);
 	        MessageUploader.clean(fileId);

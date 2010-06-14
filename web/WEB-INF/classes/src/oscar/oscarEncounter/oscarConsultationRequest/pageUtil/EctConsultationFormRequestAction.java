@@ -258,7 +258,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 	    
 	    REF_I12 refI12=RefI12.makeRefI12(facility.getName(), consultationRequest, new StreetAddressDataHolder());
-	    SendingUtils.send(refI12, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey());
+	    SendingUtils.send(refI12, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey(), professionalSpecialist.geteReferralServiceName());
     }
 
 }

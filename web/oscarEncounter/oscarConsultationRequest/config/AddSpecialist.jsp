@@ -169,6 +169,10 @@ function BackToOscar() {
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralServiceKey" /></td>
 						</tr>
 						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralServiceName" /></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralServiceName" /></td>
+						</tr>
+						<tr>
 							<td colspan="6">
 								<input type="hidden" name="whichType" value="<%=whichType%>" /> 
 								<input type="submit" name="transType" value="<%=transactionType%>" />

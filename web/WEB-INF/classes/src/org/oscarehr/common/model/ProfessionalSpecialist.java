@@ -78,6 +78,7 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	private String eReferralUrl;
 	private String eReferralOscarKey;
 	private String eReferralServiceKey;
+	private String eReferralServiceName;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
@@ -196,4 +197,14 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	public void seteReferralServiceKey(String eReferralServiceKey) {
     	this.eReferralServiceKey = StringUtils.trimToNull(eReferralServiceKey);
     }
+
+	public String geteReferralServiceName() {
+    	return eReferralServiceName;
+    }
+
+	public void seteReferralServiceName(String eReferralServiceName) {
+    	this.eReferralServiceName = StringUtils.trimToNull(eReferralServiceName);
+    }
+	
+	
 }

@@ -88,7 +88,8 @@ if (message != null){
     failDisplay = "block";
 }
 %>
-<html>
+
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -173,6 +174,7 @@ if (message != null){
 					<option value="ICL">ICL</option>
 					<option value="MDS">MDS</option>
 					<option value="PATHL7">EXCELLERIS</option>
+					<option value="<%=OscarToOscarUtils.UPLOAD_MESSAGE_TYPE%>"><%=OscarToOscarUtils.UPLOAD_MESSAGE_TYPE%></option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>
