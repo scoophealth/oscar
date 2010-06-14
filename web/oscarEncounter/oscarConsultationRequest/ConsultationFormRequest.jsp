@@ -227,22 +227,23 @@ function K( serviceNumber, service ){
 //-----------------disableDateFields() disables date fields if "Patient Will Book" selected
 function disableDateFields(){
 	if(document.forms[0].patientWillBook.checked){
-		document.forms[0].appointmentYear.disabled = true;
-		document.forms[0].appointmentMonth.disabled = true;
-		document.forms[0].appointmentDay.disabled = true;
-		document.forms[0].appointmentHour.disabled = true;
-		document.forms[0].appointmentMinute.disabled = true;
-		document.forms[0].appointmentPm.disabled = true;
+		setDisabledDateFields(document.forms[0], true);
 	}
 	else{
-		document.forms[0].appointmentYear.disabled = false;
-		document.forms[0].appointmentMonth.disabled = false;
-		document.forms[0].appointmentDay.disabled = false;
-		document.forms[0].appointmentHour.disabled = false;
-		document.forms[0].appointmentMinute.disabled = false;
-		document.forms[0].appointmentPm.disabled = false;
+		setDisabledDateFields(document.forms[0], false);
 	}
 }
+
+function setDisabledDateFields(form, disabled)
+{
+	form.appointmentYear.disabled = disabled;
+	form.appointmentMonth.disabled = disabled;
+	form.appointmentDay.disabled = disabled;
+	form.appointmentHour.disabled = disabled;
+	form.appointmentMinute.disabled = disabled;
+	form.appointmentPm.disabled = disabled;	
+}
+
 //------------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////
 // create car model objects and fill arrays
