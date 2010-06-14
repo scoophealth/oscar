@@ -227,23 +227,22 @@ function K( serviceNumber, service ){
 //-----------------disableDateFields() disables date fields if "Patient Will Book" selected
 function disableDateFields(){
 	if(document.forms[0].patientWillBook.checked){
-		setDisabledDateFields(document.forms[0], true);
+		document.forms[0].appointmentYear.disabled = true;
+		document.forms[0].appointmentMonth.disabled = true;
+		document.forms[0].appointmentDay.disabled = true;
+		document.forms[0].appointmentHour.disabled = true;
+		document.forms[0].appointmentMinute.disabled = true;
+		document.forms[0].appointmentPm.disabled = true;
 	}
 	else{
-		setDisabledDateFields(document.forms[0], false);
+		document.forms[0].appointmentYear.disabled = false;
+		document.forms[0].appointmentMonth.disabled = false;
+		document.forms[0].appointmentDay.disabled = false;
+		document.forms[0].appointmentHour.disabled = false;
+		document.forms[0].appointmentMinute.disabled = false;
+		document.forms[0].appointmentPm.disabled = false;
 	}
 }
-
-function setDisabledDateFields(form, disabled)
-{
-	form.appointmentYear.disabled = disabled;
-	form.appointmentMonth.disabled = disabled;
-	form.appointmentDay.disabled = disabled;
-	form.appointmentHour.disabled = disabled;
-	form.appointmentMinute.disabled = disabled;
-	form.appointmentPm.disabled = disabled;	
-}
-
 //------------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////
 // create car model objects and fill arrays
@@ -729,7 +728,7 @@ function fetchAttached() {
 			thisForm.setSendTo(team);
 			//thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
 			thisForm.setAppointmentYear(year);
-
+	
 		}
 	%>
 
@@ -746,7 +745,8 @@ function fetchAttached() {
 				<tr>
 					<td class="Header"
 						style="padding-left: 2px; padding-right: 2px; border-right: 2px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
-						NOWRAP><%=thisForm.getPatientName()%> <%=thisForm.getPatientSex()%>	<%=thisForm.getPatientAge()%></td>
+						NOWRAP><%=consultUtil.patientName%> <%=consultUtil.patientSex%>
+					<%=consultUtil.patientAge%></td>
 				</tr>
 			</table>
 			</td>
@@ -761,7 +761,7 @@ function fetchAttached() {
 							<td class="stat" colspan="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCreated" />:</td>
 						</tr>
 						<tr>
-							<td class="stat" colspan="2" align="right" nowrap><%=thisForm.getProviderName()%>
+							<td class="stat" colspan="2" align="right" nowrap><%=consultUtil.getProviderName(consultUtil.providerNo)%>
 							</td>
 						</tr>
 					</table>
@@ -813,7 +813,9 @@ function fetchAttached() {
 						<tr>
 							<td class="stat"><html:radio property="status" value="4" />
 							</td>
-							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCompleted" /></td>
+							<td class="stat"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCompleted" />
+							</td>
 						</tr>
 					</table>
 					</td>
@@ -825,24 +827,9 @@ function fetchAttached() {
 							<td class="stat">&nbsp;</td>
 						</tr>
 						<tr>
-							<td style="text-align: center" class="stat">
-							<%
-								if (thisForm.isViewOnly())
-								{
-									%>
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" />
-									<%
-								}
-								else
-								{
-									%>
-									<a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;">
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" />
-									</a>
-									<%
-								}
-							%>													
-							</td>
+							<td style="text-align: center" class="stat"><a href="#"
+								onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" /></a></td>
 						</tr>
 						<tr>
 							<td style="text-align: center"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.curAttachDoc"/>:</td>
@@ -881,11 +868,14 @@ function fetchAttached() {
 							<%
 								if (request.getAttribute("id") != null)
 										{
-							%> <html:text styleClass="righty" property="referalDate" /> <%
+							%> <html:text
+								styleClass="righty" property="referalDate" /> <%
  	}
  			else
  			{
- %> <html:text styleClass="righty" property="referalDate" value="<%=formattedDate%>" /> <%
+ %> <html:text
+								styleClass="righty" property="referalDate"
+								value="<%=formattedDate%>" /> <%
  	}
  %>
 							</td>
@@ -905,49 +895,35 @@ function fetchAttached() {
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons" />:
 							</td>
-							<td align="right" class="tite2">
-							<%
-								if (thisForm.isViewOnly())
-								{
-									%>
-										<%=thisForm.getProfessionalSpecialistName()%>
-									<%
-								}
-								else
-								{
-									%>
-									<html:select property="specialist" size="1" onchange="onSelectSpecialist(this)">
-									<!-- <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
-	                                        <option/>
-					    				<option/>
-						    			<option/>
-							    		<option/> -->
-									</html:select>
-									<%
-								}
-							%>						
-							</td>
+							<td align="right" class="tite2"><html:select property="specialist" size="1" onchange="onSelectSpecialist(this)">
+								<!-- <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
+                                        <option/>
+	    				<option/>
+		    			<option/>
+			    		<option/> -->
+							</html:select></td>
 						</tr>
 						<tr>
-							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency" /></td>
-							<td align="right" class="tite2">
-								<html:select property="urgency">
-									<html:option value="2">
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent" />
-									</html:option>
-									<html:option value="1">
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent" />
-									</html:option>
-									<html:option value="3">
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn" />
-									</html:option>
-								</html:select>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency" />
 							</td>
+							<td align="right" class="tite2"><html:select
+								property="urgency">
+								<html:option value="2">
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent" />
+								</html:option>
+								<html:option value="1">
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent" />
+								</html:option>
+								<html:option value="3">
+									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn" />
+								</html:option>
+							</html:select></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPhone" />:
 							</td>
-							<td align="right" class="tite2"><input type="text" name="phone" class="righty" value="<%=thisForm.getProfessionalSpecialistPhone()%>" /></td>
+							<td align="right" class="tite2"><input type="text" name="phone" class="righty" /></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formFax" />:
@@ -956,12 +932,11 @@ function fetchAttached() {
 						</tr>
 
 						<tr>
-							<td class="tite4">
-								<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAddr" />:
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAddr" />:
 							</td>
-							<td align="right" class="tite3">
-								<textarea name="address" cols=20 ><%=thisForm.getProfessionalSpecialistAddress()%></textarea>
-							</td>
+							<td align="right" class="tite3"><textarea name="address"
+								cols=20></textarea></td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPatientBook" />:</td>
@@ -969,23 +944,11 @@ function fetchAttached() {
 							</html:checkbox></td>
 						</tr>
 						<tr>
-							<td class="tite4">
-							<%
-								if (thisForm.isViewOnly())
-								{
-									%>
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> : 
-									<%
-								}
-								else
-								{
-									%>
-									<a href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName()%>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')">
-										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> : 
-									</a>
-									<%
-								}
-							%>						
+							<td class="tite4"><a
+								href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName()%>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate"
+							/>:</a>
+
 							</td>
 							<td align="right" class="tite3">
 							<table bgcolor="white">
@@ -995,48 +958,46 @@ function fetchAttached() {
 									<th class="tite2"><bean:message key="global.day" /></th>
 								</tr>
 								<tr>
-									<td class="tite3"><html:text size="5" maxlength="4"	property="appointmentYear" /></td>
-									<td class="tite3">
-										<html:select property="appointmentMonth">
+									<td class="tite3"><html:text size="5" maxlength="4"
+										property="appointmentYear" /></td>
+									<td class="tite3"><html:select property="appointmentMonth">
 										<%
 											for (int i = 1; i < 13; i = i + 1)
-											{
-												String month = Integer.toString(i);
-												if (i < 10)
-												{
-													month = "0" + month;
-												}
-												%>
-												<html:option value="<%=month%>"><%=month%></html:option>
-												<%
+														{
+															String month = Integer.toString(i);
+															if (i < 10)
+															{
+																month = "0" + month;
+															}
+										%>
+										<html:option value="<%=month%>"><%=month%></html:option>
+										<%
 											}
 										%>
-										</html:select>
-									</td>
-						
-									<td class="tite3">
-										<html:select property="appointmentDay">
+									</html:select></td>
+									<td class="tite3"><html:select property="appointmentDay">
 										<%
 											for (int i = 1; i < 32; i = i + 1)
-											{
-												String dayOfWeek = Integer.toString(i);
-												if (i < 10)
-												{
-													dayOfWeek = "0" + dayOfWeek;
-												}
-												%>
-												<html:option value="<%=dayOfWeek%>"><%=dayOfWeek%></html:option>
-												<%
+														{
+															String dayOfWeek = Integer.toString(i);
+															if (i < 10)
+															{
+																dayOfWeek = "0" + dayOfWeek;
+															}
+										%>
+										<html:option value="<%=dayOfWeek%>"><%=dayOfWeek%></html:option>
+										<%
 											}
 										%>
-										</html:select>
-									</td>
+
+									</html:select></td>
 								</tr>
 							</table>
 							</td>
 						</tr>
 						<tr>
-							<td class="tite4"><bean:message	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime" />:
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime" />:
 							</td>
 							<td align="right" class="tite3">
 							<table>
@@ -1295,8 +1256,8 @@ function fetchAttached() {
 						if (request.getAttribute("id") != null)
 								{
 					%>
-						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
 						<input name="updateAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
 						<%
 							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
@@ -1311,8 +1272,8 @@ function fetchAttached() {
 								else
 								{
 					%> 
-						<input name="submit" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
-						<input name="submitAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
+						<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>" onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
 						<input name="submitAndSendElectronically" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendElectronicReferral"/>" onclick="return checkForm('Submit_esend','EctConsultationFormRequestForm');" />
 						<%
 							if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes"))
