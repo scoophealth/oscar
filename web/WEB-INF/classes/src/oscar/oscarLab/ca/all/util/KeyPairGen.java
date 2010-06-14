@@ -16,6 +16,9 @@ import java.sql.ResultSet;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.OscarKeyDao;
+import org.oscarehr.common.model.OscarKey;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -55,9 +58,15 @@ public class KeyPairGen {
             if( name.equals("oscar")){
                 // the primary key is name, therefore this statement will only
                 // be able to run once and the oscar key pair will not be overwritten
-                String insertStmt = "INSERT INTO oscarKeys (name, pubKey, privKey) VALUES ('oscar','"+(new String(pubKey, "ASCII"))+"','"+(new String(privKey, "ASCII"))+"');";
-                runInsertStmt(insertStmt);
-                
+            	
+            	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
+            	OscarKey oscarKey=new OscarKey();
+            	oscarKey.setId("oscar");
+            	oscarKey.setPublicKey(new String(pubKey, "ASCII"));
+            	oscarKey.setPrivateKey(new String(privKey, "ASCII"));
+
+            	oscarKeyDao.persist(oscarKey);            	
+            	
                 // no keys need to be returned so return "success" instead to 
                 // indicate the operation completed successfully
                 return("success");
@@ -85,22 +94,13 @@ public class KeyPairGen {
      *  Retrieve oscars public key and return it as a string
      */
     public String getPublic(){
-        String key = "";
-        
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            
-            String query = "SELECT pubKey FROM oscarKeys WHERE name='oscar';";
-            ResultSet rs = db.GetSQL(query);
-            
-            while(rs.next()){
-                key = db.getString(rs,"pubKey");
-            }
-            rs.close();
-            return(key);
-            
+        	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
+        	OscarKey oscarKey=oscarKeyDao.find("oscar");
+
+            return(oscarKey.getPublicKey());
         }catch(Exception e){
-            logger.error("Could not save public key", e);
+            logger.error("Could not get public key", e);
             return null;
         }
 
@@ -111,32 +111,35 @@ public class KeyPairGen {
      *  pair, return 'true' if it has and 'false' otherwise.
      */
     public boolean checkName(String name){
-        String query = "";
-        String result = "";
-        
         if (name.equals("oscar"))
-            query = "SELECT name FROM oscarKeys Where name='oscar';";
-        else
-            query = "SELECT service FROM publicKeys WHERE service='"+name+"';";
-        
-        try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs = db.GetSQL(query);
-            
-            while(rs.next()){
-                result = db.getString(rs,0);
-            }
-            rs.close();
-        }catch(Exception e){
-            logger.error("Could not retrieve service name from database: ",e);
-            return true;
+        {
+        	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
+        	OscarKey oscarKey=oscarKeyDao.find("oscar");
+        	return(oscarKey!=null);
         }
-        
-        if (result.equals(""))
-            return false;
         else
-            return true;
-        
+        {
+            String result = "";
+            
+            String query = "SELECT service FROM publicKeys WHERE service='"+name+"';";
+            try{
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs = db.GetSQL(query);
+                
+                while(rs.next()){
+                    result = db.getString(rs,0);
+                }
+                rs.close();
+            }catch(Exception e){
+                logger.error("Could not retrieve service name from database: ",e);
+                return true;
+            }
+        	
+            if (result.equals(""))
+                return false;
+            else
+                return true;
+        }        
     }
     
     /**

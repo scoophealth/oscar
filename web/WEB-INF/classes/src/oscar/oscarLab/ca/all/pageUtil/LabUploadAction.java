@@ -35,6 +35,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.common.dao.OscarKeyDao;
+import org.oscarehr.common.model.OscarKey;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.FileUploadCheck;
@@ -218,20 +221,13 @@ public class LabUploadAction extends Action {
         PrivateKey Key = null;
         Base64 base64 = new Base64();
         byte[] privateKey;
-        String keyString = "";
 
         try{
+        	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
+        	OscarKey oscarKey=oscarKeyDao.find("oscar");
+            logger.info("oscar key: "+oscarKey);
 
-            String query = "SELECT privKey FROM oscarKeys WHERE name='oscar';";
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs = db.GetSQL(query);
-
-            while(rs.next()){
-                keyString = db.getString(rs,"privKey");
-            }
-            logger.info("oscar key: "+keyString);
-            rs.close();
-            privateKey = base64.decode(keyString.getBytes("ASCII"));
+            privateKey = base64.decode(oscarKey.getPrivateKey().getBytes("ASCII"));
             PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privateKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             Key = keyFactory.generatePrivate(privKeySpec);
