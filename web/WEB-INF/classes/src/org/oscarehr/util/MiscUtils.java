@@ -132,6 +132,24 @@ public class MiscUtils {
 
 	/**
 	 * This method should only really be called once per context in the context startup listener.
+	 * 
+	 * The purpose of this is to allow customisations to the logging on a per-deployment basis with out
+	 * needing to commit the configuration to cvs while at the same time allowing you to keep your
+	 * configuration through multiple deployments. As an example, if you modified the WEB-INF/classes/log4j.xml
+	 * either you have to commit that and everyone gets your configuration, or you don't commit it,
+	 * every new deploy will over write changes you made locally to your log4j.xml. This helper method alleviates this problem.
+	 * 
+	 * The functionality of this is as follows :
+	 * 
+	 * The system configuration parameter "log4j.override.configuration" specifies the file to use
+	 * to override overlay on top of the default log4j.xml file. This can be a relative or absolute path.
+	 * An example maybe "/home/foo/my_override_log4j.xml"
+	 * 
+	 * The filename specified is allowed to have a special placeholder ${contextName}, this allows the
+	 * system variable to be used when multiple oscar contexts exist. As an example it maybe
+	 * "/home/foo/${contextName}_log4.xml". During runtime, when each context startup calls this method
+	 * the ${contextName} is replaced with the contextPath. So as an example of you had 2 contexts called
+	 * "asdf" and "zxcv" respectively, it will look for /home/foo/asdf_log4j.xml and /home/foo/zxcv_log4j.xml.
 	 */
 	protected static void addLoggingOverrideConfiguration(String contextPath)
 	{
