@@ -257,8 +257,14 @@ public class EctConsultationFormRequestAction extends Action {
 	    
 	    Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 	    
+	    // set status now so the remote version shows this status
+	    consultationRequest.setStatus("2");
+
 	    REF_I12 refI12=RefI12.makeRefI12(facility.getName(), consultationRequest, new StreetAddressDataHolder());
 	    SendingUtils.send(refI12, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey(), professionalSpecialist.geteReferralServiceName());
+	    
+	    // save after the sending just in case the sending fails.
+	    consultationRequestDao.merge(consultationRequest);
     }
 
 }
