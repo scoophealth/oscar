@@ -28,7 +28,7 @@ public final class RefI12 {
 	
 	public enum REF_NTE_TYPE
 	{
-		APPOINTMENT_NOTES,
+		// APPOINTMENT_NOTES, this field is purposely removed as I was told this field specifically should not be sent with eReferrals
 		REASON_FOR_CONSULTATION,
 		CLINICAL_INFORMATION,
 		CONCURRENT_PROBLEMS,
@@ -81,12 +81,22 @@ public final class RefI12 {
 	{
 		// for each data section, we'll create a new NTE and we'll label the section some how...
 
-		DataTypeUtils.fillNte(referralMsg.getNTE(0), REF_NTE_TYPE.APPOINTMENT_NOTES.name(), consultationRequest.getStatusText());
-		DataTypeUtils.fillNte(referralMsg.getNTE(1), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), consultationRequest.getReasonForReferral());
-		DataTypeUtils.fillNte(referralMsg.getNTE(2), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), consultationRequest.getClinicalInfo());
-		DataTypeUtils.fillNte(referralMsg.getNTE(3), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), consultationRequest.getConcurrentProblems());
-		DataTypeUtils.fillNte(referralMsg.getNTE(4), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), consultationRequest.getCurrentMeds());
-		DataTypeUtils.fillNte(referralMsg.getNTE(5), REF_NTE_TYPE.ALLERGIES.name(), consultationRequest.getAllergies());
+		// Was specifically told that appointment notes is considered a secret field that should never be shown to the referredTo Provider
+		// DataTypeUtils.fillNte(referralMsg.getNTE(0), REF_NTE_TYPE.APPOINTMENT_NOTES.name(), consultationRequest.getStatusText());
+		int noteCounter=0;
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), consultationRequest.getReasonForReferral());
+
+		noteCounter++;
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), consultationRequest.getClinicalInfo());
+		
+		noteCounter++;
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), consultationRequest.getConcurrentProblems());
+		
+		noteCounter++;
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), consultationRequest.getCurrentMeds());
+		
+		noteCounter++;
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.ALLERGIES.name(), consultationRequest.getAllergies());
 	}
 
 	

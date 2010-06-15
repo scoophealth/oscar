@@ -150,26 +150,11 @@ public class EctViewRequestAction extends Action {
         GregorianCalendar referralDate=DataTypeUtils.getCalendarFromDTM(refI12.getRF1().getEffectiveDate().getTime());
         thisForm.setReferalDate(DateFormatUtils.ISO_DATE_FORMAT.format(referralDate));
 
-//        thisForm.setSendTo();
-//        thisForm.setService(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setStatus(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setAppointmentDay(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setAppointmentMonth(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setAppointmentYear(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setAppointmentHour(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setAppointmentMinute(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setAppointmentPm(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-
         thisForm.setConcurrentProblems(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CONCURRENT_PROBLEMS));
-        thisForm.setAppointmentNotes(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.APPOINTMENT_NOTES));
 
-//        thisForm.setUrgency(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        thisForm.setPatientWillBook(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//
-//        if( !consultUtil.teamVec.contains(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES)) ) {
-//            consultUtil.teamVec.add(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
-//        }
-        
+        // spoecifically told that this field should not be sent electronically (so it shouldn't be received either).
+        // thisForm.setAppointmentNotes(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.APPOINTMENT_NOTES));
+
         //---
         
         
