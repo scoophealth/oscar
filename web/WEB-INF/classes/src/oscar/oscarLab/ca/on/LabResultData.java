@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
@@ -45,7 +46,7 @@ import oscar.util.UtilDateUtilities;
  */
 public class LabResultData implements Comparable{
     
-    Logger logger = Logger.getLogger(LabResultData.class );
+    Logger logger = MiscUtils.getLogger();
     
     public static String CML = "CML";
     public static String MDS = "MDS";
@@ -108,13 +109,13 @@ public class LabResultData implements Comparable{
     
     public boolean isAbnormal(){
         if (EXCELLERIS.equals(this.labType)){
-            //System.out.println("excelleris is doc type");
+            //logger.debug("excelleris is doc type");
             PathnetResultsData prd = new PathnetResultsData();
             if (prd.findPathnetAdnormalResults(this.segmentID) > 0){
                 this.abn= true;
             }
         }else if(CML.equals(this.labType)){
-            //System.out.println("cml is doc type");
+            //logger.debug("cml is doc type");
             CMLLabTest cml = new CMLLabTest();
             if (cml.findCMLAdnormalResults(this.segmentID) > 0){
                 this.abn= true;
@@ -212,7 +213,7 @@ public class LabResultData implements Comparable{
 //          this.isMatchedToPatient = prd.isLabLinkedWithPatient(this.segmentID);
 //       }
         CommonLabResultData commonLabResultData = new CommonLabResultData();
-        System.out.println("in ismatchedtopatient, "+this.segmentID+"--"+this.labType);
+        logger.debug("in ismatchedtopatient, "+this.segmentID+"--"+this.labType);
         if(this.labType.equals("DOC"))
             this.isMatchedToPatient=commonLabResultData.isDocLinkedWithPatient(this.segmentID,this.labType);
         else
