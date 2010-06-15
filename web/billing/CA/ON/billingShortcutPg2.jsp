@@ -155,11 +155,11 @@
     for( int idx = 0; idx < tempDate.length; ++idx ) {
         System.out.println("BILLING DATE " + tempDate[idx]);
     }
-
+System.out.println("RECORD COUNT " + recordCount);
 	for(int i=0; i<recordCount; i++) {
 		sql = "select service_code, description, value, percentage from billingservice where service_code='"
 			+ billrec[i] + "' and billingservice_date in (select max(b.billingservice_date) from billingservice b where b.service_code='" + billrec[i] + "' and b.billingservice_date <= '" + request.getParameter("billDate") + "')";
-        System.out.println(sql);
+        System.out.println("SQL " + sql);
 		rs = dbObj.searchDBRecord(sql);
 		while (rs.next()) {
 			billrecdesc[i] = rs.getString("description");
@@ -174,7 +174,10 @@
 				vecServiceCodePrice.add( pricerec[i] );
 				vecServiceCodeUnit.add( billrecunit[i] );
 			} else {
-				if(!"allAboveCode".equals(rulePerc) ) rulePercLabelNum = i-1;
+				if(!"allAboveCode".equals(rulePerc) && rulePercLabelNum == -1 ) {
+                                    rulePercLabelNum = i-1 == -1 ? 0 : i-1;
+                                    System.out.println("SETTING RULE " + rulePercLabelNum);
+                                }
 				vecServiceCodePerc.add( billrec[i] ); // code
 				vecServiceCodePerc.add( percrec[i] ); // price
 				vecServiceCodePerc.add( billrecunit[i] ); // unit
@@ -196,11 +199,13 @@
 		tempUnit = (tempUnit==null||"".equals(tempUnit) )? "1":tempUnit;
 		String code = temp.substring("xml_".length()).toUpperCase();
 		if( (!"".equals(fee) && Double.parseDouble(fee)>0.) || ( "".equals(perc)) ) {
+                    System.out.println("Adding fee code " + code);
 			vecServiceCodePrice.add( fee );
 			vecServiceCodeUnit.add( tempUnit );
 			vecServiceCode.add( code );
 			vecServiceCodeDesc.add( desc );
 		} else {
+                    System.out.println("Adding percentage code " + code);
 			vecServiceCodePerc.add( code );
 			vecServiceCodePerc.add( perc );
 			vecServiceCodePerc.add( tempUnit ); // unit
@@ -211,16 +216,27 @@
 	//check perc code limitation
 	boolean bLimit = false;
 	String minFee = "", maxFee = "";
-	if(vecServiceCodePerc.size()>0) {
+        int size = vecServiceCodePerc.size()/4;
+        String[] aMinFee = new String[size];
+        String[] aMaxFee = new String[size];
+        Boolean[] aLimits = new Boolean[size];
+        for( int idx1 = 0; idx1 < aLimits.length; ++idx1 ) {
+            aLimits[idx1] = false;
+        }
+
+        int codeIdx = 0;
+	for(int idx2 = 0; idx2 < size; ++idx2) {
 		//TODO: only one perc code allowed, otherwise error msg
 		sql = "select min, max from billingperclimit where service_code='"
-			+ vecServiceCodePerc.get(0) + "'";
+			+ vecServiceCodePerc.get(codeIdx) + "'";
 		rs = dbObj.searchDBRecord(sql);
 		while (rs.next()) {
-			bLimit = true;
-			minFee = rs.getString("min");
-			maxFee = rs.getString("max");
+			//bLimit = true;
+                        aLimits[idx2] = true;
+			aMinFee[idx2] = rs.getString("min");
+			aMaxFee[idx2] = rs.getString("max");
 		}
+                codeIdx += 4;
 	}
 
     // calculate total
@@ -232,28 +248,36 @@
     	BigDecimal price = new BigDecimal(Double.parseDouble((String)vecServiceCodePrice.get(i))).setScale(2, BigDecimal.ROUND_HALF_UP);
     	BigDecimal unit = new BigDecimal(Double.parseDouble((String)vecServiceCodeUnit.get(i))).setScale(2, BigDecimal.ROUND_HALF_UP);
     	bdTotal = bdTotal.add(price.multiply(unit).setScale(2, BigDecimal.ROUND_HALF_UP));
-    	if(i==rulePercLabelNum) bdPercBase = bdTotal;
+    	if(i==rulePercLabelNum) {
+            bdPercBase = bdTotal;
+            System.out.println("Assigned perc total " + bdPercBase);
+        }
 //System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
 		msg += "<tr bgcolor='#EEEEFF'><td align='right' width='20%'>" + vecServiceCode.get(i) + " ("+Math.round(unit.floatValue())+")</td><td align='right'>" + (i==0?"":" + ") + price + " x " + unit + " = " + bdTotal + "</td></tr>";
 	}
-	if(vecServiceCodePerc.size()>1) {
+	
 		// calculate perc base
 		if("allAboveCode".equals(rulePerc) ) {
 			bdPercBase = bdTotal;
 		}
+        codeIdx = 1;
+        BigDecimal[] bdPercs = new BigDecimal[size];
+        for( int idx3 = 0; idx3 < size; ++idx3) {
 		// calculate perc
-		BigDecimal perc = new BigDecimal(Double.parseDouble((String)vecServiceCodePerc.get(1))).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal perc = new BigDecimal(Double.parseDouble((String)vecServiceCodePerc.get(codeIdx))).setScale(2, BigDecimal.ROUND_HALF_UP);
 		bdPerc = bdPercBase.multiply(perc).setScale(2, BigDecimal.ROUND_HALF_UP);
 //System.out.println("Percentage :" + bdPercBase + " x " + perc + " = " + bdPerc);
-		msg += "<tr bgcolor='#EEEEFF'><td align='right'>"+vecServiceCodePerc.get(0)+" (1)</td><td align='right'>Percentage : " + bdPercBase + " x " + perc + " = " + bdPerc + "</td></tr>";
+		msg += "<tr bgcolor='#EEEEFF'><td align='right'>"+vecServiceCodePerc.get(codeIdx-1)+" (1)</td><td align='right'>Percentage : " + bdPercBase + " x " + perc + " = " + bdPerc + "</td></tr>";
 		// adjust perc by min/max
-		if(bLimit) {
-			bdPerc = bdPerc.min(new BigDecimal(Double.parseDouble(maxFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
-			bdPerc = bdPerc.max(new BigDecimal(Double.parseDouble(minFee) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
+		if(aLimits[idx3]) {
+			bdPerc = bdPerc.min(new BigDecimal(Double.parseDouble(aMaxFee[idx3]) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
+			bdPerc = bdPerc.max(new BigDecimal(Double.parseDouble(aMinFee[idx3]) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
 //System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
-		msg += "<tr bgcolor='ivory'><td align='right' colspan='2'>Adjust to (" + minFee + ", " + maxFee + "): </td><td align='right'>" + bdPerc + "</td></tr>";
+		msg += "<tr bgcolor='ivory'><td align='right' colspan='2'>Adjust to (" + aMinFee[idx3] + ", " + aMaxFee[idx3] + "): </td><td align='right'>" + bdPerc + "</td></tr>";
 		}
     	bdTotal = bdTotal.add(bdPerc);
+        bdPercs[idx3] = bdPerc;
+        codeIdx += 4;
 	}
 
     total = "" + bdTotal;
@@ -311,10 +335,14 @@
 				// combine two vecs into one
 				if(!bServicePerc && vecServiceCodePerc.size()>1) {
                                         bServicePerc = true;
-					vecServiceCodePrice.add( "" + bdPerc); //vecServiceCodePerc.get(1) );
-					vecServiceCodeUnit.add( vecServiceCodePerc.get(2) );
-					vecServiceCode.add( vecServiceCodePerc.get(0) );
-					vecServiceCodeDesc.add( vecServiceCodePerc.get(3) );
+                                        codeIdx = 0;
+                                        for( int idx4 = 0; idx4 < size; ++idx4 ) {
+                                            vecServiceCodePrice.add( "" + bdPercs[idx4]); //vecServiceCodePerc.get(1) );
+                                            vecServiceCodeUnit.add( vecServiceCodePerc.get(codeIdx+2) );
+                                            vecServiceCode.add( vecServiceCodePerc.get(codeIdx) );
+                                            vecServiceCodeDesc.add( vecServiceCodePerc.get(codeIdx+3) );
+                                            codeIdx += 4;
+                                        }
 				}
 				Vector vecT = saveObj.getBillingClaimHospObj(request, tempDate[k], total, vecServiceCode, vecServiceCodeUnit, vecServiceCodePrice);
 				saveObj.addABillingRecord(vecT);
