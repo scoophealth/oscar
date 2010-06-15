@@ -260,7 +260,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 
 	public String getAccessionNum()
 	{
-		return("0");
+		return(null);
 	}
 
 	public abstract String getDocName();

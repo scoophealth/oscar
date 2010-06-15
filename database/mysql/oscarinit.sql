@@ -7190,7 +7190,7 @@ create table hl7TextInfo(
 	last_name varchar(30),
 	first_name varchar(30),
 	report_status varchar(1) NOT NULL,
-	accessionNum varchar(20) NOT NULL
+	accessionNum varchar(20)
 );
 
 create table hl7TextMessage(

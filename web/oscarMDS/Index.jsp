@@ -32,8 +32,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%
-
-
     //oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
     CommonLabResultData comLab = new CommonLabResultData();
     //String providerNo = request.getParameter("providerNo");
