@@ -1212,13 +1212,12 @@ function fetchAttached() {
 <!-- end -->
 
 						<tr>
-							<td colspan=2 class="tite4"><bean:message
+							<td colspan="2" class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes" />:
 							</td>
-							<td style="background-color: #B8B8FF;">&nbsp;</td>
 						</tr>
 						<tr>
-							<td colspan=2 class="tite3"><html:textarea cols="50"
+							<td colspan="2" class="tite3"><html:textarea cols="50"
 								rows="3" property="appointmentNotes"></html:textarea></td>
 						</tr>
 
