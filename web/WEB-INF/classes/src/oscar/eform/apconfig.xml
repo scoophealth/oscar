@@ -58,12 +58,19 @@
 
 	<databaseap>
 		<ap-name>doctor</ap-name>
-		<ap-sql>SELECT provider.last_name, provider.first_name FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+		<ap-sql>SELECT provider.first_name, provider.last_name  FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
 		<ap-output>${last_name}, ${first_name}</ap-output>
 	</databaseap>
         <databaseap>
 		<ap-name>doctor_ohip_no</ap-name>
 		<ap-sql>SELECT provider.ohip_no FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+		<ap-output>${ohip_no}</ap-output>
+        </databaseap>
+        <databaseap>
+		<ap-name>current_user_ohip_no</ap-name>
+		<ap-sql>SELECT provider.ohip_no
+			FROM provider
+			WHERE provider.provider_no=${provider} </ap-sql>
 		<ap-output>${ohip_no}</ap-output>
 	</databaseap>
 	<databaseap>
@@ -237,7 +244,7 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
         
         <databaseap>
 		<ap-name>current_user</ap-name>
-		<ap-sql>SELECT provider.last_name, provider.first_name 
+		<ap-sql>SELECT provider.first_name, provider.last_name
 			FROM provider 
 			WHERE provider.provider_no=${provider} </ap-sql>
 		<ap-output>${last_name}, ${first_name}</ap-output>
