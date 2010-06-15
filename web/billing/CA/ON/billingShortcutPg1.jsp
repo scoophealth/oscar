@@ -416,12 +416,12 @@ function showHideLayers() { //v3.0
         } else if(document.forms[0].serviceDate2.value.length>0 && document.forms[0].serviceDate2.value.length!=5 || !isServiceCode(document.forms[0].serviceDate2.value)){
         	alert("Wrong service code 3!");
             b = false;
-        //} else if(document.forms[0].serviceDate3.value.length>0 && document.forms[0].serviceDate3.value.length!=5 || !isServiceCode(document.forms[0].serviceDate3.value)){
-        //	alert("Wrong service code 4!");
-        //    b = false;
-        //} else if(document.forms[0].serviceDate4.value.length>0 && document.forms[0].serviceDate4.value.length!=5 || !isServiceCode(document.forms[0].serviceDate4.value)){
-        //	alert("Wrong service code 5!");
-        //    b = false;
+        } else if(document.forms[0].serviceDate3.value.length>0 && document.forms[0].serviceDate3.value.length!=5 || !isServiceCode(document.forms[0].serviceDate3.value)){
+        	alert("Wrong service code 4!");
+            b = false;
+        } else if(document.forms[0].serviceDate4.value.length>0 && document.forms[0].serviceDate4.value.length!=5 || !isServiceCode(document.forms[0].serviceDate4.value)){
+        	alert("Wrong service code 5!");
+            b = false;
         } else if(document.forms[0].dxCode.value.length!=3){
         	alert("Wrong dx code!");
             b = false;
@@ -703,6 +703,16 @@ ctlCount = 0;
 						<input type="text" name="serviceUnit2" size="2" maxlength="2"
 							style=""
 							value="<%=request.getParameter("serviceUnit2")!=null?request.getParameter("serviceUnit2"):""%>"><br>
+                                                 <input type="text" name="serviceDate3" size="5" maxlength="5"
+							value="<%=request.getParameter("serviceDate3")!=null?request.getParameter("serviceDate3"):""%>">x
+						<input type="text" name="serviceUnit3" size="2" maxlength="2"
+							style=""
+							value="<%=request.getParameter("serviceUnit3")!=null?request.getParameter("serviceUnit3"):""%>"><br>
+                                                <input type="text" name="serviceDate4" size="5" maxlength="5"
+							value="<%=request.getParameter("serviceDate4")!=null?request.getParameter("serviceDate4"):""%>">x
+						<input type="text" name="serviceUnit4" size="2" maxlength="2"
+							style=""
+							value="<%=request.getParameter("serviceUnit4")!=null?request.getParameter("serviceUnit4"):""%>">
 						</td>
 						<td valign="top">
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
