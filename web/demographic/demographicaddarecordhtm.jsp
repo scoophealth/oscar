@@ -1061,7 +1061,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					value=""></td>
 			</tr>
  <% }
-   if (props.getProperty("clinic_name", "").trim().equalsIgnoreCase("IBD")) { %>
+   if (props.isPropertyActive("meditech_id")) { %>
                          <tr valign="top">
                              <td align="right"><b>Meditech ID:</b></td>
                              <td align="left"><input type="text" name="meditech_id" value=""></td>
