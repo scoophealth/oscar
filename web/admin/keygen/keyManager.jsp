@@ -15,6 +15,11 @@
 <br />
 <hr />
 <br />
+<div class="oscarBlueForeground">Oscar Public Key</div>
+<div style="border:solid grey 1px;word-wrap:break-word;font-size:12px; width:95%"><%=KeyManagerUIBean.getPublicOscarKeyEscaped()%></div>
+<br />
+<hr />
+<br />
 
 <script language="javascript">
 	function onSelectService()
@@ -53,24 +58,28 @@
 		);
 	}
 </script>
-<div class="oscarBlueForeground">Current Keys</div>
-<select id="selectKeyList" onchange="onSelectService()">
-	<%
-		for (PublicKey publicKey : KeyManagerUIBean.getPublicKeys())
-		{
-			%>
-				<option value="<%=KeyManagerUIBean.getSericeNameEscaped(publicKey)%>"><%=KeyManagerUIBean.getSericeDisplayString(publicKey)%></option>
-			<%
-		}
-	%>
-</select>
-<script language="javascript">
-	onSelectService();
-</script>
-<br /><br />
-<table style="border-collapse:collapse; width:95%; table-layout:fixed;word-wrap:break-word">
+<div class="oscarBlueForeground">Current Public Keys</div>
+<table style="border-collapse:collapse; width:95%; table-layout:fixed;word-wrap:break-word;font-size:12px">
 	<tr style="border:solid grey 1px">
-		<td class="oscarBlueHeader" style="width:13em">Public Key</td>
+		<td class="oscarBlueHeader" style="width:13em">Service Name</td>
+		<td>
+			<select id="selectKeyList" onchange="onSelectService()">
+				<%
+					for (PublicKey publicKey : KeyManagerUIBean.getPublicKeys())
+					{
+						%>
+							<option value="<%=KeyManagerUIBean.getSericeNameEscaped(publicKey)%>"><%=KeyManagerUIBean.getSericeDisplayString(publicKey)%></option>
+						<%
+					}
+				%>
+			</select>
+			<script language="javascript">
+				onSelectService();
+			</script>
+		</td>
+	</tr>
+	<tr style="border:solid grey 1px">
+		<td class="oscarBlueHeader">Public Key</td>
 		<td id="publicKey"></td>
 	</tr>
 	<tr style="border:solid grey 1px">

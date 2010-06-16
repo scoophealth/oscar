@@ -3,8 +3,10 @@ package org.oscarehr.web.admin;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.common.dao.OscarKeyDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.dao.PublicKeyDao;
+import org.oscarehr.common.model.OscarKey;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.PublicKey;
 import org.oscarehr.util.SpringUtils;
@@ -12,6 +14,7 @@ import org.oscarehr.util.SpringUtils;
 public final class KeyManagerUIBean {
 	
 	private static final PublicKeyDao publicKeyDao=(PublicKeyDao) SpringUtils.getBean("publicKeyDao");
+	private static final OscarKeyDao oscarKeyDao=(OscarKeyDao) SpringUtils.getBean("oscarKeyDao");
 	private static final ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 	
 	public static List<PublicKey> getPublicKeys()
@@ -49,5 +52,14 @@ public final class KeyManagerUIBean {
 		PublicKey publicKey=publicKeyDao.find(serviceName);
 		publicKey.setMatchingProfessionalSpecialistId(matchingProfessionalSpecialistId);
 		publicKeyDao.merge(publicKey);
+	}
+	
+	public static String getPublicOscarKeyEscaped()
+	{
+		OscarKey oscarKey=oscarKeyDao.find("oscar");
+		
+		if (oscarKey==null) return("");
+		
+		return(StringEscapeUtils.escapeHtml(oscarKey.getPublicKey()));
 	}
 }
