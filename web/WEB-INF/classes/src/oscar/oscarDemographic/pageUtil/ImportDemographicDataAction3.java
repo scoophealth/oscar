@@ -1616,9 +1616,9 @@ import org.oscarehr.util.SpringUtils;
 	Set<CaseManagementIssue> getCMIssue(String code) {
 		CaseManagementIssue cmIssu = new CaseManagementIssue();
 		cmIssu.setDemographic_no(demographicNo);
-		cmIssu.setType("doctor");
 		Issue isu = caseManagementManager.getIssueInfoByCode(Util.noNull(code));
 		cmIssu.setIssue_id(isu.getId());
+		cmIssu.setType(isu.getType());
 		caseManagementManager.saveCaseIssue(cmIssu);
 
 		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
@@ -1632,8 +1632,8 @@ import org.oscarehr.util.SpringUtils;
 		if (isu!=null) {
 			CaseManagementIssue cmIssu = new CaseManagementIssue();
 			cmIssu.setDemographic_no(demographicNo);
-			cmIssu.setType("doctor");
 			cmIssu.setIssue_id(isu.getId());
+			cmIssu.setType(isu.getType());
 			caseManagementManager.saveCaseIssue(cmIssu);
 			sCmIssu.add(cmIssu);
 		}
@@ -1644,8 +1644,8 @@ import org.oscarehr.util.SpringUtils;
 			if (isu!=null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
 				cmIssu.setDemographic_no(demographicNo);
-				cmIssu.setType("doctor");
 				cmIssu.setIssue_id(isu.getId());
+				cmIssu.setType(isu.getType());
 				caseManagementManager.saveCaseIssue(cmIssu);
 				sCmIssu.add(cmIssu);
 			}
