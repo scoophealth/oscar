@@ -495,7 +495,7 @@ function pasteAppt() {
 					name="notes" tabindex="3" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("notes").equals("")?"":request.getParameter("notes")%></textarea>
 				</font></td>
 			</tr>
-<% if (pros.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) { %>
+			<% if (pros.isPropertyActive("mc_number")) { %>
 			<tr valign="middle" BGCOLOR="#CCCCFF">
 				<td align="right">M/C number:</td>
 				<td><input type="text" name="appt_mc_number" tabindex="4" /></td>

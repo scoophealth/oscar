@@ -425,7 +425,7 @@ function onCut() {
 					cols="18"><%=bFirstDisp?appt.get("notes"):request.getParameter("notes")%></textarea>
 				</font></td>
 			</tr>
-<% if (pros.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) {
+			<% if (pros.isPropertyActive("mc_number")) {
 		String mcNumber = new OtherIdManager().getApptOtherId(appointment_no, "appt_mc_number");
 %>
 			<tr valign="middle">
