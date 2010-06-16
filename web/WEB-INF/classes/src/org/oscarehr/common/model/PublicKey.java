@@ -42,6 +42,17 @@ public class PublicKey extends AbstractModel<String> implements Serializable {
 
 	@Column(name = "pubKey")
 	private String publicKey;
+	
+	/**
+	 * This field is meant to be a corresponding professionalSpecialist entry.
+	 * The purpose is to do 2-way communications, i.e. publicKeys is what some one
+	 * uses to contact "our" server, if we want to sent back information, we would
+	 * then look up the corresponding professional specialist entry to know what
+	 * the contact information for their server is.
+	 * 
+	 * This value can be null. Null means we have no way to contact them back.
+	 */
+	private Integer matchingProfessionalSpecialistId;
 
 	@Override
 	public String getId() {
@@ -74,5 +85,13 @@ public class PublicKey extends AbstractModel<String> implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	public Integer getMatchingProfessionalSpecialistId() {
+    	return matchingProfessionalSpecialistId;
+    }
+
+	public void setMatchingProfessionalSpecialistId(Integer matchingProfessionalSpecialistId) {
+    	this.matchingProfessionalSpecialistId = matchingProfessionalSpecialistId;
+    }
 
 }

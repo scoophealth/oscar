@@ -7209,7 +7209,8 @@ create table oscarKeys(
 create table publicKeys(
 	service varchar(100) NOT NULL primary key,
 	type varchar(100) NOT NULL,
-	pubKey text NOT NULL
+	pubKey text NOT NULL,
+	matchingProfessionalSpecialistId int
 );
 
 CREATE TABLE measurementsExt(
