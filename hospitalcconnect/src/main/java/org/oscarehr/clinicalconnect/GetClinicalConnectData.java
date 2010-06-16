@@ -24,16 +24,17 @@
  */
 package org.oscarehr.clinicalconnect;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.clinicalconnect.util.EmrDownloadEngine;
 import org.oscarehr.clinicalconnect.ws.GeneratedFile;
 import org.oscarehr.clinicalconnect.ws.GeneratedFileInfo;
@@ -43,6 +44,7 @@ import org.oscarehr.clinicalconnect.ws.GeneratedFileInfo;
  * @author jaygallagher
  */
 public class GetClinicalConnectData {
+    private static final Log log = LogFactory.getLog(GetClinicalConnectData.class);
 
     /**
      * Load a configuration file, (name of the file is either passed in or the file ClinicalConnect will be searched in the local directory)
@@ -96,8 +98,8 @@ public class GetClinicalConnectData {
 
             keyLocation = properties.getProperty("keyLocation");
             URL         = properties.getProperty("URL");
-            fileName    = properties.getProperty("fileName");
-            directory   = properties.getProperty("directory");
+            fileName    = properties.getProperty("fileName","");
+            directory   = properties.getProperty("directory","");
 
 
             incomingHL7dir	 = properties.getProperty("incomingHL7dir");
@@ -121,7 +123,7 @@ public class GetClinicalConnectData {
         File emptyDir = new File(emptyHL7dir);
 
         File zipfile = pollClinicalConnectForFile(serviceLocation,serviceUsername, servicePassword, group, password, incomingDir);
-
+        log.debug("AFTER pollClinicalConnectForFile");
         //I think i should check to see if this file is empty here
 
         clinConnect.sendDataToOscar(incomingDir,completedDir,errorDir,emptyDir,fileName, directory, keyLocation, URL);
@@ -130,17 +132,19 @@ public class GetClinicalConnectData {
     private void sendDataToOscar(File incomingDir,File completedDir,File errorDir,File emptyDir,String fileName, String directory, String keyLocation, String URL){
         Uploader uploader = new Uploader();
         //Lock for files in incoming directory
+        log.debug("incoming "+incomingDir);
         String[] incomingFiles = incomingDir.list();
         for(String incomingFile: incomingFiles){
             File zipfile = new File(incomingDir,incomingFile);
             byte[] fileBytes = null;
             try{
+               log.info("incomingFile "+incomingFile+" -- zipfile "+zipfile);
                fileBytes = getByteArrayFromZip(zipfile);  //This isn't erroring correctly
             }catch(Exception getFileException){
                 getFileException.printStackTrace();
                 //What to do here?
             }
-            System.out.println("File size in bytes "+fileBytes.length);
+            log.debug("File size in bytes "+fileBytes.length);
 
             if (fileBytes.length > 0){
                
@@ -154,16 +158,16 @@ public class GetClinicalConnectData {
                 //Uploaded successfully
                 boolean success = zipfile.renameTo(new File(completedDir, zipfile.getName()+"."+System.currentTimeMillis()));
                 if (!success) {
-                    System.out.println("Not able to move "+zipfile.getName()  +" to "+completedDir.getName());
+                    log.error("Not able to move "+zipfile.getName()  +" to "+completedDir.getName());
                     // File was not successfully moved
                 }
 
             }else{
-                System.out.println("FILE EMPTY - No Need to send to OSCAR");
+                log.info("FILE EMPTY - No Need to send to OSCAR");
                 //Move File to empty directory
                 boolean success = zipfile.renameTo(new File(emptyDir, zipfile.getName()+"."+System.currentTimeMillis()));
                 if (!success) {
-                    System.out.println("Not able to move "+zipfile.getName());
+                    log.error("Not able to move "+zipfile.getName());
                     // File was not successfully moved
                 }
             }
@@ -191,8 +195,8 @@ public class GetClinicalConnectData {
         System.out.println(new String(file.getData()));
         File zipfile = new File(incomingDir, "outfilename" + System.currentTimeMillis());
         try {
-            BufferedWriter bout = new BufferedWriter(new FileWriter(zipfile));
-            bout.write(new String(file.getData()));
+            FileOutputStream bout = new FileOutputStream(zipfile);
+            bout.write(filebytes);
             bout.close();
         } catch (IOException e) {
         }
@@ -229,7 +233,7 @@ public class GetClinicalConnectData {
             in.close();
             return out.toByteArray();
 
-        } catch (IOException e) { }
+        } catch (IOException e) { e.printStackTrace();}
         return null;
     }
 }
