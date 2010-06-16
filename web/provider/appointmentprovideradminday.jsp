@@ -1393,12 +1393,21 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 &nbsp; reason: <%=UtilMisc.htmlEscape(reason)%>
 &nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.eForms" rights="r">
+<oscar:oscarPropertiesCheck property="eform_in_appointment" value="yes">
+	<b><a href="#" onclick="popupPage(500,1000,'../eform/efmformslistadd.jsp?parentAjaxId=eforms&demographic_no=<%=demographic_no%>&apptProvider=<%=curProvider_no[nProvider]%>&appointment=<%=appointment.get("appointment_no")%>'); return false;"
+		  title="eForms">|e</a></b>
+</oscar:oscarPropertiesCheck>
+</security:oscarSec>
+
 <!-- doctor code block -->
 <% if(bShowEncounterLink && !isWeekView) { %>
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+appointment.get("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status + "&apptProvider_no=" + curProvider_no[nProvider] + "&providerview=" + curProvider_no[nProvider];%>
 <a href=# onClick="popupWithApptNo(710, 1024,'<%=eURL%>','encounter',<%=appointment.get("appointment_no")%>);return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <% } %>
+
 <!-- billing code block -->
 <% if (!isWeekView) { %>
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
@@ -1421,10 +1430,10 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- billing code block -->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_masterLink" rights="r">
     <% if (vLocale.getCountry().equals("BR")) {%>
-    <a href="javascript: function myFunction() {return false; }" onClick="popupWithApptNo(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr','master',<%=appointment.get("appointment_no")%>)"
+    <a href="javascript: function myFunction() {return false; }" onClick="popupWithApptNo(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=curProvider_no[nProvider]%>&appointment=<%=appointment.get("appointment_no")%>&displaymode=edit&dboperation=search_detail_ptbr','master',<%=appointment.get("appointment_no")%>)"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}else{%>
-    <a href="javascript: function myFunction() {return false; }" onClick="popupWithApptNo(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail','master',<%=appointment.get("appointment_no")%>)"
+    <a href="javascript: function myFunction() {return false; }" onClick="popupWithApptNo(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=curProvider_no[nProvider]%>&appointment=<%=appointment.get("appointment_no")%>&displaymode=edit&dboperation=search_detail','master',<%=appointment.get("appointment_no")%>)"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
 </security:oscarSec>
