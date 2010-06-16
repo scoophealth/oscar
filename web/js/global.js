@@ -127,3 +127,20 @@ function getSelectedRadioValue(radioGroup)
 	}
 }
 
+
+function selectSelectListOption(selectList, optionValue)
+{
+	 for (var i=0; i<selectList.options.length; i++)
+	 {
+		 if (selectList.options[i].value==optionValue)
+		 {
+			 selectList.selectedIndex=i;
+			 return;
+		 }
+	 } 
+}
+
+function getSelectListValue(selectList)
+{
+	return(selectList.options[selectList.selectedIndex].value);
+}

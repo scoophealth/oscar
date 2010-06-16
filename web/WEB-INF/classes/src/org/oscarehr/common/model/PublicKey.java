@@ -52,7 +52,7 @@ public class PublicKey extends AbstractModel<String> implements Serializable {
 	 * 
 	 * This value can be null. Null means we have no way to contact them back.
 	 */
-	private Integer matchingProfessionalSpecialistId;
+	private Integer matchingProfessionalSpecialistId=null;
 
 	@Override
 	public String getId() {

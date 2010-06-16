@@ -281,3 +281,16 @@ TH {
     padding:2px;
     width:150px;
  }
+ 
+
+.oscarBlueHeader
+{
+	background:#486ebd;
+	color:#ffffff;
+	font-weight:bold;	
+}
+ 
+.oscarBlueForeground
+{
+	color:#003399;
+}

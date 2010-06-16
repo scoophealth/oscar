@@ -24,6 +24,10 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.PublicKey;
 import org.springframework.stereotype.Repository;
 
@@ -33,4 +37,15 @@ public class PublicKeyDao extends AbstractDao<PublicKey> {
 	public PublicKeyDao() {
 		super(PublicKey.class);
 	}
+	
+    public List<PublicKey> findAll()
+	{
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x");
+		
+		@SuppressWarnings("unchecked")
+		List<PublicKey> results=query.getResultList();
+		
+		return(results);
+	}
+
 }
