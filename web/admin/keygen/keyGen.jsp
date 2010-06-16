@@ -1,15 +1,7 @@
-
-<% 
-
-%>
-
 <%@page contentType="text/html"%>
 <%@page pageEncoding="ISO-8859-1"%> 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ page
-	import="java.util.*,
-java.io.*,
-oscar.oscarLab.ca.all.util.KeyPairGen"%>
+<%@ page import="java.util.*,java.io.*,oscar.oscarLab.ca.all.util.KeyPairGen"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -91,8 +83,7 @@ if (message != null){
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Oscar - Key Pair Creation</title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
 <script type="text/javascript">
             function selectOther(){                
                 if (document.getElementById('selection').value == "OTHER")

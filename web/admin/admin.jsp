@@ -696,7 +696,7 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/ALL/testUploader.jsp"/>&quot;);return false;'><bean:message key="admin.admin.hl7LabUpload"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/oscarKeys/keyGen.jsp"/>&quot;);return false;'><bean:message key="admin.admin.keyPairGen"/></a></li>
+				onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/keygen/keyGen.jsp"/>&quot;);return false;'><bean:message key="admin.admin.keyPairGen"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/labforwardingrules.jsp"/>&quot;);return false;'><bean:message key="admin.admin.labFwdRules"/></a></li>
                         <li>
