@@ -408,4 +408,57 @@ public class EForm extends EFormBase {
 		}
 		return sql;
 	}
+
+	public String getTemplate(String templateName) {
+	// Get content between "<!-- <Template:templateName>" & "</Template:templateName> -->"
+		if (templateName==null) return null;
+
+		String template = this.getFormHtml();
+		if (template==null) return null;
+
+		String sTemplateBegin = "<template:"+templateName+">";
+		String sTemplateEnd = "</template:"+templateName+">";
+		int templateBegin = findIgnoreCase(template, sTemplateBegin, 0);
+		int templateEnd = findIgnoreCase(template, sTemplateEnd, templateBegin);
+
+		int templateFound = -1;
+		while (templateFound<0) {
+			int commentBegin = template.lastIndexOf("<!--", templateBegin);
+			int commentEnd = template.indexOf("-->", templateEnd);
+			if (templateBegin==-1 || templateEnd==-1 || commentBegin==-1 || commentEnd==-1) {
+				templateFound = 0;
+			} else if (template.indexOf("-->", commentBegin)<templateBegin || 
+					   template.lastIndexOf("<!--", commentEnd)>templateEnd) { //Template tags outside of comment, look again
+				templateBegin = findIgnoreCase(template, sTemplateBegin, templateBegin+sTemplateBegin.length());
+				templateEnd = findIgnoreCase(template, sTemplateEnd, templateBegin);
+			} else {
+				templateFound = 1;
+			}
+		}
+		if (templateFound==0) return null;
+
+		template = removeBlanks(template.substring(templateBegin+sTemplateBegin.length(), templateEnd));
+		return template.equals("") ? null : template;
+	}
+
+	private int findIgnoreCase(String text, String phrase, int start) {
+		if (text==null || phrase==null) return -1;
+
+		text = text.toLowerCase();
+		phrase = phrase.toLowerCase();
+		return text.indexOf(phrase, start);
+	}
+
+	private String removeBlanks(String text) {
+		if (text==null) return null;
+
+		text = text.trim();
+		while (text.startsWith("\n") || text.startsWith("\r") || text.startsWith("\t")) {
+			text = text.substring(1).trim();
+		}
+		while (text.endsWith("\n") || text.endsWith("\r") || text.endsWith("\t")) {
+			text = text.substring(0, text.length()-1).trim();
+		}
+		return text;
+	}
 }
