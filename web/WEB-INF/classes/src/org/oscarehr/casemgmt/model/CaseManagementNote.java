@@ -75,6 +75,7 @@ public class CaseManagementNote extends BaseObject {
 	private int hashCode = Integer.MIN_VALUE;
 	private int position = 0;
 
+	@Override
 	public boolean equals(Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof CaseManagementNote)) return false;
@@ -85,6 +86,7 @@ public class CaseManagementNote extends BaseObject {
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
 			if (null == this.getId()) return super.hashCode();
@@ -445,7 +447,7 @@ public class CaseManagementNote extends BaseObject {
 	}
 
          public boolean isDocumentNote() {
-        String sql = "select id from casemgmt_note_link where note_id=" + this.id + " and table_name=5";
+        String sql = "select id from casemgmt_note_link where note_id=" + this.id + " and table_name="+CaseManagementNoteLink.DOCUMENT;
         //System.out.println("isDocNote query: "+sql);
         ResultSet rs = null;
         rs = getSQL(sql);
@@ -463,7 +465,7 @@ public class CaseManagementNote extends BaseObject {
 
     public boolean isRxAnnotation(){
         boolean bool=false;
-        String sql="select id from casemgmt_note_link where note_id=" + this.id + " and table_name=2";
+        String sql="select id from casemgmt_note_link where note_id=" + this.id + " and table_name="+CaseManagementNoteLink.DRUGS;
         //System.out.println(" in isRxAnnotation,sql="+sql);
         ResultSet rs = null;
         rs = getSQL(sql);
