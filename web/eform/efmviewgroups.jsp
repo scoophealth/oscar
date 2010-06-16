@@ -44,6 +44,12 @@ if (request.getParameter("demographic_no") != null)
 String patientGroups = "";
 if (request.getParameter("patientGroups") != null) 
     patientGroups = (String) request.getParameter("patientGroups");
+String apptProvider = "";
+if (request.getParameter("apptProvider") != null)
+	apptProvider = (String) request.getParameter("apptProvider");
+String appointment = "";
+if (request.getParameter("appointment") != null)
+	appointment = (String) request.getParameter("appointment");
     
 String parentAjaxId = request.getParameter("parentAjaxId");
 
@@ -54,10 +60,12 @@ if (patientGroups.equals("1")) {
     groups = EFormUtil.getEFormGroups();
 }
 %>
-<form action="<%=url%>" name="groupselect" method="get"><input
-	type="hidden" id="group_view" name="group_view" value=""> <input
-	type="hidden" name="demographic_no" value="<%=demographic_no%>">
-<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
+<form action="<%=url%>" name="groupselect" method="get">
+	<input type="hidden" id="group_view" name="group_view" value="">
+	<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+	<input type="hidden" name="apptProvider" value="<%=apptProvider%>">
+	<input type="hidden" name="appointment" value="<%=appointment%>">
+	<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
 <div class="grouplist">
 <div class="grouplistHeader"><bean:message key="eform.showmyform.msgViewGroup"/>:</div>
 <ul class="grouplist">
