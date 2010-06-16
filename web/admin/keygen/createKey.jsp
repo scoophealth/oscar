@@ -107,7 +107,7 @@ if (message != null){
         </script>
 </head>
 <body>
-<form method='POST' action='keyGen.jsp'>
+<form method='POST' action=''>
 <table align="center" class="MainTable">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn" width="175">Key Pair
