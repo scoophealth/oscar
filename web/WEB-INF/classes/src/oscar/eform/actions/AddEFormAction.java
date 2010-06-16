@@ -43,6 +43,7 @@ import org.apache.struts.action.ActionMessages;
 
 import oscar.eform.EFormUtil;
 import oscar.eform.data.EForm;
+import oscar.oscarEncounter.data.EctProgram;
 
 public class AddEFormAction extends Action {
     
@@ -82,9 +83,15 @@ public class AddEFormAction extends Action {
              return mapping.getInputForward();
          }
          String fdid = EFormUtil.addEForm(curForm);
+
          //adds parsed values
          EFormUtil.addEFormValues(paramNames, paramValues, fdid, fid, demographic_no);
          //add to oscarMeasurements
+
+		 //write template message to echart
+		 String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
+		 String eformLink = request.getContextPath()+"/eform/efmshowform_data.jsp?fdid="+fdid;
+		 EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, eformLink, program_no);
          
          return(mapping.findForward("close"));
     }
