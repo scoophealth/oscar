@@ -75,6 +75,8 @@
 
 	String curProvider_no = (String) session.getAttribute("user");
 	String demographic_no = request.getParameter("demographic_no") ;
+	String apptProvider = request.getParameter("apptProvider");
+	String appointment = request.getParameter("appointment");
 	String userfirstname = (String) session.getAttribute("userfirstname");
 	String userlastname = (String) session.getAttribute("userlastname");
 	String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
@@ -877,12 +879,12 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 		</special:SpecialEncounterTag>
 			<tr>
 				<td><a
-					href="../eform/efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message
+					href="../eform/efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>"><bean:message
 					key="demographic.demographiceditdemographic.btnEForm" /></a></td>
 			</tr>
 			<tr>
 				<td><a
-					href="../eform/efmformslistadd.jsp?demographic_no=<%=demographic_no%>">
+					href="../eform/efmformslistadd.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>">
 				<bean:message
 					key="demographic.demographiceditdemographic.btnAddEForm" /> </a></td>
 			</tr>
@@ -1039,7 +1041,7 @@ if ( PatStat.equals(Dead) ) {%>
 							<li><bean:message
 								key="demographic.demographiceditdemographic.formChartNo" />: <b><%=apptMainBean.getString(rs,"chart_no")%></b>
 							</li>
-<% if (oscarProps.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) { %>
+							<% if (oscarProps.isPropertyActive("meditech_id")) { %>
 							<li>Meditech ID: <b><%=oidManager.getDemoOtherId(demographic_no, "meditech_id")%></b>
 							</li>
 <% } %>
@@ -1931,7 +1933,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									size="30" value="<%=apptMainBean.getString(rs,"chart_no")%>">
 								</td>
 							</tr>
-<% if (oscarProps.getProperty("clinic_name","").trim().equalsIgnoreCase("IBD")) { %>
+<% if (oscarProps.isPropertyActive("meditech_id")) { %>
                                                         <tr>
                                                             <td align="right"><b>Meditech ID: </b></td>
                                                             <td align="left"><input type="text" name="meditech_id" size="30"
