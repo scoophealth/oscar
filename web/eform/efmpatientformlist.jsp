@@ -47,6 +47,8 @@ if (groupView == null) {
     groupView = "";
 }
 
+String apptProvider = request.getParameter("apptProvider");
+String appointment = request.getParameter("appointment");
 String parentAjaxId = request.getParameter("parentAjaxId");
 
 %>
@@ -122,19 +124,19 @@ function updateAjax() {
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top"><a
-			href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>">
+			href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>">
 		<bean:message key="eform.showmyform.btnAddEForm" /></a> <br>
 		<%  if (country.equals("BR")) { %> <a
-			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message
+			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message
 			key="global.btnBack" /> &nbsp;</a> <%}else{%> <a
-			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message
+			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&displaymode=edit&dboperation=search_detail"><bean:message
 			key="global.btnBack" /> &nbsp;</a> <%}%> <br>
 		<a
-			href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"
+			href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"
 			class="current"><bean:message
 			key="eform.calldeletedformdata.btnGoToForm" /></a><br />
 		<a
-			href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
+			href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&apptProvider=<%=apptProvider%>&appointment=<%=appointment%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
 			key="eform.showmyform.btnDeleted" /> </a> <security:oscarSec
 			roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r"
 			reverse="<%=false%>">
