@@ -64,17 +64,18 @@ function hideDiv() {
       thisEForm.setProviderNo(provider_no);  //needs provider for the action
   }
 
-  Hashtable sparam = new Hashtable();
-  if (request.getParameter("curProvider")!=null) {
-	  sparam.put(thisEForm.APPT_PROVIDER_NAME, request.getParameter("curProvider"));
-	  sparam.put(thisEForm.APPT_PROVIDER_ID, request.getParameter("curProvider"));
-	  sparam.put(thisEForm.RESIDENT_TFNOTES, request.getParameter("curProvider"));
+  thisEForm.special_params = new Hashtable();
+  if (request.getParameter("apptProvider")!=null) {
+	  thisEForm.special_params.put(thisEForm.APPT_PROVIDER_NAME, request.getParameter("apptProvider"));
+	  thisEForm.special_params.put(thisEForm.APPT_PROVIDER_ID, request.getParameter("apptProvider"));
+	  thisEForm.special_params.put(thisEForm.RESIDENT_TFNOTES, request.getParameter("apptProvider"));
   }
   if (request.getParameter("appointment")!=null) {
-	  sparam.put(thisEForm.APPT_MC_NO, request.getParameter("appointment"));
+	  thisEForm.special_params.put(thisEForm.APPT_MC_NO, request.getParameter("appointment"));
   }
-  sparam.put(thisEForm.PATIENT_TFNOTES, "");
-  thisEForm.special_params = sparam;
+  if (fid!=null) {
+	  thisEForm.special_params.put(thisEForm.PATIENT_TFNOTES, fid);
+  }
 
   thisEForm.setContextPath(request.getContextPath());
   thisEForm.setImagePath();
