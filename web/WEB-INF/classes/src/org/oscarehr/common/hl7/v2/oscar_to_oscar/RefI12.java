@@ -84,19 +84,19 @@ public final class RefI12 {
 		// Was specifically told that appointment notes is considered a secret field that should never be shown to the referredTo Provider
 		// DataTypeUtils.fillNte(referralMsg.getNTE(0), REF_NTE_TYPE.APPOINTMENT_NOTES.name(), consultationRequest.getStatusText());
 		int noteCounter=0;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), consultationRequest.getReasonForReferral());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), "txt", consultationRequest.getReasonForReferral());
 
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), consultationRequest.getClinicalInfo());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), "txt", consultationRequest.getClinicalInfo());
 		
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), consultationRequest.getConcurrentProblems());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), "txt", consultationRequest.getConcurrentProblems());
 		
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), consultationRequest.getCurrentMeds());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), "txt", consultationRequest.getCurrentMeds());
 		
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.ALLERGIES.name(), consultationRequest.getAllergies());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.ALLERGIES.name(), "txt", consultationRequest.getAllergies());
 	}
 
 	

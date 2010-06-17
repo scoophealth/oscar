@@ -25,6 +25,7 @@ import ca.uhn.hl7v2.model.v25.datatype.XPN;
 import ca.uhn.hl7v2.model.v25.datatype.XTN;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 import ca.uhn.hl7v2.model.v25.segment.NTE;
+import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import ca.uhn.hl7v2.model.v25.segment.PRD;
 import ca.uhn.hl7v2.model.v25.segment.SFT;
@@ -59,7 +60,7 @@ public final class DataTypeUtils {
 		cal.getTimeInMillis();
 
 		return (cal);
-    }
+	}
 
 	public static GregorianCalendar getCalendarFromDTM(DTM dtm) throws DataTypeException {
 		GregorianCalendar cal = new GregorianCalendar();
@@ -165,31 +166,30 @@ public final class DataTypeUtils {
 		PLN pln = prd.getProviderIdentifiers(0);
 		pln.getIDNumber().setValue(provider.getProviderNo());
 	}
-	
+
 	/**
 	 * @return a detached and non-persisted Provider model object with data filed in from the PRD.
-	 * @throws HL7Exception 
+	 * @throws HL7Exception
 	 */
-	public static Provider parsePrdAsProvider(PRD prd) throws HL7Exception
-	{
-		Provider provider=new Provider();
-		
+	public static Provider parsePrdAsProvider(PRD prd) throws HL7Exception {
+		Provider provider = new Provider();
+
 		XPN xpn = prd.getProviderName(0);
 		provider.setLastName(xpn.getFamilyName().getSurname().getValue());
 		provider.setFirstName(xpn.getGivenName().getValue());
 		provider.setTitle(xpn.getPrefixEgDR().getValue());
-		
-		XAD xad=prd.getProviderAddress(0);
+
+		XAD xad = prd.getProviderAddress(0);
 		provider.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		provider.setWorkPhone(xtn.getUnformattedTelephoneNumber().getValue());
 		provider.setEmail(xtn.getEmailAddress().getValue());
-		
+
 		PLN pln = prd.getProviderIdentifiers(0);
 		provider.setProviderNo(pln.getIDNumber().getValue());
 
-		return(provider);
+		return (provider);
 	}
 
 	/**
@@ -224,25 +224,24 @@ public final class DataTypeUtils {
 		pln.getIDNumber().setValue(professionalSpecialist.getId().toString());
 	}
 
-	public static ProfessionalSpecialist parsePrdAsProfessionalSpecialist(PRD prd) throws HL7Exception
-	{
-		ProfessionalSpecialist professionalSpecialist=new ProfessionalSpecialist();
-		
+	public static ProfessionalSpecialist parsePrdAsProfessionalSpecialist(PRD prd) throws HL7Exception {
+		ProfessionalSpecialist professionalSpecialist = new ProfessionalSpecialist();
+
 		XPN xpn = prd.getProviderName(0);
 		professionalSpecialist.setLastName(xpn.getFamilyName().getSurname().getValue());
 		professionalSpecialist.setFirstName(xpn.getGivenName().getValue());
 		professionalSpecialist.setProfessionalLetters(xpn.getPrefixEgDR().getValue());
-		
+
 		XAD xad = prd.getProviderAddress(0);
 		professionalSpecialist.setStreetAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
-		
+
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		professionalSpecialist.setPhoneNumber(xtn.getUnformattedTelephoneNumber().getValue());
 		professionalSpecialist.setEmailAddress(xtn.getEmailAddress().getValue());
 
-		return(professionalSpecialist);
+		return (professionalSpecialist);
 	}
-	
+
 	/**
 	 * @param pid
 	 * @param pidNumber pass in the # of this pid for the sequence, i.e. normally it's 1 if you only have 1 pid entry. if this is a list of pids, then the first one is 1, second is 2 etc..
@@ -262,16 +261,14 @@ public final class DataTypeUtils {
 		cx.getAssigningJurisdiction().getIdentifier().setValue(demographic.getHcType());
 
 		GregorianCalendar tempCalendar = new GregorianCalendar();
-		if (demographic.getEffDate()!=null)
-		{
+		if (demographic.getEffDate() != null) {
 			tempCalendar.setTime(demographic.getEffDate());
 			cx.getEffectiveDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
 		}
-		
-		if (demographic.getHcRenewDate()!=null)
-		{
+
+		if (demographic.getHcRenewDate() != null) {
 			tempCalendar.setTime(demographic.getHcRenewDate());
-			cx.getExpirationDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));			
+			cx.getExpirationDate().setYearMonthDayPrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
 		}
 
 		XPN xpn = pid.getPatientName(0);
@@ -294,11 +291,10 @@ public final class DataTypeUtils {
 		// U Unspecified
 		xpn.getNameTypeCode().setValue("L");
 
-		if (demographic.getBirthDay()!=null)
-		{
+		if (demographic.getBirthDay() != null) {
 			TS bday = pid.getDateTimeOfBirth();
 			tempCalendar = demographic.getBirthDay();
-			bday.getTime().setDatePrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));		
+			bday.getTime().setDatePrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
 		}
 
 		// Value Description
@@ -328,24 +324,24 @@ public final class DataTypeUtils {
 		// ISO table 3166.
 		pid.getCitizenship(0).getIdentifier().setValue(demographic.getCitizenship());
 	}
-	
+
 	/**
 	 * This method returns a non-persisted, detached demographic model object.
-	 * @throws HL7Exception 
+	 * 
+	 * @throws HL7Exception
 	 */
-	public static Demographic parsePid(PID pid) throws HL7Exception
-	{
-		Demographic demographic=new Demographic();
-		
-		XAD xad=pid.getPatientAddress(0);
+	public static Demographic parsePid(PID pid) throws HL7Exception {
+		Demographic demographic = new Demographic();
+
+		XAD xad = pid.getPatientAddress(0);
 		demographic.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
 		demographic.setCity(xad.getCity().getValue());
 		demographic.setProvince(xad.getStateOrProvince().getValue());
 		demographic.setPostal(xad.getZipOrPostalCode().getValue());
 
-		GregorianCalendar birthDate=DataTypeUtils.getCalendarFromDTM(pid.getDateTimeOfBirth().getTime());
+		GregorianCalendar birthDate = DataTypeUtils.getCalendarFromDTM(pid.getDateTimeOfBirth().getTime());
 		demographic.setBirthDay(birthDate);
-		
+
 		CX cx = pid.getPatientIdentifierList(0);
 		// health card string, excluding version code
 		demographic.setHin(cx.getIDNumber().getValue());
@@ -366,10 +362,10 @@ public final class DataTypeUtils {
 
 		XTN phone = pid.getPhoneNumberHome(0);
 		demographic.setPhone(phone.getUnformattedTelephoneNumber().getValue());
-	
+
 		demographic.setSex(getOscarGenderFromHl7Gender(pid.getAdministrativeSex().getValue()).name());
-		
-		return(demographic);
+
+		return (demographic);
 	}
 
 	/**
@@ -426,27 +422,37 @@ public final class DataTypeUtils {
 
 	/**
 	 * @param nte
-	 * @param type should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
+	 * @param typeText should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
+	 * @param dataType should be the extention of the file type, i.e. "txt", "doc", "pdf", "jpg", "png" etc...
 	 * @param data should be UTF-8 String, if you have bytes, use base64 encoding first. Max Length is 65535
 	 * @throws HL7Exception
 	 */
-	public static void fillNte(NTE nte, String type, String data) throws HL7Exception {
-		if (type.length() > 250) throw (new IllegalArgumentException("Type too long for NTE, type max length is 250, type.length()=" + type.length()));
+	public static void fillNte(NTE nte, String typeText, String dataType, String data) throws HL7Exception {
+		if (typeText.length()+dataType.length() > 700) throw (new IllegalArgumentException("Type + dataType too long for NTE, max combined length is 700, type.length()=" + typeText.length()+", dataType.length()="+dataType.length()));
 		if (data.length() > 65535) throw (new IllegalArgumentException("Data too long for NTE, data max length is 65535, data.length()=" + data.length()));
 
-		nte.getCommentType().getText().setValue(type);
+		nte.getCommentType().getText().setValue(typeText);
 		nte.getComment(0).setValue(data);
 	}
 
 	/**
 	 * @param nte
-	 * @param type should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES"
+	 * @param typeText should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
+	 * @param dataType should be the extention of the file type, i.e. "txt", "doc", "pdf", "jpg", "png" etc...
 	 * @param data will be base64 encoded, the encoded length must still be less than 65535
 	 * @throws HL7Exception
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void fillNte(NTE nte, String type, byte[] data) throws HL7Exception, UnsupportedEncodingException {
+	public static void fillNte(NTE nte, String typeText, String dataType, byte[] data) throws HL7Exception, UnsupportedEncodingException {
 		String dataString = OscarToOscarUtils.encodeBase64String(data);
-		fillNte(nte, type, dataString);
+		fillNte(nte, typeText, dataType, dataString);
+	}
+
+	/**
+	 * Sometimes an OBR segment is required even though none of the fields are relevant. This will create essentially a blank / useless OBR. It will fill in required fields with valid but essentially useless data.
+	 * @throws DataTypeException 
+	 */
+	public static void fillBlankOBR(OBR obr) throws DataTypeException {
+		obr.getUniversalServiceIdentifier().getIdentifier().setValue(String.valueOf(System.nanoTime()));
 	}
 }
