@@ -1293,6 +1293,7 @@ insert into `secRole` (role_name, description) values('Case Manager', 'Case Mana
 insert into `secRole` (role_name, description) values('Housing Worker', 'Housing Worker');
 insert into `secRole` (role_name, description) values('Support Worker', 'Support Worker');
 insert into `secRole` (role_name, description) values('Client Service Worker', 'Client Service Worker');
+insert into `secRole` (role_name, description) values('CAISI ADMIN', 'CAISI ADMIN');
 
 insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'doctor', 'R0000001',1);
 insert into `secUserRole` (`provider_no`,`role_name`,`orgcd`,`activeyn`) values('999998', 'admin', 'R0000001',1);
