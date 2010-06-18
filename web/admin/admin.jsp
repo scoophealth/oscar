@@ -4,32 +4,36 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html"
 	prefix="html"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc,_admin.torontoRfq"
 	rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
+	<%
+		response.sendRedirect("../logout.jsp");
+	%>
 </security:oscarSec>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%
-if(session.getAttribute("user") == null ) //|| !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
+	if (session.getAttribute("user") == null) //|| !((String) session.getValue("userprofession")).equalsIgnoreCase("admin"))
 	response.sendRedirect("../logout.jsp");
-String curProvider_no = (String) session.getAttribute("user");
-String userfirstname = (String) session.getAttribute("userfirstname");
-String userlastname = (String) session.getAttribute("userlastname");
+	String curProvider_no = (String)session.getAttribute("user");
+	String userfirstname = (String)session.getAttribute("userfirstname");
+	String userlastname = (String)session.getAttribute("userlastname");
 %>
 
 <%@ page errorPage="errorpage.jsp"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />
-<% String country = request.getLocale().getCountry();
-   oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
-   response.addCookie(cs.GiveMeACookie(cs.adminCookie)); %>
+<%
+	String country = request.getLocale().getCountry();
+	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
+	response.addCookie(cs.GiveMeACookie(cs.adminCookie));
+%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -63,9 +67,9 @@ String userlastname = (String) session.getAttribute("userlastname");
 
 <%@page import="oscar.OscarProperties"%><html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title><bean:message key="admin.admin.title" /> Start Time : <%=oscar.OscarProperties.getInstance().getStartTime() %></title>
+<title><bean:message key="admin.admin.title" /> Start Time : <%=oscar.OscarProperties.getInstance().getStartTime()%></title>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
@@ -196,10 +200,15 @@ div.logoutBox {
 </div>
 
 <div class="logoutBox">
-<% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><html:link
+<%
+	if (roleName$.equals("admin" + "," + curProvider_no))
+		{
+%><html:link
 	page="/admin/logout.jsp">
 	<bean:message key="global.btnLogout" />
-</html:link>&nbsp;<% }%>
+</html:link>&nbsp;<%
+	}
+%>
 </div>
 
 <security:oscarSec roleName="<%=roleName$%>"
@@ -289,7 +298,10 @@ div.logoutBox {
 	</div>
 
 
-	<% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
+	<%
+		if (oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled())
+				{
+	%>
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_admin.cookieRevolver" rights="r">
 		<div class="adminBox">
@@ -314,7 +326,9 @@ div.logoutBox {
 		</ul>
 		</div>
 	</security:oscarSec>
-	<% } %>
+	<%
+		}
+	%>
 </security:oscarSec>
 
 <%-- -add by caisi--%>
@@ -413,12 +427,18 @@ div.logoutBox {
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>">
 		<%-- This links doesnt make sense on Brazil. There are other billing engines that we must use for billing --%>
-		<% if (!country.equals("BR")) { %>
+		<%
+			if (!country.equals("BR"))
+						{
+		%>
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.billing" /></h3>
 		<ul>
 
-			<% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
+			<%
+				if (oscarVariables.getProperty("billregion", "").equals("BC"))
+								{
+			%>
 			<li><a href="#"
 				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/manageBillingform.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageBillFrm"/></a></li>
 			<li><a href="#"
@@ -462,7 +482,11 @@ div.logoutBox {
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.editInvoices"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(200,300,&quot;<html:rewrite page="/billing/CA/BC/settleBG.jsp"/>&quot;);return false;'><bean:message key="admin.admin.settlePaidClaims"/></a></li>
-			<% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
+			<%
+				}
+								else if (oscarVariables.getProperty("billregion", "").equals("ON"))
+								{
+			%>
 			<li><a href="#"
 				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>&quot;);return false;'><bean:message key="admin.admin.scheduleOfBenefits"/></a></li>
 			<li><a href="#"
@@ -499,10 +523,14 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/ON/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.invoiceRpts"/></a></li>
 
-			<%}%>
+			<%
+				}
+			%>
 		</ul>
 		</div>
-		<% } %>
+		<%
+			}
+		%>
 	</security:oscarSec>
 
 
@@ -525,12 +553,19 @@ div.logoutBox {
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.oscarReport" /></h3>
 		<ul>
-			<%session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/");%>
-			<% if (!country.equals("BR")) { %>
+			<%
+				session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/");
+			%>
+			<%
+				if (!country.equals("BR"))
+							{
+			%>
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarReport/RptByExample.do"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnQueryByExample" /></a></li>
-			<%}%>
+			<%
+				}
+			%>
 			<li><a href="#"
 				onclick='popup(600,900,&quot;<html:rewrite page="/oscarReport/reportByTemplate/homePage.jsp"/>&quot;, "reportbytemplate")'><bean:message key="admin.admin.rptbyTemplate"/></a></li>
 			<li><a href="#"
@@ -540,7 +575,10 @@ div.logoutBox {
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportVisitControl.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnVisitReport" /></a></li>
 			<%-- This links doesnt make sense on Brazil. Hide then --%>
-			<% if (!country.equals("BR")) { %>
+			<%
+				if (!country.equals("BR"))
+							{
+			%>
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportCatchment.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnPCNCatchmentReport" /></a></li>
@@ -550,11 +588,17 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(600,1000,&quot;<html:rewrite page="/oscarReport/obec.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnOvernightChecking" /></a></li>
-			<% } else {%>
+			<%
+				}
+							else
+							{
+			%>
 			<li><a href="#"
 				onclick='popupPage(600,750,&quot;<html:rewrite page="/report/reportactivepatientlist.jsp"/>&quot;)'><bean:message
 				key="report.reportindex.btnActivePList" /></a></li>
-			<% } %>
+			<%
+				}
+			%>
 			<li><a href="#"
 				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarSurveillance/ReportSurveillance.jsp"/>&quot;)"><bean:message
 				key="admin.admin.report.SurveillanceReport" /></a></li>
@@ -585,7 +629,10 @@ div.logoutBox {
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>">
 		<%-- This links doesnt make sense on Brazil. Hide then --%>
-		<% if (!country.equals("BR")) { %>
+		<%
+			if (!country.equals("BR"))
+						{
+		%>
 		<div class="adminBox">
 		<h3>&nbsp;<bean:message key="admin.admin.oscarBackup" /></h3>
 		<ul>
@@ -594,7 +641,9 @@ div.logoutBox {
 				key="admin.admin.btnAdminBackupDownload" /></a></li>
 		</ul>
 		</div>
-		<% } %>
+		<%
+			}
+		%>
 	</security:oscarSec>
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>">
@@ -657,10 +706,15 @@ div.logoutBox {
 		<ul>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'><bean:message key="admin.admin.clinicAdmin"/></a></li>
-<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>                        
+<%
+	if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable())
+				{
+%>                        
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageSites.do"/>&quot;);return false;'><bean:message key="admin.admin.sitesAdmin"/></a></li>
-<% } %>
+<%
+	}
+%>
                         <li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageBillingReferral.do"/>&quot;);return false;'><bean:message key="admin.admin.billingreferralAdmin"/></a></li>
 			<li><a href="#"
@@ -675,11 +729,17 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/providertemplate.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnInsertTemplate" /></a></li>
-			<% if (!country.equals("BR")) { %>
+			<%
+				if (!country.equals("BR"))
+							{
+			%>
 			<li><a href="#"
 				onclick='popupPage(550,810,&quot;<html:rewrite page="/admin/demographicstudysearchresults.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnStudy" /></a></li>
-			<%   if (oscarVariables.getProperty("billregion","").equals("ON")){  %>
+			<%
+				if (oscarVariables.getProperty("billregion", "").equals("ON"))
+								{
+			%>
 			<li><a href="#"
 				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilledphcp.jsp"/>&quot;);return false;'><bean:message key="admin.admin.PHCP"/></a>
 			<span style="font-size: x-small;"> (Setting: <a href="#"
@@ -687,26 +747,29 @@ div.logoutBox {
 			<a href="#"
 				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilleddxgrp.jsp"/>&quot;);return false;'><bean:message key="admin.admin.dx"/>
 			category</a>) </span></li>
-			<% } } %>
+			<%
+				}
+							}
+			%>
 			<oscar:oscarPropertiesCheck property="OLD_LAB_UPLOAD" value="yes"
 				defaultVal="false">
 				<li><a href="#"
 					onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/BC/LabUpload.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oldLabUpload"/></a></li>
 			</oscar:oscarPropertiesCheck>
-			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/ALL/testUploader.jsp"/>&quot;);return false;'><bean:message key="admin.admin.hl7LabUpload"/></a></li>
-			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/keygen/keyManager.jsp"/>&quot;);return false;'><bean:message key="admin.admin.keyPairGen"/></a></li>
-			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/labforwardingrules.jsp"/>&quot;);return false;'><bean:message key="admin.admin.labFwdRules"/></a></li>
-                        <li>
-                            <a href="#" onclick='popupPage(600,600,&quot;<html:rewrite page="/FacilityManager.do"/>&quot;);return false;'><bean:message key="admin.admin.manageIntegratorFacilities"/></a>
-                        </li>
-			<%if (oscarVariables.getProperty("hsfo.loginSiteCode","")!=null && 
-		!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
+			<li><a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/ALL/testUploader.jsp"/>&quot;);return false;'><bean:message key="admin.admin.hl7LabUpload" /></a></li>
+			<li><a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/keygen/keyManager.jsp"/>&quot;);return false;'><bean:message key="admin.admin.keyPairGen" /></a></li>
+			<li><a href="#" onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/labforwardingrules.jsp"/>&quot;);return false;'><bean:message key="admin.admin.labFwdRules" /></a></li>
+			<li><a href="#" onclick='popupPage(600,600,&quot;<html:rewrite page="/FacilityManager.do"/>&quot;);return false;'><bean:message key="admin.admin.manageIntegratorFacilities" /></a></li>
+			<li><a href="<%=request.getContextPath()%>/lab/CA/ALL/sendOruR01.jsp"><bean:message key="admin.admin.sendOruR01" /></a></li>
+			<%
+				if (oscarVariables.getProperty("hsfo.loginSiteCode", "") != null && !"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode", "")))
+							{
+			%>
 			<li><a href="#"
 				onclick='popupPage(400,600,&quot;<html:rewrite page="/admin/RecommitHSFO.do"/>?method=showSchedule&quot;);return false;'><bean:message key="admin.admin.hsfoSubmit"/></a></li>
-			<%}%>
+			<%
+				}
+			%>
             <oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
             <li><a href="#"
             onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/uploadEntryText.jsp"/>&quot;);return false;'><bean:message key="admin.admin.uploadEntryTxt"/></a>
@@ -718,10 +781,15 @@ div.logoutBox {
 </caisi:isModuleLoad>
 <hr style="color: black;" />
 <div class="logoutBox">
-<% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><html:link
+<%
+	if (roleName$.equals("admin" + "," + curProvider_no))
+		{
+%><html:link
 	page="/logout.jsp">
 	<bean:message key="global.btnLogout" />
-</html:link>&nbsp;<% }%>
+</html:link>&nbsp;<%
+	}
+%>
 </div>
 
 
