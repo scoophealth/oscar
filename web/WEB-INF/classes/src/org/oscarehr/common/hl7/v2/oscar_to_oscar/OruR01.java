@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.BuildInfo;
@@ -22,7 +23,6 @@ import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.segment.NTE;
 import ca.uhn.hl7v2.model.v26.segment.OBR;
-import ca.uhn.hl7v2.model.v26.segment.ROL;
 
 public final class OruR01 {
 	
@@ -57,7 +57,7 @@ public final class OruR01 {
 	/**
 	 * This method is essentially used to make an ORU_R01 containing pretty much any random data.
 	 */
-	public static ORU_R01 makeOruR01(String facilityName, Demographic demographic, List<ObservationData> observationData) throws HL7Exception
+	public static ORU_R01 makeOruR01(String facilityName, Demographic demographic, List<ObservationData> observationData, Provider sendingProvider, Provider receivingProvider) throws HL7Exception
 	{
 		ORU_R01 observationMsg=new ORU_R01();
 
@@ -72,7 +72,8 @@ public final class OruR01 {
 		fillNtesWithObservationData(orderObservation, observationData);
 
 		// use ROL for the sending and receiving provider
-		orderObservation.getROL(0);
+		DataTypeUtils.fillRol(orderObservation.getROL(0), sendingProvider, DataTypeUtils.ACTION_ROLE_SENDER);
+		DataTypeUtils.fillRol(orderObservation.getROL(1), receivingProvider, DataTypeUtils.ACTION_ROLE_RECEIVER);
 		
 		return(observationMsg);
 	}
@@ -147,7 +148,17 @@ public final class OruR01 {
 		byte[] b=FileUtils.readFileToByteArray(new File("/tmp/r6.jpg"));
 		observationDataList.add(new ObservationData("test","jpg", b));
 		
-		ORU_R01 observationMsg=makeOruR01("facility name", demographic, observationDataList);
+		Provider sender=new Provider();
+		sender.setProviderNo("111");
+		sender.setLastName("sender ln");
+		sender.setFirstName("sender fn");
+		
+		Provider receiver=new Provider();
+		receiver.setProviderNo("222");
+		receiver.setLastName("receiver ln");
+		receiver.setFirstName("receiver fn");
+		
+		ORU_R01 observationMsg=makeOruR01("facility name", demographic, observationDataList, sender, receiver);
 		
 		String messageString=OscarToOscarUtils.pipeParser.encode(observationMsg);
 		logger.info(messageString);

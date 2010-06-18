@@ -20,12 +20,14 @@ import ca.uhn.hl7v2.model.v26.datatype.DT;
 import ca.uhn.hl7v2.model.v26.datatype.DTM;
 import ca.uhn.hl7v2.model.v26.datatype.PLN;
 import ca.uhn.hl7v2.model.v26.datatype.XAD;
+import ca.uhn.hl7v2.model.v26.datatype.XCN;
 import ca.uhn.hl7v2.model.v26.datatype.XPN;
 import ca.uhn.hl7v2.model.v26.datatype.XTN;
 import ca.uhn.hl7v2.model.v26.segment.MSH;
 import ca.uhn.hl7v2.model.v26.segment.NTE;
 import ca.uhn.hl7v2.model.v26.segment.PID;
 import ca.uhn.hl7v2.model.v26.segment.PRD;
+import ca.uhn.hl7v2.model.v26.segment.ROL;
 import ca.uhn.hl7v2.model.v26.segment.SFT;
 
 public final class DataTypeUtils {
@@ -33,6 +35,8 @@ public final class DataTypeUtils {
 
 	public static final String HL7_VERSION_ID="2.6";
 	public static final int NTE_COMMENT_MAX_SIZE=65536;
+	public static final String ACTION_ROLE_SENDER="SENDER";
+	public static final String ACTION_ROLE_RECEIVER="RECEIVER";
 	
 	/**
 	 * Don't access this formatter directly, use the getAsFormattedString method, it provides synchronisation
@@ -447,5 +451,32 @@ public final class DataTypeUtils {
 	public static void fillNte(NTE nte, String typeText, String dataType, byte[] data) throws HL7Exception, UnsupportedEncodingException {
 		String dataString = OscarToOscarUtils.encodeBase64ToString(data);
 		fillNte(nte, typeText, dataType, dataString);
+	}
+	
+	/**
+	 * @param rol
+	 * @param provider
+	 * @param actionRole the role of the given provider with regards to this communcations. There is HL7 table 0443. We will also add DataTypeUtils.ACTION_ROLE_* as roles so we can send and receive arbitrary data under arbitrary conditions.
+	 * @throws HL7Exception 
+	 */
+	public static void fillRol(ROL rol, Provider provider, String actionRole) throws HL7Exception
+	{
+		rol.getActionCode().setValue("unused");
+		rol.getRoleROL().getIdentifier().setValue(actionRole);
+		
+		XCN xcn=rol.getRolePerson(0);
+		xcn.getIDNumber().setValue(provider.getProviderNo());
+		xcn.getFamilyName().getSurname().setValue(provider.getLastName());
+		xcn.getGivenName().setValue(provider.getFirstName());
+		xcn.getPrefixEgDR().setValue(provider.getTitle());
+		
+		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
+		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(provider.getAddress()));
+		xad.getAddressType().setValue("O");
+		
+		XTN xtn = rol.getPhone(0);
+		xtn.getUnformattedTelephoneNumber().setValue(provider.getPhone());
+		xtn.getCommunicationAddress().setValue(provider.getEmail());
+		
 	}
 }
