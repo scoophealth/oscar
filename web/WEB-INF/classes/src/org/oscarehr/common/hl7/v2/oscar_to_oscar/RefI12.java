@@ -16,12 +16,12 @@ import org.oscarehr.util.SpringUtils;
 import oscar.util.BuildInfo;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v25.group.REF_I12_PATIENT_VISIT;
-import ca.uhn.hl7v2.model.v25.message.REF_I12;
-import ca.uhn.hl7v2.model.v25.segment.NTE;
-import ca.uhn.hl7v2.model.v25.segment.PRD;
-import ca.uhn.hl7v2.model.v25.segment.PV1;
-import ca.uhn.hl7v2.model.v25.segment.RF1;
+import ca.uhn.hl7v2.model.v26.group.REF_I12_PATIENT_VISIT;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
+import ca.uhn.hl7v2.model.v26.segment.NTE;
+import ca.uhn.hl7v2.model.v26.segment.PRD;
+import ca.uhn.hl7v2.model.v26.segment.PV1;
+import ca.uhn.hl7v2.model.v26.segment.RF1;
 
 public final class RefI12 {
 	private static final Logger logger=MiscUtils.getLogger();
@@ -40,7 +40,7 @@ public final class RefI12 {
 	{
 		REF_I12 referralMsg=new REF_I12();
 
-		DataTypeUtils.fillMsh(referralMsg.getMSH(), new Date(), facilityName, "REF", "I12", "REF_I12", "2.5");
+		DataTypeUtils.fillMsh(referralMsg.getMSH(), new Date(), facilityName, "REF", "I12", "REF_I12", DataTypeUtils.HL7_VERSION_ID);
 		DataTypeUtils.fillSft(referralMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
 
 		fillRf1(referralMsg.getRF1(), null, null, null, null, consultationRequest.getId(), consultationRequest.getReferralDate(), null, null);
@@ -129,7 +129,7 @@ public final class RefI12 {
 		rf1.getOriginatingReferralIdentifier().getEntityIdentifier().setValue(oscarReferralId.toString());
 		
 		// date referral is effective
-		rf1.getEffectiveDate().getTime().setValue(DataTypeUtils.getAsHl7FormattedString(referralDate));
+		rf1.getEffectiveDate().setValue(DataTypeUtils.getAsHl7FormattedString(referralDate));
 
 		//Value Description
 		//-----------------

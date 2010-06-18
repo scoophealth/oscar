@@ -16,13 +16,13 @@ import org.oscarehr.util.MiscUtils;
 import oscar.util.BuildInfo;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v25.datatype.FT;
-import ca.uhn.hl7v2.model.v25.group.ORU_R01_ORDER_OBSERVATION;
-import ca.uhn.hl7v2.model.v25.group.ORU_R01_PATIENT_RESULT;
-import ca.uhn.hl7v2.model.v25.message.ORU_R01;
-import ca.uhn.hl7v2.model.v25.segment.NTE;
-import ca.uhn.hl7v2.model.v25.segment.OBR;
-import ca.uhn.hl7v2.model.v25.segment.ROL;
+import ca.uhn.hl7v2.model.v26.datatype.FT;
+import ca.uhn.hl7v2.model.v26.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT_RESULT;
+import ca.uhn.hl7v2.model.v26.message.ORU_R01;
+import ca.uhn.hl7v2.model.v26.segment.NTE;
+import ca.uhn.hl7v2.model.v26.segment.OBR;
+import ca.uhn.hl7v2.model.v26.segment.ROL;
 
 public final class OruR01 {
 	
@@ -61,7 +61,7 @@ public final class OruR01 {
 	{
 		ORU_R01 observationMsg=new ORU_R01();
 
-		DataTypeUtils.fillMsh(observationMsg.getMSH(), new Date(), facilityName, "ORU", "R01", "ORU_R01", "2.5");
+		DataTypeUtils.fillMsh(observationMsg.getMSH(), new Date(), facilityName, "ORU", "R01", "ORU_R01", DataTypeUtils.HL7_VERSION_ID);
 		DataTypeUtils.fillSft(observationMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
 
 		ORU_R01_PATIENT_RESULT patientResult=observationMsg.getPATIENT_RESULT(0);
@@ -72,7 +72,7 @@ public final class OruR01 {
 		fillNtesWithObservationData(orderObservation, observationData);
 
 		// use ROL for the sending and receiving provider
-		ROL rol;
+		orderObservation.getROL(0);
 		
 		return(observationMsg);
 	}
@@ -150,11 +150,11 @@ public final class OruR01 {
 		ORU_R01 observationMsg=makeOruR01("facility name", demographic, observationDataList);
 		
 		String messageString=OscarToOscarUtils.pipeParser.encode(observationMsg);
-		System.err.println(messageString);
+		logger.info(messageString);
 		
 		ORU_R01 newObservationMsg=(ORU_R01)OscarToOscarUtils.pipeParser.parse(messageString);
 		byte[] decoded=getNteCommentsAsDecodedBytes(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(0));
-		System.err.println("equal data:"+Arrays.equals(b, decoded));
+		logger.info("equal data:"+Arrays.equals(b, decoded));
 		FileUtils.writeByteArrayToFile(new File("/tmp/out.jpg"), decoded);
 	}
 }

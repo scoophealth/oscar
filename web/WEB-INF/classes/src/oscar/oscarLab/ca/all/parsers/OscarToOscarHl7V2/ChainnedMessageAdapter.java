@@ -45,9 +45,9 @@ import oscar.util.DateUtils;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v25.datatype.DTM;
-import ca.uhn.hl7v2.model.v25.segment.MSH;
-import ca.uhn.hl7v2.model.v25.segment.PID;
+import ca.uhn.hl7v2.model.v26.datatype.DTM;
+import ca.uhn.hl7v2.model.v26.segment.MSH;
+import ca.uhn.hl7v2.model.v26.segment.PID;
 
 /**
  * This class is loosely based on the MessageHandler interface. The purpose of this class is to provide an adapter for that interface with some minor changes like a default parsing and an init method that's a message instead of a string. The general
@@ -84,7 +84,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 
 	public String getMsgDate() {
 		try {
-			DTM dtm = getMsh().getDateTimeOfMessage().getTime();
+			DTM dtm = getMsh().getDateTimeOfMessage();
 			GregorianCalendar cal = DataTypeUtils.getCalendarFromDTM(dtm);
 			return (DateUtils.getISODateTimeFormatNoT(cal));
 		} catch (DataTypeException e) {
@@ -189,7 +189,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 
 	public String getDOB() {
 		try {
-			DTM dtm = getPid().getDateTimeOfBirth().getTime();
+			DTM dtm = getPid().getDateTimeOfBirth();
 			GregorianCalendar cal = DataTypeUtils.getCalendarFromDTM(dtm);
 			return (DateUtils.getISODateTimeFormatNoT(cal));
 		} catch (DataTypeException e) {
@@ -200,7 +200,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 
 	public String getAge() {
 		try {
-			DTM dtm = getPid().getDateTimeOfBirth().getTime();
+			DTM dtm = getPid().getDateTimeOfBirth();
 			GregorianCalendar cal = DataTypeUtils.getCalendarFromDTM(dtm);
 			int age = DateUtils.getAge(cal, new GregorianCalendar());
 			return (String.valueOf(age));

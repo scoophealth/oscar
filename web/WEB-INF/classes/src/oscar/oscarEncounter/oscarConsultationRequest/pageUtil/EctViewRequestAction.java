@@ -73,9 +73,9 @@ import org.oscarehr.util.MiscUtils;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v25.message.REF_I12;
-import ca.uhn.hl7v2.model.v25.segment.PID;
-import ca.uhn.hl7v2.model.v25.segment.PRD;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
+import ca.uhn.hl7v2.model.v26.segment.PID;
+import ca.uhn.hl7v2.model.v26.segment.PRD;
 
 public class EctViewRequestAction extends Action {
 	
@@ -147,7 +147,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setClinicalInformation(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CLINICAL_INFORMATION));
         thisForm.setCurrentMedications(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CURRENT_MEDICATIONS));
         
-        GregorianCalendar referralDate=DataTypeUtils.getCalendarFromDTM(refI12.getRF1().getEffectiveDate().getTime());
+        GregorianCalendar referralDate=DataTypeUtils.getCalendarFromDTM(refI12.getRF1().getEffectiveDate());
         thisForm.setReferalDate(DateFormatUtils.ISO_DATE_FORMAT.format(referralDate));
 
         thisForm.setConcurrentProblems(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.CONCURRENT_PROBLEMS));

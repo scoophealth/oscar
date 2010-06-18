@@ -59,7 +59,7 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v25.message.REF_I12;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;

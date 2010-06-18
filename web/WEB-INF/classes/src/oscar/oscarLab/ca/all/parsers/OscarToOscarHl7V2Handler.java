@@ -33,9 +33,9 @@ import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.ChainnedMessageAdapter;
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.RefI12Handler;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
-import ca.uhn.hl7v2.model.v25.message.REF_I12;
-import ca.uhn.hl7v2.model.v25.segment.MSH;
-import ca.uhn.hl7v2.model.v25.segment.PID;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
+import ca.uhn.hl7v2.model.v26.segment.MSH;
+import ca.uhn.hl7v2.model.v26.segment.PID;
 
 public final class OscarToOscarHl7V2Handler implements MessageHandler {
 	private static Logger logger = MiscUtils.getLogger();

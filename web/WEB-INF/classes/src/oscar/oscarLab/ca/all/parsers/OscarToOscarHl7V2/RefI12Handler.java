@@ -29,12 +29,12 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType;
 import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v25.datatype.XPN;
-import ca.uhn.hl7v2.model.v25.group.REF_I12_PROVIDER_CONTACT;
-import ca.uhn.hl7v2.model.v25.message.REF_I12;
-import ca.uhn.hl7v2.model.v25.segment.MSH;
-import ca.uhn.hl7v2.model.v25.segment.PID;
-import ca.uhn.hl7v2.model.v25.segment.PRD;
+import ca.uhn.hl7v2.model.v26.datatype.XPN;
+import ca.uhn.hl7v2.model.v26.group.REF_I12_PROVIDER_CONTACT;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
+import ca.uhn.hl7v2.model.v26.segment.MSH;
+import ca.uhn.hl7v2.model.v26.segment.PID;
+import ca.uhn.hl7v2.model.v26.segment.PRD;
 
 public final class RefI12Handler extends ChainnedMessageAdapter<REF_I12> {
 	

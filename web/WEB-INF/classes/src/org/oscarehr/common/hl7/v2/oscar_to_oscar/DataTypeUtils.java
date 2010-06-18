@@ -15,23 +15,23 @@ import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v25.datatype.CX;
-import ca.uhn.hl7v2.model.v25.datatype.DT;
-import ca.uhn.hl7v2.model.v25.datatype.DTM;
-import ca.uhn.hl7v2.model.v25.datatype.PLN;
-import ca.uhn.hl7v2.model.v25.datatype.TS;
-import ca.uhn.hl7v2.model.v25.datatype.XAD;
-import ca.uhn.hl7v2.model.v25.datatype.XPN;
-import ca.uhn.hl7v2.model.v25.datatype.XTN;
-import ca.uhn.hl7v2.model.v25.segment.MSH;
-import ca.uhn.hl7v2.model.v25.segment.NTE;
-import ca.uhn.hl7v2.model.v25.segment.PID;
-import ca.uhn.hl7v2.model.v25.segment.PRD;
-import ca.uhn.hl7v2.model.v25.segment.SFT;
+import ca.uhn.hl7v2.model.v26.datatype.CX;
+import ca.uhn.hl7v2.model.v26.datatype.DT;
+import ca.uhn.hl7v2.model.v26.datatype.DTM;
+import ca.uhn.hl7v2.model.v26.datatype.PLN;
+import ca.uhn.hl7v2.model.v26.datatype.XAD;
+import ca.uhn.hl7v2.model.v26.datatype.XPN;
+import ca.uhn.hl7v2.model.v26.datatype.XTN;
+import ca.uhn.hl7v2.model.v26.segment.MSH;
+import ca.uhn.hl7v2.model.v26.segment.NTE;
+import ca.uhn.hl7v2.model.v26.segment.PID;
+import ca.uhn.hl7v2.model.v26.segment.PRD;
+import ca.uhn.hl7v2.model.v26.segment.SFT;
 
 public final class DataTypeUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 
+	public static final String HL7_VERSION_ID="2.6";
 	public static final int NTE_COMMENT_MAX_SIZE=65536;
 	
 	/**
@@ -105,14 +105,14 @@ public final class DataTypeUtils {
 	 * @param messageCode i.e. "REF"
 	 * @param triggerEvent i.e. "I12"
 	 * @param messageStructure i.e. "REF_I12"
-	 * @param hl7VersionId is the version of hl7 in use, i.e. "2.5"
+	 * @param hl7VersionId is the version of hl7 in use, i.e. "2.6"
 	 */
 	public static void fillMsh(MSH msh, Date dateOfMessage, String facilityName, String messageCode, String triggerEvent, String messageStructure, String hl7VersionId) throws DataTypeException {
 		msh.getFieldSeparator().setValue("|");
 		msh.getEncodingCharacters().setValue("^~\\&");
 		msh.getVersionID().getVersionID().setValue(hl7VersionId);
 
-		msh.getDateTimeOfMessage().getTime().setValue(getAsHl7FormattedString(dateOfMessage));
+		msh.getDateTimeOfMessage().setValue(getAsHl7FormattedString(dateOfMessage));
 
 		msh.getSendingApplication().getNamespaceID().setValue("OSCAR");
 
@@ -162,7 +162,7 @@ public final class DataTypeUtils {
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		xtn.getUnformattedTelephoneNumber().setValue(provider.getWorkPhone());
-		xtn.getEmailAddress().setValue(provider.getEmail());
+		xtn.getCommunicationAddress().setValue(provider.getEmail());
 
 		PLN pln = prd.getProviderIdentifiers(0);
 		pln.getIDNumber().setValue(provider.getProviderNo());
@@ -185,7 +185,7 @@ public final class DataTypeUtils {
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		provider.setWorkPhone(xtn.getUnformattedTelephoneNumber().getValue());
-		provider.setEmail(xtn.getEmailAddress().getValue());
+		provider.setEmail(xtn.getCommunicationAddress().getValue());
 
 		PLN pln = prd.getProviderIdentifiers(0);
 		provider.setProviderNo(pln.getIDNumber().getValue());
@@ -219,7 +219,7 @@ public final class DataTypeUtils {
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		xtn.getUnformattedTelephoneNumber().setValue(professionalSpecialist.getPhoneNumber());
-		xtn.getEmailAddress().setValue(professionalSpecialist.getEmailAddress());
+		xtn.getCommunicationAddress().setValue(professionalSpecialist.getEmailAddress());
 
 		PLN pln = prd.getProviderIdentifiers(0);
 		pln.getIDNumber().setValue(professionalSpecialist.getId().toString());
@@ -238,7 +238,7 @@ public final class DataTypeUtils {
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		professionalSpecialist.setPhoneNumber(xtn.getUnformattedTelephoneNumber().getValue());
-		professionalSpecialist.setEmailAddress(xtn.getEmailAddress().getValue());
+		professionalSpecialist.setEmailAddress(xtn.getCommunicationAddress().getValue());
 
 		return (professionalSpecialist);
 	}
@@ -257,7 +257,7 @@ public final class DataTypeUtils {
 		// health card string, excluding version code
 		cx.getIDNumber().setValue(demographic.getHin());
 		// blank for everyone but ontario use version code
-		cx.getCheckDigit().setValue(demographic.getVer());
+		cx.getIdentifierCheckDigit().setValue(demographic.getVer());
 		// province
 		cx.getAssigningJurisdiction().getIdentifier().setValue(demographic.getHcType());
 
@@ -293,9 +293,9 @@ public final class DataTypeUtils {
 		xpn.getNameTypeCode().setValue("L");
 
 		if (demographic.getBirthDay() != null) {
-			TS bday = pid.getDateTimeOfBirth();
+			DTM bday = pid.getDateTimeOfBirth();
 			tempCalendar = demographic.getBirthDay();
-			bday.getTime().setDatePrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
+			bday.setDatePrecision(tempCalendar.get(GregorianCalendar.YEAR), tempCalendar.get(GregorianCalendar.MONTH) + 1, tempCalendar.get(GregorianCalendar.DAY_OF_MONTH));
 		}
 
 		// Value Description
@@ -340,14 +340,14 @@ public final class DataTypeUtils {
 		demographic.setProvince(xad.getStateOrProvince().getValue());
 		demographic.setPostal(xad.getZipOrPostalCode().getValue());
 
-		GregorianCalendar birthDate = DataTypeUtils.getCalendarFromDTM(pid.getDateTimeOfBirth().getTime());
+		GregorianCalendar birthDate = DataTypeUtils.getCalendarFromDTM(pid.getDateTimeOfBirth());
 		demographic.setBirthDay(birthDate);
 
 		CX cx = pid.getPatientIdentifierList(0);
 		// health card string, excluding version code
 		demographic.setHin(cx.getIDNumber().getValue());
 		// blank for everyone but ontario use version code
-		demographic.setVer(cx.getCheckDigit().getValue());
+		demographic.setVer(cx.getIdentifierCheckDigit().getValue());
 		// province
 		demographic.setHcType(cx.getAssigningJurisdiction().getIdentifier().getValue());
 		// valid
