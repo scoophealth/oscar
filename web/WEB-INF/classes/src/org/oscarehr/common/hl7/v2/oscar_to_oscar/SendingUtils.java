@@ -64,8 +64,8 @@ public final class SendingUtils {
 
 			MultipartPostMethod multipartPostMethod = new MultipartPostMethod(url);
 			multipartPostMethod.addParameter("importFile", tempFile.getName(), tempFile);
-			multipartPostMethod.addParameter("key", OscarToOscarUtils.encodeBase64String(encryptedSecretKey));
-			multipartPostMethod.addParameter("signature", OscarToOscarUtils.encodeBase64String(signature));
+			multipartPostMethod.addParameter("key", OscarToOscarUtils.encodeBase64ToString(encryptedSecretKey));
+			multipartPostMethod.addParameter("signature", OscarToOscarUtils.encodeBase64ToString(signature));
 			multipartPostMethod.addParameter("service", serviceName);
 
 			HttpClient httpClient = new HttpClient();
@@ -105,7 +105,7 @@ public final class SendingUtils {
 	}
 
 	public static PublicKey getPublicOscarKey(String publicOscarKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(OscarToOscarUtils.base64.decode(publicOscarKeyString.getBytes(OscarToOscarUtils.ENCODING)));
+	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(OscarToOscarUtils.decodeBase64(publicOscarKeyString));
 		KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
 		PublicKey publicOscarKey = pubKeyFactory.generatePublic(pubKeySpec);
 	    return publicOscarKey;
@@ -116,7 +116,7 @@ public final class SendingUtils {
 	 * because it's a key we give out to other people.
 	 */
 	public static PrivateKey getPublicServiceKey(String publicServiceKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(OscarToOscarUtils.base64.decode(publicServiceKeyString.getBytes(OscarToOscarUtils.ENCODING)));
+	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(OscarToOscarUtils.decodeBase64(publicServiceKeyString));
 		KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
 		PrivateKey publicServiceKey = privKeyFactory.generatePrivate(privKeySpec);
 	    return publicServiceKey;

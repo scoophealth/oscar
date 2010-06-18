@@ -25,7 +25,6 @@ import ca.uhn.hl7v2.model.v25.datatype.XPN;
 import ca.uhn.hl7v2.model.v25.datatype.XTN;
 import ca.uhn.hl7v2.model.v25.segment.MSH;
 import ca.uhn.hl7v2.model.v25.segment.NTE;
-import ca.uhn.hl7v2.model.v25.segment.OBR;
 import ca.uhn.hl7v2.model.v25.segment.PID;
 import ca.uhn.hl7v2.model.v25.segment.PRD;
 import ca.uhn.hl7v2.model.v25.segment.SFT;
@@ -33,6 +32,8 @@ import ca.uhn.hl7v2.model.v25.segment.SFT;
 public final class DataTypeUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 
+	public static final int NTE_COMMENT_MAX_SIZE=65536;
+	
 	/**
 	 * Don't access this formatter directly, use the getAsFormattedString method, it provides synchronisation
 	 */
@@ -444,15 +445,7 @@ public final class DataTypeUtils {
 	 * @throws UnsupportedEncodingException
 	 */
 	public static void fillNte(NTE nte, String typeText, String dataType, byte[] data) throws HL7Exception, UnsupportedEncodingException {
-		String dataString = OscarToOscarUtils.encodeBase64String(data);
+		String dataString = OscarToOscarUtils.encodeBase64ToString(data);
 		fillNte(nte, typeText, dataType, dataString);
-	}
-
-	/**
-	 * Sometimes an OBR segment is required even though none of the fields are relevant. This will create essentially a blank / useless OBR. It will fill in required fields with valid but essentially useless data.
-	 * @throws DataTypeException 
-	 */
-	public static void fillBlankOBR(OBR obr) throws DataTypeException {
-		obr.getUniversalServiceIdentifier().getIdentifier().setValue(String.valueOf(System.nanoTime()));
 	}
 }

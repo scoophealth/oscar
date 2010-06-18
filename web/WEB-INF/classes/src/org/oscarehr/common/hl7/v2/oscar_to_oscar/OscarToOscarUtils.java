@@ -13,7 +13,7 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
 public final class OscarToOscarUtils {
 	public static final String UPLOAD_MESSAGE_TYPE = "OSCAR_TO_OSCAR_HL7_V2";
 	public static final String ENCODING="UTF-8";
-	public static final Base64 base64=new Base64();
+	private static final Base64 base64=new Base64();
 	public static final PipeParser pipeParser=initialisePipeParser();
 	
 	public enum CategoryType
@@ -28,8 +28,12 @@ public final class OscarToOscarUtils {
 		return(pipeParser);
 	}
 	
-	public static String encodeBase64String(byte[] b) throws UnsupportedEncodingException {
-		return (new String(OscarToOscarUtils.base64.encode(b), OscarToOscarUtils.ENCODING));
+	public static String encodeBase64ToString(byte[] b) throws UnsupportedEncodingException {
+		return (new String(base64.encode(b), ENCODING));
+	}
+	
+	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
+		return(base64.decode(s.getBytes(ENCODING)));
 	}
 	
 	public static AbstractMessage pipeParserParse(String hl7Message) throws EncodingNotSupportedException, HL7Exception
@@ -39,7 +43,7 @@ public final class OscarToOscarUtils {
 		// the above will have converted \r\n to \r\r so fix that too
 		hl7Message=hl7Message.replaceAll("\r\r", "\r");
 		
-		AbstractMessage message=(AbstractMessage) OscarToOscarUtils.pipeParser.parse(hl7Message);
+		AbstractMessage message=(AbstractMessage) pipeParser.parse(hl7Message);
 		return(message);
 	}
 }
