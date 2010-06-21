@@ -52,8 +52,19 @@ public class Provider implements Serializable, Comparable<Provider>{
 	private String firstName;
 	private String rmaNo;
     private Date SignedConfidentiality;
+    private String practitionerNo;
     private String email;
     private String title;
+    
+	public String getPractitionerNo() {
+		return practitionerNo;
+	}
+
+	public void setPractitionerNo(String practitionerNo) {
+		this.practitionerNo = practitionerNo;
+	}
+
+   
 
 	private Set<Site> sites;
 

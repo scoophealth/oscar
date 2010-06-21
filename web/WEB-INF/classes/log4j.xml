@@ -80,7 +80,7 @@
 	<category name="org.springframework">
 		<priority value="WARN" />
 	</category>
-
+	
 	<!-- ############################# -->
 
 	<root>

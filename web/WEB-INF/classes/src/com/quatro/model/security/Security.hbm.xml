@@ -33,7 +33,9 @@
 		<property name="BExpireset" type="java.lang.Integer">
 			<column name="b_expireSet" precision="1" scale="0" default="1" />
 		</property>
+		<!-- 
 		<property name="lastUpdateDate" column="lastUpdateDate"></property>
 		<property name="lastUpdateUser" column="lastUpdateUser"></property>
+		-->
 	</class>
 </hibernate-mapping>

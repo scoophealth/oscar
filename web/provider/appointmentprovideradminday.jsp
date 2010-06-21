@@ -828,6 +828,14 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 	<span id="oscar_new_tickler"><bean:message key="global.btntickler"/></span></a>
    </caisi:isModuleLoad>
 </li>
+
+<oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
+<li>   
+    <a HREF="#" ONCLICK ="popupPage2('../oscarLearning/CourseView.jsp','<bean:message key="global.courseview"/>');return false;" TITLE='<bean:message key="global.courseview"/>'>
+	<span id="oscar_courseview"><bean:message key="global.btncourseview"/></span></a>
+</li>
+</oscar:oscarPropertiesCheck>
+
 <oscar:oscarPropertiesCheck property="WORKFLOW" value="yes">
    <li><a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../oscarWorkflow/WorkFlowList.jsp','<bean:message key="global.workflow"/>')"><bean:message key="global.btnworkflow"/></a></li> 
 </oscar:oscarPropertiesCheck>

@@ -283,4 +283,8 @@ public class ProviderDao extends HibernateDaoSupport {
     public void updateProvider( Provider provider) {        
         this.getHibernateTemplate().update(provider);
     }
+    
+    public void saveProvider( Provider provider) {        
+        this.getHibernateTemplate().save(provider);
+    }
 }

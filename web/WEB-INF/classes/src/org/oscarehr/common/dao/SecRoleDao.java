@@ -55,4 +55,11 @@ public class SecRoleDao extends AbstractDao<SecRole> {
 		return(results);
 	}
 
+    public SecRole findByName(String name) {
+    	Query q = entityManager.createQuery("select x from SecRole x where x.name=?");
+    
+    	q.setParameter(1, name);
+    	SecRole result = (SecRole)q.getSingleResult();
+    	return result;
+    }
 }

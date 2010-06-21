@@ -80,5 +80,6 @@
 -->
 		<property name="lastUpdateDate" column="lastupdatedate"></property>
 		<property name="lastUpdateUser" column="lastupdateuser"></property>
+		<property name="siteSpecificField" />
     </class>
 </hibernate-mapping>

@@ -30,6 +30,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+
+<% String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); %>
 
 <html:html locale="true">
 <head>
@@ -80,6 +83,11 @@
             document.titlesearch.ptstatus.value="";
             if (checkTypeIn()) document.titlesearch.submit();
         }
+
+        function searchOutOfDomain() {
+            document.titlesearch.outofdomain.value="true";
+            if (checkTypeIn()) document.titlesearch.submit();
+        }
          
         </script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
@@ -117,7 +125,8 @@
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
 			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
 			NAME="displaymode" VALUE="Search"> <INPUT TYPE="hidden"
-			NAME="ptstatus" VALUE="active"> <INPUT TYPE="SUBMIT"
+			NAME="ptstatus" VALUE="active"><INPUT TYPE="hidden"
+			NAME="outofdomain" VALUE=""> <INPUT TYPE="SUBMIT"
 			NAME="displaymode"
 			VALUE="<bean:message key="demographic.search.btnSearch"/>" SIZE="17"
 			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">
@@ -126,7 +135,13 @@
 			VALUE="<bean:message key="demographic.search.Inactive"/>"> <INPUT
 			TYPE="button" onclick="searchAll();"
 			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
-			VALUE="<bean:message key="demographic.search.All"/>"></td>
+			VALUE="<bean:message key="demographic.search.All"/>">
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_search.outofdomain" rights="r">  
+		<INPUT TYPE="button" onclick="searchOutOfDomain();"
+			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
+			VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
+			</security:oscarSec>	
+		</td>
 	</tr>
 	<tr>
 		<td nowrap><font size="1" face="Verdana" color="#0000FF">
@@ -146,8 +161,14 @@
 <p><br>
 </p>
 
-<p><a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message
-	key="demographic.search.btnCreateNew" /></font></b></a> <oscar:oscarPropertiesCheck
+<p>
+<!-- we may want to not allow students to create new patients? -->
+<!-- <security:oscarSec roleName="<%=roleName$%>" objectName="_demographic.addnew" rights="r">  -->
+	<a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message
+	key="demographic.search.btnCreateNew" /></font></b></a> 
+<!-- </security:oscarSec> -->
+		
+	<oscar:oscarPropertiesCheck
 	property="SHOW_FILE_IMPORT_SEARCH" value="yes">
            &nbsp;&nbsp;&nbsp;<a href="demographicImport.jsp"><b><font
 		size="+1">Import New Demographic</font></a>

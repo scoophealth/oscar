@@ -84,11 +84,18 @@
   else
       ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";   
 
+  String domainRestriction="";
+  if(request.getParameter("outofdomain")!=null && !request.getParameter("outofdomain").equals("true")) {
+  	String curProvider_no = (String) session.getAttribute("user");
+  	domainRestriction = "and demographic_no in (select client_id from admission where admission_status='current' and program_id in (select program_id from program_provider where provider_no='"+curProvider_no+"')) ";
+  }
+
+  
   String [][] dbQueries=new String[][] {
-    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby},
-    {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby + " " + limit},
-    {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby},
-    {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},
+    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby},
+    {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby + " " + limit},
+    {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+domainRestriction+orderby},
+    {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+domainRestriction+orderby + " "+limit},
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
     {"update_record", "update demographic set last_name=?,first_name=?,address=?,city=?,province=?,postal=?,phone=?,phone2=?,email=?,pin=?,year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?,roster_status=?,patient_status=?,chart_no=?,provider_no=?,sex=?,pcn_indicator=?,hc_type=?,family_doctor=?,country_of_origin=?,newsletter=?,sin=?,title=?,official_lang=?,spoken_lang=?,date_joined=?,end_date=?,eff_date=?,hc_renew_date=? where demographic_no=?"},
@@ -99,7 +106,7 @@
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
     {"search_provider_doc_with_ohip", "select * from provider where provider_type='doctor' and status='1' and ohip_no is not null and ohip_no !='' order by last_name"},
     {"search_demographicid", "select * from demographic where demographic_no=?"},
-    {"search*", "select * from demographic "+ ptstatusexp+orderby + " "+limit },
+    {"search*", "select * from demographic "+ ptstatusexp+domainRestriction+orderby + " "+limit },
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " },
     {"search_demographiccust", "select * from demographiccust where demographic_no = ?" },

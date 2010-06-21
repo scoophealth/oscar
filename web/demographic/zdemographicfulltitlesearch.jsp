@@ -27,10 +27,12 @@
 <%@ page import="java.lang.*"%>
 
 <%
-        boolean fromMessenger = request.getParameter("fromMessenger") == null ? false : (request.getParameter("fromMessenger")).equalsIgnoreCase("true")?true:false;            
+        boolean fromMessenger = request.getParameter("fromMessenger") == null ? false : (request.getParameter("fromMessenger")).equalsIgnoreCase("true")?true:false;
+		String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");		
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <script language="JavaScript">
 function searchInactive() {
@@ -42,6 +44,12 @@ function searchAll() {
     document.titlesearch.ptstatus.value="";
     if (checkTypeIn()) document.titlesearch.submit();
 }
+
+function searchOutOfDomain() {
+    document.titlesearch.outofdomain.value="true";
+    if (checkTypeIn()) document.titlesearch.submit();
+}
+
 </script>
 
 <form method="get" name="titlesearch" action="demographiccontrol.jsp"
@@ -86,6 +94,7 @@ function searchAll() {
 					TYPE="hidden" NAME="displaymode" VALUE="Search"> <INPUT
 					TYPE="hidden" NAME="ptstatus" VALUE="active"> <INPUT
 					TYPE="hidden" NAME="fromMessenger" VALUE="<%=fromMessenger%>">
+					<INPUT TYPE="hidden" NAME="outofdomain" VALUE="">
 				<INPUT TYPE="SUBMIT"
 					VALUE="<bean:message key="demographic.zdemographicfulltitlesearch.msgSearch" />"
 					SIZE="17"
@@ -95,7 +104,13 @@ function searchAll() {
 					VALUE="<bean:message key="demographic.search.Inactive"/>">
 				<INPUT TYPE="button" onclick="searchAll();"
 					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
-					VALUE="<bean:message key="demographic.search.All"/>"></td>
+					VALUE="<bean:message key="demographic.search.All"/>">
+					<security:oscarSec roleName="<%=roleName%>" objectName="_search.outofdomain" rights="r">  
+				<INPUT TYPE="button" onclick="searchOutOfDomain();"
+					TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchOutOfDomain"/>"
+					VALUE="<bean:message key="demographic.search.OutOfDomain"/>">
+					</security:oscarSec>
+					</td>
 			</tr>
 			<tr bgcolor="white">
 				<td nowrap><input type="radio" name="search_mode"

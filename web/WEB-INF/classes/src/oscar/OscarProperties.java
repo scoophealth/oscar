@@ -242,4 +242,8 @@ public class OscarProperties extends Properties {
 	public String getBuildDate() {
 		return getProperty("builddate");
 	}
+	
+	public boolean isOscarLearning() {
+		return isPropertyActive("OSCAR_LEARNING");
+	}
 }

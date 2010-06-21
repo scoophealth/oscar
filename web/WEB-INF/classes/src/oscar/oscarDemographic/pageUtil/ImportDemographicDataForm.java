@@ -38,8 +38,12 @@ import org.apache.struts.upload.FormFile;
 public class ImportDemographicDataForm extends ActionForm {
    FormFile importFile = null;
    boolean matchProviderNames = true;
+   int timeshiftInDays;
+   String courseId;
+   
 
    public ImportDemographicDataForm() {
+   
    }
 
 
@@ -59,4 +63,29 @@ public class ImportDemographicDataForm extends ActionForm {
    public void setMatchProviderNames(boolean matchProviderNames) {
        this.matchProviderNames = matchProviderNames;
    }
+   
+   public int getTimeshiftInDays() {
+		return timeshiftInDays;
+	}
+
+
+
+	public void setTimeshiftInDays(int timeshiftInDays) {
+		this.timeshiftInDays = timeshiftInDays;
+	}
+
+
+
+	public String getCourseId() {
+		return courseId;
+	}
+
+
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+
+
+	
 }

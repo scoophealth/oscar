@@ -778,6 +778,25 @@ div.logoutBox {
 		</ul>
 		</div>
 	</security:oscarSec>
+
+<oscar:oscarPropertiesCheck
+	property="OSCAR_LEARNING" value="yes">
+	<security:oscarSec roleName="<%=roleName$%>"
+		objectName="_admin" rights="r" reverse="<%=false%>">
+		<div class="adminBox">
+		<h3>&nbsp;<bean:message key="admin.admin.learning" /></h3>
+		<ul>
+		<li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/oscarLearning/CourseManager.jsp"/>&quot;);return false;'><bean:message key="admin.admin.learning.manageCourses"/></a></li>
+			<li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/demographic/demographicImport.jsp"/>&quot;);return false;'><bean:message key="admin.admin.learning.importPatient"/></a></li>
+			<li><a href="#"
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/oscarLearning/StudentImport.jsp"/>&quot;);return false;'><bean:message key="admin.admin.learning.importStudent"/></a></li>		
+		</ul>
+		</div>
+	</security:oscarSec>	
+</oscar:oscarPropertiesCheck>
+
 </caisi:isModuleLoad>
 <hr style="color: black;" />
 <div class="logoutBox">

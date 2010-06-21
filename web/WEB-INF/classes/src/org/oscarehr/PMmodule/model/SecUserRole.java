@@ -34,6 +34,8 @@ public class SecUserRole implements Serializable {
     private int hashCode = Integer.MIN_VALUE;// primary key
     private String _roleName;
     private String _providerNo;
+    private boolean _active;
+    
 
 
     // constructors
@@ -70,6 +72,24 @@ public class SecUserRole implements Serializable {
      */
     public void setRoleName (String _roleName) {
         this._roleName = _roleName;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+    
+    /**
+     * @hibernate.property
+     *  column=activeyn
+     * not-null=true
+     */
+    public boolean getActive () {
+        return this._active;
+    }
+
+    /**
+     * Set the value related to the column: activeyn
+     * @param _active the active value
+     */
+    public void setActive (boolean _active) {
+        this._active = _active;
         this.hashCode = Integer.MIN_VALUE;
     }
 

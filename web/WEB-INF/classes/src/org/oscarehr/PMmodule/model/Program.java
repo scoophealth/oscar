@@ -93,8 +93,18 @@ public class Program implements Serializable {
     private String lastUpdateUser;
     private Date lastUpdateDate;
     private LookupCodeValue shelter;
+    private String siteSpecificField;
+    
 
-    public Date getLastUpdateDate() {
+    public String getSiteSpecificField() {
+		return siteSpecificField;
+	}
+
+	public void setSiteSpecificField(String siteSpecificField) {
+		this.siteSpecificField = siteSpecificField;
+	}
+
+	public Date getLastUpdateDate() {
 		return lastUpdateDate;
 	}
 

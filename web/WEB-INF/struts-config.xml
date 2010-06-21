@@ -177,6 +177,7 @@
         <form-bean name="dxResearchLoadQuickListItemsForm" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadQuickListItemsForm" />
         <form-bean name="dxResearchUpdateQuickListForm" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchUpdateQuickListForm" />
         <form-bean name="dxAssociationsForm" type="oscar.oscarResearch.oscarDxResearch.bean.dxAssociationBean"/>
+        <form-bean name="StudentImportForm" type="org.oscarehr.learning.web.StudentImportBean"/>
         <form-bean name="procedimentoRealizadoForm" type="oscar.billing.controler.ProcedimentoRealizadoForm" />
         <form-bean name="consultaFaturamentoMedicoForm" type="oscar.billing.controler.ConsultaFaturamentoMedicoForm" />
         <form-bean name="consultaFaturamentoPacienteForm" type="oscar.billing.controler.ConsultaFaturamentoPacienteForm" />
@@ -454,6 +455,10 @@
 		<form-property name="userId" type="java.lang.String" />
 	</form-bean>
 
+	<form-bean name="courseManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="name" type="java.lang.String" />
+	</form-bean>
+	
     </form-beans>
 
     <global-forwards>
@@ -1227,6 +1232,12 @@
         </action>
         <action parameter="method" path="/oscarResearch/oscarDxResearch/dxResearchLoadAssociations" name="dxAssociationsForm" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchLoadAssociationsAction">
             <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchSelectAssociations.jsp" redirect="true"/>
+        </action>
+        <action parameter="method" path="/oscarLearning/CourseManager" name="courseManagerForm" scope="request" type="org.oscarehr.learning.web.CourseManagerAction">
+            <forward name="success" path="/oscarLearning/CourseManager.jsp" redirect="true"/>
+        </action>
+        <action parameter="method" path="/oscarLearning/StudentImport" name="StudentImportForm" scope="request" type="org.oscarehr.learning.web.StudentImportAction">
+            <forward name="success" path="/oscarLearning/StudentImport.jsp" redirect="true"/>
         </action>
         <action input="/billing/billingBrazil.jsp" name="procedimentoRealizadoForm" parameter="init" path="/oscar/billing/procedimentoRealizado/init" scope="session" type="oscar.billing.controler.ProcedimentoRealizadoAction">
             <forward name="success" path="/billing/billingBrazil.jsp" />

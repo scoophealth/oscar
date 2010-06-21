@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -53,18 +54,28 @@ import java.util.zip.ZipInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.apache.xmlbeans.XmlException;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
@@ -100,20 +111,22 @@ import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
 import cds.ReportsReceivedDocument.ReportsReceived;
 import cds.RiskFactorsDocument.RiskFactors;
-import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.util.SpringUtils;
 
 /**
  *
  * @author Ronnie Cheng
  */
 	public class ImportDemographicDataAction3 extends Action {
+	
+	Log logger = LogFactory.getLog(ImportDemographicDataAction3.class);
+		
 	boolean matchProviderNames = true;
 	String admProviderNo = null;
 	String demographicNo = null;
 	String programId = null;
-
+    
+    ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
+    AdmissionManager admissionManager = (AdmissionManager) SpringUtils.getBean("admissionManager");
 	AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	OscarSuperManager oscarSuperManager = (OscarSuperManager) SpringUtils.getBean("oscarSuperManager");
@@ -129,6 +142,23 @@ import org.oscarehr.util.SpringUtils;
 		}
 
 		ImportDemographicDataForm frm = (ImportDemographicDataForm) form;
+        logger.info("import to course id "  + frm.getCourseId() + " using timeshift value " + frm.getTimeshiftInDays());
+        List<Provider> students = new ArrayList<Provider>();
+        int courseId = 0;
+        if(frm.getCourseId()!=null && frm.getCourseId().length()>0) {
+        	courseId = Integer.valueOf(frm.getCourseId());
+        	if(courseId>0) {
+        		logger.info("need to apply this import to a learning environment");
+        		//get all the students from this course        		
+        		List<ProgramProvider> courseProviders = programManager.getProgramProviders(String.valueOf(courseId));
+        		for(ProgramProvider pp:courseProviders) {
+        			if(pp.getRole().getName().equalsIgnoreCase("student")) {
+        				students.add(pp.getProvider());
+        			}
+        		}        		
+        	}
+        }
+        logger.info("apply this patient to " + students.size() + " students");
 		matchProviderNames = frm.getMatchProviderNames();
 		FormFile imp = frm.getImportFile();
 		String ifile = tmpDir + imp.getFileName();
@@ -161,8 +191,8 @@ import org.oscarehr.util.SpringUtils;
 					noXML = false;
 					OutputStream out = new FileOutputStream(ofile);
 					while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-					out.close();
-					logs.add(importXML(ofile, warnings, request));
+					out.close();					
+					logs.add(importXML(ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
 				}
 				entry = in.getNextEntry();
 			}
@@ -176,8 +206,8 @@ import org.oscarehr.util.SpringUtils;
 			Util.cleanFile(ifile);
 
 		} else if (matchFileExt(ifile, "xml")) {
-			logs.add(importXML(ifile, warnings, request));
-			importLog = makeImportLog(logs, tmpDir);
+			logs.add(importXML(ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+			importLog = makeImportLog(logs, tmpDir);		
 		} else {
 			Util.cleanFile(ifile);
 			throw new Exception ("Error! Import file must be XML or ZIP");
@@ -194,10 +224,39 @@ import org.oscarehr.util.SpringUtils;
 		return mapping.findForward("success");
 	}
 
+    String[] importXML(String xmlFile, ArrayList warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
+        if(students == null || students.size()==0) {
+        	return importXML(xmlFile,warnings,request,timeShiftInDays,null,null,0);
+        }
+        
+        List<String> logs = new ArrayList<String>();
+        
+        for(Provider student:students) {
+        	//need that student's personal program
+        	Integer pid = programManager.getProgramIdByProgramName("program"+student.getProviderNo());
+        	if(pid == null) {
+        		logger.warn("student's program not found");
+        		continue;
+        	}
+        	Program p = programManager.getProgram(pid);
+        	
+        	String[] result = importXML(xmlFile,warnings,request,timeShiftInDays,student,p,courseId);
+        	logs.addAll(convertLog(result));
+        }
+        return logs.toArray(new String[logs.size()]);
+    }
+    
+    private List<String> convertLog(String[] logs) {
+    	List<String> tmp = new ArrayList<String>();
+    	for(int x=0;x<logs.length;x++) {
+    		tmp.add(logs[x]);
+    	}
+    	return tmp;
+    }
+    
 
 
-
-	String[] importXML(String xmlFile, ArrayList warnings, HttpServletRequest request) throws SQLException, Exception {
+	String[] importXML(String xmlFile, ArrayList warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
 		ArrayList err_demo = new ArrayList(); //errors: duplicate demographics
 		ArrayList err_data = new ArrayList(); //errors: discrete data
 		ArrayList err_summ = new ArrayList(); //errors: summary
@@ -238,7 +297,7 @@ import org.oscarehr.util.SpringUtils;
 		if (Util.empty(sex)) {
 			err_data.add("Error! No Gender");
 		}
-		String birthDate = dateFullPartial(demo.getDateOfBirth());
+		String birthDate = dateFullPartial(demo.getDateOfBirth(), timeShiftInDays);
 		if (Util.empty(birthDate)) {
 			birthDate = null;
 			err_data.add("Error! No Date Of Birth");
@@ -257,8 +316,8 @@ import org.oscarehr.util.SpringUtils;
 		else {
 			err_data.add("Error! No Person Status Code");
 		}
-		String roster_date = dateFullPartial(demo.getEnrollmentDate()); //roster_date=hc_renew_date in table
-		String end_date = dateFullPartial(demo.getEnrollmentTerminationDate());
+		String roster_date = dateFullPartial(demo.getEnrollmentDate(), timeShiftInDays); //roster_date=hc_renew_date in table
+		String end_date = dateFullPartial(demo.getEnrollmentTerminationDate(), timeShiftInDays);
 		String sin = Util.noNull(demo.getSIN());
 
 		String chart_no = Util.noNull(demo.getChartNumber());
@@ -273,7 +332,7 @@ import org.oscarehr.util.SpringUtils;
 		String uvID = demo.getUniqueVendorIdSequence();
 		String fmLink = demo.getFamilyMemberLink();
 		String pwFlag = demo.getPatientWarningFlags();
-		String psDate = dateFullPartial(demo.getPersonStatusDate());
+		String psDate = dateFullPartial(demo.getPersonStatusDate(), timeShiftInDays);
 
 		if (Util.filled(uvID)) {
 			if (Util.empty(chart_no)) {
@@ -371,16 +430,20 @@ import org.oscarehr.util.SpringUtils;
 		}
 		String email = Util.noNull(demo.getEmail());
 
-		String primaryPhysician = "";
-		if (demo.getPrimaryPhysician()!=null) {
-			String[] personName = getPersonName(demo.getPrimaryPhysician().getName());
-			String personOHIP = demo.getPrimaryPhysician().getOHIPPhysicianId();
-			primaryPhysician = writeProviderData(personName[0], personName[1], personOHIP);
-		}
-		if (Util.empty(primaryPhysician)) {
-			primaryPhysician = defaultProvider;
-			err_data.add("Error! No Primary Physician; patient assigned to \"doctor oscardoc\"");
-		}
+       String primaryPhysician = "";
+        if(student == null){
+	        if (demo.getPrimaryPhysician()!=null) {
+	            String[] personName = getPersonName(demo.getPrimaryPhysician().getName());
+	            String personOHIP = demo.getPrimaryPhysician().getOHIPPhysicianId();
+	            primaryPhysician = writeProviderData(personName[0], personName[1], personOHIP);
+	        }
+	        if (Util.empty(primaryPhysician)) {
+	            primaryPhysician = defaultProvider;
+	            err_data.add("Error! No Primary Physician; patient assigned to \"doctor oscardoc\"");
+	        }
+        } else {
+        	primaryPhysician = student.getProviderNo();
+        }
 
 		String year_of_birth = null;
 		String month_of_birth = null;
@@ -404,13 +467,20 @@ import org.oscarehr.util.SpringUtils;
 		demographicNo = demoRes.getId();
 		if (demographicNo!=null)
 		{
-			insertIntoAdmission();
+        	//TODO: Course - Admit to student program
+        	if(admitTo == null) {
+        		insertIntoAdmission();
+        	} else {
+        		admissionManager.processAdmission(Integer.valueOf(demographicNo), student.getProviderNo(), admitTo, "", "batch import");
+        	}
+			
 			if (Util.filled(dNote)) dd.addDemographiccust(demographicNo, dNote);
 
 			if (!workExt.equals("")) dExt.addKey(primaryPhysician, demographicNo, "wPhoneExt", workExt);
 			if (!homeExt.equals("")) dExt.addKey(primaryPhysician, demographicNo, "hPhoneExt", homeExt);
 			if (!cellPhone.equals("")) dExt.addKey(primaryPhysician, demographicNo, "demo_cell", cellPhone);
-
+			if(courseId>0) dExt.addKey(primaryPhysician, demographicNo, "course", String.valueOf(courseId));
+			
 			Demographics.Contact[] contt = demo.getContactArray();
 			for (int i=0; i<contt.length; i++) {
 				String[] contactName = getPersonName(contt[i].getName());
@@ -533,7 +603,7 @@ import org.oscarehr.util.SpringUtils;
 				cme.setNoteId(hostNoteId);
 				if (fHist[i].getStartDate()!=null) {
 					cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-					cme.setDateValue(dDateFullPartial(fHist[i].getStartDate()));
+					cme.setDateValue(dDateFullPartial(fHist[i].getStartDate(), timeShiftInDays));
 					caseManagementManager.saveNoteExt(cme);
 				}
 				if (fHist[i].getAgeAtOnset()!=null) {
@@ -597,7 +667,7 @@ import org.oscarehr.util.SpringUtils;
 				}
 				if (pHealth[i].getResolvedDate()!=null) {
 					cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
-					cme.setDateValue(dDateFullPartial(pHealth[i].getResolvedDate()));
+					cme.setDateValue(dDateFullPartial(pHealth[i].getResolvedDate(), timeShiftInDays));
 					caseManagementManager.saveNoteExt(cme);
 				}
 			}
@@ -640,14 +710,14 @@ import org.oscarehr.util.SpringUtils;
 				cme.setNoteId(hostNoteId);
 				if (probList[i].getOnsetDate()!=null) {
 					cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-					cme.setDateValue(dDateFullPartial(probList[i].getOnsetDate()));
+					cme.setDateValue(dDateFullPartial(probList[i].getOnsetDate(), timeShiftInDays));
 					caseManagementManager.saveNoteExt(cme);
 				} else {
 					err_data.add("Error! No Onset Date for Problem List ("+(i+1)+")");
 				}
 				if (probList[i].getResolutionDate()!=null) {
 					cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
-					cme.setDateValue(dDateFullPartial(probList[i].getResolutionDate()));
+					cme.setDateValue(dDateFullPartial(probList[i].getResolutionDate(), timeShiftInDays));
 					caseManagementManager.saveNoteExt(cme);
 				}
 				if (Util.filled(probList[i].getProblemStatus())) {
@@ -690,12 +760,12 @@ import org.oscarehr.util.SpringUtils;
 				cme.setNoteId(hostNoteId);
 				if (rFactors[i].getStartDate()!=null) {
 					cme.setKeyVal(CaseManagementNoteExt.STARTDATE);
-					cme.setDateValue(dDateFullPartial(rFactors[i].getStartDate()));
+					cme.setDateValue(dDateFullPartial(rFactors[i].getStartDate(), timeShiftInDays));
 					caseManagementManager.saveNoteExt(cme);
 				}
 				if (rFactors[i].getEndDate()!=null) {
 					cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
-					cme.setDateValue(dDateFullPartial(rFactors[i].getEndDate()));
+					cme.setDateValue(dDateFullPartial(rFactors[i].getEndDate(), timeShiftInDays));
 					caseManagementManager.saveNoteExt(cme);
 				}
 				if (rFactors[i].getAgeOfOnset()!=null) {
@@ -714,9 +784,9 @@ import org.oscarehr.util.SpringUtils;
 			for (int i=0; i<cNotes.length; i++) {
 				CaseManagementNote cmNote = prepareCMNote();
 				if (cNotes[i].getEventDateTime()==null) cmNote.setObservation_date(new Date());
-				else cmNote.setObservation_date(dDateFullPartial(cNotes[i].getEventDateTime()));
+				else cmNote.setObservation_date(dDateFullPartial(cNotes[i].getEventDateTime(), timeShiftInDays));
 				if (cNotes[i].getSignedDateTime()==null) cmNote.setUpdate_date(new Date());
-				else cmNote.setUpdate_date(dDateFullPartial(cNotes[i].getSignedDateTime()));
+				else cmNote.setUpdate_date(dDateFullPartial(cNotes[i].getSignedDateTime(), timeShiftInDays));
 
 				String encounter = cNotes[i].getMyClinicalNotesContent();
 				encounter = Util.appendLine(encounter,"Note Type: ",cNotes[i].getNoteType());
@@ -742,7 +812,7 @@ import org.oscarehr.util.SpringUtils;
 					cmNote.setSigning_provider_no(signProvider);
 				}
 				encounter = Util.appendLine(encounter,"Signing Physician OHIP Id: ",cNotes[i].getSigningOHIPPhysicianId());
-				encounter = Util.appendLine(encounter,"Entered DateTime: ",dateFullPartial(cNotes[i].getEnteredDateTime()));
+				encounter = Util.appendLine(encounter,"Entered DateTime: ",dateFullPartial(cNotes[i].getEnteredDateTime(), timeShiftInDays));
 				if (Util.filled(encounter)) {
 					cmNote.setNote(encounter);
 					caseManagementManager.saveNoteSimple(cmNote);
@@ -756,8 +826,8 @@ import org.oscarehr.util.SpringUtils;
 
 				reaction = Util.noNull(aaReactArray[i].getReaction());
 				description = Util.noNull(aaReactArray[i].getOffendingAgentDescription());
-				entryDate = dateFullPartial(aaReactArray[i].getRecordedDate());
-				startDate = dateFullPartial(aaReactArray[i].getStartDate());
+				entryDate = dateFullPartial(aaReactArray[i].getRecordedDate(), timeShiftInDays);
+				startDate = dateFullPartial(aaReactArray[i].getStartDate(), timeShiftInDays);
 				if (Util.empty(entryDate)) entryDate = null;
 				if (Util.empty(startDate)) startDate = null;
 
@@ -805,10 +875,10 @@ import org.oscarehr.util.SpringUtils;
 				boolean longTerm=false, pastMed=false;
 				int takemin=0, takemax=0, repeat=0, patientCompliance=0;
 
-				writtenDate		= dateFullPartial(medArray[i].getPrescriptionWrittenDate());
-				rxDate			= dateFullPartial(medArray[i].getStartDate());
-				endDate			= dateFullPartial(medArray[i].getEndDate());
-				lastRefillDate	= dateFullPartial(medArray[i].getLastRefillDate());
+				writtenDate		= dateFullPartial(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays);
+				rxDate			= dateFullPartial(medArray[i].getStartDate(), timeShiftInDays);
+				endDate			= dateFullPartial(medArray[i].getEndDate(), timeShiftInDays);
+				lastRefillDate	= dateFullPartial(medArray[i].getLastRefillDate(), timeShiftInDays);
 				regionalId		= Util.noNull(medArray[i].getDrugIdentificationNumber());
 				quantity		= Util.getNum(medArray[i].getQuantity());
 				duration		= Util.getNum(medArray[i].getDuration());
@@ -926,7 +996,7 @@ import org.oscarehr.util.SpringUtils;
 				} else {
 					err_data.add("Error! No Immunization Name ("+(i+1)+")");
 				}
-				preventionDate = dateFullPartial(immuArray[i].getDate());
+				preventionDate = dateFullPartial(immuArray[i].getDate(), timeShiftInDays);
 				refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
 
 				String iSummary="";
@@ -1002,9 +1072,9 @@ import org.oscarehr.util.SpringUtils;
 				_location[i] = Util.noNull(labResultArr[i].getLaboratoryName());
 				_accession[i] = Util.noNull(labResultArr[i].getAccessionNumber());
 				_comments[i] = Util.noNull(labResultArr[i].getPhysiciansNotes());
-				_coll_date[i] = dateOnly(dateFullPartial(labResultArr[i].getCollectionDateTime()));
-				_req_date[i] = dateFullPartial(labResultArr[i].getLabRequisitionDateTime());
-				_rev_date[i] = dateFullPartial(labResultArr[i].getDateTimeResultReviewed());
+				_coll_date[i] = dateOnly(dateFullPartial(labResultArr[i].getCollectionDateTime(), timeShiftInDays));
+				_req_date[i] = dateFullPartial(labResultArr[i].getLabRequisitionDateTime(), timeShiftInDays);
+				_rev_date[i] = dateFullPartial(labResultArr[i].getDateTimeResultReviewed(), timeShiftInDays);
 
 				_title[i] = Util.noNull(labResultArr[i].getTestName());
 				if (Util.filled(labResultArr[i].getTestNameReportedByLab())) {
@@ -1013,7 +1083,7 @@ import org.oscarehr.util.SpringUtils;
 				}
 				_description[i] = Util.appendLine(_description[i], "Test Results Info: ", labResultArr[i].getTestResultsInformationReportedByTheLab());
 				_description[i] = Util.appendLine(_description[i], "Notes from Lab: ", labResultArr[i].getNotesFromLab());
-				_description[i] = Util.appendLine(_description[i], "Received Datetime: ", dateFullPartial(labResultArr[i].getDateTimeResultReceivedByCMS()));
+				_description[i] = Util.appendLine(_description[i], "Received Datetime: ", dateFullPartial(labResultArr[i].getDateTimeResultReceivedByCMS(), timeShiftInDays));
 
 				if (labResultArr[i].getResultNormalAbnormalFlag()!=null) {
 					cdsDt.ResultNormalAbnormalFlag.Enum flag = labResultArr[i].getResultNormalAbnormalFlag();
@@ -1099,7 +1169,7 @@ import org.oscarehr.util.SpringUtils;
 					meas.setDataField("");
 				}
 				if (labResults.getDateTimeResultReceivedByCMS()!=null) {
-					meas.setDateEntered(dDateFullPartial(labResults.getDateTimeResultReceivedByCMS()));
+					meas.setDateEntered(dDateFullPartial(labResults.getDateTimeResultReceivedByCMS(), timeShiftInDays));
 				} else {
 					meas.setDateEntered(new Date());
 				}
@@ -1117,7 +1187,7 @@ import org.oscarehr.util.SpringUtils;
 
 				cdsDt.DateFullOrPartial collDate = labResults.getCollectionDateTime();
 				if (collDate!=null) {
-					saveMeasurementsExt(measId, "datetime", dateFullPartial(collDate));
+					saveMeasurementsExt(measId, "datetime", dateFullPartial(collDate, timeShiftInDays));
 				} else {
 					err_data.add("Error! No Collection DateTime for Lab Test "+testCode+" for Patient "+demographicNo);
 				}
@@ -1170,7 +1240,7 @@ import org.oscarehr.util.SpringUtils;
 			for (int i=0; i<appArray.length; i++) {
 				name = lastName + "," + firstName;
 
-				String apptDateStr = dateFullPartial(appArray[i].getAppointmentDate());
+				String apptDateStr = dateFullPartial(appArray[i].getAppointmentDate(), timeShiftInDays);
 				if (Util.filled(apptDateStr)) {
 					appointmentDate = UtilDateUtilities.StringToDate(apptDateStr);
 				} else {
@@ -1268,9 +1338,9 @@ import org.oscarehr.util.SpringUtils;
 							reviewer = writeProviderData("", "", revOHIP);
 						}
 
-						observationDate = dateFullPartial(repR[i].getEventDateTime());
-						updateDateTime = dateFullPartial(repR[i].getReceivedDateTime());
-						reviewDateTime = dateFullPartial(repR[i].getReviewedDateTime());
+						observationDate = dateFullPartial(repR[i].getEventDateTime(), timeShiftInDays);
+						updateDateTime = dateFullPartial(repR[i].getReceivedDateTime(), timeShiftInDays);
+						reviewDateTime = dateFullPartial(repR[i].getReviewedDateTime(), timeShiftInDays);
 
 						EDocUtil.addDocument(demographicNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime, source);
 						if (Util.filled(repR[i].getSubClass())) {
@@ -1565,24 +1635,42 @@ import org.oscarehr.util.SpringUtils;
 		return "OT"; //Other
 	}
 
-	String dateFullPartial(cdsDt.DateFullOrPartial dfp) {
+    String dateFullPartial(cdsDt.DateFullOrPartial dfp, int timeshiftInDays) {
 		if (dfp==null) return "";
-
-		if (dfp.getDateTime()!=null) return getCalDateTime(dfp.getDateTime());
-		else if (dfp.getFullDate()!=null) return getCalDate(dfp.getFullDate());
-		else if (dfp.getYearMonth()!=null) return getCalDate(dfp.getYearMonth());
-		else if (dfp.getYearOnly()!=null) return getCalDate(dfp.getYearOnly());
-		else return "";
-	}
-
-	Date dDateFullPartial(cdsDt.DateFullOrPartial dfp) {
-		String sdate = dateFullPartial(dfp);
+				
+		if (dfp.getDateTime()!=null) {
+			dfp.getDateTime().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
+			return getCalDateTime(dfp.getDateTime());
+		}
+		else if (dfp.getFullDate()!=null)  {
+			dfp.getFullDate().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
+			return getCalDate(dfp.getFullDate());
+		}		
+		else if (dfp.getYearMonth()!=null) {
+			dfp.getYearMonth().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
+			return getCalDate(dfp.getYearMonth());
+		}
+		else if (dfp.getYearOnly()!=null)  
+		{
+			dfp.getYearOnly().add(Calendar.DAY_OF_YEAR, timeshiftInDays);
+			return getCalDate(dfp.getYearOnly());
+		}
+		else 
+			return "";
+	   
+    }
+	    
+    Date dDateFullPartial(cdsDt.DateFullOrPartial dfp, int timeShiftInDays) {
+		String sdate = dateFullPartial(dfp,timeShiftInDays);
 		Date dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd HH:mm:ss");
-		if (dDate==null) dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
-		if (dDate==null) dDate = UtilDateUtilities.StringToDate(sdate, "HH:mm:ss");
-
+		if (dDate==null) 
+			dDate = UtilDateUtilities.StringToDate(sdate, "yyyy-MM-dd");
+		if (dDate==null) 
+			dDate = UtilDateUtilities.StringToDate(sdate, "HH:mm:ss");
+		
+		
 		return dDate;
-	}
+    }
 
 	String dateOnly(String d) {
 		return UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(d),"yyyy-MM-dd");
@@ -1902,7 +1990,7 @@ import org.oscarehr.util.SpringUtils;
 		admissionDao.saveAdmission(admission);
 	}
 
-	String getLabDline(LaboratoryResults labRes){
+	String getLabDline(LaboratoryResults labRes, int timeShiftInDays){
 		StringBuffer s = new StringBuffer();
 		appendIfNotNull(s,"LaboratoryName",labRes.getLaboratoryName());
 		appendIfNotNull(s,"TestNameReportedByLab", labRes.getTestNameReportedByLab());
@@ -1922,13 +2010,13 @@ import org.oscarehr.util.SpringUtils;
 		}
 
 		//<xs:element name="LabRequisitionDateTime" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
-		appendIfNotNull(s,"LabRequisitionDateTime",dateFullPartial(labRes.getLabRequisitionDateTime ()));
+		appendIfNotNull(s,"LabRequisitionDateTime",dateFullPartial(labRes.getLabRequisitionDateTime (), timeShiftInDays));
 		//<xs:element name="CollectionDateTime" type="cdsd:dateTimeYYYYMMDDHHMM"/>
-		appendIfNotNull(s,"CollectionDateTime",dateFullPartial( labRes.getCollectionDateTime()));
+		appendIfNotNull(s,"CollectionDateTime",dateFullPartial( labRes.getCollectionDateTime(), timeShiftInDays));
 		//<xs:element name="DateTimeResultReceivedByCMS" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
-		appendIfNotNull(s,"DateTimeResultReceivedByCMS",dateFullPartial(labRes.getDateTimeResultReceivedByCMS()));
+		appendIfNotNull(s,"DateTimeResultReceivedByCMS",dateFullPartial(labRes.getDateTimeResultReceivedByCMS(), timeShiftInDays));
 		//<xs:element name="DateTimeResultReviewed" type="cdsd:dateTimeYYYYMMDDHHMM" minOccurs="0"/>
-		appendIfNotNull(s,"DateTimeResultReviewed",dateFullPartial(labRes.getDateTimeResultReviewed()));
+		appendIfNotNull(s,"DateTimeResultReviewed",dateFullPartial(labRes.getDateTimeResultReviewed(), timeShiftInDays));
 
 		if (labRes.getResultReviewer() != null){ //ResultReviewer){
 			//<xs:element name="ResultReviewer" type="cdsd:ohipBillingNumber" minOccurs="0"/>

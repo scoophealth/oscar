@@ -380,7 +380,9 @@ public class DBPreparedHandler {
 	    	ResultSet rs = queryResults(sql);
 	    	while (rs.next()) {
 	    		if (rs.getInt(1)> 0) {
-	    			pno = oscar.Misc.getRandomNumber(6);
+	    			do {
+	    				pno = oscar.Misc.getRandomNumber(6);
+	    			}while(pno != null && pno.startsWith("0"));
 	    			sql = "select count(*) from prvider where provider_no= '" + pno + "'";
 	    			rs= queryResults(sql);
 	    		}

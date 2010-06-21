@@ -33,6 +33,7 @@
 		<property column="rma_no" length="20" name="RmaNo" not-null="false" type="string" />
 		<property column="signed_confidentiality" name="SignedConfidentiality" not-null="true" type="date" />
 		<property name="email" />
+		<property column="practitionerNo" length="20" name="practitionerNo" not-null="false" type="string" />
 		<property name="title" />
 
 		<set name="sites" table="providersite" cascade="all" lazy="false" fetch="join">

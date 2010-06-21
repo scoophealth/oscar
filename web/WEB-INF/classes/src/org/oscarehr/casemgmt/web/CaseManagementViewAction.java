@@ -202,7 +202,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		log.debug("is client in program");
 		// need to check to see if the client is in our program domain
 		// if not...don't show this screen!
-		if (!caseManagementMgr.isClientInProgramDomain(providerNo, demoNo)) {
+		String roles = (String) se.getAttribute("userrole");
+		if(OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator")!=-1) {
+			log.info("skipping domain check..provider is a moderator");
+		}else if (!caseManagementMgr.isClientInProgramDomain(providerNo, demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 

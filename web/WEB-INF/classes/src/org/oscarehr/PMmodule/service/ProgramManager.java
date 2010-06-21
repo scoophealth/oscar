@@ -484,4 +484,16 @@ public class ProgramManager {
         	return false;
         }
     }
+    
+    public List<Program> getAllProgramsByRole(String providerNo,int roleId) {
+    	List<Program> results = new ArrayList<Program>();
+    	List<ProgramProvider> ppList = programProviderDAO.getProgramProvidersByProvider(providerNo);
+    	for(ProgramProvider pp:ppList) {
+    		if(pp.getRoleId().intValue() == roleId) {
+    			Program p = programDao.getProgram(pp.getProgramId().intValue());
+    			results.add(p);
+    		}
+    	}
+    	return results;
+    }
 }

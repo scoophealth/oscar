@@ -25,6 +25,7 @@
 			<key-property name="RoleName" column="role_name" type="string" />
 			<key-property name="ProviderNo" column="provider_no"
 				type="string" />
+			<key-property name="active" column="activeyn"/>
 		</composite-id>
 	</class>
 </hibernate-mapping>

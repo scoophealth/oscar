@@ -38,8 +38,10 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -252,5 +254,26 @@ public class DemographicDao extends HibernateDaoSupport {
         return list;
     }
     
+     
+     public List<Demographic> getDemographicsByExtKey(String key, String value) {
+    	 List<DemographicExt> extras = this.getHibernateTemplate().find("from DemographicExt d where d.key=? and d.value=?", new Object[] {key,value});
+    	 if(extras.size()==0) {
+    		 return new ArrayList<Demographic>();
+    	 }
+    	 StringBuilder sb = new StringBuilder();
+    	 for(int x=0;x<extras.size();x++) {
+    		 DemographicExt extra = extras.get(x);
+    		 if(sb.length()>0) {
+    			 sb.append(",");
+    		 }
+    		 sb.append(extra.getDemographicNo());    		
+    	 }
+    	 
+    	 logger.info("from ext, found " + extras.size() + " ids.");
+    	
+    	 Query q = this.getSession().createQuery("from Demographic d where d.DemographicNo in ("+sb.toString()+")");
+    	 return q.list();
+    	 
+     }
  
 }
