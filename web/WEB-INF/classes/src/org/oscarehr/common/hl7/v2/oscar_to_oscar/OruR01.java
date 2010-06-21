@@ -57,7 +57,7 @@ public final class OruR01 {
 	/**
 	 * This method is essentially used to make an ORU_R01 containing pretty much any random data.
 	 */
-	public static ORU_R01 makeOruR01(String facilityName, Demographic demographic, List<ObservationData> observationData, Provider sendingProvider, Provider receivingProvider) throws HL7Exception
+	public static ORU_R01 makeOruR01(String facilityName, Demographic demographic, List<ObservationData> observationDataList, Provider sendingProvider, Provider receivingProvider) throws HL7Exception
 	{
 		ORU_R01 observationMsg=new ORU_R01();
 
@@ -69,7 +69,7 @@ public final class OruR01 {
 
 		ORU_R01_ORDER_OBSERVATION orderObservation=patientResult.getORDER_OBSERVATION(0);
 		fillBlankOBR(orderObservation.getOBR());
-		fillNtesWithObservationData(orderObservation, observationData);
+		fillNtesWithObservationData(orderObservation, observationDataList);
 
 		// use ROL for the sending and receiving provider
 		DataTypeUtils.fillRol(orderObservation.getROL(0), sendingProvider, DataTypeUtils.ACTION_ROLE_SENDER);

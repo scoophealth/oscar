@@ -1,9 +1,20 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
+ <link href="<%=request.getContextPath()%>/js/jquery_css/smoothness/jquery-ui-1.7.3.custom.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-ui-1.7.3.custom.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery_oscar_defaults.js"></script>
+<%
+	String passedThroughHeadElement=(String)request.getAttribute("HEAD_ELEMENT");
+	if (passedThroughHeadElement!=null)
+	{
+		%>
+			<%=passedThroughHeadElement%>
+		<%
+	}		
+%>
 <title></title>
 </head>
 <body>
