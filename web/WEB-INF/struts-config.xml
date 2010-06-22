@@ -1513,6 +1513,7 @@
             <forward name="success" path="/lab/CA/ALL/testUploader.jsp" />
         </action>
         <action name="oruR01UploadForm" path="/lab/CA/ALL/oruR01Upload" scope="request" type="oscar.oscarLab.ca.all.pageUtil.OruR01UploadAction">
+            <forward name="result" path="/common/genericResultPage.jsp" />
         </action>
         <action input="/demographic/demographicImport.jsp" name="CMLLabUploadForm" path="/lab/CMLlabUpload" scope="request" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadAction">
             <forward name="success" path="/lab/CA/ON/uploadComplete.jsp" />

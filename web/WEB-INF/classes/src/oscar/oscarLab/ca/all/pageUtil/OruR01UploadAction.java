@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
@@ -23,6 +24,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
 
 import oscar.util.DateUtils;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
@@ -44,28 +46,26 @@ public class OruR01UploadAction extends Action {
 	        String extension=FilenameUtils.getExtension(formFile.getFileName());
 	        observationDataList.add(new ObservationData(oruR01UploadForm.getDataName(), extension, formFile.getFileData()));
 	        
-	        Provider sendingProvider=loggedInInfo.loggedInProvider;
-	        Provider receivingProvider=getReceivingProvider(oruR01UploadForm);
+	    	Provider sendingProvider=loggedInInfo.loggedInProvider;
+
+	    	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
+	    	ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(oruR01UploadForm.getProfessionalSpecialistId());
+	        Provider receivingProvider=getReceivingProvider(professionalSpecialist);
 	        
 	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationDataList, sendingProvider, receivingProvider);
 	        
-System.err.println("FOOOOOOO : "+oruR01UploadForm);
-
-System.err.println("---"+formFile.getContentType());
-System.err.println("---"+formFile.getFileName());
-System.err.println("---"+formFile.getFileSize());
-System.err.println("---"+new String(formFile.getFileData()));
+	        SendingUtils.send(hl7Message, professionalSpecialist);
+	        
+	        WebUtils.addInfoMessage(request.getSession(), "Data successfully send.");
         } catch (Exception e) {
 	        logger.error("Unexpected error.", e);
+	        WebUtils.addInfoMessage(request.getSession(), "An error occurred while sending this data, please try again or send this manually.");
         }
 
-    	return(null);
+    	return(mapping.findForward("result"));
     }
     
-    private Provider getReceivingProvider(OruR01UploadForm oruR01UploadForm) {
-    	
-    	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
-    	ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(oruR01UploadForm.getProfessionalSpecialistId());
+    private Provider getReceivingProvider(ProfessionalSpecialist professionalSpecialist) {    	
     	
     	Provider provider=new Provider();
     	

@@ -26,6 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -35,6 +36,11 @@ public final class SendingUtils {
 
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final int CONNECTION_TIME_OUT = 10000;
+	
+	public static int send(AbstractMessage message, ProfessionalSpecialist professionalSpecialist) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception
+	{
+		return(send(message, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey(), professionalSpecialist.geteReferralServiceName()));
+	}
 	
 	public static int send(AbstractMessage message, String url, String publicOscarKeyString, String publicServiceKeyString, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeySpecException, HL7Exception {
 		PrivateKey publicServiceKey = getPublicServiceKey(publicServiceKeyString);

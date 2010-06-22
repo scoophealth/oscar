@@ -261,7 +261,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    consultationRequest.setStatus("2");
 
 	    REF_I12 refI12=RefI12.makeRefI12(facility.getName(), consultationRequest, new StreetAddressDataHolder());
-	    SendingUtils.send(refI12, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey(), professionalSpecialist.geteReferralServiceName());
+	    SendingUtils.send(refI12, professionalSpecialist);
 	    
 	    // save after the sending just in case the sending fails.
 	    consultationRequestDao.merge(consultationRequest);

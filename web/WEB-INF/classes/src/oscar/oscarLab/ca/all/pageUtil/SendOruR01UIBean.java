@@ -1,5 +1,6 @@
 package oscar.oscarLab.ca.all.pageUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -40,8 +41,15 @@ public final class SendOruR01UIBean {
 		return (StringEscapeUtils.escapeHtml(sb.toString()));
 	}
 
-	public static List<ProfessionalSpecialist> getAllProfessionalSpecialists() {
-		return (professionalSpecialistDao.findAll());
+	public static List<ProfessionalSpecialist> getRemoteCapableProfessionalSpecialists() {
+		ArrayList<ProfessionalSpecialist> results=new ArrayList<ProfessionalSpecialist>();
+		
+		for (ProfessionalSpecialist professionalSpecialist : professionalSpecialistDao.findAll())
+		{
+			if (professionalSpecialist.geteReferralUrl()!=null) results.add(professionalSpecialist);
+		}
+		
+		return(results);
 	}
 
 	public static String getProfessionalSpecialistDisplayString(ProfessionalSpecialist professionalSpecialist) {

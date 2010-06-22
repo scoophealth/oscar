@@ -1,18 +1,43 @@
-<%
-	request.setAttribute("HEAD_ELEMENT", "");
-%>
+<%@page import="oscar.oscarLab.ca.all.pageUtil.SendOruR01UIBean"%>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.Gender"%>
 
 <%@include file="/layouts/html_top.jspf"%>
 
 
-<%@page import="oscar.oscarLab.ca.all.pageUtil.SendOruR01UIBean"%>
-<%@page import="org.oscarehr.common.model.ProfessionalSpecialist"%>
-<%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.common.Gender"%><h2 class="oscarBlueHeader">
-	Send Unsolicited Observation Message (ORU_R01)
+<h2 class="oscarBlueHeader">
+	Send Data Electronically 
+	<span style="font-size:9px">(ORU_R01 : Unsolicited Observation Message)</span>
 </h2>
 
-<form method="post" enctype="multipart/form-data" action="oruR01Upload.do">
+
+<script type="text/javascript">
+	function checkRequiredFields()
+	{
+		if (jQuery("#clientFirstName").val().length==0)
+		{
+			alert('The clients first name is required.');
+			return(false);
+		}
+
+		if (jQuery("#dataName").val().length==0)
+		{
+			alert('The data name is required.');
+			return(false);
+		}
+
+		if (jQuery("#textData").val().length==0 && jQuery("#uploadFile").val().length==0)
+		{
+			alert('Either Text Data or an Upload File is required.');
+			return(false);
+		}
+
+		return(true);
+	}
+</script>
+
+<form method="post" enctype="multipart/form-data" action="oruR01Upload.do" onsubmit="return checkRequiredFields()">
 	<table style="border-collapse:collapse; width:95%; font-size:12px">
 		<tr style="border:solid grey 1px">
 			<td class="oscarBlueHeader" style="width:10em">From Provider</td>
@@ -23,7 +48,7 @@
 			<td>
 				<select name="professionalSpecialistId">
 					<%
-						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getAllProfessionalSpecialists())
+						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getRemoteCapableProfessionalSpecialists())
 						{
 							%>
 								<option value="<%=professionalSpecialist.getId()%>"><%=SendOruR01UIBean.getProfessionalSpecialistDisplayString(professionalSpecialist)%></option>
@@ -39,7 +64,7 @@
 				<table style="border-collapse:collapse">
 					<tr>
 						<td style="font-weight:bold;text-align:right">First Name</td>
-						<td><input type="text" name="clientFirstName" value="" /></td>
+						<td><input type="text" id="clientFirstName" name="clientFirstName" value="" /></td>
 					</tr>
 					<tr>
 						<td style="font-weight:bold;text-align:right">Last Name</td>
@@ -81,19 +106,21 @@
 		</tr>
 		<tr style="border:solid grey 1px">
 			<td class="oscarBlueHeader">Data Name</td>
-			<td><input type="text" name="dataName" value="" /></td>
+			<td><input type="text" id="dataName" name="dataName" value="" /></td>
 		</tr>
 		<tr style="border:solid grey 1px">
 			<td class="oscarBlueHeader">Text Data</td>
-			<td><textarea name="textData" style="width:40em;height:8em" ></textarea></td>
+			<td><textarea id="textData" name="textData" style="width:40em;height:8em" ></textarea></td>
 		</tr>
 		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader">Binary Data</td>
-			<td><input type="file" name="uploadFile" /></td>
+			<td class="oscarBlueHeader">Upload File</td>
+			<td><input type="file" id="uploadFile" name="uploadFile" /></td>
 		</tr>
 	</table>
 	<br />
 	<input type="submit" value="Electronically Send Data" />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="button" value="close" onclick='window.close()' />
 	
 </form>
 
