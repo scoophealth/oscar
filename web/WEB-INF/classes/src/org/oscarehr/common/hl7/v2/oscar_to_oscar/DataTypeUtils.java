@@ -477,6 +477,5 @@ public final class DataTypeUtils {
 		XTN xtn = rol.getPhone(0);
 		xtn.getUnformattedTelephoneNumber().setValue(provider.getPhone());
 		xtn.getCommunicationAddress().setValue(provider.getEmail());
-		
 	}
 }

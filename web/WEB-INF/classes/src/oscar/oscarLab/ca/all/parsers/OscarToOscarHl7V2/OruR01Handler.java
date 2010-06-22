@@ -23,81 +23,88 @@
  */
 package oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2;
 
-import java.util.GregorianCalendar;
-
 import org.apache.log4j.Logger;
-import org.oscarehr.common.Gender;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.util.DateUtils;
-
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v26.datatype.DTM;
-import ca.uhn.hl7v2.model.v26.datatype.XPN;
-import ca.uhn.hl7v2.model.v26.group.REF_I12_PROVIDER_CONTACT;
-import ca.uhn.hl7v2.model.v26.message.REF_I12;
+import ca.uhn.hl7v2.model.v26.datatype.XCN;
+import ca.uhn.hl7v2.model.v26.group.ORU_R01_ORDER_OBSERVATION;
+import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.segment.MSH;
+import ca.uhn.hl7v2.model.v26.segment.NTE;
 import ca.uhn.hl7v2.model.v26.segment.PID;
-import ca.uhn.hl7v2.model.v26.segment.PRD;
+import ca.uhn.hl7v2.model.v26.segment.ROL;
 
-public final class RefI12Handler extends ChainnedMessageAdapter<REF_I12> {
+public final class OruR01Handler extends ChainnedMessageAdapter<ORU_R01> {
 	
 	private static Logger logger = MiscUtils.getLogger();
-
-	public RefI12Handler(REF_I12 hl7Message) {
+	
+	public OruR01Handler(ORU_R01 hl7Message) {
 	    super(hl7Message);
     }	
+	
+	private ORU_R01_ORDER_OBSERVATION getOrderObservation() throws HL7Exception
+	{
+		return(hl7Message.getPATIENT_RESULT(0).getORDER_OBSERVATION(0));
+	}
 	
 	@Override
 	public String getDocName() {
 		// look through provider records for the referring provider
 		
-		logger.debug("hl7Message.getPROVIDER_CONTACTReps()="+hl7Message.getPROVIDER_CONTACTReps());
-		for (int i = 0; i < hl7Message.getPROVIDER_CONTACTReps(); i++) {
-			try {
-	            REF_I12_PROVIDER_CONTACT providerContact = hl7Message.getPROVIDER_CONTACT(i);
-
-	            PRD prd = providerContact.getPRD();
-
-	            logger.debug("prd.getProviderRole(0).getIdentifier()='"+prd.getProviderRole(0).getIdentifier()+'\'');
-	            if ("RP".equals(prd.getProviderRole(0).getIdentifier().getValue())) {
-	            	XPN xpn = prd.getProviderName(0);
+		try {
+	        ORU_R01_ORDER_OBSERVATION orderObservation=getOrderObservation();
+	        
+	        for (int i=0; i<orderObservation.getROLReps(); i++)
+	        {
+	        	ROL rol=orderObservation.getROL(i);
+	        	if (DataTypeUtils.ACTION_ROLE_SENDER.equals(rol.getRoleROL().getIdentifier().getValue()))
+	        	{
+	        		XCN xcn=rol.getRolePerson(0);
 	            	StringBuilder sb=new StringBuilder();
 	            	
-	            	String temp= xpn.getPrefixEgDR().getValue();
+	            	String temp= xcn.getPrefixEgDR().getValue();
 	            	if (temp!=null)
 	            	{
 	            		sb.append(temp);
 	            		sb.append(' ');
 	            	}
 	            	
-	            	temp=xpn.getGivenName().getValue();
+	            	temp=xcn.getGivenName().getValue();
 	            	if (temp!=null)
 	            	{
 	            		sb.append(temp);
 	            		sb.append(' ');
 	            	}
 	            	
-	            	temp=xpn.getFamilyName().getSurname().getValue();
+	            	temp=xcn.getFamilyName().getSurname().getValue();
 	            	if (temp!=null) sb.append(temp);
 	            	
 	            	String name=sb.toString();
-	            	logger.debug("xpn/name="+name);
+	            	logger.debug("xcn/name="+name);
 	            	return (name);
-	            }
-            } catch (HL7Exception e) {
-            	logger.error("Unexpected error.", e);
-            }
-		}
-
-		return (null);
+	        	}
+	        }
+	        
+        } catch (HL7Exception e) {
+	        logger.error("Unexpected error", e);
+        }
+        
+        return(null);
 	}
 
 	@Override
 	public String getMessageStructureType() {
-		return ("REFERRAL");
+        try {
+            ORU_R01_ORDER_OBSERVATION orderObservation=getOrderObservation();
+	        NTE nte=orderObservation.getNTE(0);
+	        return(nte.getCommentType().getText().getValue());
+        } catch (HL7Exception e) {
+	        logger.error("Unexpected error", e);
+        }
+        
+        return(null);
 	}
 
 	@Override
@@ -107,7 +114,6 @@ public final class RefI12Handler extends ChainnedMessageAdapter<REF_I12> {
 
 	@Override
 	public PID getPid() {
-		return (hl7Message.getPID());
+		return (hl7Message.getPATIENT_RESULT().getPATIENT().getPID());
 	}
-
 }

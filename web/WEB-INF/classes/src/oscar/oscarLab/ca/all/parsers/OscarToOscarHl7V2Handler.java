@@ -30,9 +30,11 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.ChainnedMessageAdapter;
+import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.OruR01Handler;
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.RefI12Handler;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
+import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.message.REF_I12;
 import ca.uhn.hl7v2.model.v26.segment.MSH;
 import ca.uhn.hl7v2.model.v26.segment.PID;
@@ -48,6 +50,7 @@ public final class OscarToOscarHl7V2Handler implements MessageHandler {
 		logger.debug("Received hl7 message type : "+message.getClass().getName());
 		
 		if (message instanceof REF_I12) chainnedMessageAdapter=new RefI12Handler((REF_I12) message);
+		else if (message instanceof ORU_R01) chainnedMessageAdapter=new OruR01Handler((ORU_R01) message);
 	}
 
 	public String audit() {

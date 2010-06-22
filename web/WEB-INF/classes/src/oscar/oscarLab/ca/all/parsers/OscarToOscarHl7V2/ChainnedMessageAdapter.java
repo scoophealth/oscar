@@ -12,20 +12,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
  *
- *  Jason Gallagher
- *
  *  This software was written for the
  *  Department of Family Medicine
  *  McMaster University
  *  Hamilton
- *  Ontario, Canada   Creates a new instance of MessageHandler
- *
- *
- *
- * MessageHandler.java
- *
- * Created on June 4, 2007, 10:50 AM
- *
+ *  Ontario, Canada
  */
 
 package oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2;
@@ -37,7 +28,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
@@ -74,9 +64,12 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 	public abstract PID getPid();
 
 	/**
-	 * The message category is just a random string representing what this hl7 message was about. As an example for REF I12 you might return "Referral".
+	 * The message category is just a random string representing the type of hl7 message.
 	 */
-	public abstract CategoryType getMessageCategory();
+	public String getMessageStructureType()
+	{
+		return(getMsh().getMessageType().getMessageStructure().getValue());
+	}
 
 	public String getMsgType() {
 		return (OscarToOscarUtils.UPLOAD_MESSAGE_TYPE);
@@ -122,7 +115,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 	}
 
 	public String getObservationHeader(int i, int j) {
-		return (getMessageCategory().name());
+		return (getMessageStructureType());
 	}
 
 	public String getOBXIdentifier(int i, int j) {
@@ -155,7 +148,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 
 	public ArrayList<String> getHeaders() {
 		ArrayList<String> headers=new ArrayList<String>();
-		headers.add(getMessageCategory().name());
+		headers.add(getMessageStructureType());
 		return (headers);
 	}
 

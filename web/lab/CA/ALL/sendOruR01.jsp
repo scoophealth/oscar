@@ -15,9 +15,9 @@
 <script type="text/javascript">
 	function checkRequiredFields()
 	{
-		if (jQuery("#clientFirstName").val().length==0)
+		if (jQuery("#clientFirstName").val().length==0 || jQuery("#clientLastName").val().length==0)
 		{
-			alert('The clients first name is required.');
+			alert('The clients first and last name is required.');
 			return(false);
 		}
 
@@ -68,7 +68,7 @@
 					</tr>
 					<tr>
 						<td style="font-weight:bold;text-align:right">Last Name</td>
-						<td><input type="text" name="clientLastName" value="" /></td>
+						<td><input type="text" id="clientLastName" name="clientLastName" value="" /></td>
 					</tr>
 					<tr>
 						<td style="font-weight:bold;text-align:right">Health Number<br />(excluding version code)</td>

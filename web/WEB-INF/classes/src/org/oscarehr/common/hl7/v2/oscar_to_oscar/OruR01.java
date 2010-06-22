@@ -31,6 +31,7 @@ public final class OruR01 {
 	public static class ObservationData
 	{
 		public String name;
+		public String fileName;
 		public String dataType;
 		public String data;
 		
@@ -49,8 +50,9 @@ public final class OruR01 {
 		 * See the other constructor
 		 * @param data binary data which will be base64 encoded.
 		 */
-		public ObservationData(String name, String dataType, byte[] data) throws UnsupportedEncodingException {
+		public ObservationData(String name, String fileName, String dataType, byte[] data) throws UnsupportedEncodingException {
 			this(name, dataType, OscarToOscarUtils.encodeBase64ToString(data));
+			this.fileName=fileName;
         }
 	}
 	
@@ -96,7 +98,8 @@ public final class OruR01 {
 	{
 		nte.getCommentType().getText().setValue(observationData.name);
 		nte.getCommentType().getNameOfCodingSystem().setValue(observationData.dataType);
-
+		nte.getCommentType().getOriginalText().setValue(observationData.fileName);
+		
 		int dataLength=observationData.data.length();
 		int chunks=dataLength/DataTypeUtils.NTE_COMMENT_MAX_SIZE;
 		if (dataLength%DataTypeUtils.NTE_COMMENT_MAX_SIZE!=0) chunks++;
@@ -145,8 +148,10 @@ public final class OruR01 {
 		demographic.setBirthDay(new GregorianCalendar(1960, 2, 3));
 		
 		ArrayList<ObservationData> observationDataList=new ArrayList<ObservationData>();
-		byte[] b=FileUtils.readFileToByteArray(new File("/tmp/r6.jpg"));
-		observationDataList.add(new ObservationData("test","jpg", b));
+		observationDataList.add(new ObservationData("txt test", "txt", "once upon a time"));
+		String fileName="/tmp/oscar.properties";
+		byte[] b=FileUtils.readFileToByteArray(new File(fileName));
+		observationDataList.add(new ObservationData("test", fileName, "properties", b));
 		
 		Provider sender=new Provider();
 		sender.setProviderNo("111");
@@ -164,8 +169,8 @@ public final class OruR01 {
 		logger.info(messageString);
 		
 		ORU_R01 newObservationMsg=(ORU_R01)OscarToOscarUtils.pipeParser.parse(messageString);
-		byte[] decoded=getNteCommentsAsDecodedBytes(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(0));
+		byte[] decoded=getNteCommentsAsDecodedBytes(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(1));
 		logger.info("equal data:"+Arrays.equals(b, decoded));
-		FileUtils.writeByteArrayToFile(new File("/tmp/out.jpg"), decoded);
+		FileUtils.writeByteArrayToFile(new File("/tmp/out.test"), decoded);
 	}
 }

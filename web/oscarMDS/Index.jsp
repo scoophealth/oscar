@@ -211,9 +211,6 @@
 %>
 
 
-<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
-<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
-<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
@@ -1062,20 +1059,12 @@ function wrapUp() {
                                     <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                                     <% }else if (result.isHL7TEXT())
                                    	{ 
-                                    	OscarToOscarUtils.CategoryType categoryType=null;
-                                    	try
-                                    	{
-                                    		categoryType=OscarToOscarUtils.CategoryType.valueOf(result.getDiscipline());
-                                    	}
-                                    	catch (Exception e)
-                                    	{
-                                    		// this okay, it means it's not a special category
-                                    	}
+                                    	String categoryType=result.getDiscipline();
                                    		
-                                    	if (categoryType==OscarToOscarUtils.CategoryType.REFERRAL)
+                                    	if ("REF_I12".equals(categoryType))
                                     	{
 	                                    	%>
-                                      			<a href="javascript:popupConsultation('<%=segmentID%>')"><%=(String) result.getPatientName()%></a>
+                                      			<a href="javascript:popupConsultation('<%=segmentID%>')"><%=result.getPatientName()%></a>
                                     		<%                                    		
                                     	}
                                     	else
@@ -1093,7 +1082,7 @@ function wrapUp() {
                                     <% }%>
                                 </td>
                                 <td nowrap>
-                                    <center><%= (String) result.getSex() %></center>
+                                    <center><%=result.getSex() %></center>
                                 </td>
                                 <td nowrap>
                                     <%= (result.isAbnormal() ? "Abnormal" : "" ) %>

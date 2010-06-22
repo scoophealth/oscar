@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -44,7 +45,7 @@ public class OruR01UploadAction extends Action {
 	        ArrayList<ObservationData> observationDataList=new ArrayList<ObservationData>();
 	        observationDataList.add(new ObservationData(oruR01UploadForm.getDataName(), "txt", oruR01UploadForm.getTextData()));
 	        String extension=FilenameUtils.getExtension(formFile.getFileName());
-	        observationDataList.add(new ObservationData(oruR01UploadForm.getDataName(), extension, formFile.getFileData()));
+	        observationDataList.add(new ObservationData(oruR01UploadForm.getDataName(), formFile.getFileName(), extension, formFile.getFileData()));
 	        
 	    	Provider sendingProvider=loggedInInfo.loggedInProvider;
 
@@ -90,8 +91,12 @@ public class OruR01UploadAction extends Action {
     	
     	try
     	{
-    		GregorianCalendar gregorianCalendar=DateUtils.toGregorianCalendarDate(oruR01UploadForm.getClientBirthDay());
-    		demographic.setBirthDay(gregorianCalendar);
+    		String temp=StringUtils.trimToNull(oruR01UploadForm.getClientBirthDay());
+    		if (temp!=null)
+    		{
+	    		GregorianCalendar gregorianCalendar=DateUtils.toGregorianCalendarDate(temp);
+	    		demographic.setBirthDay(gregorianCalendar);
+    		}
     	}
     	catch (Exception e)
     	{
