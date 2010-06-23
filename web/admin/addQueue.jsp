@@ -150,7 +150,6 @@
                 <td>  
                        <%
                         List<Hashtable> queues=QueueData.getQueues();
-                        System.out.println(queues);
                         for(Hashtable qht:queues){
                         %>                            
                                 <%=(String)qht.get("queue")%>     <br>
