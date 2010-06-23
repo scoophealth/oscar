@@ -31,6 +31,7 @@ package oscar.oscarLab.ca.on;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -55,6 +56,8 @@ public class CommonLabResultData {
 
     public static final boolean ATTACHED = true;
     public static final boolean UNATTACHED = false;
+
+    public static final String NOT_ASSIGNED_PROVIDER_NO="0";
 
     public CommonLabResultData() {
 
@@ -114,6 +117,7 @@ public class CommonLabResultData {
         String hl7text = op.getProperty("HL7TEXT_LABS");
 
         if(scannedDocStatus !=null && (scannedDocStatus.equals("N")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
+            //System.out.println("##cml="+cml+"--mds="+mds);
             if( cml != null && cml.trim().equals("yes")){
                 ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
                 labs.addAll(cmlLabs);
