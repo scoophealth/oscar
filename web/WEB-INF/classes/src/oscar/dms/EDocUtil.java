@@ -133,8 +133,8 @@ public class EDocUtil extends SqlUtilBaseS {
     }
 
     public static String addDocumentSQL(EDoc newDocument) {
-        String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?,?)";
-        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[13];
+        String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate,number_of_pages) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?,?,?)";
+        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[14];
         int counter = 0;
         param[counter++] = new DBPreparedHandlerParam(newDocument.getType());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());
@@ -153,6 +153,7 @@ public class EDocUtil extends SqlUtilBaseS {
         param[counter++] = new DBPreparedHandlerParam(newDocument.getDocPublic());
         java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
         param[counter++] = new DBPreparedHandlerParam(od2);
+        param[counter++] = new DBPreparedHandlerParam(newDocument.getNumberOfPages());
 
         /*
          * String documentSql = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, updatedatetime, status, contenttype, public1, observationdate) " + "VALUES ('" +
@@ -518,6 +519,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setHtml(rsGetString(rs, "docxml"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));
+                currentdoc.setNumberOfPages(rs.getInt("number_of_pages"));
 
                 if (myOscarEnabled) {
                     String tmp = indivoSql.replaceFirst("\\?", oscar.Misc.getString(rs, "document_no"));
