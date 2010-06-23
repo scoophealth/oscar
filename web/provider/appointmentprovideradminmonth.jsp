@@ -368,11 +368,11 @@ function refreshTabAlerts(id) {
 			<security:oscarSec roleName="<%=roleName$%>"
 				objectName="_appointment.doctorLink" rights="r">
 				<li><a HREF="#"
-					ONCLICK="popupOscarRx(600,900,'../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.inbox"/>');return false;"
+					ONCLICK="popupOscarRx(600,1090,'../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%=curUser_no%>', '<bean:message key="global.inbox"/>');return false;"
 					TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
 				<span id="oscar_new_lab"></span> </a> <oscar:newUnclaimedLab>
 					<a class="tabalert" HREF="#"
-						ONCLICK="popupOscarRx(600,900,'../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;"
+						ONCLICK="popupOscarRx(600,1090,'../dms/inboxManage.do?method=prepareForIndexPage&providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;"
 						TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
 				</oscar:newUnclaimedLab></li>
 			</security:oscarSec>
@@ -887,7 +887,7 @@ document.onkeypress=function(e){
 				</caisi:isModuleLoad>
 				return false;
 			}
-			case <bean:message key="global.labShortcut"/> : popupOscarRx(600,900,'../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');  return false;  //run code for 'L'ab
+			case <bean:message key="global.labShortcut"/> : popupOscarRx(600,1090,'../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');  return false;  //run code for 'L'ab
 			case <bean:message key="global.msgShortcut"/> : popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>'); return false;  //run code for 'M'essage
 			case <bean:message key="global.monthShortcut"/> : window.open("providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth","_self"); return false ;  //run code for Mo'n'th
 			case <bean:message key="global.conShortcut"/> : popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>');  return false;  //run code for c'O'nsultation

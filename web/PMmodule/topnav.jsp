@@ -87,11 +87,14 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
 				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
                                 <li>
-					<a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/oscarMDS/Index.jsp"/>?providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
+					<!--a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/oscarMDS/Index.jsp"/>?providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
+                                            <span id="oscar_new_lab"><bean:message key="global.lab"/></span>
+					</a-->
+                                        <a HREF="#" ONCLICK ="popupInboxManager('<html:rewrite page="/dms/inboxManage.do?method=prepareForIndexPage"/>?providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
                                             <span id="oscar_new_lab"><bean:message key="global.lab"/></span>
 					</a>
        				<oscar:newUnclaimedLab>
-       					<a class="tabalert" HREF="#" ONCLICK="popupPage2('<html:rewrite page="/oscarMDS/Index.jsp"/>?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
+       					<a class="tabalert" HREF="#" ONCLICK="popupInboxManager('<html:rewrite page="/dms/inboxManage.do?method=prepareForIndexPage"/>?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', 'Lab');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
        				</oscar:newUnclaimedLab>					       
 				</li>
 				</oscar:oscarPropertiesCheck>
