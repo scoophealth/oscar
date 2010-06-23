@@ -348,7 +348,7 @@ public class Hl7textResultsData {
         return labResults;
     }
     
-    public ArrayList populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
+    public ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         
         if ( providerNo == null) { providerNo = ""; }
         if ( patientFirstName == null) { patientFirstName = ""; }
@@ -357,7 +357,7 @@ public class Hl7textResultsData {
         
         patientHealthNumber=StringUtils.trimToNull(patientHealthNumber);
         
-        ArrayList labResults =  new ArrayList();
+        ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
