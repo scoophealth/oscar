@@ -29,11 +29,16 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class EctPeriMenopausalRecord
 {
+    private static Logger logger=MiscUtils.getLogger(); 
+
     public Properties getPeriMenopausalRecord(int demographicNo, int existingID)
             throws SQLException
     {
@@ -65,8 +70,7 @@ public class EctPeriMenopausalRecord
                 rs.close();
 
             }catch(SQLException ee) {
-                System.err.println("sql exception "+ee);
-                ee.printStackTrace(System.out);
+            	logger.error("Unexpected error", ee);
             }
         } else {
             try{
@@ -113,8 +117,7 @@ public class EctPeriMenopausalRecord
                 }//end if
                 rs.close();
             }catch(SQLException ee) {
-                System.err.println("sql exception "+ee);
-                ee.printStackTrace(System.out);
+            	logger.error("Unexpected error", ee);
             }
         }//end else
         return props;

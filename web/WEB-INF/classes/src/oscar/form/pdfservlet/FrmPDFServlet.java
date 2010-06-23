@@ -312,7 +312,6 @@ public class FrmPDFServlet extends HttpServlet {
                 i++;
                 PdfImportedPage page1 = writer.getImportedPage(reader, i);
                 cb.addTemplate(page1, 1, 0, 0, 1, 0, 0);
-                //System.err.println(cfgFileNo + "processed page " + i);
                 
                 BaseFont bf; // = normFont;
                 String encoding;

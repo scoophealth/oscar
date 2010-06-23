@@ -70,7 +70,7 @@ public class OBR extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
          this.note.add(nte);
          return nte.Parse(line);
       }
-      System.err.println("Error During Parsing, Unknown Line - oscar.PathNet.HL7.V2_3.OBR - Message: " + line);
+      _logger.error("Error During Parsing, Unknown Line - oscar.PathNet.HL7.V2_3.OBR - Message: " + line);
       return null;
    }
    public String getNote() {

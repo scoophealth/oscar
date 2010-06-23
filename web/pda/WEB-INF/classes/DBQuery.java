@@ -3,6 +3,9 @@ import java.sql.*;
 import java.util.Date;
 import java.util.Calendar;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 /*
  * $RCSfile: AbstractApplication.java,v1.0 $
  *
@@ -33,7 +36,9 @@ import java.util.Calendar;
  */
 
 public class DBQuery {
-     private int wrongInVolume = 0 ;
+    private static Logger logger=MiscUtils.getLogger(); 
+
+    private int wrongInVolume = 0 ;
      private String sVolume = "";
      ResultSet RS = null;
      private int[] in_correct = new int[6] ;
@@ -48,7 +53,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select distinct appointment_date from appointment : " + ex.getMessage());
+                    logger.error(" select distinct appointment_date from appointment : " + ex.getMessage());
                     }
     return RS;
   }
@@ -60,7 +65,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select distinct appointment_date from appointment : " + ex.getMessage());
+                    logger.error(" select distinct appointment_date from appointment : " + ex.getMessage());
                     }
     return RS;
   } 
@@ -71,7 +76,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from appointment : " + ex.getMessage());
+                    logger.error(" select * from appointment : " + ex.getMessage());
                     }
     return RS;
   }
@@ -86,7 +91,7 @@ public class DBQuery {
                     RS.next();
                     i=RS.getInt("appointment_no");
                     } catch(Exception ex) {
-                    System.err.println(" select * from appointment : " + ex.getMessage());
+                    logger.error(" select * from appointment : " + ex.getMessage());
                     }
     return i;
   } 
@@ -97,7 +102,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from appointment : " + ex.getMessage());
+                    logger.error(" select * from appointment : " + ex.getMessage());
                     }
     return RS;
   }
@@ -114,7 +119,7 @@ public class DBQuery {
                        }
                        RS.close();
                     } catch(Exception ex) {
-                    System.err.println("select vid from tvolume where volume =: " + ex.getMessage());
+                    logger.error("select vid from tvolume where volume =: " + ex.getMessage());
                     }
     return returnNo ;
   }
@@ -137,7 +142,7 @@ public class DBQuery {
                        returnNo[i]= new Integer(k).toString(); 
                        RS.close();
                     } catch(Exception ex) {
-                    System.err.println("select vid from tvolume where volume =: " + ex.getMessage());
+                    logger.error("select vid from tvolume where volume =: " + ex.getMessage());
                     }
        }else{
              returnNo[i]=""; 
@@ -153,7 +158,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from appointment : " + ex.getMessage());
+                    logger.error(" select * from appointment : " + ex.getMessage());
                     }
     return RS;
   }
@@ -170,7 +175,7 @@ public class DBQuery {
                        RS.close();
 
                     } catch(Exception ex) {
-                    System.err.println("select vid from tvolume where volume =: " + ex.getMessage());
+                    logger.error("select vid from tvolume where volume =: " + ex.getMessage());
                     }
 
     return providerName ;
@@ -194,7 +199,7 @@ public class DBQuery {
                        }
                        RS.close();
                     } catch(Exception ex) {
-                    System.err.println("select * from appointment where provider_no =: " + ex.getMessage());
+                    logger.error("select * from appointment where provider_no =: " + ex.getMessage());
                     }
  
     
@@ -215,7 +220,7 @@ public class DBQuery {
                        }
                        RS.close();
                     } catch(Exception ex) {
-                    System.err.println("select * from appointment where provider_no =: " + ex.getMessage());
+                    logger.error("select * from appointment where provider_no =: " + ex.getMessage());
                     }
  
     
@@ -229,7 +234,7 @@ public class DBQuery {
                     dbc.executeUpdate(getUpdate);
                     } catch(Exception ex) {
                       returnVid = 0;
-                    System.err.println("select vid from tvolume where volume =: " + ex.getMessage());
+                    logger.error("select vid from tvolume where volume =: " + ex.getMessage());
                     }
     return returnVid ;
   }
@@ -255,7 +260,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from demographic : " + ex.getMessage());
+                    logger.error(" select * from demographic : " + ex.getMessage());
                     }
     return RS;
   }
@@ -267,7 +272,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from demographic : " + ex.getMessage());
+                    logger.error(" select * from demographic : " + ex.getMessage());
                     }
     return RS;
   }
@@ -290,7 +295,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from demographic : " + ex.getMessage());
+                    logger.error(" select * from demographic : " + ex.getMessage());
                     }
     return RS;
   }
@@ -302,7 +307,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from demographic : " + ex.getMessage());
+                    logger.error(" select * from demographic : " + ex.getMessage());
                     }
     return RS;
   }
@@ -314,7 +319,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from demographic : " + ex.getMessage());
+                    logger.error(" select * from demographic : " + ex.getMessage());
                     }
     return RS;
   } 
@@ -326,7 +331,7 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from demographic : " + ex.getMessage());
+                    logger.error(" select * from demographic : " + ex.getMessage());
                     }
     return RS;
   }   
@@ -339,75 +344,9 @@ public class DBQuery {
                     DBConnect dbc= new DBConnect();
                     RS = dbc.executeQuery(getQuery);
                     } catch(Exception ex) {
-                    System.err.println(" select * from demographic : " + ex.getMessage());
+                    logger.error(" select * from demographic : " + ex.getMessage());
                     }
     return RS;
   }   
-  
-     
-/*
-  public ResultSet getUsers(){
-     String getMaxVid = "  select * from tusers ";
-         ResultSet RS = null;
-                  try{
-                    DBConnect dbc= new DBConnect();
-                    RS = dbc.executeQuery(getMaxVid);
-                    } catch(Exception ex) {
-                    System.err.println("select * from tusers: " + ex.getMessage());
-                    }
-    return RS;
-  }
-
- 
-
-  public int getVid(String in_volume){
-     String getMaxVid = " select vid from tvolume where volume = '"+ in_volume+"'";
-         ResultSet RS = null;
-         int returnVid = 1;
-                  try{
-                    DBConnect dbc= new DBConnect();
-                    RS = dbc.executeQuery(getMaxVid);
-                    RS.last();
-                    returnVid = RS.getInt("vid");
-                    } catch(Exception ex) {
-                    System.err.println("select vid from tvolume where volume =: " + ex.getMessage());
-                    }
-    return returnVid ;
-  }
-  
-  public void updateUser(int in_mailme,String in_cfpcNo,int in_eOrNot,int in_pOrNot,int in_pay,String in_payDate){
-    String  updateUser = " update tusers set mailme ='"+in_mailme+"' ,cfpcNo ='"+in_cfpcNo+"',"
-                       +" eOrNot="+in_eOrNot+", pOrNot="+in_pOrNot+", pay="+in_pay+", payDate='"+in_payDate+"'";
-                try{
-                    DBConnect dbc= new DBConnect();
-                     dbc.executeUpdate(updateUser);
-                    } catch(Exception ex) {
-                    System.err.println("update tusers set mailme: " + ex.getMessage());
-                    }
-
-  }
- 
-   public void makeBackupTables(){
-   String makeBackupTables = "BACKUP TABLE tadmin,tusers,tanswers,tquestions,treference,tsubtopic,ttopic,tvolume  TO '/back'";
-                try{
-                    DBConnect dbc= new DBConnect();
-                     dbc.executeUpdate(makeBackupTables);
-                    } catch(Exception ex) {
-                    System.err.println("makeBackupTables : " + ex.getMessage());
-                    }
-   }
-
-   public void makeRestoreTables(){
-   String makeRestoreTables = "RESTORE TABLE tadmin,tusers,tanswers,tquestions,treference,tsubtopic,ttopic,tvolume  FROM '/back'";
-                try{
-                    DBConnect dbc= new DBConnect();
-                     dbc.executeUpdate(makeRestoreTables);
-                    } catch(Exception ex) {
-                    System.err.println("makeRestoreTables : " + ex.getMessage());
-                    }
-   }
-
-*/
-
 
 }

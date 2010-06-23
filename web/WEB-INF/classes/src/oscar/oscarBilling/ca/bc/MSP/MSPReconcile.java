@@ -1803,7 +1803,6 @@ public class MSPReconcile {
         " and bm.billingstatus != 'D'" +
         " order by t_payment";
 
-    System.err.println(p);
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
@@ -2220,7 +2219,7 @@ public class MSPReconcile {
         " and provider.ohip_no= teleplanS00.t_practitionerno " +
         " and teleplanS00.t_payeeno = " + payeeNo +
         " order by provider.first_name,t_servicedate,billing.demographic_name";
-    System.err.println(qry);
+
     DBHandler db = null;
     ResultSet rs = null;
     try {
@@ -2295,7 +2294,6 @@ public class MSPReconcile {
         "select * from provider where provider_type = 'doctor'";
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
-      System.err.println(qry);
       rs = db.GetSQL(qry);
 
       while (rs.next()) {
@@ -2363,7 +2361,7 @@ public class MSPReconcile {
     oscar.entities.S21 s21 = new oscar.entities.S21();
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
-      System.err.println(qry);
+
       rs = db.GetSQL(qry);
       if (rs.next()) {
         s21.setPaymentDate(rs.getString(1));

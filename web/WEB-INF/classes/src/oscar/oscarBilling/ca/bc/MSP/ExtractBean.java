@@ -32,6 +32,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.Misc;
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
@@ -41,6 +44,8 @@ import oscar.util.UtilMisc;
 
 
 public class ExtractBean extends Object implements Serializable {
+    private static Logger logger=MiscUtils.getLogger(); 
+	
     private String ohipRecord;
     private String ohipClaim;
     private String ohipReciprocal;
@@ -344,8 +349,7 @@ public class ExtractBean extends Object implements Serializable {
             p.println(value1);
             p.close();
         }catch(Exception e) {
-            e.printStackTrace();
-            System.err.println("Error");
+            logger.error("Unexpected error", e);
         }
     }
 
@@ -358,8 +362,7 @@ public class ExtractBean extends Object implements Serializable {
             p.println(htmlvalue1);
             p.close();
         }catch(Exception e) {
-            e.printStackTrace();
-            System.err.println("Error");
+            logger.error("Unexpected error", e);
         }
       }
     }
@@ -430,7 +433,8 @@ public class ExtractBean extends Object implements Serializable {
        String retval = "1";
        try{
           retval = new java.math.BigDecimal(str).setScale(0,BigDecimal.ROUND_UP).toString();
-       }catch(Exception e){ e.printStackTrace();}
+       }catch(Exception e){
+           logger.error("Unexpected error", e);}
        return retval;
     }
     public String getClaimDetailRecord(ResultSet rs2,String LogNo) throws SQLException{
@@ -501,7 +505,7 @@ public class ExtractBean extends Object implements Serializable {
           }
        }catch(Exception e){
           retval = false;
-          e.printStackTrace();
+          logger.error("Unexpected error", e);
        }
        return retval;
     }
@@ -569,7 +573,7 @@ public class ExtractBean extends Object implements Serializable {
          tosubmit = rs.next() && 0 < rs.getInt("count");
          rs.close();
       }catch (Exception ex) {
-         System.err.println(ex.getMessage());
+          logger.error("Unexpected error", ex);
       }
       return tosubmit;
    }

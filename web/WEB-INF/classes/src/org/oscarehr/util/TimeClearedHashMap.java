@@ -78,45 +78,19 @@ public class TimeClearedHashMap<K, V> extends HashMap<K, V> {
 		}
 	}
 
-	public V put(K key, V value) {
+	@Override
+    public V put(K key, V value) {
 		V result = super.put(key, value);
 		data.put(key, System.currentTimeMillis());
 		return (result);
 	}
 
-	public void putAll(Map<? extends K, ? extends V> m) {
+	@Override
+    public void putAll(Map<? extends K, ? extends V> m) {
 		super.putAll(m);
 		for (K key : m.keySet()) {
 			data.put(key, System.currentTimeMillis());
 		}
-	}
-
-	// @Test
-	// public void test() throws InterruptedException {
-	public static void main(String... argv) throws Exception {
-		TimeClearedHashMap<String, String> map = new TimeClearedHashMap<String, String>(1000, 25);
-		map.put("foo", "FOO");
-		// assertEquals(1, map.size());
-		if (map.size() != 1) throw (new IllegalStateException());
-
-		Thread.sleep(600);
-		map.put("bar", "BAR");
-		// assertEquals(2, map.size());
-		if (map.size() != 2) throw (new IllegalStateException());
-
-		Thread.sleep(600);
-		// assertEquals(1, map.size());
-		if (map.size() != 1) throw (new IllegalStateException());
-		if (map.data.size() != 1) throw (new IllegalStateException());
-		map.put("bar", "BAR");
-		map.put("blah", "BLAH");
-		// assertEquals(2, map.size());
-		if (map.size() != 2) throw (new IllegalStateException());
-		if (map.data.size() != 2) throw (new IllegalStateException());
-
-		if (!map.get("bar").equals("BAR")) throw (new IllegalStateException());
-
-		System.err.println("all good");
 	}
 
 }

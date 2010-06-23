@@ -3,6 +3,9 @@ package oscar.oscarBilling.ca.bc.MSP;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.Misc;
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -34,6 +37,8 @@ import oscar.oscarDB.DBHandler;
  * www.andromedia.ca
  */
 public class WcbSb {
+    private static Logger logger=MiscUtils.getLogger(); 
+
    protected static String file = null;
    private String demographic_no,
    provider_no,
@@ -171,7 +176,7 @@ public class WcbSb {
          this.formNeeded = rs.getString("formNeeded");
       }
       catch (Exception ex) {
-         System.err.println("WcbSb (Constructor): " + ex.getMessage());
+    	  logger.error("WcbSb (Constructor): ",ex);
       }
        
    }

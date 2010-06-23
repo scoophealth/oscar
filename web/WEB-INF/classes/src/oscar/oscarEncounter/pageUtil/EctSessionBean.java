@@ -435,17 +435,14 @@ public class EctSessionBean {
     }
 
     public void setConsultationRequestId(String str) {
-        //System.out.println("CON ID setting too "+str);
         consultationRequestId = str;
     }
 
     public String getConsultationRequestId() {
-        //System.out.println("CON ID in session bean getter "+consultationRequestId);
         return consultationRequestId;
     }
 
     public void unsetConsultationRequestId() {
-        System.err.println("UNSETTING REQUEST ID");
         consultationRequestId = null;
     }
 
@@ -457,7 +454,6 @@ public class EctSessionBean {
     }
 
     public void setCurrentTeam(String str) {
-        //System.out.println("Setting curr team = " +str);
         currentTeam = str;
     }
 

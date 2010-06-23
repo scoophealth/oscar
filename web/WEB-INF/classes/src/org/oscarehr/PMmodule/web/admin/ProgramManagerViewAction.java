@@ -34,8 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.WebServiceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -71,11 +70,12 @@ import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 public class ProgramManagerViewAction extends BaseAction {
 
-	private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
+	private static Logger logger = MiscUtils.getLogger();
 	private ClientRestrictionManager clientRestrictionManager;
 	private FacilityDao facilityDao = null;
 	private CaseManagementManager caseManagementManager;
@@ -312,9 +312,9 @@ public class ProgramManagerViewAction extends BaseAction {
 			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 			referralWs.removeReferral(remoteReferralId);
 		} catch (MalformedURLException e) {
-			log.error("Unexpected error", e);
+			logger.error("Unexpected error", e);
 		} catch (WebServiceException e) {
-			log.error("Unexpected error", e);
+			logger.error("Unexpected error", e);
 		}
 
 		return view(mapping, form, request, response);
@@ -322,7 +322,7 @@ public class ProgramManagerViewAction extends BaseAction {
 
 	public ActionForward viewBedReservationChangeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		Integer reservedBedId = Integer.valueOf(request.getParameter("reservedBedId"));
-		System.err.println(reservedBedId);
+		logger.debug(reservedBedId);
 
 		// BedDemographicChange[] bedDemographicChanges = bedDemographicManager.getBedDemographicChanges(reservedBedId)
 		request.setAttribute("bedReservationChanges", null);
@@ -356,12 +356,12 @@ public class ProgramManagerViewAction extends BaseAction {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);
 		} catch (ProgramFullException e) {
-			log.error(e);
+			logger.error(e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
 			saveMessages(request, messages);
 		} catch (AdmissionException e) {
-			log.error(e);
+			logger.error(e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 			saveMessages(request, messages);
@@ -414,12 +414,12 @@ public class ProgramManagerViewAction extends BaseAction {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);
 		} catch (ProgramFullException e) {
-			log.error(e);
+			logger.error(e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
 			saveMessages(request, messages);
 		} catch (AdmissionException e) {
-			log.error(e);
+			logger.error(e);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 			saveMessages(request, messages);
@@ -471,7 +471,7 @@ public class ProgramManagerViewAction extends BaseAction {
 	}
 
 	public ActionForward batch_discharge(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		log.info("do batch discharge");
+		logger.info("do batch discharge");
 		String type = request.getParameter("type");
 		String admitToProgramId;
 		if (type != null && type.equalsIgnoreCase("community")) {
@@ -479,7 +479,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		} else if (type != null && type.equalsIgnoreCase("bed")) {
 			admitToProgramId = request.getParameter("batch_discharge_program");
 		} else {
-			log.warn("Invalid program type for batch discharge");
+			logger.warn("Invalid program type for batch discharge");
 			admitToProgramId = "";
 		}
 
@@ -493,7 +493,7 @@ public class ProgramManagerViewAction extends BaseAction {
 				String admissionId = name.substring(8);
 				Admission admission = admissionManager.getAdmission(Long.valueOf(admissionId));
 				if (admission == null) {
-					log.warn("admission #" + admissionId + " not found.");
+					logger.warn("admission #" + admissionId + " not found.");
 					continue;
 				}
 
@@ -570,13 +570,13 @@ public class ProgramManagerViewAction extends BaseAction {
 
 		List<Long> dependents = clientManager.getDependentsList(new Long(clientId));
 
-		log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
+		logger.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
 
 		programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
 
 		if (dependents != null) {
 			for (Long l : dependents) {
-				log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + l.intValue());
+				logger.debug("rejecting from queue: program_id=" + programId + ",clientId=" + l.intValue());
 				programQueueManager.rejectQueue(programId, l.toString(), notes, rejectionReason);
 			}
 		}
@@ -603,7 +603,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		if (program.getType().equalsIgnoreCase("bed") && queue != null && !queue.isTemporaryAdmission()) {
 			Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(clientId));
 			if (currentAdmission != null) {
-				log.warn("client already in a bed program..doing a discharge/admit if proceeding");
+				logger.warn("client already in a bed program..doing a discharge/admit if proceeding");
 				request.setAttribute("current_admission", currentAdmission);
 				Program currentProgram = programManager.getProgram(String.valueOf(currentAdmission.getProgramId()));
 				request.setAttribute("current_program", currentProgram);

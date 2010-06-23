@@ -9,6 +9,9 @@ package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 /*
@@ -38,7 +41,9 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  * www.andromedia.ca
  */
 public class PID extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
-   private ArrayList containers;
+    private static Logger logger=MiscUtils.getLogger(); 
+
+    private ArrayList containers;
    
    private ArrayList note;
    
@@ -81,7 +86,7 @@ public class PID extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
       } else {
          return ((PIDContainer)this.containers.get(this.containers.size() -1)).Parse(line);
       }
-      System.err.println("Error During Parsing, Unknown Line - oscar.PathNet.HL7.V2_3.PID - Message: " + line);
+      logger.error("Error During Parsing, Unknown Line - oscar.PathNet.HL7.V2_3.PID - Message: " + line);
       return null;
    }
    

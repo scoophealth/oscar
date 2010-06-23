@@ -242,7 +242,6 @@ public class CreateBillingReportAction extends OscarAction {
 
             for (Iterator iter = billSearch.list.iterator(); iter.hasNext();) {
                 MSPBill item = (MSPBill)iter.next();
-                System.err.println(item.rejectionDate);
             }
             oscar.entities.Provider payProv = msp.getProvider(payee, 1);
             reportParams.put("account", account.equals("ALL")?"ALL":payProv.getFullName());

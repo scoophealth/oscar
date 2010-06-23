@@ -34,11 +34,16 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 
 
 public class ExtractBean extends Object implements Serializable {
+    private static Logger logger=MiscUtils.getLogger(); 
+
     private String ohipRecord;
     private String ohipClaim;
     private String ohipReciprocal;
@@ -403,8 +408,7 @@ public class ExtractBean extends Object implements Serializable {
             p.close();
         }
         catch(Exception e) {
-            e.printStackTrace();
-            System.err.println("Error");
+        	logger.error("Unexpected error", e);
         }        
     }
     
@@ -434,8 +438,7 @@ public class ExtractBean extends Object implements Serializable {
             p1.close();
         }
         catch(Exception e) {
-            e.printStackTrace();
-            System.err.println("Error");
+        	logger.error("Unexpected error", e);
         }
         
     }

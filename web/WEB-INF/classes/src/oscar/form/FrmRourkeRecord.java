@@ -29,10 +29,16 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmRourkeRecord extends FrmRecord {
+    private static Logger logger=MiscUtils.getLogger(); 
+
+	
     public Properties getFormRecord(int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
@@ -149,22 +155,15 @@ public class FrmRourkeRecord extends FrmRecord {
 
         try {
             Date tToday = (oscar.util.UtilDateUtilities.StringToDate(today, "yyyy/MM/dd"));
-            System.out.println("today: "+today);
-            System.out.println("Date: "+tToday);
-            System.out.println("Time: "+tToday.getTime());
 
             Date tDob = (oscar.util.UtilDateUtilities.StringToDate(dob, "yyyy/MM/dd"));
-            System.out.println("Dob: "+dob);
-            System.out.println("Date: "+tDob);
-            System.out.println("Time: "+tDob.getTime());
 
             age = (tToday.getTime() - tDob.getTime())/(1000*3600*24);
             double daysPerMonth = 30.4375;
             age = age/daysPerMonth; // the approximate number of days in a month
         } catch(Exception ex) {
-            System.err.println(ex);
+            logger.error("", ex);
         }
-        System.out.println("this is returned: "+age);
         return age;
     }
 

@@ -29,11 +29,16 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class EctLabReqRecord
 {
+    private static Logger logger=MiscUtils.getLogger(); 
+
     public Properties getLabReqRecord(int demographicNo, int existingID, int provNo)
             throws SQLException
     {
@@ -87,8 +92,7 @@ public class EctLabReqRecord
                 }
                 rs.close();
             }catch(SQLException ee) {
-                System.err.println("sql exception "+ee);
-                ee.printStackTrace(System.out);
+            	logger.error("Unexpected error", ee);
             }
         }
         else

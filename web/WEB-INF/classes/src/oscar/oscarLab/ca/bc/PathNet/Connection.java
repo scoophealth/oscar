@@ -14,6 +14,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.httpclient.HttpException;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -46,7 +48,9 @@ import oscar.oscarLab.ca.bc.PathNet.Communication.HTTP;
  * www.andromedia.ca
  */
 public class Connection {
-   private boolean secure;
+    private static Logger logger=MiscUtils.getLogger(); 
+
+    private boolean secure;
    private String url;
    private static final 
    String LoginQuery      = "Page=Login&Mode=Silent&UserID=@username&Password=@password",
@@ -69,8 +73,7 @@ public class Connection {
          success = (response.toUpperCase().indexOf("ACCESSGRANTED") > -1);
       }
       catch (Exception ex) {
-         System.err.println("Error - oscar.PathNet.Connection.Open - Message: "+ ex.getMessage());
-         ex.printStackTrace();
+         logger.error("Error - oscar.PathNet.Connection.Open - Message: "+ ex.getMessage(), ex);
          success = false;
       }
       return success;
@@ -80,20 +83,18 @@ public class Connection {
          this.CreateInputStream(LogoutQuery).close();
       }
       catch (Exception ex) {
-         System.err.println("Error - oscar.PathNet.Connection.Close - Message: "+ ex.getMessage());
+    	  logger.error("Error - oscar.PathNet.Connection.Close - Message: "+ ex.getMessage(), ex);
       }
    }
    public ArrayList Retrieve() {
       ArrayList messages = null;
       try {
-         System.err.println("retrieving");
          Document document = this.CreateDocument(this.CreateInputStream(RequestNewQuery));
          
          if (document.getDocumentElement().getAttribute("MessageFormat").toUpperCase().equals("ORUR01") && document.getDocumentElement().getAttribute("Version").toUpperCase().equals("2.3")) {
             if (document.getDocumentElement().getAttribute("MessageCount").equals(String.valueOf(document.getDocumentElement().getChildNodes().getLength()))) {
                messages = new ArrayList(document.getDocumentElement().getChildNodes().getLength());
                for (int i = 0;i < document.getDocumentElement().getChildNodes().getLength(); i++) {
-                  System.err.println("messages : " + i);
                   messages.add(document.getDocumentElement().getChildNodes().item(i).getFirstChild().getNodeValue());
                }
             }
@@ -103,7 +104,7 @@ public class Connection {
          }
       }
       catch (Exception ex) {
-         System.err.println("Error - oscar.PathNet.Connection.Retrieve - Message: "+ ex.getMessage());
+    	  logger.error("Error - oscar.PathNet.Connection.Retrieve - Message: "+ ex.getMessage(), ex);
       }
       return messages;
    }
@@ -111,14 +112,12 @@ public class Connection {
    public ArrayList Retrieve(InputStream is) {
       ArrayList messages = null;
       try {
-         System.err.println("retrieving");
          Document document = this.CreateDocument(is);
          
          if (document.getDocumentElement().getAttribute("MessageFormat").toUpperCase().equals("ORUR01") && document.getDocumentElement().getAttribute("Version").toUpperCase().equals("2.3")) {
             if (document.getDocumentElement().getAttribute("MessageCount").equals(String.valueOf(document.getDocumentElement().getChildNodes().getLength()))) {
                messages = new ArrayList(document.getDocumentElement().getChildNodes().getLength());
                for (int i = 0;i < document.getDocumentElement().getChildNodes().getLength(); i++) {
-                  System.err.println("messages : " + i);
                   messages.add(document.getDocumentElement().getChildNodes().item(i).getFirstChild().getNodeValue());
                }
             }
@@ -128,7 +127,7 @@ public class Connection {
          }
       }
       catch (Exception ex) {
-         System.err.println("Error - oscar.PathNet.Connection.Retrieve - Message: "+ ex.getMessage());
+    	  logger.error("Error - oscar.PathNet.Connection.Retrieve - Message: "+ ex.getMessage(), ex);
       }
       return messages;
    }
@@ -139,7 +138,7 @@ public class Connection {
          this.CreateInputStream((success ? PositiveAckQuery : NegativeAckQuery)).close();
       }
       catch (Exception ex) {
-         System.err.println("Error - oscar.PathNet.Connection.Acknowledge - Message: "+ ex.getMessage());
+    	  logger.error("Error - oscar.PathNet.Connection.Acknowledge - Message: "+ ex.getMessage(), ex);
       }
    }
    public Document CreateDocument(InputStream input) throws SAXException, IOException, ParserConfigurationException {

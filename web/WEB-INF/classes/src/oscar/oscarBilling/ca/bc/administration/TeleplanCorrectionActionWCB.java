@@ -123,8 +123,7 @@ public class TeleplanCorrectionActionWCB
             //bean.queryExecuteUpdate(data.getBillingMaster(),CLOSE_RECONCILIATION);
             bean.closePstmtConn();
         } catch (Exception ex) {
-            ex.printStackTrace();
-            System.err.println("WCB Teleplan Correction Query Error: " +ex.getMessage() + " - ");
+            log.error("WCB Teleplan Correction Query Error: " +ex.getMessage() + " - ", ex);
         }
 
         String newURL = mapping.findForward(where).getPath();
@@ -141,7 +140,7 @@ public class TeleplanCorrectionActionWCB
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL("update billingmaster set billing_unit = '" + i + "' WHERE billing_no ='" + billingno + "'");
         } catch (java.sql.SQLException e) {
-            System.err.println(e.getMessage());
+            log.error("", e);
         }
     }
 
@@ -157,7 +156,7 @@ public class TeleplanCorrectionActionWCB
                 billamt = rs.getString("value");
             }
         } catch (java.sql.SQLException e) {
-            System.err.println(e.getMessage());
+            log.error("", e);
         }
         return billamt;
     }

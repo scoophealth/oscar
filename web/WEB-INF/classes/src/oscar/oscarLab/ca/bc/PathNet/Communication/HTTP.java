@@ -11,6 +11,8 @@ import java.io.InputStream;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -38,6 +40,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
  * www.andromedia.ca
  */
 public class HTTP {
+    private static Logger logger=MiscUtils.getLogger(); 
+
    private String url;
    private HttpClient client;
    public HTTP(String url) {
@@ -47,7 +51,7 @@ public class HTTP {
    public InputStream Get(String queryString) throws IOException, HttpException {
       GetMethod method = new GetMethod(url);
       method.setQueryString(queryString);
-      System.err.println(this.client.executeMethod(method));
+      logger.error(this.client.executeMethod(method));
       method.getResponseBodyAsString();
       InputStream response = method.getResponseBodyAsStream();
       method.releaseConnection();

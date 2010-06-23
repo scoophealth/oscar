@@ -33,7 +33,11 @@ import java.util.GregorianCalendar;
  * Ontario, Canada
  */
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 public class FunctionGenerator {
+    private static Logger logger=MiscUtils.getLogger(); 
 
   public FunctionGenerator() {
   }
@@ -71,7 +75,7 @@ public class FunctionGenerator {
                     RS.close();
                      
                     } catch(Exception ex) {
-                    System.err.println(" select name from appointment  : " + ex.getMessage());
+                    logger.error(" select name from appointment  : " + ex.getMessage());
                     }
 
           for (int k =0; k<in_array_length; k++){

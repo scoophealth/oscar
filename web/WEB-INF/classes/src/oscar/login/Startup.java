@@ -101,7 +101,7 @@ public class Startup implements ServletContextListener {
 			}
 			catch(java.io.FileNotFoundException e)
 			{
-				System.err.println("Configuration file: " + propName + " cannot be found, it should be put either in the User's home or in WEB-INF ");
+				log.error("Configuration file: " + propName + " cannot be found, it should be put either in the User's home or in WEB-INF ");
 				return;
 			}
 			catch(Exception e)

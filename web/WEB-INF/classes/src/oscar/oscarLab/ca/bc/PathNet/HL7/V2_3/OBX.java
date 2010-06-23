@@ -9,6 +9,9 @@ package oscar.oscarLab.ca.bc.PathNet.HL7.V2_3;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
 /*
@@ -38,7 +41,9 @@ import oscar.oscarLab.ca.bc.PathNet.HL7.Node;
  * www.andromedia.ca
  */
 public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
-   private ArrayList note;
+    private static Logger logger=MiscUtils.getLogger(); 
+
+    private ArrayList note;
    
    private boolean update = false;;
    
@@ -55,7 +60,7 @@ public class OBX extends oscar.oscarLab.ca.bc.PathNet.HL7.Node {
          this.note.add(nte);
          return nte.Parse(line);
       }
-      System.err.println("Error During Parsing, Unknown Line - oscar.PathNet.HL7.V2_3.OBX - Message: " + line);
+      logger.error("Error During Parsing, Unknown Line - oscar.PathNet.HL7.V2_3.OBX - Message: " + line);
       return null;
    }
    

@@ -35,11 +35,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
 import oscar.util.UtilDateUtilities;
 
 public class ExtractBean extends Object implements Serializable {
+    private static Logger logger=MiscUtils.getLogger(); 
+
     private String apptDate;
     private String batchCount = "";
     private String batchHeader;
@@ -522,7 +527,7 @@ public class ExtractBean extends Object implements Serializable {
             p.close();
             out.close();
         } catch (Exception e) {
-            System.err.println("Write OHIP File Error");
+            logger.error("Write OHIP File Error", e);
         }
     }
 
@@ -546,7 +551,7 @@ public class ExtractBean extends Object implements Serializable {
             p1.close();
             out1.close();
         } catch (Exception e) {
-            System.err.println("Write HTML File Error!!!");
+            logger.error("Write HTML File Error!!!", e);
         }
     }
 

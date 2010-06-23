@@ -2,6 +2,9 @@ package oscar.oscarBilling.ca.bc.administration;
 
 import java.sql.ResultSet;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.Misc;
 import oscar.MyDateFormat;
 import oscar.oscarDemographic.data.DemographicData;
@@ -35,6 +38,9 @@ import oscar.oscarDemographic.data.DemographicData;
 public class TeleplanCorrectionFormWCB
         extends org.apache.struts.action.ActionForm {
 
+    private static Logger logger=MiscUtils.getLogger(); 
+
+	
     private String id = "",  demographicNumber = "",  lastName = "",  firstName = "",  yearOfBirth = "",  monthOfBirth = "",  dayOfBirth = "",  address = "",  city = "",  province = "",  postal = "",  hin = "",  practitioner = "",  billingUnit = "",  billingCode = "",  billingAmount = "",  serviceLocation = "",  date = "",  billingNo = "",  dataSeqNo = "",  w_reportype = "",  w_mname = "",  w_gender = "",  w_doi = "",  w_area = "",  w_phone = "",  w_empname = "",  w_emparea = "",  w_empphone = "",  w_wcbno = "",  w_opaddress = "",  w_opcity = "",  w_rphysician = "",  w_duration = "",  w_ftreatment = "",  w_problem = "",  w_servicedate = "",  w_diagnosis = "",  w_icd9 = "",  w_bp = "",  w_side = "",  w_noi = "",  w_work = "",  w_workdate = "",  w_clinicinfo = "",  w_capability = "",  w_capreason = "",  w_estimate = "",  w_rehab = "",  w_rehabtype = "",  w_estimatedate = "",  w_tofollow = "",  w_wcbadvisor = "",  w_feeitem = "",  w_extrafeeitem = "",  status = "",  formNeeded = "",  providerNo = "",  w_payeeno = "",  w_pracno = "";
     private String xml_status;
     private String adjType;
@@ -120,7 +126,7 @@ public class TeleplanCorrectionFormWCB
                 w_pracno = result.getString("w_pracno");
             }
         } catch (java.lang.Exception ex) {
-            System.err.println("Teleplan Correction Form WCB: (Constructor) " + ex.getMessage());
+            logger.error("Teleplan Correction Form WCB: (Constructor) " + ex.getMessage());
         }
     }
 
