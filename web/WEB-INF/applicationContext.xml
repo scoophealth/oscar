@@ -295,6 +295,7 @@
 	<bean id="securityDao" class="com.quatro.dao.security.SecurityDao" autowire="byName" />
 	<bean id="secProviderDao" class="com.quatro.dao.security.SecProviderDao" autowire="byName" />
 	<bean id="secuserroleDao" class="com.quatro.dao.security.SecuserroleDao" autowire="byName" />
+        <bean id="secObjectNameDao" class="com.quatro.dao.security.SecObjectNameDao" autowire="byName"/>
 
 	<bean id="orgManager" class="com.quatro.service.ORGManager" autowire="byName">
 		<property name="orgDao" ref="orgDao" />

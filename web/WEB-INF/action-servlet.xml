@@ -27,6 +27,7 @@
                 <property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
                 <property name="queueDocumentLinkDAO" ref="queueDocumentLinkDAO" />
                 <property name="queueProviderLinkDAO" ref="queueProviderLinkDAO" />
+                <property name="secObjectNameDao" ref="secObjectNameDao" />
 	</bean>
 
         <bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction">
