@@ -16,6 +16,7 @@ import java.util.Collections;
 import org.apache.log4j.Logger;
 
 import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 
 /**
@@ -87,7 +88,28 @@ public class DocumentResultsData {
         }
         return labResults;
     }
-    
+    public boolean isSentToProvider(String docNo, String providerNo){
+        if(docNo!=null && providerNo!=null){
+            int dn=Integer.parseInt(docNo.trim());
+            providerNo=providerNo.trim();
+            String sql="select * from providerLabRouting plr where plr.lab_type='DOC' and plr.lab_no="+dn+" and plr.provider_no='"+providerNo+"'";
+            try{
+                DBHandler db=new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs = db.GetSQL(sql);
+                logger.info(sql);
+                if(rs.first()){
+                    return true;
+                }else
+                    return false;
+            }catch(Exception e){
+                e.printStackTrace();
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+    //retrieve all documents from database
     public ArrayList populateDocumentResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         
         if ( providerNo == null) { providerNo = ""; }
@@ -108,16 +130,17 @@ public class DocumentResultsData {
                 sql = "select * "+//providerLabRouting.status " +
                         "from document doc, providerLabRouting " +
                         " where doc.document_no = providerLabRouting.lab_no "+
-                        " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
+                        " AND providerLabRouting.status like '%"+status+"%' AND (providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
+                        " OR providerLabRouting.provider_no ='"+CommonLabResultData.NOT_ASSIGNED_PROVIDER_NO+"' ) "+
                         " AND providerLabRouting.lab_type = 'DOC' " +
                         " ORDER BY doc.document_no DESC";
                 
-            } else {
+            } else {//HL7?
                 
-                sql = "select info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
+               /* sql = "select info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
                         "from hl7TextInfo info, patientLabRouting " +
                         " where info.lab_no = patientLabRouting.lab_no "+
-                        " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";
+                        " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";*/
             }
             
             logger.debug(sql);
