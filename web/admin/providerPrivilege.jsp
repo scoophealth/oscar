@@ -350,8 +350,7 @@ System.out.println(roleUser);
 		<th colspan="4" align="left">Add Role/Privilege</th>
 	</tr>
 	<tr>
-		<th width="20%">Role
-		</td>
+		<th width="20%">Role</th>
 		<th width="30%">Object ID</th>
 		<th width="40%">Privilege</th>
 		<th>Priority</th>
@@ -385,10 +384,30 @@ System.out.println(roleUser);
 			String objName = "";
 			if(i==vecObjectId.size()) {
 				objName = "Name1";
-%> <input type="text" name="object$<%=objName%>" value="" size=35 /> <%			} else {
+%> <input type="text" name="object$<%=objName%>" value="" size=35 /> <%	} else {
+
 				objName = (String)vecObjectId.get(i);
 %> <input type="checkbox" name="object$<%=objName%>" /> <%= vecObjectId.get(i) %>
-		<%			}%>
+		<%	if(objName.startsWith("_queue.")){
+                    String d=null;
+                    sql   = "select description from secObjectName where objectName='"+objName+"'";
+                    rs = dbObj.searchDBRecord(sql);
+
+                    if (rs.next()) {
+                        d=dbObj.getString(rs,"description");
+
+                    }
+
+                    if(d==null || d.equalsIgnoreCase("null")||d.trim().length()==0){
+                            d="";
+                        }
+                    else{
+                            d="("+d+")";
+                        }
+    %>
+
+                                <%=d%>
+                            <%}		}%>
 		</td>
 		<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
 		<td>
