@@ -36,7 +36,10 @@ import org.oscarehr.common.model.QueueDocumentLink;
  */
 
 public class QueueDocumentLinkDao extends HibernateDaoSupport {
-
+    public List getQueueDocLinks(){
+        List queues=this.getHibernateTemplate().find("from QueueDocumentLink");
+        return queues;
+    }
     public List getQueueFromDocument(Integer docId){
         List queues = this.getHibernateTemplate().find("from QueueDocumentLink where docId = ?",new Object[] {docId});
         return queues;
