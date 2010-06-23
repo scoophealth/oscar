@@ -43,10 +43,9 @@ public class Demographic implements Serializable {
 	private static final String DEFAULT_PATIENT_STATUS = PatientStatus.AC.name();
 	private static final String DEFAULT_HEATH_CARD_TYPE = "ON";
 	private static final String DEFAULT_FUTURE_DATE = "2100-01-01";
-	public static final String ANONYMOUS="ANONYMOUS";
-	public static final String UNIQUE_ANONYMOUS="UNIQUE_ANONYMOUS";
-	
-	
+	public static final String ANONYMOUS = "ANONYMOUS";
+	public static final String UNIQUE_ANONYMOUS = "UNIQUE_ANONYMOUS";
+
 	private int hashCode = Integer.MIN_VALUE;// primary key
 	private Integer demographicNo;// fields
 	private String phone;
@@ -88,9 +87,9 @@ public class Demographic implements Serializable {
 	private String sin;
 	private Integer headRecord = null;
 	private Set<Integer> subRecord = null;
-	private String anonymous=null;
+	private String anonymous = null;
 	private String spokenLanguage;
-	
+
 	private int activeCount = 0;
 	private int hsAlertCount = 0;
 
@@ -98,14 +97,25 @@ public class Demographic implements Serializable {
 		AC, IN, DE, IC, ID, MO, FI
 	}
 
+	/**
+	 * @deprecated default for birth day should be null
+	 */
 	public static Demographic create(String firstName, String lastName, String gender, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver, boolean applyDefaultBirthDate) {
+		return(create(firstName, lastName, gender, monthOfBirth, dateOfBirth, yearOfBirth, hin, ver));
+	}
+
+	/**
+	 * @param applyDefaultBirthDate should never be used
+	 * @return
+	 */
+	public static Demographic create(String firstName, String lastName, String gender, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {
 		Demographic demographic = new Demographic();
 
 		demographic.setFirstName(firstName);
 		demographic.setLastName(lastName);
-		demographic.setMonthOfBirth(monthOfBirth != null && monthOfBirth.length() > 0 ? monthOfBirth : applyDefaultBirthDate ? DEFAULT_MONTH : null);
-		demographic.setDateOfBirth(dateOfBirth != null && dateOfBirth.length() > 0 ? dateOfBirth : applyDefaultBirthDate ? DEFAULT_DATE : null);
-		demographic.setYearOfBirth(yearOfBirth != null && yearOfBirth.length() > 0 ? yearOfBirth : applyDefaultBirthDate ? DEFAULT_YEAR : null);
+		demographic.setMonthOfBirth(monthOfBirth);
+		demographic.setDateOfBirth(dateOfBirth);
+		demographic.setYearOfBirth(yearOfBirth);
 		demographic.setHin(hin);
 		demographic.setVer(ver);
 
@@ -599,48 +609,52 @@ public class Demographic implements Serializable {
 	public Date getEffDate() {
 		return effDate;
 	}
-	
+
 	public String getFormattedEffDate() {
-		Date d=getEffDate();
-		if (d!=null) return(DateFormatUtils.ISO_DATE_FORMAT.format(d));
-		else return("");
+		Date d = getEffDate();
+		if (d != null) return (DateFormatUtils.ISO_DATE_FORMAT.format(d));
+		else return ("");
 	}
 
 	public String getAnonymous() {
-    	return anonymous;
-    }
+		return anonymous;
+	}
 
 	/**
 	 * @param anonymous can be any string indicating it's anonymisity (if that's a word), null means it's not anonymous.
 	 */
 	public void setAnonymous(String anonymous) {
-    	this.anonymous = anonymous;
-    }
+		this.anonymous = anonymous;
+	}
 
 	public void setFormattedEffDate(String formattedDate) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date d = sdf.parse(formattedDate);		
+			Date d = sdf.parse(formattedDate);
 			this.setEffDate(d);
-		}catch(ParseException e) {e.printStackTrace();}
-		
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	public String getFormattedRenewDate() {
-		Date d=getHcRenewDate();
-		if (d!=null) return(DateFormatUtils.ISO_DATE_FORMAT.format(d));
-		else return("");
+		Date d = getHcRenewDate();
+		if (d != null) return (DateFormatUtils.ISO_DATE_FORMAT.format(d));
+		else return ("");
 	}
 
 	public void setFormattedRenewDate(String formattedDate) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date d = sdf.parse(formattedDate);		
+			Date d = sdf.parse(formattedDate);
 			this.setHcRenewDate(d);
-		}catch(ParseException e) {e.printStackTrace();}
-		
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	/**
 	 * Set the value related to the column: eff_date
 	 * 
@@ -699,7 +713,7 @@ public class Demographic implements Serializable {
 	}
 
 	@Override
-    public boolean equals(Object obj) {
+	public boolean equals(Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof Demographic)) return false;
 		else {
@@ -710,7 +724,7 @@ public class Demographic implements Serializable {
 	}
 
 	@Override
-    public int hashCode() {
+	public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
 			if (null == this.getDemographicNo()) return super.hashCode();
 			else {
@@ -722,7 +736,7 @@ public class Demographic implements Serializable {
 	}
 
 	@Override
-    public String toString() {
+	public String toString() {
 		return super.toString();
 	}
 
@@ -741,23 +755,19 @@ public class Demographic implements Serializable {
 	}
 
 	public String getAge() {
-		return (String.valueOf(Utility.calcAge(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(),
-		        DEFAULT_DATE))));
+		return (String.valueOf(Utility.calcAge(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE))));
 	}
 
 	public String getAgeAsOf(Date asofDate) {
-		return Utility.calcAgeAtDate(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(),
-		        DEFAULT_DATE)), asofDate);
+		return Utility.calcAgeAtDate(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), asofDate);
 	}
 
 	public int getAgeInYears() {
-		return Utility.getNumYears(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(),
-		        DEFAULT_DATE)), Calendar.getInstance().getTime());
+		return Utility.getNumYears(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), Calendar.getInstance().getTime());
 	}
 
 	public int getAgeInYearsAsOf(Date asofDate) {
-		return Utility.getNumYears(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(),
-		        DEFAULT_DATE)), asofDate);
+		return Utility.getNumYears(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), asofDate);
 	}
 
 	public DemographicExt[] getExtras() {
@@ -765,21 +775,22 @@ public class Demographic implements Serializable {
 	}
 
 	public String getFormattedDob() {
-		Calendar cal=getBirthDay();
-		if (cal!=null) return(DateFormatUtils.ISO_DATE_FORMAT.format(cal));
-		else return("");
+		Calendar cal = getBirthDay();
+		if (cal != null) return (DateFormatUtils.ISO_DATE_FORMAT.format(cal));
+		else return ("");
 	}
-	
+
 	public void setFormattedDob(String formattedDate) {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date d = sdf.parse(formattedDate);
 			Calendar cal = Calendar.getInstance();
-			cal.setTime(d);			
+			cal.setTime(d);
 			this.setBirthDay(cal);
-		}catch(ParseException e) {e.printStackTrace();}
-		
-		
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public String getFormattedLinks() {
@@ -883,7 +894,7 @@ public class Demographic implements Serializable {
 			dateOfBirth = monthOfBirth = yearOfBirth = null;
 		} else {
 			dateOfBirth = addZero(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)), 2);
-			monthOfBirth = addZero(String.valueOf(cal.get(Calendar.MONTH)+1), 2);
+			monthOfBirth = addZero(String.valueOf(cal.get(Calendar.MONTH) + 1), 2);
 			yearOfBirth = addZero(String.valueOf(cal.get(Calendar.YEAR)), 4);
 		}
 	}
@@ -895,7 +906,7 @@ public class Demographic implements Serializable {
 			cal = new GregorianCalendar();
 			cal.setTimeInMillis(0);
 			cal.set(Integer.parseInt(yearOfBirth), Integer.parseInt(monthOfBirth) - 1, Integer.parseInt(dateOfBirth));
-			
+
 			// force materialisation of data
 			cal.getTimeInMillis();
 		}
@@ -904,11 +915,11 @@ public class Demographic implements Serializable {
 	}
 
 	public String getSpokenLanguage() {
-    	return spokenLanguage;
-    }
+		return spokenLanguage;
+	}
 
 	public void setSpokenLanguage(String spokenLanguage) {
-    	this.spokenLanguage = spokenLanguage;
-    }
-	
+		this.spokenLanguage = spokenLanguage;
+	}
+
 }

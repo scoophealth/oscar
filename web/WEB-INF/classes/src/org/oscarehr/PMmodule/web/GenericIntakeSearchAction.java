@@ -224,7 +224,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	public ActionForward createLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
-		return forwardIntakeEditCreate(mapping, request, createClient(intakeSearchBean, true));
+		return forwardIntakeEditCreate(mapping, request, Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getGender(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean
+        .getHealthCardNumber(), intakeSearchBean.getHealthCardVersion()));
 	}
 
 	public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -296,11 +297,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		clientSearchBean.setSearchUsingSoundex(true);
 
 		return clientManager.search(clientSearchBean);
-	}
-
-	private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean, boolean populateDefaultBirthDate) {
-		return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getGender(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean
-		        .getHealthCardNumber(), intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
 	}
 
 	protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {
