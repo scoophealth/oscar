@@ -88,13 +88,6 @@
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  />
     </head>
     <body>
-        <ul>
-            <li style="text-decoration:line-through">Show number of pages in PDF</li>
-            <li style="text-decoration:line-through">Show current Demographic Information</li>
-            <li>Show previous lab comments</li>
-            <li>Try in the lab format page</li>
-            <li>Check how well mime-util would work</li>
-        </ul>
         <div id="labdoc_<%=docId%>">
             <table class="docTable">
                 <tr>
@@ -168,8 +161,8 @@
                                                 // Enable caching
                                                 oDS.maxCacheEntries = 0;
                                                 //oDS.connXhrMode ="cancelStaleRequests";
-                                                oscarLog("autocompletedemo<%=docId%>");
-                                                oscarLog("autocomplete_choices<%=docId%>");
+                                                //oscarLog("autocompletedemo<%=docId%>");
+                                                //oscarLog("autocomplete_choices<%=docId%>");
 
                                                 //var elinput=window.frames[0].document.getElementById("autocompletedemo<%=docId%>");
                                                 //var elcontainer=window.frames[0].document.getElementById("autocomplete_choices<%=docId%>");
@@ -177,24 +170,24 @@
                                                 // Instantiate the AutoComplete
                                                 //var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=docId%>", "autocomplete_choices<%=docId%>", oDS);
                                                 var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=docId%>","autocomplete_choices<%=docId%>",oDS);
-                                                oscarLog('oAc='+oAC);
-                                                oscarLog('oDs='+oDS);
-                                                oscarLog('resultFormatter2='+resultFormatter2);
+                                                //oscarLog('oAc='+oAC);
+                                                //oscarLog('oDs='+oDS);
+                                                //oscarLog('resultFormatter2='+resultFormatter2);
                                                 oAC.queryMatchSubset = true;
                                                 oAC.minQueryLength = 3;
                                                 oAC.maxResultsDisplayed = 25;
                                                 oAC.formatResult = resultFormatter2;
                                                 //oAC.typeAhead = true;
                                                 oAC.queryMatchContains = true;
-                                                oscarLog(oAC);
-                                                oscarLog(oAC.itemSelectEvent);
+                                                //oscarLog(oAC);
+                                                //oscarLog(oAC.itemSelectEvent);
                                                 oAC.itemSelectEvent.subscribe(function(type, args) {
-                                                    oscarLog(args);
-                                                    oscarLog(args[0].getInputEl().id);
+                                                    //oscarLog(args);
+                                                    //oscarLog(args[0].getInputEl().id);
                                                     var str = args[0].getInputEl().id.replace("autocompletedemo","demofind");
-                                                   oscarLog(str);
+                                                   //oscarLog(str);
                                                    $(str).value = args[2][2];//li.id;
-                                                   oscarLog("str value="+$(str).value);
+                                                   //oscarLog("str value="+$(str).value);
                                                    //oscarLog(args[2][1]+"--"+args[2][0]);
                                                    args[0].getInputEl().value = args[2][0] + "("+args[2][1]+")";
                                                    //oscarLog("--"+args[0].getInputEl().value);
@@ -248,8 +241,7 @@
                                                     }});
                                                     return false;
                                                 }
-                                               // new Ajax.Autocompleter("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", "testProvcomp.jsp", {minChars: 1, afterUpdateElement: saveProvId});
-                                                //console.log("autocompleteprov<%=curdoc.getDocId()%>");
+                                             
                                                 YAHOO.example.BasicRemote = function() {
                                                         var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
                                                         var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
@@ -262,10 +254,10 @@
                                                         // Enable caching
                                                         oDS.maxCacheEntries = 0;
                                                         //oDS.connXhrMode ="cancelStaleRequests";
-                                                        oscarLog("autocompleteprov<%=docId%>");
-                                                        oscarLog("autocomplete_choicesprov<%=docId%>");
-                                                        oscarLog($("autocompleteprov<%=docId%>"));
-                                                        oscarLog($("autocomplete_choicesprov<%=docId%>"));
+                                                        //oscarLog("autocompleteprov<%=docId%>");
+                                                        //oscarLog("autocomplete_choicesprov<%=docId%>");
+                                                        //oscarLog($("autocompleteprov<%=docId%>"));
+                                                        //oscarLog($("autocomplete_choicesprov<%=docId%>"));
                                                         // Instantiate the AutoComplete
                                                         var oAC = new YAHOO.widget.AutoComplete("autocompleteprov<%=docId%>", "autocomplete_choicesprov<%=docId%>", oDS);
                                                         oAC.queryMatchSubset = true;
@@ -356,15 +348,18 @@
 
                                     <tr>
                                         <td colspan="2">
-                                            Linked Providers
+                                            Linked Providers:
                                             <%
             Properties p = (Properties) session.getAttribute("providerBean");
             List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", docId);
                                             %>
                                             <ul>
-                                                <%for (ProviderInboxItem pItem : routeList) {%>
-                                                <li><%=p.getProperty(pItem.getProviderNo(), pItem.getProviderNo())%></li>
-                                                <%}%>
+                                                <%for (ProviderInboxItem pItem : routeList) {
+                                                    String s=p.getProperty(pItem.getProviderNo(), pItem.getProviderNo());
+                                                    if(!s.equals("0")){  %>
+                                                        <li><%=s%></li>
+                                                <%}
+                                                }%>
                                             </ul>
                                         </td>
                                     </tr>
@@ -373,12 +368,13 @@
                             </form>
                         </fieldset>
 
-                        <fieldset>
+                        
                             <%
                             AcknowledgementData ackData = new AcknowledgementData();
                             ArrayList ackList = ackData.getAcknowledgements("DOC",docId);
 
                                             if (ackList.size() > 0){%>
+                                            <fieldset>
                                                 <table width="100%" height="20" cellpadding="2" cellspacing="2">
                                                     <tr>
                                                             <td align="center" bgcolor="white">
@@ -413,12 +409,12 @@
                                                         </td>
                                                     </tr>
                                                 </table>
-
+                                            </fieldset>
                                             <%}
 
 //System.out.println("done second part java");
 %>
-                        </fieldset>
+                        
 
                         <fieldset>
                             <legend><span class="FieldData"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>

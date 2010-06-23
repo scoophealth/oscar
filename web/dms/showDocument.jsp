@@ -45,21 +45,7 @@
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
             //System.out.println("done first part java");
 %>
-        <!--script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
-        <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-        <script type="text/javascript" src="../share/javascript/effects.js"></script>
-        <script type="text/javascript" src="../share/javascript/controls.js"></script>
-
-        <script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"></script>
-        <script type="text/javascript" src="../share/yui/js/connection-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/animation-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/datasource-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"></script>
-        <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script>
-
-        <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
-        <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
-        <link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  /-->
+       
 
         <div id="labdoc_<%=docId%>">
             <table class="docTable">
@@ -214,8 +200,7 @@
                                                     }});
                                                     return false;
                                                 }
-                                               // new Ajax.Autocompleter("autocompleteprov<%=curdoc.getDocId()%>", "autocomplete_choicesprov<%=curdoc.getDocId()%>", "testProvcomp.jsp", {minChars: 1, afterUpdateElement: saveProvId});
-                                                //console.log("autocompleteprov<%=curdoc.getDocId()%>");
+                                        
                                                 YAHOO.example.BasicRemote = function() {
                                                         var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
                                                         var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
@@ -326,9 +311,12 @@
             List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", docId);
                                             %>
                                             <ul>
-                                                <%for (ProviderInboxItem pItem : routeList) {%>
-                                                <li><%=p.getProperty(pItem.getProviderNo(), pItem.getProviderNo())%></li>
-                                                <%}%>
+                                                <%for (ProviderInboxItem pItem : routeList) {
+                                                    String s=p.getProperty(pItem.getProviderNo(), pItem.getProviderNo());
+                                                    if(!s.equals("0")){  %>
+                                                        <li><%=s%></li>
+                                                <%}
+                                                }%>
                                             </ul>
                                         </td>
                                     </tr>
@@ -337,12 +325,13 @@
                             </form>
                         </fieldset>
 
-                        <fieldset>
+
                             <%
                             AcknowledgementData ackData = new AcknowledgementData();
                             ArrayList ackList = ackData.getAcknowledgements("DOC",docId);
 
                                             if (ackList.size() > 0){%>
+                                            <fieldset>
                                                 <table width="100%" height="20" cellpadding="2" cellspacing="2">
                                                     <tr>
                                                             <td align="center" bgcolor="white">
@@ -377,12 +366,11 @@
                                                         </td>
                                                     </tr>
                                                 </table>
-
+                                            </fieldset>
                                             <%}
 
 //System.out.println("done second part java");
 %>
-                        </fieldset>
 
                         <fieldset>
                             <legend><span class="FieldData"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>
