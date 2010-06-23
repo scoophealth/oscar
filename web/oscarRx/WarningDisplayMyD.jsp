@@ -42,7 +42,8 @@ if ( bean == null ){
             +"\nReference: "+ht.get("reference")
             +"\nWarning: "+ht.get("body"));%>
 
-<div
+
+<%@page import="org.oscarehr.util.MiscUtils"%><div
 	style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
 <b><%=ht.get("name")%></b><br />
 <%=ht.get("body")%><br />
@@ -135,19 +136,14 @@ if ( bean == null ){
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
         }catch (XmlRpcException exception) {
-            
-            System.err.println("JavaClient: XML-RPC Fault #" +
-                    Integer.toString(exception.code) + ": " +
-                    exception.toString());
-            exception.printStackTrace();
+            MiscUtils.getLogger().error("JavaClient: XML-RPC Fault #" + exception.code ,exception);
             
             throw new Exception("JavaClient: XML-RPC Fault #" +
                     Integer.toString(exception.code) + ": " +
                     exception.toString());
             
         } catch (Exception exception) {
-            System.err.println("JavaClient: " + exception.toString());
-            exception.printStackTrace();
+			MiscUtils.getLogger().error("JavaClient: ", exception);
             throw new Exception("JavaClient: " + exception.toString());
         }
         return object;

@@ -36,7 +36,8 @@
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
     <meta http-equiv="Cache-Control" content="no-cache" />
@@ -147,18 +148,14 @@
             object = (Object) server.execute(procedureName, params);
         }catch (XmlRpcException exception) {
 
-            System.err.println("JavaClient: XML-RPC Fault #" +
-                    Integer.toString(exception.code) + ": " +
-                    exception.toString());
-            exception.printStackTrace();
+            MiscUtils.getLogger().error("JavaClient: XML-RPC Fault #" +exception.code, exception);
 
             throw new Exception("JavaClient: XML-RPC Fault #" +
                     Integer.toString(exception.code) + ": " +
                     exception.toString());
 
         } catch (Exception exception) {
-            System.err.println("JavaClient: " + exception.toString());
-            exception.printStackTrace();
+        	MiscUtils.getLogger().error("JavaClient: ", exception);
             throw new Exception("JavaClient: " + exception.toString());
         }
         return object;

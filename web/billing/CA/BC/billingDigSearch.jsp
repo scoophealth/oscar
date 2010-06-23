@@ -118,7 +118,6 @@ Description: <input type="text" name="codedesc" value="" size="30">
 			size="2">Description</font> </b></td>
 	</tr>
 	<%
- System.err.print("IN THE DIG SEARCH");
   ResultSet rslocal = null;
   ResultSet rslocal2 = null;
   String Dcode = "", DcodeDesc = "", Dcode2 = "", DcodeDesc2 = "";

@@ -29,10 +29,8 @@
 	scope="session" /><%@include file="dbBilling.jsp"%>
 <%
 
-System.err.print("THIS IS IN DIG NEW\n");
   String search = "", search2 = "";
   search = request.getParameter("search");
-  System.err.print("THE SEARCH:"+search);
   if (search.compareTo("") == 0) {
     search = "search_diagnostic_new_code";
   }

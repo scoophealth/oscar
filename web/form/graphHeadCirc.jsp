@@ -70,9 +70,7 @@
         }
         catch(Exception ex)
         {
-//            System.err.println(ex);
         }
-//        System.out.println("age: "+age);
         return age;
     }
 %>

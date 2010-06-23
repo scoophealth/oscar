@@ -84,9 +84,6 @@
 		sb.append("unique clients encountered with out client");
 		sb.append(',');
 		sb.append("total unique clients encountered");
-
-		// for debugging
-		// System.err.println(sb.toString());
 		
 		out.write(sb.toString());
 		out.write('\n');
@@ -117,10 +114,7 @@
 		sb.append(row.encounterCounts.uniqueCounts.get(EncounterUtil.EncounterType.ENCOUNTER_WITH_OUT_CLIENT));
 		sb.append(',');
 		sb.append(row.encounterCounts.totalUniqueCount);
-		
-		// for debugging
-		// System.err.println(sb.toString());
-		
+				
 		out.write(sb.toString());
 		out.write('\n');
 	}

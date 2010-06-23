@@ -98,9 +98,6 @@
 		sb.append("Total Unique Encounters");
 		sb.append(',');
 		sb.append("Total Unique Clients");
-
-		// for debugging
-		// System.err.println(sb.toString());
 		
 		response.setContentType("application/x-download");
 		response.setHeader("Content-Disposition", "attachment; filename=activity_report_program_role_"+dateFormatter.format(startCalendar.getTime())+"_"+dateFormatter.format(endCalendar.getTime())+".csv");

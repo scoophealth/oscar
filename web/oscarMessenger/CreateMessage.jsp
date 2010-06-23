@@ -415,7 +415,6 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                             theProviders = (String[]) request.getAttribute("ReMessage");
                                                             java.util.Arrays.sort(theProviders);
                                                             reData = (oscar.oscarMessenger.data.MsgReplyMessageData) request.getAttribute("ProvidersClassObject");
-                                                            System.err.println("hey every one i have a "+reData);
                                                         }else if ( request.getAttribute("ReText") != null){
                                                             oscar.oscarMessenger.pageUtil.MsgCreateMessageForm thisForm ;
                                                             thisForm = (oscar.oscarMessenger.pageUtil.MsgCreateMessageForm)request.getAttribute("msgCreateMessageForm");

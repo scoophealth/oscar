@@ -189,7 +189,7 @@ function CodeAttach(File0,dx1,dx2,dx3) {
 		<td colspan="2"><font face="Arial, Helvetica, sans-serif"
 			size="2"> No match found. <%// =i        %> </font></td>
 	</tr>
-	<%}  System.err.println("CNT:"+intCount);%>
+	<%}%>
 	<%if (intCount == 1) {  System.out.println("Count1");%>
 	<script LANGUAGE="JavaScript">
 <!--

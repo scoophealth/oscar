@@ -65,7 +65,8 @@ GregorianCalendar now=new GregorianCalendar();
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarReport.oscarReportAgeSex.title" /></title>
@@ -602,7 +603,7 @@ function refresh() {
 	   }
 	 
    }catch(Exception e){
-      System.err.println("Error");
+      MiscUtils.getLogger().error("Error", e);
    }
    return content; 
    }
@@ -618,7 +619,7 @@ public String WriteFemaleBar(int x){
 	   }
 	  
 	}catch(Exception e){
-      System.err.println("Error");
+      MiscUtils.getLogger().error("Error", e);
    }
    return content; 
 }

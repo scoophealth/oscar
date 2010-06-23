@@ -458,15 +458,7 @@ div.recommendations li{
 
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
-                h.put("desc",mtypeBean.getTypeDesc());
-                
-                System.err.println("mType ="+mtypeBean.getTypeDisplayName()+" hashtable value "+h.get("name"));
-                if (!mtypeBean.getTypeDisplayName().equals(""+h.get("name"))){
-                    System.err.println("\n\n\n\n\n\n");
-                    System.err.println("!!!!mType ="+mtypeBean.getTypeDisplayName()+" hashtable value "+h.get("name"));
-                    System.out.println("DESC "+h.get("desc"));
-                }
-                
+                h.put("desc",mtypeBean.getTypeDesc());                
             }
             String prevName = (String) h.get("name");
             ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);

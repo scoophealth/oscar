@@ -30,7 +30,8 @@ if ( bean == null ){
     String treatment = request.getParameter("cond");
     if (treatment == null || treatment.trim().equals("")){
         %>
-        <div style="background-color:white;margin:100px;padding:40px;border:2px solid grey">
+        
+<%@page import="org.oscarehr.util.MiscUtils"%><div style="background-color:white;margin:100px;padding:40px;border:2px solid grey">
             <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');">NOTHING FOUND</a>
         </div>
         <%
@@ -215,7 +216,6 @@ String DrugLing(String s){
    }
    
    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
-        System.out.println("#CALLDRUGREF-"+procedureName);
         Object object = null;
         //String server_url = "http://dev2.mydrugref.org/backend/api";
         //String server_url = "http://130.113.106.88:3000/backend/api";
@@ -225,19 +225,14 @@ String DrugLing(String s){
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
         }catch (XmlRpcException exception) {
-            
-            System.err.println("JavaClient: XML-RPC Fault #" +
-                    Integer.toString(exception.code) + ": " +
-                    exception.toString());
-            exception.printStackTrace();
+            MiscUtils.getLogger().error("JavaClient: XML-RPC Fault #" + exception.code, exception);
             
             throw new Exception("JavaClient: XML-RPC Fault #" +
                     Integer.toString(exception.code) + ": " +
                     exception.toString());
             
         } catch (Exception exception) {
-            System.err.println("JavaClient: " + exception.toString());
-            exception.printStackTrace();
+        	MiscUtils.getLogger().error("JavaClient: ", exception);
             throw new Exception("JavaClient: " + exception.toString());
         }
         return object;
@@ -245,7 +240,6 @@ String DrugLing(String s){
     
     
      public Vector getTreatment(String  treatment)throws Exception{
-         System.out.println("TREATMENT IS "+treatment);
         if (treatment == null){
             return null;
         }

@@ -105,9 +105,6 @@
 		sb.append("Total Unique Encounters");
 		sb.append(',');
 		sb.append("Total Unique Clients");
-
-		// for debugging
-		// System.err.println(sb.toString());
 		
 		response.setHeader("Content-Disposition", "attachment; filename=activity_report_" + agencyName+"_"+dateFormatter.format(startCalendar.getTime())+"_"+dateFormatter.format(endCalendar.getTime())+".csv");
 
