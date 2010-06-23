@@ -1375,8 +1375,8 @@ function wrapUp() {
                                 LabResultData   result =  (LabResultData) labdocs.get(i);
                                 //LabResultData result = (LabResultData) labMap.get(labNoArray.get(i));
 
-                                String segmentID        = (String) result.segmentID;
-                                String status           = (String) result.acknowledgedStatus;
+                                String segmentID        =  result.segmentID;
+                                String status           =  result.acknowledgedStatus;
 
                                 String bgcolor = i % 2 == 0 ? "#e0e0ff" : "#ccccff" ;
                                 if (!result.isMatchedToPatient()){
@@ -1413,6 +1413,12 @@ function wrapUp() {
                                       			<a href="javascript:popupConsultation('<%=segmentID%>')"><%=result.getPatientName()%></a>
                                     		<%                                    		
                                     	}
+                                    	else if (categoryType!=null && categoryType.startsWith("ORU_R01:"))
+                                    	{
+	                                    	%>
+                                      			<a href="<%=request.getContextPath()%>/lab/CA/ALL/viewOruR01.jsp?segmentId=<%=segmentID%>"><%=result.getPatientName()%></a>
+                                    		<%                                    		
+                                    	}
                                     	else
                                     	{
 	                                    	%>
@@ -1434,19 +1440,19 @@ function wrapUp() {
                                     <%= (result.isAbnormal() ? "Abnormal" : "" ) %>
                                 </td>
                                 <td nowrap>
-                                    <%= (String) result.getDateTime()%>
+                                    <%=result.getDateTime()%>
                                 </td>
                                 <td nowrap>
-                                    <%= (String) result.getPriority()%>
+                                    <%=result.getPriority()%>
                                 </td>
                                 <td nowrap>
-                                    <%= (String) result.getRequestingClient()%>
+                                    <%=result.getRequestingClient()%>
                                 </td>
                                 <td nowrap>
-                                    <%= StringUtils.maxLenString( discipline, 13, 10, "...") %>
+                                    <%=result.getDisciplineDisplayString()%>
                                 </td>
                                 <td nowrap>
-                                    <%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
+                                    <%= (result.isFinal() ? "Final" : "Partial")%>
                                 </td>
                                 <td nowrap>
                                     <% int multiLabCount = result.getMultipleAckCount(); %>

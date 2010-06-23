@@ -37,6 +37,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
+import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
 
@@ -347,7 +348,16 @@ public class LabResultData implements Comparable{
         }
     }
     
-    
+    public String getDisciplineDisplayString()
+    {
+    	String temp;
+    	
+    	if ("REF_I12".equals(discipline)) temp="REFERRAL";
+    	else if (discipline!=null && discipline.startsWith("ORU_R01:")) return(discipline.substring("ORU_R01:".length()));
+    	else temp=discipline;
+    	
+        return(StringUtils.maxLenString(temp, 13, 10, "..."));
+    }
 }
 
 

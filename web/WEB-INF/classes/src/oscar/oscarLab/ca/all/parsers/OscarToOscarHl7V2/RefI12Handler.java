@@ -23,18 +23,10 @@
  */
 package oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2;
 
-import java.util.GregorianCalendar;
-
 import org.apache.log4j.Logger;
-import org.oscarehr.common.Gender;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.util.MiscUtils;
 
-import oscar.util.DateUtils;
-
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v26.datatype.DTM;
 import ca.uhn.hl7v2.model.v26.datatype.XPN;
 import ca.uhn.hl7v2.model.v26.group.REF_I12_PROVIDER_CONTACT;
 import ca.uhn.hl7v2.model.v26.message.REF_I12;
@@ -97,7 +89,7 @@ public final class RefI12Handler extends ChainnedMessageAdapter<REF_I12> {
 
 	@Override
 	public String getMessageStructureType() {
-		return ("REFERRAL");
+		return ("REF_I12");
 	}
 
 	@Override

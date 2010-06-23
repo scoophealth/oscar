@@ -99,7 +99,7 @@ public final class OruR01Handler extends ChainnedMessageAdapter<ORU_R01> {
         try {
             ORU_R01_ORDER_OBSERVATION orderObservation=getOrderObservation();
 	        NTE nte=orderObservation.getNTE(0);
-	        return(nte.getCommentType().getText().getValue());
+	        return("ORU_R01:"+nte.getCommentType().getText().getValue());
         } catch (HL7Exception e) {
 	        logger.error("Unexpected error", e);
         }
