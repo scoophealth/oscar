@@ -29,8 +29,13 @@ import java.sql.*;
  * Ontario, Canada
  */
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 public class DBConnect {
-     
+    private static Logger logger=MiscUtils.getLogger(); 
+	
+	
         //   String DBDriver = "sun.jdbc.odbc.JdbcOdbcDriver";
  	//   String ConnStr = "jdbc:mysql://localhost/mydb?user=root&password=zt";
           String DBDriver = "org.gjt.mm.mysql.Driver";
@@ -46,7 +51,7 @@ public class DBConnect {
 
       }catch(
         java.lang.ClassNotFoundException e) {
-              System.err.println("DBconn (): " + e.getMessage());
+              logger.error("Unexpected error", e);
       }
   }
   public boolean executeUpdate(String sql) {
@@ -59,7 +64,7 @@ public class DBConnect {
           insert=true;
     }
     catch(SQLException ex) {
-       System.err.println("aq.executeQuery: " + ex.getMessage());
+        logger.error("Unexpected error", e);
     }
 
     return insert;
@@ -75,7 +80,7 @@ public class DBConnect {
 
     }
     catch(SQLException ex) {
-       System.err.println("aq.executeQuery: " + ex.getMessage());
+        logger.error("Unexpected error", e);
     }
     return rs;
   }
