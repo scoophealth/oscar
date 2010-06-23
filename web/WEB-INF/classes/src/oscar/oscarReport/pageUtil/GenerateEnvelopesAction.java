@@ -34,10 +34,12 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicData.Demographic;
@@ -55,14 +57,13 @@ import com.lowagie.text.pdf.PdfWriter;
  * @author jay
  */
 public class GenerateEnvelopesAction  extends Action {
-   
+    private static Logger logger=MiscUtils.getLogger(); 
+
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
        
     String[] demos = request.getParameterValues("demos");
     String providerNo = (String) request.getSession().getAttribute("user");
-       
-    System.out.println("Printing PDF file ..");
-    
+           
     //TODO: Change to be able to use other size envelopes
     Rectangle _10Envelope = new Rectangle(0,0,684,297);
     float marginLeft   = 252;
@@ -87,21 +88,12 @@ public class GenerateEnvelopesAction  extends Action {
          document.newPage();
       }
       
-//      //MARK IN MEASUREMENTS????
-//      String followUpType =  request.getParameter("followupType");//"FLUF";
-//      String followUpValue = request.getParameter("followupValue"); //"L1";
-//      String comment = request.getParameter("message");
-//      if ( followUpType != null && followUpValue != null){
-//          System.out.println("I would mark the envelopes0000");
-//          //FollowupManagement fup = new FollowupManagement();
-//          //fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,UtilDateUtilities.now(),comment);
-//      }
     }
     catch(DocumentException de) {
-      System.err.println(de.getMessage());
+      logger.error("", de);
     }
     catch(IOException ioe) {
-      System.err.println(ioe.getMessage());
+        logger.error("", ioe);
     }
     document.close();
 

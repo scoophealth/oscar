@@ -33,6 +33,9 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 /*
  * Updated by Eugene Petruhin on 21 jan 2009 while fixing missing "New Note" link
  * New isPropertyActive() function is introduced and everybody is encouraged to use it
@@ -43,6 +46,7 @@ import java.util.Set;
  * Every time the properties file changes, tomcat must be restarted.
  */
 public class OscarProperties extends Properties {
+    private static Logger logger=MiscUtils.getLogger(); 
 
 	private static final long serialVersionUID = -5965807410049845132L;
 	private static OscarProperties oscarProperties = new OscarProperties();
@@ -144,7 +148,7 @@ public class OscarProperties extends Properties {
 				propertyStream.close();
 				loaded = true;
 			} catch (IOException ex) {
-				System.err.println("IO Error: " + ex.getMessage());
+				logger.error("IO Error: ", ex);
 			}
 		}
 	}
@@ -157,7 +161,7 @@ public class OscarProperties extends Properties {
 				fis2.close();
 				loaded = true;
 			} catch (IOException ex) {
-				System.err.println("IO Error: " + ex.getMessage());
+				logger.error("IO Error: ", ex);
 			}
 		}
 	}

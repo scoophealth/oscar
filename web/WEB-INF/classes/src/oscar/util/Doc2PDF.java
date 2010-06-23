@@ -43,6 +43,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.tidy.Tidy;
 
 import com.lowagie.text.Document;
@@ -55,6 +57,7 @@ import com.lowagie.text.pdf.PdfWriter;
  * @author root
  */
 public class Doc2PDF {
+    private static Logger logger=MiscUtils.getLogger(); 
 
     public static void parseJSP2PDF(HttpServletRequest request, HttpServletResponse response, String uri, String jsessionid) {
 
@@ -79,8 +82,7 @@ public class Doc2PDF {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+            logger.error("", e);
         }
 
     }
@@ -125,8 +127,9 @@ public class Doc2PDF {
         }
         catch (Exception e) {
             // An error occurred - send it to stderr for the web server...
-            System.err.print(e.toString() + " caught while running:\n\n");
-            System.err.print("    " + command + "\n");
+            logger.error(e.toString() + " caught while running:\n\n");
+            logger.error("    " + command + "\n");
+            logger.error("", e);
             return(1);
         }
     }
@@ -145,8 +148,6 @@ public class Doc2PDF {
         if ((query_string = System.getProperty("QUERY_STRING")) != null) {
             filename = filename + "?" + query_string;
         }
-
-        System.err.print("htmldoc.class filename\n");
 
         // Convert the file to PDF and send to the web client...
         topdf(request, response, filename);
@@ -174,8 +175,7 @@ public class Doc2PDF {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+        	logger.error("Unexpected error", e);
         }
 
     }
@@ -202,8 +202,7 @@ public class Doc2PDF {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+        	logger.error("Unexpected error", e);
             return null;
         }
 
@@ -245,8 +244,7 @@ public class Doc2PDF {
 
         }
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+        	logger.error("Unexpected error", e);
         }
         return in;
     }
@@ -273,8 +271,7 @@ public class Doc2PDF {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+        	logger.error("Unexpected error", e);
         }
         return null;
 
@@ -294,8 +291,7 @@ public class Doc2PDF {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+        	logger.error("Unexpected error", e);
         }
 
     }
@@ -329,8 +325,7 @@ public class Doc2PDF {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+        	logger.error("Unexpected error", e);
         }
 
     }
@@ -364,8 +359,7 @@ public class Doc2PDF {
         }
 
         catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+        	logger.error("Unexpected error", e);
         }
 
     }

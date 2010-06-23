@@ -27,7 +27,11 @@ package oscar.util;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 public final class BuildInfo {
+    private static Logger logger=MiscUtils.getLogger(); 
 
 	private static final String BUILD_PROPERTIES="/build.properties";
 	
@@ -38,10 +42,8 @@ public final class BuildInfo {
 			properties.load(is);
 			is.close();
 		} catch (Exception e) {
-			System.err.println("Error loading "+BUILD_PROPERTIES);
-			e.printStackTrace();
+			logger.error("Error loading "+BUILD_PROPERTIES, e);
 		}
-
 	}
 
 	public static String getBuildDate() {

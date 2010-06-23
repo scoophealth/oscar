@@ -106,7 +106,6 @@ public class MsgSendDocument
         for(int i=0; i<tbls.getLength(); i++){
             Element tbl = (Element)tbls.item(i);
             aList.add(tbl.getAttribute("name"));
-            System.err.println("Name would be "+tbl.getAttribute("name"));
         }
 
         return doc;

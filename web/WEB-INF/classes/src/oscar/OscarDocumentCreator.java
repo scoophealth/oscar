@@ -66,7 +66,6 @@ public class OscarDocumentCreator {
 
       }
 
-      //System.err.println(sos);
     }
     catch (JRException ex) {
       ex.printStackTrace();

@@ -36,10 +36,12 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.Base64;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcClientLite;
 import org.apache.xmlrpc.XmlRpcException;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -48,7 +50,8 @@ import oscar.OscarProperties;
  * @author  Jay
  */
 public class RxDrugRef {
-    
+    private static Logger logger=MiscUtils.getLogger(); 
+
     private String server_url =
            // "http://www.hherb.com:8001";
            "http://24.141.82.168:8001";
@@ -360,18 +363,9 @@ public class RxDrugRef {
             XmlRpcClient server = new XmlRpcClient(server_url);
             object = (Object) server.execute(procedureName, params);
          }catch (XmlRpcException exception) {
-                
-                System.err.println("JavaClient: XML-RPC Fault #" +
-                                   Integer.toString(exception.code) + ": " +
-                                   exception.toString());
-                                   exception.printStackTrace();
-                                   
-                
-                
+                logger.error("JavaClient: XML-RPC Fault #" +exception.code, exception);
          } catch (Exception exception) {
-                System.err.println("JavaClient: " + exception.toString());
-                exception.printStackTrace();
-                
+        	 logger.error("JavaClient: ", exception);
          }
          return object;
      }
@@ -385,20 +379,15 @@ public class RxDrugRef {
             object = server.execute(procedureName, params);
          }catch (XmlRpcException exception) {
                 
-                System.err.println("JavaClient: XML-RPC Fault #" +
-                                   Integer.toString(exception.code) + ": " +
-                                   exception.toString());
-                                   exception.printStackTrace();
+             logger.error("JavaClient: XML-RPC Fault #" +exception.code, exception);
                                    
                 throw new Exception("JavaClient: XML-RPC Fault #" +
                                    Integer.toString(exception.code) + ": " +
                                    exception.toString());
                 
          } catch (Exception exception) {
-                System.out.println("Drugref URL is "+server_url);
-                System.err.println("JavaClient: " + exception.toString());
+        	 logger.error("JavaClient: ", exception);
 
-                exception.printStackTrace();
                 throw new Exception("JavaClient: " + exception.toString(),exception);
          }
          return object;

@@ -23,8 +23,10 @@
  */
 package oscar.oscarMessenger.data;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.comm.client.SendMessageClient;
 import oscar.oscarDB.DBHandler;
@@ -39,6 +41,8 @@ import oscar.oscarDB.DBHandler;
        * @version 1.0
        */
 public  class MsgRemoteMessageData extends Thread{
+    private static Logger logger=MiscUtils.getLogger(); 
+
          String messageId;
          String XMLMessage;
          String currentLocation;
@@ -58,7 +62,6 @@ public  class MsgRemoteMessageData extends Thread{
             this.messageId = new String(messageId);
             XMLMessage = new String();
             currentLocation = new String(CurrLoco);
-            System.err.println("instantiating with message id of "+this.messageId );
          }
     
 
@@ -113,15 +116,11 @@ public  class MsgRemoteMessageData extends Thread{
 
                if (theAttach != null && !theAttach.equals("null")){
                int getit = theAttach.indexOf('\n');
-               System.err.println("the ints val" +getit);
-                    if (getit > 6){
-                        theAttach = theAttach.substring(getit+1);
-                    }
+                if (getit > 6){
+                    theAttach = theAttach.substring(getit+1);
+                }
                }
 
-               // System.out.println("THE ATTACHMENT NOW IS >"+theAttach+"<");
-
-               //System.err.println("the doc = "+oscar.oscarMessenger.util.Msgxml.toXML(oscar.oscarMessenger.util.Msgxml.parseXML(theAttach)));
 
                rs_whotoo = db.GetSQL(sql_whotoo);
 
@@ -129,14 +128,11 @@ public  class MsgRemoteMessageData extends Thread{
                   providerNo.add(rs_whotoo.getString("provider_no"));
                   locationID.add(rs_whotoo.getString("remoteLocation"));
                }
-               // System.out.println(" how did i doo "+providerNo.size()+"\n");
 
                for ( int i = 0; i < providerNo.size(); i++){
 
                      String locoId = (String) locationID.elementAt(i);
-                     System.err.println("locoID "+locoId);
                   if ( locoId == null ){
-                     //System.err.println("switching to current location of "+currentLocation);
                      locoId = currentLocation;
                   }
 
@@ -158,7 +154,6 @@ public  class MsgRemoteMessageData extends Thread{
 
 
 
-               System.err.println(XMLstring.toString());
                java.io.File file = new java.io.File("/home/torenvn/mes.xml");
                try {
                java.io.FileWriter fileWriter = new java.io.FileWriter(file);
@@ -182,29 +177,17 @@ public  class MsgRemoteMessageData extends Thread{
 
     		try {
                 int i = 0;
-                System.err.println("Create MEssage with ID of "+messageId);
-                System.err.println("LOcation = "+currentLocation);
                 XMLMessage = getXMLMessage(messageId);
                 SendMessageClient sendMessageClient = new SendMessageClient();
                 boolean how = false;
                 try{
                 int llll = 0;
-                   //Document docs;
-                   //docs = oscar.oscarMessenger.util.xml.parseXML(XMLMessage);
-                   //System.err.println("\n\ndocument "+docs+"\n\n");
-                   //System.err.println("\n"+oscar.oscarMessenger.util.xml.toXML(docs)+"\n");
-
-                   //System.err.println("\nGOnna send this\n"+XMLMessage+"\n");
-                   System.err.println("MEssage Sent");
                    how = sendMessageClient.sendMessage("localhost:3306/","oscar_spc",XMLMessage);
                 }catch(Exception e){
                     defunctMessage();
-                    System.err.println("I be messin up");
-                    e.printStackTrace();
+                    logger.error("I be messin up", e);
                 }
-                System.err.println("Back from sending message");
 
-                System.err.println("How i did = " + how);
                 if (!how){
                     defunctMessage();
                 }

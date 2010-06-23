@@ -33,10 +33,12 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import com.lowagie.text.DocumentException;
 
@@ -45,7 +47,8 @@ import com.lowagie.text.DocumentException;
  * Convert submitted preventions into pdf and return file
  */
 public class PreventionPrintAction extends Action {
-   
+    private static Logger logger=MiscUtils.getLogger(); 
+
    
    public PreventionPrintAction() {
    }
@@ -58,12 +61,12 @@ public class PreventionPrintAction extends Action {
            pdf.printPdf(request, response);
            
        }catch(DocumentException de) {            
-            System.err.println(de.getMessage());
+            logger.error("", de);
             request.setAttribute("printError", new Boolean(true));
             return mapping.findForward("error");
        }
        catch(IOException ioe) {
-            System.err.println(ioe.getMessage());
+            logger.error("", ioe);
             request.setAttribute("printError", new Boolean(true));
             return mapping.findForward("error");
        } 

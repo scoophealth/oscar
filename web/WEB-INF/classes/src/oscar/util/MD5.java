@@ -31,6 +31,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import com.Ostermiller.util.MD5InputStream;
 import com.Ostermiller.util.MD5OutputStream;
 
@@ -59,6 +62,7 @@ import com.Ostermiller.util.MD5OutputStream;
  * @since ostermillerutils 1.00.00
  */
 public class MD5 {
+    private static Logger logger=MiscUtils.getLogger(); 
 
     /**
      * Class constructor
@@ -79,13 +83,13 @@ public class MD5 {
      */
     public static void main (String[] args){
         if (args.length == 0){
-            System.err.println("Please specify a file.");
+            logger.error("Please specify a file.");
         } else {
             for (int i=0; i<args.length; i++){
                 try {
-                    System.out.println(MD5.getHashString(new File(args[i])) + " " + args[i]);
+                    logger.info(MD5.getHashString(new File(args[i])) + " " + args[i]);
                 } catch (IOException x){
-                    System.err.println(x.getMessage());
+                    logger.error("", x);
                 }
             }
         }

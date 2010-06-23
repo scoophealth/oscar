@@ -28,6 +28,8 @@ package oscar.oscarMessenger.docxfer.send;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,6 +41,8 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.docxfer.util.MsgCommxml;
 
 public class MsgGenerate {
+    private static Logger logger=MiscUtils.getLogger(); 
+
     int demographicNo;
     int itemId;
     
@@ -58,7 +62,7 @@ public class MsgGenerate {
             cfg = MsgCommxml.parseXMLFile("/DocXferConfig.xml");
         }
         catch (Exception ex) {
-            ex.printStackTrace(System.err);
+        	logger.error("", ex);
         }
         
         Element cfgRoot = cfg.getDocumentElement();
@@ -69,7 +73,6 @@ public class MsgGenerate {
             if(tbl.getNodeType() == Node.ELEMENT_NODE) {
                 if(((Element)tbl).getTagName().equals("table")) {
                     Element newTable = constructTable((Element)tbl, doc, db);
-                    //                 System.err.println("test "+newTable.getNodeName()+" has childs ? = "+newTable.hasChildNodes());
                     if (newTable.hasChildNodes()){
                         docRoot.appendChild(newTable);
                     }

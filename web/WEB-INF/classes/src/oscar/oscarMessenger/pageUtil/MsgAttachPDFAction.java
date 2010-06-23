@@ -30,95 +30,86 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.util.Doc2PDF;
 
 public class MsgAttachPDFAction extends Action {
+    private static Logger logger=MiscUtils.getLogger(); 
 
-    public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws IOException, ServletException {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        MsgAttachPDFForm frm = (MsgAttachPDFForm) form;
-        String attachmentCount = frm.getAttachmentCount();
-        oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean) request.getSession().getAttribute("msgSessionBean");
+		MsgAttachPDFForm frm = (MsgAttachPDFForm) form;
+		String attachmentCount = frm.getAttachmentCount();
+		oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean) request.getSession().getAttribute("msgSessionBean");
 
-        
-        //Multiple attachment
+		// Multiple attachment
 
-        if ( frm.getIsPreview()) {
-            
-            // testing for new package, cannot pass session control. ??
-//            Doc2PDF.HTMLDOC(request, response, "http://localhost:8084/oscar_mcmaster/oscarEncounter/echarthistoryprint.jsp?echartid=68");     
-//            Doc2PDF.parseJSP2PDF( request , response, "http://localhost:8084/oscar_mcmaster/", "" );
-            
-            String srcText = frm.getSrcText();
-            Doc2PDF.parseString2PDF( request , response, "<HTML>" + srcText + "</HTML>" );
-            frm.setIsPreview(false);
-        }
-        else {
-        
-            try { 
-                 String[] indexArray = frm.getIndexArray();
-                 frm.setIndexArray(indexArray);
-                 frm.setIsAttaching( frm.getIsAttaching() );
-                 frm.setAttachmentCount( frm.getAttachmentCount() );
-                 String srcText = frm.getSrcText();
-                 String attachmentTitle = frm.getAttachmentTitle();
-                 
-                 if ( bean != null ) {
+		if (frm.getIsPreview()) {
 
-                    if ( frm.getIsNew() ){
-                        System.out.println("null attachment" );
-                        bean.nullAttachment();
-                    }
+			// testing for new package, cannot pass session control. ??
+			// Doc2PDF.HTMLDOC(request, response, "http://localhost:8084/oscar_mcmaster/oscarEncounter/echarthistoryprint.jsp?echartid=68");
+			// Doc2PDF.parseJSP2PDF( request , response, "http://localhost:8084/oscar_mcmaster/", "" );
 
-                    // check how many total attachment
-                    bean.setTotalAttachmentCount( Integer.parseInt(attachmentCount ) );
+			String srcText = frm.getSrcText();
+			Doc2PDF.parseString2PDF(request, response, "<HTML>" + srcText + "</HTML>");
+			frm.setIsPreview(false);
+		} else {
 
+			try {
+				String[] indexArray = frm.getIndexArray();
+				frm.setIndexArray(indexArray);
+				frm.setIsAttaching(frm.getIsAttaching());
+				frm.setAttachmentCount(frm.getAttachmentCount());
+				String srcText = frm.getSrcText();
+				String attachmentTitle = frm.getAttachmentTitle();
 
-                    // CHECK how many attachment to do
-                    if ( bean.getCurrentAttachmentCount() < bean.getTotalAttachmentCount() ){
+				if (bean != null) {
 
-                        
-                        // Attach the document and increment the counter
-                        String resultString = Doc2PDF.parseString2Bin ( request, response, "<HTML>" + srcText + "</HTML>" );
+					if (frm.getIsNew()) {
+						System.out.println("null attachment");
+						bean.nullAttachment();
+					}
 
-                        bean.setAppendPDFAttachment(resultString, attachmentTitle);
-                        bean.setCurrentAttachmentCount( bean.getCurrentAttachmentCount() + 1);                            
-                        Thread.sleep(500);                                
-                        
-                    }
+					// check how many total attachment
+					bean.setTotalAttachmentCount(Integer.parseInt(attachmentCount));
 
-                    if ( bean.getCurrentAttachmentCount() >= bean.getTotalAttachmentCount() ) {
-                        // reset the counter, and forward to success
-                        bean.setTotalAttachmentCount( 0 );
-                        bean.setCurrentAttachmentCount( 0 );
-                        return ( mapping.findForward("success"));         
-                    }
-                    else {
-                        // keep attaching
-                       return ( mapping.findForward("attaching"));         
-                    }   
-                        
-                 }
-                 else {
-                      System.err.println("Bean is null");     
-                 }
-            }
-            catch (Exception  e){
-                e.printStackTrace();
-                System.err.println("Error: " + e.getMessage()  );
-            }
-            
-        }
-        return null;
-    }
+					// CHECK how many attachment to do
+					if (bean.getCurrentAttachmentCount() < bean.getTotalAttachmentCount()) {
+
+						// Attach the document and increment the counter
+						String resultString = Doc2PDF.parseString2Bin(request, response, "<HTML>" + srcText + "</HTML>");
+
+						bean.setAppendPDFAttachment(resultString, attachmentTitle);
+						bean.setCurrentAttachmentCount(bean.getCurrentAttachmentCount() + 1);
+						Thread.sleep(500);
+
+					}
+
+					if (bean.getCurrentAttachmentCount() >= bean.getTotalAttachmentCount()) {
+						// reset the counter, and forward to success
+						bean.setTotalAttachmentCount(0);
+						bean.setCurrentAttachmentCount(0);
+						return (mapping.findForward("success"));
+					} else {
+						// keep attaching
+						return (mapping.findForward("attaching"));
+					}
+
+				} else {
+					logger.error("Bean is null");
+				}
+			} catch (Exception e) {
+				logger.error("Error: " + e.getMessage(), e);
+			}
+
+		}
+		return null;
+	}
 
 }
