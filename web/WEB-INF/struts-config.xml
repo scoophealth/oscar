@@ -605,8 +605,8 @@
 
 
         <action name="FrmForm" path="/dms/inboxManage" scope="request"  parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
-            <forward name="success" path="/dms/listDocument.jsp" />
-            <forward name="addProviderQueue" path="/dms/addProviderQueue.jsp" />
+            <forward name="success" path="/dms/listDocument.jsp" />           
+            <forward name="dms_index" path="/oscarMDS/Index.jsp" />
         </action>
 
         <action input="/oscarRx/ChooseDrug.jsp" path="/oscarRx/chooseDrug" scope="request" type="oscar.oscarRx.pageUtil.RxChooseDrugAction">
