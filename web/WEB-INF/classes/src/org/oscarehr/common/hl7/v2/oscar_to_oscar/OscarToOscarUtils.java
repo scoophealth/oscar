@@ -3,6 +3,8 @@ package org.oscarehr.common.hl7.v2.oscar_to_oscar;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
@@ -11,6 +13,8 @@ import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 public final class OscarToOscarUtils {
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	public static final String UPLOAD_MESSAGE_TYPE = "OSCAR_TO_OSCAR_HL7_V2";
 	public static final String ENCODING="UTF-8";
 	private static final Base64 base64=new Base64();
@@ -23,7 +27,7 @@ public final class OscarToOscarUtils {
 		return(pipeParser);
 	}
 	
-	public static String encodeBase64ToString(byte[] b) throws UnsupportedEncodingException {
+	public static String encodeToBase64String(byte[] b) throws UnsupportedEncodingException {
 		return (new String(base64.encode(b), ENCODING));
 	}
 	
@@ -41,4 +45,12 @@ public final class OscarToOscarUtils {
 		AbstractMessage message=(AbstractMessage) pipeParser.parse(hl7Message);
 		return(message);
 	}
+	
+	public static void dumpMessageToDebugger(AbstractMessage message) throws HL7Exception
+	{
+		String result=pipeParser.encode(message);
+		result=result.replace("\r", "\r\n");
+		result=result.replace("\r\r", "\r");
+		logger.error(result);
+	}	
 }

@@ -1,13 +1,11 @@
 package oscar.oscarLab.ca.all.pageUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
@@ -42,10 +40,11 @@ public class OruR01UploadAction extends Action {
 	        
 	        Demographic demographic=getDemographicObject(oruR01UploadForm); 
 	        
-	        ArrayList<ObservationData> observationDataList=new ArrayList<ObservationData>();
-	        observationDataList.add(new ObservationData(oruR01UploadForm.getDataName(), "txt", oruR01UploadForm.getTextData()));
-	        String extension=FilenameUtils.getExtension(formFile.getFileName());
-	        observationDataList.add(new ObservationData(oruR01UploadForm.getDataName(), formFile.getFileName(), extension, formFile.getFileData()));
+	        ObservationData observationData=new ObservationData();
+	        observationData.dataName=oruR01UploadForm.getDataName();
+	        observationData.textData=oruR01UploadForm.getTextData();
+	        observationData.binaryDataFileName=formFile.getFileName();
+	        observationData.binaryData=formFile.getFileData();
 	        
 	    	Provider sendingProvider=loggedInInfo.loggedInProvider;
 
@@ -53,7 +52,7 @@ public class OruR01UploadAction extends Action {
 	    	ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(oruR01UploadForm.getProfessionalSpecialistId());
 	        Provider receivingProvider=getReceivingProvider(professionalSpecialist);
 	        
-	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationDataList, sendingProvider, receivingProvider);
+	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);
 	        
 	        SendingUtils.send(hl7Message, professionalSpecialist);
 	        

@@ -449,7 +449,7 @@ public final class DataTypeUtils {
 	 * @throws UnsupportedEncodingException
 	 */
 	public static void fillNte(NTE nte, String typeText, String dataType, byte[] data) throws HL7Exception, UnsupportedEncodingException {
-		String dataString = OscarToOscarUtils.encodeBase64ToString(data);
+		String dataString = OscarToOscarUtils.encodeToBase64String(data);
 		fillNte(nte, typeText, dataType, dataString);
 	}
 	
@@ -478,4 +478,28 @@ public final class DataTypeUtils {
 		xtn.getUnformattedTelephoneNumber().setValue(provider.getPhone());
 		xtn.getCommunicationAddress().setValue(provider.getEmail());
 	}
+
+	/**
+	 * The provider returned is just a detached/unmanaged Provider object which may not represent an entry in the db, it is used as a data structure only. 
+	 * @throws HL7Exception 
+	 */
+	public static Provider parseRolAsProvider(ROL rol) throws HL7Exception {
+		Provider provider=new Provider();
+
+		XCN xcn=rol.getRolePerson(0);
+		provider.setProviderNo(xcn.getIDNumber().getValue());
+		provider.setLastName(xcn.getFamilyName().getSurname().getValue());
+		provider.setFirstName(xcn.getGivenName().getValue());
+		provider.setTitle(xcn.getPrefixEgDR().getValue());
+		
+		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
+		provider.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
+
+		XTN xtn = rol.getPhone(0);
+		provider.setPhone(xtn.getUnformattedTelephoneNumber().getValue());
+		provider.setEmail(xtn.getCommunicationAddress().getValue());
+		
+		return(provider);
+	}
+	
 }

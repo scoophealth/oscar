@@ -31,9 +31,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%--@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
-<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
-<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"--%>
 <%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 
@@ -50,7 +47,7 @@ String patientIdStr =(String)request.getAttribute("patientIdStr");
 Hashtable typeDocLab =(Hashtable)request.getAttribute("typeDocLab");
 String demographicNo=(String)request.getAttribute("demographicNo");
 String ackStatus = (String)request.getAttribute("ackStatus");
-List labdocs=(List)request.getAttribute("labdocs");System.out.println("labdocs.size()="+labdocs.size());
+List labdocs=(List)request.getAttribute("labdocs");
 Hashtable patientNumDoc=(Hashtable)request.getAttribute("patientNumDoc");
 Integer totalDocs=(Integer) request.getAttribute("totalDocs");
 Integer totalHL7=(Integer)request.getAttribute("totalHL7");

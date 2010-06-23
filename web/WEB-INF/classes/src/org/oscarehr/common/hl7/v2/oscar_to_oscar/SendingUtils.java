@@ -70,8 +70,8 @@ public final class SendingUtils {
 
 			MultipartPostMethod multipartPostMethod = new MultipartPostMethod(url);
 			multipartPostMethod.addParameter("importFile", tempFile.getName(), tempFile);
-			multipartPostMethod.addParameter("key", OscarToOscarUtils.encodeBase64ToString(encryptedSecretKey));
-			multipartPostMethod.addParameter("signature", OscarToOscarUtils.encodeBase64ToString(signature));
+			multipartPostMethod.addParameter("key", OscarToOscarUtils.encodeToBase64String(encryptedSecretKey));
+			multipartPostMethod.addParameter("signature", OscarToOscarUtils.encodeToBase64String(signature));
 			multipartPostMethod.addParameter("service", serviceName);
 
 			HttpClient httpClient = new HttpClient();
