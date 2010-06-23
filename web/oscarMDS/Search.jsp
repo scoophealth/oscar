@@ -41,7 +41,8 @@
 </head>
 
 <body>
-<form method="post" action="Index.jsp">
+<form method="post" action="../dms/inboxManage.do">
+    <input type="hidden" name="method" value="prepareForIndexPage"/>
 <table width="100%" height="100%" border="0">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRow" colspan="9" align="left">
