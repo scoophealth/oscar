@@ -30,189 +30,41 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%--@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"%>
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils.CategoryType"--%>
+<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 
 <%
-    //oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
-    CommonLabResultData comLab = new CommonLabResultData();
-    //String providerNo = request.getParameter("providerNo");
-    String providerNo =  (String) session.getAttribute("user");
-    String searchProviderNo = request.getParameter("searchProviderNo");
-    String ackStatus = request.getParameter("status");
-    String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
-    String scannedDocStatus = request.getParameter("scannedDocument");
-    scannedDocStatus = "I";
 
-    if ( ackStatus == null ) { ackStatus = "N"; } // default to new labs only
-    if ( providerNo == null ) { providerNo = ""; }
-    if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
-    //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
-    ArrayList labs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus,scannedDocStatus);
-    Collections.sort(labs);
+Integer pageNum=(Integer)request.getAttribute("pageNum");
+Hashtable docType=(Hashtable)request.getAttribute("docType");
+Hashtable patientDocs=(Hashtable)request.getAttribute("patientDocs");
+String providerNo=(String)request.getAttribute("providerNo");
+String searchProviderNo=(String)request.getAttribute("searchProviderNo");
+Hashtable patientIdNames=(Hashtable)request.getAttribute("patientIdNames");
+Hashtable docStatus=(Hashtable)request.getAttribute("docStatus");
+String patientIdStr =(String)request.getAttribute("patientIdStr");
+Hashtable typeDocLab =(Hashtable)request.getAttribute("typeDocLab");
+String demographicNo=(String)request.getAttribute("demographicNo");
+String ackStatus = (String)request.getAttribute("ackStatus");
+List labdocs=(List)request.getAttribute("labdocs");System.out.println("labdocs.size()="+labdocs.size());
+Hashtable patientNumDoc=(Hashtable)request.getAttribute("patientNumDoc");
+Integer totalDocs=(Integer) request.getAttribute("totalDocs");
+Integer totalHL7=(Integer)request.getAttribute("totalHL7");
+List<String> normals=(List<String>)request.getAttribute("normals");
+List<String> abnormals=(List<String>)request.getAttribute("abnormals");
+Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
 
-    Hashtable patientDocs=new Hashtable();
-    Hashtable patientIdNames=new Hashtable();
-    Hashtable docStatus=new Hashtable();
-    Hashtable docType=new Hashtable();
-    Hashtable<String,List<String>> ab_NormalDoc=new Hashtable();
-    for(int i=0;i<labs.size();i++){
-        LabResultData data=(LabResultData)labs.get(i);
-        List<String> segIDs=new ArrayList();
-        String labPatientId=data.getLabPatientId();
-        MiscUtils.getLogger().debug(labPatientId+"--"+data.patientName);
-        if(data.isAbnormal()){
-            List<String> abns=ab_NormalDoc.get("abnormal");
-            if(abns==null){
-                abns=new ArrayList();
-                abns.add(data.getSegmentID());
-            }else{
-                abns.add(data.getSegmentID());
-            }
-            ab_NormalDoc.put("abnormal",abns);
-        }else{
-            List<String> ns=ab_NormalDoc.get("normal");
-            if(ns==null){
-                ns=new ArrayList();
-                ns.add(data.getSegmentID());
-            }else{
-                ns.add(data.getSegmentID());
-            }
-            ab_NormalDoc.put("normal",ns);
-        }
-        if(patientDocs.containsKey(labPatientId)) {
-            MiscUtils.getLogger().debug(labPatientId+"--"+patientDocs);
-            segIDs=(List)patientDocs.get(labPatientId);
-            segIDs.add(data.getSegmentID());
-            patientDocs.put(labPatientId,segIDs);
-        }else{
-            segIDs.add(data.getSegmentID());
-            patientDocs.put(labPatientId, segIDs);
-            patientIdNames.put(labPatientId, data.patientName);
-        }
-        docStatus.put(data.getSegmentID(), data.getAcknowledgedStatus());
-        docType.put(data.getSegmentID(), data.labType);
-    }
-    MiscUtils.getLogger().debug("docType="+docType);
-    Integer totalDocs=0;
-    Integer totalHL7=0;
-    Hashtable<String,List<String>> typeDocLab=new Hashtable();
-    Enumeration keys=docType.keys();
-    while(keys.hasMoreElements()){
-        String keyDocLabId=((String)keys.nextElement());
-        String valType=(String)docType.get(keyDocLabId);
-        if(valType.equalsIgnoreCase("DOC")){
-            if(typeDocLab.containsKey("DOC")){
-                List<String> docids=(List<String>)typeDocLab.get("DOC");
-                docids.add(keyDocLabId);//add doc id to list
-                typeDocLab.put("DOC", docids);
-            }else{
-                List<String> docids=new ArrayList();
-                docids.add(keyDocLabId);
-                typeDocLab.put("DOC", docids);
-            }
-            totalDocs++ ;
-        }else if(valType.equalsIgnoreCase("HL7")){
-            if(typeDocLab.containsKey("HL7")){
-                List<String> hl7ids=(List<String>)typeDocLab.get("HL7");
-                hl7ids.add(keyDocLabId);
-                typeDocLab.put("HL7", hl7ids);
-            }else{
-                List<String> hl7ids=new ArrayList();
-                hl7ids.add(keyDocLabId);
-                typeDocLab.put("HL7", hl7ids);
-            }
-            totalHL7++  ;
-        }
-    }
-
-    Hashtable patientNumDoc=new Hashtable();
-    Enumeration patientIds=patientDocs.keys();
-    String patientIdStr="";
-    Integer totalNumDocs=0;
-    while(patientIds.hasMoreElements()){
-        String key=(String)patientIds.nextElement();
-        patientIdStr+=key;
-        patientIdStr+=",";
-        List<String> val=(List<String>)patientDocs.get(key);
-        Integer numDoc=val.size();
-        patientNumDoc.put(key, numDoc);
-        totalNumDocs+=numDoc;
-    }
-
-    //Hashtable<String,String> docPatient=new Hashtable();
-    //patientIds=patientDocs.keys();
-    //while
-    MiscUtils.getLogger().debug("patientDocs="+patientDocs);
-    MiscUtils.getLogger().debug("patientNumDoc="+patientNumDoc);
-    MiscUtils.getLogger().debug("docStatus="+docStatus);
-    MiscUtils.getLogger().debug("typeDocLab="+typeDocLab);
-    MiscUtils.getLogger().debug("ab_NormalDoc="+ab_NormalDoc);
-    List<String> normals=ab_NormalDoc.get("normal");
-    List<String> abnormals=ab_NormalDoc.get("abnormal");
-
-    MiscUtils.getLogger().debug("labs.size="+labs.size());
-    HashMap labMap = new HashMap();
-    LinkedHashMap accessionMap = new LinkedHashMap();
-    LabResultData result;
-    for( int i = 0; i < labs.size(); i++ ) {
-        result = (LabResultData) labs.get(i);
-        labMap.put(result.segmentID, result);
-        ArrayList labNums = new ArrayList();
-        if (result.accessionNumber == null || result.accessionNumber.equals("")){
-            labNums.add(result.segmentID);
-            accessionMap.put("noAccessionNum"+i+result.labType, labNums);
-        }else if (!accessionMap.containsKey(result.accessionNumber+result.labType)){
-            labNums.add(result.segmentID);
-            accessionMap.put(result.accessionNumber+result.labType, labNums);
-
-        // Different MDS Labs may have the same accession Number if they are seperated
-        // by two years. So accession numbers are limited to matching only if their
-        // labs are within one year of eachother
-        }else{
-            labNums = (ArrayList) accessionMap.get(result.accessionNumber+result.labType);
-            boolean matchFlag = false;
-            for (int j=0; j < labNums.size(); j++){
-                LabResultData matchingResult = (LabResultData) labMap.get(labNums.get(j));
-
-                Date dateA = result.getDateObj();
-                Date dateB = matchingResult.getDateObj();
-                int monthsBetween = 0;
-                if (dateA.before(dateB)){
-                    monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
-                }else{
-                    monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
-                }
-
-                if (monthsBetween < 4){
-                    matchFlag = true;
-                    break;
-                }
-            }
-            if (!matchFlag){
-                labNums.add(result.segmentID);
-                accessionMap.put(result.accessionNumber+result.labType, labNums);
-            }
-        }
-    }
-    ArrayList labArrays = new ArrayList(accessionMap.values());
-    labs.clear();
-    for (int i=0; i < labArrays.size(); i++){
-        ArrayList labNums = (ArrayList) labArrays.get(i);
-        // must sort through in reverse to keep the labs in the correct order
-        for (int j=labNums.size()-1; j >= 0; j--){
-            labs.add(labMap.get(labNums.get(j)));
-        }
-    }
-    Collections.sort(labs);
-
-    int pageNum = 1;
-    if ( request.getParameter("pageNum") != null ) {
-        pageNum = Integer.parseInt(request.getParameter("pageNum"));
-    }
 %>
 
 
-<%@page import="org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils"%>
-<%@page import="org.oscarehr.util.MiscUtils"%><html>
+
+
+<html>
+
 <head>
     <!-- main calendar program -->
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
@@ -221,7 +73,7 @@
 <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-<!-- calendar stylesheet -->
+<!-- calendar style sheet -->
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -241,7 +93,7 @@
         <script type="text/javascript" src="../share/yui/js/datasource-min.js"></script>
         <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"></script>
         <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script>
-
+        
         <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
         <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  />
@@ -254,6 +106,9 @@
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <style type="text/css">
+    span.categoryCB{
+        color:white;
+}
 <!--
 .RollRes     { font-weight: 700; font-size: 8pt; color: white; font-family:
                Verdana, Arial, Helvetica }
@@ -368,32 +223,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 .smallButton { font-size: 8pt; }
 -->
 </style>
-
-
-<script type="text/javascript" language=javascript>
-
-function popupStart(vheight,vwidth,varpage) {
-    popupStart(vheight,vwidth,varpage,"helpwindow");
-}
-
-function popupStart(vheight,vwidth,varpage,windowname) {
-        //console.log("in popupstart 4 args");
-    //console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
-    if(!windowname)
-        windowname="helpwindow";
-    //console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
-    var page = varpage;
-    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-    var popup=window.open(varpage, windowname, windowprops);
-}
-
-function reportWindow(page) {
-    windowprops="height=660, width=960, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0";
-    var popup = window.open(page, "labreport", windowprops);
-    popup.focus();
-}
-
-function checkSelected() {
+<script type="text/javascript" >
+    function checkSelected() {
     aBoxIsChecked = false;
     if (document.reassignForm.flaggedLabs.length == undefined) {
         if (document.reassignForm.flaggedLabs.checked == true) {
@@ -412,6 +243,45 @@ function checkSelected() {
         alert('<bean:message key="oscarMDS.index.msgSelectOneLab"/>');
     }
 }
+    function popupConsultation(segmentId) {
+                            	  var page = '<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?segmentId='+segmentId;
+                            	  var windowprops = "height=960,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+                            	  var popup=window.open(page, "<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgConsReq"/>", windowprops);
+                            	  if (popup != null) {
+                            	    if (popup.opener == null) {
+                            	      popup.opener = self;
+                            	    }
+                            	  }
+                           }
+
+
+
+function popupStart(vheight,vwidth,varpage) {
+    popupStart(vheight,vwidth,varpage,"helpwindow");
+}
+
+function popupStart(vheight,vwidth,varpage,windowname) {
+        //console.log("in popupstart 4 args");
+    //console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
+    if(!windowname)
+        windowname="helpwindow";
+    //console.log(vheight+"--"+ vwidth+"--"+ varpage+"--"+ windowname);
+    var page = varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+    var popup=window.open(varpage, windowname, windowprops);
+}
+
+function reportWindow(page,height,width) {
+    //console.log(page);
+    if(height && width){
+        windowprops="height="+660+", width="+width+", location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0" ;
+    }else{
+        windowprops="height=660, width=960, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0";
+    }
+    var popup = window.open(page, "labreport", windowprops);
+    popup.focus();
+}
+
 
 function submitFile(){
    aBoxIsChecked = false;
@@ -451,7 +321,6 @@ function checkAll(formId){
    }
 }
 
-<%-- call parent window Ajax updater and then close the lab report window --%>
 function wrapUp() {
     if (opener.callRefreshTabAlerts) {
 	opener.callRefreshTabAlerts("oscar_new_lab");
@@ -461,7 +330,7 @@ function wrapUp() {
     }
 }
 
-  Element.addMethods("select",(function(){
+ /* Element.addMethods("select",(function(){
                                 function getSelected(element){
                                     if(!(element=$(element))) return;
                                     var index=element.selectedIndex;
@@ -470,40 +339,34 @@ function wrapUp() {
                                 return {
                                     getSelected: getSelected
                                 };
-                            })());
-                            function showAllLabs(){
+                            })());*/
+                         /*   function showAllSummaryDocLabs(){
                                 var eles1=document.getElementsByClassName('NormalRes');
                                 var eles2=document.getElementsByClassName('AbnormalRes');
                                 var i=0;
                                 for(i=0;i<eles1.length;i++){
+
                                     var ele=eles1[i];
-                                    var display=ele.getStyle('display');
-                                    if(display=='none')
+                                    oscarLog(ele.id);
                                         ele.setStyle({display:'table-row'});
-                                    else
-                                        ;
                                 }
                                 for(i=0;i<eles2.length;i++){
                                     var ele=eles2[i];
-                                    var display=ele.getStyle('display');
-                                    if(display=='none')
                                         ele.setStyle({display:'table-row'});
-                                    else
-                                        ;
-                                }
-                            }
-                            function showOnlyScannedDocs(){
+                                  }
+                            }*/
+                            /*function showDocs(){
                                 var eles=document.getElementsByName('scannedDoc');
                                 var i=0;
                                 for(i=0;i<eles.length;i++){
                                     var ele=eles[i];
+                                    oscarLog(ele.id);
                                     var display=ele.getStyle('display');
                                     if(display=='none')
                                         ele.setStyle({display:'table-row'});
-                                    else
-                                        ;
+                                    else   ;
                                 }
-                                eles=document.getElementsByName('notScannedDoc');
+                                eles=document.getElementsByName('HL7lab');
                                 for(i=0;i<eles.length;i++){
                                     var ele=eles[i];
                                     var display=ele.getStyle('display');
@@ -512,9 +375,8 @@ function wrapUp() {
                                     else
                                         ele.setStyle({display:'none'});
                                 }
-
-                            }
-                            function hideScannedDocs(){
+                            }*/
+                          /*  function hideScannedDocs(){//not used
                                 var eles=document.getElementsByName('scannedDoc');
                                 var i=0;
                                 for(i=0;i<eles.length;i++){
@@ -526,7 +388,7 @@ function wrapUp() {
                                         ele.setStyle({display:'none'});
                                 }
 
-                                eles=document.getElementsByName('notScannedDoc');
+                                eles=document.getElementsByName('HL7lab');
                                 for(i=0;i<eles.length;i++){
                                     var ele=eles[i];
                                     var display=ele.getStyle('display');
@@ -535,20 +397,75 @@ function wrapUp() {
                                     else
                                         ;
                                 }
-                            }
-                            function toggleScannedDocs(ele){
-                                var selected=$('selectScannedDocs').getSelected();
-                                if(selected=='I'){
-                                    //show both docs and other
-                                    showAllLabs();
-                                }else if(selected=='O'){
+                            }*/
+                          /*  function showHL7s(){
+                                var eles=document.getElementsByName('HL7lab');
+                                var i=0;
+                                for(i=0;i<eles.length;i++){
+                                    var ele=eles[i];
+                                    ele.setStyle({display:'table-row'});
+                                }
+                                eles=document.getElementsByName('scannedDoc');
+                                for(i=0;i<eles.length;i++){
+                                    var ele=eles[i];
+                                    ele.setStyle({display:'none'});
+                                }
+                            }*/
+                           /* function showNormals(){
+                                var eles1=document.getElementsByClassName('NormalRes');
+                                var i=0;
+                                for(i=0;i<eles1.length;i++){
+                                    var ele=eles1[i];
+                                    ele.setStyle({display:'table-row'});
+                                }
+                                var eles2=document.getElementsByClassName('AbnormalRes');
+                                i=0;
+                                for(i=0;i<eles2.length;i++){
+                                    var ele=eles2[i];
+                                    ele.setStyle({display:'none'});
+                                }
+                            }*/
+                           /* function showAbnormals(){
+                                var eles2=document.getElementsByClassName('AbnormalRes');
+                                var i=0;
+                                for(i=0;i<eles2.length;i++){
+                                    var ele=eles2[i];
+                                    ele.setStyle({display:'table-row'});
+                                }
+                                var eles1=document.getElementsByClassName('NormalRes');
+                                i=0;
+                                for(i=0;i<eles1.length;i++){
+                                    var ele=eles1[i];
+                                    ele.setStyle({display:'none'});
+                                }
+                            }*/
+                           /* function toggleDocLabs(ele){
+                                var selected=ele.getSelected();
+
+                                if(selected=='A'){
+                                    $('Atop').selected=true;
+                                    $('Abottom').selected=true;
+                                    //show all
+                                    showAllSummaryDocLabs();
+                                }else if(selected=='D'){
+                                    $('Dtop').selected=true;
+                                    $('Dbottom').selected=true;
                                     //show only docs
-                                    showOnlyScannedDocs();
+                                    showDocs();
+                                }else if(selected=='H'){
+                                    $('Htop').selected=true;
+                                    $('Hbottom').selected=true;
+                                    showHL7s();
                                 }else if(selected=='N'){
-                                    //hide scanned docs
-                                    hideScannedDocs();
+                                    $('Ntop').selected=true;
+                                    $('Nbottom').selected=true;
+                                    showNormals();
+                                }else if(selected=='AB'){
+                                    $('ABtop').selected=true;
+                                    $('ABbottom').selected=true;
+                                    showAbnormals();
                                 }
-                            }
+                            }*/
                             function changeView(){
                                 if($('summaryView').getStyle('display')=='none'){
                                      $('summaryView').show();
@@ -565,10 +482,10 @@ function wrapUp() {
                                 var docTypes='<%=docType%>';
                                 var s='[{\\s]'+docNo+'='+'\\w+';
                                 var p= new RegExp(s,'g');
-                                oscarLog(docTypes+"-+-"+p);
+                                //oscarLog(docTypes+"-+-"+p);
                                 if(docTypes.match(p)!=null && (docTypes.match(p)).length>0){
                                     var text=(docTypes.match(p))[0];
-                                    oscarLog('matched='+text);
+                                    //oscarLog('matched='+text);
                                     return text.split("=")[1];
                                 }else
                                     return '';
@@ -577,7 +494,7 @@ function wrapUp() {
                                 //create child element in docViews
                                 docNo=docNo.replace(' ','');//trim
                                 var type=checkType(docNo);
-                                oscarLog('type'+type);
+                                //oscarLog('type'+type);
                                 //var div=childId;
 
                                 //var div=window.frames[0].document.getElementById(childId);
@@ -595,52 +512,48 @@ function wrapUp() {
                                 else
                                     url="";
 
-                                //oscarLog('showhide  '+$(showhide).value);
-                                //if($(showhide).value==0){//show this doc
-                                  //  var ele=window.frames[0].document.getElementById('labdoc_'+docNo);
-                                    //if(ele==null){
-                                        oscarLog('url='+url);
+                                        //oscarLog('url='+url);
                                         var data="segmentID="+docNo+"&providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&demoName="+demoName;
-                                        oscarLog('url='+url+'+-+ \n data='+data);
+                                        //oscarLog('url='+url+'+-+ \n data='+data);
                                         new Ajax.Updater(div,url,{method:'get',parameters:data,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){}});
 
                             }
 
                             function createNewElement(parent,child){
-                                oscarLog('11 create new leme');
+                                //oscarLog('11 create new leme');
                                 var newdiv=document.createElement('div');
-                                oscarLog('22 after create new leme');
+                                //oscarLog('22 after create new leme');
                                 newdiv.setAttribute('id',child);
-                                oscarLog('33 after create new leme');
+                                //oscarLog('33 after create new leme');
                                 //var parentdiv=document.getElementById(parent);
                                // var parentdiv=window.frames[0].document.getElementById(parent);
                                var parentdiv=$(parent);
                                 //alert(parentdiv);
                                 //newdiv.innerHTML='test html';
-                                oscarLog('parentdiv='+parentdiv+"; child ="+newdiv);
+                                //oscarLog('parentdiv='+parentdiv+"; child ="+newdiv);
                                 parentdiv.appendChild(newdiv);
-                                oscarLog('55 after create new leme');
+                                //oscarLog('55 after create new leme');
                             }
                             function getLabDocFromPatientId(patientId){//return array of doc ids and lab ids from patient id.
                                 var pattern=new RegExp(patientId+"=\\[.*?\\]","g");
                                 var text='<%=patientDocs%>';
-                                oscarLog(text);
+                                //oscarLog(text);
                                 var result=(text.match(pattern))[0];
-                                oscarLog(result);
+                                //oscarLog(result);
                                 result=result.replace(patientId+"=[","");
                                 result=result.replace("]","");
                                 result=result.replace(/\s/g,"");
-                                oscarLog(result);
+                                //oscarLog(result);
                                 var resultAr=result.split(",");
                                 return resultAr;
                             }
 
                             function showThisPatientDocs(patientId,keepPrevious){
-                                oscarLog("patientId in show this patientdocs="+patientId);
+                                //oscarLog("patientId in show this patientdocs="+patientId);
                                 var labDocsArr=getLabDocFromPatientId(patientId);
                                 var patientName=getPatientNameFromPatientId(patientId);
                                 if(patientName!=null&&patientName.length>0){
-                                        oscarLog(patientName);
+                                        //oscarLog(patientName);
                                         var childId='patient'+patientId;
                                       //if(toggleElement(childId));
                                       //else{
@@ -651,7 +564,7 @@ function wrapUp() {
                                             var docId=labDocsArr[i].replace(' ', '');
 
                                             var ackStatus=getAckStatusFromDocLabId(docId);
-                                            oscarLog('childId='+childId+',docId='+docId+',ackStatus='+ackStatus);
+                                            //oscarLog('childId='+childId+',docId='+docId+',ackStatus='+ackStatus);
                                             showDocLab(childId,docId,'<%=providerNo%>','<%=searchProviderNo%>',ackStatus,patientName,'labdoc'+patientId+'show');
                                         }
                                         //toggleMarker('labdoc'+patientId+'show');
@@ -693,7 +606,7 @@ function wrapUp() {
                                 return ackStatus;
                             }
                             //not used
-                            function toggleElement(ele){// return true if element is present,false if not
+                           /* function toggleElement(ele){// return true if element is present,false if not
                                 //var div=window.frames[0].document.getElementById(ele);
                                 var div=$(ele);
                                 oscarLog("div="+div);
@@ -705,31 +618,32 @@ function wrapUp() {
                                     return true;
                                 }else
                                     return false;
-                            }
+                            }*/
                             function showAllDocLabs(){
                                 var patientids='<%=patientIdStr%>';
                                 var idsArr=patientids.split(',');
                                 clearDocView();
                                 for(var i=0;i<idsArr.length;i++){
                                     var id=idsArr[i];
-                                    oscarLog("ids in showalldoclabs="+id);
+                                    //oscarLog("ids in showalldoclabs="+id);
                                     if(id.length>0){
                                         showThisPatientDocs(id,true);
-                                        
+
                                     }
                                 }
                                //toggleMarker('allshow');
                             }
                             //not used
-                            function toggleMarker(marker){
+                        /*    function toggleMarker(marker){
                                 oscarLog('before toggleMarker='+$(marker).value);
                                 if($(marker).value==0)
                                     $(marker).value=1;
                                 else
                                     $(marker).value=0;
                                 oscarLog('after toggleMarker='+$(marker).value);
-                            }
+                            }*/
                             function showCategory(cat){
+                                //oscarLog('cat ='+cat);
                                 var pattern=new RegExp(cat+"=\\[.*?\\]","g");
                                 var text='<%=typeDocLab%>';
                                 var resultA=text.match(pattern);
@@ -741,7 +655,7 @@ function wrapUp() {
                                  r=r.replace("[","");
                                  r=r.replace("]","");
                                  var sA=r.split(",");//array of doc ids belong to this category
-                                 oscarLog("sA="+sA);
+                                 //oscarLog("sA="+sA);
                                  var childId="category"+cat;
                                  //if(toggleElement(childId));
                                 // else{
@@ -750,21 +664,17 @@ function wrapUp() {
                                      for(var i=0;i<sA.length;i++){
                                          var docLabId=sA[i];
                                          docLabId=docLabId.replace(/\s/g, "");
-                                         oscarLog("docLabId="+docLabId);
+                                         //oscarLog("docLabId="+docLabId);
                                          var patientId=getPatientIdFromDocLabId(docLabId);
-                                         oscarLog("patientId="+patientId);
+                                         //oscarLog("patientId="+patientId);
                                          var patientName=getPatientNameFromPatientId(patientId);
                                          var ackStatus=getAckStatusFromDocLabId(docLabId);
-                                         oscarLog("patientName="+patientName);
-                                         oscarLog("ackStatus="+ackStatus);
+                                         //oscarLog("patientName="+patientName);
+                                         //oscarLog("ackStatus="+ackStatus);
 
                                          if(patientName!=null) showDocLab(childId,docLabId,'<%=providerNo%>','<%=searchProviderNo%>',ackStatus,patientName,cat+'show');
                                      }
-
                                     //toggleMarker(cat+'show');
-
-
-
                             }
                             function showAb_Normal(ab_normal,str){
                                     str=str.replace('[','');
@@ -776,7 +686,7 @@ function wrapUp() {
                                 }else if (ab_normal=='abnormal'){
                                     childId='abnormals';
                                 }
-                                oscarLog(childId);
+                                //oscarLog(childId);
                                 if(childId!=null && childId.length>0){
                                     //if(toggleElement(childId));
                                       //else{
@@ -810,11 +720,11 @@ function wrapUp() {
                                         for(var i=0;i<labdocsArr.length;i++){
                                             var labdoc=labdocsArr[i];
                                             labdoc=labdoc.replace(' ','');
-                                            oscarLog('check type input='+labdoc);
+                                            //oscarLog('check type input='+labdoc);
                                             var type=checkType(labdoc);
                                             var ackStatus=getAckStatusFromDocLabId(labdoc);
                                             var patientName=getPatientNameFromPatientId(patientId);
-                                            oscarLog("type="+type+"--subType="+subType);
+                                            //oscarLog("type="+type+"--subType="+subType);
                                             if(type==subType)
                                                 showDocLab(childId,labdoc,'<%=providerNo%>','<%=searchProviderNo%>',ackStatus,patientName,'subtype'+subType+patientId+'show');
                                             else;
@@ -838,7 +748,7 @@ function wrapUp() {
                             }
 
                             //not used
-                            function showLabDocFromPatient(patientId){
+                       /*     function showLabDocFromPatient(patientId){
                                 $('labdoc'+patientId+'show').value=0;
                                 showThisPatientDocs(patientId);
                                 $('labdocshow'+patientId).hide();
@@ -851,10 +761,10 @@ function wrapUp() {
                                 showThisPatientDocs(patientId);
                                 $('labdocshow'+patientId).show();
                                 $('labdochide'+patientId).hide();
-                            }
+                            }*/
                             var currentBold='';
                             function un_bold(ele){
-                                oscarLog('currentbold='+currentBold+'---ele.id='+ele.id);
+                                //oscarLog('currentbold='+currentBold+'---ele.id='+ele.id);
                                 if(currentBold==ele.id){
                                     ;
                                 }else{
@@ -863,24 +773,486 @@ function wrapUp() {
                                     ele.style.fontWeight='bold';
                                     currentBold=ele.id;
                                 }
-                                oscarLog('currentbold='+currentBold+'---ele.id='+ele.id);
+                                //oscarLog('currentbold='+currentBold+'---ele.id='+ele.id);
                             }
 
-                            function popupConsultation(segmentId) {
-                            	  var page = '<%=request.getContextPath()%>/oscarEncounter/ViewRequest.do?segmentId='+segmentId;
-                            	  windowprops = "height=960,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-                            	  var popup=window.open(page, "<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgConsReq"/>", windowprops);
-                            	  if (popup != null) {
-                            	    if (popup.opener == null) {
-                            	      popup.opener = self;
-                            	    }
-                            	  }
-                            	}
-                            
+
+                           var number_of_row_per_page=20;
+                           function showPageNumber(page){
+                                    var totalNoRow=$('totalNumberRow').value;
+                                    var newStartIndex=number_of_row_per_page*(parseInt(page)-1);
+                                    var newEndIndex=parseInt(newStartIndex)+19;
+                                    var isLastPage=false;
+                                    if(newEndIndex>totalNoRow){
+                                        newEndIndex=totalNoRow;
+                                        isLastPage=true;
+                                    }
+                                    //oscarLog("new start="+newStartIndex+";new end="+newEndIndex);
+                                   for(var i=0;i<totalNoRow;i++){
+                                       if($('row'+i) && parseInt(newStartIndex)<=i && i<=parseInt(newEndIndex)) {
+                                           //oscarLog("show row-"+i);
+                                           $('row'+i).show();
+                                       }else if($('row'+i)){
+                                           //oscarLog("hide row-"+i);
+                                           $('row'+i).hide();
+                                       }
+                                   }
+                               //update current page
+                               $('currentPageNum').innerHTML=page;
+                               if(page==1)
+                               {
+                                   $('msgPrevious').hide();
+                               }else if(page>1){
+                                   $('msgPrevious').show();
+                               }
+                               if(isLastPage)
+                                   $('msgNext').hide();
+                               else
+                                   $('msgNext').show();
+                           }
+                           function showTypePageNumber(page,type){
+                               var eles;
+                               var numberPerPage=20;
+                               if(type=='D'){
+                                   eles=document.getElementsByName('scannedDoc');
+                                   var length=eles.length;
+                                   var startindex=(parseInt(page)-1)*numberPerPage;
+                                   var endindex=startindex+numberPerPage-1;
+                                   if(endindex>length-1){
+                                       endindex=length-1;
+                                   }
+                                   //only display current page
+                                   for(var i=startindex;i<endindex+1;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'table-row'});
+                                   }
+                                   //hide previous page
+                                   for(var i=0;i<startindex;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide later page
+                                   for(var i=endindex;i<length;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide all labs
+                                   eles=document.getElementsByName('HL7lab');
+                                   for(i=0;i<eles.length;i++){
+                                        var ele=eles[i];
+                                        ele.setStyle({display:'none'});
+                                   }
+                               }else if (type=='H'){
+                                   eles=document.getElementsByName('HL7lab');
+                                   var length=eles.length;
+                                   var startindex=(parseInt(page)-1)*numberPerPage;
+                                   var endindex=startindex+numberPerPage-1;
+                                   if(endindex>length-1){
+                                       endindex=length-1;
+                                   }
+                                   //only display current page
+                                   for(var i=startindex;i<endindex+1;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'table-row'});
+                                   }
+                                   //hide previous page
+                                   for(var i=0;i<startindex;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide later page
+                                   for(var i=endindex;i<length;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide all labs
+                                   eles=document.getElementsByName('scannedDoc');
+                                   for(i=0;i<eles.length;i++){
+                                        var ele=eles[i];
+                                        ele.setStyle({display:'none'});
+                                   }
+                               }else if (type=='N'){
+                                    var eles1=document.getElementsByClassName('NormalRes');
+                                    var length=eles.length;
+                                    var startindex=(parseInt(page)-1)*numberPerPage;
+                                    var endindex=startindex+numberPerPage-1;
+                                    if(endindex>length-1){
+                                           endindex=length-1;
+                                    }
+
+                                    for(var i=startindex;i<endindex+1;i++){
+                                        var ele=eles1[i];
+                                        ele.setStyle({display:'table-row'});
+                                    }
+                                    //hide previous page
+                                    for(var i=0;i<startindex;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide later page
+                                   for(var i=endindex;i<length;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide all abnormals
+                                    var eles2=document.getElementsByClassName('AbnormalRes');
+                                    i=0;
+                                    for(i=0;i<eles2.length;i++){
+                                        var ele=eles2[i];
+                                        ele.setStyle({display:'none'});
+                                    }
+                               }else if (type=='AB'){
+                                    var eles1=document.getElementsByClassName('AbnormalRes');
+                                    var length=eles.length;
+                                    var startindex=(parseInt(page)-1)*numberPerPage;
+                                    var endindex=startindex+numberPerPage-1;
+                                    if(endindex>length-1){
+                                           endindex=length-1;
+                                    }
+                                    for(var i=startindex;i<endindex+1;i++){
+                                        var ele=eles1[i];
+                                        ele.setStyle({display:'table-row'});
+                                    }
+                                    //hide previous page
+                                    for(var i=0;i<startindex;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide later page
+                                   for(var i=endindex;i<length;i++){
+                                       var ele=eles[i];
+                                       ele.setStyle({display:'none'});
+                                   }
+                                   //hide all normals
+                                    var eles2=document.getElementsByClassName('NormalRes');
+                                    for(var i=0;i<eles2.length;i++){
+                                        var ele=eles2[i];
+                                        ele.setStyle({display:'none'});
+                                    }
+                               }
+                           }
+
+                          /* function displayPage(page){//when category is all
+                               var selected=$("selectDocLabBottom").getSelected();
+                               if(selected=='A'){
+                                   if(page=='Next'){
+                                        var currentpage=parseInt($('currentPageNum').innerHTML);
+                                        showPageNumber(currentpage+1);
+                                   }
+                                   else if( page=='Previous'){
+                                        var currentpage=parseInt($('currentPageNum').innerHTML);
+                                        showPageNumber(currentpage-1);
+                                   }
+                                   else if(page>0){
+                                       showPageNumber(page);
+                                   }
+                               }else if(selected=='D'||selected=='H'||selected=='N'||selected=='AB'){
+                                   if(page=='Next'){
+                                       var cp=$('currentPageNum').innerHTML;
+                                       showTypePageNumber(parseInt(cp)+1,selected);
+                                   }
+                                   else if( page=='Previous'){
+                                       var cp=$('currentPageNum').innerHTML;
+                                       showTypePageNumber(parseInt(cp)-1,selected);
+                                   }
+                                   else if(page>0){
+                                       showTypePageNumber(page,selected);
+                                   }
+
+                               }
+                           }*/
+                           var current_category=new Array();
+                           var current_rows=new Array();
+                           var current_numberofpages=1;
+                           var total_rows=new Array();
+
+                           function setTotalRows(){
+                               var ds=document.getElementsByName('scannedDoc');
+                               var ls=document.getElementsByName('HL7lab');
+                               for(var i=0;i<ds.length;i++){
+                                   var ele=ds[i];
+                                   total_rows.push(ele.id);
+                               }
+                               for(var i=0;i<ls.length;i++){
+                                   var ele=ls[i];
+                                   total_rows.push(ele.id);
+                               }
+                               total_rows=sortRowId(uniqueArray(total_rows));
+                               current_category=new Array();
+                                                        current_category[0]=document.getElementsByName('scannedDoc');
+                                                        current_category[1]=document.getElementsByName('HL7lab');
+                                                        current_category[2]=document.getElementsByClassName('NormalRes');
+                                                        current_category[3]=document.getElementsByClassName('AbnormalRes');
+                           }
+                           function checkBox(){
+                                                    //oscarLog("in checkBox");
+                                                    var checkedArray=new Array();
+                                                    if($('documentCB').checked==1){
+                                                        checkedArray.push('document');
+                                                    }
+                                                    if($('hl7CB').checked==1){
+                                                        checkedArray.push('hl7');
+                                                    }
+                                                    if($('normalCB').checked==1){
+                                                        checkedArray.push('normal');
+                                                    }
+                                                    if($('abnormalCB').checked==1){
+                                                        checkedArray.push('abnormal');
+                                                    }
+                                         if(checkedArray.length==0||checkedArray.length==4){
+                                                        var endindex= number_of_row_per_page-1;
+                                                        if(endindex>=total_rows.length)
+                                                            endindex=total_rows.length-1;
+
+                                                        //show all
+                                                        for(var i=0;i<endindex+1;i++){
+                                                            var id=total_rows[i];
+                                                            if($(id)){
+                                                                $(id).show();
+                                                            }
+                                                        }
+                                                        for(var i=endindex+1;i<total_rows.length;i++){
+                                                            var id=total_rows[i];
+                                                            if($(id)){
+                                                                $(id).hide();
+                                                            }
+                                                        }
+                                                        current_numberofpages=Math.ceil(total_rows.length/number_of_row_per_page);
+                                                        initializeNavigation();
+                                                        current_category=new Array();
+                                                        current_category[0]=document.getElementsByName('scannedDoc');
+                                                        current_category[1]=document.getElementsByName('HL7lab');
+                                                        current_category[2]=document.getElementsByClassName('NormalRes');
+                                                        current_category[3]=document.getElementsByClassName('AbnormalRes');
+                                           }
+                                            else{
+                                                        //oscarLog('checkedArray='+checkedArray);
+                                                        var eles=new Array();
+                                                    for(var i=0;i<checkedArray.length;i++){
+                                                        var type=checkedArray[i];
+
+                                                        if(type=='document'){
+                                                            var docs=document.getElementsByName('scannedDoc');
+                                                            eles.push(docs);
+                                                        }
+                                                        else if(type=='hl7'){
+                                                            var labs=document.getElementsByName('HL7lab');
+                                                            eles.push(labs);
+                                                        }
+                                                        else if(type=='normal'){
+                                                            var normals=document.getElementsByClassName('NormalRes');
+                                                            eles.push(normals);
+
+                                                        }
+                                                        else if(type=='abnormal'){
+                                                            var abnormals=document.getElementsByClassName('AbnormalRes');
+                                                            eles.push(abnormals);
+                                                        }
+                                                    }
+                                                    current_category=eles;
+                                                    displayCategoryPage(1);
+                                                    initializeNavigation();
+                                                }
+                                            }
+
+                                            function displayCategoryPage(page){
+                                                //oscarLog('in displaycategorypage, page='+page);
+                                                //write all row ids to an array
+                                                var displayrowids=new Array();
+                                                    for(var p=0;p<current_category.length;p++){
+                                                        var elements=new Array();
+                                                        elements=current_category[p];
+                                                        //oscarLog("elements.lenght="+elements.length);
+                                                        for(var j=0;j<elements.length;j++){
+                                                            var e=elements[j];
+                                                            var rowid=e.id;
+                                                            displayrowids.push(rowid);
+                                                        }
+                                                    }
+                                                    //oscarLog('displayrowids='+displayrowids);
+                                                    //oscarLog('size='+displayrowids.length);
+                                                    //make array unique
+                                                    displayrowids=uniqueArray(displayrowids);
+                                                    //oscarLog('unique displayrowids='+displayrowids);
+                                                    //oscarLog('unique size='+displayrowids.length);
+                                                    displayrowids=sortRowId(displayrowids);
+                                                    //oscarLog('sort and unique displaywords='+displayrowids);
+
+                                                    var numOfRows=displayrowids.length;
+                                                    //oscarLog(numOfRows);
+                                                    current_numberofpages=Math.ceil(numOfRows/number_of_row_per_page);
+                                                    //oscarLog(current_numberofpages);
+                                                    var startIndex=(parseInt(page)-1)*number_of_row_per_page;
+                                                    var endIndex=startIndex+(number_of_row_per_page-1);
+                                                    if(endIndex>displayrowids.length-1){
+                                                        endIndex=displayrowids.length-1;
+                                                    }
+                                                    //set current displaying rows
+                                                    current_rows=new Array();
+                                                    for(var i=startIndex;i<endIndex+1;i++){
+                                                        if($(displayrowids[i])){
+                                                            current_rows.push(displayrowids[i]);
+                                                        }
+                                                    }
+                                                    //oscarLog('total_rows='+total_rows);
+                                                    //oscarLog('current_rows='+current_rows);
+                                                    //loop through every thing,if it's in displayrowids, show it , if it's not hide it.
+                                                    for(var i=0;i<total_rows.length;i++){
+                                                        var rowid=total_rows[i];
+                                                        if(a_contain_b(current_rows,rowid)){
+                                                            $(rowid).show();
+                                                        }else
+                                                            $(rowid).hide();
+                                                    }
+                                            }
+
+                                            function initializeNavigation(){
+                                                   $('currentPageNum').innerHTML=1;
+                                                    //update the page number shown and update previous and next words
+                                                    if(current_numberofpages>1){
+                                                        $('msgNext').show();
+                                                        $('msgPrevious').hide();
+                                                    }else if(current_numberofpages<1){
+                                                        $('msgNext').hide();
+                                                        $('msgPrevious').hide();
+                                                    }else if(current_numberofpages==1){
+                                                        $('msgNext').hide();
+                                                        $('msgPrevious').hide();
+                                                    }
+                                                    //oscarLog("current_numberofpages "+current_numberofpages);
+                                                    $('current_individual_pages').innerHTML="";
+                                                   if(current_numberofpages>1){
+                                                       for(var i=1;i<=current_numberofpages;i++){
+                                                        $('current_individual_pages').innerHTML+='<a style="text-decoration:none;" href="javascript:void(0);" onclick="navigatePage('+i+')> [ '+i+' ] </a>';
+                                                    }
+                                                   }
+                                            }
+                                            function sortRowId(a){
+                                                    var numArray=new Array();
+                                                    //sort array
+                                                    for(var i=0;i<a.length;i++){
+                                                        var id=a[i];
+                                                        var n=id.replace('row','');
+                                                        numArray.push(parseInt(n));
+                                                    }
+                                                    numArray.sort(function(a,b){return a-b;});
+                                                    a=new Array();
+                                                    for(var i=0;i<numArray.length;i++){
+                                                        a.push('row'+numArray[i]);
+                                                    }
+                                                    return a;
+                                            }
+                                            function a_contain_b(a,b){//a is an array, b maybe an element in a.
+                                                for(var i=0;i<a.length;i++){
+                                                    if(a[i]==b){
+                                                        return true;
+                                                    }
+                                                }
+                                                return false;
+                                            }
+
+                                            function uniqueArray(a){
+                                                var r=new Array();
+                                                o:for(var i=0,n=a.length;i<n;i++){
+                                                    for(var x=0,y=r.length;x<y;x++){
+                                                        if(r[x]==a[i]) continue o;
+                                                    }
+                                                    r[r.length]=a[i];
+                                                }
+                                                return r;
+                                            }
+
+                                            function navigatePage(p){
+                                                var pagenum=parseInt($('currentPageNum').innerHTML);
+                                                if(p=='Previous'){
+                                                    displayCategoryPage(pagenum-1);
+                                                    $('currentPageNum').innerHTML=pagenum-1
+                                                }
+                                                else if(p=='Next'){
+                                                    displayCategoryPage(pagenum+1);
+                                                    $('currentPageNum').innerHTML=pagenum+1
+                                                }
+                                                else if(parseInt(p)>0){
+                                                    displayCategoryPage(parseInt(p));
+                                                    $('currentPageNum').innerHTML=p;
+                                                }
+                                                changeNavigationBar();
+                                            }
+                                            function changeNavigationBar(){
+                                                var pagenum=parseInt($('currentPageNum').innerHTML);
+                                                if(current_numberofpages==1){
+                                                    $('msgNext').hide();
+                                                    $('msgPrevious').hide();
+                                                }
+                                                else if(current_numberofpages>1 && current_numberofpages==pagenum){
+                                                    $('msgNext').hide();
+                                                    $('msgPrevious').show();
+                                                }
+                                                else if(current_numberofpages>1 && pagenum==1){
+                                                    $('msgNext').show();
+                                                    $('msgPrevious').hide();
+                                                }else if(pagenum<current_numberofpages && pagenum>1){
+                                                    $('msgNext').show();
+                                                    $('msgPrevious').show();
+                                                }
+                                            }
+                                            function syncCB(ele){
+                                                var id=ele.id;
+                                                if(id=='documentCB'){
+                                                    if(ele.checked==1)
+                                                        $('documentCB2').checked=1;
+                                                    else
+                                                        $('documentCB2').checked=0;
+                                                }
+                                                else if(id=='documentCB2'){
+                                                    if(ele.checked==1)
+                                                        $('documentCB').checked=1;
+                                                    else
+                                                        $('documentCB').checked=0;
+                                                }
+                                                else if(id=='hl7CB'){
+                                                    if(ele.checked==1)
+                                                        $('hl7CB2').checked=1;
+                                                    else
+                                                        $('hl7CB2').checked=0;
+                                                }
+                                                else if(id=='hl7CB2'){
+                                                    if(ele.checked==1)
+                                                        $('hl7CB').checked=1;
+                                                    else
+                                                        $('hl7CB').checked=0;
+                                                }
+                                                else if(id=='normalCB'){
+                                                    if(ele.checked==1)
+                                                        $('normalCB2').checked=1;
+                                                    else
+                                                        $('normalCB2').checked=0;
+                                                }
+                                                else if(id=='normalCB2'){
+                                                    if(ele.checked==1)
+                                                        $('normalCB').checked=1;
+                                                    else
+                                                        $('normalCB').checked=0;
+                                                }
+                                                else if(id=='abnormalCB'){
+                                                    if(ele.checked==1)
+                                                        $('abnormalCB2').checked=1;
+                                                    else
+                                                        $('abnormalCB2').checked=0;
+                                                }
+                                                else if(id=='abnormalCB2'){
+                                                    if(ele.checked==1)
+                                                        $('abnormalCB').checked=1;
+                                                    else
+                                                        $('abnormalCB').checked=0;
+                                                }
+                                            }
+
+
 </script>
 </head>
 
-<body oldclass="BodyStyle" vlink="#0000FF" >
+<body oldclass="BodyStyle" vlink="#0000FF" onload="setTotalRows();" >
     <form name="reassignForm" method="post" action="ReportReassign.do" id="lab_form">
         <table  oldclass="MainTable" id="scrollNumber1" border="0" name="encounterTable" cellspacing="0" cellpadding="3" width="100%">
             <tr oldclass="MainTableTopRow">
@@ -906,7 +1278,7 @@ function wrapUp() {
                                             <%=ProviderData.getProviderName(searchProviderNo)%>
                                      <%}%>
                                         &nbsp;&nbsp;&nbsp;
-                                        Page : <%=pageNum%>
+                                        Page : <a id="currentPageNum"><%=pageNum%></a>
                                      </span>
                                 <% } %>
                         </td>
@@ -928,48 +1300,25 @@ function wrapUp() {
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
-                                <% if (demographicNo == null && labs.size() > 0) { %>
-                                    <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
+                                <% if (demographicNo == null && labdocs.size() > 0) { %>                                    
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                     <% if (ackStatus.equals("N")) {%>
                                         <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                     <% }
                                 }%>
-                                <select id="selectScannedDocs" name="scannedDocument" onchange="toggleScannedDocs(this);">
-                                                    <option value="I">Include Scanned Documents</option>
-                                                    <option value="O">Show Only Scanned Documents</option>
-                                                    <option value="N">Hide Scanned Documents</option>
-                                                  </select>
+                                
+                                <input type="checkbox" name="documentCB" id="documentCB" onclick="syncCB(this);checkBox();" ><span class="categoryCB"><bean:message key="global.Document"/></span>
+                                <input type="checkbox" onclick="syncCB(this);checkBox();" id="hl7CB" name="hl7CB"><span class="categoryCB"><bean:message key="global.hl7"/></span>
+                                <input type="checkbox" onclick="syncCB(this);checkBox();" id="normalCB"  name="normalCB"><span class="categoryCB"><bean:message key="global.normal"/></span>
+                                <input type="checkbox" id="abnormalCB" onclick="syncCB(this);checkBox();" name="abnormalCB"><span class="categoryCB"><bean:message key="global.abnormal"/></span>
+                                <input type="hidden" id="currentNumberOfPages" value="0"/>
                             </td>
-                            <td align="center" valign="center" width="40%" class="Nav">
-                                &nbsp;&nbsp;&nbsp;
-                                <% if (demographicNo == null) { %>
-                                    <span class="white">
-                                     <% if (ackStatus.equals("N")) {%>
-                                           <bean:message key="oscarMDS.index.msgNewLabReportsFor"/>
-                                        <%} else if (ackStatus.equals("A")) {%>
-                                           <bean:message key="oscarMDS.index.msgAcknowledgedLabReportsFor"/>
-                                        <%} else {%>
-                                           <bean:message key="oscarMDS.index.msgAllLabReportsFor"/>
-                                        <%}%>&nbsp;
-                                     <% if (searchProviderNo.equals("")) {%>
-                                            <bean:message key="oscarMDS.index.msgAllPhysicians"/>
-                                        <%} else if (searchProviderNo.equals("0")) {%>
-                                            <bean:message key="oscarMDS.index.msgUnclaimed"/>
-                                        <%} else {%>
-                                            <%=ProviderData.getProviderName(searchProviderNo)%>
-                                        <%}%>
-                                        &nbsp;&nbsp;&nbsp;
-                                        Page : <%=pageNum%>
-                                     </span>
-                                <% } %>
-                            </td>
+                            
                             <td align="right" valign="center" width="30%">
                                 <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')" style="color: #FFFFFF;"><bean:message key="global.help"/></a>
                                 | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" style="color: #FFFFFF;" ><bean:message key="global.about"/></a>
                                 | <a href="javascript:popupStart(800,1000,'../lab/CA/ALL/testUploader.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.hl7LabUpload"/></a>
-                                | <a href="javascript:popupStart(800,1000,'../dms/addDocuments.jsp')" style="color: #FFFFFF; ">Doc Upload</a>
-                                | <a href="javascript:popupStart(800,1000,'../dms/addProviderQueue.jsp')" style="color: #FFFFFF; ">Add Queue</a>
+                                | <a href="javascript:popupStart(600,500,'../dms/addDocuments2.jsp')" style="color: #FFFFFF; ">Doc Upload</a>
                                 | <a href="javascript:void(0);" onclick="changeView()" style="color: #FFFFFF;">Change view</a>
                             </td>
                         </tr>
@@ -977,8 +1326,8 @@ function wrapUp() {
                 </td>
             </tr>
             <tr>
-                <td>
-                    <table id="summaryView" width="100%">
+                <td style="margin:0px;padding:0px;">
+                    <table id="summaryView" width="100%" style="margin:0px;padding:0px;" cellpadding="0" cellspacing="0">
                         <tr>
                             <th align="left" valign="bottom" class="cell" nowrap>
                                 <input type="checkbox" onclick="checkAll('lab_form');" name="checkA"/>
@@ -1014,20 +1363,16 @@ function wrapUp() {
                         </tr>
 
                                                 <%
-                            int startIndex = 0;
-                            if ( request.getParameter("startIndex") != null ) {
-                                startIndex = Integer.parseInt(request.getParameter("startIndex"));
-                            }
-                            int endIndex = startIndex+20;
-                            if ( labs.size() < endIndex ) {
-                                endIndex = labs.size();
-                                //endIndex = labNoArray.size();
-                            }
+                            int number_of_rows_per_page=20;
+                            int totalNoPages=labdocs.size()/number_of_rows_per_page;
+                            if(labdocs.size()%number_of_rows_per_page!=0)
+                                totalNoPages+=1;
+                            System.out.println("totalNoPages="+totalNoPages);
+                            int total_row_index=labdocs.size()-1;
+                            System.out.println("total_row_index="+total_row_index);
+                            for (int i = 0; i < labdocs.size(); i++) {
 
-                            for (int i = startIndex; i < endIndex; i++) {
-
-
-                                result =  (LabResultData) labs.get(i);
+                                LabResultData   result =  (LabResultData) labdocs.get(i);
                                 //LabResultData result = (LabResultData) labMap.get(labNoArray.get(i));
 
                                 String segmentID        = (String) result.segmentID;
@@ -1043,9 +1388,10 @@ function wrapUp() {
                                     discipline="";
                                 MiscUtils.getLogger().debug("result.isAbnormal()="+result.isAbnormal());
                                 %>
-
-                                <tr bgcolor="<%=bgcolor%>" <%if(result.isDocument()){%> name="scannedDoc" <%} else{%> name="notScannedDoc" <%}%>style="display:hidden" class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
+                        
+                                <tr id="row<%=i%>" <%if((number_of_rows_per_page-1)<i){%>style="display:none;"<%}%> bgcolor="<%=bgcolor%>" <%if(result.isDocument()){%> name="scannedDoc" <%} else{%> name="HL7lab" <%}%> class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
                                 <td nowrap>
+                                    <input type="hidden" id="totalNumberRow" value="<%=total_row_index+1%>">
                                     <input type="checkbox" name="flaggedLabs" value="<%=segmentID%>">
                                     <input type="hidden" name="labType<%=segmentID+result.labType%>" value="<%=result.labType%>"/>
                                     <input type="hidden" name="ackStatus" value="<%= result.isMatchedToPatient() %>" />
@@ -1075,7 +1421,7 @@ function wrapUp() {
                                     	}
                                     }
                                     else if (result.isDocument()){ %>
-                                    <a href="javascript:reportWindow('../dms/DocumentDisplay3.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ')"><%=(String) result.getPatientName()%></a>
+                                    <a href="javascript:reportWindow('../dms/DocumentDisplay3.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ',660,1020)"><%=(String) result.getPatientName()%></a>
                                     <% }else {%>
                                     <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                                     <!--a href="javascript:reportWindow('../lab/CA/BC/report.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')">2</a-->
@@ -1106,10 +1452,10 @@ function wrapUp() {
                                     <% int multiLabCount = result.getMultipleAckCount(); %>
                                     <%= result.getAckCount() %>&#160<% if ( multiLabCount >= 0 ) { %>(<%= result.getMultipleAckCount() %>)<%}%>
                                 </td>
-                            </tr>
-                         <% }
+                            </tr>                         
+                         <% } 
 
-                            if ( endIndex == 0 ) { %>
+                            if ( total_row_index < 0 ) { %>
                             <tr>
                                 <td colspan="9" align="center">
                                     <i><bean:message key="oscarMDS.index.msgNoReports"/></i>
@@ -1129,57 +1475,54 @@ function wrapUp() {
                                                 <% if (request.getParameter("fname") != null) { %>
                                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                                 <% } %>
-                                                <% if (demographicNo == null && labs.size() > 0) { %>
+                                                <% if (demographicNo == null && labdocs.size() > 0) { %>
                                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
                                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                                     <% if (ackStatus.equals("N")) {%>
-                                                        <br><input type="button" class="smallButton" value="File" onclick="submitFile()"/>
+                                                        <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                                     <% }
-                                                } %>
+                                                } %>                                                
+                                                    <input type="checkbox" name="documentCB2" id="documentCB2" onclick="syncCB(this);checkBox();"><span class="categoryCB"><bean:message key="global.Document"/></span>
+                                                    <input type="checkbox" onclick="syncCB(this);checkBox();" id="hl7CB2" name="hl7CB2"><span class="categoryCB"><bean:message key="global.hl7"/></span>
+                                                    <input type="checkbox" onclick="syncCB(this);checkBox();" id="normalCB2"  name="normalCB2"><span class="categoryCB"><bean:message key="global.normal"/></span>
+                                                    <input type="checkbox" id="abnormalCB2" onclick="syncCB(this);checkBox();" name="abnormalCB2"><span class="categoryCB"><bean:message key="global.abnormal"/></span>
                                             </td>
+                                        <script type="text/javascript">
+                                                
+                                        </script>
+                                        </tr>
+                                        <tr>
                                             <td align="center" valign="middle" width="40%">
                                                 <div class="Nav">
-                                                <% if ( pageNum > 1 || labs.size() > endIndex ) {
-                                                 //if (pageNum > 1 || labNoArray.size() > endIndex ) {
-                                                    if ( pageNum > 1 ) { %>
-                                                        <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>">< <bean:message key="oscarMDS.index.msgPrevious"/></a>
-                                                 <% } else { %>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                 <% } %>
-                                                    <%int count = 1;
-                                                      for( int i =0; i < labs.size(); i = i +20){
-                                                      //for ( int i=0; i < labNoArray.size(); i = i+20){%>
-                                                      <a style="text-decoration:none;" href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=count%>&startIndex=<%=i%>">[<%=count%>]</a>
-                                                      <%count++;
-                                                      }%>
-                                                 <% if ( labs.size() > endIndex ) {
-                                                    //if ( labNoArray.size() > endIndex ) {
-                    %>
-                                                        <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message key="oscarMDS.index.msgNext"/> ></a>
+                                                <% if ( totalNoPages>1 ) {
+                                                    %>
+                                                    <a id="msgPrevious" <%if(pageNum<=1){%> style="display:none;" <%}%> href="javascript:void(0);" onclick="navigatePage('Previous');">< <bean:message key="oscarMDS.index.msgPrevious"/></a>
+                                                    <span id="current_individual_pages"><%
+                                                      for( int i =0; i <totalNoPages; i ++){
+                                                      %>
+                                                       <a  style="text-decoration:none;" href="javascript:void(0);" onclick="navigatePage('<%=i+1%>')">[<%=i+1%>]</a>
+                                                      <%
+                                                                                                           }%></span>
+                                                                                                      
+                    <a id="msgNext" <%if( pageNum==totalNoPages ) {%> style="display:none;" <%}%> href="javascript:void(0);" onclick="navigatePage('Next');"><bean:message key="oscarMDS.index.msgNext"/> ></a>
 
-                                                 <% } else { %>
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                 <% }
-                                                   } %>
+                                                <%  } %>
                                                  </div>
                                             </td>
-                                            <td align="right" width="30%">
-                                               &nbsp;
-                                            </td>
+                                         
                                         </tr>
                                     </table>
-                                </td>
-                            </tr>
+                                </td>                            </tr>
                     </table>
                 </td>
             </tr>
         </table>
     </form>
-                                                 <table id="readerViewTable" style="display:none;table-layout: fixed" width="1080" border="1">
+        <table id="readerViewTable" style="display:none;table-layout: fixed;border-color: blue;border-width: thin;border-spacing: 0px;background-color: #E0E1FF" width="1080" border="1">
                                                      <col width="120">
                                                      <col width="950">
           <tr>
-              <td valign="top" style="overflow:hidden" >
+              <td valign="top" style="overflow:hidden;border-color: blue;border-width: thin;background-color: #E0E1FF" >
                     <%Enumeration en=patientIdNames.keys();
                         if(en.hasMoreElements()){%>
                         <div><a id="totalAll" href="javascript:void(0);" onclick="showAllDocLabs();un_bold(this);">All <span id="totalNumDocs">(<%=totalNumDocs%>)</span></a></div><br>
@@ -1226,9 +1569,9 @@ if(totalDocs>0||totalHL7>0){%><br><%}
                                 scanDocs++;
                         else if(t.equals("HL7"))
                                 HL7s++;
-                        else if(t.equals("CML"))
+                        else if(t.equals("CML"))//not used
                                 CMLs++;
-                        else if(t.equals("MDSs"))
+                        else if(t.equals("MDSs"))//not used
                                 MDSs++;
                         }
 
@@ -1258,7 +1601,7 @@ if(totalDocs>0||totalHL7>0){%><br><%}
 
                     </dt></dl>
              </td>
-             <td style="width:100%;height:600px">
+             <td style="width:100%;height:600px;background-color: #E0E1FF">
                  <div id="docViews" style="width:100%;height:600px;overflow:auto;"></div>  
              </td>
           </tr>
