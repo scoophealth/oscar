@@ -80,6 +80,11 @@
 	<category name="org.springframework">
 		<priority value="WARN" />
 	</category>
+
+	<!-- HAPI is logging an info message at error level which isn't an error, this will squelch it -->	
+	<category name="ca.uhn.hl7v2.model.v26.segment.UAC">
+		<priority value="FATAL" />
+	</category>
 	
 	<!-- ############################# -->
 
