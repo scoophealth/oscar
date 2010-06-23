@@ -60,7 +60,7 @@ import oscar.util.UtilDateUtilities;
 public class AddEditDocumentAction extends DispatchAction {
 
     public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
-
+        //System.out.println("in multifast");
         Hashtable errors = new Hashtable();
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
 
@@ -86,16 +86,16 @@ public class AddEditDocumentAction extends DispatchAction {
             newDoc.setNumberOfPages(numberOfPages);
             String doc_no = EDocUtil.addDocumentSQL(newDoc);
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
-
-        if (request.getParameter("provider") !=null){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
+            String providerId=request.getParameter("provider");
+            //System.out.println("providerId="+providerId);
+        if (providerId !=null){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-            ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
-            String proNo = request.getParameter("provider");
-            providerInboxRoutingDao.addToProviderInbox(proNo,doc_no,"DOC");
+            ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");            
+            providerInboxRoutingDao.addToProviderInbox(providerId,doc_no,"DOC");
         }
         //add to queuelinkdocument
             String queueId=request.getParameter("queue");
-            System.out.println("queueId="+queueId);
+            //System.out.println("queueId="+queueId);
         if ( queueId !=null &&!queueId.equals("-1")){
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) ctx.getBean("queueDocumentLinkDAO");
@@ -105,7 +105,7 @@ public class AddEditDocumentAction extends DispatchAction {
             request.getSession().setAttribute("preferredQueue", queueId);
         }
         if (docFile != null){
-            System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());
+            //System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());
         }
 
         return mapping.findForward("fastUploadSuccess");
@@ -196,7 +196,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
     //returns true if successful
     private boolean addDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
-       System.out.println("=============in addDocument============");
+       //System.out.println("=============in addDocument============");
         Hashtable errors = new Hashtable();
         try {
             if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
@@ -256,7 +256,7 @@ public class AddEditDocumentAction extends DispatchAction {
                  //   System.out.println("here22");
                     String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
 
-                    System.out.println("here0 "+strNote);
+                    //System.out.println("here0 "+strNote);
                     cmn.setNote(strNote);
                     cmn.setSigned(true);
                     cmn.setSigning_provider_no("-1");
@@ -273,8 +273,8 @@ public class AddEditDocumentAction extends DispatchAction {
                     cmnl.setTableName(cmnl.DOCUMENT);
                     cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
                     cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
-                    System.out.println("ValuesSavedInCaseManagementNoteLink: ");
-                    System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
+                    //System.out.println("ValuesSavedInCaseManagementNoteLink: ");
+                    //System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
                     EDocUtil.addCaseMgmtNoteLink(cmnl);
             }
 
