@@ -37,7 +37,9 @@ import java.util.ArrayList;
 import org.apache.commons.codec.binary.Base64;
 
 public class UtilMisc {
-  public static String htmlEscape(String S) {
+  public static String htmlEscape(String s) {
+    //call to remove '&lt' to '<' etc...
+    String  S=rhtmlEscape(s);
     if (null == S) {
       return S;
     }
@@ -60,13 +62,65 @@ public class UtilMisc {
       else if (c == '\'') {
         sb.append("&#39;");
       }
-      else {
+    else {
         sb.append(c);
       }
     }
     return sb.toString();
   }
 
+ /**
+  * For eformGenerator to Edit-Html window
+  * This method is used to generate html symbols
+  * eg. change '&lt' to  '<'
+  *            '&gt' to '>'
+  *
+  */
+  public static String rhtmlEscape(String S) {
+    if (null == S) {
+      return S;
+    }
+    int N = S.length();
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+  System.out.println("r-escape> : "+c);
+        if (c == '&') {//the read one more char and encode
+          String temp =new String();
+          temp = temp +(S.charAt(i+1));
+          System.out.println("temp> : "+temp);
+          if(temp.equalsIgnoreCase("a")){//&amp
+              sb.append("&");
+              i=i+4;//move on
+          }else if (temp.equalsIgnoreCase("l")) {//&lt
+              sb.append("<");
+              i=i+3;//move on
+          }else if (temp.equalsIgnoreCase("g")) {//&gt
+              sb.append(">");
+              i=i+3;//move on
+          }else if (temp.equalsIgnoreCase("q")) {//&quot
+              sb.append("\"");
+              i=i+5;//move on
+          }
+          else {
+              //do nothing to the char
+      }
+        }else if (c == '#') {
+
+          String temp =new String();
+          temp = temp + S.charAt(i) + S.charAt(i+1) + S.charAt(i+2) + S.charAt(i+3) ;
+          if(temp.equalsIgnoreCase("#39;")){//'
+              sb.append("\'");
+              i=i+4;//move on
+          }
+        }else {
+          //do nothing
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+  
   public static String charEscape(String S, char a) {
     if (null == S) {
       return S;
