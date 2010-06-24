@@ -1380,7 +1380,14 @@ function fetchAttached() {
 						%>
 					<%
 						}
-					%>
+					
+						if (thisForm.isViewOnly())
+						{
+							%>
+								<input type="button" value="Send eResponse" onclick="document.location='<%=request.getContextPath()%>/lab/CA/ALL/sendOruR01.jsp'" />
+							<%
+						}
+						%>
 					</td>
 				</tr>
 
