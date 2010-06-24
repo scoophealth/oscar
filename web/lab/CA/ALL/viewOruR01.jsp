@@ -27,15 +27,15 @@
 		<td>
 			<table style="border-collapse:collapse; width 100%">
 				<tr style="border-bottom:solid grey 1px">
-					<td style="font-weight:bold;text-align:right;border-right:solid grey 1px">Name</td>
+					<td style="font-weight:bold;text-align:right">Name: </td>
 					<td><%=viewOruR01UIBean.getClientDisplayName()%></td>
 				</tr>
 				<tr style="border-bottom:solid grey 1px">
-					<td style="font-weight:bold;text-align:right;border-right:solid grey 1px">Health Number</td>
+					<td style="font-weight:bold;text-align:right">Health Number: </td>
 					<td><%=viewOruR01UIBean.getHinForDisplay()%></td>
 				</tr>
 				<tr>
-					<td style="font-weight:bold;text-align:right;border-right:solid grey 1px">BirthDay</td>
+					<td style="font-weight:bold;text-align:right">BirthDay: </td>
 					<td><%=viewOruR01UIBean.getBirthDayForDisplay()%></td>
 				</tr>
 			</table>
@@ -56,7 +56,7 @@
 				if (viewOruR01UIBean.hasBinaryFile())
 				{
 					%>
-						<span style="font-weight:bold">File name :</span> <%=viewOruR01UIBean.getBinaryFilenameForDisplay()%> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" value="download file" onclick="document.location='<%=viewOruR01UIBean.getContentRenderingUrl(request, true)%>'" />
+						<span style="font-weight:bold">File name:</span> <%=viewOruR01UIBean.getBinaryFilenameForDisplay()%> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" value="download file" onclick="document.location='<%=viewOruR01UIBean.getContentRenderingUrl(request, true)%>'" />
 						<hr />
 						<%=viewOruR01UIBean.getPreviewFileHtml(request)%>
 					<%
