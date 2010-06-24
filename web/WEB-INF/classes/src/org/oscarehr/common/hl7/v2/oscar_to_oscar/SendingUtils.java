@@ -70,8 +70,8 @@ public final class SendingUtils {
 
 			MultipartPostMethod multipartPostMethod = new MultipartPostMethod(url);
 			multipartPostMethod.addParameter("importFile", tempFile.getName(), tempFile);
-			multipartPostMethod.addParameter("key", OscarToOscarUtils.encodeToBase64String(encryptedSecretKey));
-			multipartPostMethod.addParameter("signature", OscarToOscarUtils.encodeToBase64String(signature));
+			multipartPostMethod.addParameter("key", DataTypeUtils.encodeToBase64String(encryptedSecretKey));
+			multipartPostMethod.addParameter("signature", DataTypeUtils.encodeToBase64String(signature));
 			multipartPostMethod.addParameter("service", serviceName);
 
 			HttpClient httpClient = new HttpClient();
@@ -111,7 +111,7 @@ public final class SendingUtils {
 	}
 
 	public static PublicKey getPublicOscarKey(String publicOscarKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(OscarToOscarUtils.decodeBase64(publicOscarKeyString));
+	    X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(DataTypeUtils.decodeBase64(publicOscarKeyString));
 		KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
 		PublicKey publicOscarKey = pubKeyFactory.generatePublic(pubKeySpec);
 	    return publicOscarKey;
@@ -122,7 +122,7 @@ public final class SendingUtils {
 	 * because it's a key we give out to other people.
 	 */
 	public static PrivateKey getPublicServiceKey(String publicServiceKeyString) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(OscarToOscarUtils.decodeBase64(publicServiceKeyString));
+	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(DataTypeUtils.decodeBase64(publicServiceKeyString));
 		KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
 		PrivateKey publicServiceKey = privKeyFactory.generatePrivate(privKeySpec);
 	    return publicServiceKey;

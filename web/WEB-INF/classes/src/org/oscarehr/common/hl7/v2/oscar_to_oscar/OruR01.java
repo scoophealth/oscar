@@ -15,7 +15,6 @@ import org.oscarehr.util.MiscUtils;
 import oscar.util.BuildInfo;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v26.datatype.FT;
 import ca.uhn.hl7v2.model.v26.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v26.group.ORU_R01_PATIENT_RESULT;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
@@ -85,46 +84,17 @@ public final class OruR01 {
 		if (observationData.textData!=null)
 		{
 			NTE nte = orderObservation.getNTE(nteCounter);
-			fillOneNte(nte, observationData.dataName, TEXT_DATA_FILENAME_PLACEHOLDER, OscarToOscarUtils.encodeToBase64String(observationData.textData.getBytes()));
+			DataTypeUtils.fillNte(nte, observationData.dataName, TEXT_DATA_FILENAME_PLACEHOLDER, observationData.textData.getBytes());
 			nteCounter++;
 		}
 		
 		if (observationData.binaryData!=null)
 		{
 			NTE nte = orderObservation.getNTE(nteCounter);
-			fillOneNte(nte, observationData.dataName, observationData.binaryDataFileName, OscarToOscarUtils.encodeToBase64String(observationData.binaryData));
+			DataTypeUtils.fillNte(nte, observationData.dataName, observationData.binaryDataFileName, observationData.binaryData);
 		}
 	}
 
-	private static void fillOneNte(NTE nte, String dataName, String fileName, String stringData) throws HL7Exception {
-
-		nte.getCommentType().getText().setValue(dataName);
-		nte.getCommentType().getNameOfCodingSystem().setValue(fileName);
-
-		int dataLength = stringData.length();
-		int chunks = dataLength / DataTypeUtils.NTE_COMMENT_MAX_SIZE;
-		if (dataLength % DataTypeUtils.NTE_COMMENT_MAX_SIZE != 0) chunks++;
-		logger.debug("Breaking Observation Data (" + dataLength + ") into chunks:" + chunks);
-
-		for (int i = 0; i < chunks; i++) {
-			FT commentPortion = nte.getComment(i);
-
-			int startIndex = i * DataTypeUtils.NTE_COMMENT_MAX_SIZE;
-			int endIndex = Math.min(dataLength, startIndex + DataTypeUtils.NTE_COMMENT_MAX_SIZE);
-
-			commentPortion.setValue(stringData.substring(startIndex, endIndex));
-		}
-	}
-
-	private static String getNteCommentsAsSingleString(NTE nte) {
-		FT[] fts = nte.getComment();
-
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < fts.length; i++)
-			sb.append(fts[i].getValue());
-
-		return (sb.toString());
-	}
 
 	/**
 	 * An OBR segment is required even though none of the fields are relevant. This will create essentially a blank / useless OBR. It will fill in required fields with valid but essentially useless data.
@@ -168,12 +138,12 @@ public final class OruR01 {
 		temp=nte.getCommentType().getNameOfCodingSystem().getValue();
 		if (TEXT_DATA_FILENAME_PLACEHOLDER.equals(temp))
 		{
-			observationData.textData=new String(OscarToOscarUtils.decodeBase64(getNteCommentsAsSingleString(nte)), OscarToOscarUtils.ENCODING);
+			observationData.textData=new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), DataTypeUtils.ENCODING);
 		}
 		else
 		{
 			observationData.binaryDataFileName=temp;
-			observationData.binaryData=OscarToOscarUtils.decodeBase64(getNteCommentsAsSingleString(nte));
+			observationData.binaryData=DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte);
 		}
 	}
 
@@ -210,9 +180,9 @@ public final class OruR01 {
 		logger.info(messageString);
 
 		ORU_R01 newObservationMsg = (ORU_R01) OscarToOscarUtils.pipeParser.parse(messageString);
-		byte[] decoded = OscarToOscarUtils.decodeBase64(getNteCommentsAsSingleString(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(1)));
+		byte[] decoded = DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(1));
 		logger.info("equal binary data:" + Arrays.equals(b, decoded));
-		logger.info("text data:" + getNteCommentsAsSingleString(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(0)));
+		logger.info("text data:" + new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(newObservationMsg.getPATIENT_RESULT(0).getORDER_OBSERVATION(0).getNTE(0)), DataTypeUtils.ENCODING));
 		FileUtils.writeByteArrayToFile(new File("/tmp/out.test"), decoded);
 	}
 }

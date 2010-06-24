@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
@@ -18,6 +19,7 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v26.datatype.CX;
 import ca.uhn.hl7v2.model.v26.datatype.DT;
 import ca.uhn.hl7v2.model.v26.datatype.DTM;
+import ca.uhn.hl7v2.model.v26.datatype.FT;
 import ca.uhn.hl7v2.model.v26.datatype.PLN;
 import ca.uhn.hl7v2.model.v26.datatype.XAD;
 import ca.uhn.hl7v2.model.v26.datatype.XCN;
@@ -37,14 +39,25 @@ public final class DataTypeUtils {
 	public static final int NTE_COMMENT_MAX_SIZE=65536;
 	public static final String ACTION_ROLE_SENDER="SENDER";
 	public static final String ACTION_ROLE_RECEIVER="RECEIVER";
+	public static final String ENCODING = "UTF-8";
+	private static final Base64 base64 = new Base64();
 	
 	/**
 	 * Don't access this formatter directly, use the getAsFormattedString method, it provides synchronisation
 	 */
 	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
 
+
 	private DataTypeUtils() {
 		// not meant to be instantiated by anyone, it's a util class
+	}
+
+	public static String encodeToBase64String(byte[] b) throws UnsupportedEncodingException {
+		return (new String(base64.encode(b), ENCODING));
+	}
+
+	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
+		return (base64.decode(s.getBytes(ENCODING)));
 	}
 
 	public static String getAsHl7FormattedString(Date date) {
@@ -435,32 +448,44 @@ public final class DataTypeUtils {
 
 	/**
 	 * @param nte
-	 * @param typeText should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
-	 * @param dataType should be the extention of the file type, i.e. "txt", "doc", "pdf", "jpg", "png" etc...
-	 * @param data should be UTF-8 String, if you have bytes, use base64 encoding first. Max Length is 65535
+	 * @param dataName should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
+	 * @param fileName should be the file name if applicable, can be null if it didn't come from a file.
+	 * @param data and binary data, a String must pass in bytes too as it needs to be base64 encoded for \n and \r's
 	 * @throws HL7Exception
+	 * @throws UnsupportedEncodingException 
 	 */
-	public static void fillNte(NTE nte, String typeText, String dataType, String data) throws HL7Exception {
-		if (typeText.length()+dataType.length() > 700) throw (new IllegalArgumentException("Type + dataType too long for NTE, max combined length is 700, type.length()=" + typeText.length()+", dataType.length()="+dataType.length()));
-		if (data.length() > 65535) throw (new IllegalArgumentException("Data too long for NTE, data max length is 65535, data.length()=" + data.length()));
+	public static void fillNte(NTE nte, String dataName, String fileName, byte[] data) throws HL7Exception, UnsupportedEncodingException {
 
-		nte.getCommentType().getText().setValue(typeText);
-		nte.getComment(0).setValue(data);
+		nte.getCommentType().getText().setValue(dataName);
+		if (fileName!=null) nte.getCommentType().getNameOfCodingSystem().setValue(fileName);
+
+		String stringData=encodeToBase64String(data);
+		int dataLength = stringData.length();
+		int chunks = dataLength / DataTypeUtils.NTE_COMMENT_MAX_SIZE;
+		if (dataLength % DataTypeUtils.NTE_COMMENT_MAX_SIZE != 0) chunks++;
+		logger.debug("Breaking Observation Data (" + dataLength + ") into chunks:" + chunks);
+
+		for (int i = 0; i < chunks; i++) {
+			FT commentPortion = nte.getComment(i);
+
+			int startIndex = i * DataTypeUtils.NTE_COMMENT_MAX_SIZE;
+			int endIndex = Math.min(dataLength, startIndex + DataTypeUtils.NTE_COMMENT_MAX_SIZE);
+
+			commentPortion.setValue(stringData.substring(startIndex, endIndex));
+		}
 	}
 
-	/**
-	 * @param nte
-	 * @param typeText should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
-	 * @param dataType should be the extention of the file type, i.e. "txt", "doc", "pdf", "jpg", "png" etc...
-	 * @param data will be base64 encoded, the encoded length must still be less than 65535
-	 * @throws HL7Exception
-	 * @throws UnsupportedEncodingException
-	 */
-	public static void fillNte(NTE nte, String typeText, String dataType, byte[] data) throws HL7Exception, UnsupportedEncodingException {
-		String dataString = OscarToOscarUtils.encodeToBase64String(data);
-		fillNte(nte, typeText, dataType, dataString);
+	public static byte[] getNteCommentsAsSingleDecodedByteArray(NTE nte) throws UnsupportedEncodingException {
+		FT[] fts = nte.getComment();
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < fts.length; i++)
+			sb.append(fts[i].getValue());
+
+		return (decodeBase64(sb.toString()));
 	}
-	
+
+
 	/**
 	 * @param rol
 	 * @param provider

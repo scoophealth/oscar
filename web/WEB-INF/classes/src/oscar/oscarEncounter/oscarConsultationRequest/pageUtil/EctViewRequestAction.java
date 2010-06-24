@@ -49,6 +49,7 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -137,7 +138,7 @@ public class EctViewRequestAction extends Action {
         thisForm.seteReferral(false);
 	}
 	
-	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception
+	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception, UnsupportedEncodingException
 	{
 		String hl7Message=Factory.getHL7Body(segmentId);
 		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(hl7Message);

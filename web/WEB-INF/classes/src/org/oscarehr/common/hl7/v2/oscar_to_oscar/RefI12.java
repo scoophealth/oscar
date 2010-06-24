@@ -1,5 +1,6 @@
 package org.oscarehr.common.hl7.v2.oscar_to_oscar;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -36,7 +37,7 @@ public final class RefI12 {
 		ALLERGIES
 	}
 	
-	public static REF_I12 makeRefI12(String facilityName, ConsultationRequest consultationRequest, StreetAddressDataHolder referringOfficeStreetAddress) throws HL7Exception
+	public static REF_I12 makeRefI12(String facilityName, ConsultationRequest consultationRequest, StreetAddressDataHolder referringOfficeStreetAddress) throws HL7Exception, UnsupportedEncodingException
 	{
 		REF_I12 referralMsg=new REF_I12();
 
@@ -77,26 +78,27 @@ public final class RefI12 {
 		pv1.getPatientClass().setValue("N"); // N is not applicable
     }
 
-	private static void fillReferralNotes(REF_I12 referralMsg, ConsultationRequest consultationRequest) throws HL7Exception
+	private static void fillReferralNotes(REF_I12 referralMsg, ConsultationRequest consultationRequest) throws HL7Exception, UnsupportedEncodingException
 	{
 		// for each data section, we'll create a new NTE and we'll label the section some how...
 
 		// Was specifically told that appointment notes is considered a secret field that should never be shown to the referredTo Provider
 		// DataTypeUtils.fillNte(referralMsg.getNTE(0), REF_NTE_TYPE.APPOINTMENT_NOTES.name(), consultationRequest.getStatusText());
+		
 		int noteCounter=0;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), "txt", consultationRequest.getReasonForReferral());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), null, consultationRequest.getReasonForReferral().getBytes());
 
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), "txt", consultationRequest.getClinicalInfo());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), null, consultationRequest.getClinicalInfo().getBytes());
 		
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), "txt", consultationRequest.getConcurrentProblems());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), null, consultationRequest.getConcurrentProblems().getBytes());
 		
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), "txt", consultationRequest.getCurrentMeds());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), null, consultationRequest.getCurrentMeds().getBytes());
 		
 		noteCounter++;
-		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.ALLERGIES.name(), "txt", consultationRequest.getAllergies());
+		DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.ALLERGIES.name(), null, consultationRequest.getAllergies().getBytes());
 	}
 
 	
@@ -141,7 +143,7 @@ public final class RefI12 {
 		rf1.getReferralReason(0).getText().setValue(referralReasonDescription);
 	}
 	
-	public static String getNteValue(REF_I12 referralMsg, REF_NTE_TYPE nteType) throws HL7Exception
+	public static String getNteValue(REF_I12 referralMsg, REF_NTE_TYPE nteType) throws HL7Exception, UnsupportedEncodingException
 	{
 		logger.debug("Looking for nte comment type : "+nteType.name());
 		logger.debug("Number of NTE segments : "+referralMsg.getNTEReps());
@@ -154,7 +156,7 @@ public final class RefI12 {
 
             if (nteType.name().equals(nteCommentType))
             {
-            	return(nte.getComment(0).getValue());
+            	return(new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), DataTypeUtils.ENCODING));
             }
 		}
 		
