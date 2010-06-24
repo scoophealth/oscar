@@ -34,7 +34,7 @@ import org.oscarehr.util.SpringUtils;
  * This servlet assumes the image exists, for the most part this servlet is a "drop in" replacement for serving images from the HD directly, i.e. things like existence and appropriateness of the image should have already been checked. In general security
  * should also be checked before hand, we also check again here as security is a special case.
  */
-public class ImageRenderingServlet extends HttpServlet {
+public final class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
 	private static DigitalSignatureDao digitalSignatureDao = (DigitalSignatureDao) SpringUtils.getBean("digitalSignatureDao");
@@ -43,7 +43,8 @@ public class ImageRenderingServlet extends HttpServlet {
 		local_client, hnr_client, integrator_client, signature_preview, signature_stored
 	}
 
-	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@Override
+    public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			String source = request.getParameter("source");
 
