@@ -780,7 +780,7 @@ function fetchAttached() {
 
 		}
 		
-		if (thisForm.isViewOnly())
+		if (thisForm.iseReferral())
 		{
 			%>
 				<SCRIPT LANGUAGE="JavaScript">
@@ -884,7 +884,7 @@ function fetchAttached() {
 						<tr>
 							<td style="text-align: center" class="stat">
 							<%
-								if (thisForm.isViewOnly())
+								if (thisForm.iseReferral())
 								{
 									%>
 										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" />
@@ -964,7 +964,7 @@ function fetchAttached() {
 							</td>
 							<td align="right" class="tite2">
 							<%
-								if (thisForm.isViewOnly())
+								if (thisForm.iseReferral())
 								{
 									%>
 										<%=thisForm.getProfessionalSpecialistName()%>
@@ -1028,7 +1028,7 @@ function fetchAttached() {
 						<tr>
 							<td class="tite4">
 							<%
-								if (thisForm.isViewOnly())
+								if (thisForm.iseReferral())
 								{
 									%>
 										<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" /> : 
@@ -1381,7 +1381,7 @@ function fetchAttached() {
 					<%
 						}
 					
-						if (thisForm.isViewOnly())
+						if (thisForm.iseReferral())
 						{
 							%>
 								<input type="button" value="Send eResponse" onclick="document.location='<%=request.getContextPath()%>/lab/CA/ALL/sendOruR01.jsp'" />

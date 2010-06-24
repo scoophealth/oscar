@@ -134,7 +134,7 @@ public class EctViewRequestAction extends Action {
         
         thisForm.setProviderName(consultUtil.getProviderName(consultUtil.providerNo));
         
-        thisForm.setViewOnly(false);
+        thisForm.seteReferral(false);
 	}
 	
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception
@@ -188,7 +188,7 @@ public class EctViewRequestAction extends Action {
         Provider provider=DataTypeUtils.parsePrdAsProvider(referringPrd);
         thisForm.setProviderName(provider.getLastName()+", "+provider.getFirstName());
 
-        thisForm.setViewOnly(true);
+        thisForm.seteReferral(true);
 
         // referredTo specialist
         PRD referredToPrd=RefI12.getPrdByRoleId(refI12, "RT");

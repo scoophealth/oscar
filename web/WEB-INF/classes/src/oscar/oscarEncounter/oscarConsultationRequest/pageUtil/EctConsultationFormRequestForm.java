@@ -125,7 +125,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private String professionalSpecialistPhone;
 	private String professionalSpecialistAddress;
 	
-	private boolean viewOnly=false;
+	private boolean eReferral=false;
 	
 	public String getProfessionalSpecialistName() {
     	return(StringUtils.trimToEmpty(professionalSpecialistName));
@@ -151,12 +151,13 @@ public final class EctConsultationFormRequestForm extends ActionForm {
     	this.professionalSpecialistAddress = professionalSpecialistAddress;
     }
 
-	public boolean isViewOnly() {
-    	return viewOnly;
+
+	public boolean iseReferral() {
+    	return eReferral;
     }
 
-	public void setViewOnly(boolean viewOnly) {
-    	this.viewOnly = viewOnly;
+	public void seteReferral(boolean eReferral) {
+    	this.eReferral = eReferral;
     }
 
 	public String getProviderName() {
