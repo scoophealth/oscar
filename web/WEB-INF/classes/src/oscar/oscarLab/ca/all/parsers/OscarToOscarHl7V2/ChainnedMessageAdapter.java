@@ -184,6 +184,9 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 		try {
 			DTM dtm = getPid().getDateTimeOfBirth();
 			GregorianCalendar cal = DataTypeUtils.getCalendarFromDTM(dtm);
+			
+			if (cal==null) return(null);
+			
 			return (DateUtils.getISODateTimeFormatNoT(cal));
 		} catch (DataTypeException e) {
 			logger.error("Unexpected Error.", e);
@@ -195,6 +198,9 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 		try {
 			DTM dtm = getPid().getDateTimeOfBirth();
 			GregorianCalendar cal = DataTypeUtils.getCalendarFromDTM(dtm);
+			
+			if (cal==null) return(null);
+			
 			int age = DateUtils.getAge(cal, new GregorianCalendar());
 			return (String.valueOf(age));
 		} catch (DataTypeException e) {

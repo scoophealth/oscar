@@ -85,7 +85,7 @@ public final class OruR01 {
 		if (observationData.textData!=null)
 		{
 			NTE nte = orderObservation.getNTE(nteCounter);
-			fillOneNte(nte, observationData.dataName, TEXT_DATA_FILENAME_PLACEHOLDER, observationData.textData);
+			fillOneNte(nte, observationData.dataName, TEXT_DATA_FILENAME_PLACEHOLDER, OscarToOscarUtils.encodeToBase64String(observationData.textData.getBytes()));
 			nteCounter++;
 		}
 		
@@ -168,7 +168,7 @@ public final class OruR01 {
 		temp=nte.getCommentType().getNameOfCodingSystem().getValue();
 		if (TEXT_DATA_FILENAME_PLACEHOLDER.equals(temp))
 		{
-			observationData.textData=getNteCommentsAsSingleString(nte);
+			observationData.textData=new String(OscarToOscarUtils.decodeBase64(getNteCommentsAsSingleString(nte)), OscarToOscarUtils.ENCODING);
 		}
 		else
 		{

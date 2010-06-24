@@ -54,6 +54,10 @@ public final class DataTypeUtils {
 	}
 
 	private static GregorianCalendar getCalendarFromDT(DT dt) throws DataTypeException {
+		
+		// hl7/hapi returns 0 for no date
+		if (dt.getYear()==0 || dt.getMonth()==0 || dt.getDay()==0) return(null);
+		
 		GregorianCalendar cal = new GregorianCalendar();
 		// zero out fields we don't use
 		cal.setTimeInMillis(0);
@@ -63,11 +67,15 @@ public final class DataTypeUtils {
 
 		// force materialisation of values
 		cal.getTimeInMillis();
-
+		
 		return (cal);
 	}
 
 	public static GregorianCalendar getCalendarFromDTM(DTM dtm) throws DataTypeException {
+
+		// hl7/hapi returns 0 for no date
+		if (dtm.getYear()==0 || dtm.getMonth()==0 || dtm.getDay()==0) return(null);
+
 		GregorianCalendar cal = new GregorianCalendar();
 		// zero out fields we don't use
 		cal.setTimeInMillis(0);
@@ -356,10 +364,10 @@ public final class DataTypeUtils {
 		demographic.setHcType(cx.getAssigningJurisdiction().getIdentifier().getValue());
 		// valid
 		GregorianCalendar tempCalendar = DataTypeUtils.getCalendarFromDT(cx.getEffectiveDate());
-		demographic.setEffDate(tempCalendar.getTime());
+		if (tempCalendar!=null) demographic.setEffDate(tempCalendar.getTime());
 		// expire
 		tempCalendar = DataTypeUtils.getCalendarFromDT(cx.getExpirationDate());
-		demographic.setHcRenewDate(tempCalendar.getTime());
+		if (tempCalendar!=null) demographic.setHcRenewDate(tempCalendar.getTime());
 
 		XPN xpn = pid.getPatientName(0);
 		demographic.setLastName(xpn.getFamilyName().getSurname().getValue());
