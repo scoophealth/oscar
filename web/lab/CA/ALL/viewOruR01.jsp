@@ -46,12 +46,29 @@
 		<td><%=viewOruR01UIBean.getDataNameForDisplay()%></td>
 	</tr>
 	<tr style="border:solid grey 1px">
-		<td class="oscarBlueHeader">Text Data</td>
+		<td class="oscarBlueHeader" style="vertical-align:top">Text Data</td>
 		<td><textarea id="textData" readonly="readonly" style="width:40em;height:8em" ><%=viewOruR01UIBean.getTextDataForDisplay()%></textarea></td>
 	</tr>
 	<tr style="border:solid grey 1px">
-		<td class="oscarBlueHeader">Uploaded File</td>
-		<td></td>
+		<td class="oscarBlueHeader" style="vertical-align:top">Uploaded File</td>
+		<td>
+			<%
+				if (viewOruR01UIBean.hasBinaryFile())
+				{
+					%>
+						<span style="font-weight:bold">File name :</span> <%=viewOruR01UIBean.getBinaryFilenameForDisplay()%> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" value="download file" onclick="document.location='<%=viewOruR01UIBean.getContentRenderingUrl(request, true)%>'" />
+						<hr />
+						<%=viewOruR01UIBean.getPreviewFileHtml(request)%>
+					<%
+				}
+				else
+				{
+					 %>
+					 	-- No File Uploaded --
+					 <%
+				}
+			%>
+		</td>
 	</tr>
 </table>
 

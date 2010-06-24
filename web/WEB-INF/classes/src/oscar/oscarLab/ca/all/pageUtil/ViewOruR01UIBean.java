@@ -2,6 +2,8 @@ package oscar.oscarLab.ca.all.pageUtil;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
@@ -10,6 +12,7 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.ui.servlet.ContentRenderingServlet;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
 import ca.uhn.hl7v2.HL7Exception;
@@ -18,12 +21,15 @@ import ca.uhn.hl7v2.model.v26.segment.PID;
 import ca.uhn.hl7v2.parser.EncodingNotSupportedException;
 
 public final class ViewOruR01UIBean {
+	private String segmentId;
 	private ORU_R01 oruR01;
 	private Demographic demographic;
 	private ObservationData observationData;
 	
 	public ViewOruR01UIBean(String segmentId) throws EncodingNotSupportedException, HL7Exception, UnsupportedEncodingException
 	{
+		this.segmentId=segmentId;
+		
 		String hl7Message=Factory.getHL7Body(segmentId);
 		oruR01=(ORU_R01) OscarToOscarUtils.pipeParserParse(hl7Message);
 		
@@ -115,5 +121,60 @@ public final class ViewOruR01UIBean {
 	{
 		if (observationData.textData==null) return("");
 		return(StringEscapeUtils.escapeHtml(observationData.textData));
+	}
+
+	public boolean hasBinaryFile()
+	{
+		return(observationData.binaryDataFileName!=null);
+	}
+
+	public String getBinaryFilenameForDisplay()
+	{
+		if (observationData.binaryDataFileName==null) return("");
+		return(StringEscapeUtils.escapeHtml(observationData.binaryDataFileName));
+	}
+
+	public String getFilename()
+	{
+		return(observationData.binaryDataFileName);
+	}
+	
+	public byte[] getFileContents()
+	{
+		return(observationData.binaryData);
+	}
+	
+	/**
+	 * The context path is prepended in this url
+	 */
+	public String getContentRenderingUrl(HttpServletRequest request, boolean download)
+	{
+		// http://127.0.0.1:8080/oscar/contentRenderingServlet/asdf.jpg?source=oruR01&segmentId=67&download=t
+		
+		StringBuilder sb=new StringBuilder();
+
+		sb.append(request.getContextPath());
+		sb.append("/contentRenderingServlet/");
+		sb.append(getBinaryFilenameForDisplay());
+		sb.append("?source=");
+		sb.append(ContentRenderingServlet.Source.oruR01.name());
+		sb.append("&segmentId=");
+		sb.append(segmentId);
+
+		if (download) sb.append("&download=true");
+		
+		return(sb.toString());
+	}
+	
+	public String getPreviewFileHtml(HttpServletRequest request)
+	{
+		String filename=observationData.binaryDataFileName;
+		
+		if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".gif"))
+		{
+			return("<img src=\""+getContentRenderingUrl(request, false)+"\" alt=\""+getBinaryFilenameForDisplay()+"\" />");
+		}
+		
+		return("Preview not supported for this type of content.");
 	}
 }
