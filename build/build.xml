@@ -253,7 +253,7 @@
 
 
 
-	<target name="dist" depends="web, document, loggerCheck">
+	<target name="dist" depends="web, document">
 		<!-- make the webapp clean, so even files that haven't changed get
   their filters updated -->
 		<propertyfile file="../web/WEB-INF/classes/build.properties">
@@ -544,7 +544,7 @@
 	  </classpath>
 	</taskdef>
 
-	<target name="loggerCheck">
+	<target name="codeCheck">
 		<foreach target="failLoggerCheck" param="file">
 			<path>
 				<fileset dir="${webapp}" includes="**/*.j*" excludes="**/*.jar">
