@@ -4,7 +4,7 @@
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
 %>
 <%@ page
-	import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*"%>
+	import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*,java.lang.String"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--  
@@ -47,7 +47,11 @@ if (request.getAttribute("submitted") != null) {
    if (curform.get("formName") == null) curform.put("formName", "");
    if (curform.get("formSubject") == null) curform.put("formSubject", "");
    if (curform.get("formFileName") == null) curform.put("formFileName", "");
-   if (curform.get("formHtml") == null) curform.put("formHtml", "");
+ 
+   if (request.getParameter("formHtml") != null){
+       //load html from hidden form from eformGenerator.jsp,the html is then injected into edit-eform
+      curform.put("formHtml",request.getParameter("formHtml"));
+   }
    if (curform.get("formDate") == null) curform.put("formDate", "--");
    if (curform.get("formTime") == null) curform.put("formTime", "--");
    if (curform.get("patientIndependent") ==null) curform.put("patientIndependent", false);
@@ -153,7 +157,7 @@ function disablenupload() {
 		<tr height="100%">
 			<th valign="top" style="text-align: right;"><bean:message key="eform.edithtml.msgEditHtml" />:</th>
 			<td colspan="2"><textarea style="width: 100%; height: 100%;"
-				wrap="off" name="formHtml"><%= formHtml%></textarea></td>
+			wrap="off" name="formHtml"><%= formHtml%></textarea></td>
 		</tr>
 		<tr>
 			<th style="text-align: right;"><bean:message key="eform.edithtml.frmSubmit" />:</th>
