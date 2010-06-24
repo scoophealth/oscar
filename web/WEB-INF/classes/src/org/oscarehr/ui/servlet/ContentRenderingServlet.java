@@ -89,7 +89,7 @@ public final class ContentRenderingServlet extends HttpServlet {
 	   	}
 	    
 	    Content content=new Content();
-	    content.contentType=request.getContentType();
+	    content.contentType=getServletContext().getMimeType(viewOruR01UIBean.getFilename());
 	    content.data=viewOruR01UIBean.getFileContents();
 	    return(content);
     }
