@@ -59,7 +59,7 @@ public class OruR01UploadAction extends Action {
 	        WebUtils.addInfoMessage(request.getSession(), "Data successfully send.");
         } catch (Exception e) {
 	        logger.error("Unexpected error.", e);
-	        WebUtils.addInfoMessage(request.getSession(), "An error occurred while sending this data, please try again or send this manually.");
+	        WebUtils.addErrorMessage(request.getSession(), "An error occurred while sending this data, please try again or send this manually.");
         }
 
     	return(mapping.findForward("result"));
