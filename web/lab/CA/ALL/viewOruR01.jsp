@@ -19,11 +19,11 @@
 		<td><%=viewOruR01UIBean.getFromProviderDisplayString()%></td>
 	</tr>
 	<tr style="border:solid grey 1px">
-		<td class="oscarBlueHeader" style="width:10em">To Provider</td>
+		<td class="oscarBlueHeader">To Provider</td>
 		<td><%=viewOruR01UIBean.getToProviderDisplayString()%></td>
 	</tr>
 	<tr style="border:solid grey 1px">
-		<td class="oscarBlueHeader" style="width:10em">For Client</td>
+		<td class="oscarBlueHeader" style="vertical-align:top">For Client</td>
 		<td>
 			<table style="border-collapse:collapse; width 100%">
 				<tr style="border-bottom:solid grey 1px">
