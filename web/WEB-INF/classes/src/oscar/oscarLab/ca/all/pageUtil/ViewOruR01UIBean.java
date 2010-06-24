@@ -92,7 +92,7 @@ public final class ViewOruR01UIBean {
 		sb.append(demographic.getFirstName());
 		
 		if (demographic.getSex()!=null){
-			sb.append('(');
+			sb.append(" (");
 			sb.append(demographic.getSex());
 			sb.append(')');
 		}
