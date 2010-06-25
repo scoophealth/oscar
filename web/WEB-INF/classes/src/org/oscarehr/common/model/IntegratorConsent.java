@@ -30,7 +30,7 @@ public class IntegratorConsent extends AbstractModel<Integer> {
 	}
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id = null;
 	/** This is the facility which is creating this record, i.e. the facility of the provider making this change. */
 	private Integer facilityId = -1;

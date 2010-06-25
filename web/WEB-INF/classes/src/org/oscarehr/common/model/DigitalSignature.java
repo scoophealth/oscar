@@ -30,7 +30,7 @@ import javax.persistence.Id;
 public class DigitalSignature extends AbstractModel<Integer>{
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id = null;
 
 	/** The facility in which this was captured */

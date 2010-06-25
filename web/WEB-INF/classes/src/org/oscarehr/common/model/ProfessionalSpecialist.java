@@ -44,7 +44,7 @@ import org.apache.commons.lang.StringUtils;
 public class ProfessionalSpecialist extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "specId")
 	private Integer id;
 	

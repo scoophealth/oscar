@@ -17,7 +17,7 @@ import javax.persistence.PreUpdate;
 public class CdsFormOption extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String cdsFormVersion = null;
 	private String cdsDataCategory = null;

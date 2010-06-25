@@ -14,7 +14,7 @@ import javax.persistence.Table;
 public class SecRole extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "role_no")
 	private Integer id;
 	@Column(name = "role_name")

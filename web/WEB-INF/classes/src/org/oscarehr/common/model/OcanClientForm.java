@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
 public class OcanClientForm extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	private String ocanFormVersion=null;

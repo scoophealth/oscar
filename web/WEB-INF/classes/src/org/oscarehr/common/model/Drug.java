@@ -20,7 +20,7 @@ import oscar.util.UtilDateUtilities;
 public class Drug extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "drugid")
 	private Integer id = null;
 	@Column(name = "provider_no")

@@ -38,7 +38,7 @@ import javax.persistence.Temporal;
 public class BillingService extends AbstractModel<Integer> implements Serializable {
 
 	@Id()
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "billingservice_no")
 	private Integer billingserviceNo;
 

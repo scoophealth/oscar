@@ -25,7 +25,7 @@ public class CdsHospitalisationDays extends AbstractModel<Integer> implements Se
 	};
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	private Integer clientId = null;

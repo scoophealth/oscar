@@ -17,7 +17,7 @@ import javax.persistence.PreUpdate;
 public class OcanFormOption extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String ocanFormVersion = null;
 	private String ocanDataCategory = null;

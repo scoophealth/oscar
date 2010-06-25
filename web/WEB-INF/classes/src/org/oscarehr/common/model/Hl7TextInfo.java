@@ -40,7 +40,7 @@ import org.apache.commons.lang.StringUtils;
 public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Column(name = "lab_no")

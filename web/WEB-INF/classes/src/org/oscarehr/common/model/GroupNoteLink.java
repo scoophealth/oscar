@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
 public class GroupNoteLink extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Temporal(TemporalType.TIMESTAMP)

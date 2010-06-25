@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 public class Prevention extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id = null;
 
 	@Column(name = "demographic_no")

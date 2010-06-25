@@ -21,7 +21,7 @@ import javax.persistence.PreUpdate;
 public class OcanClientFormData extends AbstractModel<Integer> implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	private Integer ocanClientFormId = null;

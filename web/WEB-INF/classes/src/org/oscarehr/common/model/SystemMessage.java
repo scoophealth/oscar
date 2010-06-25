@@ -37,7 +37,7 @@ import javax.persistence.TemporalType;
 public class SystemMessage extends AbstractModel<Integer> {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id = 0;
 	private String message = null;
 
