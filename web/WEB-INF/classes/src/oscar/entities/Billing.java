@@ -42,7 +42,7 @@ public class Billing {
      * auto_increment
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "billing_no")
     private int billingNo;
     @Column(name = "clinic_no")

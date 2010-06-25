@@ -50,7 +50,7 @@ public class Billingmaster {
      * auto_increment
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "billingmaster_no")
     private int billingmasterNo;
     @Column(name = "billing_no")

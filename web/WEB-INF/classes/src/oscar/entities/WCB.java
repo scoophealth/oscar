@@ -46,7 +46,7 @@ import oscar.util.StringUtils;
 public class WCB {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;//  | int(1)           ||
     private //      | int(10)          ||
             int billing_no;
