@@ -40,6 +40,7 @@ import oscar.eform.EFormUtil;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
 import oscar.util.StringBufferUtils;
+import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EForm extends EFormBase {
@@ -394,19 +395,28 @@ public class EForm extends EFormBase {
 	}
 
 	private String replaceSpecial(String sql) {
-		if (special_params.containsKey(APPT_PROVIDER_NAME) ||
-			special_params.containsKey(APPT_PROVIDER_ID) ||
-			special_params.containsKey(RESIDENT_TFNOTES)) {
-			sql = DatabaseAP.parserReplace("appt_provider", (String)special_params.get(APPT_PROVIDER_NAME), sql);
+		if (special_params.containsKey(APPT_PROVIDER_NAME)) {
+			sql = DatabaseAP.parserReplace("appt_provider", getSpecialParam(APPT_PROVIDER_NAME), sql);
+		}
+		if (special_params.containsKey(APPT_PROVIDER_ID)) {
+			sql = DatabaseAP.parserReplace("appt_provider", getSpecialParam(APPT_PROVIDER_ID), sql);
+		}
+		if (special_params.containsKey(RESIDENT_TFNOTES)) {
+			sql = DatabaseAP.parserReplace("appt_provider", getSpecialParam(RESIDENT_TFNOTES), sql);
 		}
 		if (special_params.containsKey(APPT_MC_NO)) {
 			sql = DatabaseAP.parserReplace("appt_table", new OtherIdManager().APPOINTMENT.toString(), sql);
-			sql = DatabaseAP.parserReplace("appt_id", (String)special_params.get(APPT_MC_NO), sql);
+			sql = DatabaseAP.parserReplace("appt_id", getSpecialParam(APPT_MC_NO), sql);
 		}
 		if (special_params.containsKey(PATIENT_TFNOTES)) {
-			sql = DatabaseAP.parserReplace("eform_id", (String)special_params.get(PATIENT_TFNOTES), sql);
+			sql = DatabaseAP.parserReplace("eform_id", getSpecialParam(PATIENT_TFNOTES), sql);
 		}
 		return sql;
+	}
+
+	private String getSpecialParam(String key) {
+		String value = (String)special_params.get(key);
+		return StringUtils.filled(value) ? value : "null";
 	}
 
 	public String getTemplate(String templateName) {
