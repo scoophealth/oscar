@@ -82,9 +82,10 @@ public class EctConEditSpecialistsAction extends Action {
 		request.setAttribute("email", professionalSpecialist.getEmailAddress());
 		request.setAttribute("specType", professionalSpecialist.getSpecialtyType());
 		request.setAttribute("specId", specId);
-		request.setAttribute("eReferralUrl", professionalSpecialist.geteReferralUrl());
-		request.setAttribute("eReferralOscarKey", professionalSpecialist.geteReferralOscarKey());
-		request.setAttribute("eReferralServiceKey", professionalSpecialist.geteReferralServiceKey());
+		request.setAttribute("eDataUrl", professionalSpecialist.geteDataUrl());
+		request.setAttribute("eDataOscarKey", professionalSpecialist.geteDataOscarKey());
+		request.setAttribute("eDataServiceKey", professionalSpecialist.geteDataServiceKey());
+		request.setAttribute("eDataServiceName", professionalSpecialist.geteDataServiceName());
 		request.setAttribute("upd", new Integer(updater));
 		EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
 		request.setAttribute("verd", constructSpecialistsScriptsFile.makeFile());

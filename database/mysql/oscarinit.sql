@@ -6382,10 +6382,10 @@ CREATE TABLE professionalSpecialists (
   website varchar(128),
   email varchar(128),
   specType varchar(128),
-  eReferralUrl varchar(255),
-  eReferralOscarKey varchar(1024),
-  eReferralServiceKey varchar(1024),
-  eReferralServiceName varchar(255),
+  eDataUrl varchar(255),
+  eDataOscarKey varchar(1024),
+  eDataServiceKey varchar(1024),
+  eDataServiceName varchar(255),
   lastUpdated datetime not null
 ) ;
 

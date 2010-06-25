@@ -42,7 +42,7 @@ public final class SendingUtils {
 	
 	public static int send(AbstractMessage message, ProfessionalSpecialist professionalSpecialist) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception
 	{
-		return(send(message, professionalSpecialist.geteReferralUrl(), professionalSpecialist.geteReferralOscarKey(), professionalSpecialist.geteReferralServiceKey(), professionalSpecialist.geteReferralServiceName()));
+		return(send(message, professionalSpecialist.geteDataUrl(), professionalSpecialist.geteDataOscarKey(), professionalSpecialist.geteDataServiceKey(), professionalSpecialist.geteDataServiceName()));
 	}
 	
 	public static int send(AbstractMessage message, String url, String publicOscarKeyString, String publicServiceKeyString, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException, InvalidKeySpecException, HL7Exception {

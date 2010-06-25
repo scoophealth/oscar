@@ -75,10 +75,10 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	@Column(name = "specType")
 	private String specialtyType;
 	
-	private String eReferralUrl;
-	private String eReferralOscarKey;
-	private String eReferralServiceKey;
-	private String eReferralServiceName;
+	private String eDataUrl;
+	private String eDataOscarKey;
+	private String eDataServiceKey;
+	private String eDataServiceName;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdated=new Date();
@@ -174,36 +174,36 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
     }
 
 	
-	public String geteReferralUrl() {
-    	return eReferralUrl;
+	public String geteDataUrl() {
+    	return eDataUrl;
     }
 
-	public void seteReferralUrl(String eReferralUrl) {
-    	this.eReferralUrl = StringUtils.trimToNull(eReferralUrl);
+	public void seteDataUrl(String eDataUrl) {
+    	this.eDataUrl = StringUtils.trimToNull(eDataUrl);
     }
 
-	public String geteReferralOscarKey() {
-    	return eReferralOscarKey;
+	public String geteDataOscarKey() {
+    	return eDataOscarKey;
     }
 
-	public void seteReferralOscarKey(String eReferralOscarKey) {
-    	this.eReferralOscarKey = StringUtils.trimToNull(eReferralOscarKey);
+	public void seteDataOscarKey(String eDataOscarKey) {
+    	this.eDataOscarKey = StringUtils.trimToNull(eDataOscarKey);
     }
 
-	public String geteReferralServiceKey() {
-    	return eReferralServiceKey;
+	public String geteDataServiceKey() {
+    	return eDataServiceKey;
     }
 
-	public void seteReferralServiceKey(String eReferralServiceKey) {
-    	this.eReferralServiceKey = StringUtils.trimToNull(eReferralServiceKey);
+	public void seteDataServiceKey(String eDataServiceKey) {
+    	this.eDataServiceKey = StringUtils.trimToNull(eDataServiceKey);
     }
 
-	public String geteReferralServiceName() {
-    	return eReferralServiceName;
+	public String geteDataServiceName() {
+    	return eDataServiceName;
     }
 
-	public void seteReferralServiceName(String eReferralServiceName) {
-    	this.eReferralServiceName = StringUtils.trimToNull(eReferralServiceName);
+	public void seteDataServiceName(String eDataServiceName) {
+    	this.eDataServiceName = StringUtils.trimToNull(eDataServiceName);
     }
 	
 	

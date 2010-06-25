@@ -101,10 +101,10 @@ public class EctConAddSpecialistAction extends Action {
         professionalSpecialist.setWebSite(addSpecailistForm.getWebsite());
         professionalSpecialist.setEmailAddress(addSpecailistForm.getEmail());
         professionalSpecialist.setSpecialtyType(addSpecailistForm.getSpecType());
-        professionalSpecialist.seteReferralUrl(addSpecailistForm.geteReferralUrl());
-        professionalSpecialist.seteReferralOscarKey(addSpecailistForm.geteReferralOscarKey());
-        professionalSpecialist.seteReferralServiceKey(addSpecailistForm.geteReferralServiceKey());
-        professionalSpecialist.seteReferralServiceName(addSpecailistForm.geteReferralServiceName());
+        professionalSpecialist.seteDataUrl(addSpecailistForm.geteDataUrl());
+        professionalSpecialist.seteDataOscarKey(addSpecailistForm.geteDataOscarKey());
+        professionalSpecialist.seteDataServiceKey(addSpecailistForm.geteDataServiceKey());
+        professionalSpecialist.seteDataServiceName(addSpecailistForm.geteDataServiceName());
     }
 }
 

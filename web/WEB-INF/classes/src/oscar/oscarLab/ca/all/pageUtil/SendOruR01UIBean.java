@@ -56,7 +56,7 @@ public final class SendOruR01UIBean {
 		
 		for (ProfessionalSpecialist professionalSpecialist : professionalSpecialistDao.findAll())
 		{
-			if (professionalSpecialist.geteReferralUrl()!=null) results.add(professionalSpecialist);
+			if (professionalSpecialist.geteDataUrl()!=null) results.add(professionalSpecialist);
 		}
 		
 		return(results);

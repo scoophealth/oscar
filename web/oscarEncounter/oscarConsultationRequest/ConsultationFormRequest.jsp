@@ -481,7 +481,7 @@ function onSelectSpecialist(SelectedSpec)	{
             	jQuery.getJSON("getProfessionalSpecialist.json", {id: aSpeci.specNbr}, 
                     function(xml)
                     {
-                		var hasUrl=xml.eReferralUrl!=null&&xml.eReferralUrl!="";
+                		var hasUrl=xml.eDataUrl!=null&&xml.eDataUrl!="";
                 		enableDisableRemoteReferralButton(form, !hasUrl);
                 	}
             	);

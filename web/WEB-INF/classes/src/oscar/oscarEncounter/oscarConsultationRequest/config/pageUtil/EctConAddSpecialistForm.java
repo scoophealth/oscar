@@ -44,10 +44,10 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String transType;
 	String specId;
 	int whichType;
-	String eReferralUrl;
-	String eReferralOscarKey;
-	String eReferralServiceKey;
-	String eReferralServiceName;
+	String eDataUrl;
+	String eDataOscarKey;
+	String eDataServiceKey;
+	String eDataServiceName;
 
 	public EctConAddSpecialistForm() {
 		whichType = 0;
@@ -156,7 +156,8 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		specId = str;
 	}
 
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+	@Override
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		if (fName == null || fName.length() == 0) errors.add("fName", new ActionMessage("Errors.Firstname"));
 		if (lName == null || lName.length() == 0) errors.add("lName", new ActionMessage("Errors.Lastname"));
@@ -166,7 +167,8 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		return errors;
 	}
 
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
+	@Override
+    public void reset(ActionMapping mapping, HttpServletRequest request) {
 		resetForm();
 	}
 
@@ -182,9 +184,9 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		specType = null;
 		transType = null;
 		specId = null;
-		eReferralUrl = null;
-		eReferralOscarKey = null;
-		eReferralServiceKey = null;
+		eDataUrl = null;
+		eDataOscarKey = null;
+		eDataServiceKey = null;
 		whichType = 0;
 	}
 
@@ -206,36 +208,37 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		this.whichType = whichType;
 	}
 
-	public String geteReferralUrl() {
-		return eReferralUrl;
-	}
+	public String geteDataUrl() {
+    	return eDataUrl;
+    }
 
-	public void seteReferralUrl(String eReferralUrl) {
-		this.eReferralUrl = eReferralUrl;
-	}
+	public void seteDataUrl(String eDataUrl) {
+    	this.eDataUrl = eDataUrl;
+    }
 
-	public String geteReferralOscarKey() {
-		return eReferralOscarKey;
-	}
+	public String geteDataOscarKey() {
+    	return eDataOscarKey;
+    }
 
-	public void seteReferralOscarKey(String eReferralOscarKey) {
-		this.eReferralOscarKey = eReferralOscarKey;
-	}
+	public void seteDataOscarKey(String eDataOscarKey) {
+    	this.eDataOscarKey = eDataOscarKey;
+    }
 
-	public String geteReferralServiceKey() {
-		return eReferralServiceKey;
-	}
+	public String geteDataServiceKey() {
+    	return eDataServiceKey;
+    }
 
-	public void seteReferralServiceKey(String eReferralServiceKey) {
-		this.eReferralServiceKey = eReferralServiceKey;
-	}
+	public void seteDataServiceKey(String eDataServiceKey) {
+    	this.eDataServiceKey = eDataServiceKey;
+    }
 
-	public String geteReferralServiceName() {
-		return eReferralServiceName;
-	}
+	public String geteDataServiceName() {
+    	return eDataServiceName;
+    }
 
-	public void seteReferralServiceName(String eReferralServiceName) {
-		this.eReferralServiceName = eReferralServiceName;
-	}
+	public void seteDataServiceName(String eDataServiceName) {
+    	this.eDataServiceName = eDataServiceName;
+    }
+
 
 }

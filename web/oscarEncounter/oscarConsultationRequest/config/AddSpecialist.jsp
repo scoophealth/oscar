@@ -113,9 +113,10 @@ function BackToOscar() {
                            thisForm.setEmail( (String) request.getAttribute("email"));
                            thisForm.setSpecType( (String) request.getAttribute("specType"));
                            thisForm.setSpecId( (String) request.getAttribute("specId"));
-                           thisForm.seteReferralUrl( (String) request.getAttribute("eReferralUrl"));
-                           thisForm.seteReferralOscarKey( (String) request.getAttribute("eReferralOscarKey"));
-                           thisForm.seteReferralServiceKey( (String) request.getAttribute("eReferralServiceKey"));
+                           thisForm.seteDataUrl( (String) request.getAttribute("eDataUrl"));
+                           thisForm.seteDataOscarKey( (String) request.getAttribute("eDataOscarKey"));
+                           thisForm.seteDataServiceKey( (String) request.getAttribute("eDataServiceKey"));
+                           thisForm.seteDataServiceName( (String) request.getAttribute("eDataServiceName"));
                            }
                         %>
 						<html:hidden name="EctConAddSpecialistForm" property="specId" />
@@ -157,20 +158,20 @@ function BackToOscar() {
 							<td></td>
 						</tr>
 						<tr>
-							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralUrl" /></td>
-							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralUrl" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataUrl" /></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataUrl" /></td>
 						</tr>
 						<tr>
-							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralOscarKey" /></td>
-							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralOscarKey" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataOscarKey" /></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataOscarKey" /></td>
 						</tr>
 						<tr>
-							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralServiceKey" /></td>
-							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralServiceKey" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataServiceKey" /></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceKey" /></td>
 						</tr>
 						<tr>
-							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eReferralServiceName" /></td>
-							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eReferralServiceName" /></td>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataServiceName" /></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName" /></td>
 						</tr>
 						<tr>
 							<td colspan="6">
