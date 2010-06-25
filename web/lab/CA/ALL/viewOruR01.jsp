@@ -56,7 +56,11 @@
 				if (viewOruR01UIBean.hasBinaryFile())
 				{
 					%>
-						<span style="font-weight:bold">File name:</span> <%=viewOruR01UIBean.getBinaryFilenameForDisplay()%> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" value="download file" onclick="document.location='<%=viewOruR01UIBean.getContentRenderingUrl(request, true)%>'" />
+						<span style="font-weight:bold">File name:</span> <%=viewOruR01UIBean.getBinaryFilenameForDisplay()%>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+						<input type="button" value="open file" onclick="document.location='<%=viewOruR01UIBean.getContentRenderingUrl(request, false)%>'" />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+						<input type="button" value="download file" onclick="document.location='<%=viewOruR01UIBean.getContentRenderingUrl(request, true)%>'" />
 						<hr />
 						<%=viewOruR01UIBean.getPreviewFileHtml(request)%>
 					<%

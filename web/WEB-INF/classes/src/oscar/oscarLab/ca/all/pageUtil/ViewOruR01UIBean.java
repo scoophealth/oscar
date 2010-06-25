@@ -172,7 +172,7 @@ public final class ViewOruR01UIBean {
 		
 		if (filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".gif"))
 		{
-			return("<img src=\""+getContentRenderingUrl(request, false)+"\" alt=\""+getBinaryFilenameForDisplay()+"\" />");
+			return("<img style=\"max-width:800px;max-height:600px\" src=\""+getContentRenderingUrl(request, false)+"\" alt=\""+getBinaryFilenameForDisplay()+"\" />");
 		}
 		
 		return("Preview not supported for this type of content.");
