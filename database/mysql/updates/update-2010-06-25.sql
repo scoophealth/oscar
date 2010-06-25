@@ -8,3 +8,5 @@ alter table professionalSpecialists change eReferralUrl eDataUrl varchar(255);
 alter table professionalSpecialists change eReferralOscarKey eDataOscarKey varchar(1024);
 alter table professionalSpecialists change eReferralServiceKey eDataServiceKey varchar(1024);
 alter table professionalSpecialists change eReferralServiceName eDataServiceName varchar(255);
+
+alter table log change action action varchar(64);

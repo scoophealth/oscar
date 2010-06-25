@@ -6923,7 +6923,7 @@ CREATE TABLE surveyData (
 CREATE TABLE `log` (
   `dateTime` timestamp,
   `provider_no` varchar(10) NOT NULL default '',
-  `action` varchar(20) default NULL,
+  `action` varchar(64) default NULL,
   `content` varchar(80) NOT NULL default '',
   `contentId` varchar(80) default NULL,
   `ip` varchar(30) default NULL,
