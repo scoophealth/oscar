@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.log.LogAction;
 import oscar.oscarLab.ca.all.pageUtil.ViewOruR01UIBean;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.parser.EncodingNotSupportedException;
@@ -91,6 +93,10 @@ public final class ContentRenderingServlet extends HttpServlet {
 	    Content content=new Content();
 	    content.contentType=getServletContext().getMimeType(viewOruR01UIBean.getFilename());
 	    content.data=viewOruR01UIBean.getFileContents();
+	    
+	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	    LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), getClass().getSimpleName(), "OruR01Content", "segmentId="+segmentId);
+	    
 	    return(content);
     }
 }
