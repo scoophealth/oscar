@@ -1384,7 +1384,7 @@ function fetchAttached() {
 						if (thisForm.iseReferral())
 						{
 							%>
-								<input type="button" value="Send eResponse" onclick="document.location='<%=request.getContextPath()%>/lab/CA/ALL/sendOruR01.jsp'" />
+								<input type="button" value="Send eResponse" onclick="document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
 							<%
 						}
 						%>

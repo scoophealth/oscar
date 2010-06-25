@@ -47,8 +47,7 @@ public class InsideLabUploadAction extends Action {
             if (type.equals("OTHER"))
                 type = request.getParameter("otherType");
             
-            Utilities u = new Utilities();
-            String filePath = u.saveFile(is, filename);
+            String filePath = Utilities.saveFile(is, filename);
             is.close();
             File file = new File(filePath);
             
@@ -64,7 +63,7 @@ public class InsideLabUploadAction extends Action {
                 if(msgHandler != null){
                    logger.info("MESSAGE HANDLER "+msgHandler.getClass().getName());
                 }
-                if((msgHandler.parse(filePath,checkFileUploadedSuccessfully)) != null)
+                if((msgHandler.parse(getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully)) != null)
                     outcome = "success";
                 
             }else{

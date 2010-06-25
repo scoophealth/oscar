@@ -50,6 +50,7 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -492,4 +493,19 @@ public final class EctConsultationFormRequestForm extends ActionForm {
     	this.patientHealthCardType = patientHealthCardType;
     }
 
+	/**
+	 * This url will include the context path.
+	 */
+	public String getOruR01UrlString(HttpServletRequest request)
+	{
+		// /lab/CA/ALL/sendOruR01.jsp
+		
+		StringBuilder sb=new StringBuilder();
+		
+		sb.append(request.getContextPath());
+		sb.append("/lab/CA/ALL/sendOruR01.jsp?professionalSpecialistId=");
+//		sb.append();
+		
+		return(StringEscapeUtils.escapeHtml(sb.toString()));
+	}
 }

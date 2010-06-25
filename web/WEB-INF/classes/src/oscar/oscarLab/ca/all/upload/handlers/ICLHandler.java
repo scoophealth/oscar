@@ -26,16 +26,16 @@ public class ICLHandler implements MessageHandler  {
     
     Logger logger = Logger.getLogger(ICLHandler.class);
     
-    public String parse(String fileName,int fileId){
+    public String parse(String serviceName, String fileName,int fileId){
         
         ICLUtilities u = new ICLUtilities();
         int i = 0;
         try {
-            ArrayList messages = u.separateMessages(fileName);
+            ArrayList<String> messages = u.separateMessages(fileName);
             for (i=0; i < messages.size(); i++){
                 
-                String msg = (String) messages.get(i);
-                MessageUploader.routeReport("ICL", msg,fileId);
+                String msg = messages.get(i);
+                MessageUploader.routeReport(serviceName, "ICL", msg,fileId);
                 
             }
             

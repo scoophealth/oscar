@@ -22,21 +22,15 @@ import java.util.Date;
 
 import oscar.OscarProperties;
 
-/**
- *
- * @author wrighd
- */
 public class Utilities {
        
-    /**
-     * Creates a new instance of Utilities
-     */
-    public Utilities() {
+    private Utilities() {
+    	// utils shouldn't be instantiated
     }
     
-    public ArrayList separateMessages(String fileName) throws Exception{
+    public static ArrayList<String> separateMessages(String fileName) throws Exception{
                 
-        ArrayList messages = new ArrayList();
+        ArrayList<String> messages = new ArrayList<String>();
         try{
             InputStream is = new FileInputStream(fileName);
             
@@ -94,7 +88,6 @@ public class Utilities {
      */
     public static String saveFile(InputStream stream,String filename ){
         String retVal = null;
-        boolean isAdded = true;
         
         
         try {
@@ -132,7 +125,7 @@ public class Utilities {
     /*
      *  Return a string corresponding to the data in a given InputStream
      */
-    public String inputStreamAsString(InputStream stream) throws IOException {
+    public static String inputStreamAsString(InputStream stream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(stream));
         StringBuilder sb = new StringBuilder();
         String line = null;

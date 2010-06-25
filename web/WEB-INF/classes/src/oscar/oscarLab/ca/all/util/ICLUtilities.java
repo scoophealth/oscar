@@ -31,9 +31,9 @@ public class ICLUtilities {
     public ICLUtilities() {
     }
     
-    public ArrayList separateMessages(String fileName) throws Exception{
+    public ArrayList<String> separateMessages(String fileName) throws Exception{
                 
-        ArrayList messages = new ArrayList();
+        ArrayList<String> messages = new ArrayList<String>();
         try{
             InputStream is = new FileInputStream(fileName);
             
@@ -94,9 +94,7 @@ public class ICLUtilities {
      * @return
      */
     public static String saveFile(InputStream stream,String filename ){
-        String retVal = null;
-        boolean isAdded = true;
-        
+        String retVal = null;        
         
         try {
             OscarProperties props = OscarProperties.getInstance();

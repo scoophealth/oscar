@@ -36,14 +36,14 @@ import oscar.oscarLab.ca.all.upload.MessageUploader;
 public class OscarToOscarHl7V2Handler implements MessageHandler {
 	private Logger logger = MiscUtils.getLogger();
 
-	public String parse(String fileName, int fileId) {
+	public String parse(String serviceName, String fileName, int fileId) {
 		
 		try {
 	        byte[] dataBytes=FileUtils.readFileToByteArray(new File(fileName));
 	        String dataString=new String(dataBytes, DataTypeUtils.ENCODING);
 	        logger.debug("Incoming HL7 Message : \n"+dataString);
 	        
-			MessageUploader.routeReport(OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
+			MessageUploader.routeReport(serviceName, OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
 		} catch (Exception e) {
 	        logger.error("Unexpected error.", e);
 	        MessageUploader.clean(fileId);

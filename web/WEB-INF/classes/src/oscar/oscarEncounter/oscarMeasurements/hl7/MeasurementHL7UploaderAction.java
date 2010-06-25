@@ -43,22 +43,16 @@ import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 public class MeasurementHL7UploaderAction extends DispatchActionSupport {
-	private static Logger logger = Logger
-			.getLogger(MeasurementHL7UploaderAction.class);
+	private static Logger logger = Logger.getLogger(MeasurementHL7UploaderAction.class);
 
-	private static SimpleDateFormat sdf = new SimpleDateFormat(OscarProperties
-			.getInstance().getProperty(
-					"oscar.measurements.hl7.datetime.format",
-					"yyyyMMddHHmmss"));
+	private static SimpleDateFormat sdf = new SimpleDateFormat(OscarProperties.getInstance().getProperty("oscar.measurements.hl7.datetime.format", "yyyyMMddHHmmss"));
 
 	private DemographicDao demoDao;
 	private MeasurementsDao measurementsDao;
 
 	// settings to be set in spring config xml, if needed
-	private String defaultProviderNo = OscarProperties.getInstance()
-			.getProperty("oscar.measurements.hl7.defaultProviderNo", "999998");
-	private String hl7UploadPassword = OscarProperties.getInstance()
-			.getProperty("oscar.measurements.hl7.password");
+	private String defaultProviderNo = OscarProperties.getInstance().getProperty("oscar.measurements.hl7.defaultProviderNo", "999998");
+	private String hl7UploadPassword = OscarProperties.getInstance().getProperty("oscar.measurements.hl7.password");
 
 	public void setHl7UploadPassword(String uploadPassword) {
 		this.hl7UploadPassword = uploadPassword;
@@ -76,8 +70,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 		this.defaultProviderNo = defaultProviderNo;
 	}
 
-	public ActionForward upload(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		Date dateEntered = new Date();
 		String hl7msg = null;
 
@@ -85,38 +78,26 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			boolean checkPassword = StringUtils.isNotBlank(hl7UploadPassword);
 
 			// file is encrypted using RSA public keys if no password enforced
-			hl7msg = checkPassword ? IOUtils.toString(((LabUploadForm) form)
-					.getImportFile().getInputStream())
-					: extractEncryptedMessage((LabUploadForm) form, request);
+			hl7msg = checkPassword ? IOUtils.toString(((LabUploadForm) form).getImportFile().getInputStream()) : extractEncryptedMessage((LabUploadForm) form, request);
 
-			if (checkPassword && hl7UploadPassword.length() < 16)
-				throw new RuntimeException(
-						"Upload password length is too weak, please check oscar property file and make sure it's more than 16 letters.");
+			if (checkPassword && hl7UploadPassword.length() < 16) throw new RuntimeException("Upload password length is too weak, please check oscar property file and make sure it's more than 16 letters.");
 
 			Parser p = new GenericParser();
 			p.setValidationContext(new NoValidation());
 			ORU_R01 msg = (ORU_R01) p.parse(hl7msg);
 
 			MSH msh = msg.getMSH();
-			String msgType = msh.getMessageType().getMessageType().getValue()
-					+ "_" + msh.getMessageType().getTriggerEvent().getValue();
+			String msgType = msh.getMessageType().getMessageType().getValue() + "_" + msh.getMessageType().getTriggerEvent().getValue();
 
-			if (!"ORU_R01".equals(msgType))
-				throw new RuntimeException("Message type is not ORU_R01 - "
-						+ msgType);
+			if (!"ORU_R01".equals(msgType)) throw new RuntimeException("Message type is not ORU_R01 - " + msgType);
 
-			if (checkPassword
-					&& !hl7UploadPassword.equals(msh.getSecurity().getValue()))
-				throw new RuntimeException("Password in MSH is invalid.");
+			if (checkPassword && !hl7UploadPassword.equals(msh.getSecurity().getValue())) throw new RuntimeException("Password in MSH is invalid.");
 
-			String sender = msh.getSendingApplication().getNamespaceID()
-					.getValue();
-			String receiver = msh.getReceivingApplication().getNamespaceID()
-					.getValue();
+			String sender = msh.getSendingApplication().getNamespaceID().getValue();
+			String receiver = msh.getReceivingApplication().getNamespaceID().getValue();
 
 			String msgId = msh.getMessageControlID().getValue();
-			logger.info("HL7 message [" + msgId + "] received from: " + sender
-					+ " to: " + receiver + " on " + dateEntered);
+			logger.info("HL7 message [" + msgId + "] received from: " + sender + " to: " + receiver + " on " + dateEntered);
 
 			// TODO: handle multiple responses in one upload, right now only
 			// assumes 1 per upload
@@ -125,21 +106,14 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			PID patient = resp.getPATIENT().getPID();
 
 			String hcn = patient.getPatientIDInternalID(0).getID().getValue();
-			String hcnType = patient.getPatientIDInternalID(0)
-					.getAssigningAuthority().getNamespaceID().getValue();
+			String hcnType = patient.getPatientIDInternalID(0).getAssigningAuthority().getNamespaceID().getValue();
 			// get demographic no from hcn
-			List<Demographic> demos = demoDao.getActiveDemosByHealthCardNo(hcn,
-					hcnType);
-			if (demos == null || demos.size() == 0)
-				throw new RuntimeException(
-						"There is no active patient with the supplied health card number: "
-								+ hcn + " " + hcnType);
+			List<Demographic> demos = demoDao.getActiveDemosByHealthCardNo(hcn, hcnType);
+			if (demos == null || demos.size() == 0) throw new RuntimeException("There is no active patient with the supplied health card number: " + hcn + " " + hcnType);
 
 			// try to get consult doctor's providerID
-			String providerNo = resp.getPATIENT().getVISIT().getPV1()
-					.getConsultingDoctor(0).getIDNumber().getValue();
-			if (providerNo == null)
-				providerNo = defaultProviderNo;
+			String providerNo = resp.getPATIENT().getVISIT().getPV1().getConsultingDoctor(0).getIDNumber().getValue();
+			if (providerNo == null) providerNo = defaultProviderNo;
 
 			// now handle OBR
 			ORU_R01_ORDER_OBSERVATION obr = resp.getORDER_OBSERVATION();
@@ -151,27 +125,23 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			for (int i = 0; i < len; i++) {
 				logger.info("Processing OBX no." + i);
 				OBX obx = obr.getOBSERVATION(i).getOBX();
-				Date dateObserved = sdf.parse(obx.getDateTimeOfTheObservation()
-						.getTimeOfAnEvent().getValue());
+				Date dateObserved = sdf.parse(obx.getDateTimeOfTheObservation().getTimeOfAnEvent().getValue());
 				CE obvId = obx.getObservationIdentifier();
 				// the 1st part of obvId is the unique short name
 				String measurementType = obvId.getIdentifier().getValue();
 
 				String unit = obx.getUnits().getIdentifier().getValue();
 				if (unit == null) // oscar does not allow unit to be null
-					unit = "";
+				    unit = "";
 				String range = obx.getReferencesRange().getValue();
-				if (range != null)
-					unit += " Range:" + range;
+				if (range != null) unit += " Range:" + range;
 
 				String data = obx.getObservationValue(0).getData().toString();
 
 				String abnormal = StringUtils.join(obx.getAbnormalFlags(), "|");
-				if (StringUtils.isNotEmpty(abnormal))
-					abnormal = " Abnormal:" + abnormal;
+				if (StringUtils.isNotEmpty(abnormal)) abnormal = " Abnormal:" + abnormal;
 
-				logger.info(measurementType + " : " + data + " : " + unit
-						+ " : " + dateObserved + " : " + abnormal);
+				logger.info(measurementType + " : " + data + " : " + unit + " : " + dateObserved + " : " + abnormal);
 
 				// since oscar may have duplicate patient records, just add to
 				// all of them.
@@ -197,10 +167,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			logger.error("Failed to parse HL7 ORU_R01 messages:\n" + hl7msg, e);
 			response.setStatus(HttpStatus.SC_BAD_REQUEST);
 			try {
-				response.getWriter()
-						.println(
-								"Invalid HL7 ORU_R01 format/request: "
-										+ e.getMessage());
+				response.getWriter().println("Invalid HL7 ORU_R01 format/request: " + e.getMessage());
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -214,21 +181,14 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 	}
 
 	/**
-	 * Extract encrypted data from http request. Assuming message file is
-	 * attached as multipart request, and
-	 * <LI>signature - signed by MD5WithRSA
-	 * <LI>key - symetric key encrypted by client's private key
-	 * <LI>service - the ID of client's public key in oscar's 'publicKeys'
-	 * table
-	 * 
-	 * All keys are base64 encoded.
+	 * Extract encrypted data from http request. Assuming message file is attached as multipart request, and <LI>signature - signed by MD5WithRSA <LI>key - symetric key encrypted by client's private key <LI>service - the ID of client's public key in
+	 * oscar's 'publicKeys' table All keys are base64 encoded.
 	 * 
 	 * @param form
 	 * @param request
 	 * @return
 	 */
-	private String extractEncryptedMessage(LabUploadForm form,
-			HttpServletRequest request) {
+	private String extractEncryptedMessage(LabUploadForm form, HttpServletRequest request) {
 		FormFile importFile = form.getImportFile();
 
 		String signature = request.getParameter("signature");
@@ -241,23 +201,18 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 
 		try {
 
-			InputStream is = LabUploadAction.decryptMessage(importFile
-					.getInputStream(), key, clientKey);
-			Utilities u = new Utilities();
+			InputStream is = LabUploadAction.decryptMessage(importFile.getInputStream(), key, clientKey);
 			String fileName = importFile.getFileName();
-			String filePath = u.saveFile(is, fileName);
+			String filePath = Utilities.saveFile(is, fileName);
 
 			File file = new File(filePath);
 
 			if (LabUploadAction.validateSignature(clientKey, signature, file)) {
 				return FileUtils.readFileToString(file);
-			} else
-				throw new RuntimeException(
-						"Invalid signature, upload rejected.");
+			} else throw new RuntimeException("Invalid signature, upload rejected.");
 
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to decrypt upload file stream",
-					e);
+			throw new RuntimeException("Failed to decrypt upload file stream", e);
 
 		} finally {
 			try {

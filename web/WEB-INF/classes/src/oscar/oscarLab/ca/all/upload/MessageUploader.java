@@ -44,7 +44,7 @@ public final class MessageUploader {
     /**
      *  Insert the lab into the proper tables of the database
      */
-    public static String routeReport(String type, String hl7Body,int fileId) throws Exception{
+    public static String routeReport(String serviceName, String type, String hl7Body,int fileId) throws Exception{
         
     	Hl7TextInfoDao hl7TextInfoDao=(Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
     	
@@ -113,11 +113,12 @@ public final class MessageUploader {
             
             String fileUploadCheck_id = ""+ fileId;
                         
-            String insertStmt = "INSERT INTO hl7TextMessage (lab_id, message, type, fileUploadCheck_id) VALUES ('', ?, ?, ?)";
+            String insertStmt = "INSERT INTO hl7TextMessage (lab_id, message, type, fileUploadCheck_id, serviceName) VALUES ('', ?, ?, ?,?)";
             PreparedStatement pstmt = conn.prepareStatement(insertStmt);
             pstmt.setString(1, new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"));
             pstmt.setString(2, type);
             pstmt.setString(3, fileUploadCheck_id);
+            pstmt.setString(4, serviceName);
             pstmt.executeUpdate();
             
             ResultSet rs = pstmt.getGeneratedKeys();

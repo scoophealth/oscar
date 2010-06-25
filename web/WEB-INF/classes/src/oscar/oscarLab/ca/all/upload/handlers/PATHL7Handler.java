@@ -21,45 +21,44 @@ import org.w3c.dom.NodeList;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 
 /**
- *
  * @author wrighd
  */
-public class PATHL7Handler implements MessageHandler  {
+public class PATHL7Handler implements MessageHandler {
 
-    Logger logger = Logger.getLogger(PATHL7Handler.class);
-    
-    public String parse(String fileName,int fileId){
-        Document doc = null;
-        try{
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            doc = docBuilder.parse(new FileInputStream(fileName));
-        }catch(Exception e){
-            logger.error("Could not parse PATHL7 message", e);
-        }
-        
-        if (doc != null){
-            int i = 0;
-            try{
-                Node messageSpec = doc.getFirstChild();
-                NodeList messages = messageSpec.getChildNodes();
-                for (i=0; i<messages.getLength(); i++){
-                    
-                    String hl7Body = messages.item(i).getFirstChild().getTextContent();
-                    MessageUploader.routeReport("PATHL7", hl7Body,fileId);
-                    
-                }
-            }catch(Exception e){
-                logger.error("Could not upload PATHL7 message", e);
-                e.printStackTrace();
-                MessageUploader.clean(fileId);
-                return null;
-            }
-            return("success");
-        }else{
-            return null;
-        }
-        
-    }
-      
+	Logger logger = Logger.getLogger(PATHL7Handler.class);
+
+	public String parse(String serviceName, String fileName, int fileId) {
+		Document doc = null;
+		try {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			doc = docBuilder.parse(new FileInputStream(fileName));
+		} catch (Exception e) {
+			logger.error("Could not parse PATHL7 message", e);
+		}
+
+		if (doc != null) {
+			int i = 0;
+			try {
+				Node messageSpec = doc.getFirstChild();
+				NodeList messages = messageSpec.getChildNodes();
+				for (i = 0; i < messages.getLength(); i++) {
+
+					String hl7Body = messages.item(i).getFirstChild().getTextContent();
+					MessageUploader.routeReport(serviceName, "PATHL7", hl7Body, fileId);
+
+				}
+			} catch (Exception e) {
+				logger.error("Could not upload PATHL7 message", e);
+				e.printStackTrace();
+				MessageUploader.clean(fileId);
+				return null;
+			}
+			return ("success");
+		} else {
+			return null;
+		}
+
+	}
+
 }

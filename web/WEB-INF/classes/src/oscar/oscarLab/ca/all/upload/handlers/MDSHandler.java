@@ -8,7 +8,6 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
-
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -16,39 +15,34 @@ import org.apache.log4j.Logger;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.oscarLab.ca.all.util.Utilities;
 
-/**
- *
- * @author wrighd
- */
-public class MDSHandler implements MessageHandler  {
+public class MDSHandler implements MessageHandler {
 
-    Logger logger = Logger.getLogger(MDSHandler.class);
-    
-    public String parse(String fileName,int fileId){
-        
-        Utilities u = new Utilities();
-        int i = 0;
-        try {
+	Logger logger = Logger.getLogger(MDSHandler.class);
 
-            StringBuffer audit = new StringBuffer();
-            ArrayList messages = u.separateMessages(fileName);
-            for (i=0; i < messages.size(); i++){
-                
-                String msg = (String) messages.get(i);
-                String auditLine = MessageUploader.routeReport("MDS", msg,fileId)+"\n";
-                audit.append(auditLine);
+	public String parse(String serviceName, String fileName, int fileId) {
 
-            }
-            logger.info("Parsed OK");
+		int i = 0;
+		try {
 
-            return(audit.toString());
+			StringBuffer audit = new StringBuffer();
+			ArrayList<String> messages = Utilities.separateMessages(fileName);
+			for (i = 0; i < messages.size(); i++) {
 
-        } catch (Exception e) {
-        	MessageUploader.clean(fileId);
-            logger.error("Could not parse message", e);
-            return null;
-        }
+				String msg = messages.get(i);
+				String auditLine = MessageUploader.routeReport(serviceName, "MDS", msg, fileId) + "\n";
+				audit.append(auditLine);
 
-    }   
-    
+			}
+			logger.info("Parsed OK");
+
+			return (audit.toString());
+
+		} catch (Exception e) {
+			MessageUploader.clean(fileId);
+			logger.error("Could not parse message", e);
+			return null;
+		}
+
+	}
+
 }

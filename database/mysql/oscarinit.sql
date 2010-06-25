@@ -7195,9 +7195,10 @@ create table hl7TextInfo(
 
 create table hl7TextMessage(
 	lab_id int(10) NOT NULL auto_increment primary key,
-        fileUploadCheck_id int(10) NOT NULL,
+	fileUploadCheck_id int(10) NOT NULL,
 	message longtext NOT NULL,
-	type varchar(100)
+	type varchar(100) not null,
+	serviceName varchar(100) not null
 );
 
 create table oscarKeys(

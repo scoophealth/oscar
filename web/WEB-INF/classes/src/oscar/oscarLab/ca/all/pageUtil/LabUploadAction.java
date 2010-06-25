@@ -80,7 +80,7 @@ public class LabUploadAction extends Action {
                 FileUploadCheck fileC = new FileUploadCheck();
                 int check = fileC.addFile(file.getName(),is,"0");
                 if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
-                    if((audit = msgHandler.parse(filePath,check)) != null)
+                    if((audit = msgHandler.parse(service, filePath,check)) != null)
                         outcome = "uploaded";
                     else
                         outcome = "upload failed";
