@@ -63,13 +63,16 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.util.UtilDateUtilities;
@@ -140,8 +143,14 @@ public class EctViewRequestAction extends Action {
 	
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, String segmentId) throws HL7Exception, UnsupportedEncodingException
 	{
-		String hl7Message=Factory.getHL7Body(segmentId);
-		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(hl7Message);
+		Hl7TextMessageDao hl7TextMessageDao=(Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
+		Hl7TextMessage hl7TextMessage=hl7TextMessageDao.find(Integer.parseInt(segmentId));
+		
+		String encodedMessage=hl7TextMessage.getBase64EncodedeMessage();
+		byte[] decodedMessage=DataTypeUtils.decodeBase64(encodedMessage);
+		String decodedMessageString=new String(decodedMessage, DataTypeUtils.ENCODING);
+		
+		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(decodedMessageString);
 		
         thisForm.setAllergies(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
         thisForm.setReasonForConsultation(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.REASON_FOR_CONSULTATION));

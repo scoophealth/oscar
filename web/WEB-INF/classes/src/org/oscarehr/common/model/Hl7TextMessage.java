@@ -46,67 +46,66 @@ public class Hl7TextMessage extends AbstractModel<Integer> implements Serializab
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "lab_id")
 	private Integer id;
-	
+
 	@Column(name = "fileUploadCheck_id")
 	private int fileUploadCheckId;
-	
-	private String message;
+
+	@Column(name = "message")
+	private String base64EncodedeMessage;
 	private String type;
 	private String serviceName;
-		
+
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date created=new Date();
-	
+	private Date created = new Date();
+
 	@PreRemove
-	protected void jpaPreventDelete()
-	{
-		throw(new UnsupportedOperationException("Remove is not allowed for this type of item."));
+	protected void jpaPreventDelete() {
+		throw (new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
 
 	@PreUpdate
-	protected void jpaPreventUpdate()
-	{
-		throw(new UnsupportedOperationException("Update is not allowed for this type of item."));
+	protected void jpaPreventUpdate() {
+		throw (new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
 
 	@Override
-    public Integer getId() {
-	    return(id);
-    }
+	public Integer getId() {
+		return (id);
+	}
 
 	public int getFileUploadCheckId() {
-    	return fileUploadCheckId;
-    }
+		return fileUploadCheckId;
+	}
 
 	public void setFileUploadCheckId(int fileUploadCheckId) {
-    	this.fileUploadCheckId = fileUploadCheckId;
-    }
+		this.fileUploadCheckId = fileUploadCheckId;
+	}
 
-	public String getMessage() {
-    	return message;
-    }
+	public String getBase64EncodedeMessage() {
+		return base64EncodedeMessage;
+	}
 
-	public void setMessage(String message) {
-    	this.message = message;
-    }
+	public void setBase64EncodedeMessage(String base64EncodedeMessage) {
+		this.base64EncodedeMessage = base64EncodedeMessage;
+	}
 
 	public String getType() {
-    	return type;
-    }
+		return type;
+	}
 
 	public void setType(String type) {
-    	this.type = type;
-    }
+		this.type = type;
+	}
 
 	public String getServiceName() {
-    	return serviceName;
-    }
+		return serviceName;
+	}
 
 	public void setServiceName(String serviceName) {
-    	this.serviceName = serviceName;
-    }
+		this.serviceName = serviceName;
+	}
 
 	public Date getCreated() {
-    	return created;
-    }	
+		return created;
+	}
 }

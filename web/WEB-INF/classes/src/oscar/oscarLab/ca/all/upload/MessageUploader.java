@@ -104,7 +104,7 @@ public final class MessageUploader {
 			Hl7TextMessage hl7TextMessage = new Hl7TextMessage();
 			hl7TextMessage.setFileUploadCheckId(fileId);
 			hl7TextMessage.setType(type);
-			hl7TextMessage.setMessage(new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"));
+			hl7TextMessage.setBase64EncodedeMessage(new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"));
 			hl7TextMessage.setServiceName(serviceName);
 			hl7TextMessageDao.persist(hl7TextMessage);
 
