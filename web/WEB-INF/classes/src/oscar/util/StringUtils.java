@@ -374,4 +374,20 @@ public class StringUtils {
     		return s2==null;
     	
     }
+
+    public static boolean nullSafeEqualsIgnoreCase(String s1, String s2) {
+		return nullSafeEquals(s1.toUpperCase(), s2.toUpperCase());
+    }
+
+    static public String noNull(String maybeNullText) {
+		return filled(maybeNullText) ? maybeNullText : "";
+    }
+
+    static public boolean empty(String s) {
+		return isNullOrEmpty(s);
+    }
+
+    static public boolean filled(String s) {
+		return !isNullOrEmpty(s);
+    }
 }
