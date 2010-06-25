@@ -7198,7 +7198,8 @@ create table hl7TextMessage(
 	fileUploadCheck_id int(10) NOT NULL,
 	message longtext NOT NULL,
 	type varchar(100) not null,
-	serviceName varchar(100) not null
+	serviceName varchar(100) not null,
+	created datetime not null
 );
 
 create table oscarKeys(
