@@ -192,7 +192,7 @@ public class LabUploadAction extends Action {
 
             if (publicKeyObject!=null)
             {
-                keyString = publicKeyObject.getPublicKey();
+                keyString = publicKeyObject.getBase64EncodedPublicKey();
                 type = publicKeyObject.getType();            	
             }
             

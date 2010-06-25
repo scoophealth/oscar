@@ -31,8 +31,8 @@
 		jQuery.getJSON("getPublicKey.json", {id: getSelectListValue(selectKeyList)}, 
 			function(xml)
 			{
-				var publicKeyField=document.getElementById("publicKey");
-				publicKeyField.innerHTML=xml.publicKey;
+				var privateKeyField=document.getElementById("privateKey");
+				privateKeyField.innerHTML=xml.base64EncodedPrivateKey;
 
 				var selectProfessionalSpecialistList=document.getElementById("selectProfessionalSpecialistList");
 				selectProfessionalSpecialistList.selectedIndex=0;
@@ -79,8 +79,8 @@
 		</td>
 	</tr>
 	<tr style="border:solid grey 1px">
-		<td class="oscarBlueHeader">Public Key</td>
-		<td id="publicKey"></td>
+		<td class="oscarBlueHeader">Private Key</td>
+		<td id="privateKey"></td>
 	</tr>
 	<tr style="border:solid grey 1px">
 		<td class="oscarBlueHeader">Matching Professional Specialist (optional)</td>

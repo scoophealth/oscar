@@ -62,11 +62,12 @@ public final class KeyPairGen {
                 PublicKey publicKeyObject=new PublicKey();
                 publicKeyObject.setService(name);
                 publicKeyObject.setType(type);
-                publicKeyObject.setPublicKey(new String(pubKey, "ASCII"));
+                publicKeyObject.setBase64EncodedPublicKey(new String(pubKey, "ASCII"));
+                publicKeyObject.setBase64EncodedPrivateKey(new String(privKey, "ASCII"));
                 
                 publicKeyDao.persist(publicKeyObject);
                 
-                return(new String(privKey, "ASCII"));
+                return(publicKeyObject.getBase64EncodedPrivateKey());
             }
             
         }catch(NoSuchAlgorithmException e){

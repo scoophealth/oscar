@@ -10,3 +10,6 @@ alter table professionalSpecialists change eReferralServiceKey eDataServiceKey v
 alter table professionalSpecialists change eReferralServiceName eDataServiceName varchar(255);
 
 alter table log change action action varchar(64);
+
+alter table publicKeys add column privateKey text not null;
+update publicKeys set privateKey='not available';

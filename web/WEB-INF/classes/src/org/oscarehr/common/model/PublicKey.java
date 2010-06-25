@@ -41,7 +41,11 @@ public class PublicKey extends AbstractModel<String> implements Serializable {
 	private String type;
 
 	@Column(name = "pubKey")
-	private String publicKey;
+	private String base64EncodedPublicKey;
+	
+	@Column(name = "privateKey")
+	private String base64EncodedPrivateKey;
+	
 	
 	/**
 	 * This field is meant to be a corresponding professionalSpecialist entry.
@@ -70,12 +74,12 @@ public class PublicKey extends AbstractModel<String> implements Serializable {
     	this.service = service;
     }
 
-	public String getPublicKey() {
-		return publicKey;
+	public String getBase64EncodedPublicKey() {
+		return base64EncodedPublicKey;
 	}
 
-	public void setPublicKey(String publicKey) {
-		this.publicKey = publicKey;
+	public void setBase64EncodedPublicKey(String publicKey) {
+		this.base64EncodedPublicKey = publicKey;
 	}
 
 	public String getType() {
@@ -92,6 +96,14 @@ public class PublicKey extends AbstractModel<String> implements Serializable {
 
 	public void setMatchingProfessionalSpecialistId(Integer matchingProfessionalSpecialistId) {
     	this.matchingProfessionalSpecialistId = matchingProfessionalSpecialistId;
+    }
+
+	public String getBase64EncodedPrivateKey() {
+    	return base64EncodedPrivateKey;
+    }
+
+	public void setBase64EncodedPrivateKey(String base64EncodedPrivateKey) {
+    	this.base64EncodedPrivateKey = base64EncodedPrivateKey;
     }
 
 }

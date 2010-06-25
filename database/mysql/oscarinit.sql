@@ -7212,6 +7212,7 @@ create table publicKeys(
 	service varchar(100) NOT NULL primary key,
 	type varchar(100) NOT NULL,
 	pubKey text NOT NULL,
+	privateKey text NOT NULL,
 	matchingProfessionalSpecialistId int
 );
 
