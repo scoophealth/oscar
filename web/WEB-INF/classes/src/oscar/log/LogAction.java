@@ -52,6 +52,17 @@ public class LogAction {
         logWorker.start();
     }    
 
+    public static void addLog(String provider_no, String action, String content, String data)
+    {
+    	LogWorker logWorker=new LogWorker();
+    	logWorker.provider_no=provider_no;
+    	logWorker.action=action;
+    	logWorker.content=content;
+    	logWorker.data=data;
+    	
+    	logWorker.start();
+    }
+    
     public static boolean addALog(String provider_no, String action, String content, String contentId, String ip) {
         boolean ret = false;
         DBHelp db = new DBHelp();

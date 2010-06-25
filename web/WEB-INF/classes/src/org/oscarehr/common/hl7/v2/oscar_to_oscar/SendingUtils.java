@@ -27,7 +27,10 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+
+import oscar.log.LogAction;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
@@ -57,6 +60,9 @@ public final class SendingUtils {
 		byte[] encryptedBytes = encryptData(dataBytes, senderSecretKey);
 		byte[] encryptedSecretKey = encryptEncryptionKey(senderSecretKey, receiverOscarKey);
 
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, DataTypeUtils.ENCODING));
+		
 		return (postData(url, encryptedBytes, encryptedSecretKey, signature, serviceName));
 	}
 
