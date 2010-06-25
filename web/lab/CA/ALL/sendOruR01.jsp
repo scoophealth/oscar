@@ -7,7 +7,7 @@
 
 
 <h2 class="oscarBlueHeader">
-	Send Data Electronically 
+	Send eData 
 	<span style="font-size:9px">(ORU_R01 : Unsolicited Observation Message)</span>
 </h2>
 
@@ -15,6 +15,12 @@
 <script type="text/javascript">
 	function checkRequiredFields()
 	{
+		if (jQuery("#professionalSpecialistId").val().length==0)
+		{
+			alert('Select a provider / specialist to send to.');
+			return(false);
+		}
+		
 		if (jQuery("#clientFirstName").val().length==0 || jQuery("#clientLastName").val().length==0)
 		{
 			alert('The clients first and last name is required.');
@@ -46,7 +52,8 @@
 		<tr style="border:solid grey 1px">
 			<td class="oscarBlueHeader">To Provider / Specialist</td>
 			<td>
-				<select name="professionalSpecialistId">
+				<select name="professionalSpecialistId" id="professionalSpecialistId">
+					<option value="">--- none ---</option>
 					<%
 						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getRemoteCapableProfessionalSpecialists())
 						{
