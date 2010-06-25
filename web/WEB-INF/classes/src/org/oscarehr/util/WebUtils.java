@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -193,5 +194,33 @@ public final class WebUtils {
 
 			errors.add(message);
 		}
+	}
+	
+	/**
+	 * This method will return a string like "?foo=bar&asdf=zxcv"
+	 * based on the contents of the map. Note that the first item is a ?
+	 * if an empty map is passed in it will return ""
+	 * 
+	 * Note that the results are not html escaped.
+	 * 
+	 * Null or blank values will not be added as query parameters.
+	 */
+	public static String buildQueryString(Map<String, Object> map)
+	{
+		StringBuilder sb=new StringBuilder();
+		
+		for (Map.Entry<String,Object> entry : map.entrySet())
+		{
+			if (entry.getValue()==null) continue;
+			
+			if (sb.length()==0) sb.append('?');
+			else sb.append('&');
+			
+			sb.append(entry.getKey());
+			sb.append('=');
+			sb.append(entry.getValue());
+		}
+		
+		return(sb.toString());
 	}
 }

@@ -48,6 +48,8 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -56,6 +58,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.oscarehr.util.WebUtils;
 
 public final class EctConsultationFormRequestForm extends ActionForm {
 
@@ -111,7 +114,8 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	String urgency;
 
-	private String patientName;
+	private String patientFirstName;
+	private String patientLastName;
 	private String patientAddress;
 	private String patientPhone;
 	private String patientWPhone;
@@ -125,108 +129,108 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private String professionalSpecialistName;
 	private String professionalSpecialistPhone;
 	private String professionalSpecialistAddress;
-	
-	private boolean eReferral=false;
-	
+
+	private boolean eReferral = false;
+	private Integer hl7TextMessageId;
+
 	public String getProfessionalSpecialistName() {
-    	return(StringUtils.trimToEmpty(professionalSpecialistName));
-    }
+		return (StringUtils.trimToEmpty(professionalSpecialistName));
+	}
 
 	public void setProfessionalSpecialistName(String professionalSpecialistName) {
-    	this.professionalSpecialistName = professionalSpecialistName;
-    }
+		this.professionalSpecialistName = professionalSpecialistName;
+	}
 
 	public String getProfessionalSpecialistPhone() {
-    	return(StringUtils.trimToEmpty(professionalSpecialistPhone));
-    }
+		return (StringUtils.trimToEmpty(professionalSpecialistPhone));
+	}
 
 	public void setProfessionalSpecialistPhone(String professionalSpecialistPhone) {
-    	this.professionalSpecialistPhone = professionalSpecialistPhone;
-    }
+		this.professionalSpecialistPhone = professionalSpecialistPhone;
+	}
 
 	public String getProfessionalSpecialistAddress() {
-    	return(StringUtils.trimToEmpty(professionalSpecialistAddress));
-    }
+		return (StringUtils.trimToEmpty(professionalSpecialistAddress));
+	}
 
 	public void setProfessionalSpecialistAddress(String professionalSpecialistAddress) {
-    	this.professionalSpecialistAddress = professionalSpecialistAddress;
-    }
-
+		this.professionalSpecialistAddress = professionalSpecialistAddress;
+	}
 
 	public boolean iseReferral() {
-    	return eReferral;
-    }
+		return eReferral;
+	}
 
 	public void seteReferral(boolean eReferral) {
-    	this.eReferral = eReferral;
-    }
+		this.eReferral = eReferral;
+	}
 
 	public String getProviderName() {
-    	return(StringUtils.trimToEmpty(providerName));
-    }
+		return (StringUtils.trimToEmpty(providerName));
+	}
 
 	public void setProviderName(String providerName) {
-    	this.providerName = providerName;
-    }
+		this.providerName = providerName;
+	}
 
 	public String getPatientAge() {
-    	return(StringUtils.trimToEmpty(patientAge));
-    }
+		return (StringUtils.trimToEmpty(patientAge));
+	}
 
 	public void setPatientAge(String patientAge) {
-    	this.patientAge = patientAge;
-    }
+		this.patientAge = patientAge;
+	}
 
 	public String getAllergies() {
-		return(StringUtils.trimToEmpty(allergies));
+		return (StringUtils.trimToEmpty(allergies));
 	}
 
 	public String getAppointmentDay() {
-		return(StringUtils.trimToEmpty(appointmentDay));
+		return (StringUtils.trimToEmpty(appointmentDay));
 	}
 
 	public String getAppointmentHour() {
-		return(StringUtils.trimToEmpty(appointmentHour));
+		return (StringUtils.trimToEmpty(appointmentHour));
 	}
 
 	public String getAppointmentMinute() {
-		return(StringUtils.trimToEmpty(appointmentMinute));
+		return (StringUtils.trimToEmpty(appointmentMinute));
 	}
 
 	public String getAppointmentMonth() {
-		return(StringUtils.trimToEmpty(appointmentMonth));
+		return (StringUtils.trimToEmpty(appointmentMonth));
 	}
 
 	public String getAppointmentNotes() {
-		return(StringUtils.trimToEmpty(appointmentNotes));
+		return (StringUtils.trimToEmpty(appointmentNotes));
 	}
 
 	public String getAppointmentPm() {
-		return(StringUtils.trimToEmpty(appointmentPm));
+		return (StringUtils.trimToEmpty(appointmentPm));
 	}
 
 	public String getAppointmentTime() {
-		return(StringUtils.trimToEmpty(appointmentTime));
+		return (StringUtils.trimToEmpty(appointmentTime));
 	}
 
 	public String getAppointmentYear() {
-		return(StringUtils.trimToEmpty(appointmentYear));
+		return (StringUtils.trimToEmpty(appointmentYear));
 	}
 
 	public String getClinicalInformation() {
-		return(StringUtils.trimToEmpty(clinicalInformation));
+		return (StringUtils.trimToEmpty(clinicalInformation));
 	}
 
 	public String getConcurrentProblems() {
-		return(StringUtils.trimToEmpty(concurrentProblems));
+		return (StringUtils.trimToEmpty(concurrentProblems));
 	}
 
 	public String getCurrentMedications() {
-		return(StringUtils.trimToEmpty(currentMedications));
+		return (StringUtils.trimToEmpty(currentMedications));
 	}
 
 	public String getDemographicNo() {
-		return(StringUtils.trimToEmpty(demographicNo));
+		return (StringUtils.trimToEmpty(demographicNo));
 	}
 
 	public String getDocuments() {
@@ -238,43 +242,43 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getProviderNo() {
-		return(StringUtils.trimToEmpty(providerNo));
+		return (StringUtils.trimToEmpty(providerNo));
 	}
 
 	public String getReasonForConsultation() {
-		return(StringUtils.trimToEmpty(reasonForConsultation));
+		return (StringUtils.trimToEmpty(reasonForConsultation));
 	}
 
 	public String getReferalDate() {
-		return(StringUtils.trimToEmpty(referalDate));
+		return (StringUtils.trimToEmpty(referalDate));
 	}
 
 	public String getRequestId() {
-		return(StringUtils.trimToEmpty(requestId));
+		return (StringUtils.trimToEmpty(requestId));
 	}
 
 	public String getSendTo() {
-		return(StringUtils.trimToEmpty(sendTo));
+		return (StringUtils.trimToEmpty(sendTo));
 	}
 
 	public String getService() {
-		return(StringUtils.trimToEmpty(service));
+		return (StringUtils.trimToEmpty(service));
 	}
 
 	public String getSpecialist() {
-		return(StringUtils.trimToEmpty(specialist));
+		return (StringUtils.trimToEmpty(specialist));
 	}
 
 	public String getStatus() {
-		return(StringUtils.trimToEmpty(status));
+		return (StringUtils.trimToEmpty(status));
 	}
 
 	public String getSubmission() {
-		return(StringUtils.trimToEmpty(submission));
+		return (StringUtils.trimToEmpty(submission));
 	}
 
 	public String getUrgency() {
-		return(StringUtils.trimToEmpty(urgency));
+		return (StringUtils.trimToEmpty(urgency));
 	}
 
 	@Override
@@ -422,15 +426,11 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getPatientName() {
-		return(StringUtils.trimToEmpty(patientName));
-	}
-
-	public void setPatientName(String patientName) {
-		this.patientName = patientName;
+		return (StringUtils.trimToEmpty(patientLastName + ", " + patientFirstName));
 	}
 
 	public String getPatientAddress() {
-		return(StringUtils.trimToEmpty(patientAddress));
+		return (StringUtils.trimToEmpty(patientAddress));
 	}
 
 	public void setPatientAddress(String patientAddress) {
@@ -438,7 +438,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getPatientPhone() {
-		return(StringUtils.trimToEmpty(patientPhone));
+		return (StringUtils.trimToEmpty(patientPhone));
 	}
 
 	public void setPatientPhone(String patientPhone) {
@@ -446,7 +446,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getPatientWPhone() {
-		return(StringUtils.trimToEmpty(patientWPhone));
+		return (StringUtils.trimToEmpty(patientWPhone));
 	}
 
 	public void setPatientWPhone(String patientWPhone) {
@@ -454,7 +454,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getPatientDOB() {
-		return(StringUtils.trimToEmpty(patientDOB));
+		return (StringUtils.trimToEmpty(patientDOB));
 	}
 
 	public void setPatientDOB(String patientDOB) {
@@ -462,7 +462,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getPatientSex() {
-		return(StringUtils.trimToEmpty(patientSex));
+		return (StringUtils.trimToEmpty(patientSex));
 	}
 
 	public void setPatientSex(String patientSex) {
@@ -470,7 +470,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getPatientHealthNum() {
-		return(StringUtils.trimToEmpty(patientHealthNum));
+		return (StringUtils.trimToEmpty(patientHealthNum));
 	}
 
 	public void setPatientHealthNum(String patientHealthNum) {
@@ -478,34 +478,68 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	}
 
 	public String getPatientHealthCardVersionCode() {
-		return(StringUtils.trimToEmpty(patientHealthCardVersionCode));
-    }
+		return (StringUtils.trimToEmpty(patientHealthCardVersionCode));
+	}
 
 	public void setPatientHealthCardVersionCode(String patientHealthCardVersionCode) {
-    	this.patientHealthCardVersionCode = patientHealthCardVersionCode;
-    }
+		this.patientHealthCardVersionCode = patientHealthCardVersionCode;
+	}
 
 	public String getPatientHealthCardType() {
-		return(StringUtils.trimToEmpty(patientHealthCardType));
-    }
+		return (StringUtils.trimToEmpty(patientHealthCardType));
+	}
 
 	public void setPatientHealthCardType(String patientHealthCardType) {
-    	this.patientHealthCardType = patientHealthCardType;
-    }
+		this.patientHealthCardType = patientHealthCardType;
+	}
+
+	public Integer getHl7TextMessageId() {
+		return hl7TextMessageId;
+	}
+
+	public void setHl7TextMessageId(Integer hl7TextMessageId) {
+		this.hl7TextMessageId = hl7TextMessageId;
+	}
+
+	public String getPatientFirstName() {
+		return patientFirstName;
+	}
+
+	public void setPatientFirstName(String patientFirstName) {
+		this.patientFirstName = patientFirstName;
+	}
+
+	public String getPatientLastName() {
+		return patientLastName;
+	}
+
+	public void setPatientLastName(String patientLastName) {
+		this.patientLastName = patientLastName;
+	}
 
 	/**
 	 * This url will include the context path.
 	 */
-	public String getOruR01UrlString(HttpServletRequest request)
-	{
+	public String getOruR01UrlString(HttpServletRequest request) {
 		// /lab/CA/ALL/sendOruR01.jsp
-		
-		StringBuilder sb=new StringBuilder();
-		
+
+		StringBuilder sb = new StringBuilder();
+
 		sb.append(request.getContextPath());
-		sb.append("/lab/CA/ALL/sendOruR01.jsp?professionalSpecialistId=");
-//		sb.append();
-		
-		return(StringEscapeUtils.escapeHtml(sb.toString()));
+		sb.append("/lab/CA/ALL/sendOruR01.jsp");
+
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+
+		// buildQueryString will take null into account
+		queryParameters.put("hl7TextMessageId", hl7TextMessageId);
+		queryParameters.put("clientFirstName", patientFirstName);
+		queryParameters.put("clientLastName", patientLastName);
+		queryParameters.put("clientHin", patientHealthNum);
+		queryParameters.put("clientBirthDate", patientDOB);
+		queryParameters.put("clientGender", patientSex);
+
+		sb.append(WebUtils.buildQueryString(queryParameters));
+
+		return (StringEscapeUtils.escapeHtml(sb.toString()));
 	}
 }

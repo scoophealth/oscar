@@ -4,14 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.dao.PublicKeyDao;
+import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.PublicKey;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public final class SendOruR01UIBean {
+	
+	private static Logger logger=MiscUtils.getLogger();
 	private static ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+	private static Hl7TextMessageDao hl7TextMessageDao = (Hl7TextMessageDao) SpringUtils.getBean("hl7TextMessageDao");
+	private static PublicKeyDao publicKeyDao = (PublicKeyDao) SpringUtils.getBean("publicKeyDao");
 
 	public static String getLoggedInProviderDisplayLine() {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
@@ -75,5 +85,23 @@ public final class SendOruR01UIBean {
 		}
 
 		return (StringEscapeUtils.escapeHtml(sb.toString()));
+	}
+
+	public static Integer getSelectedProfessionalSpecialistId(String hl7TextMessageId)
+	{
+		if (hl7TextMessageId==null) return(null);
+
+		try
+		{
+			Hl7TextMessage hl7TextMessage=hl7TextMessageDao.find(Integer.parseInt(hl7TextMessageId));
+			PublicKey publicKey=publicKeyDao.find(hl7TextMessage.getServiceName());
+			return(publicKey.getMatchingProfessionalSpecialistId());
+		}
+		catch (Exception e)
+		{
+			logger.error("Unexpected error.", e);
+		}
+		
+		return(null);
 	}
 }

@@ -44,7 +44,10 @@ public class EctConsultationFormRequestUtil {
             ResultSet rs = db.GetSQL(sql);
 
             if (rs.next()) {
-                patientName = db.getString(rs, "last_name") + "," +db.getString(rs, "first_name");
+                patientFirstName = db.getString(rs, "first_name");
+                patientLastName = db.getString(rs, "last_name");
+                patientName = patientLastName + "," +patientFirstName;
+
                 patientAddress = db.getString(rs, "address") + "<br>" + db.getString(rs, "city") +
                         "," + db.getString(rs, "province") + "," + db.getString(rs, "postal");
                 patientPhone = db.getString(rs, "phone");
@@ -312,6 +315,8 @@ public class EctConsultationFormRequestUtil {
     }
             
     public String patientName;
+    public String patientFirstName;
+    public String patientLastName;
     public String patientAddress;
     public String patientPhone;
     public String patientWPhone;

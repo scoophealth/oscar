@@ -130,7 +130,8 @@ public class EctViewRequestAction extends Action {
         thisForm.setPatientHealthNum(consultUtil.patientHealthNum);
         thisForm.setPatientHealthCardVersionCode(consultUtil.patientHealthCardVersionCode);
         thisForm.setPatientHealthCardType(consultUtil.patientHealthCardType);
-        thisForm.setPatientName(consultUtil.patientName);
+        thisForm.setPatientFirstName(consultUtil.patientFirstName);
+        thisForm.setPatientLastName(consultUtil.patientLastName);
         thisForm.setPatientPhone(consultUtil.patientPhone);
         thisForm.setPatientSex(consultUtil.patientSex);
         thisForm.setPatientWPhone(consultUtil.patientWPhone);
@@ -151,6 +152,8 @@ public class EctViewRequestAction extends Action {
 		String decodedMessageString=new String(decodedMessage, DataTypeUtils.ENCODING);
 		
 		REF_I12 refI12=(REF_I12) OscarToOscarUtils.pipeParserParse(decodedMessageString);
+		
+		thisForm.setHl7TextMessageId(hl7TextMessage.getId());
 		
         thisForm.setAllergies(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.ALLERGIES));
         thisForm.setReasonForConsultation(RefI12.getNteValue(refI12, RefI12.REF_NTE_TYPE.REASON_FOR_CONSULTATION));
@@ -188,7 +191,8 @@ public class EctViewRequestAction extends Action {
         thisForm.setPatientHealthCardType(demographic.getHcType());
         thisForm.setPatientHealthCardVersionCode(demographic.getVer());
         
-        thisForm.setPatientName(demographic.getLastName()+','+demographic.getFirstName());
+        thisForm.setPatientFirstName(demographic.getFirstName());
+        thisForm.setPatientLastName(demographic.getLastName());
         thisForm.setPatientPhone(demographic.getPhone());
         thisForm.setPatientSex(demographic.getSex());
 //        thisForm.setPatientWPhone(patientAddress);
