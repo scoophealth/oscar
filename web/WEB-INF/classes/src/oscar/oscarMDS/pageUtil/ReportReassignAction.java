@@ -25,6 +25,7 @@ package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.servlet.ServletException;
@@ -36,6 +37,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
@@ -62,12 +64,19 @@ public class ReportReassignAction extends Action {
         Hashtable htable = new Hashtable();
         String[] labTypes = CommonLabResultData.getLabTypes();
         ArrayList listFlaggedLabs = new ArrayList();
-        
+       /* Enumeration em=request.getParameterNames();
+        while(em.hasMoreElements()){
+            MiscUtils.getLogger().info("ele="+em.nextElement());
+            MiscUtils.getLogger().info("val="+request.getParameter((em.nextElement()).toString()));
+        }*/
+
         if(flaggedLabs != null && labTypes != null){
             for (int i = 0; i < flaggedLabs.length; i++){
+                //MiscUtils.getLogger().info(flaggedLabs[i]);
                 for (int j = 0; j < labTypes.length; j++){
+                    //MiscUtils.getLogger().info(labTypes[j]);
                     String s =  request.getParameter("labType"+flaggedLabs[i]+labTypes[j]);
-                    
+                    //MiscUtils.getLogger().info(s);
                     if (s != null){  //This means that the lab was of this type.
                         String[] la =  new String[] {flaggedLabs[i],labTypes[j]};
                         listFlaggedLabs.add(la);
@@ -80,13 +89,13 @@ public class ReportReassignAction extends Action {
         }
         
         String newURL = "";
-        
+       // MiscUtils.getLogger().info(listFlaggedLabs.size());
         try {
             CommonLabResultData.updateLabRouting(listFlaggedLabs, selectedProviders);
             newURL = mapping.findForward("success").getPath();
             
             // the segmentID is needed when being called from a lab display
-            newURL = newURL + "?providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&segmentID="+flaggedLabs[0];
+            newURL = newURL + "&providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&segmentID="+flaggedLabs[0];
             if (request.getParameter("lname") != null) { newURL = newURL + "&lname="+request.getParameter("lname"); }
             if (request.getParameter("fname") != null) { newURL = newURL + "&fname="+request.getParameter("fname"); }
             if (request.getParameter("hnum") != null) { newURL = newURL + "&hnum="+request.getParameter("hnum"); }
@@ -94,7 +103,7 @@ public class ReportReassignAction extends Action {
             logger.error("exception in ReportReassignAction", e);
             newURL = mapping.findForward("failure").getPath();
         }
-        // System.out.println("In ReportReassignAction: newURL is: "+newURL);
+         //System.out.println("In ReportReassignAction: newURL is: "+newURL);
         return (new ActionForward(newURL));
     }
 }

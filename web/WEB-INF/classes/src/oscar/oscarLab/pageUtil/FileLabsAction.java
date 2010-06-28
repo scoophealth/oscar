@@ -34,6 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
@@ -78,11 +79,11 @@ public class FileLabsAction extends Action {
 
          CommonLabResultData.fileLabs(listFlaggedLabs, providerNo);
          newURL = mapping.findForward("success").getPath();
-         newURL = newURL + "?providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status;
+         newURL = newURL + "&providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status;
          if (request.getParameter("lname") != null) { newURL = newURL + "&lname="+request.getParameter("lname"); }
          if (request.getParameter("fname") != null) { newURL = newURL + "&fname="+request.getParameter("fname"); }
          if (request.getParameter("hnum")  != null) { newURL = newURL + "&hnum="+request.getParameter("hnum"); }
-
+         //MiscUtils.getLogger().info(newURL);
       return (new ActionForward(newURL));
    }
 }
