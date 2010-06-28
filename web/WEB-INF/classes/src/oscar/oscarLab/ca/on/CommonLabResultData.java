@@ -31,12 +31,12 @@ package oscar.oscarLab.ca.on;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
 import org.oscarehr.document.DocumentResultsData;
+import org.oscarehr.util.MiscUtils;
 import oscar.OscarProperties;
 import oscar.oscarDB.ArchiveDeletedRecords;
 import oscar.oscarDB.DBHandler;
@@ -64,7 +64,7 @@ public class CommonLabResultData {
     }
 
     public static String[] getLabTypes(){
-        return new String[] {"MDS","CML","BCP","HL7"};
+        return new String[] {"MDS","CML","BCP","HL7","DOC"};
     }
 
     public ArrayList populateLabResultsData(String demographicNo, String reqId, boolean attach) {
@@ -282,7 +282,7 @@ public class CommonLabResultData {
             String insertString = "";
             CommonLabResultData data = new CommonLabResultData();
             ProviderLabRouting plr = new ProviderLabRouting();
-
+           //MiscUtils.getLogger().info(flaggedLabs.size()+"--");
             for (int i=0; i < flaggedLabs.size(); i++) {
                 String[] strarr = (String[]) flaggedLabs.get(i);
                 String lab = strarr[0];
@@ -291,6 +291,7 @@ public class CommonLabResultData {
                 // Forward all versions of the lab
                 String matchingLabs = data.getMatchingLabs(lab, labType);
                 String[] labIds = matchingLabs.split(",");
+                //MiscUtils.getLogger().info(labIds.length+"labIds --");
                 for (int k=0; k < labIds.length; k++){
 
                     for (int j=0; j < providersArray.length; j++) {
@@ -304,6 +305,7 @@ public class CommonLabResultData {
 
                     // delete old entries
                     String sql = "delete from providerLabRouting where provider_no='0' and lab_type= '"+labType+"' and lab_no = '"+labIds[k]+"'";
+                    //System.out.println("***sql="+sql);
                     result = db.RunSQL(sql);
 
                 }
