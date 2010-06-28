@@ -57,12 +57,23 @@
 
                     <td align="left" valign="top">
                         <fieldset><legend>Patient:<%=demoName%> </legend>
-                            <div>Document Uploaded :<%=curdoc.getDateTimeStamp()%></div>
-                            <div>Content Type: <%=contentType%></div>
-                            <div>Number of Pages: <%=numOfPageStr%></div>
+                            <table border="0">
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.DocumentUploaded"/></td>
+                                    <td><%=curdoc.getDateTimeStamp()%></td>
+                                </tr>
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.ContentType"/></td>
+                                    <td><%=contentType%></td>
+                                </tr>
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.NumberOfPages"/></td>
+                                    <td><%=numOfPageStr%></td>
+                                </tr>
+                            </table>
 
                             <form id="forms_<%=docId%>" onsubmit="return updateDocument('forms_<%=docId%>');">
-                                <input type="hidden" name="method" value="documentUpdate" />
+                                <input type="hidden" name="method" value="documentUpdateAjax" />
                                 <input type="hidden" name="documentId" value="<%=docId%>" />
                                 <table border="0">
                                     <tr>
@@ -283,7 +294,10 @@
 
                                                         new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                                                                 var num=formid.split("_");
-                                                                Effect.BlindUp('labdoc_'+num[1]);
+                                                             if(num[1]){
+                                                                 Effect.BlindUp('labdoc_'+num[1]);
+                                                                 updateSideBar(num[1]);
+                                                            }
                                                     }});
 
                                                     }
