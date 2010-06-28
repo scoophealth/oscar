@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="oscar.dms.data.*,oscar.oscarProvider.data.*,java.util.*,oscar.oscarLab.ca.on.CommonLabResultData" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%
             List<Hashtable> queues = QueueData.getQueues();
             ArrayList providers = ProviderData.getProviderList();
@@ -95,7 +96,7 @@
                     button_height: "29",
                     button_placeholder_id: "btnUpload",
                     button_text: '<span class=\"theFont\">Upload</span>',
-                    button_text_style: ".theFont { font-size: 9pt;  font-family:Arial,Helvetica,sans-serif;}",
+                    button_text_style: ".theFont { font-size: 12pt;  font-family:Arial,Helvetica,sans-serif;}",
                     button_text_left_padding: 12,
                     button_text_top_padding: 5,
 
