@@ -389,7 +389,8 @@ public final class DataTypeUtils {
 		XTN phone = pid.getPhoneNumberHome(0);
 		demographic.setPhone(phone.getUnformattedTelephoneNumber().getValue());
 
-		demographic.setSex(getOscarGenderFromHl7Gender(pid.getAdministrativeSex().getValue()).name());
+		Gender gender=getOscarGenderFromHl7Gender(pid.getAdministrativeSex().getValue());
+		if (gender!=null) demographic.setSex(gender.name());
 
 		return (demographic);
 	}

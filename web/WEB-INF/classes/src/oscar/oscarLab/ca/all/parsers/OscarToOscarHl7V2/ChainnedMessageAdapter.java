@@ -212,6 +212,7 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 	public String getSex() {
 		String hl7Gender = getPid().getAdministrativeSex().getValue();
 		Gender oscarGender = DataTypeUtils.getOscarGenderFromHl7Gender(hl7Gender);
+		if (oscarGender==null) return(null);
 		return (oscarGender.name());
 	}
 
