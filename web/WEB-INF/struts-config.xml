@@ -755,7 +755,7 @@
         </action>
         <action input="/Index.jsp" path="/oscarMDS/ReportReassign" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
             <forward name="failure" path="/errorpage.jsp" />
-            <forward name="success" path="/oscarMDS/Index.jsp" />
+            <forward name="success" path="/dms/inboxManage.do?method=prepareForIndexPage" />
         </action>
         <action input="/labDisplay.jsp" path="/lab/CA/ALL/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
             <forward name="failure" path="/errorpage.jsp" />
@@ -778,7 +778,7 @@
         </action>
         <action input="/Index.jsp" path="/oscarMDS/FileLabs" scope="request" type="oscar.oscarLab.pageUtil.FileLabsAction">
             <forward name="failure" path="/errorpage.jsp" />
-            <forward name="success" path="/oscarMDS/Index.jsp" />
+            <forward name="success" path="/dms/inboxManage.do?method=prepareForIndexPage" />
         </action>
         <action input="/SegmentDisplay.jsp" path="/oscarMDS/SearchPatient" scope="request" type="oscar.oscarMDS.pageUtil.SearchPatientAction">
             <forward name="failure" path="/oscarMDS/PatientSearch.jsp?search_mode=search_name&amp;limit1=0&amp;limit2=10" />
@@ -2015,6 +2015,7 @@
 
         <action path="/dms/ManageDocument" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
            <forward name="success" path="/dms/undocument.jsp"/>
+           <forward name="displaySingleDoc" path="/dms/DocumentDisplay3.jsp"/>
         </action>
 
         <action path="/PhrRetrieve" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
