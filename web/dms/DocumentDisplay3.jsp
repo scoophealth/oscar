@@ -4,17 +4,26 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%><%
+<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
+<%
 //System.out.println("start first part java");
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
-            String demoName=request.getParameter("demoName");
-            String documentNo = request.getParameter("segmentID");
 
-            String providerNo = request.getParameter("providerNo");
-            String searchProviderNo = request.getParameter("searchProviderNo");
-            String status = request.getParameter("status");
+            String demoName, documentNo,providerNo,searchProviderNo,status;
 
+             demoName=(String)request.getAttribute("demoName");
+             documentNo = (String)request.getAttribute("segmentID");
+             providerNo = (String)request.getAttribute("providerNo");
+             searchProviderNo = (String)request.getAttribute("searchProviderNo");
+             status = (String)request.getAttribute("status");
+            if(demoName==null && documentNo==null &&providerNo==null &&searchProviderNo==null &&status==null ){
+                         demoName=request.getParameter("demoName");
+                         documentNo = request.getParameter("segmentID");
+                         providerNo = request.getParameter("providerNo");
+                         searchProviderNo = request.getParameter("searchProviderNo");
+                         status = request.getParameter("status");
+            }
             String creator = (String) session.getAttribute("user");
             ArrayList doctypes = EDocUtil.getDoctypes("demographic");
             EDocUtil edocUtil = new EDocUtil();
@@ -45,21 +54,7 @@
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
             //System.out.println("done first part java");
 %>
-        <!--script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
-        <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-        <script type="text/javascript" src="../share/javascript/effects.js"></script>
-        <script type="text/javascript" src="../share/javascript/controls.js"></script>
-
-        <script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"></script>
-        <script type="text/javascript" src="../share/yui/js/connection-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/animation-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/datasource-min.js"></script>
-        <script type="text/javascript" src="../share/yui/js/autocomplete-min.js"></script>
-        <script type="text/javascript" src="../js/demographicProviderAutocomplete.js"></script>
-
-        <link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
-        <link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
-        <link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  /-->
+        
 <html>
     <head>
             <!-- main calendar program -->
@@ -98,13 +93,27 @@
 
                     <td align="left" valign="top">
                         <fieldset><legend>Patient:<%=demoName%> </legend>
-                            <div>Document Uploaded :<%=curdoc.getDateTimeStamp()%></div>
-                            <div>Content Type: <%=contentType%></div>
-                            <div>Number of Pages: <%=numOfPageStr%></div>
+                            <table border="0">
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.DocumentUploaded"/></td>
+                                    <td><%=curdoc.getDateTimeStamp()%></td>
+                                </tr>
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.ContentType"/></td>
+                                    <td><%=contentType%></td>
+                                </tr>
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.NumberOfPages"/></td>
+                                    <td><%=numOfPageStr%></td>
+                                </tr>
+                            </table>                             
 
-                            <form id="forms_<%=docId%>" onsubmit="return updateDocument('forms_<%=docId%>');">
+                                    <form id="forms_<%=docId%>" action="ManageDocument.do" onsubmit="refreshParent();" >
                                 <input type="hidden" name="method" value="documentUpdate" />
                                 <input type="hidden" name="documentId" value="<%=docId%>" />
+                                <input type="hidden" name="providerNo" value="<%=providerNo%>" />
+                                <input type="hidden" name="searchProviderNo" value="<%=searchProviderNo%>" />
+                                <input type="hidden" name="status" value="<%=status%>" />
                                 <table border="0">
                                     <tr>
                                         <td><bean:message key="dms.documentReport.msgDocType" />:</td>
@@ -230,7 +239,7 @@
                                                     oscarLog(windowprops);
                                                     var popup=window.open(varpage, windowname, windowprops);
                                                 }
-                                                updateDocument=function(eleId){
+                                         /*       updateDocument=function(eleId){
 
                                                     var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
                                                     new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
@@ -241,7 +250,7 @@
                                                     }});
                                                     return false;
                                                 }
-                                             
+                                             */
                                                 YAHOO.example.BasicRemote = function() {
                                                         var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
                                                         var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
@@ -317,7 +326,9 @@
                                                             oAC: oAC
                                                         };
                                                     }();
-
+                                                    refreshParent=function(){
+                                                        window.opener.location.reload();
+                                                    }
                                                     updateStatus=function(formid){
                                                         var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
                                                         var data=$(formid).serialize(true);
@@ -343,7 +354,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;">Successfully saved.</a><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /> <%}%></td>
+                                        <td colspan="2" align="right"><!--a id="saveSucessMsg_<%=docId%>" style="display:none;">Successfully saved.</a--><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /> <%}%></td>
                                     </tr>
 
                                     <tr>
@@ -425,7 +436,7 @@
                                 <input type="hidden" name="labType<%= docId%>DOC" value="imNotNull" />
                                 <input type="hidden" name="providerNo" value="<%= providerNo%>" />
                             </form>
-                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');" method="post" action="javascript:void(0);">
+                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');refreshParent();;" method="post" action="javascript:void(0);">
 
                                 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
