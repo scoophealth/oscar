@@ -69,7 +69,7 @@ import com.lowagie.text.pdf.PdfReader;
 import java.io.IOException;
 import java.util.HashMap;
 import net.sf.json.JSONObject;
-import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarLab.ca.on.LabResultData;
 
 
@@ -94,17 +94,14 @@ public class ManageDocumentAction extends DispatchAction {
     }
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        //System.out.println("ManageDocumentAciton - unspecified");
-        return null;//execute2(mapping, form, request, response);
+
+        return null;
     }
 
-    //public ActionForward multifast(
-    //public ActionForward documentUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    public ActionForward documentUpdate(org.apache.struts.action.ActionMapping mapping, org.apache.struts.action.ActionForm form,
-            javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) {
+public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
+            HttpServletRequest request, HttpServletResponse response) {
         //System.out.println("In here DocumentUpdate");
          String ret = "";
-       // providerInboxRoutingDAO=new ProviderInboxRoutingDao();
 
 
         String observationDate = request.getParameter("observationDate");// :2008-08-22<
@@ -114,13 +111,12 @@ public class ManageDocumentAction extends DispatchAction {
 
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, documentId, request.getRemoteAddr());
 
-        String demog = request.getParameter("demog");// get demo number
-        String demographicKeyword = request.getParameter("demographicKeyword");// get demo name
-        String[] flagproviders = request.getParameterValues("flagproviders");//get all flagged providers
-        String demoLink=request.getParameter("demoLink");//value of  'send to MRP'
+        String demog = request.getParameter("demog");
+        String demographicKeyword = request.getParameter("demographicKeyword");
+        String[] flagproviders = request.getParameterValues("flagproviders");
+        String demoLink=request.getParameter("demoLink");
         //System.out.println("DOCUMNET " + documentDAO);
         //System.out.println("link to prov "+demoLink+" demo "+demog);
-        
         //TODO: if demoLink is "on", check if msp is in flagproviders, if not save to providerInboxRouting, if yes, don't save.
 
         //DONT COPY THIS !!!
@@ -136,13 +132,8 @@ public class ManageDocumentAction extends DispatchAction {
                 }
              }catch(Exception e){e.printStackTrace();}
         }
-        //// END COPY
-
-
         Document d = documentDAO.getDocument(documentId);
-
         //System.out.println("aaa " + d);
-
         d.setDocdesc(documentDescription);
         d.setDoctype(docType);
         Date obDate = UtilDateUtilities.StringToDate(observationDate);
@@ -153,27 +144,17 @@ public class ManageDocumentAction extends DispatchAction {
         //System.out.println("bbb " + d);
         documentDAO.save(d);
         //System.out.println("Document " + d.getDocfilename() + " desc " + d.getDocdesc());
-
         try {
             //System.out.println("parse Int " + Integer.parseInt(demog));
-
-
             CtlDocument ctlDocument = documentDAO.getCtrlDocument(Integer.parseInt(documentId));
             //System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
             ctlDocument.setModuleId(Integer.parseInt(demog));
-
-            //System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
-
-            //System.out.println("1" + ctlDocument.toString());
             documentDAO.saveCtlDocument(ctlDocument);
             //save a document created note
             if(ctlDocument.isDemographicDocument()){
                 //save note
                 saveDocNote(request,d.getDocdesc(),demog,documentId);
-                //save patient routing table
-               // savePatientLabRouting(demog,documentId,LabResultData.DOCUMENT);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -185,7 +166,94 @@ public class ManageDocumentAction extends DispatchAction {
         if (ret != null && !ret.equals("")) {
             //response.getOutputStream().print(ret);
         }
-        return null;//execute2(mapping, form, request, response);
+
+
+        return null;
+
+    }
+
+    public ActionForward documentUpdate(ActionMapping mapping, ActionForm form,
+            HttpServletRequest request, HttpServletResponse response) {
+        //System.out.println("In here DocumentUpdate");
+         String ret = "";
+
+
+        String observationDate = request.getParameter("observationDate");// :2008-08-22<
+        String documentDescription = request.getParameter("documentDescription");//:test2<
+        String documentId = request.getParameter("documentId");//:29<
+        String docType = request.getParameter("docType");//:consult<
+
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, documentId, request.getRemoteAddr());
+
+        String demog = request.getParameter("demog");
+        String demographicKeyword = request.getParameter("demographicKeyword");
+        String[] flagproviders = request.getParameterValues("flagproviders");
+        String demoLink=request.getParameter("demoLink");
+        //System.out.println("DOCUMNET " + documentDAO);
+        //System.out.println("link to prov "+demoLink+" demo "+demog);        
+        //TODO: if demoLink is "on", check if msp is in flagproviders, if not save to providerInboxRouting, if yes, don't save.
+
+        //DONT COPY THIS !!!
+         if (flagproviders !=null && flagproviders.length > 0){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
+             try{
+                for(String proNo:flagproviders){
+                    //System.out.println("flagproviders="+flagproviders.length+"; flagproviders="+flagproviders);
+                    for(int i=0;i<flagproviders.length;i++){
+                        System.out.println("element="+flagproviders[i]);
+                    }
+                    System.out.println("proNo="+proNo+"; documentId="+documentId);
+                    providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
+                }
+             }catch(Exception e){e.printStackTrace();}
+        }
+        Document d = documentDAO.getDocument(documentId);
+        //System.out.println("aaa " + d);
+        d.setDocdesc(documentDescription);
+        d.setDoctype(docType);
+        Date obDate = UtilDateUtilities.StringToDate(observationDate);
+        //System.out.println("Date util " + obDate);
+        if (obDate != null) {
+            d.setObservationdate(obDate);
+        }
+        //System.out.println("bbb " + d);
+        documentDAO.save(d);
+        //System.out.println("Document " + d.getDocfilename() + " desc " + d.getDocdesc());
+        try {
+            //System.out.println("parse Int " + Integer.parseInt(demog));
+            CtlDocument ctlDocument = documentDAO.getCtrlDocument(Integer.parseInt(documentId));
+            //System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
+            ctlDocument.setModuleId(Integer.parseInt(demog));
+            documentDAO.saveCtlDocument(ctlDocument);
+            //save a document created note
+            if(ctlDocument.isDemographicDocument()){
+                //save note
+                saveDocNote(request,d.getDocdesc(),demog,documentId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (flagproviders != null) {
+            for (String str : flagproviders) {
+                //System.out.println("str " + str);
+            }
+        }
+        if (ret != null && !ret.equals("")) {
+            //response.getOutputStream().print(ret);
+        }
+        String providerNo=request.getParameter("providerNo");
+        String searchProviderNo=request.getParameter("searchProviderNo");
+        String ackStatus=request.getParameter("status");
+        DemographicData demoD=new DemographicData();
+        DemographicData.Demographic demo = demoD.getDemographic(demog);
+        String demoName=demo.getLastName()+", "+demo.getFirstName();
+        request.setAttribute("demoName", demoName);
+        request.setAttribute("segmentID", documentId);
+        request.setAttribute("providerNo", providerNo);
+        request.setAttribute("searchProviderNo", searchProviderNo);
+        request.setAttribute("status", ackStatus);
+        
+        return mapping.findForward("displaySingleDoc");
+        
     }
 
     private void saveDocNote(final HttpServletRequest request,String docDesc,String demog,String documentId){
