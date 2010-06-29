@@ -26,10 +26,13 @@
  */
 -->
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
+<%@page import="oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
@@ -104,6 +107,29 @@ function disableifchecked(ele,nextDate){
     }else{                      
        document.getElementById(nextDate).disabled = false;              
     }
+}
+
+function batchBill() {
+    var frm = document.forms["frmBatchBill"];
+    var url = "<c:out value="${ctx}"/>" + "/billing/CA/ON/BatchBill.do";
+        
+    new Ajax.Request(
+        url,
+        {
+            method: 'post',
+            postBody: Form.serialize(frm),
+            asynchronous: true,
+            onSuccess: function(ret) {
+                alert("Billing Complete!");
+            },
+            onFailure: function(ret) {
+                alert( ret.status + " Billing Failed");
+            }
+        }
+
+    );
+
+    return false;
 }
 
 </script>
@@ -322,12 +348,17 @@ table.ele td{
                   String percentage = (String) request.getAttribute("percent");
                   String percentageWithGrace = (String) request.getAttribute("percentWithGrace");
                   String followUpType = (String) request.getAttribute("followUpType");
+                  String billCode =  (String) request.getAttribute("BillCode");
                   ArrayList list = (ArrayList) request.getAttribute("returnReport");
                   Date asDate = (Date) request.getAttribute("asDate");
                   if (asDate == null){ asDate = Calendar.getInstance().getTime(); }
                   
                   if (list != null ){ %>
+                  <form name="frmBatchBill" action="" method="post">
+                      <input type="hidden" name="clinic_view" value="<%=OscarProperties.getInstance().getProperty("clinic_view","")%>">
               <table class="ele" width="80%">
+                  
+                      
                        <tr>
                        <td>&nbsp;</td>
                        <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
@@ -339,8 +370,10 @@ table.ele td{
                        </td>
                        <%if (type != null ){ %>
                        <td colspan="10">&nbsp;<%=request.getAttribute("patientSet")%> </td>
+                       <td><input style="float: right" type="button" value="Bill" onclick="return batchBill();"></td>
                        <%}else{%>
                        <td colspan="8">&nbsp;<%=request.getAttribute("patientSet")%> </td>
+                       <td colspan="3"><input style="float: right" type="button" value="Bill" onclick="return batchBill();"></td>
                        <%}%>
                        </tr>
                        <tr>
@@ -365,14 +398,15 @@ table.ele td{
                           <td>Last Contact Method</td>
                           <td>Next Contact Method</td>
                           <td>Roster Physician</td>
+                          <td>Bill</td>
                        </tr>
                        <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
                          DemographicData demoData= new DemographicData();
-                         
+                         boolean setBill;
                          
                          for (int i = 0; i < list.size(); i++){
                              System.out.println("for # "+i); 
-                             
+                             setBill = false;
                             PreventionReportDisplay dis = (PreventionReportDisplay) list.get(i);
                             Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);
                             DemographicData.Demographic demo = demoData.getDemographic(dis.demographicNo);
@@ -385,15 +419,21 @@ table.ele td{
                                     secondLetter.add(dis.demographicNo);
                                 }else if (dis.nextSuggestedProcedure.equals("P1")){
                                     phoneCall.add(dis.demographicNo);
+                                    setBill = true;
                                 }
                             }
                           
                             if (dis.state != null && dis.state.equals("Refused")){
                                 refusedLetter.add(dis.demographicNo);
+                                setBill = true;
                             }
                                     
                             if (dis.state != null && dis.state.equals("Overdue")){
                                overDueList.add(dis.demographicNo);
+                            }
+
+                            if( dis.state != null && dis.bonusStatus.equals("Y")) {
+                              setBill = true;
                             }
                             %>
                        <tr>
@@ -451,12 +491,23 @@ table.ele td{
                               <%}%>
                           </td>
                           <td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
-                          
+                          <td bgcolor="<%=dis.color%>">
+                              <% if( setBill ) {
+                              %>
+                              <input type="checkbox" name="bill" checked value="<%=billCode + ";" + dis.demographicNo + ";" + demo.getProviderNo()%>">
+                              <%}%>
+                          </td>
+
                        </tr>                                                         
                       <%}%>
+                      <tr>
+                          <td colspan="16"><input style="float: right" type="button" value="Bill" onclick="return batchBill();"></td>
+
+                      </tr>
+                       
                     </table>   
                     
-                    
+                    </form>
                   
                   <%}%>
                   <%--
@@ -501,9 +552,7 @@ table.ele td{
                         <a target="_blank" href="../report/GenerateSpreadsheet.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Phone call 1 made for : "+request.getAttribute("prevType"),"UTF-8")%>followupType=<%=followUpType%>&followupValue=P1">Generate Phone Call list</a>
                   <%}%>
                   --%>             
-                                    
-                                
-           
+                  
                </div>
     
 <script type="text/javascript">
