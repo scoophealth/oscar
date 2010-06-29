@@ -88,7 +88,7 @@
                 <tr>
 
 
-                    <td colspan="8"><a href="<%=url2%>"><img src="<%=url%>" /></a></td>
+                    <td colspan="8"><a href="<%=url2%>"><img  src="<%=url%>" /></a></td>
 
 
                     <td align="left" valign="top">
@@ -118,7 +118,7 @@
                                     <tr>
                                         <td><bean:message key="dms.documentReport.msgDocType" />:</td>
                                         <td>
-                                            <select name ="docType" id="docType">
+                                            <select tabindex="<%=tabindex++%>" name ="docType" id="docType">
                                                 <option value=""><bean:message key="dms.addDocument.formSelect" /></option>
                                                 <%for (int j = 0; j < doctypes.size(); j++) {
                 String doctype = (String) doctypes.get(j);%>
@@ -215,7 +215,7 @@
                                             }();
 
                                             </script>
-                                            <input type="checkbox" name="demoLink" >Send to MRP
+                                            <input tabindex="<%=tabindex++%>" type="checkbox" name="demoLink" >Send to MRP
                                         </td>
                                     </tr>
 
@@ -223,7 +223,7 @@
                                         <td valign="top">Flag Provider: </td>
                                         <td>
                                             <input type="hidden" name="provi" id="provfind<%=docId%>" />
-                                            <input type="text" id="autocompleteprov<%=docId%>" name="demographicKeyword"/>
+                                            <input tabindex="<%=tabindex++%>" type="text" id="autocompleteprov<%=docId%>" name="demographicKeyword"/>
                                             <div id="autocomplete_choicesprov<%=docId%>" class="autocomplete"></div>
 
                                             <script type="text/javascript">
@@ -354,7 +354,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" align="right"><!--a id="saveSucessMsg_<%=docId%>" style="display:none;">Successfully saved.</a--><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /> <%}%></td>
+                                        <td colspan="2" align="right"><%if(!demographicID.equals("-1")){%><input type="submit" name="save" tabindex="<%=tabindex++%>" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" tabindex="<%=tabindex++%>" id="save<%=docId%>" disabled value="Save" /> <%}%></td>
                                     </tr>
 
                                     <tr>
@@ -450,18 +450,18 @@
                                                         <input type="hidden" name="status" value="A"/>
                                                         <input type="hidden" name="labType" value="DOC"/>
                                                         <input type="hidden" name="ajaxcall" value="yes"/>
-                                                        <textarea name="comment" cols="40" rows="4"></textarea>
+                                                        <textarea  tabindex="<%=tabindex++%>" name="comment" cols="40" rows="4"></textarea>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
-                                                        <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
-                                                        <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                                        <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
+                                                        <input type="submit"  tabindex="<%=tabindex++%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                                        <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
+                                                        <input type="button"  tabindex="<%=tabindex++%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                                                        <input type="button"  tabindex="<%=tabindex++%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
-                                                        <input type="button" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                                        <input type="button" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
+                                                        <input type="button"  tabindex="<%=tabindex++%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
+                                                        <input type="button"  tabindex="<%=tabindex++%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
                                                         <% }
 
                                                         //System.out.println("done third part java");
