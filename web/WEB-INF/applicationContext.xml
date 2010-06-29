@@ -22,6 +22,8 @@
 	<import resource="classpath:spring_hibernate.xml" />
 
 	<!-- hibernated DAO -->
+        <bean id="gstControlDao" class="org.oscarehr.billing.CA.dao.GstControlDao" autowire="byName" />
+        <bean id="billingClaimDAO" class="org.oscarehr.billing.CA.ON.dao.BillingClaimDAO" autowire="byName" />
 	<bean id="demoDao" class="oscar.oscarEncounter.oscarMeasurements.dao.DemographicHibernateDao" autowire="byName"/>
 	<bean id="measurementsDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsHibernateDao" autowire="byName"/>
 	<bean id="measurementsExtDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsExtDao" autowire="byName"/>
