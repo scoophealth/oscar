@@ -1,4 +1,4 @@
-<%@ page language="java" errorPage="../../../provider/errorpage.jsp" %>
+<%@ page language="java" errorPage="../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
 		 oscar.oscarDB.*,
@@ -37,14 +37,11 @@ while(rs.next()){
 }
 rs.close();
 
-System.out.println("33333333333333");
 if(demographicID != null && !demographicID.equals("")){
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),demographicID);
 }else{
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
 }
-
-System.out.println("444444444444444");
 
 boolean ackFlag = false;
 AcknowledgementData ackData = new AcknowledgementData();
@@ -79,8 +76,8 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         <html:base/>
         <title><%=handler.getPatientName()+" Lab Results"%></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script language="javascript" type="text/javascript" src="../../../share/javascript/Oscar.js" ></script>
-        <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
+        <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
+        <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
         <style type="text/css">
             <!--
 .RollRes     { font-weight: 700; font-size: 8pt; color: white; font-family:
@@ -211,7 +208,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         }
 
 	function linkreq(rptId, reqId) {
-	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
+	    var link = "../lab/LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
 	    window.open(link, "linkwin", "width=500, height=200");
 	}
 
@@ -221,7 +218,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
         function matchMe() {
             <% if ( patientMatched != null && patientMatched.equals("no") ) { %>
-               	popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow');
+               	popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow');
             <% } %>
 	}
 
@@ -229,6 +226,21 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
         }
         matchMe();
+
+        updateStatus=function(formid){
+            var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
+            var data=$(formid).serialize(true);
+
+            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                    var num=formid.split("_");
+                 if(num[1]){
+                     Effect.BlindUp('labdoc_'+num[1]);
+                     updateDocLabData(num[1]);
+
+                }
+        }});
+
+        }
         </script>
 
 
@@ -241,8 +253,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
             <input type="hidden" name="providerNo" value="<%= providerNo %>" />
         </form>
-        <form name="acknowledgeForm" method="post" action="../../../oscarMDS/UpdateStatus.do">
-
+        <form name="acknowledgeForm" id="acknowledgeForm_<%=segmentID%>" onsubmit="updateStatus('acknowledgeForm_<%=segmentID%>');" method="post" action="javascript:void(0);">
+            
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td valign="top">
@@ -255,19 +267,20 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="status" value="A"/>
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
+                                    <input type="hidden" name="ajaxcall" value="yes"/>
                                     <% if ( !ackFlag ) { %>
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return confirmAck();">
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
                                     <% } %>
-                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
                                     <% if ( demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")){ %>
-                                    <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                    <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId=<%= segmentID %>&demographic_no=<%=demographicID%>','tickler')"/>
+                                    <input type="button" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
+                                    <input type="button" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=HL7&docId=<%= segmentID %>&demographic_no=<%=demographicID%>','tickler')"/>
                                     <% } %>
                                     <% if ( searchProviderNo != null ) { // null if we were called from e-chart%>
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
 				    <input type="button" value="Req# <%=reqID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
@@ -337,7 +350,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                                 %>
                                                                             <a href="javascript:window.close()"> <% } else { // we were called from lab module
     %></a>
-                                                                            <a href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                                                            <a href="javascript:popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                                                                 <% } %>
                                                                                 <%=handler.getPatientName()%>
                                                                             </a>
@@ -519,12 +532,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                     <%= handler.getDocName()%>
                                                 </div>
                                             </td>
-                                            <%-- <td bgcolor="white">
-                                    <div class="FieldData">
-                                        <strong><bean:message key="oscarMDS.segmentDisplay.formReportToClient"/>: </strong>
-                                            <%= No admitting Doctor for CML messages%>
-                                    </div>
-                                </td> --%>
+                                            
                                             <td bgcolor="white" align="right">
                                                 <div class="FieldData">
                                                     <strong><bean:message key="oscarMDS.segmentDisplay.formCCClient"/>: </strong>
@@ -722,12 +730,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                         <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                             <tr>
                                 <td align="left" width="50%">
-                                    <% if ( providerNo != null /*&& ! mDSSegmentData.getAcknowledgedStatus(providerNo) */) { %>
+                                    <% if ( providerNo != null ) { %>
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="getComment()">
                                     <% } %>
-                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
-                                    <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp', 'providerselect')">
+                                    <!--input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()"-->
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
                                     <oscarProperties:oscarPropertiesCheck property="MY_OSCAR" value="yes">
                                         <indivo:indivoRegistered demographic="<%=demographicID%>" provider="<%=providerNo%>">
@@ -735,7 +743,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         </indivo:indivoRegistered>
                                     </oscarProperties:oscarPropertiesCheck>
                                     <% if ( searchProviderNo != null ) { // we were called from e-chart %>
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
 
                                     <% } %>
                                 </td>
