@@ -212,6 +212,7 @@ public class FOBTReport implements PreventionReport{
           h.put("inEligible", ""+inList);
           h.put("eformSearch","FOBT");
           h.put("followUpType","FOBF");
+          h.put("BillCode", "Q005A");
           log.debug("set returnReport "+returnReport);
           return h;
     }

@@ -213,6 +213,7 @@ public class MammogramReport implements PreventionReport{
           h.put("inEligible", ""+inList);
           h.put("eformSearch","Mam");
           h.put("followUpType","MAMF");
+          h.put("BillCode", "Q002A");
           log.debug("set returnReport "+returnReport);
           return h;
     }

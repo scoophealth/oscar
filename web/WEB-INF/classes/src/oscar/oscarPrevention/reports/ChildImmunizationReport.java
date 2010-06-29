@@ -298,6 +298,7 @@ public class ChildImmunizationReport implements PreventionReport{
           h.put("inEligible", ""+inList);
           h.put("eformSearch","CHI");
           h.put("followUpType","CIMF");
+          h.put("BillCode", "Q004A");
           log.debug("set returnReport "+returnReport);
           return h;
     }

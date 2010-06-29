@@ -235,6 +235,7 @@ public class PapReport implements PreventionReport {
           h.put("inEligible", ""+inList);
           h.put("eformSearch","Mam");
           h.put("followUpType","PAPF");
+          h.put("BillCode", "Q001A");
           log.debug("set returnReport "+returnReport);
           return h;
     }

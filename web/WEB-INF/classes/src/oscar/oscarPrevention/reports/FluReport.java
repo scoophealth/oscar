@@ -253,6 +253,7 @@ public class FluReport implements PreventionReport {
           h.put("inEligible", ""+inList);
           h.put("eformSearch","Flu");
           h.put("followUpType","FLUF");
+          h.put("BillCode", "Q003A");
           
           log.debug("set returnReport "+returnReport);
           return h;
