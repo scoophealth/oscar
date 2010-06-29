@@ -93,6 +93,7 @@ public class PreventionReportAction extends Action {
        request.setAttribute("inEligible", h.get("inEligible"));
        request.setAttribute("eformSearch",h.get("eformSearch"));
        request.setAttribute("followUpType",h.get("followUpType"));
+       request.setAttribute("BillCode", h.get("BillCode"));
        
        request.setAttribute("prevType",prevention);
        request.setAttribute("patientSet",setName);
