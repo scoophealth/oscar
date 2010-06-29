@@ -431,13 +431,13 @@ function wrapUp() {
                                                             eles.push(labs);
                                                         }
                                                         else if(type=='normal'){
-                                                            var normals=document.getElementsByClassName('NormalRes');
-                                                            eles.push(normals);
+                                                            var norm=document.getElementsByClassName('NormalRes');
+                                                            eles.push(norm);
 
                                                         }
                                                         else if(type=='abnormal'){
-                                                            var abnormals=document.getElementsByClassName('AbnormalRes');
-                                                            eles.push(abnormals);
+                                                            var abn=document.getElementsByClassName('AbnormalRes');
+                                                            eles.push(abn);
                                                         }
                                                     }
                                                     current_category=eles;
@@ -632,7 +632,13 @@ function wrapUp() {
                                                         $('abnormalCB').checked=0;
                                                 }
                                             }
-function showAb_Normal(ab_normal,str){
+function showAb_Normal(ab_normal){
+    var str;
+
+if(ab_normal=='normal')
+    str=normals;
+else if(ab_normal=='abnormal')
+   str=abnormals;
                                     str=str.replace('[','');
                                     str=str.replace(']','');
                                     var ids=str.split(',');
@@ -780,6 +786,7 @@ function showAb_Normal(ab_normal,str){
                             function showThisPatientDocs(patientId,keepPrevious){
                                 //oscarLog("patientId in show this patientdocs="+patientId);
                                 var labDocsArr=getLabDocFromPatientId(patientId);
+                                //oscarLog('labDocsArr'+labDocsArr);
                                 var patientName=getPatientNameFromPatientId(patientId);
                                 if(patientName!=null&&patientName.length>0){
                                         //oscarLog(patientName);
@@ -822,7 +829,7 @@ function showAb_Normal(ab_normal,str){
                                 }else
                                     return '';
                             }
-                             function checkSelected() {
+function checkSelected() {
     aBoxIsChecked = false;
     if (document.reassignForm.flaggedLabs.length == undefined) {
         if (document.reassignForm.flaggedLabs.checked == true) {
@@ -839,5 +846,347 @@ function showAb_Normal(ab_normal,str){
         popupStart(300, 400, 'SelectProvider.jsp', 'providerselect');
     } else {
         alert(msgSelectOneLab);
+    }
+}
+function cutText(text,first,last){
+    var p1=text.substring(0,first);
+    var p2=text.substring(last);
+    return p1+p2;
+    
+}
+
+function updateDocLabData(doclabid){//remove doclabid from global variables
+    /*oscarLog("** doclabid="+doclabid);
+
+oscarLog("before---typeDocLab ="+typeDocLab);
+                           oscarLog("docType ="+docType);
+                           oscarLog("patientDocs ="+patientDocs);
+                           oscarLog("patientIdNames ="+patientIdNames);
+                           oscarLog("patientIdStr ="+patientIdStr);
+                           oscarLog("docStatus ="+docStatus);
+   */
+  if(doclabid){
+       //trim doclabid
+      doclabid=doclabid.replace(/\s/g,'');
+        updateSideNav(doclabid);
+        hideRowUsingId(doclabid);
+
+    //change typeDocLab
+    var p1='\\s'+doclabid+', ';
+    var p2=', '+doclabid+'\\]';
+    var p3='\\['+doclabid+'\\]';
+    var p4='\\['+doclabid+', ';
+
+    var r1=new RegExp(p1);
+    var r2=new RegExp(p2);
+    var r3=new RegExp(p3);
+    var r4=new RegExp(p4);
+    var rr,firstindex,lastindex,match;
+    if(typeDocLab.search(r1)>-1){//typeDocLab ={DOC=[306, 332, 331, 330, 324, 323, 322, 319, 321, 313, 309, 311, 308, 310, 337, 307], HL7=[23]}
+         firstindex=typeDocLab.search(r1)+1;
+         match=typeDocLab.match(r1)[0];
+         lastindex=firstindex+match.length-1;
+       typeDocLab=cutText(typeDocLab,firstindex,lastindex);
+    }else if(typeDocLab.search(r2)>-1){
+         firstindex=typeDocLab.search(r2);
+         match=typeDocLab.match(r2)[0];
+         lastindex=firstindex+match.length-1;
+        typeDocLab=cutText(typeDocLab,firstindex,lastindex);
+    }else if(typeDocLab.search(r3)>-1){
+        firstindex=typeDocLab.search(r3)+1;
+        match=typeDocLab.match(r3)[0];
+        lastindex=firstindex+match.length-2;
+        typeDocLab=cutText(typeDocLab,firstindex,lastindex);
+    }else if(typeDocLab.search(r4)>-1){
+        firstindex=typeDocLab.search(r4)+1;
+        match=typeDocLab.match(r4)[0];
+        lastindex=firstindex+match.length-1;
+        //oscarLog(firstindex+'--'+match+'--'+lastindex);
+        typeDocLab=cutText(typeDocLab,firstindex,lastindex);
+    }
+
+    //change docType
+    p1='\\s'+doclabid+'=\\w+, ';
+    p2=', '+doclabid+'=\\w+\\}';
+    p3='\\{'+doclabid+'=\\w+\\}';
+    p4='\\{'+doclabid+'=\\w+, ';
+
+    r1=new RegExp(p1);
+    r2=new RegExp(p2);
+    r3=new RegExp(p3);
+    r4=new RegExp(p4);
+    if(docType.search(r1)>-1){//docType ={306=DOC, 332=DOC, 331=DOC, 330=DOC, 23=HL7, 324=DOC, 323=DOC, 322=DOC, 319=DOC, 321=DOC, 313=DOC, 309=DOC, 311=DOC, 308=DOC, 310=DOC, 337=DOC, 307=DOC}
+        firstindex=docType.search(r1)+1;
+        match=docType.match(r1)[0];
+        lastindex=firstindex+match.length-1;
+        docType=cutText(docType,firstindex,lastindex);
+    }else if(docType.search(r2)>-1){
+        firstindex=docType.search(r2);
+        match=docType.match(r2)[0];
+        lastindex=firstindex+match.length-1;
+        docType=cutText(docType,firstindex,lastindex);
+    }else if(docType.search(r3)>-1){
+        firstindex=docType.search(r3)+1;
+        match=docType.match(r3)[0];
+        lastindex=firstindex+match.length-2;
+        docType=cutText(docType,firstindex,lastindex);
+    }else if(docType.search(r4)>-1){//docType ={306=DOC, 332=DOC, 331=DOC, 330=DOC, 23=HL7, 324=DOC, 323=DOC, 322=DOC, 319=DOC, 321=DOC, 313=DOC, 309=DOC, 311=DOC, 308=DOC, 310=DOC, 337=DOC, 307=DOC}
+        firstindex=docType.search(r4)+1;
+        match=docType.match(r4)[0];
+        lastindex=firstindex+match.length-1;
+        docType=cutText(docType,firstindex,lastindex);
+    }
+    //change patientDocs
+    p1='\\['+doclabid+'\\]';
+    p2='\\s'+doclabid+', ';
+    p3=', '+doclabid+'\\]';
+    p4='\\['+doclabid+', ';
+    r1=new RegExp(p1);
+    r2=new RegExp(p2);
+    r3=new RegExp(p3);
+    r4=new RegExp(p4);
+    if(patientDocs.search(r1)>-1){//patientDocs ={3=[337], -1=[332, 331, 330, 324, 323, 322, 321, 319, 313, 311, 310, 309, 308, 307, 306, 23]}
+        firstindex=patientDocs.search(r1)+1;
+        match=patientDocs.match(r1)[0];
+        lastindex=firstindex+match.length-2;
+        patientDocs=cutText(patientDocs,firstindex,lastindex);
+    }else if(patientDocs.search(r2)>-1){
+        firstindex=patientDocs.search(r2)+1;
+        match=patientDocs.match(r2)[0];
+        lastindex=firstindex+match.length-1;
+        patientDocs=cutText(patientDocs,firstindex,lastindex);
+    }else if(patientDocs.search(r3)>-1){
+        firstindex=patientDocs.search(r3);
+        match=patientDocs.match(r3)[0];
+        lastindex=firstindex+match.length-1;
+        patientDocs=cutText(patientDocs,firstindex,lastindex);
+    }else if(patientDocs.search(r4)>-1){
+        firstindex=patientDocs.search(r4)+1;
+        match=patientDocs.match(r4)[0];
+        lastindex=firstindex+match.length-1;
+        patientDocs=cutText(patientDocs,firstindex,lastindex);
+    }
+
+    //change patientIdNames
+    //change patientIdStr=3,-1,
+   var patientids=patientIdStr.split(',');
+    for(var i=0;i<patientids.length;i++){
+        var pid=patientids[i];
+
+        if(pid!=null) pid=pid.replace(' ','');
+        if(pid!=null && pid.length>0){
+            var pp1='\\s'+pid+'=\\[\\], ';
+            var pp2=', '+pid+'=\\[\\]\\}';
+            var pp3='{'+pid+'=\\[\\], ';
+            var rr1=new RegExp(pp1);
+            var rr2=new RegExp(pp2);
+            var rr3=new RegExp(pp3);
+            var pid_empty=false;
+            if(patientDocs.match(rr1) || patientDocs.match(rr2) || patientDocs.match(rr3)){
+                pid_empty=true;
+            }
+            //oscarLog(patientDocs+"--"+pid_empty+"--"+patientIdNames);
+            if(pid_empty){
+                //remove from patientIdNames;
+                rr1=new RegExp('\\s'+pid+'=\\w+, \\w+, ');
+                rr2=new RegExp(', '+pid+'=\\w+, \\w+\\}');
+                rr3=new RegExp('{'+pid+'=\\w+, \\w+, ');
+                var rr4=new RegExp('{'+pid+'=\\w+, \\w+\\}');
+                //oscarLog(rr1+"--"+rr2+"--"+rr3);
+                if(patientIdNames.search(rr1)>-1){
+                    firstindex=patientIdNames.search(rr1)+1;
+                    match=patientIdNames.match(rr1)[0];
+                    lastindex=firstindex+match.length-1;
+                    patientIdNames=cutText(patientIdNames,firstindex,lastindex);
+                }else if(patientIdNames.search(rr2)>-1){
+                    rr2=new RegExp(', '+pid+'=\\w+, \\w+');
+                    patientIdNames=patientIdNames.replace(rr2,'');
+                }else if(patientIdNames.search(rr3)>-1){
+                    patientIdNames=patientIdNames.replace(rr3,'');
+                    patientIdNames='{'+patientIdNames;
+                }else if(patientIdNames.search(rr4)>-1){
+                    patientIdNames=patientIdNames.replace(rr4,'');
+                    patientIdNames='{'+patientIdNames+'}';
+                }
+                //remove from patientIdStr;
+                patientIdStr=patientIdStr.replace(pid+',', '');
+            }
+        }
+    }
+
+    //change docStatus
+    p1='\\s'+doclabid+'=\\w, ';
+    p2=', '+doclabid+'=\\w\\}';
+    p3='\\{'+doclabid+'=\\w, ';
+    p4='\\{'+doclabid+'=\\w\\}';
+    r1=new RegExp(p1);
+    r2=new RegExp(p2);
+    r3=new RegExp(p3);
+    r4=new RegExp(p4);
+
+    if(docStatus.search(r1)>-1){//docStatus ={306=A, 332=A, 331=A, 330=A, 23=N, 324=A, 323=A, 322=A, 319=A, 321=A, 313=A, 309=A, 311=A, 308=A, 310=A, 337=A, 307=A}
+        firstindex=docStatus.search(r1)+1;
+        match=docStatus.match(r1)[0];
+        lastindex=firstindex+match.length-1;
+        docStatus=cutText(docStatus,firstindex,lastindex);
+    }else if(docStatus.search(r2)>-1){
+        firstindex=docStatus.search(r2);
+        match=docStatus.match(r2)[0];
+        lastindex=firstindex+match.length-1;
+        docStatus=cutText(docStatus,firstindex,lastindex);
+    }else if (docStatus.search(r3)>-1){
+        firstindex=docStatus.search(r3)+1;
+        match=docStatus.match(r3)[0];
+        lastindex=firstindex+match.length-1;
+        docStatus=cutText(docStatus,firstindex,lastindex);
+    }else if (docStatus.search(r4)>-1){
+        firstindex=docStatus.search(r4)+1;
+        match=docStatus.match(r4)[0];
+        lastindex=firstindex+match.length-2;
+
+        docStatus=cutText(docStatus,firstindex,lastindex);
+    }
+
+    //remove from normals
+    p1='\\['+doclabid+', ';
+    p2=' '+doclabid+', ';
+    p3=', '+doclabid+'\\]';
+    p4='\\['+doclabid+'\\]';
+    r1=new RegExp(p1);
+    r2=new RegExp(p2);
+    r3=new RegExp(p3);
+    r4=new RegExp(p4);
+    //oscarLog(r1+'--'+normals);oscarLog(normals.search(r1));
+    if(normals.search(r1)>-1){
+        firstindex=normals.search(r1)+1;
+        match=normals.match(r1)[0];
+        lastindex=firstindex+match.length-1;oscarLog(firstindex+'--'+lastindex);
+        normals=cutText(normals,firstindex,lastindex);
+    }
+    else if(normals.search(r2)>-1){
+        firstindex=normals.search(r2)+1;
+        match=normals.match(r2)[0];
+        lastindex=firstindex+match.length-1;
+        normals=cutText(normals,firstindex,lastindex);
+    }
+    else if(normals.search(r3)>-1){
+        firstindex=normals.search(r3);
+        match=normals.match(r3)[0];
+        lastindex=firstindex+match.length-1;
+        normals=cutText(normals,firstindex,lastindex);
+    }
+    else if(normals.search(r4)>-1){
+        firstindex=normals.search(r4)+1;
+        match=normals.match(r4)[0];
+        lastindex=firstindex+match.length-2;
+        normals=cutText(normals,firstindex,lastindex);
+    }//remove from abnormals
+    else if(abnormals.search(r1)>-1){
+        firstindex=abnormals.search(r1)+1;
+        match=abnormals.match(r1)[0];
+        lastindex=firstindex+match.length-1;oscarLog(firstindex+'--'+lastindex);
+        abnormals=cutText(abnormals,firstindex,lastindex);
+    }
+    else if(abnormals.search(r2)>-1){
+        firstindex=abnormals.search(r2)+1;
+        match=abnormals.match(r2)[0];
+        lastindex=firstindex+match.length-1;
+        abnormals=cutText(abnormals,firstindex,lastindex);
+    }
+    else if(abnormals.search(r3)>-1){
+        firstindex=abnormals.search(r3);
+        match=abnormals.match(r3)[0];
+        lastindex=firstindex+match.length-1;
+        abnormals=cutText(abnormals,firstindex,lastindex);
+    }
+    else if(abnormals.search(r4)>-1){
+        firstindex=abnormals.search(r4)+1;
+        match=abnormals.match(r4)[0];
+        lastindex=firstindex+match.length-2;
+        abnormals=cutText(abnormals,firstindex,lastindex);
+    }
+
+    
+/*oscarLog("after---typeDocLab ="+typeDocLab);
+                           oscarLog("docType ="+docType);
+                           oscarLog("patientDocs ="+patientDocs);
+                           oscarLog("patientIdNames ="+patientIdNames);
+                           oscarLog("patientIdStr ="+patientIdStr);
+                           oscarLog("docStatus ="+docStatus);
+                           oscarLog("normals ="+normals);
+                     */
+  }
+}
+function checkAb_normal(doclabid){
+    var p1='\\['+doclabid+', ';
+    var p2=' '+doclabid+', ';
+    var p3=', '+doclabid+'\\]';
+    var p4='\\['+doclabid+'\\]';
+    var r1=new RegExp(p1);
+    var r2=new RegExp(p2);
+    var r3=new RegExp(p3);
+    var r4=new RegExp(p4);
+    if(normals.match(r1)||normals.match(r2)||normals.match(r3)||normals.match(r4))
+        return 'normal';
+    else if(abnormal.match(r1)||abnormal.match(r2)||abnormal.match(r3)||abnormal.match(r4))
+        return 'abnormal';
+}
+function updateSideNav(doclabid){
+    var n=$('totalNumDocs').innerHTML;
+    n=parseInt(n);
+    if(n>0){
+        n=n-1;
+        $('totalNumDocs').innerHTML=n;
+    }
+    var type=checkType(doclabid);
+    //oscarLog('type='+type);
+    if(type=='DOC'){
+        n=$('totalDocsNum').innerHTML;
+        //oscarLog('n='+n);
+        n=parseInt(n);
+        if(n>0){
+            n=n-1;
+            $('totalDocsNum').innerHTML=n;
+        }
+    }else if (type=='HL7'){
+        n=$('totalHL7Num').innerHTML;
+        n=parseInt(n);
+        if(n>0){
+            n=n-1;
+            $('totalHL7Num').innerHTML=n;
+        }
+    }
+    var ab_normal=checkAb_normal(doclabid);
+    //oscarLog('normal or abnormal?'+ab_normal);
+    if(ab_normal=='normal'){
+        n=$('normalNum').innerHTML;
+        //oscarLog('normal inner='+n);
+        n=parseInt(n);
+        if(n>0){
+            n=n-1;
+            $('normalNum').innerHTML=n;
+        }
+    }else if(ab_normal=='abnormal'){
+        n=$('abnormalNum').innerHTML;
+        n=parseInt(n);
+        if(n>0){
+            n=n-1;
+            $('abnormalNum').innerHTML=n;
+        }
+    }
+    //oscarLog('doen update side nav');
+}
+
+function hideRowUsingId(doclabid){
+    if(doclabid!=null ){
+        var rowid;
+        doclabid=doclabid.replace(' ','');
+        for(var i=0;i<doclabid_seq.length;i++){
+            if(doclabid==doclabid_seq[i]){
+                rowid='row'+i;
+                $(rowid).remove();
+                break;
+            }
+        }
     }
 }
