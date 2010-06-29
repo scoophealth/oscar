@@ -22,7 +22,8 @@ CREATE TABLE billingperclimit (
   min varchar(8) default '0',
   max varchar(8) default '0',
   effective_date date default '1970-01-01',
-  PRIMARY KEY  (service_code)
+  id int auto_increment,
+  PRIMARY KEY  (id)
 ) ;
 
 
