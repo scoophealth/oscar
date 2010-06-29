@@ -1,0 +1,1 @@
+insert into secObjectName values('_queue.1','default',0);

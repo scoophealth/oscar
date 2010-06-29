@@ -1356,7 +1356,7 @@ insert into `secObjectName` (`objectName`) values ('_newCasemgmt.medicalHistory'
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.calculators');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.templates');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.cpp');
-
+insert into  secObjectName values('_queue.1','default',0);
 
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
