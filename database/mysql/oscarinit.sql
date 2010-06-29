@@ -7306,6 +7306,8 @@ CREATE TABLE hash_audit (
 CREATE TABLE `gstControl` (
   `gstFlag` int(1) NOT NULL default '0',
   `gstPercent` int(3) NOT NULL default '0'
+   id int auto_increment,
+   PRIMARY KEY  (id)
 );
 
 --
