@@ -436,7 +436,7 @@
                                 <input type="hidden" name="labType<%= docId%>DOC" value="imNotNull" />
                                 <input type="hidden" name="providerNo" value="<%= providerNo%>" />
                             </form>
-                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');refreshParent();;" method="post" action="javascript:void(0);">
+                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');refreshParent();" method="post" action="javascript:void(0);">
 
                                 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
