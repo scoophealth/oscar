@@ -54,7 +54,6 @@ Integer totalHL7=(Integer)request.getAttribute("totalHL7");
 List<String> normals=(List<String>)request.getAttribute("normals");
 List<String> abnormals=(List<String>)request.getAttribute("abnormals");
 Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
-
 %>
 
 
@@ -122,7 +121,8 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                            var docStatus='<%=docStatus%>';
                            var normals='<%=normals%>';
                            var abnormals='<%=abnormals%>';
-                           
+                           var tabindex=0;
+                           var current_first_doclab=0;
                            /*oscarLog("typeDocLab ="+typeDocLab);
                            oscarLog("docType ="+docType);
                            oscarLog("patientDocs ="+patientDocs);
@@ -180,14 +180,14 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
-                                <input type="button" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
+                                <input type="button" id="topFRBtn" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
                                 <% if (demographicNo == null && labdocs.size() > 0) { %>                                    
-                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
+                                    <input id="topFBtn" type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                     <% if (ackStatus.equals("N")) {%>
-                                        <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
+                                        <input id="topFileBtn" type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                     <% }
                                 }%>
                                 
@@ -368,8 +368,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                                                 <% if (request.getParameter("fname") != null) { %>
                                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                                 <% } %>
-                                                <% if (demographicNo == null && labdocs.size() > 0) { %>
-                                                    <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
+                                                <% if (demographicNo == null && labdocs.size() > 0) { %>                                                    
                                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                                     <% if (ackStatus.equals("N")) {%>
                                                         <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
@@ -431,26 +430,26 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
               <td valign="top" style="overflow:hidden;border-color: blue;border-width: thin;background-color: #E0E1FF" >
                     <%Enumeration en=patientIdNames.keys();
                         if(en.hasMoreElements()){%>
-                        <div><a id="totalAll" href="javascript:void(0);" onclick="showAllDocLabs();un_bold(this);">All (<span id="totalNumDocs"><%=totalNumDocs%></span>)</a></div><br>
+                        <div><a id="totalAll" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showAllDocLabs();un_bold(this);">All (<span id="totalNumDocs"><%=totalNumDocs%></span>)</a></div><br>
 
     <%}
                     if(totalDocs>0){
 %>
-<div><a id="totalDocs" href="javascript:void(0);" onclick="showCategory('DOC');un_bold(this);" title="Documents">Documents(<span id="totalDocsNum"><%=totalDocs%></span>)</a></div>
+<div><a id="totalDocs" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showCategory('DOC');un_bold(this);" title="Documents">Documents(<span id="totalDocsNum"><%=totalDocs%></span>)</a></div>
                      <%} if(totalHL7>0){%>
-                     <div><a id="totalHL7s" href="javascript:void(0);" onclick="showCategory('HL7');un_bold(this);" title="HL7">HL7(<span id="totalHL7Num"><%=totalHL7%></span>)</a></div>
+                     <div><a id="totalHL7s" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showCategory('HL7');un_bold(this);" title="HL7">HL7(<span id="totalHL7Num"><%=totalHL7%></span>)</a></div>
 
 <%}
 if(totalDocs>0||totalHL7>0){%><br><%}
                     if(normals!=null && normals.size()>0){
         Integer normalNum=normals.size();
     %>
-    <div><a id="totalNormals" href="javascript:void(0);" onclick="showAb_Normal('normal');un_bold(this);" title="Normal" >Normal(<span id="normalNum"><%=normalNum%></span>)</a></div>
+    <div><a id="totalNormals" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showAb_Normal('normal');un_bold(this);" title="Normal" >Normal(<span id="normalNum"><%=normalNum%></span>)</a></div>
 
 <%} if(abnormals!=null && abnormals.size()>0){
         Integer abnormalNum=abnormals.size() ;
     %>
-    <div><a id="totalAbnormals" href="javascript:void(0);" onclick="showAb_Normal('abnormal');un_bold(this);" title="Abnormal">Abnormal(<span id="abnormalNum"><%=abnormalNum%></span>)</a></div>
+    <div><a id="totalAbnormals" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showAb_Normal('abnormal');un_bold(this);" title="Abnormal">Abnormal(<span id="abnormalNum"><%=abnormalNum%></span>)</a></div>
 
 <%}%>
 <dl>
@@ -486,20 +485,13 @@ if(totalDocs>0||totalHL7>0){%><br><%}
 
    <dt><img id="plus<%=patientId%>" alt="plus" src="../images/plus.png" onclick="showhideSubCat('plus','<%=patientId%>');"/>
        <img id="minus<%=patientId%>" alt="minus" style="display:none;" src="../images/minus.png" onclick="showhideSubCat('minus','<%=patientId%>');"/>
-       <a id="patient<%=patientId%>all" href="javascript:void(0);"  onclick="showThisPatientDocs('<%=patientId%>');un_bold(this);" title="<%=patientName%>"><%=patientName%> (<span id="patientNumDocs<%=patientId%>"><%=numDocs%></span>)</a>
+       <a id="patient<%=patientId%>all" href="javascript:void(0);"  onclick="resetCurrentFirstDocLab();showThisPatientDocs('<%=patientId%>');un_bold(this);" title="<%=patientName%>"><%=patientName%> (<span id="patientNumDocs<%=patientId%>"><%=numDocs%></span>)</a>
                          <dl id="labdoc<%=patientId%>showSublist" style="display:none" >
                         <%if(scanDocs>0){%>
-                        <dt><a id="patient<%=patientId%>docs" href="javascript:void(0);" onclick="showSubType('<%=patientId%>','DOC');un_bold(this);" title="Documents">Documents<span>(<%=scanDocs%>)</span></a>
+                        <dt><a id="patient<%=patientId%>docs" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showSubType('<%=patientId%>','DOC');un_bold(this);" title="Documents">Documents(<span id="pDocNum_<%=patientId%>"><%=scanDocs%></span>)</a>
                         </dt>
                      <%} if(HL7s>0){%>
-                     <dt><a id="patient<%=patientId%>hl7s" href="javascript:void(0);" onclick="showSubType('<%=patientId%>','HL7');un_bold(this);" title="HL7">HL7<span>(<%=HL7s%>)</span></a>
-                        </dt>
-                     <%} if(CMLs>0){%>
-                     <dt><a id="patient<%=patientId%>cmls" href="javascript:void(0);" onclick="showSubType('<%=patientId%>','CML');un_bold(this);" title="CML">CML<span>(<%=CMLs%>)</span></a>
-                     </dt>
-                    <%}
-                      if(MDSs>0){%>
-                      <dt><a id="patient<%=patientId%>mdss" href="javascript:void(0);" onclick="showSubType('<%=patientId%>','MDS');un_bold(this);" title="MDS">MDS<span>(<%=MDSs%>)</span></a>
+                     <dt><a id="patient<%=patientId%>hl7s" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showSubType('<%=patientId%>','HL7');un_bold(this);" title="HL7">HL7(<span id="pLabNum_<%=patientId%>"><%=HL7s%></span>)</a>
                         </dt>
                      <%}%>
                     </dl>
