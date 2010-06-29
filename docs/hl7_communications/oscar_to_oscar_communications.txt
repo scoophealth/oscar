@@ -68,3 +68,5 @@ At a high level :
 	We use NTE segments to represent the different chunks of text data in the referral form. So as an example the "Reason for consultation" is represented as one NTE. 
 	- NTE -> CommentType -> Text = the portion of text, i.e. "REASON_FOR_CONSULTATION", "CLINICAL_INFORMATION", "CONCURRENT_PROBLEMS", "CURRENT_MEDICATIONS", "ALLERGIES"
 	- NTE -> Comment = base64 encoded text. The text is broken into 64k chunks so for large amounts of text there maybe more than one comment in an NTE.
+	
+When responding to an eReferral, just use the eData exchange to send a response.
