@@ -93,9 +93,11 @@ public class ReportReassignAction extends Action {
         try {
             CommonLabResultData.updateLabRouting(listFlaggedLabs, selectedProviders);
             newURL = mapping.findForward("success").getPath();
-            
+            if(newURL.contains("labDisplay.jsp"))
+                newURL = newURL + "?providerNo=" + providerNo + "&searchProviderNo=" + searchProviderNo + "&status=" + status + "&segmentID=" + flaggedLabs[0];
+
             // the segmentID is needed when being called from a lab display
-            newURL = newURL + "&providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&segmentID="+flaggedLabs[0];
+            else newURL = newURL + "&providerNo=" + providerNo + "&searchProviderNo=" + searchProviderNo + "&status=" + status + "&segmentID=" + flaggedLabs[0];
             if (request.getParameter("lname") != null) { newURL = newURL + "&lname="+request.getParameter("lname"); }
             if (request.getParameter("fname") != null) { newURL = newURL + "&fname="+request.getParameter("fname"); }
             if (request.getParameter("hnum") != null) { newURL = newURL + "&hnum="+request.getParameter("hnum"); }
