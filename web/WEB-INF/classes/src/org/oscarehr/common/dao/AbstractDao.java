@@ -30,7 +30,7 @@ import org.oscarehr.common.model.AbstractModel;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-abstract class AbstractDao<T extends AbstractModel<?>>
+public abstract class AbstractDao<T extends AbstractModel<?>>
 {
 	protected Class<T> modelClass;
     
