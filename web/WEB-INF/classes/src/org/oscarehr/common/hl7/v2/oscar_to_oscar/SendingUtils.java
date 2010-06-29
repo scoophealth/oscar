@@ -54,8 +54,8 @@ public final class SendingUtils {
 		return (send(dataBytes, url, publicOscarKey, publicServiceKey, serviceName));
 	}
 
-	public static int send(byte[] dataBytes, String url, PublicKey receiverOscarKey, PrivateKey receiverServiceKey, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException {
-		byte[] signature = getSignature(dataBytes, receiverServiceKey);
+	public static int send(byte[] dataBytes, String url, PublicKey receiverOscarKey, PrivateKey publicServiceKey, String serviceName) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, IOException {
+		byte[] signature = getSignature(dataBytes, publicServiceKey);
 		SecretKey senderSecretKey = createSecretKey();
 		byte[] encryptedBytes = encryptData(dataBytes, senderSecretKey);
 		byte[] encryptedSecretKey = encryptEncryptionKey(senderSecretKey, receiverOscarKey);
