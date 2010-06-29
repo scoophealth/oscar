@@ -23,7 +23,7 @@
             String demographicID = curdoc.getModuleId();
 
             String docId = curdoc.getDocId();
-            int tabindex = 0;
+            
             int slash = 0;
             String contentType = "";
             if ((slash = curdoc.getContentType().indexOf('/')) != -1) {
@@ -79,7 +79,7 @@
                                     <tr>
                                         <td><bean:message key="dms.documentReport.msgDocType" />:</td>
                                         <td>
-                                            <select name ="docType" id="docType">
+                                            <select name ="docType" id="docType_<%=docId%>">
                                                 <option value=""><bean:message key="dms.addDocument.formSelect" /></option>
                                                 <%for (int j = 0; j < doctypes.size(); j++) {
                 String doctype = (String) doctypes.get(j);%>
@@ -90,12 +90,12 @@
                                     </tr>
                                     <tr>
                                         <td><bean:message key="dms.documentReport.msgDocDesc" />:</td>
-                                        <td><input tabindex="<%=tabindex++%>"  type="text" name="documentDescription" value="<%=curdoc.getDescription()%>" /></td>
+                                        <td><input id="docDesc_<%=docId%>"  type="text" name="documentDescription" value="<%=curdoc.getDescription()%>" /></td>
                                     </tr>
                                     <tr>
                                         <td>Observation Date:</td>
                                         <td>
-                                            <input tabindex="<%=tabindex++%>"  id="observationDate<%=docId%>" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
+                                            <input   id="observationDate<%=docId%>" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
                                             <a id="obsdate<%=docId%>" onmouseover="renderCalendar(this.id,'observationDate<%=docId%>' );" href="javascript:void(0);" ><img title="Calendar" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar"border="0" /></a>
                                         </td>
                                     </tr>
@@ -106,7 +106,7 @@
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
                                             <%=demoName%><%}else{%>
                                             <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />
-                                            <input tabindex="<%=tabindex++%>" type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>')" name="demographicKeyword" />
+                                            <input type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>')" name="demographicKeyword" />
                                             <div id="autocomplete_choices<%=docId%>"class="autocomplete"></div>
                                             <%}%>
 
@@ -176,7 +176,7 @@
                                             }();
 
                                             </script>
-                                            <input type="checkbox" name="demoLink" >Send to MRP
+                                                   <input id="mrp_<%=docId%>" type="checkbox" name="demoLink" >Send to MRP
                                         </td>
                                     </tr>
 
@@ -315,7 +315,8 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;">Successfully saved.</a><input type="submit" name="save" value="Save" /></td>
+                                        <td colspan="2" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;color:blue;">Successfully saved.</a><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /> <%}%>
+
                                     </tr>
 
                                     <tr>
@@ -410,21 +411,20 @@
                                                         <input type="hidden" name="status" value="A"/>
                                                         <input type="hidden" name="labType" value="DOC"/>
                                                         <input type="hidden" name="ajaxcall" value="yes"/>
-                                                        <textarea name="comment" cols="40" rows="4"></textarea>
+                                                        <textarea id="comment_<%=docId%>" name="comment" cols="40" rows="4"></textarea>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
-                                                        <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
-                                                        <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                                        <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
+                                                        <input type="submit" id="ackBtn_<%=docId%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                                        <input type="button" id="fwdBtn_<%=docId%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
+                                                        <input type="button" id="closeBtn_<%=docId%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                                                        <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
-                                                        <input type="button" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                                        <input type="button" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
+                                                        <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
+                                                        <input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
                                                         <% }
 
-                                                        //System.out.println("done third part java");
                                                         %>
                                                     </td>
                                                 </tr>
