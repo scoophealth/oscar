@@ -120,9 +120,19 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                            var patientIdNames='<%=patientIdNames%>';
                            var patientIdStr='<%=patientIdStr%>';
                            var docStatus='<%=docStatus%>';
-                            
+                           var normals='<%=normals%>';
+                           var abnormals='<%=abnormals%>';
+                           
+                           /*oscarLog("typeDocLab ="+typeDocLab);
+                           oscarLog("docType ="+docType);
+                           oscarLog("patientDocs ="+patientDocs);
+                           oscarLog("patientIdNames ="+patientIdNames);
+                           oscarLog("patientIdStr ="+patientIdStr);
+                           oscarLog("docStatus ="+docStatus);
+                           oscarLog("normals ="+normals);
+                           oscarLog("abnormals ="+abnormals);*/
 
-                            function updateSideBar(doclabid){  }
+                            
 </script>
 </head>
 
@@ -194,6 +204,8 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                                 | <a href="javascript:popupStart(800,1000,'../lab/CA/ALL/testUploader.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.hl7LabUpload"/></a>
                                 | <a href="javascript:popupStart(600,500,'../dms/addDocuments2.jsp')" style="color: #FFFFFF; "><bean:message key="inboxmanager.document.uploadDoc"/></a>
                                 | <a href="javascript:void(0);" onclick="changeView();" style="color: #FFFFFF;"><bean:message key="inboxmanager.document.changeView"/></a>
+                                
+                                <!--input type="text" value="" onchange="updateDocLabData(this.value);"/-->
                             </td>
                         </tr>
                     </table>
@@ -237,6 +249,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                         </tr>
 
                                                 <%
+                            List doclabid_seq=new ArrayList();
                             int number_of_rows_per_page=20;
                             int totalNoPages=labdocs.size()/number_of_rows_per_page;
                             if(labdocs.size()%number_of_rows_per_page!=0)
@@ -261,6 +274,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                                 if(discipline==null || discipline.equalsIgnoreCase("null"))
                                     discipline="";
                                 MiscUtils.getLogger().debug("result.isAbnormal()="+result.isAbnormal());
+                                doclabid_seq.add(segmentID);
                                 %>
                         
                                 <tr id="row<%=i%>" <%if((number_of_rows_per_page-1)<i){%>style="display:none;"<%}%> bgcolor="<%=bgcolor%>" <%if(result.isDocument()){%> name="scannedDoc" <%} else{%> name="HL7lab" <%}%> class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
@@ -367,7 +381,20 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                                                     <input type="checkbox" id="abnormalCB2" onclick="syncCB(this);checkBox();" name="abnormalCB2"><span name="cbText" class="categoryCB"><bean:message key="global.abnormal"/></span>
                                             </td>
                                         <script type="text/javascript">
-                                                
+                                                var doclabid_seq='<%=doclabid_seq%>';
+                                                //oscarLog('doclabid_seq='+doclabid_seq);
+                                                doclabid_seq=doclabid_seq.replace('[','');
+                                                doclabid_seq=doclabid_seq.replace(']','');
+                                                var arr=doclabid_seq.split(',');
+                                                var arr2=new Array();
+                                                for(var i=0;i<arr.length;i++){
+                                                    var ele=arr[i];
+                                                    ele=ele.replace(' ','');
+                                                    arr2.push(ele);
+                                                }
+                                                doclabid_seq=arr2;
+                                                //oscarLog('doclabid_seq='+doclabid_seq);
+
                                         </script>
                                         </tr>
                                         <tr>
@@ -404,26 +431,26 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
               <td valign="top" style="overflow:hidden;border-color: blue;border-width: thin;background-color: #E0E1FF" >
                     <%Enumeration en=patientIdNames.keys();
                         if(en.hasMoreElements()){%>
-                        <div><a id="totalAll" href="javascript:void(0);" onclick="showAllDocLabs();un_bold(this);">All <span id="totalNumDocs">(<%=totalNumDocs%>)</span></a></div><br>
+                        <div><a id="totalAll" href="javascript:void(0);" onclick="showAllDocLabs();un_bold(this);">All (<span id="totalNumDocs"><%=totalNumDocs%></span>)</a></div><br>
 
     <%}
                     if(totalDocs>0){
 %>
-<div><a id="totalDocs" href="javascript:void(0);" onclick="showCategory('DOC');un_bold(this);" title="Documents">Documents<span id="totalDocs">(<%=totalDocs%>)</span></a></div>
+<div><a id="totalDocs" href="javascript:void(0);" onclick="showCategory('DOC');un_bold(this);" title="Documents">Documents(<span id="totalDocsNum"><%=totalDocs%></span>)</a></div>
                      <%} if(totalHL7>0){%>
-                     <div><a id="totalHL7s" href="javascript:void(0);" onclick="showCategory('HL7');un_bold(this);" title="HL7">HL7<span id="totalHL7">(<%=totalHL7%>)</span></a></div>
+                     <div><a id="totalHL7s" href="javascript:void(0);" onclick="showCategory('HL7');un_bold(this);" title="HL7">HL7(<span id="totalHL7Num"><%=totalHL7%></span>)</a></div>
 
 <%}
 if(totalDocs>0||totalHL7>0){%><br><%}
                     if(normals!=null && normals.size()>0){
         Integer normalNum=normals.size();
     %>
-    <div><a id="totalNormals" href="javascript:void(0);" onclick="showAb_Normal('normal','<%=normals%>');un_bold(this);" title="Normal" >Normal<span id="normalNum">(<%=normalNum%>)</span></a></div>
+    <div><a id="totalNormals" href="javascript:void(0);" onclick="showAb_Normal('normal');un_bold(this);" title="Normal" >Normal(<span id="normalNum"><%=normalNum%></span>)</a></div>
 
 <%} if(abnormals!=null && abnormals.size()>0){
         Integer abnormalNum=abnormals.size() ;
     %>
-    <div><a id="totalAbnormals" href="javascript:void(0);" onclick="showAb_Normal('abnormal','<%=abnormals%>');un_bold(this);" title="Abnormal">Abnormal<span id="abnormalNum">(<%=abnormalNum%>)</span></a></div>
+    <div><a id="totalAbnormals" href="javascript:void(0);" onclick="showAb_Normal('abnormal');un_bold(this);" title="Abnormal">Abnormal(<span id="abnormalNum"><%=abnormalNum%></span>)</a></div>
 
 <%}%>
 <dl>
