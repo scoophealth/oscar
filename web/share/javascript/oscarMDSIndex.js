@@ -21,7 +21,16 @@
 
  */
 
-
+function hideTopBtn(){
+    $('topFRBtn').hide();
+    $('topFBtn').hide();
+    $('topFileBtn').hide();
+}
+function showTopBtn(){
+    $('topFRBtn').show();
+    $('topFBtn').show();
+    $('topFileBtn').show();
+}
   function changeView(){
                                 if($('summaryView').getStyle('display')=='none'){
                                      $('summaryView').show();
@@ -40,6 +49,7 @@
                                          var ele=eles[i];
                                          ele.show();
                                      }
+                                      showTopBtn();
                                 }
                                 else{
                                      $('summaryView').hide();
@@ -58,6 +68,7 @@
                                          var ele=eles[i];
                                          ele.hide();
                                      }
+                                    hideTopBtn();
                                  }
 
 
@@ -162,7 +173,9 @@ function wrapUp() {
                                         //oscarLog('url='+url);
                                         var data="segmentID="+docNo+"&providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&demoName="+demoName;
                                         //oscarLog('url='+url+'+-+ \n data='+data);
-                                        new Ajax.Updater(div,url,{method:'get',parameters:data,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){}});
+                                        new Ajax.Updater(div,url,{method:'get',parameters:data,insertion:Insertion.Bottom,evalScripts:true,onSuccess:function(transport){
+                                                focusFirstDocLab();
+                                        }});
 
                             }
 
@@ -657,6 +670,7 @@ else if(ab_normal=='abnormal')
                                             var ackStatus=getAckStatusFromDocLabId(docLabId);
                                             var patientId=getPatientIdFromDocLabId(docLabId);
                                             var patientName=getPatientNameFromPatientId(patientId);
+                                            if(current_first_doclab==0) current_first_doclab=docLabId;
                                             showDocLab(childId,docLabId,providerNo,searchProviderNo,ackStatus,patientName,ab_normal+'show');
                                         }
                                 }
@@ -677,6 +691,7 @@ else if(ab_normal=='abnormal')
                                             var type=checkType(labdoc);
                                             var ackStatus=getAckStatusFromDocLabId(labdoc);
                                             var patientName=getPatientNameFromPatientId(patientId);
+                                            if(current_first_doclab==0) current_first_doclab=labdoc;
                                             //oscarLog("type="+type+"--subType="+subType);
                                             if(type==subType)
                                                 showDocLab(childId,labdoc,providerNo,searchProviderNo,ackStatus,patientName,'subtype'+subType+patientId+'show');
@@ -715,7 +730,7 @@ else if(ab_normal=='abnormal')
 
                                     }
                                 }
-
+                                
                             }
                             function showCategory(cat){
                                 //oscarLog('cat ='+cat);
@@ -747,7 +762,10 @@ else if(ab_normal=='abnormal')
                                          //oscarLog("patientName="+patientName);
                                          //oscarLog("ackStatus="+ackStatus);
 
-                                         if(patientName!=null) showDocLab(childId,docLabId,providerNo,searchProviderNo,ackStatus,patientName,cat+'show');
+                                         if(patientName!=null) {
+                                             if(current_first_doclab==0) current_first_doclab=docLabId;
+                                             showDocLab(childId,docLabId,providerNo,searchProviderNo,ackStatus,patientName,cat+'show');
+                                         }
                                      }
                                     //toggleMarker(cat+'show');
                             }
@@ -764,6 +782,9 @@ else if(ab_normal=='abnormal')
                                         if(r!=null && r.length>0){
                                             var s=r[0];
                                             s=(s.split("="))[0];
+                                            s=s.replace('{','');
+                                            s=s.replace('}','');
+
                                             return s;
                                         }
                                         return null;
@@ -798,7 +819,7 @@ else if(ab_normal=='abnormal')
                                         createNewElement('docViews',childId);
                                         for(var i=0;i<labDocsArr.length;i++){
                                             var docId=labDocsArr[i].replace(' ', '');
-
+                                            if(current_first_doclab==0) current_first_doclab=docId;
                                             var ackStatus=getAckStatusFromDocLabId(docId);
                                             //oscarLog('childId='+childId+',docId='+docId+',ackStatus='+ackStatus);
                                             showDocLab(childId,docId,providerNo,searchProviderNo,ackStatus,patientName,'labdoc'+patientId+'show');
@@ -1132,6 +1153,7 @@ function checkAb_normal(doclabid){
         return 'abnormal';
 }
 function updateSideNav(doclabid){
+    //oscarLog('in updatesidenav');
     var n=$('totalNumDocs').innerHTML;
     n=parseInt(n);
     if(n>0){
@@ -1174,7 +1196,31 @@ function updateSideNav(doclabid){
             $('abnormalNum').innerHTML=n;
         }
     }
-    //oscarLog('doen update side nav');
+
+    //update patient and patient's subtype
+    var patientId=getPatientIdFromDocLabId(doclabid);
+    //oscarLog('xx '+patientId+'--'+n);
+    n=$('patientNumDocs'+patientId).innerHTML;
+    //oscarLog('xx xx '+patientId+'--'+n);
+    n=parseInt(n);
+    if(n>0){
+        $('patientNumDocs'+patientId).innerHTML=n-1;
+    }
+
+    if(type=='DOC'){
+        n=$('pDocNum_'+patientId).innerHTML;
+        n=parseInt(n);
+        if(n>0){
+            $('pDocNum_'+patientId).innerHTML=n-1;
+        }
+    }
+    else if(type=='HL7'){
+        n=$('pLabNum_'+patientId).innerHTML;
+        n=parseInt(n);
+        if(n>0){
+            $('pLabNum_'+patientId).innerHTML=n-1;
+        }
+    }
 }
 
 function hideRowUsingId(doclabid){
@@ -1190,3 +1236,19 @@ function hideRowUsingId(doclabid){
         }
     }
 }
+function resetCurrentFirstDocLab(){
+    current_first_doclab=0;
+}
+
+function focusFirstDocLab(){
+    if(current_first_doclab>0){
+            var doc_lab=checkType(current_first_doclab);
+            if(doc_lab=='DOC'){
+                //oscarLog('docDesc_'+current_first_doclab);
+                $('docDesc_'+current_first_doclab).focus();
+            }
+            else if(doc_lab=='HL7'){
+                //do nothing
+            }
+        }
+    }
