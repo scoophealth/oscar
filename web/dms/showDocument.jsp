@@ -296,7 +296,8 @@
                                                                 var num=formid.split("_");
                                                              if(num[1]){
                                                                  Effect.BlindUp('labdoc_'+num[1]);
-                                                                 updateSideBar(num[1]);
+                                                                 updateDocLabData(num[1]);
+
                                                             }
                                                     }});
 
