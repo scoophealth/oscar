@@ -35,17 +35,16 @@ import ca.uhn.hl7v2.model.v26.segment.SFT;
 public final class DataTypeUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 
-	public static final String HL7_VERSION_ID="2.6";
-	public static final int NTE_COMMENT_MAX_SIZE=65536;
-	public static final String ACTION_ROLE_SENDER="SENDER";
-	public static final String ACTION_ROLE_RECEIVER="RECEIVER";
+	public static final String HL7_VERSION_ID = "2.6";
+	public static final int NTE_COMMENT_MAX_SIZE = 65536;
+	public static final String ACTION_ROLE_SENDER = "SENDER";
+	public static final String ACTION_ROLE_RECEIVER = "RECEIVER";
 	private static final Base64 base64 = new Base64();
-	
+
 	/**
 	 * Don't access this formatter directly, use the getAsFormattedString method, it provides synchronisation
 	 */
 	private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
-
 
 	private DataTypeUtils() {
 		// not meant to be instantiated by anyone, it's a util class
@@ -59,6 +58,14 @@ public final class DataTypeUtils {
 		return (base64.decode(s.getBytes(MiscUtils.ENCODING)));
 	}
 
+	public static String encodeToBase64String(String s) throws UnsupportedEncodingException {
+		return (new String(base64.encode(s.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
+	}
+
+	public static String decodeBase64StoString(String s) throws UnsupportedEncodingException {
+		return (new String(base64.decode(s.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
+	}
+
 	public static String getAsHl7FormattedString(Date date) {
 		synchronized (dateTimeFormatter) {
 			return (dateTimeFormatter.format(date));
@@ -66,10 +73,10 @@ public final class DataTypeUtils {
 	}
 
 	private static GregorianCalendar getCalendarFromDT(DT dt) throws DataTypeException {
-		
+
 		// hl7/hapi returns 0 for no date
-		if (dt.getYear()==0 || dt.getMonth()==0 || dt.getDay()==0) return(null);
-		
+		if (dt.getYear() == 0 || dt.getMonth() == 0 || dt.getDay() == 0) return (null);
+
 		GregorianCalendar cal = new GregorianCalendar();
 		// zero out fields we don't use
 		cal.setTimeInMillis(0);
@@ -79,14 +86,14 @@ public final class DataTypeUtils {
 
 		// force materialisation of values
 		cal.getTimeInMillis();
-		
+
 		return (cal);
 	}
 
 	public static GregorianCalendar getCalendarFromDTM(DTM dtm) throws DataTypeException {
 
 		// hl7/hapi returns 0 for no date
-		if (dtm.getYear()==0 || dtm.getMonth()==0 || dtm.getDay()==0) return(null);
+		if (dtm.getYear() == 0 || dtm.getMonth() == 0 || dtm.getDay() == 0) return (null);
 
 		GregorianCalendar cal = new GregorianCalendar();
 		// zero out fields we don't use
@@ -376,10 +383,10 @@ public final class DataTypeUtils {
 		demographic.setHcType(cx.getAssigningJurisdiction().getIdentifier().getValue());
 		// valid
 		GregorianCalendar tempCalendar = DataTypeUtils.getCalendarFromDT(cx.getEffectiveDate());
-		if (tempCalendar!=null) demographic.setEffDate(tempCalendar.getTime());
+		if (tempCalendar != null) demographic.setEffDate(tempCalendar.getTime());
 		// expire
 		tempCalendar = DataTypeUtils.getCalendarFromDT(cx.getExpirationDate());
-		if (tempCalendar!=null) demographic.setHcRenewDate(tempCalendar.getTime());
+		if (tempCalendar != null) demographic.setHcRenewDate(tempCalendar.getTime());
 
 		XPN xpn = pid.getPatientName(0);
 		demographic.setLastName(xpn.getFamilyName().getSurname().getValue());
@@ -388,8 +395,8 @@ public final class DataTypeUtils {
 		XTN phone = pid.getPhoneNumberHome(0);
 		demographic.setPhone(phone.getUnformattedTelephoneNumber().getValue());
 
-		Gender gender=getOscarGenderFromHl7Gender(pid.getAdministrativeSex().getValue());
-		if (gender!=null) demographic.setSex(gender.name());
+		Gender gender = getOscarGenderFromHl7Gender(pid.getAdministrativeSex().getValue());
+		if (gender != null) demographic.setSex(gender.name());
 
 		return (demographic);
 	}
@@ -452,14 +459,14 @@ public final class DataTypeUtils {
 	 * @param fileName should be the file name if applicable, can be null if it didn't come from a file.
 	 * @param data and binary data, a String must pass in bytes too as it needs to be base64 encoded for \n and \r's
 	 * @throws HL7Exception
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
 	public static void fillNte(NTE nte, String dataName, String fileName, byte[] data) throws HL7Exception, UnsupportedEncodingException {
 
 		nte.getCommentType().getText().setValue(dataName);
-		if (fileName!=null) nte.getCommentType().getNameOfCodingSystem().setValue(fileName);
+		if (fileName != null) nte.getCommentType().getNameOfCodingSystem().setValue(fileName);
 
-		String stringData=encodeToBase64String(data);
+		String stringData = encodeToBase64String(data);
 		int dataLength = stringData.length();
 		int chunks = dataLength / DataTypeUtils.NTE_COMMENT_MAX_SIZE;
 		if (dataLength % DataTypeUtils.NTE_COMMENT_MAX_SIZE != 0) chunks++;
@@ -485,54 +492,53 @@ public final class DataTypeUtils {
 		return (decodeBase64(sb.toString()));
 	}
 
-
 	/**
 	 * @param rol
 	 * @param provider
 	 * @param actionRole the role of the given provider with regards to this communcations. There is HL7 table 0443. We will also add DataTypeUtils.ACTION_ROLE_* as roles so we can send and receive arbitrary data under arbitrary conditions.
-	 * @throws HL7Exception 
+	 * @throws HL7Exception
 	 */
-	public static void fillRol(ROL rol, Provider provider, String actionRole) throws HL7Exception
-	{
+	public static void fillRol(ROL rol, Provider provider, String actionRole) throws HL7Exception {
 		rol.getActionCode().setValue("unused");
 		rol.getRoleROL().getIdentifier().setValue(actionRole);
-		
-		XCN xcn=rol.getRolePerson(0);
+
+		XCN xcn = rol.getRolePerson(0);
 		xcn.getIDNumber().setValue(provider.getProviderNo());
 		xcn.getFamilyName().getSurname().setValue(provider.getLastName());
 		xcn.getGivenName().setValue(provider.getFirstName());
 		xcn.getPrefixEgDR().setValue(provider.getTitle());
-		
+
 		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
 		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(provider.getAddress()));
 		xad.getAddressType().setValue("O");
-		
+
 		XTN xtn = rol.getPhone(0);
 		xtn.getUnformattedTelephoneNumber().setValue(provider.getPhone());
 		xtn.getCommunicationAddress().setValue(provider.getEmail());
 	}
 
 	/**
-	 * The provider returned is just a detached/unmanaged Provider object which may not represent an entry in the db, it is used as a data structure only. 
-	 * @throws HL7Exception 
+	 * The provider returned is just a detached/unmanaged Provider object which may not represent an entry in the db, it is used as a data structure only.
+	 * 
+	 * @throws HL7Exception
 	 */
 	public static Provider parseRolAsProvider(ROL rol) throws HL7Exception {
-		Provider provider=new Provider();
+		Provider provider = new Provider();
 
-		XCN xcn=rol.getRolePerson(0);
+		XCN xcn = rol.getRolePerson(0);
 		provider.setProviderNo(xcn.getIDNumber().getValue());
 		provider.setLastName(xcn.getFamilyName().getSurname().getValue());
 		provider.setFirstName(xcn.getGivenName().getValue());
 		provider.setTitle(xcn.getPrefixEgDR().getValue());
-		
+
 		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
 		provider.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
 
 		XTN xtn = rol.getPhone(0);
 		provider.setPhone(xtn.getUnformattedTelephoneNumber().getValue());
 		provider.setEmail(xtn.getCommunicationAddress().getValue());
-		
-		return(provider);
+
+		return (provider);
 	}
-	
+
 }

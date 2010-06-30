@@ -19,6 +19,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.util.MiscUtils;
@@ -81,9 +82,9 @@ public final class MessageUploader {
 				i++;
 			}
 
-			ArrayList disciplineArray = h.getHeaders();
+			ArrayList<String> disciplineArray = h.getHeaders();
 			String next = "";
-			if (disciplineArray != null && disciplineArray.size() > 0) next = (String) disciplineArray.get(0);
+			if (disciplineArray != null && disciplineArray.size() > 0) next = disciplineArray.get(0);
 
 			int sepMark;
 			if ((sepMark = next.indexOf("<br />")) < 0) {
@@ -93,7 +94,7 @@ public final class MessageUploader {
 
 			for (i = 1; i < disciplineArray.size(); i++) {
 
-				next = (String) disciplineArray.get(i);
+				next = disciplineArray.get(i);
 				if ((sepMark = next.indexOf("<br />")) < 0) {
 					if ((sepMark = next.indexOf(" ")) < 0) sepMark = next.length();
 				}
@@ -104,7 +105,7 @@ public final class MessageUploader {
 			Hl7TextMessage hl7TextMessage = new Hl7TextMessage();
 			hl7TextMessage.setFileUploadCheckId(fileId);
 			hl7TextMessage.setType(type);
-			hl7TextMessage.setBase64EncodedeMessage(new String(base64.encode(hl7Body.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
+			hl7TextMessage.setBase64EncodedeMessage(DataTypeUtils.encodeToBase64String(hl7Body));
 			hl7TextMessage.setServiceName(serviceName);
 			hl7TextMessageDao.persist(hl7TextMessage);
 
