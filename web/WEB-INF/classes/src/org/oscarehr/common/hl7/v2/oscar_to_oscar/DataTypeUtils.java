@@ -315,7 +315,7 @@ public final class DataTypeUtils {
 		// I Licensing Name
 		// L Legal Name
 		// M Maiden Name
-		// N Nickname /”Call me” Name/Street Name
+		// N Nickname /Call me Name/Street Name
 		// P Name of Partner/Spouse - obsolete (DO NOT USE)
 		// R Registered Name (animals only)
 		// S Coded Pseudo-Name to ensure anonymity

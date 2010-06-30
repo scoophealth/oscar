@@ -400,10 +400,10 @@ public class RxDrugRef {
       *
       * Applications allowing more choice will expose all possible data sources to the end user
       * @param searchexpr mnemonic describing data source,
-      *        e.g. “mims�?, “amh�?, “rote liste�?, “first database�?.
-      *        Case insensitive, partial match possible if using “%�? as wild card
+      *        e.g. mims, amh, rote liste, first database.
+      *        Case insensitive, partial match possible if using % as wild card
       * @param tags see tags
-      * @return array of structs alphabetically sorted by “name�? with the following minimum keys:
+      * @return array of structs alphabetically sorted by name with the following minimum keys:
       *
       * <B>pkey</B>: integer. Primary key      
       * <B>name</B>: string. Menemonic describing data source     
@@ -424,16 +424,16 @@ public class RxDrugRef {
          return new Hashtable();
      }
 
-     /**returns basic identifiers of all drugs, drug products and drug classes available in the database which names match “searchexpr�?, and which other criteria match the constraints in “tags�?
+     /**returns basic identifiers of all drugs, drug products and drug classes available in the database which names match searchexpr, and which other criteria match the constraints in tags
       *
-      *@param searchexpr: (Partial) name of a “drug�? (generic, brand name, composite drug) Case insensitive, partial match possible if using “%�? as wild card
+      *@param searchexpr: (Partial) name of a drug (generic, brand name, composite drug) Case insensitive, partial match possible if using % as wild card
       *@tags: see [tags] Additional optional keys:
       *       classes : boolean. If true, class names (ATC) are listed
       *       generics : boolean. If true, generic names are listed
       *       branded : boolean. If true, branded product names are listed
       *       composites : if true, generic composite drugs are listed
       *
-      *@return array of structs alphabetically sorted by “name�? with the following minimum keys:
+      *@return array of structs alphabetically sorted by name with the following minimum keys:
       *       pkey: integer. Primary key
       *       Name: string. Name of the drug
       *       Type: string(2):
@@ -444,7 +444,7 @@ public class RxDrugRef {
       *         'ge' = generic
       *         'gc' = composite generic (e.g. Co-Trimoxazole)
       *         'bp' = branded product
-      *       If the parameter “return_tags�? was given in the query, “tags�? will be available too.
+      *       If the parameter return_tags was given in the query, tags will be available too.
       */
      public Vector list_drugs(String searchexpr,Hashtable  tags){
          Vector params = new Vector();

@@ -41,17 +41,17 @@ public class RxDrugData {
     public class DrugMonograph{
           
          
-          public String name;        // : string. International nonproprietary name (INPN) of this drug (=�?generic�?)
+          public String name;        // : string. International nonproprietary name (INPN) of this drug (=generic)
           public String atc;         //: string. ATC code
           public String regionalIdentifier;
           //     generics : struct. Lists all generic components (usually just one). Key (string) is the generic name, value (integer) is the repective primary key
           public boolean essential;  //: True if this drug is on the WHO essential drug list
           public String product;     //: string. If this drug is not a generic, the product brand name is listed under this key, else this key is not available
           public String action;      //: string. Description of mode of action.
-          public Vector indications; //: array of Indications. Each struct has “indication�? as key, and a struct as value containing the following keys:
+          public Vector indications; //: array of Indications. Each struct has indication as key, and a struct as value containing the following keys:
           public Vector components = new Vector();
           
-          public Vector contraindications; //: array of contraindications. Each struct has “contraindication�? as key, and a struct as value containing the following keys:
+          public Vector contraindications; //: array of contraindications. Each struct has contraindication as key, and a struct as value containing the following keys:
           
           public String[] practice_points; //: array of strings
           public String paediatric_use; //:  string. Describing special considerations in paediatric use
@@ -134,8 +134,8 @@ public class RxDrugData {
             int frequency_units; //: integer. 0=not applicable, 1=seconds, 2=minutes, 3=hours, 4=days, 5=weeks, 6=months, 7=years
             int frequency;       //: integer. How often this drug should be administered
             int duration_units; //: integer. Same as frequency_units, additional value 8='times'
-            int duration_minimum; // ; integer. How long a usual course of this drug should be given. -1 is “permanent�?, -2=�?p.r.n.�?
-            int duration_maximum; // : integer. -1 is “permanent�?, “-2�?=�?p.r.n.�?
+            int duration_minimum; // ; integer. How long a usual course of this drug should be given. -1 is permanent, -2=p.r.n.
+            int duration_maximum; // : integer. -1 is permanent, -2=p.r.n.
             boolean constrained;  //: boolean. If true, no automazied dosage suggestion must be generated, prescriber must read comment. (e.g. dosage per body surface etc.)
             String comment;
           }
