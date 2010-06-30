@@ -1,7 +1,5 @@
 package org.oscarehr.common.hl7.v2.oscar_to_oscar;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -23,22 +21,25 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.MultipartPostMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.log.LogAction;
-
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
 
 public final class SendingUtils {
 
 	private static final Logger logger = MiscUtils.getLogger();
-	private static final int CONNECTION_TIME_OUT = 10000;
+	private static final Integer CONNECTION_TIME_OUT = 10000;
 	
 	public static int send(AbstractMessage message, ProfessionalSpecialist professionalSpecialist) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception
 	{
@@ -67,27 +68,23 @@ public final class SendingUtils {
 	}
 
 	private static int postData(String url, byte[] encryptedBytes, byte[] encryptedSecretKey, byte[] signature, String serviceName) throws IOException {
-		File tempFile = File.createTempFile(SendingUtils.class.getName(), "hl7");
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
-			fileOutputStream.write(encryptedBytes);
-			fileOutputStream.flush();
-			fileOutputStream.close();
+		MultipartEntity multipartEntity = new MultipartEntity();
+		
+		String filename=serviceName+'_'+System.currentTimeMillis()+".hl7";
+		multipartEntity.addPart("importFile", new ByteArrayBody(encryptedBytes, filename));		
+		multipartEntity.addPart("key", new StringBody(DataTypeUtils.encodeToBase64String(encryptedSecretKey)));
+		multipartEntity.addPart("signature", new StringBody(DataTypeUtils.encodeToBase64String(signature)));
+		multipartEntity.addPart("service", new StringBody(serviceName));
 
-			MultipartPostMethod multipartPostMethod = new MultipartPostMethod(url);
-			multipartPostMethod.addParameter("importFile", tempFile.getName(), tempFile);
-			multipartPostMethod.addParameter("key", DataTypeUtils.encodeToBase64String(encryptedSecretKey));
-			multipartPostMethod.addParameter("signature", DataTypeUtils.encodeToBase64String(signature));
-			multipartPostMethod.addParameter("service", serviceName);
+		HttpPost httpPost = new HttpPost(url);
+		httpPost.setEntity(multipartEntity);
 
-			HttpClient httpClient = new HttpClient();
-			httpClient.setConnectionTimeout(CONNECTION_TIME_OUT);
-			int statusCode = httpClient.executeMethod(multipartPostMethod);
-			logger.debug("StatusCode:" + statusCode);
-			return (statusCode);
-		} finally {
-			if (tempFile != null) tempFile.delete();
-		}
+		HttpClient httpClient = new DefaultHttpClient();
+		httpClient.getParams().setParameter("http.socket.timeout", CONNECTION_TIME_OUT);
+		HttpResponse httpResponse = httpClient.execute(httpPost);
+		int statusCode=httpResponse.getStatusLine().getStatusCode();
+		logger.debug("StatusCode:" + statusCode);
+		return (statusCode);
 	}
 
 	private static byte[] encryptEncryptionKey(SecretKey senderSecretKey, PublicKey receiverOscarKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
@@ -135,7 +132,7 @@ public final class SendingUtils {
     }
 
 	public static void main(String... argv) throws Exception {
-		String url = "http://localhost:8080/oscar/lab/newLabUpload.do";
+		String url = "http://localhost:49898/oscar/lab/newLabUpload.do";
 		String publicOscarKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCCYf7j1EXWHdbtZgn7e28Yc4a/0Mznx1irA0NW1yknJU9TScpFUVJ9LKmo3+pqAqaGkWmZgz4bn0XZQ/PJNw9z24dRwaVzOgjJ9h1ci/cmei80UK7uL7soS3c1Hj6lddkZbAJ5+F9amasRsaabFI+Gvevq0EYMIaETFjZiEkDNUwIDAQAB";
 		String publicServiceKeyString = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI61yqsLH352cc+Ij3X/WzUKrFD6izRCwRqdS7RobiKmRqp6Ol1fiFJEOGGot1deNpIWJP05SNvx1qhMb9r6g8JamQvORR4QgUfKVOxwauOqm9myvSr8kPjAbQVHG8QcCBs+2qPfQU2whf+dpJFlx2P/Gx42W7S6HhK9awu9ZKeBAgMBAAECgYBRhwmBLZmQZZofNaS/hGJWqwJGQNvFv10SF0pohkBlCxjTy4AMV8dJOC/9mqUjBG+ohX4cK92zyTUYcJJ2Ryd9veIrVKM/3oUAXeHBaAHyaamFb8s6tZMHuJNJipV5igod/7nkRVGFa1RzamnMzrcnBLhqVZacwkN2F+BFzMTAAQJBAPxkQTT46O4DCbuNNxnIvMcpzIT17mhXNE+ZUOL1R2LMFM0bSyItkeiTaWQ1zgK4BPT3iAYiyvUq7fZOVGuGP9ECQQCQwBsubAM8R1STJERefMZRGAUg+UVTXatq9BK1xU9vQQCwKXBf78a+JLONQN/h8F8RXQduyyrNe0qpo7vTVAixAkA2zjJWpWI3JNO9NTns0Gkluk7d5GVjpOQIENu+nNJmgrhVnYKgJlMTtMbi6sgUUQ9KfmG8K1v1BuBrZrDwNFOxAkA9JSlWPsJPIEKVtWg8EbEkaGUiPKoQQS08DMYqiqK3eFn2EEsr+3mUsKQ4MwNfyc4e45FUN/ZovoAXkNayunjBAkAzhYBxLxjJTf7SBCjwcKus/Z0G1+mYWaKQuYWhyXhVJ7w8oNZ0KqoXECDYdeSAMEwGUkLHJjRtIFBHyJzR2vU6";
 
