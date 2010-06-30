@@ -56,11 +56,12 @@ if (ackList != null){
         }
     }
 }
-MessageHandler handler = Factory.getHandler(segmentID);
+Factory f = new Factory();
+MessageHandler handler = f.getHandler(segmentID);
 Hl7textResultsData data = new Hl7textResultsData();
 String multiLabId = data.getMatchingLabs(segmentID);
 
-String hl7 = Factory.getHL7Body(segmentID);
+String hl7 = f.getHL7Body(segmentID);
 
 // check for errors printing
 if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){
@@ -647,8 +648,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 //System.out.println("OBR Count "+OBRCount+" J "+j+" obx count "+obxCount);
                                 for (k=0; k < obxCount; k++){ 
                                     String obxName = handler.getOBXName(j, k);
-                                    //System.out.println("OBX NAME "+obxName+"  -> "+handler.getObservationHeader(j, k).equals(headers.get(i))+" obsHeader "+ handler.getObservationHeader(j, k) +" header "+ headers.get(i));
-                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !obxName.equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
+                                    System.out.println("OBX NAME "+obxName+"  -> "+handler.getObservationHeader(j, k).equals(headers.get(i))+" obsHeader "+ handler.getObservationHeader(j, k) +" header "+ headers.get(i));
+                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") /*&& !obxName.equals("")*/ && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
                                         String obrName = handler.getOBRName(j);
                                         if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
@@ -665,20 +666,36 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         } else if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H") || handler.isOBXAbnormal( j, k) ) ){
                                             lineClass = "AbnormalRes";
                                         }%>
-                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>                                         
-                                            <td align="right"><%= handler.getOBXResult( j, k) %></td>
-                                            <td align="center">
-                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
-                                            </td>
-                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
-                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
-                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
-                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
-                                        </tr>
-
+                                        <%if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("FT")){
+                                            String[] dividedString  =divideStringAtFirstNewline(handler.getOBXResult( j, k));
+                                            %>                                         
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>" >
+                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>
+                                                <td align="right"><%= dividedString[0] %></td>
+                                                <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
+                                                <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
+                                                <td align="left" valign="top"><%=handler.getOBXUnits( j, k) %></td>
+                                                <td align="center" valign="top"><%= handler.getTimeStamp(j, k) %></td>
+                                                <td align="center" valign="top"><%= handler.getOBXResultStatus( j, k) %></td>
+                                            </tr>
+                                            <%if(dividedString[1] != null){ %>
+                                            <tr>
+                                                <td colspan="7" style="padding-left:10px;"><%=dividedString[1]%></td>
+                                            </tr>
+                                            <%}%>
+                                        <%}else{%>
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                                <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>
+                                                <td align="right"><%= handler.getOBXResult( j, k) %></td>
+                                                <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
+                                                <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
+                                                <td align="left" valign="top"><%=handler.getOBXUnits( j, k) %></td>
+                                                <td align="center" valign="top"><%= handler.getTimeStamp(j, k) %></td>
+                                                <td align="center" valign="top"><%= handler.getOBXResultStatus( j, k) %></td>
+                                            </tr>
+                                        <%}%>
                                         <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
-                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes" >
                                                 <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
                                             </tr>
                                         <%}
@@ -746,9 +763,50 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                 </tr>
             </table>
             
-        </form>
+        </form><%String s = ""+System.currentTimeMillis();%>
         <!-- a style="color:white;" href="labDebug.jsp?segmentID=<%=segmentID%>" >debug</a -->
-        <a style="color:white;" href="javascript: void();" onclick="showHideItem('rawhl7');" >show</a> 
-        <pre id="rawhl7" style="display:none;"><%=hl7%></pre>
+        <a style="color:white;" href="javascript: void();" onclick="showHideItem('rawhl7<%=s%>');" >show</a>
+        <pre id="rawhl7<%=s%>" style="display:none;"><%=hl7%></pre>
     </body>
 </html>
+<%!
+    public String[] divideStringAtFirstNewline(String s){
+        int i = s.indexOf("<br />");
+        String[] ret  = new String[2];
+        if(i == -1){
+               ret[0] = new String(s);
+               ret[1] = null;
+            }else{
+               ret[0] = s.substring(0,i);
+               ret[1] = s.substring(i+6);
+            }
+        return ret;
+    }
+%>
+ <%--
+    AD Address
+    CE Coded Entry
+    CF Coded Element With Formatted Values
+    CK Composite ID With Check Digit
+    CN Composite ID And Name
+    CP Composite Price
+    CX Extended Composite ID With Check Digit
+    DT Date
+    ED Encapsulated Data
+    FT Formatted Text (Display)
+    MO Money
+    NM Numeric
+    PN Person Name
+    RP Reference Pointer
+    SN Structured Numeric
+    ST String Data.
+    TM Time
+    TN Telephone Number
+    TS Time Stamp (Date & Time)
+    TX Text Data (Display)
+    XAD Extended Address
+    XCN Extended Composite Name And Number For Persons
+    XON Extended Composite Name And Number For Organizations
+    XPN Extended Person Number
+    XTN Extended Telecommunications Number
+ --%>
