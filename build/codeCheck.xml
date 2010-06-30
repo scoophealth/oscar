@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project default="codeCheck">
+
+	<property name="srcDir" location="../web" />
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	  <classpath>
+	    <pathelement location="ant-contrib-1.0b3.jar"/>
+	  </classpath>
+	</taskdef>
+
+	<target name="codeCheck">
+		<antcall target="loggerCheck" />
+		<antcall target="asciiCheck" />
+	</target>
+
+	<!-- logger check -->	
+	<target name="loggerCheck">
+		<foreach target="failLoggerCheck" param="file">
+			<path>
+				<fileset dir="${srcDir}" includes="**/*.j*" excludes="**/*.jar">
+					<or>
+						<contains text="System.err" />
+					</or>
+				</fileset>
+			</path>			
+		</foreach>
+	</target>
+
+	<target name="failLoggerCheck">
+		<fail message="File is not using logger. File=${file}" />
+	</target>
+
+	<!-- ascii check -->	
+	<target name="asciiCheck">
+		<foreach target="failAsciiCheck" param="file">
+			<path>
+				<fileset dir="${srcDir}" includes="**/*.j*" excludes="**/*.jar, **/TeleplanAPI.java">
+					<contains text="ASCII" />
+				</fileset>
+			</path>			
+		</foreach>
+	</target>
+
+	<target name="failAsciiCheck">
+		<fail message="File references ASCII, should use UTF-8 from MiscUtils.ENCODING instead. File=${file}" />
+	</target>
+
+</project>
