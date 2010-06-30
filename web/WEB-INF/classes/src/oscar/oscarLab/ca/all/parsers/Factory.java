@@ -53,7 +53,7 @@ public final class Factory {
             while(rs.next()){
                 
                 String fileString = db.getString(rs,"message");
-                hl7Body = new String(base64.decode(fileString.getBytes("ASCII")), "ASCII");
+                hl7Body = new String(base64.decode(fileString.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING);
                 type = db.getString(rs,"type");
                 
             }
@@ -77,7 +77,7 @@ public final class Factory {
             Base64 base64 = new Base64();
             while(rs.next()){
                 String fileString = db.getString(rs,"message");
-                ret = new String(base64.decode(fileString.getBytes("ASCII")), "ASCII");
+                ret = new String(base64.decode(fileString.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING);
             }
             rs.close();
         }catch(Exception e){

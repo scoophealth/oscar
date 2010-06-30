@@ -27,6 +27,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.MultipartPostMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.FileUtils;
+import org.oscarehr.util.MiscUtils;
 
 public class TestHL7Upload {
 
@@ -169,7 +170,7 @@ public class TestHL7Upload {
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, pubKey);
 			byte[] cipherText = cipher.doFinal(skey.getEncoded());
-			return (new String(base64.encode(cipherText), "ASCII"));
+			return (new String(base64.encode(cipherText), MiscUtils.ENCODING));
 		} catch (Exception e) {
 			// return("failed");
 			throw e;
@@ -210,7 +211,7 @@ public class TestHL7Upload {
 			}
 
 			signature = sig.sign();
-			return (new String(base64.encode(signature), "ASCII"));
+			return (new String(base64.encode(signature), MiscUtils.ENCODING));
 		} catch (Exception e) {
 			// return("");
 			throw e;
@@ -245,13 +246,13 @@ public class TestHL7Upload {
 
 			// create private key from string
 			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(base64
-					.decode(privateKey.getBytes("ASCII")));
+					.decode(privateKey.getBytes(MiscUtils.ENCODING)));
 			KeyFactory privKeyFactory = KeyFactory.getInstance("RSA");
 			privKey = privKeyFactory.generatePrivate(privKeySpec);
 
 			// create public key from string
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(base64
-					.decode(publicKey.getBytes("ASCII")));
+					.decode(publicKey.getBytes(MiscUtils.ENCODING)));
 			KeyFactory pubKeyFactory = KeyFactory.getInstance("RSA");
 			pubKey = pubKeyFactory.generatePublic(pubKeySpec);
 

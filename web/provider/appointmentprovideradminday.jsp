@@ -1593,7 +1593,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 //     underlines should be added to the labels to prompt/remind the user and should correspond to
 //     the actual key whose keydown fires, which is also stored in the oscarResources.properties files
 //     if you are using the keydown/up event the value stored is the actual key code
-//     which, at least with a US keyboard, also is the uppercase ASCII code, ie A keyCode=65
+//     which, at least with a US keyboard, also is the uppercase utf-8 code, ie A keyCode=65
 
 document.onkeydown=function(e){
 	evt = e || window.event;  // window.event is the IE equivalent

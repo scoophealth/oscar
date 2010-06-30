@@ -26,12 +26,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Properties;
 
 import java.util.Vector;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -53,12 +50,15 @@ import org.apache.log4j.xml.DOMConfigurator;
  * even though the jvm itself has not restarted.
  */
 public class MiscUtils {
-
+	
+	public static final String ENCODING = "UTF-8";
 	private static boolean shutdownSignaled = false;
 	private static Thread shutdownHookThread = null;
 
 	private static class ShutdownHookThread extends Thread {
-		public void run() {
+		// can't have override until everyone uses jdk1.6
+		// @Override
+        public void run() {
 			shutdownSignaled = true;
 		}
 	}
@@ -184,13 +184,13 @@ public class MiscUtils {
 	}
 
 
-        //return a vector which contains distinctive string elements
-        public static Vector findUniqueElementVector (Vector v){
-            Vector retVec=new Vector();
-            for(int i=0;i<v.size();i++){
-                if(!retVec.contains(v.get(i)))
-                    retVec.add(v.get(i));
-            }
-            return retVec;
+    //return a vector which contains distinctive string elements
+    public static Vector findUniqueElementVector (Vector v){
+        Vector retVec=new Vector();
+        for(int i=0;i<v.size();i++){
+            if(!retVec.contains(v.get(i)))
+                retVec.add(v.get(i));
         }
+        return retVec;
+    }
 }

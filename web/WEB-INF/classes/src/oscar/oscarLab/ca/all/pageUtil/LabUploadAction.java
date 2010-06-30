@@ -37,6 +37,7 @@ import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.OscarKeyDao;
 import org.oscarehr.common.dao.PublicKeyDao;
 import org.oscarehr.common.model.OscarKey;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.FileUploadCheck;
@@ -126,7 +127,7 @@ public class LabUploadAction extends Action {
             // Decrypt the secret key using the servers private key
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] newSecretKey = cipher.doFinal(base64.decode(skey.getBytes("ASCII")));
+            byte[] newSecretKey = cipher.doFinal(base64.decode(skey.getBytes(MiscUtils.ENCODING)));
 
             // Decrypt the message using the secret key
             SecretKeySpec skeySpec = new SecretKeySpec(newSecretKey, "AES");
@@ -165,7 +166,7 @@ public class LabUploadAction extends Action {
             }
             msgIs.close();
 
-            return(sig.verify(base64.decode(sigString.getBytes("ASCII"))));
+            return(sig.verify(base64.decode(sigString.getBytes(MiscUtils.ENCODING))));
 
         }catch(Exception e){
             logger.debug("Could not validate signature: "+e);
@@ -196,7 +197,7 @@ public class LabUploadAction extends Action {
                 type = publicKeyObject.getType();            	
             }
             
-            publicKey = base64.decode(keyString.getBytes("ASCII"));;
+            publicKey = base64.decode(keyString.getBytes(MiscUtils.ENCODING));;
             X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             Key = keyFactory.generatePublic(pubKeySpec);
@@ -224,7 +225,7 @@ public class LabUploadAction extends Action {
         	OscarKey oscarKey=oscarKeyDao.find("oscar");
             logger.info("oscar key: "+oscarKey);
 
-            privateKey = base64.decode(oscarKey.getPrivateKey().getBytes("ASCII"));
+            privateKey = base64.decode(oscarKey.getPrivateKey().getBytes(MiscUtils.ENCODING));
             PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privateKey);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             Key = keyFactory.generatePrivate(privKeySpec);

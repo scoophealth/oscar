@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -101,7 +102,7 @@ public class GDMLHandler implements MessageHandler {
         try{
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B,  a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m1, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no = m1.lab_id AND m1.message='"+(new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"))+"' ORDER BY a.obr_date, a.lab_no";
+            String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B,  a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m1, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no = m1.lab_id AND m1.message='"+(new String(base64.encode(hl7Body.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING))+"' ORDER BY a.obr_date, a.lab_no";
             ResultSet rs = db.GetSQL(sql);
             
             while(rs.next()) {
@@ -116,7 +117,7 @@ public class GDMLHandler implements MessageHandler {
                     monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
                 }
                 if (monthsBetween < 4){
-                    ret.add(new String(base64.decode(db.getString(rs,"message").getBytes("ASCII")), "ASCII"));
+                    ret.add(new String(base64.decode(db.getString(rs,"message").getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
                 }
                 
                 // only return labs up to the one being initialized

@@ -538,27 +538,7 @@
     
  -->
 	
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-	  <classpath>
-	    <pathelement location="ant-contrib-1.0b3.jar"/>
-	  </classpath>
-	</taskdef>
-
-	<target name="codeCheck">
-		<foreach target="failLoggerCheck" param="file">
-			<path>
-				<fileset dir="${webapp}" includes="**/*.j*" excludes="**/*.jar">
-					<or>
-						<contains text="System.err" />
-					</or>
-				</fileset>
-			</path>			
-		</foreach>
-	</target>
+	<import file="codeCheck.xml"/>
 	
-	<target name="failLoggerCheck">
-		<fail message="File not using logger : ${file}" />
-	</target>
-
 </project>
 

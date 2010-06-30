@@ -156,7 +156,7 @@ public final class RefI12 {
 
             if (nteType.name().equals(nteCommentType))
             {
-            	return(new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), DataTypeUtils.ENCODING));
+            	return(new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), MiscUtils.ENCODING));
             }
 		}
 		

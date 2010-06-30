@@ -358,7 +358,7 @@ public class CoercionTest {
 		int rows = 0;
 		
 		
-		// Some BLOB (i.e. byte[]) data, ASCII and binary
+		// Some BLOB (i.e. byte[]) data, string and binary
 		//	
 		// This array is smaller than the maximum string size and 
 		//  should be returned with getString() as well as getBytes();
@@ -370,14 +370,14 @@ public class CoercionTest {
 		}
 	
 		
-		// An array containing ASCII bytes but larger than the
+		// An array containing string bytes but larger than the
 		//  maximum string size. getString() will return null but
 		//  getBytes() will return the entire BLOB.
 		
-		byte[] asciiArray = new byte[512];
-		for (int i=0; i<asciiArray.length; i++) {
+		byte[] stringArray = new byte[512];
+		for (int i=0; i<stringArray.length; i++) {
 			byte aChar = (byte)((i%26) + 'A');
-			asciiArray[i] = aChar;
+			stringArray[i] = aChar;
 		}
 		
 		// A large array containing binary values.

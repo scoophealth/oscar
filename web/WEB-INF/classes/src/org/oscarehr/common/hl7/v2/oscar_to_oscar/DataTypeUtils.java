@@ -39,7 +39,6 @@ public final class DataTypeUtils {
 	public static final int NTE_COMMENT_MAX_SIZE=65536;
 	public static final String ACTION_ROLE_SENDER="SENDER";
 	public static final String ACTION_ROLE_RECEIVER="RECEIVER";
-	public static final String ENCODING = "UTF-8";
 	private static final Base64 base64 = new Base64();
 	
 	/**
@@ -53,11 +52,11 @@ public final class DataTypeUtils {
 	}
 
 	public static String encodeToBase64String(byte[] b) throws UnsupportedEncodingException {
-		return (new String(base64.encode(b), ENCODING));
+		return (new String(base64.encode(b), MiscUtils.ENCODING));
 	}
 
 	public static byte[] decodeBase64(String s) throws UnsupportedEncodingException {
-		return (base64.decode(s.getBytes(ENCODING)));
+		return (base64.decode(s.getBytes(MiscUtils.ENCODING)));
 	}
 
 	public static String getAsHl7FormattedString(Date date) {

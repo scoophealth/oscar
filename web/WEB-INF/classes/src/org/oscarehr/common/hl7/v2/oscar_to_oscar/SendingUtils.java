@@ -61,7 +61,7 @@ public final class SendingUtils {
 		byte[] encryptedSecretKey = encryptEncryptionKey(senderSecretKey, receiverOscarKey);
 
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, DataTypeUtils.ENCODING));
+		LogAction.addLog(loggedInInfo.loggedInProvider.getProviderNo(), SendingUtils.class.getSimpleName(), "HL7", new String(dataBytes, MiscUtils.ENCODING));
 		
 		return (postData(url, encryptedBytes, encryptedSecretKey, signature, serviceName));
 	}
