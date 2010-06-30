@@ -14,6 +14,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
@@ -50,7 +51,7 @@ public class OruR01UploadAction extends Action {
 
 	    	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
 	    	ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(oruR01UploadForm.getProfessionalSpecialistId());
-	        Provider receivingProvider=getReceivingProvider(professionalSpecialist);
+	        Provider receivingProvider=DataTypeUtils.getReceivingProvider(professionalSpecialist);
 	        
 	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);
 	        
@@ -64,20 +65,7 @@ public class OruR01UploadAction extends Action {
 
     	return(mapping.findForward("result"));
     }
-    
-    private Provider getReceivingProvider(ProfessionalSpecialist professionalSpecialist) {    	
-    	
-    	Provider provider=new Provider();
-    	
-    	provider.setFirstName(professionalSpecialist.getFirstName());
-    	provider.setLastName(professionalSpecialist.getLastName());
-    	provider.setEmail(professionalSpecialist.getEmailAddress());
-    	provider.setPhone(professionalSpecialist.getPhoneNumber());
-    	provider.setTitle(professionalSpecialist.getProfessionalLetters());
-    	provider.setAddress(professionalSpecialist.getStreetAddress());
-    	
-    	return(provider);
-    }
+
 
 	private static Demographic getDemographicObject(OruR01UploadForm oruR01UploadForm)
     {

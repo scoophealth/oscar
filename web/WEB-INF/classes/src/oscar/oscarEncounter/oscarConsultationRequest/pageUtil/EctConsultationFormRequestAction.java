@@ -31,6 +31,7 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -46,25 +47,32 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ConsultationRequestDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.StreetAddressDataHolder;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.model.ConsultationRequest;
-import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v26.message.REF_I12;
-
 import oscar.OscarProperties;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.util.ParameterActionForward;
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v26.message.ORU_R01;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
 
 public class EctConsultationFormRequestAction extends Action {
 
@@ -162,8 +170,8 @@ public class EctConsultationFormRequestAction extends Action {
 
 					for (int idx = 0; idx < docs.length; ++idx) {
 						if (docs[idx].length() > 0) {
-							if (docs[idx].charAt(0) == 'D') oscar.dms.EDocUtil.attachDocConsult(providerNo, docs[idx].substring(1), requestId);
-							else if (docs[idx].charAt(0) == 'L') oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachLabs.attachLabConsult(providerNo, docs[idx].substring(1), requestId);
+							if (docs[idx].charAt(0) == 'D') EDocUtil.attachDocConsult(providerNo, docs[idx].substring(1), requestId);
+							else if (docs[idx].charAt(0) == 'L') ConsultationAttachLabs.attachLabConsult(providerNo, docs[idx].substring(1), requestId);
 						}
 					}
 
@@ -255,16 +263,36 @@ public class EctConsultationFormRequestAction extends Action {
 	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
 	    ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 	    
-	    Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
+        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	    
 	    // set status now so the remote version shows this status
 	    consultationRequest.setStatus("2");
 
-	    REF_I12 refI12=RefI12.makeRefI12(facility.getName(), consultationRequest, new StreetAddressDataHolder());
+	    REF_I12 refI12=RefI12.makeRefI12(loggedInInfo.currentFacility.getName(), consultationRequest, new StreetAddressDataHolder());
 	    SendingUtils.send(refI12, professionalSpecialist);
 	    
 	    // save after the sending just in case the sending fails.
 	    consultationRequestDao.merge(consultationRequest);
+	    
+	    //--- send attachments ---
+    	Provider sendingProvider=loggedInInfo.loggedInProvider;
+    	DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
+    	Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());
+    	Provider receivingProvider=DataTypeUtils.getReceivingProvider(professionalSpecialist);
+    	
+	    ArrayList<EDoc> attachments=EDocUtil.listDocs(demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), true);
+	    for (EDoc attachment : attachments)
+	    {
+	        ObservationData observationData=new ObservationData();
+	        observationData.dataName=attachment.getDescription();
+	        observationData.textData="Attachment for consultation : "+consultationRequestId;
+	        observationData.binaryDataFileName=attachment.getFileName();
+	        observationData.binaryData=attachment.getFileBytes();
+
+	        
+	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);        
+	        SendingUtils.send(hl7Message, professionalSpecialist);	    	
+	    }
     }
 
 }

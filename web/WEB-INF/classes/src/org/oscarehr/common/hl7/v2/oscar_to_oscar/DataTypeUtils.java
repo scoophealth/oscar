@@ -541,4 +541,17 @@ public final class DataTypeUtils {
 		return (provider);
 	}
 
+    public static Provider getReceivingProvider(ProfessionalSpecialist professionalSpecialist) {    	
+    	
+    	Provider provider=new Provider();
+    	
+    	provider.setFirstName(professionalSpecialist.getFirstName());
+    	provider.setLastName(professionalSpecialist.getLastName());
+    	provider.setEmail(professionalSpecialist.getEmailAddress());
+    	provider.setPhone(professionalSpecialist.getPhoneNumber());
+    	provider.setTitle(professionalSpecialist.getProfessionalLetters());
+    	provider.setAddress(professionalSpecialist.getStreetAddress());
+    	
+    	return(provider);
+    }
 }

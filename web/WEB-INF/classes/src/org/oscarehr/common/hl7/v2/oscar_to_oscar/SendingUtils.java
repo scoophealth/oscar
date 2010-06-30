@@ -80,7 +80,7 @@ public final class SendingUtils {
 		httpPost.setEntity(multipartEntity);
 
 		HttpClient httpClient = new DefaultHttpClient();
-		httpClient.getParams().setParameter("http.socket.timeout", CONNECTION_TIME_OUT);
+		httpClient.getParams().setParameter("http.connection.timeout", CONNECTION_TIME_OUT);
 		HttpResponse httpResponse = httpClient.execute(httpPost);
 		int statusCode=httpResponse.getStatusLine().getStatusCode();
 		logger.debug("StatusCode:" + statusCode);
