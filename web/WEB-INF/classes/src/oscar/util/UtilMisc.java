@@ -84,11 +84,9 @@ public class UtilMisc {
     StringBuffer sb = new StringBuffer(N);
     for (int i = 0; i < N; i++) {
       char c = S.charAt(i);
-  System.out.println("r-escape> : "+c);
         if (c == '&') {//the read one more char and encode
           String temp =new String();
           temp = temp +(S.charAt(i+1));
-          System.out.println("temp> : "+temp);
           if(temp.equalsIgnoreCase("a")){//&amp
               sb.append("&");
               i=i+4;//move on
