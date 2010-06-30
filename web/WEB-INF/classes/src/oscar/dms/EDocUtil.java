@@ -240,15 +240,15 @@ public class EDocUtil extends SqlUtilBaseS {
     /**
      * Fetches all consult docs attached to specific consultation
      */
-    public static ArrayList listDocs(String demoNo, String consultationId, boolean attached) {
+    public static ArrayList<EDoc> listDocs(String demoNo, String consultationId, boolean attached) {
         String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.source, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, ctl_document c "
                 + "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + "c.module='demographic' AND c.module_id = " + demoNo;
 
         String attachQuery = "SELECT d.document_no, d.doccreator, d.source, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, consultdocs cd " +
 		"WHERE d.document_no = cd.document_no AND " + "cd.requestId = "+consultationId+" AND cd.doctype = 'D' AND cd.deleted IS NULL";
 
-        ArrayList resultDocs = new ArrayList();
-        ArrayList attachedDocs = new ArrayList();
+        ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
+        ArrayList<EDoc> attachedDocs = new ArrayList<EDoc>();
 
         try {
             ResultSet rs = getSQL(attachQuery);
