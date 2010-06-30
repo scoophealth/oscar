@@ -19,7 +19,7 @@ public enum Cds4FunctionCode {
     code0FI("0FI"," Family Initiatives"),
     codeFOR("FOR"," Forensic"),
     codeHPA("HPA"," Health Promotion and Education -  General Awareness"),
-    codeHPW("HPW"," Health Promotion and Education - Women’s Mental Health"),
+    codeHPW("HPW"," Health Promotion and Education - Women's Mental Health"),
     codeHSC("HSC"," Homes for Special Care"),
     code0CM("0CM"," Mental Health Case Management"),
     codeCRI("CRI"," Mental Health Crisis Intervention"),
