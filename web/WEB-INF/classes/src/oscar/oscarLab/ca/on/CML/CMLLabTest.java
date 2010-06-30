@@ -350,7 +350,7 @@ public class CMLLabTest {
         public String maximum = null;     //  8. Maximum
         public String units = null;       //  9. Units
         public String result = null;      // 10. Result
-        public String locationId = null;  // 11. Location Id (Test performed at …)
+        public String locationId = null;  // 11. Location Id (Test performed at)
         public String last = null;        // 12. Last Y or N
         
         
