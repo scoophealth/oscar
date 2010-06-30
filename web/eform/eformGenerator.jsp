@@ -1,4 +1,4 @@
-<%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.String,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*"%>
+<%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*"%>
 
 
 <!--
@@ -92,11 +92,8 @@ var img = document.getElementById('imageName' );
 var myCnv = document.getElementById('myCanvas');
 var bg = document.getElementById('BGImage');
 
-//bg.src = img.value;
 //set the path for image function
-bg.src = ("http://localhost:8084"+"<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+img.value);
-
-//document.write (img); //prints the value
+bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+img.value);
 
 	document.getElementById('OrientCustom').value = document.getElementById('OrientCustomValue').value;
 	BGWidth = parseInt(getCheckedValue(document.getElementsByName('Orientation')));
@@ -1790,42 +1787,18 @@ function _CompInt(x, y)
 		<p>Custom text:<input type="text" name="inputValue" id="inputValue" value="">
 			<br>, or <br>
 			From Oscar Database:
-			<select name="oscarDB" id="oscarDB">
-				<option value="" selected="selected">----None----</option>
-				<option value="label">Patient's Electronic Label</option>
-				<option value="patient_name">Last Name, First Name</option>
-				<option value="patient_nameL">Last Name</option>
-				as a second optional parameter<option value="patient_nameF">First Name</option>
-				<option value="DOB">DOB, with (d/m/y)</option>
-				<option value="DOBc">DOB, no (d/m/y)</option>
-				<option value="today">Today's Date</option>
-				<option value="age">Age</option>
-				<option value="sex">Gender (M/F)</option>
-				<option value="address">Address, 3 Lines</option>
-				<option value="addressLine">Address, 1 Line</option>
-				<option value="NameAddress">Patient's Name, 2-Line Address</option>
-				<option value="province">2-letter Province Code</option>
-				<option value="Email">Email address</option>
-				<option value="HIN">HIN, with version code</option>
-				<option value="HINc">HIN, no version code</option>
-				<option value="HINversion">Version Code of HIN</option>
-				<option value="phone">Phone #1</option>
-				<option value="phone2">Phone #2</option>
-				<option value="doctor">Patient's Doctor</option>
-				<option value="clinic_name">Clinic Name</option>
-				<option value="clinic_phone">Clinic Phone</option>
-				<option value="clinic_fax">Clinic Fax</option>
-				<option value="clinic_label">Clinic Label</option>
-				<option value="clinic_addressLine">Clinic Address, 1-Line, Street Only</option>
-				<option value="clinic_addressLineFull">Clinic Address, 1-Line, Full</option>
-				<option value="clinic_address">Clinic Address, 3-Lines, Full</option>
-				<option value="Social_Family_History">SH/FH, from eChart</option>
-				<option value="Other_Medications_History">Other Medications, from eChart</option>
-				<option value="Medical_History">Medical History, from eChart</option>
-				<option value="Ongoing Concerns">Ongoing Concerns, from eChart</option>
-				<option value="Reminders">Reminders, from eChart</option>
-				<option value="current_user">Current User</option>
-			</select>
+                       <p><select name="oscarDB" id="oscarDB">
+                                 <option value=""          >----None----</option>
+                                <%
+                                  EFormLoader names = EFormLoader.getInstance();
+                                  //return the array with a list of names from database
+                                  List<String> kout = names.getNames();
+                                for(String str :kout){ %>
+                                  <option value="<%= str %>"  ><%= str %></option>
+                                   <%
+                                  }
+                                 %>
+                        </select>
 			<br>, or<br>
 			Pre-check the checkbox<input name="preCheck" id="preCheck" type="checkbox">
 		</p>

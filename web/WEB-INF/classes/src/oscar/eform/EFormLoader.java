@@ -29,6 +29,8 @@ package oscar.eform;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -62,9 +64,9 @@ public class EFormLoader {
         ap.setApOutput(processed);
         eFormAPs.addElement(ap);
     }
-    
+
     private EFormLoader() {
-        /*
+/*
         String name = "patient_name";
         String sql = "SELECT * FROM demographic WHERE demographic_no=${demographic}";
         String output = "${last_name}, ${first_name}";
@@ -75,19 +77,22 @@ public class EFormLoader {
         DatabaseAP ap2 = new DatabaseAP(name2, sql2, output2);
         eFormAPs.addElement(ap1);
         eFormAPs.addElement(ap2);
-        */
-        
+ */
+            
     }
-    /*
-    public static ArrayList getNames() {
+    /**
+     *
+     * @return list of names from database
+     */
+    public List getNames() {
         ArrayList names = new ArrayList();
         for (int i=0; i<eFormAPs.size(); i++) {
             DatabaseAP curap = (DatabaseAP) eFormAPs.get(i);
             names.add(curap.getApName());
         }
         return names;
-    }*/
-    
+    }
+     
     public static String getMarker() { return marker; }
     
     public static DatabaseAP getAP(String apName) {
@@ -130,7 +135,7 @@ public class EFormLoader {
           if (configpath == null) {             
              EFormLoader eLoader = new EFormLoader();
              ClassLoader loader = eLoader.getClass().getClassLoader();
-             fs = loader.getResourceAsStream("/oscar/eform/apconfig.xml");                                                       
+             fs = loader.getResourceAsStream("/oscar/eform/apconfig.xml");
           }else{
              fs = new FileInputStream(configpath);          
           }
