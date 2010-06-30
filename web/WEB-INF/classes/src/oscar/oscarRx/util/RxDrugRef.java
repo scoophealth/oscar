@@ -546,17 +546,17 @@ public class RxDrugRef {
       *
       *@return struct with at least the following keys:
       *
-      *     name: string. International nonproprietary name (INPN) of this drug (=�?generic�?)
+      *     name: string. International nonproprietary name (INPN) of this drug (=generic)
       *     atc: string. ATC code
       *     generics : struct. Lists all generic components (usually just one). Key (string) is the generic name, value (integer) is the repective primary key
       *     essential: True if this drug is on the WHO essential drug list
       *     product: string. If this drug is not a generic, the product brand name is listed under this key, else this key is not available
       *     action: string. Description of mode of action.
-      *     indications: array of structs. Each struct has “indication�? as key, and a struct as value containing the following keys:
+      *     indications: array of structs. Each struct has indication as key, and a struct as value containing the following keys:
       *         code : integer. Drugref condition code primary key
       *         firstline : boolean. True if for this indication this drug is considered a first line treatment.
       *         comment : string
-      *     contraindications: array of structs. Each struct has “contraindication�? as key, and a struct as value containing the following keys:
+      *     contraindications: array of structs. Each struct has contraindication as key, and a struct as value containing the following keys:
       *         code : integer. Drugref condition code primary key.
       *         severity : integer (1-3, 3 being absolute contraindication)
       *         comment : string
@@ -587,8 +587,8 @@ public class RxDrugRef {
       *         frequency_units : integer. 0=not applicable, 1=seconds, 2=minutes, 3=hours, 4=days, 5=weeks, 6=months, 7=years
       *         frequency : integer. How often this drug should be administered
       *         duration_units: integer. Same as frequency_units, additional value 8='times'
-      *         duration_minimum ; integer. How long a usual course of this drug should be given. -1 is “permanent�?, -2=�?p.r.n.�?
-      *         duration_maximum : integer. -1 is “permanent�?, “-2�?=�?p.r.n.�?
+      *         duration_minimum ; integer. How long a usual course of this drug should be given. -1 is permanent, -2=p.r.n.
+      *         duration_maximum : integer. -1 is permanent, -2=p.r.n.
       *         constrained: boolean. If true, no automazied dosage suggestion must be generated, prescriber must read comment. (e.g. dosage per body surface etc.)
       *         comment
       */         
@@ -644,7 +644,7 @@ public class RxDrugRef {
 
 
 
-       /**returns all available products for a given drug as identified by “pkey�? and constrained by “tags�?
+       /**returns all available products for a given drug as identified by pkey and constrained by tags
         *@param pkey: primary key of a drug.
         *@param tags: see [tags].
         *return list of structs containing the following minimum keys:
@@ -659,7 +659,7 @@ public class RxDrugRef {
            return new Vector();
        }
 
-       /**returns product specific information for a given drug as identified by “pkey�? and constrained by “tags�?, including available package sizes and strengths, manufacturers, prices and available subsidies as well as legal / subsidy access restrictions.
+       /**returns product specific information for a given drug as identified by pkey and constrained by tags, including available package sizes and strengths, manufacturers, prices and available subsidies as well as legal / subsidy access restrictions.
         *
         *@param pkey: primary key of a specific drug product
         *@param tags: see [tags]
@@ -677,7 +677,7 @@ public class RxDrugRef {
         *                   c=conditional
         *           subsidy_conditions : struct. Key is name of subsidy, value is a string (conditions in human readable text)
         *           subsidy_gap : struct. Key is name of subsidy, value (Real ) is th amount
-        *           brand_price_premium : struct. Key is “applicability�? (all, pensioners ...), value (Real) is the price
+        *           brand_price_premium : struct. Key is applicability (all, pensioners ), value (Real) is the price
         *           prices : struct. Key is price category (retail, wholesale, subsidized), value (Real) is the price
         *           currency : string. Currency the stated price / gap / premium is based on
         */
@@ -697,7 +697,7 @@ public class RxDrugRef {
            return new Base64();
        }
 
-       /**returns an array of structs describing the possible interactions between any two drugs contained in “drugs�?. Information used for interaction checking constrained by “tags�?.
+       /**returns an array of structs describing the possible interactions between any two drugs contained in drugs. Information used for interaction checking constrained by tags.
         *@param drugs: array of integers. Primary keys of drugs
         *@param tags: see [tags].
         *@return array of structs with the following minimum keys:
@@ -718,7 +718,7 @@ public class RxDrugRef {
        }
 
        
-       /**List all conditions and their codes / coding systems known to drugref, constrained by “searchexpr�? as welll as by tags. “Searchexpr�? accepts “%�? as wildcard.
+       /**List all conditions and their codes / coding systems known to drugref, constrained by searchexpr as welll as by tags. Searchexpr accepts % as wildcard.
         *
         */
        public Vector list_conditions(String searchexpr,Hashtable tags){           
