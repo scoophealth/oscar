@@ -1648,7 +1648,8 @@ CREATE TABLE `program` (
   `capacity_funding` int(10) default NULL,
   `capacity_space` int(10) default NULL,
   `lastUpdateUser` varchar(6) default NULL,
-  `lastUpdateDate` date default NULL
+  `lastUpdateDate` date default NULL,
+  `siteSpecificField` varchar(255) default NULL
 
 );
 
