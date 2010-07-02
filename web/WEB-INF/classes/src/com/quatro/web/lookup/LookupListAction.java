@@ -52,7 +52,7 @@ public class LookupListAction extends BaseAdminAction {
 			super.getAccess(request, KeyConstants.FUN_CLIENT);
         String parentCode =request.getParameter("parentCode");
         request.setAttribute("parentCode",parentCode);
-        String grandParentCode =request.getParameter("grandParentCode");
+       
         LookupTableDefValue tableDef = lookupManager.GetLookupTableDef(tableId);
 		List lst = lookupManager.LoadCodeList(tableId, true,parentCode, null, null);
 		LookupListForm qform = (LookupListForm) form;

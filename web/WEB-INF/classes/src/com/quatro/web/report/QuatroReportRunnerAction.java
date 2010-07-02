@@ -237,7 +237,7 @@ public class QuatroReportRunnerAction extends Action {
 	
 	public void btnRun_Click(int reportNo, QuatroReportRunnerForm myForm, HttpServletRequest request)
 	{
-        ReportTempValue rptTempVal=null;
+       
         try
         {
         	BuildTemplate(myForm, request); 
@@ -773,11 +773,7 @@ public class QuatroReportRunnerAction extends Action {
 		String[] obj2= (String[])map.get("lineno");
 		int lineno=0;
 		if(obj2!=null) lineno=obj2.length;
-		
-		int iReportNo = Integer.parseInt(myForm.getReportNo());
 
-		QuatroReportManager reportManager = (QuatroReportManager)WebApplicationContextUtils.getWebApplicationContext(
-        		getServlet().getServletContext()).getBean("quatroReportManager");
 
 		switch(operationType)
 		{
