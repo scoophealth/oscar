@@ -37,7 +37,7 @@ import org.oscarehr.casemgmt.model.base.BaseHashAudit;
 public class HashAuditImpl extends BaseHashAudit {
     
     private final String ALGORITHM = "MD5";
-    
+    private final String ENCODING = "UTF-8";
     
     /** Creates a new instance of HashAuditImpl */
     public HashAuditImpl() {
