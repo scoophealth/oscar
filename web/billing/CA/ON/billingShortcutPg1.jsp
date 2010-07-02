@@ -286,7 +286,6 @@
 	  for(int i=0; i<vecCodeCol1.size(); i++) {
 	  	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol1.get(i)).getProperty("serviceCode") + "'";
 	  }
-	  //System.out.println("vecCodeCol1: " + sql);
 	  rs = dbObj.searchDBRecord(sql);
 	  while (rs.next()) {
 	    propPremium.setProperty(rs.getString("service_code"), "A");
@@ -326,7 +325,6 @@
     propT.setProperty("servicePercentage",rs.getString("percentage"));
 	vecCodeCol3.add(propT);
   }
-//System.out.println(" * ******************************" + sql);
   sql = "select service_code,status from ctl_billingservice_premium where ";
   for(int i=0; i<vecCodeCol3.size(); i++) {
   	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol3.get(i)).getProperty("serviceCode") + "'";
@@ -338,7 +336,6 @@
 
   // create msg
   msg += errorMsg + warningMsg;
-//System.out.println(" * ******************************" + sql);
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -1113,7 +1110,6 @@ ctlCount = 0;
 			for (int i = 0; i < aL.size(); i = i + 2) {
 				BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
 				BillingItemData iobj = (BillingItemData) aL.get(i + 1);
-				//System.out.println(i + obj.getBilling_date());
 
 				%>
 			<tr <%=i%4==0? "class=\"myGreen\"":""%> align="center">
@@ -1172,7 +1168,6 @@ String getDefaultValue(String paraName, Vector vec, String propName) {
   } else if(vec!=null && vec.size()>0 && vec.get(0)!=null) {
     ret = ((Properties)vec.get(0)).getProperty(propName, "") ;
   }
-  System.out.println("paraName:" + paraName + " propName:" + propName + " :" + ret);
   return ret;
 }
 %>

@@ -42,7 +42,6 @@ if(oscarVariables.getProperty("hybrid_billing", "").equalsIgnoreCase("on")) {
 	String[] temp = proList.split("\\,");
 	for(int i = 0; i<temp.length; i++) {
 	    vecGrpBillingPro.add(temp[i].trim());
-	    //System.out.println(vecGrpBillingPro);
 	}
 }
 

@@ -124,7 +124,6 @@ if (rowsAffected ==1) {
    }
    apptMainBean.closePstmtConn();
    
-   System.out.println(request.getParameter("goPrev"));
    if ( request.getParameter("goPrev") != null && request.getParameter("goPrev").equals("goPrev") && billSaved){ 
       response.sendRedirect("../../../../../oscarPrevention/AddPreventionData.jsp?prevention=Flu&demographic_no="+demoNo);
    }

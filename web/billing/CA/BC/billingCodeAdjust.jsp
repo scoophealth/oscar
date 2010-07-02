@@ -88,7 +88,6 @@
 		<%
 
       String sortOrder = request.getParameter("sortOrder")!=null?request.getParameter("sortOrder"):"";
-      System.out.println("sortOrder=" + sortOrder);
 
         String bCode = request.getParameter("bCode");
         List list = null;

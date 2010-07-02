@@ -107,7 +107,6 @@ function CodeAttach(File0,dx1,dx2,dx3) {
 -->
 </script>
 </head>
-<%System.out.println("LOADED"); %>
 <body bgcolor="#FFFFFF" text="#000000" topmargin="0" leftmargin="0"
 	rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -190,7 +189,7 @@ function CodeAttach(File0,dx1,dx2,dx3) {
 			size="2"> No match found. <%// =i        %> </font></td>
 	</tr>
 	<%}%>
-	<%if (intCount == 1) {  System.out.println("Count1");%>
+	<%if (intCount == 1) {%>
 	<script LANGUAGE="JavaScript">
 <!--
 

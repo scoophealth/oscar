@@ -58,7 +58,6 @@
 				String sql = "select * from billing_on_3rdPartyAddress where " + where + " order by " + orderBy + " limit "
 						+ strLimit1 + "," + strLimit2;
 				ResultSet rs = dbObj.searchDBRecord(sql);
-				// System.out.println(sql);
 				while (rs.next()) {
 					prop = new Properties();
 					prop.setProperty("id", rs.getString("id"));

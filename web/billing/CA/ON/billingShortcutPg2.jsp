@@ -153,13 +153,10 @@
 	String [] tempDate = billingDate.split("\\s");
 
     for( int idx = 0; idx < tempDate.length; ++idx ) {
-        System.out.println("BILLING DATE " + tempDate[idx]);
     }
-System.out.println("RECORD COUNT " + recordCount);
 	for(int i=0; i<recordCount; i++) {
 		sql = "select service_code, description, value, percentage from billingservice where service_code='"
 			+ billrec[i] + "' and billingservice_date in (select max(b.billingservice_date) from billingservice b where b.service_code='" + billrec[i] + "' and b.billingservice_date <= '" + request.getParameter("billDate") + "')";
-        System.out.println("SQL " + sql);
 		rs = dbObj.searchDBRecord(sql);
 		while (rs.next()) {
 			billrecdesc[i] = rs.getString("description");
@@ -176,7 +173,6 @@ System.out.println("RECORD COUNT " + recordCount);
 			} else {
 				if(!"allAboveCode".equals(rulePerc) && rulePercLabelNum == -1 ) {
                                     rulePercLabelNum = i-1 == -1 ? 0 : i-1;
-                                    System.out.println("SETTING RULE " + rulePercLabelNum);
                                 }
 				vecServiceCodePerc.add( billrec[i] ); // code
 				vecServiceCodePerc.add( percrec[i] ); // price
@@ -199,13 +195,11 @@ System.out.println("RECORD COUNT " + recordCount);
 		tempUnit = (tempUnit==null||"".equals(tempUnit) )? "1":tempUnit;
 		String code = temp.substring("xml_".length()).toUpperCase();
 		if( (!"".equals(fee) && Double.parseDouble(fee)>0.) || ( "".equals(perc)) ) {
-                    System.out.println("Adding fee code " + code);
 			vecServiceCodePrice.add( fee );
 			vecServiceCodeUnit.add( tempUnit );
 			vecServiceCode.add( code );
 			vecServiceCodeDesc.add( desc );
 		} else {
-                    System.out.println("Adding percentage code " + code);
 			vecServiceCodePerc.add( code );
 			vecServiceCodePerc.add( perc );
 			vecServiceCodePerc.add( tempUnit ); // unit
@@ -250,9 +244,7 @@ System.out.println("RECORD COUNT " + recordCount);
     	bdTotal = bdTotal.add(price.multiply(unit).setScale(2, BigDecimal.ROUND_HALF_UP));
     	if(i==rulePercLabelNum) {
             bdPercBase = bdTotal;
-            System.out.println("Assigned perc total " + bdPercBase);
         }
-//System.out.println(i + " :" + price + " x " + unit + " = " + bdTotal);
 		msg += "<tr bgcolor='#EEEEFF'><td align='right' width='20%'>" + vecServiceCode.get(i) + " ("+Math.round(unit.floatValue())+")</td><td align='right'>" + (i==0?"":" + ") + price + " x " + unit + " = " + bdTotal + "</td></tr>";
 	}
 	
@@ -266,13 +258,11 @@ System.out.println("RECORD COUNT " + recordCount);
 		// calculate perc
 		BigDecimal perc = new BigDecimal(Double.parseDouble((String)vecServiceCodePerc.get(codeIdx))).setScale(2, BigDecimal.ROUND_HALF_UP);
 		bdPerc = bdPercBase.multiply(perc).setScale(2, BigDecimal.ROUND_HALF_UP);
-//System.out.println("Percentage :" + bdPercBase + " x " + perc + " = " + bdPerc);
 		msg += "<tr bgcolor='#EEEEFF'><td align='right'>"+vecServiceCodePerc.get(codeIdx-1)+" (1)</td><td align='right'>Percentage : " + bdPercBase + " x " + perc + " = " + bdPerc + "</td></tr>";
 		// adjust perc by min/max
 		if(aLimits[idx3]) {
 			bdPerc = bdPerc.min(new BigDecimal(Double.parseDouble(aMaxFee[idx3]) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
 			bdPerc = bdPerc.max(new BigDecimal(Double.parseDouble(aMinFee[idx3]) ).setScale(2, BigDecimal.ROUND_HALF_UP) );
-//System.out.println("Adjust to (" + minFee + ", " + maxFee + "): " + bdPerc);
 		msg += "<tr bgcolor='ivory'><td align='right' colspan='2'>Adjust to (" + aMinFee[idx3] + ", " + aMaxFee[idx3] + "): </td><td align='right'>" + bdPerc + "</td></tr>";
 		}
     	bdTotal = bdTotal.add(bdPerc);
@@ -281,7 +271,6 @@ System.out.println("RECORD COUNT " + recordCount);
 	}
 
     total = "" + bdTotal;
-    System.out.println("***************total****************:" + bdTotal);
 		msg += "<tr><td align='right' colspan='2'>Total: " + bdTotal + "</td></tr>";
 	// referral
     content = "";
@@ -356,7 +345,6 @@ System.out.println("RECORD COUNT " + recordCount);
 				+ UtilMisc.nullMySQLEscape(param[10]) + "," + UtilMisc.nullMySQLEscape(param[11]) + "," + UtilMisc.nullMySQLEscape(param[12]) + "," + UtilMisc.nullMySQLEscape(param[13]) + "," + UtilMisc.nullMySQLEscape(param[14]) + ","
 				+ UtilMisc.nullMySQLEscape(param[15]) + "," + UtilMisc.nullMySQLEscape(param[16]) + "," + UtilMisc.nullMySQLEscape(param[17]) + "," + UtilMisc.nullMySQLEscape(param[18]) + "," + UtilMisc.nullMySQLEscape(param[19]) + ","
 				+ UtilMisc.nullMySQLEscape(param[20]) + "," + UtilMisc.nullMySQLEscape(param[21]) + ",'" + param[22] + "')";
-		    System.out.println("*******************************" + sql);
 			nBillNo = dbObj.saveBillingRecord(sql);
 
 
@@ -396,7 +384,6 @@ System.out.println("RECORD COUNT " + recordCount);
 					dbObj.updateDBRecord(sql);
 		    		break;
 		    	}
-		    	System.out.println(nBillNo + sql);
 			}
 			
 			}
@@ -420,8 +407,6 @@ System.out.println("RECORD COUNT " + recordCount);
   // create msg
   String wrongMsg = errorMsg + warningMsg;
   //msg += errorMsg + warningMsg;
-System.out.println(" * ******************************" + sql);
-
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">

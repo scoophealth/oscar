@@ -34,17 +34,12 @@
 			dateBegin = dateBegin==null? "" : dateBegin;
 			String dateEnd = dateObj.getDiskCreateDate(diskId);
 			
-			//System.out.println(diskId + ":" + mohOffice);
 			// solo disk
 			BillingDiskCreatePrep obj = new BillingDiskCreatePrep();
-			//System.out.println(diskId + ":" + mohOffice);
 			List lProvider = obj.getProvider(diskId);
-			//System.out.println(diskId + ":" + lProvider.size());
 
 			if (lProvider != null && lProvider.size() == 1 && ((BillingProviderData) lProvider.get(0)).getBillingGroupNo().equals("0000")) {
 				BillingProviderData dataProvider = (BillingProviderData) lProvider.get(0);
-				//System.out.println(diskId + ":" + mohOffice);
-				//boolean bU = obj.updateSoloDiskName(diskId, (String) session.getAttribute("user"));
 
 				// create the billing file 
 				int headerId = obj.updateBatchHeader(dataProvider, diskId, mohOffice, "1", (String) session

@@ -409,14 +409,12 @@
                                                         <td align="right"><%=bean.getDx1()%>&nbsp;<%=bean.getDx2()%>&nbsp;<%=bean.getDx3()%></td>
                                                         <%
                                                             double lnTotal = ((BillingBillingManager.BillingItem) billItem.get(i)).getPrice();
-                                                            System.out.println(lnTotal);
                                                         %>
                                                         <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(lnTotal).replace('$', ' ')%></td>
                                                     </tr>
                                                     <%
      String num = String.valueOf(((BillingBillingManager.BillingItem) billItem.get(i)).getLineNo());
      List trans = dao.getBillHistory(num);
-     System.out.print(trans.size());
      for (Iterator iter = trans.iterator(); iter.hasNext();) {
          oscar.entities.BillHistory item = (oscar.entities.BillHistory) iter.next();
          int paymentType = Integer.parseInt(item.getPaymentTypeId());

@@ -176,10 +176,8 @@
 				if (request.getParameter("name") == null) {
 					msg = "Please type in a right name.";
 				} else {
-					//System.out.println("L1L");
 					String name = request.getParameter("name");
 					List ni = dbObj.getBillingFavouriteOne(name);
-					//System.out.println("dbObj.getBillingFavouriteOne(name):" + ni);
 					if (ni != null && ni.size() > 0) {
 						prop.setProperty("name", (String) ni.get(0));
 						String list1 = (String) ni.get(1);
@@ -363,7 +361,6 @@
 			<option selected="selected" value="">- choose one -</option>
 			<%//
 				List sL = dbObj.getBillingFavouriteList();
-				//System.out.println("s:" + sL.size());
 				for (int i = 0; i < sL.size(); i = i + 2) {
 					%>
 			<option value="<%=(String) sL.get(i)%>"><%=(String) sL.get(i)%></option>

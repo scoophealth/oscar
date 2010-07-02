@@ -1,5 +1,4 @@
 
-<%System.out.println("GET CALLED");%>
 <!--  
 /*
  * 

@@ -34,9 +34,6 @@
 			List lObj = bObj.getBillingClaimHeaderObj(request.getParameter("xml_billing_no"));
 			BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) lObj.get(0);
 			boolean bs = bObj.updateBillingClaimHeader(ch1Obj, request);
-			if(!bs) {
-				System.out.println("Something is wrong here 1!");
-			}
 
 			// update item objs
 			if(lObj.size() > 1) {
@@ -44,10 +41,6 @@
 				bs = bObj.updateBillingItem(lObj, request);
 			}
 			
-			if(!bs) {
-				System.out.println("Something is wrong here 2!");
-			}
-
 		%>
 <p>
 <h1>Successful Updation of a billing Record.</h1>

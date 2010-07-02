@@ -133,7 +133,6 @@ if(bPercS) {
 		}
 	}
 }
-//System.out.println(billing_pCode);
 
 int counter = 0;
 String numCode="";
@@ -915,14 +914,11 @@ if (xFlag.compareTo("1")==0) {
 		// reset
 		BigTotal = BigTotal.subtract(percentPremium);
 		BigTotal = BigTotal.subtract(xPercentPremium);
-		System.out.println("BigTotal:" + BigTotal);
 		// calc xUnit
 		xPercent = new BigDecimal(Double.parseDouble(xPerc)).setScale(4, BigDecimal.ROUND_HALF_UP);
 		otherunit = new BigDecimal(Double.parseDouble(xUnit)).setScale(2, BigDecimal.ROUND_HALF_UP);
-		System.out.println("xPercent:" + xPercent + ":" +otherunit);
 		xPercentPremium = pValue1PerUnit.multiply(otherunit).setScale(2, BigDecimal.ROUND_HALF_UP);
 		xPercentPremium = xPercent.multiply(pValue1PerUnit).setScale(2, BigDecimal.ROUND_HALF_UP);
-		System.out.println("xPercentPremium:" + xPercentPremium);
 
 		BigTotal = BigTotal.add(xPercentPremium);
 		BigTotal = BigTotal.add(percentPremium);

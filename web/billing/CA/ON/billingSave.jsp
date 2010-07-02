@@ -142,8 +142,6 @@ if (nBillNo > 0) {
 			billObj.updateDBRecord(sql);
     		break;
     	}
-    	//System.out.println(nBillNo + sql);
-		//recordAffected = apptMainBean.queryExecuteUpdate(param2,"save_bill_record");
 	}
 
 //    if (rowsAffected ==1) {

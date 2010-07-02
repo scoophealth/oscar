@@ -83,7 +83,6 @@
 			//			 get the current year's billing disk filenames
 			BillingReviewPrep prep = new BillingReviewPrep();
 			Vector mriList = (Vector) prep.getMRIList(thisyear + "/01/01 00:00:01", thisyear + "/12/31 23:59:59","'U'");
-			//System.out.println("a     aaaaaaaaaaaa");
 			%>
 <script language="JavaScript" type="text/JavaScript">
 <!--
@@ -190,7 +189,6 @@ obj.visibility=v; }
 			<%
 			for (int i = 0; i < providerStr.size(); i++) {
 				String temp[] = ((String) providerStr.get(i)).split("\\|");
-				//System.out.println(providerStr.get(i));
 			%>
 			<option value="<%=temp[0]%>"><%=temp[1]%>, <%=temp[2]%></option>
 			<%}
@@ -236,7 +234,6 @@ obj.visibility=v; }
 
 			int count = 0;
 			for(int i=0; i<mriList.size(); i++) {
-				//System.out.println(i+" : " + mriList.size() +  mriList.get(i));
 				BillingDiskNameData obj = (BillingDiskNameData) mriList.get(i);
 				oFile = obj.getOhipfilename();
 				pro_group = obj.getGroupno();
@@ -244,7 +241,6 @@ obj.visibility=v; }
 				String createdate = obj.getCreatedatetime();
 				Vector vecProviderOhipNo = obj.getProviderohipno();
 				Vector vecProviderNo = obj.getProviderno();
-				//System.out.println(i+" : " + vecProviderNo);
 				for(int j=0; j<vecProviderNo.size(); j++){
 					count++;
 					pro_ohip = (String)vecProviderOhipNo.get(j);

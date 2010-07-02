@@ -38,11 +38,6 @@
    String formName = request.getParameter("formName");
    String formElementCode = request.getParameter("formElementCode");
    String formElementPrice = request.getParameter("formElementPrice");      
-   //if ( formName == null || formElement == null){
-   //   formName = "";
-   //   formElement = "";
-   //}   
-   System.out.println("formElementCode "+formElementCode);
    String[] param =new String[1];
    param[0] = formElementCode;
 %>

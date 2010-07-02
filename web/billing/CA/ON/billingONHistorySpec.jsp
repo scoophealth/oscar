@@ -30,9 +30,7 @@
   String strToday = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.DATE);
   calendar.add(Calendar.DATE, Integer.parseInt(strDay)*(-1));
   String strStartDay = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.DATE);;
-  //System.out.println(strToday + "|"+ strStartDay);
 
-//  String dateRange = " and billing_date>='" + strStartDay + "' and billing_date <='" + strToday + "'";
   DBPreparedHandlerParam[] pDateRange= new DBPreparedHandlerParam[2];
   pDateRange[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(strStartDay));
   pDateRange[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(strToday));

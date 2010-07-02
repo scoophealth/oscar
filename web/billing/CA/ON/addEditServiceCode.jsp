@@ -71,7 +71,6 @@
                             sql += " where billingservice_no = " + billingservice_no;
                         }
 	
-			System.out.println(sql);
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
 				String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
 				boolean bAdd = true;
@@ -165,7 +164,6 @@
 		String	sql   = "select * from billingservice where service_code='" + serviceCode + "'  order by billingservice_date desc";
 		ResultSet rs = dbObj.searchDBRecord(sql);
                 String tmp;
-System.out.println(sql);
                 int count = 0;
                 
 		while (rs.next()) {
@@ -188,7 +186,6 @@ System.out.println(sql);
                         action2 = "add" + serviceCode;
 
 		    String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "' and effective_date = '" + prop.getProperty("billingservice_date") + "'";;
-System.out.println(sqlMinMax);
 			ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
 			if (rs2.next()) {
                             prop.setProperty("min", rs2.getString("min"));
@@ -212,7 +209,6 @@ System.out.println(sqlMinMax);
       ResultSet rs = dbObj.searchDBRecord(sql);
       
       String tmp;
-System.out.println(sql);
     int count = 0;
 
     while (rs.next()) {
@@ -235,7 +231,7 @@ System.out.println(sql);
             action2 = "add" + serviceCode;
 
         String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "' and effective_date = '" + prop.getProperty("billingservice_date") + "'";
-System.out.println(sqlMinMax);
+
             ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
             if (rs2.next()) {
                 prop.setProperty("min", rs2.getString("min"));

@@ -50,7 +50,6 @@ String reportAction=request.getParameter("reportAction")==null?"":request.getPar
 
 if (request.getParameter("submit") != null && request.getParameter("submit").equals("Delete")) {
 	String	sql   = "delete from clinic_location where clinic_location_no='" + request.getParameter("location_no") + "'";
-	System.out.println(sql);
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 	if(!dbObj.updateDBRecord(sql)) {
 		out.println("The action is failed!!!");

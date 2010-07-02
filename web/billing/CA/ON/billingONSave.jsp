@@ -75,13 +75,13 @@
 					self.location.href="<%=request.getParameter("url_back")%>";
 				    </script>
 <% }
-				if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { System.out.println("option a");%>
+				if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
 <a href="billingON3rdInv.jsp?billingNo=<%=billingNo%>"> Print
 invoice</a>
 <% } %>
 </p>
 
-<% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { System.out.println("option b");%>
+<% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
 <script LANGUAGE="JavaScript">
                                             
                                         <% 

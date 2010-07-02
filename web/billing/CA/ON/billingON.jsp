@@ -361,7 +361,6 @@
                         }
 			// create msg
 			msg += errorMsg + warningMsg;
-			//System.out.println(" * ******************************" + sql);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -833,7 +832,6 @@ function changeCodeDesc() {
 				<option selected="selected" value="">- SUPER CODES -</option>
 <% //
 			    List sL = tdbObj.getBillingFavouriteList();
-			    System.out.println("s:" + sL.size());
 			    for (int i = 0; i < sL.size(); i = i + 2) { %>
 				<option value="<%=(String) sL.get(i+1)%>"><%=(String) sL.get(i)%></option>
 <% } %>
@@ -1375,7 +1373,6 @@ function changeSite(sel) {
 			for (int i = 0; i < aL.size(); i = i + 2) {
 				BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
 				BillingItemData iobj = (BillingItemData) aL.get(i + 1);
-				//System.out.println(i + obj.getBilling_date());
 
 				%>
 			<tr <%=i%4==0? "class=\"myGreen\"":""%> align="center">
@@ -1405,12 +1402,9 @@ Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :fa
 		String ret = "";
 		if (paraName != null && !"".equals(paraName)) {
 			ret = paraName;
-                        System.out.println("HERE 1 "+ret);
 		} else if (vec != null && vec.size() > 0 && vec.get(0) != null) {
 			ret = ((Properties) vec.get(0)).getProperty(propName, "");
-                        System.out.println("HERE 2 "+propName+" "+ret);
 		}   
-		//System.out.println("paraName:" + paraName + " propName:" + propName + " :" + ret);
 		return ret;
 	}
 

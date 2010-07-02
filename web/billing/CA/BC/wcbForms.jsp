@@ -34,7 +34,6 @@
 <%String demographicNo = request.getParameter("demographicNo");
   String wcbid = request.getParameter("wcbid");
   String billingcode = request.getParameter("billingcode");
-  System.out.println("WHAT IS FORM "+request.getAttribute("FormMissing")+"  ---  "+request.getAttribute("WCBFormId")); %>
 <p>
                                                 
     WCB Forms available to attach. <a  onclick="popup(700,960,'viewformwcb.do?demographic_no=<%=demographicNo%>&formId=0&provNo=999998&parentAjaxId=forms&hideToBill=true','<%=demographicNo%>NEWWCB'); return false;"  href="javascript:void(0);" >New WCB Form</a> <br>
@@ -55,7 +54,6 @@
             //WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             //BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
             List<WCB> l = billingmasterDAO.getWCBForms(demographicNo);
-            System.out.println(l);
             for (WCB wcb : l) {
             request.setAttribute("wcb",(Object) wcb);
             %>

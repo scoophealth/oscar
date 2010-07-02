@@ -81,7 +81,8 @@ boolean adminAccess = false;
     <% adminAccess = true; %>
 </security:oscarSec>
 
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <html:base/>
 <title>Invoice List</title>
@@ -494,7 +495,6 @@ if("true".equals(readonly)){
   </tr>
 </table>
 <% String billTypes = request.getParameter("billTypes");
-System.out.println("billTypes" + billTypes);
 if (billTypes == null){
     billTypes = MSPReconcile.REJECTED;
 }
@@ -559,7 +559,6 @@ billTypes = "%";
 	<th align="center" class="bHeaderData" title="TYPE" >TYPE </th>
 	<%
 		if(!"true".equals(readonly)){
-		System.out.println("READ:"+readonly);
 	%>
     <th align="center" class="bHeaderData" title="PATIENT" >PATIENT</th>
 	<%}%>
@@ -591,7 +590,6 @@ billTypes = "%";
     boolean bodd = true;
     boolean incorrectVal = false;
     boolean paidinCorrectval = false;
-    System.out.println(list.size()+" in this billing list");
 	String currentBillingNo = "";
     for (int i = 0; i < list.size(); i++){
 
@@ -607,7 +605,7 @@ billTypes = "%";
       try{
         valueToAdd = new BigDecimal(b.amount).setScale(2, BigDecimal.ROUND_HALF_UP);
       }catch(Exception badValueException){
-        System.out.println(" Error calculating value for "+b.billMasterNo);
+        MiscUtils.getLogger().error(" Error calculating value for "+b.billMasterNo);
         incorrectVal = true;
       }
       total = total.add(valueToAdd);
@@ -616,7 +614,7 @@ billTypes = "%";
       try{
         valueToPaidAdd = new BigDecimal(pAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
       }catch(Exception badValueException){
-        System.out.println(" Error calculating paid value for "+b.billMasterNo);
+		MiscUtils.getLogger().error(" Error calculating paid value for "+b.billMasterNo);
         paidinCorrectval = true;
       }
       paidTotal = paidTotal.add(valueToPaidAdd);

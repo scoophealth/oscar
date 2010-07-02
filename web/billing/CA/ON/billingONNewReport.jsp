@@ -82,7 +82,6 @@ if("unbilled".equals(action)) {
     sql = "select * from appointment where provider_no='" + providerview + "' and appointment_date >='" + xml_vdate   
             + "' and appointment_date<='" + xml_appointment_date + "' and (status='P' or status='H' or status='HS' or status='PV' or status='PS' or status='E' or status='ES' or status='EV')" 
             + " and demographic_no != 0 order by appointment_date , start_time ";
-    System.out.println(sql);
     rs = dbObj.searchDBRecord(sql);
     while (rs.next()) {
     	if (bMultisites) {
@@ -118,7 +117,6 @@ if("billed".equals(action)) {
     sql = "select * from billing_on_cheader1 where provider_no='" + providerview + "' and billing_date >='" + xml_vdate 
             + "' and billing_date<='" + xml_appointment_date + "' and (status<>'D' and status<>'S' and status<>'B')" 
             + " order by billing_date , billing_time ";
-    System.out.println(sql);
     rs = dbObj.searchDBRecord(sql);
     while (rs.next()) {
     	if (bMultisites) {
@@ -180,7 +178,6 @@ if("paid".equals(action)) {
     sql = "select billing_no,total from billing where provider_no='" + providerview 
     + "' and billing_date>='" + xml_vdate + "' and billing_date<='" + xml_appointment_date 
     + "' and status ='S' order by billing_date, billing_time";
-    System.out.println(sql);
     
     // change 'S' to 'O' for testing
     
@@ -203,7 +200,6 @@ if("paid".equals(action)) {
     
     sql = "select billing_no, amountclaim, amountpay, hin, service_date from radetail where billing_no in ("
             + tempStr + ") and raheader_no !=0 order by billing_no, radetail_no";
-    System.out.println(sql);
     rs = dbObj.searchDBRecord(sql);
     String sAmountclaim = "", sAmountpay = "", hin = "";
     int nNo = 0;
@@ -215,8 +211,6 @@ if("paid".equals(action)) {
             nNo++;
             sAmountclaim = rs.getString("amountclaim");
 			sAmountpay = rs.getString("amountpay");
-		    //System.out.println(sAmountpay + " :sAmountclaim: " + sAmountclaim);
-			//hin = rs.getString("hin");
 			String strT = "<a href=# onClick='popupPage(700,720, \"../../../billing/CA/BC/billingView.do?billing_no="
 		        + rs.getString("billing_no") + "&dboperation=search_bill&hotclick=0\"); return false;' >" 
 		        + rs.getString("billing_no") + "</a>";
@@ -235,7 +229,6 @@ if("paid".equals(action)) {
             //sAmountclaim = rs.getString("amountclaim");
 			//sAmountpay = rs.getString("amountpay");
 			float fAmountclaim = Float.parseFloat(sAmountclaim);
-		    //System.out.println(sAmountclaim + " :fAmountclaim: " + fAmountclaim);
 			fAmountclaim = fAmountclaim + Float.parseFloat(rs.getString("amountclaim"));
 			sAmountclaim = "" + Math.round(fAmountclaim*100)/100.00;
 			float fAmountpay = Float.parseFloat(sAmountpay);
@@ -283,7 +276,6 @@ if("unpaid".equals(action)) {
     sql = "select * from billing where provider_no='" + providerview + "' and billing_date >='" + xml_vdate 
     + "' and billing_date<='" + xml_appointment_date + "' and (status<>'D' and status<>'S')" 
     + " order by billing_date , billing_time ";
-	System.out.println(sql);
     int nNo = 0;
 	rs = dbObj.searchDBRecord(sql);
 	while (rs.next()) {

@@ -69,9 +69,7 @@ boolean dupServiceCode = false;
 		vecServiceParam = prepObj.getRequestFormCodeVec(request, "xml_", "1", "1");
 	}
 	
-	//System.out.println(vecServiceParam[0] + ":" + vecServiceParam[1] + vecServiceParam[2] + " :::" + vecServiceParam.length);
 	Vector[] vecServiceParam0 = prepObj.getRequestCodeVec(request, "serviceCode", "serviceUnit", "serviceAt", BillingDataHlp.FIELD_SERVICE_NUM);
-	//System.out.println(vecServiceParam0[0] +":"+vecServiceParam0[1] +" :: :" + vecServiceParam0.length);
 	vecServiceParam[0].addAll(vecServiceParam0[0]);
 	vecServiceParam[1].addAll(vecServiceParam0[1]);
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
@@ -225,8 +223,6 @@ boolean dupServiceCode = false;
 
 			// create msg
 			String wrongMsg = errorMsg + warningMsg;
-			//msg += errorMsg + warningMsg;
-			//System.out.println(" * ******************************" + sql);
 
 			%>
 
@@ -485,7 +481,6 @@ window.onload=function(){
     
 	if (!serviceCodeValue.equals("")) {
 	    sql = "select distinct(service_code) from billingservice where  service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "' and termination_date > '" + billReferalDate + "'";
-	   System.out.println(sql);
             rs = dbObj.searchDBRecord(sql);
 	    if (!rs.next()) {
 		codeValid = false;
@@ -539,12 +534,7 @@ window.onload=function(){
 				Vector vecPercMin = new Vector();
 				Vector vecPercMax = new Vector();
 				for(int i=0; i<vecServiceParam[0].size(); i++) { 
-					//System.out.println("big end: " + vecServiceParam[0].size());
 					String codeName = (String)vecServiceParam[0].get(i);
-					//System.out.println("big end: " + codeName);
-					//String codeItemName = (String) ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeName();
-					//System.out.println("codeItemName end: " + (String) ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeName());
-					//String PercItemName = (String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName();
 					if(nCode<vecCodeItem.size() && codeName.equals((String) ((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeName())) {
 						n++;
 						String codeUnit = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
@@ -589,7 +579,6 @@ window.onload=function(){
                         }                        
 						nCode++;
 					} 
-					//System.out.println("vecPercCodeItem end: " + codeName);
 					else if(nPerc<vecPercCodeItem.size() && codeName.equals((String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
 			if (codeValid) {
                                             %>
@@ -632,7 +621,6 @@ window.onload=function(){
 						vecPercMin.add(nMin);
 						vecPercMax.add(nMax);
 					}
-					//System.out.println(i + "end: " + nCode);
 				}
                         if (codeValid) {
 			%>
@@ -746,8 +734,6 @@ function onCheckMaster() {
             OscarProperties props = OscarProperties.getInstance();
             boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
             if(bMoreAddr) {
-            	//String pNo = request.getParameter("xml_provider")!=null?request.getParameter("xml_provider").substring(0,request.getParameter("xml_provider").indexOf("|")):"";
-            	//System.out.println(";;; " + request.getParameter("service_date"));           	
             	tempLoc = request.getParameter("siteId").trim();
             }
 		} else {

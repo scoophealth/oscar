@@ -112,7 +112,6 @@ while ((nextline=input.readLine())!=null){
 				account = String.valueOf(accountno);
 			}
 			// add a bean
-			//System.out.println(location + " | " + account);
 			if (location.equals(localClinicNo)) {
 				billingLocalInvNoBean.setProperty(account, localClinicNo);
 			}
@@ -623,7 +622,6 @@ param2[1] = raNo;
 
 recordAffected = apptMainBean.queryExecuteUpdate(param2,"update_rahd_content");
 
-if (recordAffected != 1) System.out.println("genRASummary.jsp: update_rahd_content - wrong!");
 apptMainBean.closePstmtConn();
 
 file.close();
@@ -645,7 +643,6 @@ boolean wasBilledLocal(String account,String provider,String billing_date, Strin
    boolean wasbilledlocal = false; 
    java.util.Date date = UtilDateUtilities.getDateFromString(billing_date, "yyyyMMdd");
    String sql = "select count(*) as cou from billing b, billingdetail bd where b.billing_no= '"+account+"' and b.billing_date = '"+UtilDateUtilities.DateToString(date)+"' and b.provider_ohip_no = '"+provider+"' and bd.billing_no = b.billing_no  and bd.service_code = '"+code+"'";
-   System.out.println(sql);
    try{
        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA); 
        ResultSet rs  = db.GetSQL(sql);

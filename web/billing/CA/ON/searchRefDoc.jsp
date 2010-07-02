@@ -73,7 +73,6 @@
                 
             iRow = 0;
           }
-		// System.out.println(sql);
 	  while (rs.next()) {
 	    iRow++;
 	    if(iRow>Integer.parseInt(strLimit2)) break;

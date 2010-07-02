@@ -58,7 +58,7 @@ if (dateBegin.compareTo("") == 0){
 }else{
 	dateRange = " and billing_date >='" + dateBegin + "' and billing_date <='" + dateEnd + "'";
 }
-System.out.println(request.getParameter("provider"));
+
 ResultSet rslocal = apptMainBean.queryResults(request.getParameter("provider"), "search_provider_ohip_dt");
 while(rslocal.next()){
 	proOHIP = rslocal.getString("ohip_no"); 

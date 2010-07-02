@@ -79,7 +79,6 @@
 
 				} else if (request.getParameter("action").startsWith("add")) {
 					// insert into the service code
-					System.out.println("go 222" );
 					String company_name = request.getParameter("company_name");
 					if (company_name.equals(request.getParameter("action").substring("add".length()))) {
 						Properties val = new Properties();
@@ -124,10 +123,8 @@
 				if (request.getParameter("company_name") == null) {
 					msg = "Please type in a right name.";
 				} else {
-					//System.out.println("L1L");
 					String company_name = request.getParameter("company_name");
 					Properties ni = dbObj.get3rdAddrProp(company_name);
-					System.out.println("dbObj.getBillingFavouriteOne(name):" + ni);
 					if (!ni.getProperty("company_name", "").equals("")) {
 						prop = ni; //.setProperty("company_name", company_name);
 						int n = 0;
@@ -143,8 +140,6 @@
 			}
 			
 			
-%>
-<% System.out.println("go 1" ); 
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -282,7 +277,6 @@
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"
 	class="myYellow">
 	<form method="post" name="baseur0" action="onAddEdit3rdAddr.jsp">
-	<% System.out.println("go 2" ); %>
 	
 	<tr>
 		<td align="right" width="50%"><select name="company_name"
@@ -290,7 +284,6 @@
 			<option selected="selected" value="">- choose one -</option>
 			<%//
 				List sL = dbObj.get3rdAddrNameList();
-				//System.out.println("s:" + sL.size());
 				for (int i = 0; i < sL.size(); i++) {
 					Properties propT = (Properties) sL.get(i);
 					%>

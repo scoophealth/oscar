@@ -96,7 +96,6 @@ List pList = isTeamBillingOnly
 		: (Vector)(new JdbcBillingPageUtil()).getCurProviderStr();
 
 BillingStatusPrep sObj = new BillingStatusPrep();
-System.out.println(" statusType "+strBillType);
 List bList = null;
 if(serviceCode == null && dx.length()<2 && visitType.length()<2) {
 	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new Vector();
@@ -108,16 +107,8 @@ if(serviceCode == null && dx.length()<2 && visitType.length()<2) {
 }
 
 
-//ProviderData pd = new ProviderData();
-//ArrayList pList = pd.getProviderList();
-//BillingData billingData = new BillingData();
-//BillingStatusData billingData = new BillingStatusData();
 RAData raData = new RAData();
 
-System.out.println(" statusType "+statusType+" providerNo "+providerNo+" startDate "+startDate+" endDate "+endDate+" demo "+demoNo);
-
-//ArrayList bList = billingData.getBills( statusType,  providerNo, startDate,  endDate,  demoNo);
-//ArrayList bList = billingData.getBills( statusType,  providerNo, startDate,  endDate,  demoNo);
 
 BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP); 
 BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP); 
@@ -598,7 +589,6 @@ if(statusType.equals("_")) { %>
        <% //
        String invoiceNo = ""; 
        boolean nC = false;
-       //System.out.println("total:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
        for (int i = 0 ; i < bList.size(); i++) { 
     	   BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) bList.get(i);
@@ -614,7 +604,6 @@ if(statusType.equals("_")) { %>
     		   }
     	   }
     	   
-           System.out.println( ch1Obj.getBilling_date().replaceAll("\\D", "") + "total::::::::::::::::::::::::::::::::::::::::::::" + ch1Obj.getProvider_ohip_no());
            String ohip_no = ch1Obj.getProvider_ohip_no();
 	       ArrayList raList = raData.getRADataIntern(ch1Obj.getId(), ch1Obj.getBilling_date().replaceAll("\\D", ""), ohip_no);
 	       boolean incorrectVal = false;
@@ -626,7 +615,6 @@ if(statusType.equals("_")) { %>
 	          incorrectVal = true;
 	       }
 	       total = total.add(valueToAdd);
-	       //System.out.println("total:" + total);
 	       String amountPaid = "0.00";
 	       String errorCode = "";
 	       if(serviceCode.equals("-") && raList.size() > 0){
@@ -639,10 +627,8 @@ if(statusType.equals("_")) { %>
 	       // 3rd party billing
 	       if(ch1Obj.getPay_program().matches("PAT|OCF|ODS|CPP|STD|IFH")) {
 	    	   amountPaid = ch1Obj.getPaid();
-		       //System.out.println("amountPaid:" + amountPaid);
 	    	   amountPaid = (amountPaid==null||amountPaid.equals(""))? "0.00" : amountPaid;
 	       }
-	       //System.out.println("paidTotal:" + paidTotal + ":amountPaid:" + amountPaid + ":");
 	       BigDecimal bTemp = (new BigDecimal(amountPaid.trim())).setScale(2,BigDecimal.ROUND_HALF_UP);
 	       paidTotal = paidTotal.add(bTemp);
 	       

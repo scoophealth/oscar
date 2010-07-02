@@ -135,8 +135,6 @@
         balancefwd = rsdemo.getString("t_balancefwd");
         chequeamt= rsdemo.getString("t_cheque");
         newbalance = rsdemo.getString("t_newbalance");
-        System.out.println(raNo+ " " + amtbilled);
-        //total = rsdemo.getString("totalamount");
    %>
 
      <tr>

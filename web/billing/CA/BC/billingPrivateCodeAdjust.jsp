@@ -86,7 +86,6 @@
 		<%
 
       String sortOrder = request.getParameter("sortOrder")!=null?request.getParameter("sortOrder"):"";
-      System.out.println("sortOrder=" + sortOrder);
         BillingCodeData bcds = new BillingCodeData();
         ArrayList list = (ArrayList) bcds.findBillingCodesByCode("A",sortOrder.equals("desc")?1:0);
         if (list != null) {

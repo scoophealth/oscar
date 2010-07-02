@@ -114,7 +114,6 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 	</tr>
 	<% 
           Misc misc = new Misc();
-          System.out.println(officeNo);
               String[] param = new String[1];          
               param[0] = misc.forwardZero(officeNo,7);
               

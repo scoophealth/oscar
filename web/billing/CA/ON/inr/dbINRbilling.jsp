@@ -63,7 +63,6 @@ userlastname = (String) session.getAttribute("userlastname");
 	</tr>
 </table>
 <%
-//System.out.println(subject+content); 
 String[] param =new String[15]; 
 param[0]=request.getParameter("demoid");
 param[1]=request.getParameter("demo_name");

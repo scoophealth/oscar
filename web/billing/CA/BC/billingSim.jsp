@@ -121,7 +121,6 @@ function checkData() {
 
 <%
 String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
-System.out.println("providerview "+providerview);
 String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
 String xml_appointment_date = request.getParameter("xml_appointment_date")==null? nowDate : request.getParameter("xml_appointment_date");
 %>

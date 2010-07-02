@@ -64,10 +64,6 @@ while(rs.next()){
 	billingProvider.add(dbObj.getString(rs,"p.last_name") +","+ dbObj.getString(rs,"p.first_name"));
 }
 
-//System.out.println("size of result: "+ billingProvider.size());
-
-//OscarProperties props = OscarProperties.getInstance();
-//System.out.println("OscarProperties: "+ oscarVariables.getProperty("isNewONbilling", ""));
 String actionPage = "dbAddFluBilling.jsp";
 if(oscarVariables.getProperty("isNewONbilling", "").equals("true")) {
 	actionPage = "onDbAddFluBilling.jsp";

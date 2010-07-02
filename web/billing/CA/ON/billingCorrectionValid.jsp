@@ -172,7 +172,7 @@ try {
 			}
 			
 			if (value.compareTo(".00") ==0 ){
-                            System.out.println("scode: " + scode + " value" + value + " percentage " + percentage);
+                            
 				if (scode.compareTo("E411A") == 0 ){
 					eCode = scode;
 					eDesc = desc;

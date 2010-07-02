@@ -61,8 +61,6 @@ String startDate  = request.getParameter("xml_vdate");
 String endDate    = request.getParameter("xml_appointment_date");
 String demoNo     = request.getParameter("demographicNo");
 
-System.out.println(" statusType "+statusType+" providerNo "+providerNo+" startDate "+startDate+" endDate "+endDate+" demo "+demoNo);
-
 if ( statusType == null ) { statusType = "O"; } 
 if ( startDate == null ) { startDate = ""; } 
 if ( endDate == null ) { endDate = ""; } 
@@ -79,7 +77,8 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -204,27 +203,22 @@ Demographic:<input type="text" name="demographicNo" size="5"
 
 
 	<% 
-       System.out.println(" Error calculating value for bList.size(): "+bList.size()); 
 
        for (int i = 0 ; i < bList.size(); i++) { 
        Hashtable h = (Hashtable) bList.get(i);    
        ArrayList raList = raData.getRAData((String)h.get("billing_no"));
        boolean incorrectVal = false;
        
-       BigDecimal valueToAdd = new BigDecimal("0.00");
-       System.out.println(" Error calculating value for billing_no: "+(String)h.get("billing_no")); 
+       BigDecimal valueToAdd = new BigDecimal("0.00"); 
        try{
           valueToAdd = new BigDecimal(""+h.get("total")).setScale(2, BigDecimal.ROUND_HALF_UP);  
        }catch(Exception badValueException){ 
-          System.out.println(" Error calculating value for "+h.get("billing_no")); 
+          MiscUtils.getLogger().error(" Error calculating value for "+h.get("billing_no")); 
           incorrectVal = true;
        }
        total = total.add(valueToAdd);
-       System.out.println(" Er ror calculating value for bList.size(): "+raList.size()); 
        String amountPaid = raData.getAmountPaid(raList);
-       System.out.println(" E rr or calculating value for bList.size(): "+bList.size()); 
        paidTotal.add(new BigDecimal(amountPaid).setScale(2,BigDecimal.ROUND_HALF_UP));
-       System.out.println(" E rr or calculating value for bList.size(): "+bList.size()); 
        
        %>
 	<tr>

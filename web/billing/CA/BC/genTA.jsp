@@ -493,7 +493,6 @@ while ((nextline=input.readLine())!=null){
            param04[52] =  t_insurercode ; //(2),
            param04[53] =  t_filler ; //(87),
            int rowsAffected04 = apptMainBean.queryExecuteUpdate(param04,"save_tadt");
-            System.out.println("held "+MSPReconcile.HELD+" office no "+Integer.toString(Integer.parseInt(t_officeno)));
            mspReconcile.updateStat(MSPReconcile.HELD,Integer.toString(Integer.parseInt(t_officeno)));
         }     
    } else if (header.compareTo("S23") == 0||header.compareTo("S24")==0){

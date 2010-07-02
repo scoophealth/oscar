@@ -586,7 +586,6 @@ param2[1] = raNo;
 
 recordAffected = apptMainBean.queryExecuteUpdate(param2,"update_rahd_content");
 
-if (recordAffected != 1) System.out.println("genONRASummary.jsp: update_rahd_content - wrong!");
 apptMainBean.closePstmtConn();
 
 %>
