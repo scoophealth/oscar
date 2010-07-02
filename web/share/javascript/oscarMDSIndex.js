@@ -131,11 +131,22 @@ function submitFile(){
     }
 }
 
+
+function isRowShown(rowid){
+    if($(rowid).style.display=='none')
+        return false;
+    else
+        return true;
+}
 function checkAll(formId){
    var f = document.getElementById(formId);
    var val = f.checkA.checked;
    for (i =0; i < f.flaggedLabs.length; i++){
-      f.flaggedLabs[i].checked = val;
+       var rowid=getRowIdFromDocLabId(f.flaggedLabs[i].value);
+      if(isRowShown(rowid)){//if row is shown
+          //oscarLog(f.flaggedLabs[i].value);
+        f.flaggedLabs[i].checked = val;
+      }
    }
 }
 
@@ -772,23 +783,39 @@ else if(ab_normal=='abnormal')
 
                             function getPatientIdFromDocLabId(docLabId){
                                 var pna=new RegExp("-1=\\[.*?"+docLabId+".*?\\]");
-                                var p=new RegExp("[{\\s]\\d+=\\[.*?"+docLabId+".*?\\]",'g');
+                                var p=new RegExp("({|\\s)(\\d+|-1)=\\[[^=]*?"+docLabId+",.*?\\]",'g');
                                 var text=patientDocs;
                                 var rna=text.match(pna);
-                                if(rna!=null && rna.length>0){
-                                    return '-1';
-                                }else{
-                                        var r=text.match(p);
-                                        if(r!=null && r.length>0){
-                                            var s=r[0];
-                                            s=(s.split("="))[0];
-                                            s=s.replace('{','');
-                                            s=s.replace('}','');
-
-                                            return s;
+                                //oscarLog('in getpatientidfromdoclabid, '+docLabId+'=='+text+'=='+p+'rna='+rna+'pna='+pna);
+                             //   if(rna!=null && rna.length>0){
+                              //      return '-1';
+                              //  }else{
+                                    text=text.replace('{','');
+                                    text=text.replace('}','');
+                                    var arr=text.split('],');
+                                    for(var i=0;i<arr.length;i++){
+                                        var s=arr[i];
+                                        s=s.replace(/\s/g,'');
+                                        //oscarLog('s='+s);
+                                        var sArr=s.split('=');
+                                        var pid=sArr[0];
+                                        var doclabs=sArr[1];
+                                        doclabs=doclabs.replace('[','');
+                                        doclabs=doclabs.replace(']','');
+                                   if(doclabs==docLabId){
+                                            return pid;
+                                   }
+                                   else{
+                                        var doclabArr=doclabs.split(',');
+                                        for(var j=0;j<doclabArr.length;j++){
+                                            var doclabid=doclabArr[j];
+                                            if(doclabid==docLabId)
+                                                return pid;
                                         }
-                                        return null;
-                                }
+                                    }
+                                    }
+                              //  }
+                              alert("didn't find patient id for doc/lab id "+docLabId);
                             }
                               function getLabDocFromPatientId(patientId){//return array of doc ids and lab ids from patient id.
                                 var pattern=new RegExp(patientId+"=\\[.*?\\]","g");
@@ -851,6 +878,8 @@ else if(ab_normal=='abnormal')
                                     return '';
                             }
 function checkSelected() {
+    
+    //oscarLog('in checkSelected()');
     aBoxIsChecked = false;
     if (document.reassignForm.flaggedLabs.length == undefined) {
         if (document.reassignForm.flaggedLabs.checked == true) {
@@ -859,6 +888,7 @@ function checkSelected() {
     } else {
         for (i=0; i < document.reassignForm.flaggedLabs.length; i++) {
             if (document.reassignForm.flaggedLabs[i].checked == true) {
+                //oscarLog(document.reassignForm.flaggedLabs[i].value);
                 aBoxIsChecked = true;
             }
         }
@@ -1077,7 +1107,8 @@ oscarLog("before---typeDocLab ="+typeDocLab);
     r2=new RegExp(p2);
     r3=new RegExp(p3);
     r4=new RegExp(p4);
-    //oscarLog(r1+'--'+normals);oscarLog(normals.search(r1));
+    //oscarLog(r1+'--'+normals);
+    //oscarLog(normals.search(r1));
     if(normals.search(r1)>-1){
         firstindex=normals.search(r1)+1;
         match=normals.match(r1)[0];
@@ -1105,7 +1136,8 @@ oscarLog("before---typeDocLab ="+typeDocLab);
     else if(abnormals.search(r1)>-1){
         firstindex=abnormals.search(r1)+1;
         match=abnormals.match(r1)[0];
-        lastindex=firstindex+match.length-1;oscarLog(firstindex+'--'+lastindex);
+        lastindex=firstindex+match.length-1;
+        //oscarLog(firstindex+'--'+lastindex);
         abnormals=cutText(abnormals,firstindex,lastindex);
     }
     else if(abnormals.search(r2)>-1){
@@ -1223,17 +1255,23 @@ function updateSideNav(doclabid){
     }
 }
 
+function getRowIdFromDocLabId(doclabid){
+    var rowid;
+    for(var i=0;i<doclabid_seq.length;i++){
+            if(doclabid==doclabid_seq[i]){
+                rowid='row'+i;
+                break;
+            }
+        }
+    return rowid;
+}
+
 function hideRowUsingId(doclabid){
     if(doclabid!=null ){
         var rowid;
         doclabid=doclabid.replace(' ','');
-        for(var i=0;i<doclabid_seq.length;i++){
-            if(doclabid==doclabid_seq[i]){
-                rowid='row'+i;
-                $(rowid).remove();
-                break;
-            }
-        }
+        rowid=getRowIdFromDocLabId(doclabid);
+        $(rowid).remove();
     }
 }
 function resetCurrentFirstDocLab(){
