@@ -98,7 +98,7 @@ public class ScratchData {
         String scratch_id = null;
         try {
             //Get Provider from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            //DBHandler db = new DBHandler(DBHandler.OSCAR_DATA); //unused variable db
              String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values (?,?,now())";
              Connection conn = DBHandler.getConnection();
              PreparedStatement pstat = conn.prepareStatement(sql);
