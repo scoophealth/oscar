@@ -30,7 +30,7 @@ public class IfTimeToExchange extends TagSupport {
     public int doStartTag() {
         Date scheduledExchange = (Date) pageContext.getSession().getAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME);
         Date now = new Date();
-        int intervalMinutes = Integer.parseInt(OscarProperties.getInstance().getProperty(PHRService.OSCAR_PROPS_EXCHANGE_INTERVAL, "5"));
+       
         log.debug("Entering IfTimeToExchange tag");
         log.debug("ScheduledExchange: " + scheduledExchange);
         log.debug("PHRAuth: " + pageContext.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH));

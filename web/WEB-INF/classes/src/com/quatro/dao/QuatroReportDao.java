@@ -68,7 +68,6 @@ public class QuatroReportDao extends HibernateDaoSupport {
 
 	  public List GetReportGroupList(String providerNo)
 	  {
-          ArrayList paramList = new ArrayList();
 		  String sSQL="from ReportGroupValue s  order by s.reportGroupDesc";
 	      return  getHibernateTemplate().find(sSQL);
 	  }
