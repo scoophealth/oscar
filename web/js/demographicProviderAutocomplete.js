@@ -9,7 +9,7 @@ var highlightMatch = function(full, snippet, matchindex) {
     full.substring(matchindex + snippet.length);
 };
 var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
-    console.log(oResultData);
+    //console.log(oResultData);
     var query = sQuery.toLowerCase(),
     fname = oResultData[0],
     dob = oResultData[1],
@@ -29,7 +29,7 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
 };
 
 var resultFormatter = function(oResultData, sQuery, sResultMatch) {
-    console.log(oResultData);
+   //console.log(oResultData);
     var query = sQuery.toLowerCase(),
     fname = oResultData[1],
     lname = oResultData[2],
@@ -57,7 +57,7 @@ var resultFormatter = function(oResultData, sQuery, sResultMatch) {
 
 };
 var resultFormatter3 = function(oResultData, sQuery, sResultMatch) {
-    console.log(oResultData);
+    //console.log(oResultData);
     var query = sQuery.toLowerCase(),
     fname = oResultData[1],
     lname = oResultData[2],
