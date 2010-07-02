@@ -183,7 +183,7 @@ public class ProgramDao extends HibernateDaoSupport {
     }
 
     public Integer getProgramIdByProgramName(String programName) {
-    	Integer id = null;
+    	
     	if(programName == null) return null;
     	
     	List<Program> programs = getHibernateTemplate().find("FROM Program p WHERE p.name = ? ORDER BY p.id ", programName);

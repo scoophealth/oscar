@@ -426,7 +426,7 @@ public class TicklerAction extends DispatchAction {
     public ActionForward update_status(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("update_status");
         char status = request.getParameter("status").charAt(0);
-        String provider = request.getParameter("provider");
+        
         String id = request.getParameter("id");
 
         switch (status) {
@@ -446,7 +446,7 @@ public class TicklerAction extends DispatchAction {
     public boolean isModuleLoaded(HttpServletRequest request, String moduleName) {
         String propFile = request.getContextPath().substring(1) + ".properties";
         String sep = System.getProperty("file.separator");
-        String propFileName = System.getProperty("user.home") + sep + propFile;
+        
         OscarProperties proper = OscarProperties.getInstance();
         // proper.loader(propFileName);
 
