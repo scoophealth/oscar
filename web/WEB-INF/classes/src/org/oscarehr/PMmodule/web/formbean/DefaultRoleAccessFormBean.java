@@ -23,7 +23,7 @@
 package org.oscarehr.PMmodule.web.formbean;
 
 public class DefaultRoleAccessFormBean {
-	private int id;
+	
 	private int roleId;
 	private int accessTypeId;
 	

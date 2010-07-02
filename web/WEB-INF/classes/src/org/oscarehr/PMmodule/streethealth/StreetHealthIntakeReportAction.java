@@ -754,7 +754,7 @@ public class StreetHealthIntakeReportAction extends BaseAction {
 	            int numDaysHospitalized=0;
 	            int numPsychHospitalizations=0;
 	            int numDeclined = 0;
-	            int numNotBeenHosp = 0;
+	            
 	            
 	            for(HospitalizationBean hospitalization:hospitalizations) {
 	            	try {
