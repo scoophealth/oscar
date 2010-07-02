@@ -54,7 +54,7 @@ public class InfirmAction extends BaseAction
 	{
 		logger.debug("====> inside showProgram action.");
 
-		String clientStatusId = request.getParameter("infirmaryView_clientStatusId");
+		
 
 		HttpSession se = request.getSession();	
 		se.setAttribute("infirmaryView_initflag", "true");
