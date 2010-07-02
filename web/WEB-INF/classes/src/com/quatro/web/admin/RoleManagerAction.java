@@ -199,8 +199,7 @@ public class RoleManagerAction extends BaseAdminAction {
 			super.getAccess(request, KeyConstants.FUN_ADMIN_ROLE,KeyConstants.ACCESS_WRITE);
 	
 			ActionMessages messages = new ActionMessages();
-	        boolean isError = false;
-	        boolean isWarning = false;
+	       
 	        
 			DynaActionForm secroleForm = (DynaActionForm) form;
 	
@@ -370,8 +369,6 @@ public class RoleManagerAction extends BaseAdminAction {
 
 	private void ChangeFunLstTable(int operationType, DynaActionForm myForm,
 			HttpServletRequest request) {
-		
-		ActionMessages messages = new ActionMessages();
 		
 		ArrayList secobjprivilegeLst = new ArrayList();
 

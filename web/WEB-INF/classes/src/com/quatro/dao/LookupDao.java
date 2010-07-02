@@ -549,8 +549,8 @@ public class LookupDao extends HibernateDaoSupport {
 	}
 	public void SaveAsOrgCode(Program program) throws SQLException
 	{
-		LookupTableDefValue tableDef = this.GetLookupTableDef("ORG");
-		List codeValues = new ArrayList();
+		
+		
 		String  programId = "0000000" + program.getId().toString();
 		programId = "P" + programId.substring(programId.length()-7);
 		String fullCode = "P" + program.getId();
@@ -642,8 +642,8 @@ public class LookupDao extends HibernateDaoSupport {
 	}
 	public void SaveAsOrgCode(Facility facility) throws SQLException
 	{
-		LookupTableDefValue tableDef = this.GetLookupTableDef("ORG");
-		List codeValues = new ArrayList();
+		
+		
 		String  facilityId = "0000000" + facility.getId().toString();
 		facilityId = "F" + facilityId.substring(facilityId.length()-7);
 		String fullCode = "F" + facility.getId();
@@ -678,8 +678,8 @@ public class LookupDao extends HibernateDaoSupport {
 	}
 	public void SaveAsOrgCode(LookupCodeValue orgVal, String tableId) throws SQLException
 	{
-		LookupTableDefValue tableDef = this.GetLookupTableDef("ORG");
-		List codeValues = new ArrayList();
+		
+		
 		String orgPrefix = tableId.substring(0,1);
 		String orgPrefixP = "R1";
 		if ("S".equals(orgPrefix)) orgPrefixP = "O";   //parent of Organization is R, parent of Shelter is O.
