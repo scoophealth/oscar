@@ -185,12 +185,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         </style>
 
         <script language="JavaScript">
-        function popupStart(vheight,vwidth,varpage,windowname) {
+         popupStart=function(vheight,vwidth,varpage,windowname) {
             var page = varpage;
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
             var popup=window.open(varpage, windowname, windowprops);
         }
-        function getComment() {
+         getComment=function() {
             var ret = true;
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
 
@@ -202,27 +202,27 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             return ret;
         }
 
-        function printPDF(){
+         printPDF=function(){
             document.acknowledgeForm.action="PrintPDF.do";
             document.acknowledgeForm.submit();
         }
 
-	function linkreq(rptId, reqId) {
+	 linkreq=function(rptId, reqId) {
 	    var link = "../lab/LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
 	    window.open(link, "linkwin", "width=500, height=200");
 	}
 
-        function sendToPHR(labId, demographicNo) {
+         sendToPHR=function(labId, demographicNo) {
             popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
         }
 
-        function matchMe() {
+         matchMe=function() {
             <% if ( patientMatched != null && patientMatched.equals("no") ) { %>
                	popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow');
             <% } %>
 	}
 
-        function confirmAck() {
+        confirmAck=function() {
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
         }
         matchMe();
