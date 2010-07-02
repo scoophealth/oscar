@@ -225,6 +225,7 @@
 
         <bean name="/report/DxresearchReport" class="org.oscarehr.common.web.DxresearchReportAction" singleton="false">
             <property name="dxresearchdao" ref="DxresearchDAO" />
+            <property name="mygroupdao" ref="MyGroupDAO" />
         </bean>
 
 	<!-- Indivo -->

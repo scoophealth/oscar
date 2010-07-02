@@ -22,7 +22,7 @@ import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
  */
 public class DxresearchDAO extends HibernateDaoSupport{
 
-    public List getPatientRegisted(List dList) {
+    public List getPatientRegisted(List dList, List doctorList) {
 
         List<DxRegistedPTInfo> rList = new ArrayList<DxRegistedPTInfo>();
 
@@ -38,6 +38,18 @@ public class DxresearchDAO extends HibernateDaoSupport{
                 Demographic demo = (Demographic)getHibernateTemplate().get(Demographic.class, demographicNo);
 
                 if (demo != null ) {
+                    String demoprovider = demo.getProviderNo();
+                    boolean isDoctorPatient = false;
+                    // if patient's doctor is not in the doctor's list then skip, "*" means all doctor
+                    Iterator j = doctorList.listIterator();
+                    while (j.hasNext()) {
+                     String providerNo = (String)j.next();
+                     if (providerNo.equalsIgnoreCase("*") || providerNo.equalsIgnoreCase(demoprovider)) {
+                         isDoctorPatient = true;
+                         break;
+                     }
+                    }
+                 if (isDoctorPatient)
                     rList.add(new DxRegistedPTInfo(demo.getFirstName(),demo.getLastName(),demo.getSex(),
                                                     demo.getYearOfBirth()+"-"+demo.getMonthOfBirth()+"-"+demo.getDateOfBirth(),
                                                     demo.getPhone(),demo.getHin(),dxres.getCodingSystem(),dxres.getDxresearchCode(),
@@ -63,7 +75,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
     }
 
 
-    public List patientRegistedDistincted(List searchItems){
+    public List patientRegistedDistincted(List searchItems, List doctorList){
         List dList = null;
         Session session = null;
         List<dxCodeSearchBean> listItems = searchItems;
@@ -106,13 +118,13 @@ public class DxresearchDAO extends HibernateDaoSupport{
             //Iterator i = dList.listIterator();
             //while (i.hasNext())
              //   System.out.println(i.next());
-            return getPatientRegisted (dList);
+            return getPatientRegisted (dList,doctorList);
         } else {
             return null;
         }
     }
 
-    public List patientRegistedAll(List searchItems){
+    public List patientRegistedAll(List searchItems, List doctorList){
         List dList = null;
         Session session = null;
         List<dxCodeSearchBean> listItems = searchItems;
@@ -156,25 +168,25 @@ public class DxresearchDAO extends HibernateDaoSupport{
             //Iterator i = dList.listIterator();
             //while (i.hasNext())
              //   System.out.println(i.next());
-            return getPatientRegisted (dList);
+            return getPatientRegisted (dList,doctorList);
         } else {
             return null;
         }
     }
 
-    public List patientRegistedActive(List searchItems){
-        return patientRegistedStatus("A",searchItems);
+    public List patientRegistedActive(List searchItems, List doctorList){
+        return patientRegistedStatus("A",searchItems, doctorList);
     }
 
-    public List patientRegistedResolve(List searchItems){
-        return patientRegistedStatus("C",searchItems);
+    public List patientRegistedResolve(List searchItems, List doctorList){
+        return patientRegistedStatus("C",searchItems, doctorList);
     }
 
-    public List patientRegistedDeleted(List searchItems){
-        return patientRegistedStatus("D",searchItems);
+    public List patientRegistedDeleted(List searchItems, List doctorList){
+        return patientRegistedStatus("D",searchItems, doctorList);
     }
 
-    public List patientRegistedStatus(String status,List searchItems){
+    public List patientRegistedStatus(String status,List searchItems, List doctorList){
         List dList = null;
         Session session = null;
         List<dxCodeSearchBean> listItems = searchItems;
@@ -217,7 +229,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
             //Iterator i = dList.listIterator();
             //while (i.hasNext())
             //    System.out.println(i.next());
-            return getPatientRegisted (dList);
+            return getPatientRegisted (dList,doctorList);
         } else {
             return null;
         }
