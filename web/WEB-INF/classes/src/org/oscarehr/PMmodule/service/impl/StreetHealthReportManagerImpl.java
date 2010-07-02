@@ -36,7 +36,7 @@ public class StreetHealthReportManagerImpl implements StreetHealthReportManager 
 	        if (beginDate == null && endDate == null) {
 	            return new ArrayList();
 	        }
-	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+	        
 	        List results = new ArrayList();
 
 	        if (log.isDebugEnabled()) {

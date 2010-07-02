@@ -124,14 +124,13 @@ public class ClientDao extends HibernateDaoSupport {
 		String lastNameL = "";
 		String bedProgramId = "";
 		String assignedToProviderNo = "";
-		String admitDateFromCond = "";
-		String admitDateToCond = "";
+		
+		
 		String active = "";
 		String gender = "";
-		String AND = " and ";
-		String WHERE = " where ";
+		
+		
 		String sql = "";
-		String sql2 = "";
 		
 		//@SuppressWarnings("unchecked")
 		List results = null;
@@ -164,10 +163,7 @@ public class ClientDao extends HibernateDaoSupport {
 			}
 		    return results;
 		}
-		LogicalExpression condAlias1 = null;
-		LogicalExpression condAlias2 = null;
-		LogicalExpression condFirstName = null;
-		LogicalExpression condLastName = null;
+
 		if (firstName.length() > 0) {
 //			sql = "(LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
 //			sql2 = "(LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
@@ -251,19 +247,19 @@ public class ClientDao extends HibernateDaoSupport {
 		String firstNameL = "";
 		String lastNameL = "";
 		String bedProgramIdCond = "";
-		String admitDateFromCond = "";
-		String admitDateToCond = "";
+		
+		
 		String active = "";
 		String gender = "";
-		String AND = " and ";
-		String WHERE = " where ";
+		
+		
 		String sql = "";
 		String sql2 = "";
 		
 		@SuppressWarnings("unchecked")
 		List<Demographic> results = null;
 
-		boolean isOracle = OscarProperties.getInstance().getDbType().equals("oracle");
+		
 		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
 			firstName = bean.getFirstName();
 			firstName = StringEscapeUtils.escapeSql(firstName);
