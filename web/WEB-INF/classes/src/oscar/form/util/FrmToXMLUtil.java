@@ -139,39 +139,39 @@ public class FrmToXMLUtil{
                     methodCall = (String) nameProps.get("SBPValue");
                     if (methodCall != null){
                        cls = visit.getClass();
-                       //System.out.println("calling addNew"+methodCall);
+
                        addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
                        obj = addNewMethod.invoke(visit,new Object[]{});
 
                        value = dataProps.getProperty("SBPValue");
-                       //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+
                        setWhoWhatWhereWhen(obj,how,who,when,value);
                     }
                     methodCall = (String) nameProps.get("DBPValue");
                     if (methodCall != null){
                        cls = visit.getClass();
-                       //System.out.println("calling addNew"+methodCall);
+
                        addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
                        obj = addNewMethod.invoke(visit,new Object[]{});
 
                        value = dataProps.getProperty("DBPValue");
-                       //System.out.println(itemName + " who "+who+" how "+how+ " when "+when+ " value "+value);            
+
                        setWhoWhatWhereWhen(obj,how,who,when,value);
                     }
                     methodCall = (String) nameProps.get("BPDate");
-                    //System.out.println("method "+methodCall);
+
                     if (methodCall != null){                                       
 
                        cls = visit.getClass();
-                       //System.out.println("calling addNew"+methodCall);
+
                        addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
                        obj = addNewMethod.invoke(visit,new Object[]{});
 
                        value = dataProps.getProperty(itemName+"Date");
-                       //System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
+
                        setWhoWhatWhereWhen(obj,how,who,when,value);
                     } 
                     
@@ -180,7 +180,7 @@ public class FrmToXMLUtil{
                 else if (methodCall != null && !gValidator.isBlankOrNull(dataProps.getProperty(itemName+"Value"))){                                                                               
 
                    cls = visit.getClass();
-                   //System.out.println("calling addNew"+methodCall);
+
                    addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
                    obj = addNewMethod.invoke(visit,new Object[]{});
@@ -194,17 +194,17 @@ public class FrmToXMLUtil{
                    //setWhoWhatWhereWhen(obj,how,who,when,date);
 
                     methodCall = (String) nameProps.get(itemName+"Date");
-                    //System.out.println("method "+methodCall);
+
                     if (methodCall != null){                                       
 
                        cls = visit.getClass();
-                       //System.out.println("calling addNew"+methodCall);
+
                        addNewMethod  = cls.getMethod("addNew"+methodCall, new Class[] {});
 
                        obj = addNewMethod.invoke(visit,new Object[]{});
 
                        value = dataProps.getProperty(itemName+"Date");
-                       //System.out.println(itemName + "Date: who "+who+" how "+how+ " when "+when+ " value "+value);            
+
                        setWhoWhatWhereWhen(obj,how,who,when,value);
                     } 
                 }
@@ -244,7 +244,6 @@ public class FrmToXMLUtil{
             e.printStackTrace();
         }
 
-      //System.out.println(" number of records "+vec.size());  
       xmlStr = xmlStr + visitDocument.xmlText(xmlOptions);
       
       System.out.println("*********************************************************************************");
@@ -388,7 +387,7 @@ public class FrmToXMLUtil{
                                 + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
                                 + " and bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
                 ResultSet rs = dbhandler.GetSQL(s1);
-                //System.out.println("flushot: " + s1);
+
                 if (rs.next())
                         s = dbhandler.getString(rs,"billing_date");
                 rs.close();

@@ -83,7 +83,7 @@ public class RxDrugData {
               if(drugRoute!=null){
                   for (int i=0;i<drugRoute.size();i++){
                       String r=(String)drugRoute.get(i);
-                      //System.out.println(r);
+
                       route.add(r);
                   }
               }
@@ -552,10 +552,10 @@ public class RxDrugData {
         
 //        if (actualAllergies != null){
 //           for (int i =0; i < actualAllergies.length; i++){
-//              System.out.println(i+" "+actualAllergies[i].getAllergy().getDESCRIPTION()+" "+actualAllergies[i].getAllergy().getTYPECODE());              
+
 //           }
 //        }else{
-//           System.out.println("ACTUAL ALLERGIES == NULL");
+
 //        }
         
         return actualAllergies;

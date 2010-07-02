@@ -77,7 +77,7 @@ public class EctConTitlebar
         String uri = request.getRequestURI();
         int ind = uri.lastIndexOf("/");
         uri = uri.substring(ind + 1);
-        //System.out.println("uri".concat(String.valueOf(String.valueOf(uri))));
+
         for(int i = 0; i < jspVect.size(); i++){
             if(uri.equals(jspVect.elementAt(i)) && request.getAttribute("upd") == null)
             {

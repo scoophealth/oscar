@@ -60,7 +60,7 @@ import oscar.util.UtilDateUtilities;
 public class AddEditDocumentAction extends DispatchAction {
 
     public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
-        //System.out.println("in multifast");
+
         Hashtable errors = new Hashtable();
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
 
@@ -87,7 +87,7 @@ public class AddEditDocumentAction extends DispatchAction {
             String doc_no = EDocUtil.addDocumentSQL(newDoc);
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
             String providerId=request.getParameter("provider");
-            //System.out.println("providerId="+providerId);
+
         if (providerId !=null){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");            
@@ -95,7 +95,7 @@ public class AddEditDocumentAction extends DispatchAction {
         }
         //add to queuelinkdocument
             String queueId=request.getParameter("queue");
-            //System.out.println("queueId="+queueId);
+
         if ( queueId !=null &&!queueId.equals("-1")){
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) ctx.getBean("queueDocumentLinkDAO");
@@ -105,7 +105,7 @@ public class AddEditDocumentAction extends DispatchAction {
             request.getSession().setAttribute("preferredQueue", queueId);
         }
         if (docFile != null){
-            //System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());
+
         }
 
         return mapping.findForward("fastUploadSuccess");
@@ -113,16 +113,16 @@ public class AddEditDocumentAction extends DispatchAction {
     }
 
     public int countNumOfPages(String fileName){//count number of pages in a local pdf file
-         //System.out.println("in countNumOfPages");
+
          int numOfPage=0;
          String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
          String filePath=docdownload+fileName;
-         //System.out.println("filePath="+filePath);
+
          try{
             PdfReader reader =new PdfReader(filePath);
             numOfPage=reader.getNumberOfPages();
             reader.close();
-            //System.out.println("num of pages="+numOfPage);
+
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -196,7 +196,7 @@ public class AddEditDocumentAction extends DispatchAction {
 
     //returns true if successful
     private boolean addDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
-       //System.out.println("=============in addDocument============");
+
         Hashtable errors = new Hashtable();
         try {
             if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
@@ -214,7 +214,7 @@ public class AddEditDocumentAction extends DispatchAction {
             }
             //original file name
             String fileName1 = docFile.getFileName();
-        //    System.out.println("fileName1: "+fileName1);
+
             EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName1, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
             newDoc.setDocPublic(fm.getDocPublic());
             //new file name with date attached
@@ -234,9 +234,9 @@ public class AddEditDocumentAction extends DispatchAction {
             String module=fm.getFunction().trim();
             String moduleId=fm.getFunctionId().trim();
             if(module.equals("demographic")){//doc is uploaded under a patient,moduleId become demo no.
-                    //System.out.println("module is demographic");
+
                     Date now=EDocUtil.getDmsDateTimeAsDate();
-                    //System.out.println("here11");
+
                     String docDesc=EDocUtil.getLastDocumentDesc();
 
                     CaseManagementNote cmn=new CaseManagementNote();
@@ -253,10 +253,9 @@ public class AddEditDocumentAction extends DispatchAction {
 
                     String provFirstName=EDocUtil.getProviderInfo("first_name", fm.getDocCreator());
                     String provLastName=EDocUtil.getProviderInfo("last_name", fm.getDocCreator());
-                 //   System.out.println("here22");
+
                     String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
 
-                    //System.out.println("here0 "+strNote);
                     cmn.setNote(strNote);
                     cmn.setSigned(true);
                     cmn.setSigning_provider_no("-1");
@@ -273,8 +272,8 @@ public class AddEditDocumentAction extends DispatchAction {
                     cmnl.setTableName(cmnl.DOCUMENT);
                     cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
                     cmnl.setNoteId(Long.parseLong(EDocUtil.getLastNoteId()));
-                    //System.out.println("ValuesSavedInCaseManagementNoteLink: ");
-                    //System.out.println("5= "+cmnl.DOCUMENT+" last doc no="+ EDocUtil.getLastDocumentNo()+" last note id="+EDocUtil.getLastNoteId());
+
+
                     EDocUtil.addCaseMgmtNoteLink(cmnl);
             }
 
@@ -285,7 +284,7 @@ public class AddEditDocumentAction extends DispatchAction {
             request.setAttribute("completedForm", fm);
             return false;
         }
-    //    System.out.println("=============End in addDocument============");
+
         return true;
     }
 

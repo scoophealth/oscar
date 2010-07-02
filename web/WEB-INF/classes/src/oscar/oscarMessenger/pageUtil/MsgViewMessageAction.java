@@ -48,7 +48,7 @@ public class MsgViewMessageAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-        // System.out.println("in view message action jackson");
+
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -95,7 +95,7 @@ public class MsgViewMessageAction extends Action {
                  String thedate = (db.getString(rs,"thedate"));
                  String att     = db.getString(rs,"attachment");
                  String pdfAtt     = db.getString(rs,"pdfattachment");
-                 // System.out.println("attach "+att);
+
                  if (att == null || att.equals("null") ){
                     attach ="0";
                  }else{
@@ -108,9 +108,6 @@ public class MsgViewMessageAction extends Action {
                  }else{
                     pdfAttach ="1";
                  }
-
-                 // System.out.println("the message "+message+" "+subject);
-                 
 
                  request.setAttribute("viewMessageMessage",message);
                  request.setAttribute("viewMessageSubject",subject);

@@ -89,7 +89,7 @@ public class dxQuickListBeanHandler {
                 quickListName = db.getString(rs,"quickListName");
                                     
                 if(lastUsed.equals(quickListName)){
-                    //System.out.println("lastused: " + lastUsed);
+
                     bean.setLastUsed("Selected");
                     lastUsedQuickList = db.getString(rs,"quickListName");
                 }                
@@ -114,7 +114,7 @@ public class dxQuickListBeanHandler {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String lastUsed = "";
             String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName"; 
-            //System.out.println(sql);
+
             rs = db.GetSQL(sql);
             while(rs.next()){                
                 dxQuickListBean bean = new dxQuickListBean(db.getString(rs,"quickListName"));                              

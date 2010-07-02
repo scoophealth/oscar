@@ -68,7 +68,7 @@ public class RptReportConfigData {
         boolean ret = false;
         String sql = "update reportConfig set order_no=order_no+1 where report_id=" + reportId + " and save='"
                 + StringEscapeUtils.escapeSql(saveAs) + "' and order_no >=" + newPos + " order by order_no desc";
-        //System.out.println("updateRecordOrder() : sql = " + sql);
+
         if (dbObj.updateDBRecord(sql)) {
             sql = "update reportConfig set order_no=" + newPos + " where id=" + id;
             ret = dbObj.updateDBRecord(sql);
@@ -97,9 +97,9 @@ public class RptReportConfigData {
                 + "' order by order_no, id";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            //System.out.println(dbObj.getString(rs,"name"));
+
             if (dbObj.getString(rs,"name").matches(RptTableShadowFieldConst.fieldName)) {
-                //System.out.println(dbObj.getString(rs,"name"));
+
                 continue;
             }
             ret[0].add(dbObj.getString(rs,"table_name") + "." + dbObj.getString(rs,"name"));
@@ -119,9 +119,9 @@ public class RptReportConfigData {
                 + "' order by order_no, id";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            //System.out.println(dbObj.getString(rs,"name"));
+
             if (dbObj.getString(rs,"name").matches(RptTableShadowFieldConst.fieldName)) {
-                //System.out.println(dbObj.getString(rs,"name"));
+
                 continue;
             }
             ret.add(dbObj.getString(rs,"caption") + " |" + dbObj.getString(rs,"name"));

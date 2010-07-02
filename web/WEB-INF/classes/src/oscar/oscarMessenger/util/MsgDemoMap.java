@@ -31,9 +31,7 @@ public class MsgDemoMap {
      *  +----------------+--------------+------+-----+---------+-------+
      */
     public void linkMsg2Demo(String msgId, String demographic_no){
-        
-        //System.out.println("input msgId: " + msgId + "  input demographic_no: " + demographic_no);
-       
+
         //both msgId + demographic_no is the the primary key
         //if the combination of both msgId and demographic_no value exsit in the table, new data will not be added
         try{            

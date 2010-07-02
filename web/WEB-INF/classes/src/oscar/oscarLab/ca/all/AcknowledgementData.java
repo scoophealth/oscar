@@ -61,7 +61,7 @@ public class AcknowledgementData {
         } catch (Exception e) {
             logger.error("Could not retrieve acknowledgement data", e);
         }
-        //System.out.println("acknowledgements="+acknowledgements);
+
         return acknowledgements;
     }
 }

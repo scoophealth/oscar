@@ -50,11 +50,11 @@ public class DSGuidelineDrools extends DSGuideline {
         DSDemographicAccess dsDemographicAccess = new DSDemographicAccess(demographicNo);
         //put "bob" in working memory
         try {
-            //System.out.println(dsDemographicAccess.getDemographicNo() + "NO");
-            //System.out.println("a.isAgeAll(\"&gt;=5 y,&lt;611 y\")" + dsDemographicAccess.isAgeAll(">=5 y,<611 y"));
-            //System.out.println("a.hasDxCodesAny(\"icd9:'4438',icd9:'1331'\")" + dsDemographicAccess.hasDxCodesAny("icd9:'4438',icd9:'1331'"));
-            //System.out.println("isSexAny(\"F\")" + dsDemographicAccess.isSexAny("F"));
-            //System.out.println("Note contains: " + dsDemographicAccess.noteContainsAny("test"));
+
+
+
+
+
             workingMemory.assertObject(dsDemographicAccess);
 
             for(DSCondition dsc :this.getConditions()){

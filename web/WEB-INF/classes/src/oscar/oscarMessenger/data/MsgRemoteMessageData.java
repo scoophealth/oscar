@@ -112,7 +112,6 @@ public  class MsgRemoteMessageData extends Thread{
                   theAttach = (rs_message.getString("attachment"));
                   //theaction = (rs_message.getString("actionstatus"));
                }
-               // System.out.println("THE ATTACHMENT IS >"+theAttach+"<");
 
                if (theAttach != null && !theAttach.equals("null")){
                int getit = theAttach.indexOf('\n');

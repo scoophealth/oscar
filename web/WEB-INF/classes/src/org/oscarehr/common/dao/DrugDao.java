@@ -100,8 +100,8 @@ public class DrugDao extends AbstractDao<Drug> {
 
     ///////
     public List<Drug> getUniquePrescriptions(String demographic_no) {
-        //   System.out.println("===========IN getUniquePrescriptions======");
-        //    System.out.println("demographic_no="+demographic_no);
+
+
         List<Drug> rs = findByDemographicIdOrderByDate(new Integer(demographic_no), false);
 
         List<Drug> rt = new ArrayList<Drug>();
@@ -112,16 +112,16 @@ public class DrugDao extends AbstractDao<Drug> {
             for (int i = 0; i < rt.size(); i++) {
                 Drug p2 = rt.get(i);
                 if (p2.getGcnSeqNo() == drug.getGcnSeqNo()) {
-                    //    System.out.println("p2.getGCN_SEQNO().intValue() == prescriptDrug.getGCN_SEQNO().intValue()="+p2.getGCN_SEQNO());
+
                     if (p2.getGcnSeqNo() != 0){ // not custom - safe GCN
-                        //       System.out.println("p2.getGCN_SEQNO().intValue() != 0" );
+
                         b = false;
                     } else {// custom
-                        //       System.out.println("p2.getGCN_SEQNO().intValue() = 0");
+
                         if (p2.getCustomName() != null && drug.getCustomName() != null) {
-                            //          System.out.println("p2.getCustomName() != null && prescriptDrug.getCustomName() != null");
+
                             if (p2.getCustomName().equals(drug.getCustomName())){ // same custom
-                                //           System.out.println("p2.getCustomName().equals(prescriptDrug.getCustomName())");
+
                                 b = false;
                             }
                         }
@@ -132,7 +132,7 @@ public class DrugDao extends AbstractDao<Drug> {
                 rt.add(drug);
             }
         }
-        //  System.out.println("===========END getUniquePrescriptions======");
+
         return rt;
     }
 

@@ -426,7 +426,7 @@ public class ManageHSFOAction extends Action{
 //                System.out.println("from URL: " + request.getAttribute("fromURL"));https://www.cogeco.ca/on/hsi/order/connection.do;jsessionid=CC495D9878C16FD3DF1D59A13E83BC88
 //                    if ((request.getAttribute("fromURL")) != null && (request.getAttribute("fromURL")).equals("SubmitFollowup")) {
 //                    Date visitDateId = (Date)(request.getAttribute("visitDate"));
-//                    System.out.println("visitDate requested: " +  visitDateId);
+
 //                        try {
 //                            latestVisitData = hsfoDAO.retrieveLatestRecord(visitDateId,id);
 //                        } catch (SQLException e) {
@@ -434,7 +434,7 @@ public class ManageHSFOAction extends Action{
 //                            e.printStackTrace();
 //                        }
 //                    } else if ( request.getParameter("refresh") != null && request.getParameter("refresh").equals("true")){
-//                       System.out.println("IN REFRESH == ");
+
 //                       int num = Integer.parseInt(request.getParameter("recordNumber"));
 //                       System.out.print(num);
 //                       System.out.println();
@@ -444,8 +444,8 @@ public class ManageHSFOAction extends Action{
 //                    }else {
 //                       latestVisitData = (VisitData)patientHistory.get(size-1);
 //                    }
-//                System.out.println("Most recent record is on: " + latestVisitData.getVisitDate_Id());
-//                System.out.println("Record ID: " + latestVisitData.getID());
+
+
 //
 //
 //                int a = 0, b=0, c=0, d=0, e=0, f=0, g=0, h=0;
@@ -468,7 +468,7 @@ public class ManageHSFOAction extends Action{
 //                        if (visitdata.getSBP() != 0) {
 //                            SBPArray[a] = visitdata.getSBP();
 //                            SBPDateArray[a] = setDate(visitdata.getVisitDate_Id());
-//                            System.out.println("SBP: " + a + "  " + visitdata.getSBP() + " DATE " + SBPDateArray[a]);
+
 //                            a=a+1;
 //                        }
 //
@@ -504,7 +504,7 @@ public class ManageHSFOAction extends Action{
 //
 //                            BMIArray[c] = bmi;
 //                            BMIDateArray[c] = setDate(visitdata.getVisitDate_Id());
-//                            System.out.println("BMI: " + c + "  " + BMIArray[c] + " DATE " + BMIDateArray[c]);
+
 //                            c=c+1;
 //                        }
 //
@@ -521,21 +521,21 @@ public class ManageHSFOAction extends Action{
 //
 //                            WaistArray[d] = waist;
 //                            WaistDateArray[d] = setDate(visitdata.getVisitDate_Id());
-//                            System.out.println("Waist: " + d + "  " + waist + " DATE " + WaistDateArray[d]);
+
 //                            d=d+1;
 //                        }
 //
 //                        if (visitdata.getChange_importance() != 0) {
 //                            importanceArray[e] = visitdata.getChange_importance();
 //                            importanceDateArray[e] = setDate(visitdata.getVisitDate_Id());
-//                            System.out.println("Change imp: " + e + "  " + visitdata.getChange_importance() + " DATE " + importanceDateArray[e]);
+
 //                            e=e+1;
 //                        }
 //
 //                        if (visitdata.getChange_confidence() != 0) {
 //                            confidenceArray[f] = visitdata.getChange_confidence();
 //                            confidenceDateArray[f] = setDate(visitdata.getVisitDate_Id());
-//                            System.out.println("Change conf: " + f + "  " + visitdata.getChange_confidence() + " DATE " + confidenceDateArray[f]);
+
 //                            f=f+1;
 //                        }
 //
@@ -545,7 +545,7 @@ public class ManageHSFOAction extends Action{
 //                        if (visitdata.getTC_HDL() !=0 ) {
 //                            TCHDLArray[g] = visitdata.getTC_HDL();
 //                            TCHDLDateArray[g] = setDate(visitdata.getTC_HDL_LabresultsDate());
-//                            System.out.println("TC HDL: " + g + "  " + visitdata.getTC_HDL() + " DATE " + TCHDLDateArray[g]);
+
 //                            g=g+1;
 //                        }
 //                    }
@@ -554,7 +554,7 @@ public class ManageHSFOAction extends Action{
 //                        if (visitdata.getLDL() !=0 ) {
 //                            LDLArray[h] = visitdata.getLDL();
 //                            TCHDLDateArray[h] = setDate(visitdata.getLDL_LabresultsDate());
-//                            System.out.println("LDL: " + h + "  " + visitdata.getLDL() + " DATE " + TCHDLDateArray[h]);
+
 //                            h=h+1;
 //                        }
 //                    }
@@ -569,7 +569,7 @@ public class ManageHSFOAction extends Action{
 //                // if it is the first time the user accesses PreloadServlet in a particular session, set the lab date to the current date (new visit form)
 //                if ((request.getAttribute("fromURL")) == null) {
 //                    java.util.Date currentDate = new java.util.Date();
-//                    System.out.println("Current time for new record: " + currentDate.getTime());
+
 //                    String date = (currentDate.getYear()+1900) + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate();
 //                    SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date result=null;
@@ -577,13 +577,13 @@ public class ManageHSFOAction extends Action{
 //                        java.util.Date parsedDate = formater.parse(date);
 //                        result = new java.sql.Date(parsedDate.getTime());
 //                    } catch (ParseException pe) {
-//                        System.out.println("Error parsing date");
+
 //                    }
 //
 //                    latestVisitData.setVisitDate_Id(result);
 //                }
 //
-//                System.out.println("date displayed: " + latestVisitData.getVisitDate_Id());
+
 //
 //                record.setRecord(recordList);
 //

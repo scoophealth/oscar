@@ -52,7 +52,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-     //   System.out.println("***###IN RxUseFavoriteAction.java");
+
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -79,7 +79,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
             rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo(), fav);
 
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
-          //   System.out.println("***###addStathItem called22");
+
             bean.setStashIndex(bean.addStashItem(rx));
             request.setAttribute("BoxNoFillFirstLoad", "true");
         }
@@ -95,7 +95,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-     //  System.out.println("==========***###IN RxUseFavoriteAction.java=============");
+
         // Setup variables
         oscar.oscarRx.pageUtil.RxSessionBean bean =
         (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -107,8 +107,8 @@ public final class RxUseFavoriteAction extends DispatchAction {
         try {
             int favoriteId = Integer.parseInt(request.getParameter("favoriteId"));
             String randomId=request.getParameter("randomId");
-        //    System.out.println("favoriteId ="+favoriteId);
-         //   System.out.println("randomId ="+randomId);
+
+
             RxPrescriptionData rxData =
             new RxPrescriptionData();
 
@@ -142,7 +142,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
         }
 
         RxUtil.printStashContent(bean);
-      //  System.out.println("==========***###END RxUseFavoriteAction.java=============");
+
         return (mapping.findForward("useFav2"));
     }
 }

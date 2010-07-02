@@ -182,9 +182,9 @@ public class ManageTeleplanAction extends DispatchAction {
  */
 //                   else{
 //                       if (dxList.size() > 1){
-//                           System.out.println(" THIS SHOULDN'T HAPPEN!!!!!!!!");
+
 //                           for(BillingDxCode dx :dxList){
-//                               System.out.println(dx.getDiagnosticCode()+"DESC>"+desc+":"+dx.getDescription()+">"+dxProp.getProperty(code));
+
 //                           }
 //                           linesThatShouldnthappen ++;
 //                       }else{

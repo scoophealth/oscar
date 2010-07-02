@@ -49,13 +49,13 @@ public class UnclaimedLabTag extends TagSupport {
    
    public int doStartTag() throws JspException    {
         try {
-            //System.out.println("starting UnclaimedLabTag");
+
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = new String("select count(*) from providerLabRouting where provider_no = '0' and status = 'N'");            
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                numNewLabs = (rs.getInt(1));
-               //System.out.println("Un claimed Labs" +numNewLabs);
+
             }
             rs.close();
         }catch(SQLException e){
@@ -63,10 +63,10 @@ public class UnclaimedLabTag extends TagSupport {
         }
         
         if(numNewLabs > 0){
-           //System.out.println("EVAL_BODY_INCLUDE");
+
            return(EVAL_BODY_INCLUDE);
         }else{
-           //System.out.println("SKIP BODY");
+
            return(SKIP_BODY);                        
         }
     }

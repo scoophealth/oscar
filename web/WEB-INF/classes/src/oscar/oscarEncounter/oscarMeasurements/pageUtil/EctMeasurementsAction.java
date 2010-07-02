@@ -237,7 +237,7 @@ public class EctMeasurementsAction extends Action {
                             String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo+ "' AND dataField='"+inputValue
                                         +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments
                                         + "' AND dateObserved='" + dateObserved + "' and type = '"+inputType+"'";
-                            //System.out.println(sql);
+
                             rs = db.GetSQL(sql);
                             if(!rs.next()){
                                 //Write to the Dababase if all input values are valid
@@ -245,7 +245,7 @@ public class EctMeasurementsAction extends Action {
                                         +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
                                         +" VALUES ('"+str.q(inputType)+"','"+str.q(demographicNo)+"','"+str.q(providerNo)+"','"+str.q(inputValue)+"','"
                                         + str.q(mInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";
-                                //System.out.println(sql);
+
                                 db.RunSQL(sql);
                                 //prepare input values for writing to the encounter form
                                 if (mFlowsheet == null){
@@ -259,7 +259,7 @@ public class EctMeasurementsAction extends Action {
 
                     }
                     textOnEncounter = textOnEncounter + "**********************************************************************************\\n";
-                    //System.out.println(textOnEncounter);
+
                 }
                 else{
                     String groupName = (String) frm.getValue("groupName");

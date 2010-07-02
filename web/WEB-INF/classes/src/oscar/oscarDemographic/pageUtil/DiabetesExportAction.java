@@ -216,13 +216,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 while (items.hasNext()) {
                     Element pcgGroup = items.next();
                     String s = pcgGroup.getAttributeValue("base");
-                    //System.out.println(pcgGroup.getName()+ "  "+s);
-                    
-                    
+
                     if ("cdsd:drugIdentificationNumber".equals(s)){
                         List<Element> l = pcgGroup.getChildren();
                         for (Element e:l){
-                            //System.out.println(e.getAttributeValue("value"));
+
                             listOfDINS.add(e.getAttributeValue("value"));
                         }
                     }

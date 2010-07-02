@@ -61,7 +61,7 @@ public class EctMeasurementTypeBeanHandler {
 //            //System.out.println(sql);
 //            ResultSet rs = db.GetSQL(sql);        
 //            while(rs.next()){                
-//               System.out.println("validation "+db.getString(rs,"validation"));  
+
 //               ret = new EctMeasurementTypesBean(rs.getInt("id"), db.getString(rs,"type"), 
 //                                                 db.getString(rs,"typeDisplayName"), 
 //                                                 db.getString(rs,"typeDescription"), 
@@ -73,7 +73,7 @@ public class EctMeasurementTypeBeanHandler {
 //            rs.close();            
 //        }
 //        catch(SQLException e) {
-//            System.out.println(e.getMessage());
+
 //        }
 //        return ret;
     }
@@ -86,7 +86,7 @@ public class EctMeasurementTypeBeanHandler {
             ResultSet rs = db.GetSQL(sqlValidation);
             if (rs.next()){ 
                 validation = db.getString(rs,"name");
-                //System.out.println("setting validation to "+validation);
+
             }
             rs.close();
         }catch(SQLException e) {

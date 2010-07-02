@@ -106,9 +106,9 @@ public class GenericDownload extends HttpServlet {
         long incrementor = 0;
         while(( bufferSize = fis.read(buffer)) != -1) {
              stream.write(buffer, 0, bufferSize);
-             //System.out.println("Prebuffer size: " + bufferSize);
+
              //incrementor++;
-             //System.out.println("Buffer Cycle -----------" + incrementor + "bytes loaded");
+
         }
         fis.close();
         stream.flush();

@@ -30,12 +30,12 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
 	}
 
 	public void setDocumentLocator(Locator locator) {
-		// System.out.println("    * setDocumentLocator() called");
+
 		this.locator = locator;
 	}
 
 	public void startDocument() throws SAXException {
-		// System.out.println("Begin parsing *.xml...");
+
 		init();
 		results += "<center><table BORDER=0 CELLSPACING=0 CELLPADDING=1 WIDTH='95%' BGCOLOR='#009966'>\n";
 		results += "<tr><td width='5%' bgcolor='ivory' align='center'><b><font color='black'>Done</font></b></td>\n<td width='5%' bgcolor='ivory' align='center'><b><font color='black'>N/A</font></b></td>";
@@ -45,20 +45,20 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
 	}
 
 	public void endDocument() throws SAXException {
-		// System.out.println("...Parsing ends");
+
 		results += "</td></tr></table></center>\n";
 	}
 
 	public void processingInstruction(String target, String data) throws SAXException {
-		// System.out.println("PI: Target: " + target + " and Data: " + data);
+
 	}
 
 	public void startPrefixMapping(String prefix, String uri) {
-		// System.out.println("Mapping starts for prefix " + prefix + " mapped to URI " + uri);
+
 	}
 
 	public void endPrefixMapping(String prefix) {
-		// System.out.println("Mapping ends for prefix " + prefix);
+
 	}
 
 	public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
@@ -98,7 +98,6 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
 	  		if (atts.getLocalName(i) == "risk") riskname = atts.getValue(i);
 	  		if (atts.getLocalName(i) == "checkbox") checkbox = true;
 	  	}
-		  //System.out.println("ignorableWhiteSpace: [" + riskname + "] " +clname +" "+savedar1params.getProperty(riskname));
 
       if(riskname.equals("") || savedar1params.getProperty(riskname)!=null ) {
   			results += "<tr>";
@@ -184,7 +183,7 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
 
 	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
 		String s = new String(ch, start, length);
-		// System.out.println("ignorableWhiteSpace: [" + s + "]");
+
 	}
 
 	public void skippedEntity(String name) throws SAXException {

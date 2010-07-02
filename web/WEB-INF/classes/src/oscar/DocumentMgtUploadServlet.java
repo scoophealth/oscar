@@ -93,12 +93,12 @@ public class DocumentMgtUploadServlet extends HttpServlet{
                 if (item.isFormField()) {
                     //String name = item.getFieldName();
                     //String value = item.getString(); 
-                    //System.out.println("Fieldname: " + item.getFieldName());
+
                 } else {
                     String pathName = item.getName();  
                     String [] fullFile = pathName.split("[/|\\\\]");
             		File savedFile = new File(foldername, output + fullFile[fullFile.length-1]);
-                    //System.out.println(item.getName() + "fullFile: " + fullFile[fullFile.length-1]);
+
                     fileheader = output + fullFile[fullFile.length-1];
             		
             		item.write(savedFile);

@@ -166,11 +166,11 @@ public class DemographicData {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE hin = '" + hin + "'";
-			// System.out.println("sql "+sql);
+
 			rs = db.GetSQL(sql);
 			while (rs.next()) {
 				String demoNo = db.getString(rs, "demographic_no");
-				// System.out.println("same hin as "+demoNo);
+
 				list.add(getDemographic(demoNo));
 			}
 			rs.close();
@@ -187,7 +187,7 @@ public class DemographicData {
 			String year_of_birth = UtilDateUtilities.DateToString(bDate, "yyyy");
 			String month_of_birth = UtilDateUtilities.DateToString(bDate, "MM");
 			String date_of_birth = UtilDateUtilities.DateToString(bDate, "dd");
-			// System.out.println("lastname "+lastname+" firstname "+firstname+" year_of_birth "+year_of_birth+" month "+month_of_birth+" date "+date_of_birth);
+
 			return getDemographicWithLastFirstDOB(lastname, firstname, year_of_birth, month_of_birth, date_of_birth);
 		}
 		else 
@@ -209,7 +209,7 @@ public class DemographicData {
 			rs = db.GetSQL(sql);
 			while (rs.next()) {
 				String demoNo = db.getString(rs, "demographic_no");
-				// System.out.println("looks to be the same  as "+demoNo);
+
 				list.add(getDemographic(demoNo));
 			}
 			rs.close();
@@ -869,8 +869,6 @@ public class DemographicData {
 			demos = getDemographicWithHIN(hin);
 		}
 
-		// System.out.println("demos "+demos.size());
-
 		if (demos.size() == 0) { // Unique HIN
 			demos = null;
 			demos = getDemographicWithLastFirstDOB(last_name, first_name, year_of_birth, month_of_birth, date_of_birth);
@@ -883,11 +881,11 @@ public class DemographicData {
 				Demographic d = (Demographic) demos.get(i);
 				if (last_name.equalsIgnoreCase(d.getLastName()) && first_name.equalsIgnoreCase(d.getFirstName()) && year_of_birth!=null && year_of_birth.equals(d.getYearOfBirth()) && month_of_birth!=null && month_of_birth.equals(d.getMonthOfBirth()) && date_of_birth!=null && date_of_birth.equals(d.getDateOfBirth())) {
 					// DUP don't add
-					// System.out.println("NOT ADDING becuase of dup with same hin");
+
 					duplicateRecord = true;
 					ret.addWarning("Patient " + last_name + ", " + first_name + " DOB (" + year_of_birth + "-" + month_of_birth + "-" + date_of_birth + ") exists in database. Record not added");
 				} else {// add without HIN
-					// System.out.println("ADDING without him because of same hin");
+
 					ret.addWarning("Patient " + last_name + ", " + first_name + " DOB (" + year_of_birth + "-" + month_of_birth + "-" + date_of_birth + ") added without HIN - HIN already in use");
 					hin = "";
 				}
@@ -941,7 +939,6 @@ public class DemographicData {
 
 				String outString = add_record.toString();
 				int firstmark = outString.indexOf(':');
-				// System.out.println(add_record.toString().substring(firstmark+1)+";");
 
 				add_record.executeUpdate();
 				// conn.createStatement().execute(sql
@@ -981,7 +978,7 @@ public class DemographicData {
 		String id = null;
 
 		public void addWarning(String str) {
-			// System.out.println("Adding warning "+str);
+
 			if (warnings == null) {
 				warnings = new ArrayList();
 			}

@@ -56,7 +56,7 @@ public final class FrmStudyAction extends Action {
 		        ActionForward af = mapping.findForward(strAction);
 				    where = af.getPath();
 						where = rec.createActionURL(where, strAction, request.getParameter("demographic_no"), ""+newID, request.getParameter("study_no"), request.getParameter("study_link"));
-            //System.out.println(" xxxxxxxxxxxxxxxxxx7");
+
         } catch(Exception ex) {
             throw new ServletException(ex);
         }

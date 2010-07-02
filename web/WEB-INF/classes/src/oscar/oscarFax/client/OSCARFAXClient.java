@@ -110,7 +110,7 @@ public class OSCARFAXClient {
     public String getTheValue(SOAPElement sbe,SOAPEnvelope enve,String name){        
         String retval = null;
         String currNode= null;
-        //System.out.println("sbe = "+sbe.getElementName().getLocalName());
+
         try{
             Iterator subMain = sbe.getChildElements(enve.createName(name));
             if (subMain.hasNext()){            

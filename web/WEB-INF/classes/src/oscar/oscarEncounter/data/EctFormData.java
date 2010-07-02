@@ -107,8 +107,6 @@ public class EctFormData {
         if ( !table.equals("form") ) {
             String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
                         + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
-            
-//            System.out.println(sql);
 
             ResultSet rs = db.GetSQL(sql);
 

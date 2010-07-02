@@ -101,7 +101,7 @@ public class RscheduleBean {
   	  if(getEvenWeek(new GregorianCalendar(MyDateFormat.getYearFromStandardDate(this.sdate), MyDateFormat.getMonthFromStandardDate(this.sdate)-1,MyDateFormat.getDayFromStandardDate(this.sdate)), aDate) ) {
   	    aDOW = this.day_of_week.substring(0,this.day_of_week.indexOf("|") );
   		} else aDOW = this.day_of_week.substring(this.day_of_week.indexOf("|")+1 );
-      //System.out.println("ooooooooooooooosWeek: "+aDOW+": --------  Date: "+aDate.get(Calendar.DATE)); 
+
     } else {
   	  aVailable = this.available;
   	  aDOW = this.day_of_week;
@@ -117,7 +117,7 @@ public class RscheduleBean {
     StringTokenizer st = new StringTokenizer(aDOW);
     while (st.hasMoreTokens() ) {
       if( st.nextToken().compareTo(""+ aDate.get(Calendar.DAY_OF_WEEK) )==0 ) { //prompt the number, from 0?
-        //System.out.println(" "+bAvailableTemp+" "+aDate.get(Calendar.DATE)+" "+aDate.get(Calendar.DAY_OF_WEEK));      
+
     	  bAvail = bAvailableTemp;
     	  break;
       }

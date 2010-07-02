@@ -63,7 +63,7 @@ public class PatientListByAppt extends HttpServlet {
                 sql = sql + "and a.appointment_date<='"+dateto +"' ";
             }
             sql = sql + "order by a.appointment_date";
-            //System.out.println(sql);
+
             rs = db.GetSQL(sql);
             
             File ffile = new File(url);

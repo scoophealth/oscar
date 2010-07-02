@@ -55,7 +55,7 @@ public class MsgNewMessageTag extends TagSupport {
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                numNewMessages = (rs.getInt(1));
-               //System.out.println(numNewMessages);
+
             }
 
             rs.close();

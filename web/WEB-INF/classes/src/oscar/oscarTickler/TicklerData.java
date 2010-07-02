@@ -78,7 +78,7 @@ public class TicklerData {
                   +" '"+StringEscapeUtils.escapeSql(creator)+"', "
                   +" '"+StringEscapeUtils.escapeSql(priority)+"', "
                   +" '"+StringEscapeUtils.escapeSql(task_assigned_to)+"')";  
-      //System.out.println(sql);
+
       try {         
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);         
@@ -95,7 +95,7 @@ public class TicklerData {
          String sql = "select * from tickler  where demographic_no = '"+StringEscapeUtils.escapeSql(demographic)+"' "
                      +" and task_assigned_to = '"+StringEscapeUtils.escapeSql(task_assigned_to)+"' "
                      +" and message = '"+StringEscapeUtils.escapeSql(message)+"'";
-         //System.out.println(sql);
+
          ResultSet rs = db.GetSQL(sql);
          if (rs.next()){
             hastickler = true;

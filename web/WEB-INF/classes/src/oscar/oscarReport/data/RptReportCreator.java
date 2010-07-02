@@ -80,7 +80,7 @@ public final class RptReportCreator {
         String ret = "";
         for (int i = 0; i < 100; i++) {
             if (value.matches("[^\\{\\}\\$]*\\$\\{[^\\{\\}]+\\}.*")) {
-                //System.out.println(i + "getVarVec() var: " + i + ":" + vec.get(i));
+
                 value = value.replaceFirst("\\$\\{[^\\{\\}]+\\}", (vec.get(i) == null ? "" : ((String) vec.get(i))));
             } else {
                 ret = value;
@@ -105,7 +105,7 @@ public final class RptReportCreator {
             return ret;
         String[] var = value.split("[^\\{\\}\\$]*\\$\\{|\\}[^\\{\\}\\$]*");
         for (int i = 0; i < var.length; i++) {
-            //System.out.println("getVarVec() var: " + i + ":" + var[i]);
+
             if ("".equals(var[i]))
                 continue;
             ret.add(var[i]);
@@ -139,7 +139,7 @@ public final class RptReportCreator {
                 ret = "";
             }
             ret += ("".equals(ret) ? "" : ",") + rs.getInt(1);
-            //System.out.println(" tempVal: " + ret );
+
         }
         rs.close();
         return ret;

@@ -48,7 +48,7 @@ public class dbBillingData {
 
   public void setService_code(String value) {
     service_code=value;
-    // System.out.println("Service Code =" + value);
+
   }
     public void setVariables(Properties variables) {
     this.oscarVariables=variables;
@@ -76,7 +76,6 @@ public class dbBillingData {
 
 		accessDB = new DBPreparedHandler();
 		String strSQL = "select service_code, description, value, percentage from billingservice where service_code = '" + service_code + "'";
-		// System.out.println("SQL=" + strSQL);
 
 		temp = searchDB(strSQL, "service_code", "description", "value", "percentage"); // use StringBuffer later
 		if (temp != null) {

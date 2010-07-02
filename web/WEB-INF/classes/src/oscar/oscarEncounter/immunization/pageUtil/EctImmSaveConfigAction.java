@@ -50,7 +50,7 @@ public final class EctImmSaveConfigAction extends Action {
    
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
-      //System.out.println("Save Config Action Jackson");
+
       Locale locale = getLocale(request);
       MessageResources messages = getResources(request);     
       EctSessionBean bean = null;
@@ -98,7 +98,7 @@ public final class EctImmSaveConfigAction extends Action {
             String sXML = UtilXML.toXML(doc);
             imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
          }
-         //System.out.println("after save imm");
+
       } catch(Exception ex)  {
          ex.printStackTrace();
          throw new ServletException("Exception occurred in SaveConfigAction", ex);

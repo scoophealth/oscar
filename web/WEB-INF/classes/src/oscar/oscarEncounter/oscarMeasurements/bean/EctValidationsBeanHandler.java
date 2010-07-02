@@ -107,11 +107,11 @@ public class EctValidationsBeanHandler {
                         + " AND maxLength" + maxLength
                         + " AND isNumeric" + isNumeric
                         + " AND isDate" + isDate;
-            //System.out.println("findValidation: " + sql);
+
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){
                 validationId = rs.getInt("id");
-                //System.out.println(validationId + ": " + sql);
+
             }
             rs.close();
         }
@@ -167,7 +167,7 @@ public class EctValidationsBeanHandler {
                         + maxLength + "," 
                         + isNumeric + ","
                         + isDate + ")";
-            //System.out.println("sql: " + sql);
+
             db.RunSQL(sql);
             sql = "SELECT id FROM validations ORDER BY id DESC LIMIT 1";
             ResultSet rs = db.GetSQL(sql);

@@ -139,11 +139,8 @@ public final class WCBAction extends Action {
     // WCB wcb = new WCB(); 
       
    // BeanUtils.copyProperties(wcb,frm);  
-    
-  // System.out.println("FRM "+frm);
-   //System.out.println("WCB "+wcb);
-   
-    
+
+
    // billingmasterDAO.save(wcb);
 
     

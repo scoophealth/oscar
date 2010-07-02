@@ -45,20 +45,20 @@ public final class MsgSendMessageForm extends ActionForm {
   }
 
   public String getMessage(){
-  // System.out.println("GEt message");
+
   return message != null ? message : "" ;
 
   }
 
   public void setMessage(String msg){
-  // System.out.println("SetMessage"+msg+"<=");
+
   this.message = msg;
   }
 
 
 
   public String[] getProvider(){
-  // System.out.println("i want the provide");
+
   if (provider == null){
           provider = new String[]{};//{"174","176","0"};
 
@@ -68,12 +68,12 @@ public final class MsgSendMessageForm extends ActionForm {
   }
 
   public void setProvider(String[] prov){
-    // System.out.println("ive set the provider thing");
+
     this.provider = prov;
-    // System.out.println("well now i have");
+
     for (int i =0 ; i < prov.length ; i++)
     {
-        // System.out.println(prov[i]);
+
     }
   }
 
@@ -91,18 +91,18 @@ public final class MsgSendMessageForm extends ActionForm {
      */
     public ActionErrors validate(ActionMapping mapping,
                                  HttpServletRequest request) {
-        // System.out.println("validating");
+
         ActionErrors errors = new ActionErrors();
 
         if (message == null || message.length() == 0){   //index.heading
-              // System.out.println("i got calledfrom validate");
+
  //             errors.add("message32",new ActionError("error.message.missing"));
               //errors.add("message32",new ActionError("index.heading"));
               String str = "supperdooper";
               ActionMessage actionError = new ActionMessage("index.heading");
-              // System.out.println(actionError.getKey());
+
               errors.add("message", new ActionMessage("index.heading"));
-              // System.out.println("igethere");
+
         }
 
 

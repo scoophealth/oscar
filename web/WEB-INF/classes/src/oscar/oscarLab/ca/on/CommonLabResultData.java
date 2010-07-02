@@ -117,7 +117,7 @@ public class CommonLabResultData {
         String hl7text = op.getProperty("HL7TEXT_LABS");
 
         if(scannedDocStatus !=null && (scannedDocStatus.equals("N")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
-            //System.out.println("##cml="+cml+"--mds="+mds);
+
             if( cml != null && cml.trim().equals("yes")){
                 ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
                 labs.addAll(cmlLabs);
@@ -132,13 +132,13 @@ public class CommonLabResultData {
                 labs.addAll(pathLabs);
             }
             if (hl7text != null && hl7text.trim().equals("yes")){
-               // System.out.println("getting hl7text data");
+
                 Hl7textResultsData hl7Data = new Hl7textResultsData();
                 ArrayList hl7Labs = hl7Data.populateHl7ResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
                 labs.addAll(hl7Labs);
             }
         }
-        //System.out.println("test deployed");
+
         if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
             DocumentResultsData docData = new DocumentResultsData();
             ArrayList docs = docData.populateDocumentResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
@@ -149,8 +149,8 @@ public class CommonLabResultData {
     }
 
     public static boolean updateReportStatus(Properties props, int labNo, String providerNo, char status, String comment, String labType) {
-            //System.out.println("in updateReportStatus");
-            //System.out.println(labNo+"--"+providerNo+"--"+status+"--"+comment+"--"+labType);
+
+
         try {
             DBPreparedHandler db = new DBPreparedHandler();
             // handles the case where this provider/lab combination is not already in providerLabRouting table
@@ -159,16 +159,16 @@ public class CommonLabResultData {
             ResultSet rs = db.queryResults(sql);
 
             if(rs.next()){  //
-                //System.out.println("existing present");
+
                 String id = db.getString(rs,"id");
                 sql = "update providerLabRouting set status='"+status+"', comment=? where id = '"+id+"'";
                 if (!db.getString(rs,"status").equals("A")){
-                    //System.out.println("status not A");
+
                     db.queryExecute(sql, new String[] { comment });
 
                 }
             }else{
-                //System.out.println("no existing");
+
                 sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment,lab_type) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?,'"+labType+"')";
                 db.queryExecute(sql, new String[] { comment });
             }
@@ -305,7 +305,7 @@ public class CommonLabResultData {
 
                     // delete old entries
                     String sql = "delete from providerLabRouting where provider_no='0' and lab_type= '"+labType+"' and lab_no = '"+labIds[k]+"'";
-                    //System.out.println("***sql="+sql);
+
                     result = db.RunSQL(sql);
 
                 }
@@ -415,7 +415,7 @@ public class CommonLabResultData {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = '"+labType+"' ";
-            //System.out.println("in islbkd,sql="+sql);
+
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){
                 String demo =  db.getString(rs,"demographic_no");

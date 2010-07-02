@@ -375,7 +375,7 @@ public class TeleplanFileWriter {
         for (int i= 0; i < billMasterList.size(); i++){
             Billingmaster bm = (Billingmaster) billMasterList.get(i);
             bm.setDatacenter(dataCenterId);
-            //System.out.println(bm.toString());
+
             claims.increaseClaims();
             String logNo = getNextSequenceNumber();  
             String dataLine = getClaimDetailRecord(bm,logNo);  //NEED TO IMPLEMENT this method

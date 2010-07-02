@@ -299,7 +299,7 @@ public class DSDemographicAccess {
     /////New Billing Functionality
     //Days since last billed
 //    public boolean billedFor(String searchString,Hashtable options) throws DecisionSupportException {
-//        System.out.println("billedFor");
+
 //        return true;
 //    }
 

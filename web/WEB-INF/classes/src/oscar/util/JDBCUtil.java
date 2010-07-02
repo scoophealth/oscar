@@ -73,7 +73,7 @@ public class JDBCUtil
           {
              String columnName = strEscUtils.escapeXml(rsmd.getColumnName(i));
              String value      = strEscUtils.escapeXml(oscar.Misc.getString(rs,i));
-             //System.out.println(columnName+": "+value );
+
              Element node      = doc.createElement(columnName);
              node.appendChild(doc.createTextNode(value));
              row.appendChild(node);
@@ -165,12 +165,11 @@ public class JDBCUtil
             if (next!=null){
                 type = next.getNodeType();
                 if (type == next.TEXT_NODE){
-                    //System.out.println(next.getNodeValue());             
+
                     value = next.getNodeValue();
                 }
             }
 
-            //System.out.println(name + ": " + value);
             if(!name.equalsIgnoreCase("Results")&&!name.equalsIgnoreCase("Row")&&!name.equalsIgnoreCase("ID"))
                 rs.updateString(name, value);
         }

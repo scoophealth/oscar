@@ -11,7 +11,7 @@ public class OscarPropertyPlaceholderConfigurer extends PropertyPlaceholderConfi
 	 * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#resolvePlaceholder(java.lang.String, java.util.Properties, int)
 	 */
 	protected String resolvePlaceholder(String placeholder, Properties properties, int systemPropertiesMode) {
-		//System.out.println("resolvePlaceholder 1 " + placeholder);
+
 		Properties p2 = oscar.OscarProperties.getInstance();
 		System.out.println("oscarproperties="+p2.toString());
 		if(p2 != null && placeholder.startsWith("oscar.")) {
@@ -29,7 +29,7 @@ public class OscarPropertyPlaceholderConfigurer extends PropertyPlaceholderConfi
 	 * @see org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#resolvePlaceholder(java.lang.String, java.util.Properties)
 	 */
 	protected String resolvePlaceholder(String placeholder, Properties properties) {
-		//System.out.println("resolvePlaceholder 2" + placeholder);
+
 		Properties p2 = oscar.OscarProperties.getInstance();
 		System.out.println("oscarproperties="+p2.toString());
 		if(p2 != null && placeholder.startsWith("oscar.")) {

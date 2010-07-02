@@ -47,7 +47,7 @@ public class MsgDisplayMessagesAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-    // System.out.println("in display message action jackson");
+
             // Extract attributes we will need
             Locale locale = getLocale(request);
             MessageResources messages = getResources(request);
@@ -62,7 +62,7 @@ public class MsgDisplayMessagesAction extends Action {
 
             if(request.getParameter("providerNo")!=null & request.getParameter("userName")!=null)
             {
-                // System.out.println("in display message action jackson4");
+
                 bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
                 bean.setProviderNo(request.getParameter("providerNo"));
                 bean.setUserName(request.getParameter("userName"));
@@ -107,8 +107,7 @@ public class MsgDisplayMessagesAction extends Action {
             else {
                 System.out.println("Unexpected action in MsgDisplayMessagesBean.java");
             }
-           
-            //System.out.println("findFoward: " + findForward);
+
     return (mapping.findForward(findForward));
     }
 

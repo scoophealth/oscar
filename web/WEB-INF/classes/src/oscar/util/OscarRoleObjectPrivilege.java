@@ -86,7 +86,7 @@ public class OscarRoleObjectPrivilege {
             }
             
             String sql = new String("select roleUserGroup,privilege from secObjPrivilege where "+ objectWhere.toString() +" order by priority desc");
-            //System.out.println("sql for roles: "+sql );
+
             rs = db.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
@@ -95,7 +95,7 @@ public class OscarRoleObjectPrivilege {
             }
             ret.add(prop);
             ret.add(roleInObj);
-            //System.out.println(roleInObj);
+
             rs.close();
         } catch (java.sql.SQLException e) {
             e.printStackTrace(System.out);
@@ -161,7 +161,7 @@ public class OscarRoleObjectPrivilege {
                 //System.out.println("role: " + singleRoleName + " privilege:" +
                 // vecPrivilName.get(j));
                 check = checkRights((String) vecPrivilName.get(j), rights);
-                //System.out.println("check: " + check);
+
                 if (check[0]) { // get the rights, stop comparing
                     return true;
                 }

@@ -79,7 +79,7 @@ public class SxmlMisc extends Properties {
   	String val = "";
   	if(s==-1 || e==-1) return val;
   	val = str.substring(s+sTag.length(),e);
-  	//System.out.println(str+" - "+s+"  "+e+" - "+val);
+
   	return val;
   }
   public static String getXmlContent(String str, String sTagValue) {
@@ -123,9 +123,9 @@ public class SxmlMisc extends Properties {
   		s = stemp + s;
   	  str = str.substring(0,s) + newstr + str.substring(s+oldstr.length());
   	  stemp = s+newstr.length();
-  	//System.out.println(str+" s="+s+" stemp="+stemp);
+
   	  s = str.substring(stemp).indexOf(oldstr);
-  	//System.out.println(str.substring(stemp)+" s="+s);
+
   	} 
   	return str;
   }

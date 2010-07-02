@@ -53,8 +53,7 @@ public class PatientMatchAction extends Action {
       String labType = request.getParameter("labType");
       
       String newURL = "";
-      
-      // System.out.println("In ReportReassignAction: labNo is: "+labNo+"  demographicNo is: "+demographicNo);      
+
       try {
          CommonLabResultData.updatePatientLabRouting(labNo, demographicNo,labType);
          newURL = mapping.findForward("success").getPath();
@@ -63,7 +62,7 @@ public class PatientMatchAction extends Action {
          System.out.println("exception in ReportReassignAction:"+e);
          newURL = mapping.findForward("failure").getPath();
       }
-      // System.out.println("In ReportReassignAction: newURL is: "+newURL);
+
       return (new ActionForward(newURL));
    }
 }

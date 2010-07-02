@@ -108,7 +108,7 @@ public class dxQuickListItemsHandler {
             for( int idx = 0; idx < codingSystems.length; ++idx ) {
                 codingSystem = codingSystems[idx];
                 sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";           
-                //System.out.println("when does this get called "+sql);
+
                 ResultSet rs = db.GetSQL(sql);            
                 while(rs.next()){                
                     dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),

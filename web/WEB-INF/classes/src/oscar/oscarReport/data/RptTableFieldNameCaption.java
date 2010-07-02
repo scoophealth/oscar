@@ -84,7 +84,7 @@ public class RptTableFieldNameCaption {
         for (int i = 0; i < vec.size(); i++) {
             tempName = (String) vec.get(i);
             if (tempName.matches(RptTableShadowFieldConst.fieldName)) {
-                //System.out.println(db.getString(rs,"name"));
+
                 continue;
             }
             temp = prop.getProperty(tempName, "");

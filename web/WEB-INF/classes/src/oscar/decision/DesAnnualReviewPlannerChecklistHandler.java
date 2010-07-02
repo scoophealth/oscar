@@ -42,7 +42,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
     }
 
     public void setDocumentLocator(Locator locator) {
-        // System.out.println(" * setDocumentLocator() called");
+
         this.locator = locator;
     }
 
@@ -64,11 +64,11 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
     }
 
     public void startPrefixMapping(String prefix, String uri) {
-        // System.out.println("Mapping starts for prefix " + prefix + " mapped to URI " + uri);
+
     }
 
     public void endPrefixMapping(String prefix) {
-        // System.out.println("Mapping ends for prefix " + prefix);
+
     }
 
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
@@ -106,7 +106,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
                     // sxmlrisks.getXmlContent(risks,starttag,endtag); if (savedriskname != null &&
                     // savedriskname.compareTo("checked")==0){
                     if (savedar1params.getProperty(riskName) != null) {
-                        //System.out.println("getProperty ends for prefix :" + savedar1params.getProperty(riskName));
+
                         display = true;
                         break;
                     }
@@ -194,7 +194,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
 
     public void characters(char[] ch, int start, int length) throws SAXException {
         String s = new String(ch, start, length);
-        // System.out.println("characters: " + s);
+
         if (display) {
             results += s;
         }
@@ -202,7 +202,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
 
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         String s = new String(ch, start, length);
-        // System.out.println("ignorableWhiteSpace: [" + s + "]");
+
     }
 
     public void skippedEntity(String name) throws SAXException {

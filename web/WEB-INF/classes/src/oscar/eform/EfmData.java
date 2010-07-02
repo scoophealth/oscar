@@ -60,7 +60,7 @@ public class EfmData {
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
          String sql = "select form_name,subject,form_date,form_time,form_provider from eform_data where demographic_no = '"+demographicNo+"' and form_name like '"+formName+"%' and status = '1' order by form_date,form_time desc";        
-         //System.out.println(sql);            
+
          ResultSet rs = db.GetSQL(sql);                                                
          if (rs.next()){
             ret = new Hashtable();

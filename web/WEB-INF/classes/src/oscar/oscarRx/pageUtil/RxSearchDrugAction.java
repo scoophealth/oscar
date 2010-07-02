@@ -50,7 +50,7 @@ public final class RxSearchDrugAction extends DispatchAction {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-   //     System.out.println("***IN RxSearchDrugAction.java");
+
             // Setup variables
             RxSearchDrugForm reqForm = (RxSearchDrugForm) form;
             String genericSearch = reqForm.getGenericSearch();

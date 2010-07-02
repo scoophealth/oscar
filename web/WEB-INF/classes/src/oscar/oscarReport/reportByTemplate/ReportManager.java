@@ -256,7 +256,7 @@ CREATE TABLE reportTemplates (
                 }
                 String sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active) " +
                         "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + reportXML + "', " + activeint + ")";
-                //System.out.println("sql: " + sql);
+
                 try {
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                     db.RunSQL(sql);

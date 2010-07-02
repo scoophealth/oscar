@@ -83,9 +83,9 @@ public class RxSendToPhrAction extends Action {
                       } else { //if adding*/
                       
                       //only add new drugs, no updating old drugs because they cannot be edited
-                      //System.out.println("Checking drug: " + drug.getDrugName());
+
                       if (!phrService.isIndivoRegistered(phrConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"")) {
-                          //System.out.println("Entering phrService");
+
                           phrService.sendAddMedication(prov, demoNo, patientMyOscarId, drug);
                       }
                       //throw new Exception("Error: Cannot marshal the document");

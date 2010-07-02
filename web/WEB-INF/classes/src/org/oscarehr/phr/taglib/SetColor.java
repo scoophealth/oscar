@@ -56,9 +56,9 @@ public class SetColor extends TagSupport {
 				.getBean("phrService");
         PHRAuthentication phrAuth = (PHRAuthentication) pageContext.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         String providerNo = (String) pageContext.getSession().getAttribute("user");
-        //System.out.println("provider: " + providerNo);
-        //System.out.println("phrAuth: " + phrAuth);
-        //System.out.println("validAuth: " + phrService.validAuthentication(phrAuth));
+
+
+
         try {
             if (phrAuth == null || !phrService.validAuthentication(phrAuth) || providerNo == null) {
                 pageContext.getOut().print(noAuthorizationHtml);

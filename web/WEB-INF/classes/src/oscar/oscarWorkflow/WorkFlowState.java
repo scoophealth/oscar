@@ -68,7 +68,7 @@ public class WorkFlowState {
         int id = -1;
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "insert into workflow (workflow_type,provider_no, demographic_no, completion_date,current_state,create_date_time) values (?,?,?,?,?,now())" ;
             Connection  conn = DBHandler.getConnection();
@@ -103,7 +103,7 @@ public class WorkFlowState {
     public void updateWorkFlowState(String workflowId,String state ){
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "update workflow set current_state = ? where ID = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -119,7 +119,7 @@ public class WorkFlowState {
     public void updateWorkFlowState(String workflowId,String state, Date date ){
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "update workflow set current_state = ?, completion_date = ? where ID = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -138,7 +138,7 @@ public class WorkFlowState {
         ArrayList list = new ArrayList();
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select * from workflow where workflow_type = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -163,7 +163,7 @@ public class WorkFlowState {
         ArrayList list = new ArrayList();
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select * from workflow where workflow_type = ? and current_state != 'C'" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -201,7 +201,7 @@ public class WorkFlowState {
         ArrayList list = new ArrayList();
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select * from workflow where workflow_type = ? and demographic_no = ? and current_state != 'C'" ;
             System.out.println("workflow type "+workflowType+" demo "+demographicNo);

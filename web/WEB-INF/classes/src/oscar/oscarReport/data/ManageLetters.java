@@ -67,7 +67,7 @@ public class ManageLetters {
         
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "insert into report_letters (provider_no,report_name, file_name,report_file,date_time,archive) values (?,?,?,?,now(),'0')" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -87,7 +87,7 @@ public class ManageLetters {
     public void archiveReport(String id){
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "update report_letters set archive = '1' where id =  ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -105,7 +105,7 @@ public class ManageLetters {
         DBHandler dbhandler = null;
         JasperReport  jasperReport = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select report_file from report_letters where id  = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -149,7 +149,7 @@ public class ManageLetters {
         DBHandler dbhandler = null;
         
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select report_file from report_letters where id  = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -188,7 +188,7 @@ public class ManageLetters {
         DBHandler dbhandler = null;
         ArrayList list = new ArrayList();
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where archive = '0' order by date_time,report_name" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -209,7 +209,7 @@ public class ManageLetters {
         DBHandler dbhandler = null;
         Hashtable h = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where ID = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
@@ -252,7 +252,7 @@ public class ManageLetters {
         
          DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "insert into log_letters (provider_no,report_id, log, date_time) values (?,?,?,now())" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);

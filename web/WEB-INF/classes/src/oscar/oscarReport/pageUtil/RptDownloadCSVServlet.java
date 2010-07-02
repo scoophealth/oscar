@@ -104,16 +104,13 @@ public class RptDownloadCSVServlet extends HttpServlet {
             reportName = (new RptReportItem()).getReportName(reportId);
             RptFormQuery formQuery = new RptFormQuery();
             String reportSql = formQuery.getQueryStr(reportId, request);
-            // System.out.println("SQL: " + reportSql);
 
             RptReportConfigData formConfig = new RptReportConfigData();
             Vector[] vecField = formConfig.getAllFieldNameValue(SAVE_AS, reportId);
             Vector vecFieldCaption = vecField[1];
             Vector vecFieldName = vecField[0];
-            // System.out.println("SQL: 1");
-            Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
 
-            // System.out.println("SQL: 2");
+            Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
 
             StringWriter swr = new StringWriter();
             CSVPrinter csvp = new CSVPrinter(swr);
@@ -250,7 +247,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
 
                 vecValue.add(request.getParameter(name));
                 vecDateFormat.add(request.getParameter(DATE_FORMAT + serialNo));
-                // System.out.println(" tempVal: " + name.substring(VALUE.length()) );
+
             }
         }
 //         get seq. select string

@@ -42,8 +42,8 @@ public class EctConShowAllServicesAction extends Action {
       EctConShowAllServicesForm showAllServicesForm = (EctConShowAllServicesForm)form;
       String serviceId = showAllServicesForm.getServiceId();
       String serviceDesc = showAllServicesForm.getServiceDesc();
-      //System.out.println("service id = ".concat(String.valueOf(String.valueOf(serviceId))));
-      //System.out.println("service desc = ".concat(String.valueOf(String.valueOf(serviceDesc))));
+
+
       request.setAttribute("serviceId", serviceId);
       request.setAttribute("serviceDesc", serviceDesc);
       return mapping.findForward("success");

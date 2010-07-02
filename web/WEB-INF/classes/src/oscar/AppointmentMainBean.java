@@ -153,7 +153,7 @@ public class AppointmentMainBean {
 	  	sqlQuery = dbSQL.getDef(dboperation,"");
     	rs = dbPH.queryResults(sqlQuery, aKeyword);
 	  }
-	//  System.out.println("sqlQuery=" + sqlQuery);  
+
   	return rs;
   }
 
@@ -168,7 +168,7 @@ public class AppointmentMainBean {
 	  	sqlQuery = dbSQL.getDef(dboperation,"");
   	    rs = dbPH.queryResults_paged(sqlQuery, aKeyword, iOffSet);
 	  }
-   // System.out.println("sqlQuery=" + sqlQuery);
+
 	return rs;
 }
 

@@ -229,8 +229,6 @@ public class DemographicDao extends HibernateDaoSupport {
     
      public List<Demographic> searchDemographic(String searchStr){
         String fieldname = "", regularexp = "like";
-          
-        //System.out.println("searchStr" + searchStr);
 
         if (searchStr.indexOf(",") == -1) {
             fieldname = "last_name";

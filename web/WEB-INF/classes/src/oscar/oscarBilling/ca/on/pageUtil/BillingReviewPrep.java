@@ -87,11 +87,11 @@ public class BillingReviewPrep {
 			// bigCodeFee.toString());
 			BigDecimal bigCodeUnit = new BigDecimal((String) vecUnit.get(i));
 			BigDecimal bigCodeAt = new BigDecimal((String) vecAt.get(i));
-			// System.out.println("big bigCodeAt: " + (String) vecAt.get(i));
+
 			BigDecimal bigFee = bigCodeFee.multiply(bigCodeUnit);
-			// System.out.println("big fee1: " + bigFee.toString());
+
 			bigFee = bigFee.multiply(bigCodeAt);
-			// System.out.println("big fee2: " + bigFee.toString());
+
 			bigFee = bigFee.setScale(2, BigDecimal.ROUND_HALF_UP);
 			// bigFee = bigFee.round(new MathContext(2));
 			System.out.println("big end: " + bigFee.toString());
@@ -169,9 +169,9 @@ public class BillingReviewPrep {
                                 }
                                 
 				BigDecimal bigFee = bigCodeFee.multiply(new BigDecimal(fee));
-				// System.out.println("big fee1: " + bigFee.toString());
+
 				// bigFee = bigFee.multiply(bigCodeAt);
-				// System.out.println("big fee2: " + bigFee.toString());
+
 				bigFee = bigFee.setScale(4, BigDecimal.ROUND_HALF_UP);
 				// bigFee = bigFee.round(new MathContext(2));
 				vecCodeTotal.add(bigFee.toString());

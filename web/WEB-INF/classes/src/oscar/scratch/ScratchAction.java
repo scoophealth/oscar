@@ -52,7 +52,7 @@ public class ScratchAction extends Action {
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //String request.getParameter("");
-        //System.out.println("ScratchAction Jackson");
+
         String providerNo =  (String) request.getSession().getAttribute("user");
         String id = (String) request.getParameter("id");
         String dirty = (String) request.getParameter("dirty");

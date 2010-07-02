@@ -83,12 +83,12 @@ public class UnusedMinutesReporter implements Reporter{
             int latestApptHour, latestApptMin;            
             while(rs.next()) {
                 timecodes = rs.getString("timecode"); 
-                //System.out.println("TIME CODES " + timecodes);
+
                 duration = dayMins/timecodes.length();
-                //System.out.println("DURATION " + duration);
+
                 schedDate = rs.getString("sdate");
                 tmpApptSQL = apptSQL + schedDate + "' order by start_time asc";
-                //System.out.println("APPT SQL " + tmpApptSQL);                        
+
                 rs2 = db.GetSQL(tmpApptSQL);
                 codePos = 0;
                 latestApptHour = latestApptMin = 0;
@@ -101,7 +101,7 @@ public class UnusedMinutesReporter implements Reporter{
                         apptTime = rs2.getString("start_time");
                         apptHour_s = Integer.parseInt(apptTime.substring(0,2));
                         apptMin_s = Integer.parseInt(apptTime.substring(3,5));
-                        //System.out.println("iHours " + iHours + " = " + apptHour_s + " iMins " + iMins + " = " + apptMin_s);                     
+
                         if( iHours == apptHour_s && iMins == apptMin_s ) {
                             apptTime = rs2.getString("end_time");
                             apptHour_e = Integer.parseInt(apptTime.substring(0,2));

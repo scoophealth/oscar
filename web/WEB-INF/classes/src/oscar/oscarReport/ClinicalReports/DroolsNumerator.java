@@ -81,8 +81,7 @@ public class DroolsNumerator implements Numerator{
 //            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
 //           Collection v = ect.getMeasurementsDataVector();
 //           measurementList.add(new ArrayList(v));
-//            
-            System.out.println("new MeasurementDSHelper class");
+
             MeasurementDSHelper dshelper = new MeasurementDSHelper(demographicNo);
             
             System.out.println("new working mem");

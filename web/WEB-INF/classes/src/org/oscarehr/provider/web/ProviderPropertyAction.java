@@ -261,15 +261,15 @@ public class ProviderPropertyAction extends DispatchAction {
 
          DynaActionForm frm = (DynaActionForm)actionform;
          String provider = (String) request.getSession().getAttribute("user");
-         //System.out.println("provider # "+provider);
+
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.MYDRUGREF_ID);
          //String propertyToSet = "";
          //if( prop != null ) {
          //   propertyToSet = prop.getValue();
-         //    System.out.println("prop was not null "+prop.getValue());
+
          //}else{
          //    prop = new UserProperty();
-         //    System.out.println("PROP WAS NULL");
+
          //}
 
          if (prop == null){
@@ -440,10 +440,10 @@ public class ProviderPropertyAction extends DispatchAction {
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-        // System.out.println(" in viewProfileView");
+
          DynaActionForm frm = (DynaActionForm)actionform;
          String provider = (String) request.getSession().getAttribute("user");
-         //System.out.println("provider # "+provider);
+
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
 
          String propValue="";
@@ -482,12 +482,12 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("method","saveRxProfileView");
 
          frm.set("rxProfileViewProperty", prop);
-         //System.out.println("Finish in viewProfileView");
+
          return actionmapping.findForward("genRxProfileView");
      }
 
    public ActionForward saveRxProfileView(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-        //System.out.println(" in saveProfileView");
+
        try{
         String provider=(String) request.getSession().getAttribute("user");
 
@@ -525,7 +525,7 @@ public class ProviderPropertyAction extends DispatchAction {
        }catch(Exception e){
            e.printStackTrace();
        }
-         //System.out.println("Finish in saveProfileView");
+
          return actionmapping.findForward("genRxProfileView");
     }
 
@@ -677,7 +677,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletRequest request,
                                HttpServletResponse response) {
          String provider = (String) request.getSession().getAttribute("user");
-         //System.out.println("provider # "+provider);
+
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -720,7 +720,7 @@ public class ProviderPropertyAction extends DispatchAction {
 
          DynaActionForm frm = (DynaActionForm)actionform;
          String provider = (String) request.getSession().getAttribute("user");
-         //System.out.println("provider # "+provider);
+
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_USERNAME);
          UserProperty prop2 = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_PASSWORD);
 
@@ -755,7 +755,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletRequest request,
                                HttpServletResponse response) {
          String provider = (String) request.getSession().getAttribute("user");
-         //System.out.println("provider # "+provider);
+
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -841,7 +841,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletRequest request,
                                HttpServletResponse response) {
          String provider = (String) request.getSession().getAttribute("user");
-         //System.out.println("provider # "+provider);
+
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";
@@ -906,7 +906,7 @@ public class ProviderPropertyAction extends DispatchAction {
 
          //conUtil.teamVec.add("All");
          //conUtil.teamVec.add("None");
-//         System.out.println("cont size "+conUtil.teamVec.size());
+
          request.setAttribute("dropOpts",serviceList);
 
          request.setAttribute("dateProperty",prop);
@@ -929,7 +929,7 @@ public class ProviderPropertyAction extends DispatchAction {
                                HttpServletRequest request,
                                HttpServletResponse response) {
          String provider = (String) request.getSession().getAttribute("user");
-         //System.out.println("provider # "+provider);
+
          DynaActionForm frm = (DynaActionForm)actionform;
          UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");
          String drugrefId = "";

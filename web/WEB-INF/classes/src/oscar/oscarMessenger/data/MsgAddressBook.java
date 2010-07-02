@@ -80,7 +80,6 @@ public class MsgAddressBook {
             rs.close();
          }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
 
-         // System.out.println("myAddressBook :"+retval);
       return retval;
    }
    //---------------------------------------------------------------------------
@@ -124,7 +123,7 @@ public class MsgAddressBook {
       depth++;
 
       Element element = (Element) node;
-      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
+
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){
@@ -195,9 +194,9 @@ public class MsgAddressBook {
 ////////////////////////////////////////////////////////////////////////////////
    public void displayRemoteNodes(Node node,JspWriter out,int depth,String[] thePros,int remoId, java.util.Vector locationVector){
       depth++;
-      // System.out.println("\n\nIM IN REMOTE NODES!!!!!"+(String)remoteLocationId.elementAt(remoId)+"!!!!!!!\n\n");
+
       Element element = (Element) node;
-      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
+
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){
@@ -268,9 +267,9 @@ public class MsgAddressBook {
 ////////////////////////////////////////////////////////////////////////////////
    public void displayRemoteNodes2(Node node,JspWriter out,int depth,oscar.oscarMessenger.data.MsgReplyMessageData reData,int remoId, java.util.Vector locationVector){
       depth++;
-      // System.out.println("\n\nIM IN REMOTE NODES!!!!!"+(String)remoteLocationId.elementAt(remoId)+"!!!!!!!\n\n");
+
       Element element = (Element) node;
-      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
+
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){
@@ -303,11 +302,11 @@ public class MsgAddressBook {
             }
 
          }else{
-               //System.out.println("Im here");
+
                //int binSearch = java.util.Arrays.binarySearch(thePros,element.getAttribute("id")) ;
-               //System.out.println("the binsearch returned "+binSearch+" there are "+locationVector.size()+" in the locationVector ");
+
                //if ( ( binSearch > 0 ) && ( ( (String) locationVector.elementAt(binSearch) ).equals( (String) remoteLocationId.elementAt(remoId)  ) )){
-               //System.out.println("i found it at = "+locationVector.elementAt(binSearch));
+
                if (reData.remoContains((String) element.getAttribute("id"), (String) remoteLocationId.elementAt(remoId)) ){
                   out.print("<input type=\"checkbox\" name=provider value="+element.getAttribute("id")+"@"+((String)remoteLocationId.elementAt(remoId))+" checked > "+element.getAttribute("desc")+"\n");
                }else{

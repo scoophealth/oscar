@@ -100,7 +100,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
-        //System.out.println("In here DocumentUpdate");
+
          String ret = "";
 
 
@@ -115,15 +115,15 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         String demographicKeyword = request.getParameter("demographicKeyword");
         String[] flagproviders = request.getParameterValues("flagproviders");
         String demoLink=request.getParameter("demoLink");
-        //System.out.println("DOCUMNET " + documentDAO);
-        //System.out.println("link to prov "+demoLink+" demo "+demog);
+
+
         //TODO: if demoLink is "on", check if msp is in flagproviders, if not save to providerInboxRouting, if yes, don't save.
 
         //DONT COPY THIS !!!
          if (flagproviders !=null && flagproviders.length > 0){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
              try{
                 for(String proNo:flagproviders){
-                    //System.out.println("flagproviders="+flagproviders.length+"; flagproviders="+flagproviders);
+
                     for(int i=0;i<flagproviders.length;i++){
                         System.out.println("element="+flagproviders[i]);
                     }
@@ -133,21 +133,21 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
              }catch(Exception e){e.printStackTrace();}
         }
         Document d = documentDAO.getDocument(documentId);
-        //System.out.println("aaa " + d);
+
         d.setDocdesc(documentDescription);
         d.setDoctype(docType);
         Date obDate = UtilDateUtilities.StringToDate(observationDate);
-        //System.out.println("Date util " + obDate);
+
         if (obDate != null) {
             d.setObservationdate(obDate);
         }
-        //System.out.println("bbb " + d);
+
         documentDAO.save(d);
-        //System.out.println("Document " + d.getDocfilename() + " desc " + d.getDocdesc());
+
         try {
-            //System.out.println("parse Int " + Integer.parseInt(demog));
+
             CtlDocument ctlDocument = documentDAO.getCtrlDocument(Integer.parseInt(documentId));
-            //System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
+
             ctlDocument.setModuleId(Integer.parseInt(demog));
             documentDAO.saveCtlDocument(ctlDocument);
             //save a document created note
@@ -160,7 +160,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         }
         if (flagproviders != null) {
             for (String str : flagproviders) {
-                //System.out.println("str " + str);
+
             }
         }
         if (ret != null && !ret.equals("")) {
@@ -174,7 +174,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
 
     public ActionForward documentUpdate(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
-        //System.out.println("In here DocumentUpdate");
+
          String ret = "";
 
 
@@ -189,15 +189,15 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         String demographicKeyword = request.getParameter("demographicKeyword");
         String[] flagproviders = request.getParameterValues("flagproviders");
         String demoLink=request.getParameter("demoLink");
-        //System.out.println("DOCUMNET " + documentDAO);
-        //System.out.println("link to prov "+demoLink+" demo "+demog);        
+
+
         //TODO: if demoLink is "on", check if msp is in flagproviders, if not save to providerInboxRouting, if yes, don't save.
 
         //DONT COPY THIS !!!
          if (flagproviders !=null && flagproviders.length > 0){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
              try{
                 for(String proNo:flagproviders){
-                    //System.out.println("flagproviders="+flagproviders.length+"; flagproviders="+flagproviders);
+
                     for(int i=0;i<flagproviders.length;i++){
                         System.out.println("element="+flagproviders[i]);
                     }
@@ -207,21 +207,21 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
              }catch(Exception e){e.printStackTrace();}
         }
         Document d = documentDAO.getDocument(documentId);
-        //System.out.println("aaa " + d);
+
         d.setDocdesc(documentDescription);
         d.setDoctype(docType);
         Date obDate = UtilDateUtilities.StringToDate(observationDate);
-        //System.out.println("Date util " + obDate);
+
         if (obDate != null) {
             d.setObservationdate(obDate);
         }
-        //System.out.println("bbb " + d);
+
         documentDAO.save(d);
-        //System.out.println("Document " + d.getDocfilename() + " desc " + d.getDocdesc());
+
         try {
-            //System.out.println("parse Int " + Integer.parseInt(demog));
+
             CtlDocument ctlDocument = documentDAO.getCtrlDocument(Integer.parseInt(documentId));
-            //System.out.println("CtlDocument1 " + ctlDocument.getModuleId());
+
             ctlDocument.setModuleId(Integer.parseInt(demog));
             documentDAO.saveCtlDocument(ctlDocument);
             //save a document created note
@@ -234,7 +234,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         }
         if (flagproviders != null) {
             for (String str : flagproviders) {
-                //System.out.println("str " + str);
+
             }
         }
         if (ret != null && !ret.equals("")) {
@@ -273,7 +273,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
                     String provFirstName=EDocUtil.getProviderInfo("first_name", user_no);
                     String provLastName=EDocUtil.getProviderInfo("last_name", user_no);
                     String strNote="Document"+" "+docDesc+" "+  "created at "+now+" by "+provFirstName+" "+provLastName+".";
-                    //System.out.println("here0 "+strNote);
+
                    // String strNote="Document"+" "+docDesc+" "+  "created at "+now+".";
                     cmn.setNote(strNote);
                     cmn.setSigned(true);
@@ -326,7 +326,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         File documentDir = new File(docdownload);
         File documentCacheDir = getDocumentCacheDir(docdownload);
         log.debug("Document Dir is a dir"+documentDir.isDirectory());
-        //System.out.println("getdocfilename: "+d.getDocfilename());
+
         File file = new File(documentDir,d.getDocfilename());
 
         RandomAccessFile raf = new RandomAccessFile(file, "r");
@@ -366,7 +366,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
     }
     //PNG version
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        //System.out.println("in managedocumentaction--view");
+
        try{
            String doc_no = request.getParameter("doc_no");
            log.debug("Document No :"+doc_no);
@@ -380,7 +380,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         if (outfile == null){
             System.out.println("No Cache Version");
            outfile = createCacheVersion( d);
-           //System.out.println("outfile after create cache version "+outfile);
+
         }else{
             System.out.println("THERE WAS A CACHE Version "+outfile);
         }
@@ -416,7 +416,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
     }
 
     public ActionForward view2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        //System.out.println("in managedocumentaction--view2222");
+
         //TODO: NEED TO CHECK FOR ACCESS
         String doc_no = request.getParameter("doc_no");
            log.debug("Document No :"+doc_no);
@@ -473,18 +473,18 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
 
 
     public ActionForward getDocPageNumber(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        //System.out.println("in getDocPageNumber");
+
         String doc_no=request.getParameter("doc_no");
         String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         //File documentDir = new File(docdownload);
         Document d = documentDAO.getDocument(doc_no);
         String filePath=docdownload+d.getDocfilename();
-        //System.out.println("filePath="+filePath);
+
         int numOfPage=0;
         try{
             PdfReader reader =new PdfReader(filePath);
             numOfPage=reader.getNumberOfPages();
-            //System.out.println("num of pages="+numOfPage);
+
             HashMap hm = new HashMap();
             hm.put("numOfPage", numOfPage);
             JSONObject jsonObject = JSONObject.fromObject(hm);
@@ -496,7 +496,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         return null;//execute2(mapping, form, request, response);
     }
         public ActionForward display(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
-        //System.out.println("in managedocumentaction--display");
+
         String doc_no = request.getParameter("doc_no");
            log.debug("Document No :"+doc_no);
 
@@ -528,7 +528,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         if (contentType == null){
             contentType = "application/pdf";
         }
-        //System.out.println("Content type was set tooo "+contentType);
+
         File file = new File(documentDir,d.getDocfilename());
         response.setContentType(contentType);
         response.setContentLength((int)file.length());

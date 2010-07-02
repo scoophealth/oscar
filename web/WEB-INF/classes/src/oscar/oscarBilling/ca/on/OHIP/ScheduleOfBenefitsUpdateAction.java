@@ -99,9 +99,9 @@ public class ScheduleOfBenefitsUpdateAction extends Action {
                h.put("code",change[0]);
                h.put("value",change[1]);
                list.add(h);
-               //System.out.println(change.length);
+
                //for ( int j = 0; j < change.length; j++){
-               //   System.out.println(j+" "+change[j]);
+
                //}
                request.setAttribute("changes",list);
             }else{

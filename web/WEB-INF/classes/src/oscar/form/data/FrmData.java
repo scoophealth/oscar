@@ -218,18 +218,18 @@ public class FrmData {
             ////////////////////////
 //            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
 //                ret = getShortcutFormValue(demoNo, "AR2005");
-//                System.out.println("ret[0] is: " + ret[0]);                
+
 //                String[] foo = ret[0].split(".jsp");
 //                ret[0] = foo[0] + "pg1.jsp" + foo[1];
-//                System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+
 //            }
 //            String[] ret_backup =  (String[]) ret.clone();
 //            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
 //                ret = getShortcutFormValue(demoNo, "AR");
-//                System.out.println("ret[0] is: " + ret[0]);                
+
 //                String[] foo = ret[0].split(".jsp");
 //                ret[0] = foo[0] + "pg1.jsp" + foo[1];
-//                System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+
 //            }
 //            if ( ret[1].equals("0") && formName.equals("AR1") && !xmlForm[1].equals("0")) { // ditto
 //                ret = xmlForm;
@@ -242,7 +242,7 @@ public class FrmData {
 //                ret = getShortcutFormValue(demoNo, "AR");
 //                String[] foo = ret[0].split(".jsp");
 //                ret[0] = foo[0] + "pg2.jsp" + foo[1];
-//                System.out.println("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
+
 //            }
         } else {
             sql = "SELECT ID FROM " + table + " WHERE demographic_no=" + demoNo +" order by formEdited desc limit 0,1";

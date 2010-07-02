@@ -102,8 +102,7 @@ public final class BillingViewAction extends Action {
             //    bean.setApptStart(request.getParameter("start_time"));
             //    bean.setApptStatus(request.getParameter("status"));
             request.getSession().setAttribute("billingViewBean", bean);
-            
-            //	                  System.out.println("PatientName is:" + bean.getPatientName());
+
             //            }//if
             //else
             //{

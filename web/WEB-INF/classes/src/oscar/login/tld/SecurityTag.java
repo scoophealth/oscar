@@ -91,7 +91,7 @@ public class SecurityTag implements Tag {
 	            ret = SKIP_BODY;
 	        }
         }
-        //System.out.println("reverse: " + reverse);
+
         if (reverse) {
             if (ret == EVAL_BODY_INCLUDE)
                 ret = SKIP_BODY;
@@ -122,7 +122,7 @@ public class SecurityTag implements Tag {
             }
             
             String sql = new String("select roleUserGroup,privilege from secObjPrivilege where "+ objectWhere.toString() +" order by priority desc");
-            //System.out.println("sql for roles: "+sql );
+
             rs = db.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
@@ -131,7 +131,7 @@ public class SecurityTag implements Tag {
             }
             ret.add(prop);
             ret.add(roleInObj);
-            //System.out.println(roleInObj);
+
             rs.close();
         } catch (java.sql.SQLException e) {
             e.printStackTrace(System.out);
@@ -199,7 +199,7 @@ public class SecurityTag implements Tag {
                 //System.out.println("role: " + singleRoleName + " privilege:" +
                 // vecPrivilName.get(j));
                 check = checkRights((String) vecPrivilName.get(j), rights);
-                //System.out.println("check: " + check);
+
                 if (check[0]) { // get the rights, stop comparing
                     return true;
                 }

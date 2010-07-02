@@ -60,8 +60,7 @@ public class DateInMonthTable {
 		int lastDay=0;
 		int rows=0, cols=0;
 		int [][] monthDateGrid=null;
-		
-		//System.out.println("curent year: " +curYear+ "month: " + curMonth + " day: " + curDay);
+
     for(lastDay=31; lastDay>26; lastDay--) {
 			calendar=new GregorianCalendar(curYear,curMonth,lastDay);
 			if(calendar.get(Calendar.MONTH)!=curMonth) continue;
@@ -70,26 +69,26 @@ public class DateInMonthTable {
 		rows=calendar.get(Calendar.WEEK_OF_MONTH);
 		cols=7;
 		monthDateGrid=new int [rows][cols];
-		//System.out.println("lastDay is: " +lastDay);
+
 		calendar=new GregorianCalendar(curYear,curMonth, 1);
-		//System.out.println("curent year: " +curYear+ " month: " + curMonth + " first day: " + calendar.get(Calendar.DAY_OF_MONTH));
-		//System.out.println("week of month: " +calendar.get(Calendar.WEEK_OF_MONTH)+ " day of week: " + calendar.get(Calendar.DAY_OF_WEEK));
+
+
 		int firstDayOfWeek=calendar.get(Calendar.DAY_OF_WEEK);
     int day=1;
     for(int row=0; row<rows; row++) {
     	for(int col=0; col<cols; col++) {
     		if(col<firstDayOfWeek-1) {
     			monthDateGrid[row][col]=0;
-					//System.out.println("f Day["+row+"]["+col+"]= "+monthDateGrid[row][col]);
+
     		} else {
 					firstDayOfWeek=0;//don't need this first week data anymore
     			if(day<=lastDay) {
     				monthDateGrid[row][col]=day;
     				day++;
-						//System.out.println("d Day["+row+"]["+col+"]= "+monthDateGrid[row][col]);
+
 					} else {
     				monthDateGrid[row][col]=0;
-						//System.out.println("l Day["+row+"]["+col+"]= "+monthDateGrid[row][col]);
+
 					}
 				}				
     	}

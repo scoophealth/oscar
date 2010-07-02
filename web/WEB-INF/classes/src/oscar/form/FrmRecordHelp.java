@@ -74,10 +74,9 @@ public class FrmRecordHelp {
         rs = updateResultSet(props, rs, true);
         rs.insertRow();
         String saveAsXml = OscarProperties.getInstance().getProperty("save_as_xml", "false");
-        //System.out.println("the value of save_as_xml is: " + saveAsXml);
 
         if (saveAsXml.equalsIgnoreCase("true")) {
-            //System.out.println("savs as XML");
+
             String demographicNo = props.getProperty("demographic_no");
             int index = sql.indexOf("form");
             int spaceIndex = sql.indexOf(" ", index);
@@ -138,7 +137,7 @@ public class FrmRecordHelp {
                 if (value != null) {
                     if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("checked='checked'")) {
                         rs.updateInt(name, 1);   
-                        //System.out.println(name + "   - " + md.getColumnTypeName(i) + value);
+
                     } else {
                         rs.updateInt(name, 0);
                     }

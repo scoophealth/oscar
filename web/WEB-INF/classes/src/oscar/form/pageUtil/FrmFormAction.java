@@ -160,7 +160,7 @@ public class FrmFormAction extends Action {
             props.setProperty("givenName", demo.getFirstName());
             
             String diagnosisVT = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("diagnosisVT"));
-            //System.out.println("diagnosisVT >"+diagnosisVT+"< form val >"+frm.getValue("diagnosisVT"));
+
             String subjective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("subjective"));
             String objective = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("objective"));
             String assessment = org.apache.commons.lang.StringEscapeUtils.escapeSql((String) frm.getValue("assessment"));
@@ -172,8 +172,7 @@ public class FrmFormAction extends Action {
             props.setProperty("Objective", objective);
             props.setProperty("Assessment", assessment);
             props.setProperty("Plan", plan);
-            //System.out.println("diagnosis: " + props.getProperty("diagnosis"));
-           
+
             startTime = System.currentTimeMillis();
             for(int i=0; i<measurementTypes.size(); i++){
                 System.out.println("current mem 7.1."+i+" "+currentMem()); 
@@ -200,7 +199,7 @@ public class FrmFormAction extends Action {
                 inputValue = parseCheckBoxValue(inputValue, validation.getName());
                 
                 //Write to Measurement Table
-                //System.out.println("write2Measurement type: " + type + " inputValue: " + inputValue);
+
                 if(inputValue!=null){
                     if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))                    //System.out.println("write to measurement table: " + mt.getType());
                         write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
@@ -211,8 +210,7 @@ public class FrmFormAction extends Action {
                     props.setProperty(type+"LastData", lastData);
                 if(lastDataEnteredDate!=null)
                     props.setProperty(type+"LastDataEnteredDate", lastDataEnteredDate);
-                //System.out.println("type: " + type + " input: " + inputValue);
-                
+
                 props.setProperty(type+"Date", observationDate==null?dateEntered:observationDate);
                 props.setProperty(type+"Comments", comments==null?"":comments);                
                     
@@ -304,8 +302,7 @@ public class FrmFormAction extends Action {
         String inputValueName = mt.getType()+"Value";   
         String inputDateName = mt.getType()+"Date";
         String regExp = validation.getRegularExp();
-        
-        //System.out.println("Input Value of " + mt.getType() + ":" + inputValue);
+
         double dMax = Double.parseDouble(validation.getMaxValue()==null?"0":validation.getMaxValue());
         double dMin = Double.parseDouble(validation.getMinValue()==null?"0":validation.getMinValue());
         int iMax = Integer.parseInt(validation.getMaxLength()==null?"0":validation.getMaxLength());
@@ -365,7 +362,7 @@ public class FrmFormAction extends Action {
                                         EctMeasurementTypesBean mt, String inputValue, 
                                         String dateObserved, String comments){
         boolean newDataAdded = false;
-        //System.out.println("writing to Measurement: " + mt.getType() + " value: " + inputValue + " dateObserved: " + dateObserved);
+
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);    
             org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
@@ -443,7 +440,7 @@ public class FrmFormAction extends Action {
    
         
     private String parseCheckBoxValue(String inputValue, String validationName){        
-        //System.out.println("validationName: " + validationName);
+
         if(validationName.equalsIgnoreCase("Yes/No")){
             /*if(inputValue==null)
                 inputValue="no";

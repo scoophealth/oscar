@@ -31,9 +31,9 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class SecObjectNameDao extends HibernateDaoSupport{
     	public void saveOrUpdate(Secobjectname t) {
-            //System.out.println(t.getObjectname()+"--"+t.getDescription()+"--"+t.getOrgapplicable());
+
 		try {
-                    //System.out.println(this.getHibernateTemplate());
+
 			this.getHibernateTemplate().saveOrUpdate(t);
 
 		} catch (RuntimeException re) {

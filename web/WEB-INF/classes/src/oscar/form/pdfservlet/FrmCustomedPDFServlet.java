@@ -80,7 +80,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
             java.io.IOException {
-       // System.out.println("in doGet FrmCustomedPDFServlet.java");
+
         doPost(req, res);
     }
 
@@ -90,7 +90,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
             java.io.IOException {
-        //System.out.println("***in doPost FrmCustomedPDFServlet.java");
+
         DocumentException ex = null;
 
         ByteArrayOutputStream baosPDF = null;
@@ -120,7 +120,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             // selection
             //sbContentDispValue.append("; filename=");
             sbContentDispValue.append(sbFilename);
-            //System.out.println("sbContentDispValue.toString()=" + sbContentDispValue.toString());
+
             res.setHeader("Content-disposition", sbContentDispValue.toString());
 
             res.setContentLength(baosPDF.size());
@@ -150,7 +150,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
     // added by vic, hsfo
     private ByteArrayOutputStream generateHsfoRxPDF(HttpServletRequest req) {
-        //System.out.println("in generateHsfoRxPDF CustomedFrmPDFServlet.java");
+
         HsfoRxDataHolder rx = (HsfoRxDataHolder) req.getSession().getAttribute(HSFO_RX_DATA_KEY);
 
         JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(rx.getOutlines());

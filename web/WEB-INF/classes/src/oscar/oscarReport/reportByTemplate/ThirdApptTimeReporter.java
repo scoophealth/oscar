@@ -91,7 +91,7 @@ public class ThirdApptTimeReporter implements Reporter{
         ResultSet rs = null;
         ResultSet rs2 = null;
         int unbooked = 0;
-        //System.out.println("SCHEDULE SQL " + scheduleSQL);
+
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             rs = db.GetSQL(scheduleSQL);
@@ -109,12 +109,12 @@ public class ThirdApptTimeReporter implements Reporter{
             boolean codeMatch;
             while(rs.next() && numAppts < third) {
                 timecodes = rs.getString("timecode"); 
-                //System.out.println("TIME CODES " + timecodes);
+
                 duration = dayMins/timecodes.length();
-                //System.out.println("DURATION " + duration);
+
                 schedDate = rs.getString("sdate");
                 tmpApptSQL = "select start_time, end_time from appointment where provider_no = '" + rs.getString("provider_no") + "' and status not like '%C%' and appointment_date = '" + schedDate + "' order by start_time asc";
-                // System.out.println("APPT SQL " + tmpApptSQL);                        
+
                 rs2 = db.GetSQL(tmpApptSQL);
                 codePos = 0;
                 latestApptHour = latestApptMin = 0;
@@ -128,7 +128,7 @@ public class ThirdApptTimeReporter implements Reporter{
                         apptTime = rs2.getString("start_time");
                         apptHour_s = Integer.parseInt(apptTime.substring(0,2));
                         apptMin_s = Integer.parseInt(apptTime.substring(3,5));
-                        //System.out.println("iHours " + iHours + " = " + apptHour_s + " iMins " + iMins + " = " + apptMin_s);                     
+
                         if( iHours == apptHour_s && iMins == apptMin_s ) {
                             apptTime = rs2.getString("end_time");
                             apptHour_e = Integer.parseInt(apptTime.substring(0,2));

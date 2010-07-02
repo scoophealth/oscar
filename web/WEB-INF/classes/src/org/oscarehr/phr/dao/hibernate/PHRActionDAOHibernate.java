@@ -156,7 +156,7 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
                 sql += ")";
             }
             sql += "ORDER BY a.status";
-            //System.out.println(sql);
+
             String[] f = new String[2];
             f[0] = providerNo;
             f[1] = classification;

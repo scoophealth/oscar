@@ -66,7 +66,7 @@ public class DBPreparedHandler {
     	if (param != null && param.length > 0) {
 	        for (int i = 0; i < param.length; i++) {
 	            stmt.setString((i + 1), param[i]);
-	            //System.out.println(param[i]);
+
 	        }
     	}
         stmt.execute();
@@ -76,7 +76,7 @@ public class DBPreparedHandler {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         for (int i = 0; i < param.length; i++) {
             preparedStmt.setString((i + 1), param[i]);
-            //System.out.println(param[i]);
+
         }
         preparedStmt.execute();
     }
@@ -135,7 +135,7 @@ public class DBPreparedHandler {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         for (int i = 0; i < param.length; i++) {
             preparedStmt.setString((i + 1), param[i]);
-            //System.out.println(param[i]);
+
         }
         return(preparedStmt.executeUpdate());
     }

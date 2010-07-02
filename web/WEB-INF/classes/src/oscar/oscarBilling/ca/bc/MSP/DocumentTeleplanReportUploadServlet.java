@@ -88,12 +88,12 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
                 if (item.isFormField()) {
                     //String name = item.getFieldName();
                     //String value = item.getString(); 
-                    //System.out.println("Fieldname: " + item.getFieldName());
+
                 } else {
                     String pathName = item.getName();  
                     String [] fullFile = pathName.split("[/|\\\\]");
             		File savedFile = new File(foldername, fullFile[fullFile.length-1]);
-                    //System.out.println(item.getName() + "fullFile: " + fullFile[fullFile.length-1]);
+
                     fileheader = fullFile[fullFile.length-1];
             		
             		item.write(savedFile);
@@ -147,7 +147,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
                     filename = new String(data1);
                     if(filename.length()>2 && filename.indexOf("filename")!=-1) {
                         filename = filename.substring(filename.lastIndexOf('\\')+1,filename.lastIndexOf('\"'));
-                        //System.out.println("filename: "+filename);
+
                         fileheader = filename;
                         fos = new FileOutputStream(foldername+ filename);
                         dest = new BufferedOutputStream(fos, BUFFER);

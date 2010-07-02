@@ -58,7 +58,7 @@ public class HHSEmrDownloadHandler extends DefaultGenericHandler implements Mess
 //        
 //        Parser p = new PipeParser();
 //        p.setValidationContext(new NoValidation());
-//        System.out.println("ABOUT TO PARSE \n"+hl7Body);
+
 //        // force parsing as a generic message by changing the message structure
 //        hl7Body = hl7Body.replaceAll("R01", "");
 //        msg = p.parse(hl7Body.replaceAll( "\n", "\r\n"));

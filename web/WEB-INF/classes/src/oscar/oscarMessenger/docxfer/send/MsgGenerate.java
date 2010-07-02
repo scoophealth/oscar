@@ -186,8 +186,7 @@ public class MsgGenerate {
         if(cfgTable.getAttribute("sqlOrder").length()>0) {
             sql += " ORDER BY " + cfgTable.getAttribute("sqlOrder");
         }
-        
-        // System.out.println(sql);
+
         return sql;
     }
 }

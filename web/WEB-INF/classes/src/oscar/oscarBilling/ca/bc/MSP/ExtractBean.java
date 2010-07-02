@@ -343,7 +343,7 @@ public class ExtractBean extends Object implements Serializable {
     public void writeFile(String value1){
         try{
             String home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
-            //System.out.println(" im going to write >"+ohipFilename+"< >"+home_dir+"<");
+
             FileOutputStream out = new FileOutputStream(home_dir+ ohipFilename);
             PrintStream p = new PrintStream(out);
             p.println(value1);

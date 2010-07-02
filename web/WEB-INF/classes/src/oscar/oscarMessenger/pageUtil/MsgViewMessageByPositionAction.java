@@ -53,7 +53,7 @@ public class MsgViewMessageByPositionAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-        // System.out.println("in view message action jackson");
+
         // Extract attributes we will need
         String provNo = (String) request.getSession().getAttribute("user");
         

@@ -205,7 +205,7 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
 		if (sb.length > 0) {
 			ret = false;
 		}
-		//System.out.println("array length is:" + sb.length);
+
 		return ret;
 	}
 }

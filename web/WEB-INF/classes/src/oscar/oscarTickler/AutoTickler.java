@@ -41,11 +41,11 @@ public class AutoTickler {
    ArrayList ticklerList = new ArrayList();      
    
    private AutoTickler() {
-      //System.out.println("CALL FOR TICKLERS CALLED");
+
    }
                
    public static AutoTickler getInstance() {         
-      //System.out.println("CALL FOR AUTOTICKLERs");
+
       return autoTickler;
    }
    
@@ -55,8 +55,7 @@ public class AutoTickler {
    
    public void callForTicklers(String providerNo){
       //This should run through the autoTicklers array and launch threads for each.
-      
-   //System.out.println("CALL FOR TICKLERS CALLED");
+
    TicklerWorker tw = new TicklerWorker();
    tw.provider = providerNo;   
    tw.status = TicklerData.ACTIVE;

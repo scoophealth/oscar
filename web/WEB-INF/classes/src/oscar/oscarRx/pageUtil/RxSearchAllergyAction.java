@@ -152,7 +152,7 @@ public final class RxSearchAllergyAction extends Action {
                 Hashtable hash ;
                 String compString = null;
                 Vector strVec = null;
-                //System.out.println("size of listy_drug_class sending :"+classVec.size()+" returned :"+classVec2.size());
+
                 if(classVec2!=null) {
                 	for(int j = 0; j < classVec2.size(); j++){
                 

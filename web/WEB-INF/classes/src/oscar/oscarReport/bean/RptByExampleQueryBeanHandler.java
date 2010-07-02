@@ -69,7 +69,6 @@ public class RptByExampleQueryBeanHandler {
                     //queryWithEscapeChar = exampleData.replaceSQLString (";","",queryWithEscapeChar);
                     //queryWithEscapeChar = exampleData.replaceSQLString("\"", "\'", queryWithEscapeChar);            
 
-                    //System.out.println("queryWithEscapeChar" + queryWithEscapeChar);
                     String queryNameWithEscapeChar = strEscUtils.escapeJava(db.getString(rs,"name"));
                     RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), db.getString(rs,"query"), db.getString(rs,"name"));
                     favoriteVector.add(query);                             

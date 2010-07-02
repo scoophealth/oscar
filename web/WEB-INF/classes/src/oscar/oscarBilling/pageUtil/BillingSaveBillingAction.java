@@ -101,7 +101,7 @@ public class BillingSaveBillingAction
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(sql);
       rs = db.GetSQL("SELECT LAST_INSERT_ID()");
-      //      System.out.println(rs.getString(1));
+
       if (rs.next()) {
         billingid = rs.getString(1);
       }
@@ -310,8 +310,6 @@ public class BillingSaveBillingAction
         }
       }
     }
-
-    //      System.out.println("Service count : "+ billItem.size());
 
     return (mapping.findForward("success"));
   }

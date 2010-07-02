@@ -506,8 +506,6 @@ public java.util.Vector estDemographicInbox(){
               }
               msg.add(dm);
 
-           // System.out.println("message "+db.getString(rs,"message")+" status "+db.getString(rs,"status"));
-
         }
 
        rs.close();
@@ -526,7 +524,7 @@ public java.util.Vector estDemographicInbox(){
    * in the messagelisttbl
    */
   void getDeletedMessageIDs(){
-    // System.out.println("In deleted MEssages");
+
      String providerNo= this.getProviderNo();
 
      messageid = new java.util.Vector();
@@ -543,12 +541,11 @@ public java.util.Vector estDemographicInbox(){
            status.add("deleted");
            cou++;
         }
-        // System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
 
        rs.close();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
-    // System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
+
   }//getDeletedMessageIDs
 
   /**
@@ -556,7 +553,7 @@ public java.util.Vector estDemographicInbox(){
    * in the messagelisttbl
    */
   void getSentMessageIDs(){
-    // System.out.println("In sent MEssages");
+
      String providerNo= this.getProviderNo();
 
      messageid = new java.util.Vector();
@@ -581,12 +578,11 @@ public java.util.Vector estDemographicInbox(){
            subject.add(db.getString(rs,"thesubject"));
            cou++;
         }
-        // System.out.println("cou "+cou+" messageid size "+messageid.size()+" for "+providerNo);
 
        rs.close();
 
     }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
-    // System.out.println("LEaving deleted messages ID this is the size ive got "+messageid.size());
+
   }//getSentMessageIDs
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -635,8 +631,6 @@ public java.util.Vector estDemographicInbox(){
            
            msg.add(dm);
 
-           //System.out.println("message "+db.getString(rs,"message")+" status "+db.getString(rs,"status"));
-
         }
 
        rs.close();
@@ -660,7 +654,7 @@ public java.util.Vector estDemographicInbox(){
    * the Message header Info
    */
   void getInfo(){
-    // System.out.println("Get Info called ms = "+messageid.size());
+
      sentby  = new java.util.Vector();
      date    = new java.util.Vector();
      subject = new java.util.Vector();
@@ -670,7 +664,6 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        // System.out.println("Messages in getInfo = "+messageid.size());
         //make search string
         StringBuffer stringBuffer = new StringBuffer();
         for ( int i = 0; i < messageid.size() ; i++){

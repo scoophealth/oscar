@@ -77,7 +77,7 @@ public class ScheduleOfBenefitsUploadAction extends Action {
        String outcome = "";
         
        try{  
-          //System.out.println("Schedule Of Benefits content type = "+importFile.getContentType());
+
           InputStream is = importFile.getInputStream();
           filename = importFile.getFileName();
           

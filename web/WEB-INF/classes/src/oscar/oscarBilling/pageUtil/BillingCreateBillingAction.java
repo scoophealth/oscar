@@ -114,17 +114,7 @@ public class BillingCreateBillingAction extends Action {
         //bean.setPatientNo(request.getParameter("demographic_no"));
         //bean.setApptNo(request.getParameter("appointment_no"));
         //bean.setApptDate(request.getParameter("appointment_date"));
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        //      System.out.println("Service count : "+ billItem.size());
-        
+
         return (mapping.findForward("success"));
     }
     

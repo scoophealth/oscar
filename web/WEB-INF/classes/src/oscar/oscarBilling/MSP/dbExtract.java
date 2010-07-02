@@ -63,7 +63,7 @@ public class dbExtract implements Serializable {
         //  pStream.close();
         // }
         // catch (Exception ex) {
-        //     System.out.println("Exception : " + ex);
+
         //   }
     }
 
@@ -131,7 +131,7 @@ public class dbExtract implements Serializable {
 
         try {
             String SQLup = getUpdateString();
-            // System.out.println(SQLup);
+
             prepStmt = con.createStatement();
             numUpdate = prepStmt.executeUpdate(SQLup);
             con.commit();

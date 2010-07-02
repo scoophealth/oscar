@@ -104,7 +104,7 @@ public class FrmGraphicAR {
         GregorianCalendar eg = getCalendarObj(eDate);
 
         int n = (int) ((eg.getTimeInMillis() - sg.getTimeInMillis() + eg.get(Calendar.DST_OFFSET) )/(24 * 60 * 60 * 1000) );
-        //System.out.println( eg.get(Calendar.DST_OFFSET) + " | " + sg.get(Calendar.DST_OFFSET) );
+
         nWeek = n / 7 ;
         nWeekDay = n % 7;
         fWeek = n / 7.f;

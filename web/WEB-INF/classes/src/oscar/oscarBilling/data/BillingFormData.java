@@ -63,7 +63,6 @@ public class BillingFormData {
             + "c.service_code and b.region='" + billRegion +"' and c.service_group='"
             + serviceGroup + "' and c.servicetype='" + serviceType + "' order by c.service_order";
 
-            //System.out.println("getServiceList "+sql);
             rs = db.GetSQL(sql);
 
             while(rs.next()) {

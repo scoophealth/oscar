@@ -33,18 +33,18 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
     //	private Hashtable savedparams;
 
     public void setDocumentLocator(Locator locator) {
-        // System.out.println(" * setDocumentLocator() called");
+
         this.locator = locator;
     }
 
     public void startDocument() throws SAXException {
-        // System.out.println("Begin parsing risks.xml...");
+
         riskNameObj = new Properties();
         results = "<center><table width='100%' border='0' cellpadding='0' CELLSPACING='0' BGCOLOR='ivory'><tr><td>\n";
     }
 
     public void endDocument() throws SAXException {
-        // System.out.println("...Parsing ends");
+
         if (interiortable == 1) { //close content table
             results += "</center></td></tr></table>";
         }
@@ -56,11 +56,11 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
     }
 
     public void startPrefixMapping(String prefix, String uri) {
-        // System.out.println("Mapping starts for prefix " + prefix + " mapped to URI " + uri);
+
     }
 
     public void endPrefixMapping(String prefix) {
-        // System.out.println("Mapping ends for prefix " + prefix);
+
     }
 
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
@@ -117,7 +117,7 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
                 results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
                 href = 1; //there is a href there
             }
-            // System.out.println(" Attribute: " + atts.getQName(i) + "=" + atts.getValue(i));
+
         }
     }
 
@@ -141,18 +141,18 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
                     + riskName + "'>";
             riskName = "";
         }
-        // System.out.println("endElement: " + rawName + "\n");
+
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
         String s = new String(ch, start, length);
-        // System.out.println("characters: " + s);
+
         results += s;
     }
 
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         String s = new String(ch, start, length);
-        // System.out.println("ignorableWhiteSpace: [" + s + "]");
+
     }
 
     public void skippedEntity(String name) throws SAXException {

@@ -145,7 +145,7 @@ public class EctPeriMenopausalRecord
                 if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))  {
                     if(value!=null) {
                         if(value.equalsIgnoreCase("on")) {
-//                            System.out.println("in 'on' "+name+" "+value);
+
                             rs.updateInt(name, 1);
                         } else {
                             rs.updateInt(name, 0);

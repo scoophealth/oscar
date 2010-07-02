@@ -102,14 +102,14 @@ public class dxResearchAction extends Action {
                         sql = "select dxresearch_no from dxresearch where demographic_no='" + demographicNo +
                               "' and dxresearch_code='" + xml_research[i] + "' and (status='A' or status='C') and coding_system='"+
                               codingSystem +"'";
-                        //System.out.println("Look for non-deleted code" + sql);
+
                         rsdemo2 = db.GetSQL(sql);
                         if(rsdemo2!=null){
                             while(rsdemo2.next()){
                                     Count = Count +1;
                                     sql = "update dxresearch set update_date='"+nowDate+"', status='A' where dxresearch_no='"+rsdemo2.getString("dxresearch_no")+"'";
                                     db.RunSQL(sql);                                        
-                                    //System.out.println("update" + sql);
+
                             } 
                         }
 
@@ -128,7 +128,7 @@ public class dxResearchAction extends Action {
                                 else{
                                     sql = "insert into dxresearch (demographic_no, start_date, update_date, status, dxresearch_code, coding_system) values('"
                                             + demographicNo +"','" + nowDate + "','" + nowDate + "', 'A','" + xml_research[i]+ "','"+codingSystem+"')";
-                                    //System.out.println("insert" + sql);
+
                                     db.RunSQL(sql);                                                                     
                                 }
                         }	    

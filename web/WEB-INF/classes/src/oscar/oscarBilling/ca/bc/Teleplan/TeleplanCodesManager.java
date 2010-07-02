@@ -71,7 +71,7 @@ REM076 **                                                             **
          //01 - 05 Fee Item Code  X(5)  Fee for Service Fee Item      **                      
          //06 - 12 Fee Schedule   N(7)  Fee for Service Amount        **                      
          //27 - 76 Fee Item       X(50) 
-           //System.out.println(line);
+
            boolean parse = true;
            if (line == null ){
                parse = false;

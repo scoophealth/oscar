@@ -111,8 +111,7 @@ public class WLWaitingListBeanHandler {
                 if(rsCheck.next())
                 {                
                     //delete patient from the waitingList
-                    //System.out.println("patient to be deleted: " + db.getString(rs,"demographic_no"));
-                	
+
                 	WLWaitingListUtil.removeFromWaitingList(waitingListID, db.getString(rs,"demographic_no"));
                     needUpdate = true;
                 }
@@ -129,7 +128,7 @@ public class WLWaitingListBeanHandler {
                     		" WHERE listID=" + waitingListID + 
                             " AND demographic_no=" + db.getString(rs,"demographic_no") +
                             " AND is_history = 'N' ";
-                    //System.out.println("update query from waiting list view: " + sql);
+
                     log.debug(sql);
                     db.RunSQL(sql);
                     i++;

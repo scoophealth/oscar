@@ -51,7 +51,7 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 	}
 
 	public void endDocument() throws SAXException {
-    //System.out.println("...Parsing ends");
+
 		if (interiortable == 1) { //close content table
 			results += "</center></td></tr></table>";
 		}
@@ -59,15 +59,15 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 	}
 
 	public void processingInstruction(String target, String data) throws SAXException {
-		 //System.out.println("PI: Target: " + target + " and Data: " + data);
+
 	}
 
 	public void startPrefixMapping(String prefix, String uri) {
-		 //System.out.println("Mapping starts for prefix " + prefix + " mapped to URI " + uri);
+
 	}
 
 	public void endPrefixMapping(String prefix) {
-		 //System.out.println("Mapping ends for prefix " + prefix);
+
 	}
 
         public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
@@ -126,7 +126,7 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
                     results += "<a href=# onClick=\"popupPage(400,500,'" + atts.getValue(i) + "');return false;\">";
                     href = 1; //there is a href there
                 }
-                // System.out.println(" Attribute: " + atts.getQName(i) + "=" + atts.getValue(i));
+
             }
             //for (int i=0; i < atts.getLength(); i++) {
             //  if (atts.getQName(i) == "riskno") {
@@ -154,7 +154,7 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 			results += "</font></td><td><input type=text size=6 name=\"risk_" + riskName + "\" datafld='risk_" +riskName+ "'>";
 			riskName = "";
 		}
-		// System.out.println("endElement: " + rawName + "\n");
+
 	}
 
 	public void characters(char[] ch, int start, int length) throws SAXException {
@@ -164,11 +164,11 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 
 //	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
 //		String s = new String(ch, start, length);
-		// System.out.println("ignorableWhiteSpace: [" + s + "]");
+
 //	}
 
 	public void skippedEntity(String name) throws SAXException {
-		//System.out.println("Skipping entity " + name);
+
 	}
 
 	public String getResults() {

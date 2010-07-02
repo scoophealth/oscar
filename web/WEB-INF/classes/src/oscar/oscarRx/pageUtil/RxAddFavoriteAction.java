@@ -96,7 +96,6 @@ public final class RxAddFavoriteAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-     //   System.out.println("================Start addFav2 of RxAddFavoriteAction.java=================");
 
         // Extract attributes we will need
         Locale locale = getLocale(request);
@@ -127,7 +126,7 @@ public final class RxAddFavoriteAction extends DispatchAction {
         System.out.println("fill box no");
         */
         RxUtil.printStashContent(bean);
-    //    System.out.println("================END addFav2 of RxAddFavoriteAction.java=================");
+
         return null;
     }
 }

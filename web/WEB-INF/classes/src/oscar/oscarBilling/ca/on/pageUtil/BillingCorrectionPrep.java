@@ -157,8 +157,6 @@ public class BillingCorrectionPrep {
 								: "S");
 			}
 		}
-                
-                //System.out.println("ItemObj size " + lItemObj.size() + " Vector Size " + vecName.size());
 
 		// update item first
 		String claimId = "0";
@@ -302,7 +300,7 @@ public class BillingCorrectionPrep {
 			// change to settle or not
 			boolean bStatusChange = false;
 			String cStatus = (String) vecStatus.get(i);
-			// System.out.println("status: " + cStatus);
+
 			if ((!oldObj.getStatus().equals("S") && cStatus.equals("S"))
 					|| (oldObj.getStatus().equals("S") && !cStatus.equals("S"))) {
 				bStatusChange = true;
@@ -323,14 +321,14 @@ public class BillingCorrectionPrep {
 				oldObj.setService_date(serviceDate);
 				oldObj.setDx(sDx);
 				oldObj.setStatus(cStatus);
-                                //System.out.println("Updating " + oldObj.getService_code());
+
 				ret = dbObj.updateBillingOneItem(oldObj);
 				if (!ret)
 					return ret;
 			}
 		} else {
 			// delete the old item
-                        //System.out.println("Deleting old item " + oldObj.getService_code());
+
 			oldObj.setStatus("D");
 			ret = dbObj.updateBillingOneItem(oldObj);
 		}
@@ -345,9 +343,9 @@ public class BillingCorrectionPrep {
                 BillingItemData newObj = null;
 		for (int i = 0; i < lItemObj.size(); i++) {
 			oldObj = (BillingItemData) lItemObj.get(i);
-                        //System.out.println("comparing oldobj to new " + oldObj.getService_code() + " : " + sName);
+
 			if (sName.equals((String) oldObj.getService_code())) {
-                                //System.out.println(oldObj.getService_code() + " already present skipping");
+
 				ret = false;
 				break;
 			}
@@ -361,7 +359,7 @@ public class BillingCorrectionPrep {
 			newObj.setDx(sDx);
 			newObj.setStatus(sStatus);
 			JdbcBillingClaimImpl myObj = new JdbcBillingClaimImpl();
-                        //System.out.println("Adding item " + newObj.getService_code());
+
 			int i = myObj.addOneItemRecord(newObj);
 			if (i == 0)
 				return false;

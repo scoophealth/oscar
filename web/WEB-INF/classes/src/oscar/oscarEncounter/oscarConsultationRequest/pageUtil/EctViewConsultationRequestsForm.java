@@ -29,24 +29,24 @@ import org.apache.struts.action.ActionForm;
 public final class EctViewConsultationRequestsForm extends ActionForm {
    
    public String getSendTo() {
-      //System.out.println("get sendTo ".concat(String.valueOf(String.valueOf(sendTo))));
+
       return sendTo;
    }
    
    public void setSendTo(String str) {
-      //System.out.println("set send to ".concat(String.valueOf(String.valueOf(str))));
+
       sendTo = str;
    }
    
    public String getCurrentTeam() {
-      //System.out.println("get current team ".concat(String.valueOf(String.valueOf(currentTeam))));
+
       if(currentTeam == null)
          currentTeam = new String();
       return currentTeam;
    }
    
    public void setCurrentTeam(String str) {
-      //System.out.println("set current team ".concat(String.valueOf(String.valueOf(str))));
+
       currentTeam = str;
    }
    

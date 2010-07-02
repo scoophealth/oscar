@@ -359,7 +359,7 @@ public class ExtractBean extends Object implements Serializable {
                 // build billing detail
                 invCount = 0;
                 query = "select * from billingdetail where billing_no='" + invNo + "' and status='" + specCode + "'";
-                //System.out.println(query);
+
                 ResultSet rs2 = dbObj.searchDBRecord(query);
                 while (rs2.next()) {
                     recordCount++;
@@ -523,7 +523,7 @@ public class ExtractBean extends Object implements Serializable {
             FileOutputStream out = new FileOutputStream(home_dir + ohipFilename);
             PrintStream p = new PrintStream(out);
             p.println(value1);
-            //System.out.println(sqlE.record);
+
             p.close();
             out.close();
         } catch (Exception e) {
@@ -543,11 +543,11 @@ public class ExtractBean extends Object implements Serializable {
              * new Properties(); ap1.load(pStream1); pStream1.close();
              */
             home_dir1 = OscarProperties.getInstance().getProperty("HOME_DIR");
-            //System.out.println("!!!" + home_dir1);
+
             FileOutputStream out1 = new FileOutputStream(home_dir1 + htmlFilename);
             PrintStream p1 = new PrintStream(out1);
             p1.println(htmlvalue1);
-            //System.out.println(sqlE.record);
+
             p1.close();
             out1.close();
         } catch (Exception e) {

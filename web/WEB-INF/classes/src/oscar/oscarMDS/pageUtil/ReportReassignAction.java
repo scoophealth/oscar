@@ -105,7 +105,7 @@ public class ReportReassignAction extends Action {
             logger.error("exception in ReportReassignAction", e);
             newURL = mapping.findForward("failure").getPath();
         }
-         //System.out.println("In ReportReassignAction: newURL is: "+newURL);
+
         return (new ActionForward(newURL));
     }
 }

@@ -246,7 +246,7 @@ public class ExtractBean extends Object implements Serializable {
                     
                     invCount = 0;
                     query2 = "select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'";
-                    //System.out.println("2nd query " + query2);
+
                     ResultSet rs2 = dbExt.executeQuery2(query2);
                     while (rs2.next()) {
                         recordCount = recordCount + 1;                        
@@ -311,9 +311,7 @@ public class ExtractBean extends Object implements Serializable {
                 ohipRecord = String.valueOf(rCount);
                 ohipClaim = String.valueOf(pCount);
             }
-            
-            //System.out.println(value);
-            
+
         }
         catch (SQLException e) {            
             e.printStackTrace();
@@ -349,7 +347,7 @@ public class ExtractBean extends Object implements Serializable {
         
         nsql = "update log_teleplantx ";
         nsql = nsql + " set claim='" +logValue + "' where log_no='" + x +"'";
-        //System.out.println(nsql);
+
         try {
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -371,7 +369,7 @@ public class ExtractBean extends Object implements Serializable {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(nsql);
             ResultSet  rs = db.GetSQL("SELECT LAST_INSERT_ID()");
-            //      System.out.println(rs.getString(1));
+
             if (rs.next()){
                 n = rs.getString(1);
             }
@@ -380,7 +378,7 @@ public class ExtractBean extends Object implements Serializable {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        //System.out.println("seq #"+n+"#");
+
         return n;
     }
     
@@ -388,7 +386,7 @@ public class ExtractBean extends Object implements Serializable {
         try{
             String home_dir;
             String userHomePath = System.getProperty("user.home", "user.dir");
-            //System.out.println(userHomePath);
+
             File pFile = new File(userHomePath, oscar_home);
             FileInputStream pStream = new FileInputStream(pFile.getPath());
             
@@ -399,12 +397,12 @@ public class ExtractBean extends Object implements Serializable {
             pStream.close();
                         
             FileOutputStream out;
-            //System.out.println(" im going to write >"+ohipFilename+"< >"+home_dir+"<");
+
             out = new FileOutputStream(home_dir+ ohipFilename);
             PrintStream p;
             p = new PrintStream(out);                        
             p.println(value1);            
-            //System.out.println(sqlE.record);
+
             p.close();
         }
         catch(Exception e) {
@@ -416,7 +414,7 @@ public class ExtractBean extends Object implements Serializable {
         try{
             String home_dir1;
             String userHomePath1 = System.getProperty("user.home", "user.dir");
-            // System.out.println(userHomePath);
+
             File pFile1 = new File(userHomePath1, oscar_home);
             FileInputStream pStream1 = new FileInputStream(pFile1.getPath());
             
@@ -433,8 +431,7 @@ public class ExtractBean extends Object implements Serializable {
             
             
             p1.println(htmlvalue1);
-            
-            //System.out.println(sqlE.record);
+
             p1.close();
         }
         catch(Exception e) {

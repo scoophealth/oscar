@@ -68,7 +68,7 @@ public class PreventionTag extends TagSupport {
               sb.append((String) warnings.get(i));
               sb.append("\n");
            }
-           //System.out.println("the number of warnings "+numWarnings);           
+
         }
         String title = sb.toString();
         try{

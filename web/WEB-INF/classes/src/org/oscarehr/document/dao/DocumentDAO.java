@@ -74,10 +74,9 @@ public class DocumentDAO extends HibernateDaoSupport {
     
     
     public void saveCtlDocument(CtlDocument ctlDocument){
-        //System.out.println("in saveCtlDocument"+ctlDocument);
+
         getHibernateTemplate().update(ctlDocument);
-        //System.out.println("after update ctl document");
-        
+
     }
     
 }

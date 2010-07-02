@@ -802,7 +802,7 @@ public class RxUtil {
                 String instructionToCheck=checkInstructionStr(instructions);
                 Pattern p = Pattern.compile(s);
                 Matcher m = p.matcher(instructionToCheck);
-                //System.out.println("check duration unit, if space present,pattern="+s+"--instructions="+instructions);
+
                 if (m.find()) {
                         p("FOUND");
                         p("instructionToCheck==", instructionToCheck);
@@ -830,7 +830,7 @@ public class RxUtil {
                     String instructionToCheck=checkInstructionStr(instructions);
                     Pattern p = Pattern.compile(s);
                     Matcher m = p.matcher(instructionToCheck);
-                    //System.out.println("check duration unit, if space not present,pattern="+s+"--instructions="+instructions);
+
                     if (m.find()) {
                         p("FOUND");
                         p("instructionToCheck="+ instructionToCheck);
@@ -851,7 +851,6 @@ public class RxUtil {
                 }
             }
 
-            //   System.out.println("durationUnitSpec2=" + durationUnitSpec);
             //if durationUnit is not specified, deduce it
             if (durationUnitSpec.equals("")) {
                 //    p("here?? if");
@@ -1028,12 +1027,12 @@ public class RxUtil {
         String special = rx.getSpecial();
         if(special==null || special.trim().length()==0)
             return "";
-       // System.out.println("before   mitte="+special);
+
         //if rx has special instruction, remove it from special
         if(rx.getSpecialInstruction()!=null && !rx.getSpecialInstruction().equalsIgnoreCase("null")&&rx.getSpecialInstruction().trim().length()>0){
             special=special.replace(rx.getSpecialInstruction(), "");
         }
-        //System.out.println("before   mitte="+special);
+
         //remove Qty:num
         String regex1 = "Qty:\\s*[0-9]*\\.?[0-9]*\\s*";
         String unitName=rx.getUnitName();
@@ -1042,27 +1041,27 @@ public class RxUtil {
         Pattern p = Pattern.compile(regex1);
         Matcher m = p.matcher(special);
         special = m.replaceAll("");
-        //System.out.println("before   mitte="+special);
+
         //remove Repeats:num from special
         String regex2 = "Repeats:\\s*[0-9]*\\.?[0-9]*\\s*";
         p = Pattern.compile(regex2);
         m = p.matcher(special);
         special = m.replaceAll("");
-        //System.out.println("before   mitte="+special);
+
         //remove brand name
         String regex3 = rx.getBrandName();
         if(regex3!=null){
             regex3=regex3.trim();
             special=special.replace(regex3,"");
         }
-        //System.out.println("before   mitte="+special);
+
         //remove generic name
         String regex4 = rx.getGenericName();
         if(regex4!=null){
             regex4=regex4.trim();
             special=special.replace(regex4, "");
         }
-       // System.out.println("before   mitte="+special);
+
         //remove custom name
         String regex5 = rx.getCustomName();
         if(regex5!=null){
@@ -1437,8 +1436,8 @@ public class RxUtil {
     }
 
     public static boolean checkDiscontinuedBefore(RxPrescriptionData.Prescription rx) {//check if this drug was discontinued before
-        //  System.out.println("in checkDiscontinued()");
-        //  System.out.println("this.BN, genericName, demotraphicNo: " + this.atcCode+ "--" + this.regionalIdentifier + "--" + this.demographicNo);
+
+
         //String sql="SELECT * FROM drugs WHERE archived=1 AND (archived_reason>'' OR archived_reason<'' ) AND ATC='" + this.atcCode + "' AND regional_identifier='" + this.regionalIdentifier + "' AND demographic_no=" + this.demographicNo+" order by written_date desc";
         //the query will fail to check if a drug A is prescribed, and drug A is prescribed again, and then the first drug A is discontinued,when the second drug A is represcribed
         //or a third drug A is added, no warning will be given.
@@ -1449,20 +1448,20 @@ public class RxUtil {
             ResultSet rs;
             rs = db.GetSQL(sql);
             if (rs.next()) {//get the first result which has the largest drugid and hence the most recent result.
-                // System.out.println("in if ");
+
                 int drugId = rs.getInt("drugid");
-                //  System.out.println("drugId from first query: "+drugId);
+
                 boolean isLastPrescribed = checkLastPrescribed(rx, drugId);//check if this drug was saved after discontinued.
                 if (isLastPrescribed) {
-                    //     System.out.println("it's the last drug ");
+
                     //get date discontinued
                     //get reason for discontinued
                     Date archivedDate = rs.getDate("archived_date");
                     // String archDate = rs.getString("archived_date");
                     String archDate = RxUtil.DateToString(archivedDate);
                     String archReason = db.getString(rs, "archived_reason");
-                    //   System.out.println("archDate=" + archDate);
-                    //   System.out.println("archReason=" + archReason);
+
+
                     rx.setLastArchDate(archDate);
                     rx.setLastArchReason(archReason);
                     discontinuedLatest = true;
@@ -1471,7 +1470,7 @@ public class RxUtil {
                     System.out.println("not last drug ");
                 }
             } else {
-                //  System.out.println("in else ");
+
                 discontinuedLatest = false;
             }
         } catch (SQLException e) {
@@ -1479,7 +1478,7 @@ public class RxUtil {
         } finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
-        //   System.out.println("end of checkDiscontinued()");
+
         return discontinuedLatest;
     }
 

@@ -50,23 +50,23 @@ public class TicklerWorker extends Thread {
     public String priority = TicklerData.NORMAL;
 
     public TicklerWorker() {
-        //System.out.println("CONSTRUCTOR FOR TICKLERWORKER CALLED");
+
     }
 
     public void run() {
-        //System.out.println("TICKLERWORKER THREAD STARTED");
+
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
         try {
             TicklerData td = new TicklerData();
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "select * from consultationRequests where to_days(now()) - to_days(referalDate) > 14 and status = '1' and providerNo = '" + provider + "' ";
-            //System.out.println(sql);
+
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                 String demo = db.getString(rs,"demographicNo");
                 String date = db.getString(rs,"referalDate");
-                //System.out.println("Check to see if "+demo+" does not have this tickler already");
+
                 ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(demo) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
                 if (!td.hasTickler(demo, provider, ticklerMessage)) {
                     td.addTickler(demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
@@ -84,6 +84,6 @@ public class TicklerWorker extends Thread {
         /// check to see if tickler is needed
         //if so, check to see if one is already added
         //if so add it
-        //System.out.println("TICKLERWORKER THREAD ENDED");
+
     }
 }

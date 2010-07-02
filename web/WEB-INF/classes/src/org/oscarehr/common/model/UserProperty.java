@@ -60,11 +60,11 @@ public class UserProperty implements Serializable {
     private boolean checked;
 
     public boolean isChecked(){
-        //System.out.println("ischecked called");
+
         return this.checked;
     }
     public void setChecked(boolean checked){
-        //System.out.println("setchecked called");
+
         this.checked=checked;
     }
 

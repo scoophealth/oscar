@@ -50,14 +50,14 @@ public class MigrateStaffAssignments {
     		long programId = rs.getInt("program_id");
     		long group_id = rs.getInt("group_id");
     		if(programExists(programId) && providerExists(providerNo)) {
-    			//System.out.println(providerNo + "," +programId + "," + group_id);
+
     			this.addProgramProvider(programId,providerNo,group_id);
     		}
     
     		count++;
     	}
     	rs.close();
-    	//System.out.println("# of entries = " + count);
+
     }
     
     public boolean programExists(long programId) throws Exception {

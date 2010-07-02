@@ -154,7 +154,7 @@ public class EctConsultationFormRequestUtil {
                 fir = appointmentTime.indexOf(':');
                 las = appointmentTime.lastIndexOf(':');
                 if (fir > -1 && las > -1) {
-                    //System.out.println(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(appointmentTime)))).append(" firs = ").append(fir).append(" las ").append(las))));
+
                     appointmentHour = appointmentTime.substring(0, fir);
                     if (fir < las) {
                         appointmentMinute = appointmentTime.substring(fir + 1, las);

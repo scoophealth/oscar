@@ -448,7 +448,7 @@ public class CaseManagementNote extends BaseObject {
 
          public boolean isDocumentNote() {
         String sql = "select id from casemgmt_note_link where note_id=" + this.id + " and table_name="+CaseManagementNoteLink.DOCUMENT;
-        //System.out.println("isDocNote query: "+sql);
+
         ResultSet rs = null;
         rs = getSQL(sql);
         boolean bool = false;
@@ -457,7 +457,6 @@ public class CaseManagementNote extends BaseObject {
         } catch (SQLException sqe) {
             sqe.printStackTrace();
         }
-        //System.out.println("ResultSet first value ="+bool);
 
         return bool;
     }
@@ -466,7 +465,7 @@ public class CaseManagementNote extends BaseObject {
     public boolean isRxAnnotation(){
         boolean bool=false;
         String sql="select id from casemgmt_note_link where note_id=" + this.id + " and table_name="+CaseManagementNoteLink.DRUGS;
-        //System.out.println(" in isRxAnnotation,sql="+sql);
+
         ResultSet rs = null;
         rs = getSQL(sql);
         try {
@@ -479,7 +478,7 @@ public class CaseManagementNote extends BaseObject {
    public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){       
         if(this.isRxAnnotation()){
             String drugId=cmnl.getTableId().toString();
-            //System.out.println("drugId="+drugId);
+
             //get drug id from cmn_link table
             RxPrescriptionData rxData = new RxPrescriptionData();
             // create Prescription
@@ -494,7 +493,7 @@ public class CaseManagementNote extends BaseObject {
     }
    
     public boolean isFirstDocNote(Long tableId) {
-        //System.out.println("tableId="+tableId);
+
         String sql = "select min(note_id) as min_note_id from casemgmt_note_link where table_id=" + tableId;
         ResultSet rs = null;
         boolean bool = false;
@@ -502,7 +501,6 @@ public class CaseManagementNote extends BaseObject {
             rs = getSQL(sql);
             if (rs.first()) {
                  String str = rs.getString("min_note_id");
-                 //System.out.println("isFirstDocNote str="+str);
 
                 if (str==null || this.id != Long.parseLong(str)) {
                     bool = false;

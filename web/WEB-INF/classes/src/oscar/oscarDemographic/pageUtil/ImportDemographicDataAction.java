@@ -82,7 +82,7 @@ public class ImportDemographicDataAction extends Action {
          List demographicData = demographicRecord.getChildren("DemographicData");
          
          DemographicExt dExt = new DemographicExt();
-         //System.out.println("how many elements: "+demographicData.size());
+
          for (int i = 0; i < demographicData.size(); i++){
             
             Element e = (Element) demographicData.get(i);
@@ -102,10 +102,8 @@ public class ImportDemographicDataAction extends Action {
             String homeExt   = "";
             String workPhone = "";
             String workExt   = "";
-            
-            //System.out.println("lastName "+lastName +" firstName "+firstName+" sex "+sex+" birthDate "+birthDate+" versionCode "+versionCode+" hin "+hin);
-            //System.out.println("address "+address+" city "+city+" province "+province+" postalCode "+postalCode);
-            
+
+
             List telephones  = demoInfo.getChildren("telephone");
             for (int j = 0; j < telephones.size(); j++){
                Element tele = (Element) telephones.get(j);
@@ -178,8 +176,7 @@ public class ImportDemographicDataAction extends Action {
             homeExt   = null;
             workPhone = null;
             workExt   = null;
-            
-            //System.out.println("demo res size "+ demoRes.getWarningsCollection().size() );
+
             warnings.addAll(demoRes.getWarningsCollection());
             demoRes = null;
          }

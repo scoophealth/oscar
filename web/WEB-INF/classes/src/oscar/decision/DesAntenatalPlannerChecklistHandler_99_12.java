@@ -64,20 +64,20 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
 	}
 
 	public void endDocument() throws SAXException {
-		// System.out.println("...Parsing ends");
+
 		results += "</td></tr></table></center>\n";
 	}
 
 	public void processingInstruction(String target, String data) throws SAXException {
-		// System.out.println("PI: Target: " + target + " and Data: " + data);
+
 	}
 
 	public void startPrefixMapping(String prefix, String uri) {
-		// System.out.println("Mapping starts for prefix " + prefix + " mapped to URI " + uri);
+
 	}
 
 	public void endPrefixMapping(String prefix) {
-		// System.out.println("Mapping ends for prefix " + prefix);
+
 	}
 
         public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
@@ -117,8 +117,7 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
                     if (atts.getQName(i) == "risk") riskname = atts.getValue(i);
                     if (atts.getQName(i) == "checkbox") checkbox = true;
                 }
-                //System.out.println("ignorableWhiteSpace: [" + riskname + "] " +clname +" "+savedar1params.getProperty(riskname));
-                
+
                 if(riskname.equals("") || savedar1params.getProperty(riskname)!=null ) {
                     results += "<tr>";
                     
@@ -203,7 +202,7 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
 
 	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
 		String s = new String(ch, start, length);
-		// System.out.println("ignorableWhiteSpace: [" + s + "]");
+
 	}
 
 	public void skippedEntity(String name) throws SAXException {

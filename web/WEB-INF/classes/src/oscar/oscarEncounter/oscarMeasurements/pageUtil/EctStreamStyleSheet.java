@@ -73,7 +73,7 @@ public class EctStreamStyleSheet extends DownloadAction{
            }
            file = new File(directory,fileName);
            //String canonicalPath = file.getParentFile().getCanonicalPath(); //absolute path of the retrieved file
-           //System.out.println("absolutepath: " + canonicalPath);
+
            if (!directory.equals(file.getParentFile())) {
                log.warn("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
                throw new Exception("Could not open file " + fileName + ".  Check the file path"); 
@@ -84,7 +84,7 @@ public class EctStreamStyleSheet extends DownloadAction{
         }
         //gets content type from image extension
         String contentType = new MimetypesFileTypeMap().getContentType(file);
-        //System.out.println("content type:" + contentType);
+
         return new FileStreamInfo(contentType, file);   
     }   
 }

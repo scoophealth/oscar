@@ -66,8 +66,7 @@ public class ScheduleOfBenefits {
             total++;
             Hashtable newPricingInfo = breakLine(str);
             Hashtable billingInfo = bc.searchBillingCode((String) newPricingInfo.get("feeCode")+"A");
-            //System.out.println("pricing info for code "+newPricingInfo.get("feeCode"));
-            
+
             BigDecimal gpBD   = getJBD((String) newPricingInfo.get("gpFees"));
             BigDecimal specBD = getJBD((String) newPricingInfo.get("specFee"));
             BigDecimal zeroBD = new BigDecimal("0.00");
@@ -139,9 +138,9 @@ public class ScheduleOfBenefits {
             }            
         }
         in.close();
-        //System.out.println("IN Total : "+total);
-        //System.out.println("new fees "+newfees+ " current fees "+oldfees);
-        //System.out.println("Dual fees \n"+codesThatHaveBothGPSpec.toString());
+
+
+
       } catch (IOException e) {
          e.printStackTrace();
       }
@@ -169,7 +168,7 @@ public class ScheduleOfBenefits {
    }
    
    Hashtable breakLine(String s){
-      //System.out.println(s.length()+" "+s);
+
       Hashtable h = null;
       if ( s != null && s.length() == 75){
          String feeCode            = s.substring(0,4);

@@ -399,7 +399,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 //                            //ds.add(getRuleBaseElement("" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type"), recoHash));
 //                            ds.add(new Recommendation(reco,"" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type")));
 //                       }
-//                       System.out.println(""+ h.get("measurement_type")+ " adding ds  "+ds);
+
 //                       //d.addDSElement(""+ h.get("measurement_type"),ds);
 //                       item.setRecommendations(ds);
 //                    }
@@ -681,16 +681,14 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             
             ByteArrayOutputStream byteArrayout = new ByteArrayOutputStream();
             outp.output(va, byteArrayout);
-            
-            //System.out.println("FLOWSHEET EXPORT "+mFlowsheet.getDisplayName());
+
             //outp.output(va,System.out);
  
             InputStream is = new ByteArrayInputStream(byteArrayout.toByteArray());
 
             EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
             MeasurementFlowSheet d = createflowsheet(mType,is);
-            
-            //System.out.println("NOW LOOKS LIKE");
+
             //outp.output(getExportFlowsheet( d),System.out);
             return d;
             

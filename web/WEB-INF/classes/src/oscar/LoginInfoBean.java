@@ -66,7 +66,7 @@ public class LoginInfoBean {
   	cal.add(cal.MINUTE, maxduration);
   	if((cal.getTimeInMillis() < now.getTimeInMillis() ) ) 
       btemp = true; //starttime = starttime1;
-//System.out.println(" "+cal.getTimeInMillis()+"  now: "+now.getTimeInMillis());      
+
     return btemp;
 	}
 

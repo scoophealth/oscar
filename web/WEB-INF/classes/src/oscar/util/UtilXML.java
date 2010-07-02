@@ -306,10 +306,10 @@ public class UtilXML {
             String tag = xml.substring(pointer1, pointer2);
             String closetag = tag.substring(0, 1) + "/" + tag.substring(1);
             closetag += ">";
-            //System.out.println("closetag: " + closetag);
+
             if (xml.indexOf(closetag) == -1) {
                 xml = xml.substring(0, pointer1) + "&lt;" + xml.substring(pointer1+1);
-                //System.out.println("found, replaced: " + xml.substring(pointer1-10, pointer1+10));
+
             }
             pointer1++;
         }

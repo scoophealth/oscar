@@ -596,7 +596,7 @@ public class GenericIntakeManager {
 							String value = source.getAnswerMapped(
 									String.valueOf(ia.getNode().getEq_to_id()))
 									.getValue();
-							// System.out.println("value=" + value);
+
 							ia.setValue(value);
 						} catch (IllegalStateException e) {
 							logger.warn(e);

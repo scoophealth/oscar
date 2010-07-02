@@ -49,7 +49,7 @@ public class RptSearchData {
 
               while (rs.next()) {
                 retval.add( db.getString(rs,"roster_status") );
-                //System.out.println("roster "+db.getString(rs,"roster_status"));
+
               }
               rs.close();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
@@ -67,7 +67,7 @@ public class RptSearchData {
 
               while (rs.next()) {
                 retval.add( db.getString(rs,"patient_status") );
-                //System.out.println("patient "+db.getString(rs,"patient_status"));
+
               }
               rs.close();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
@@ -83,7 +83,7 @@ public class RptSearchData {
 
               while (rs.next()) {
                 retval.add( db.getString(rs,"provider_no") );
-                //System.out.println("patient "+db.getString(rs,"patient_status"));
+
               }
               rs.close();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
@@ -103,7 +103,7 @@ public class RptSearchData {
                 sc.queryName = db.getString(rs,"queryName");
 
                 retval.add( sc );
-                //System.out.println("patient "+db.getString(rs,"patient_status"));
+
               }
               rs.close();
             }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }

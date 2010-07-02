@@ -60,7 +60,7 @@ public class PreventionManager {
 
     public synchronized String getWarnings(String demo) {
         String ret = (String)mShell.get(PREVS).get(demo);
-        //System.out.println("Fetching Demo " + demo + " '" + ret + "'");
+
         if( ret == null ) {
             //synchronized(this) {
                 try {
@@ -76,7 +76,7 @@ public class PreventionManager {
                     //ret += StringUtils.join(warnings, ". ");
                     
                     mShell.get(PREVS).put(demo, ret);
-                    //System.out.println("Cached demo " + demo + " '" + ret + "'");
+
                 } catch(Exception e) {
                     ret = "";
                     e.printStackTrace();

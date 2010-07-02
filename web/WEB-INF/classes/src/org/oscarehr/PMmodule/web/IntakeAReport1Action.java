@@ -177,14 +177,14 @@ public class IntakeAReport1Action extends BaseAction {
 
         for (int i = 0; i < intakeAs.size(); i++) {
             demographicNo = ((Formintakea) intakeAs.get(i)).getDemographicNo().longValue();
-            // System.out.println("here is loop " + i+" client NO : " + demographicNo);
+
             if (prevDemoNo != demographicNo) {
                 Demographic demographic = clientMgr.getClientByDemographicNo(String.valueOf(demographicNo));
                 String clientStatus = (String) demographic.getPatientStatus();
                 if (clientStatus == null || clientStatus == "" || !clientStatus.equals("IN")) {
-                    // System.out.println("here is loop " + i+" client NO : " + demographicNo);
+
                     filteredIntakAs.add(intakeAs.get(i));
-                    // System.out.println("here is loop " + i+" client NO : " + demographicNo);
+
                 }
             }
 

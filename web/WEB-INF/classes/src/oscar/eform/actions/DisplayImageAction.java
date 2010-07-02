@@ -72,7 +72,7 @@ public class DisplayImageAction extends DownloadAction{
            }
            file = new File(directory,fileName);
            //String canonicalPath = file.getParentFile().getCanonicalPath(); //absolute path of the retrieved file
-           //System.out.println("absolutepath: " + canonicalPath);
+
            if (!directory.equals(file.getParentFile())) {
                System.out.println("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
                throw new Exception("Could not open file " + fileName + ".  Check the file path");
@@ -107,7 +107,7 @@ public class DisplayImageAction extends DownloadAction{
            }
            file = new File(directory,imageFileName);
            //String canonicalPath = file.getParentFile().getCanonicalPath(); //absolute path of the retrieved file
-           //System.out.println("absolutepath: " + canonicalPath);
+
            if (!directory.equals(file.getParentFile())) {
                System.out.println("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
                throw new Exception("Could not open file " + imageFileName + ".  Check the file path");

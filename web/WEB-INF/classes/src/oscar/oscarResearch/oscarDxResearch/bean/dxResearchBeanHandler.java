@@ -47,7 +47,7 @@ public class dxResearchBeanHandler {
             
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems();                                            
-            //System.out.println("Sql Statement: " + sql);
+
             String sql;
             ResultSet rs;
             for( int idx = 0; idx < codingSystems.length; ++idx ) {
@@ -65,7 +65,7 @@ public class dxResearchBeanHandler {
                                                             db.getString(rs,"status"),
                                                             codingSystem);
                     dxResearchBeanVector.add(bean);
-                    //System.out.println("ichppcode obtained: " + db.getString(rs,"ichppccode") + " " + db.getString(rs,"description"));                
+
                 }
                 rs.close();
             }

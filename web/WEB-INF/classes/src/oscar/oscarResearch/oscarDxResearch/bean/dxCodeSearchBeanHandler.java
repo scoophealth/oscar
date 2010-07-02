@@ -57,7 +57,7 @@ public class dxCodeSearchBeanHandler {
                         sql = sql + "or "+codingSystem+" like '%" + keywords[i] + "%' or description like '%" + keywords[i] +"%' ";
                 }
             }
-            //System.out.println("Sql Statement: " + sql);  
+
             rs = db.GetSQL(sql);
             while(rs.next()){
                 dxCodeSearchBean bean = new dxCodeSearchBean(db.getString(rs,"description"),                                                                 

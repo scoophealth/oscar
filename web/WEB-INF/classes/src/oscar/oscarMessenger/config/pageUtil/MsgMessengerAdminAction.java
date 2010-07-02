@@ -58,7 +58,6 @@ public class MsgMessengerAdminAction extends Action {
         ResourceBundle oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
 
         if (update.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"))){
-        // System.out.println("UPDATE WORKING");
 
            try{
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -77,7 +76,7 @@ public class MsgMessengerAdminAction extends Action {
 
          request.setAttribute("groupNo",grpNo);
         }else if(delete.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnDeleteThisGroup"))){
-        // System.out.println("DELETE WORKING");
+
             try{
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                  java.sql.ResultSet rs;

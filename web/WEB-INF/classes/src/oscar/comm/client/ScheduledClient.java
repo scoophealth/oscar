@@ -36,13 +36,12 @@ public class ScheduledClient {
 
         if(args.length != 1) {
 			System.out.println("Usage: oscarCommClient pathOfPropertiesFile");
-			//System.out.println("Usage: oscarCommClient databaseURL databaseName");
-			//System.out.println("    databaseURL:   Url to local MySQL database (e.g.: localhost:3306/)");
-			//System.out.println("    databaseName:  Name of the local MySQL database (e.g.: oscar_sfhc");
+
+
+
         }  else  {
             System.out.println("    propertiesFile:  " + args[0]);
-            //System.out.println("    databaseName: " + args[1]);
-	
+
 			ScheduledClient aStudy = new ScheduledClient();
 			//initial
 			aStudy.init(args[0]);

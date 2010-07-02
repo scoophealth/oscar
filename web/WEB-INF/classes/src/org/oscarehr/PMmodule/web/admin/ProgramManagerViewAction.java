@@ -773,8 +773,8 @@ public class ProgramManagerViewAction extends BaseAction {
 			saveMessages(request, messages);
 			return view(mapping, form, request, response);
 		}
-		// System.out.println("ProgramManagerViewAction.switch_beds(): switchBed1 = " + switchBed1);
-		// System.out.println("ProgramManagerViewAction.switch_beds(): switchBed2 = " + switchBed2);
+
+
 		bed1 = bedManager.getBed(Integer.valueOf(switchBed1));
 		bed2 = bedManager.getBed(Integer.valueOf(switchBed2));
 
@@ -798,15 +798,12 @@ public class ProgramManagerViewAction extends BaseAction {
 		latePass1 = bedDemographic1.isLatePass();
 		reservationEnd1 = bedDemographic1.getReservationEnd();
 
-		// System.out.println("ProgramManagerViewAction.switch_beds(): client1 = " + client1);
-		// System.out.println("ProgramManagerViewAction.switch_beds(): client2 = " + client2);
 
 		// Check whether both beds are from same room:
 		if (bed1.getRoomId().intValue() == bed2.getRoomId().intValue()) {
 			isSameRoom = true;
 		}
 
-		// System.out.println("ProgramManagerViewAction.switch_beds(): isSameRoom = " + isSameRoom);
 		if (isSameRoom) {// you can switch beds in same room for any client combination
 			bedDemographicManager.deleteBedDemographic(bedDemographic1);
 			bedDemographicManager.deleteBedDemographic(bedDemographic2);
@@ -829,10 +826,9 @@ public class ProgramManagerViewAction extends BaseAction {
 			isFamilyHead2 = clientManager.isClientFamilyHead(client2);
 			isFamilyDependent1 = clientManager.isClientDependentOfFamily(client1);
 			isFamilyDependent2 = clientManager.isClientDependentOfFamily(client2);
-			// System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyHead1 = " + isFamilyHead1);
-			// System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyHead2 = " + isFamilyHead2);
-			// System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent1 = " + isFamilyDependent1);
-			// System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent2 = " + isFamilyDependent2);
+
+
+
 
 			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1, loggedInInfo.currentFacility.getId());
 			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2, loggedInInfo.currentFacility.getId());
@@ -850,8 +846,7 @@ public class ProgramManagerViewAction extends BaseAction {
 				isIndependent2 = true;
 			}
 
-			// System.out.println("ProgramManagerViewAction.switch_beds(): isIndependent1 = " + isIndependent1);
-			// System.out.println("ProgramManagerViewAction.switch_beds(): isIndependent2 = " + isIndependent2);
+
 			// Check whether both clients are indpendents
 			if (isIndependent1 && isIndependent2) {
 				// Can switch beds and rooms

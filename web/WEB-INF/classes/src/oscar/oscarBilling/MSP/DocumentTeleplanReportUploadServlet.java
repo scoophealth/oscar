@@ -113,7 +113,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
                     filename = new String(data1);
                     if(filename.length()>2 && filename.indexOf("filename")!=-1) {
                         filename = filename.substring(filename.lastIndexOf('\\')+1,filename.lastIndexOf('\"'));
-                        //System.out.println("filename: "+filename);
+
                         fileheader = filename;
                         fos = new FileOutputStream(foldername+ filename);
                         dest = new BufferedOutputStream(fos, BUFFER);

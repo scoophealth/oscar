@@ -52,7 +52,6 @@ public class MsgMessengerCreateGroupAction extends Action {
        String parentID = ((MsgMessengerCreateGroupForm)form).getParentID();
        String type = ((MsgMessengerCreateGroupForm)form).getType2();
 
-       // System.out.println("type = "+type);
        grpName = grpName.trim();
 
        if (!grpName.equals("")){

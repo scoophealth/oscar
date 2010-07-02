@@ -51,7 +51,7 @@ public class ProviderNameBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT DISTINCT provider_no, provider_type from provider ORDER BY last_name";
-            //System.out.println("Sql Statement: " + sql);
+
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
@@ -60,7 +60,7 @@ public class ProviderNameBeanHandler {
                 providerNameVector.add(pNameBean);
                 if(db.getString(rs,"provider_type").equalsIgnoreCase("doctor")){
                     doctorNameVector.add(pNameBean);
-                    //System.out.println("doctor name added");
+
                 }
                     
             }

@@ -72,9 +72,9 @@ public class UCRConfigurationManager {
 				for(Item item:form.getItems()) {
 					System.out.println("\t\titem name=" + item.getName());
 					System.out.println("\t\titem type=" + item.getValueType());
-				//	System.out.println("\t\titem page=" + item.getPageId());
-				//	System.out.println("\t\titem section=" + item.getSectionId());
-				//	System.out.println("\t\titem question=" + item.getQuestionId());
+
+
+
 					System.out.println();
 				}
 				System.out.println();

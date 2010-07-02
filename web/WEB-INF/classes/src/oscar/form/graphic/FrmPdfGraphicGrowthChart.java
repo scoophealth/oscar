@@ -57,10 +57,10 @@ public final class FrmPdfGraphicGrowthChart extends FrmPdfGraphic {
     public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {
         prop = new Properties();
         for (int i = 0; i < xDate.size(); i++) {
-            //System.out.println(i );
+
             if (xDate.get(i) != null && yHeight.get(i) != null && !"".equals((String) xDate.get(i))
                     && !"".equals((String) yHeight.get(i))) {
-                //System.out.println(i + " " + xDate.get(i) + " | " + yHeight.get(i));
+
                 String[] xy = getGraphicXYProp((String) xDate.get(i), (String) yHeight.get(i));
                 if (xy != null)
                     prop.setProperty(xy[0], xy[1]);
@@ -117,7 +117,7 @@ public final class FrmPdfGraphicGrowthChart extends FrmPdfGraphic {
         if (sb.length > 0) {
             ret = false;
         }
-        //System.out.println("array length is:" + sb.length);
+
         return ret;
     }
 }

@@ -666,7 +666,7 @@ public class JdbcBillingCreateBillingFile {
 						if(lineValue.indexOf("RMBP")>0) nt = lineValue.indexOf("RMBP");
 						bNo = lineValue.substring(nt-8,nt);
 					}
-					//System.out.println("::::::::::::" + lineValue.length() + ":no:" + bNo);
+
 					bNo = "" + Integer.parseInt(bNo);
 					
 					propBillingNo.setProperty(bNo, "");
@@ -687,7 +687,7 @@ public class JdbcBillingCreateBillingFile {
 		
 	    // new filename
 	    String newName = ohipFilename + "." + GregorianCalendar.getInstance().getTimeInMillis();
-	    //System.out.println(newName);
+
 	    File file2 = new File(home_dir + newName);
 		
 	    boolean success = file.renameTo(file2);
@@ -711,7 +711,7 @@ public class JdbcBillingCreateBillingFile {
 			FileOutputStream out = new FileOutputStream(home_dir + ohipFilename);
 			PrintStream p = new PrintStream(out);
 			p.println(value1);
-			// System.out.println(sqlE.record);
+
 			p.close();
 			out.close();
 		} catch (Exception e) {
@@ -732,11 +732,11 @@ public class JdbcBillingCreateBillingFile {
 			 * Properties(); ap1.load(pStream1); pStream1.close();
 			 */
 			home_dir1 = OscarProperties.getInstance().getProperty("HOME_DIR");
-			// System.out.println("!!!" + home_dir1);
+
 			FileOutputStream out1 = new FileOutputStream(home_dir1 + htmlFilename);
 			PrintStream p1 = new PrintStream(out1);
 			p1.println(htmlvalue1);
-			// System.out.println(sqlE.record);
+
 			p1.close();
 			out1.close();
 		} catch (Exception e) {

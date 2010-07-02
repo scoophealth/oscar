@@ -161,7 +161,7 @@ public class EctSessionBean {
                 tmp = Integer.toString(rs.getInt("appointment_no"));
                 appointmentsIdArray.add(tmp);
                 appointmentsNamesArray.add(db.getString(rs,"name") + " " + db.getString(rs,"start_time"));
-                //                System.out.println(tmp);
+
             }
             rs.close();
             sql = "select * from encountertemplate order by encountertemplate_name";

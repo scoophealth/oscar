@@ -76,8 +76,7 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
          else
             flag1 = false;
       }
-      
-      //System.out.println(String.valueOf(String.valueOf((new StringBuffer("There are: headings = ")).append(headingVec.size()).append(" imms = ").append(immunizationVec.size()).append(" yearAge = ").append(yearAgeVec.size()))));
+
       int flag = 0;
       Vector headingVector = new Vector();
       headingVector.setSize(headingVec.size());
@@ -130,7 +129,7 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
       
       for(int q = 0; q < immunizationVector.size(); q++) {
          EctImmImmunizations immunization = (EctImmImmunizations)immunizationVector.elementAt(q);
-         //System.out.println(String.valueOf(String.valueOf((new StringBuffer("immunization ")).append(immunization.immunizationName).append(" at row index ").append(immunization.row).append(" q = ").append(q))));
+
       }
       
       Vector yearAgeVector = new Vector();
@@ -152,7 +151,7 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
          }
          EctImmImmunizations immunizations = (EctImmImmunizations)immunizationVector.elementAt(intRow - 1);
          immunizations.indexAge.add(colToBeParsed);
-         //System.out.println(String.valueOf(String.valueOf((new StringBuffer("year Age ")).append(yearAgeName).append(" subbedString ").append(subbedString).append(" the row i get ").append(rowToBeParsed).append(" the col i get ").append(colToBeParsed))));
+
       }
       
       EctImmImmunizationSetWriter immunizationSetWriter = new EctImmImmunizationSetWriter();

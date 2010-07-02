@@ -39,11 +39,10 @@ import org.apache.struts.util.MessageResources;
 
 public final class RxChooseDrugAction extends Action {
         public void p(String s){
-         //   System.out.println(s);
+
         }
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        //    System.out.println("***IN RxChooseDrugAction.java");
             // Extract attributes we will need
             Locale locale = getLocale(request);
             MessageResources messages = getResources(request);
@@ -68,9 +67,8 @@ public final class RxChooseDrugAction extends Action {
                 String GN     = request.getParameter("GN");
                 String BN     = request.getParameter("BN");
                 String drugId = request.getParameter("drugId"); 
-                
-            //    System.out.println("drugID "+drugId);
-           //     System.out.println("BRAND = "+BN);
+
+
              //   p("GN="+GN);
                     rx.setBrandName(BN);
                 try{
@@ -128,9 +126,8 @@ public final class RxChooseDrugAction extends Action {
                 rx.setDurationUnit("D");
           //      p("String.valueOf(bean.getStashIndex()): "+String.valueOf(bean.getStashIndex()));
                 bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
-                
-             //   System.out.println("***###addStathItem called11");
-             //   System.out.println("index="+bean.addStashItem(rx));
+
+
                 bean.setStashIndex(bean.addStashItem(rx));
             //    p("bean.getStashIndex: "+bean.getStashIndex());
             }

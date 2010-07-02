@@ -1513,7 +1513,7 @@ public class HSFODAO {
 //                HDL +
 //                A1C +
 //                visitData.isLocked() + " WHERE Patient_Id='" + visitData.getPatient_Id() +"'";
-//        System.out.println(sqlstatement);
+
 //        try {
 //            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 //            Connection connect = db.getConnection();
@@ -1522,9 +1522,9 @@ public class HSFODAO {
 //            st.clearParameters();
 //            st.close();
 //        }catch (SQLException se) {
-//            System.out.println("SQL Error while inserting into the database : "+ se.toString());
+
 //        }catch (Exception ne) {
-//            System.out.println("Other Error while inserting into the database : "+ ne.toString());
+
 //        }
 //        
 //    }

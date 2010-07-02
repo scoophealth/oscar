@@ -248,7 +248,7 @@ public final class FrmSetupFormAction extends Action {
         RxPatientData pData = new RxPatientData();
         List drugs = new LinkedList();
         String fluShot = getFluShotBillingDate(demographicNo);
-        //System.out.println("getFluShotBillingDate: " + fluShot);
+
         if(fluShot!=null)
             drugs.add(fluShot + "     Flu Shot");
             
@@ -295,7 +295,7 @@ public final class FrmSetupFormAction extends Action {
                                 + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
                                 + " and bd.status<>'D' and b.status<>'D' order by b.billing_date desc limit 0,1";
                 ResultSet rs = dbhandler.GetSQL(s1);
-                //System.out.println("flushot: " + s1);
+
                 if (rs.next())
                         s = dbhandler.getString(rs,"billing_date");
                 rs.close();

@@ -33,7 +33,7 @@ public class MsgDisplayDemographicMessagesAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-    // System.out.println("in display message action jackson");
+
             // Extract attributes we will need
         
             System.out.println("this is displayDemographicMessages.Action");
@@ -51,13 +51,12 @@ public class MsgDisplayDemographicMessagesAction extends Action {
 
             if(request.getParameter("providerNo")!=null & request.getParameter("userName")!=null)
             {
-                // System.out.println("in display message action jackson4");
+
                 bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
                 bean.setProviderNo(request.getParameter("providerNo"));
                 bean.setUserName(request.getParameter("userName"));
                 bean.setDemographic_no(request.getParameter("demographic_no"));
-                
-                //System.out.println(bean.getDemographic_no());
+
                 request.getSession().setAttribute("msgSessionBean", bean);
                                 
             }//if

@@ -48,8 +48,7 @@ public class DemographicSetEditAction extends Action {
    
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
       String setName = request.getParameter("patientSet");             
-      //System.out.println("setName "+setName);
-       
+
       DemographicSets dsets = new DemographicSets();
       ArrayList list = dsets.getDemographicSetExt(setName);
             

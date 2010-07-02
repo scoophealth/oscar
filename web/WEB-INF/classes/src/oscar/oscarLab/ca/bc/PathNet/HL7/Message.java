@@ -175,7 +175,7 @@ public class Message {
                        for(int p = 0; p < listOfProviderNo.size(); p++){
                           String prov = (String) listOfProviderNo.get(p);
                           //sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov+"', '"+parent+"', 'N','BCP')";
-                          //System.out.println(" size "+listOfProviderNo.size()+" "+sql);
+
                           //db.RunSQL(sql);
                           routing.route(parent, prov, DBHandler.getConnection(), "BCP");
                        }
@@ -328,7 +328,7 @@ public class Message {
                 ResultSet rs2 = db.GetSQL(sql);
                 if ( !rs2.next() ) {                            
                    //sql = "insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov_no+"', '"+lab_no+"', 'N','BCP')";
-                   //System.out.println(sql);
+
                    //db.RunSQL(sql);
                    ProviderLabRouting router = new ProviderLabRouting();
                    router.route(lab_no, prov_no, DBHandler.getConnection(), "BCP");

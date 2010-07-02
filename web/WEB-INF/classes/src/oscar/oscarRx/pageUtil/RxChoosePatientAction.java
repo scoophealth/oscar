@@ -61,7 +61,7 @@ public final class RxChoosePatientAction extends Action {
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        //   System.out.println("***IN RxChoosePatientAction.java");
+
         // Extract attributes we will need
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
@@ -122,7 +122,7 @@ public final class RxChoosePatientAction extends Action {
                                 hm.put(va[i].trim(), false);
                             }
                         }
-                        //System.out.println("in choosepatient hm=" + hm);
+
                         request.getSession().setAttribute("profileViewSpec", hm);
                     } catch (Exception e) {
                         e.printStackTrace();

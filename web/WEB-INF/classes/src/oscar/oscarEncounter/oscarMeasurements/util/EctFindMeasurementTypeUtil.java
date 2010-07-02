@@ -113,15 +113,15 @@ public class EctFindMeasurementTypeUtil {
      * @author - Ivy Chan - iConcept Technologies Inc.
      */
     static public Vector checkMeasurmentTypes(InputStream is, String formName){
-        //System.out.println("in checkMeasurementTypes");
+
         EctFormProp formProp = getEctMeasurementsType(is);
-        //System.out.println("xmlpath:" + xmlPath);
+
         Vector measurementTypes = formProp.getMeasurementTypes();
-        //System.out.println("got measurementTypes");
+
         for(int i=0; i<measurementTypes.size(); i++){
             EctMeasurementTypesBean mt = (EctMeasurementTypesBean) measurementTypes.elementAt(i);
             EctValidationsBean validation = (EctValidationsBean) mt.getValidationRules().elementAt(0);           
-            //System.out.println(mt.getType() + " " + validation.getName() + " " + validation.getRegularExp());
+
             if(!measurementTypeIsFound(mt, formName)){
                 addMeasurementType(mt, formName);
             }
@@ -176,7 +176,7 @@ public class EctFindMeasurementTypeUtil {
     static public boolean measurementFrmIsAdded(String formName, String typeId){
         boolean verdict = true;
         try {
-            //System.out.println("check if form "+ formName + " and type " + typeId + " exists");
+
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT * FROM measurementForm WHERE formName='" + formName + "' AND typeId='"+typeId+"'";
             ResultSet rs = db.GetSQL(sql);
@@ -225,7 +225,7 @@ public class EctFindMeasurementTypeUtil {
     static public void add2MeasurementForm(String formName, String typeId){
         boolean verdict = true;
         try {
-            //System.out.println("add form"+ formName + " and type " + typeId + " into measurementGroup table");
+
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "INSERT INTO measurementForm VALUES('" + formName + "','"+typeId+"')";
             db.RunSQL(sql);

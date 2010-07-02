@@ -65,7 +65,7 @@ public class AddTicklerAction extends Action {
       TicklerData td = new TicklerData();                        
       if (demos != null){
          for ( int i = 0; i < demos.length ; i++){
-            //System.out.println("Adding tickler for "+demos[i]);
+
             td.addTickler(demos[i],message,status,service_date,creator,priority,task_assigned_to);
          }
       }         
