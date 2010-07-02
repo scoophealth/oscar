@@ -32,7 +32,6 @@
 		int rowsAffected = studyBean.queryExecuteUpdate(new String[]{demographic_no}, "delete_demostudy");
 		if (study_no != null) {
 			for (int i = 0; i < study_no.length; i++) {
-				//System.out.println(i + " " + study_no[i]);
     			rowsAffected = studyBean.queryExecuteUpdate(new String[]{demographic_no, study_no[i], curUser_no, datetime}, "save_demostudy");
 			}
 		} 

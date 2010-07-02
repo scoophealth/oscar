@@ -161,7 +161,6 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     }
     priority   = request.getParameter("priority");
     provider_no   = curUser_no;
-    //System.out.println(number + "  " + name);
     sql = "update secObjPrivilege set privilege='" + privilege + "', priority='" + priority + "',provider_no='" + provider_no + "'  where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
     if(dbObj.updateDBRecord(sql, curUser_no)){
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is updated. ";
@@ -271,7 +270,6 @@ String nameWhere = "".equals(keyword)||vecRoleName.contains(keyword)? "roleUserG
 String nameValue = keyword + "%";
 String orderBy = nameWhere.equals("objectName")? "objectName, roleUserGroup" : "roleUserGroup, objectName";
 String query = "select * from secObjPrivilege where " + nameWhere + " like '" + nameValue + "' order by " + orderBy;
-System.out.println(query);
 rs = dbObj.searchDBRecord(query);
 while (rs.next()) {
 	prop = new Properties();
@@ -300,7 +298,6 @@ while (rs.next()) {
         for (int i = 0; i < vec.size(); i++) {
        		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF";
        		String roleUser = ((Properties)vec.get(i)).getProperty("roleUserGroup", "");
-System.out.println(roleUser);
        		String roleUserName = vecProviderNo.contains(roleUser)? "<font size='-1'>"+(String)vecProviderName.get(vecProviderNo.indexOf(roleUser))+"</font>": roleUser;
        		String obj = ((Properties)vec.get(i)).getProperty("objectName", "");
 %>

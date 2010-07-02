@@ -356,7 +356,6 @@ function clearField(field){
 		</table>
 		<%
       String billTypes = request.getParameter("billTypes");
-      System.out.println("billTypes" + billTypes);
       if (billTypes == null) {
         billTypes = MSPReconcile.REJECTED;
       }

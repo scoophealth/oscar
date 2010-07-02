@@ -750,8 +750,6 @@ BillingService billService = bcd.getBillingCodeByCode(allFields.getProperty("bil
                     Referrals
                   <% String  refCD1 = allFields.getProperty("referral_flag1");
                      String  refCD2 = allFields.getProperty("referral_flag2");
-                     System.out.println(" ref flag1 = "+refCD1);
-                     System.out.println(" ref flag2 = "+refCD2);
                      if (refCD1 == null || refCD1.equals("null")){ refCD1 = "0"; }
                      if (refCD2 == null || refCD2.equals("null")){ refCD2 = "0"; }
                   %>

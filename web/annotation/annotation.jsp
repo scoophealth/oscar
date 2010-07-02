@@ -51,7 +51,6 @@
 
     String demo = request.getParameter("demo");
     String display = request.getParameter("display");
-    System.out.println("demo_no="+demo);
     boolean saved = Boolean.valueOf(request.getParameter("saved"));
 
     String tid = request.getParameter("table_id");
@@ -67,7 +66,6 @@
 
     Integer tableName = cmm.getTableNameByDisplay(display);
     String note = "";
-    System.out.println("tableName="+tableName+"---"+"tableId="+tableId);
     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);//the lastest note which should be the annotation instead of document note.
     CaseManagementNote p_cmn = null;
     if (cml!=null) {
@@ -80,38 +78,31 @@
     //if get provider no is -1 , it's a document note.
     if (p_cmn!=null && !p_cmn.getProviderNo().equals("-1") ) uuid = p_cmn.getUuid();
     else p_cmn=null;//don't use document note as annotation.
-    System.out.println("uuid value="+uuid);
     //get note from attribute
     CaseManagementNote a_cmn = (CaseManagementNote)se.getAttribute(attrib_name);
-    System.out.println("attrib_name value="+attrib_name);
     CaseManagementNote historyNote=new CaseManagementNote();
     if (a_cmn!=null) {
         historyNote=a_cmn;
 	note = a_cmn.getNote();
-        System.out.println("a_cmn is not null , note="+note);
     } else if (p_cmn!=null){
 	//get note from database
 	 //previous annotation exists
             historyNote=p_cmn;
 	    note = p_cmn.getNote();
-            System.out.println("if p_cmn is not null, note="+note);
 
 	}
     if (saved) {
 	String prog_no = new EctProgram(se).getProgram(user_no);
         //create a note with demo, user_no, prog_no
 	CaseManagementNote cmn = createCMNote(historyNote,request.getParameter("note"), demo, user_no, prog_no);
-        System.out.println("annotation note id="+cmn.getNote());
 	if (cmn!=null) {
 	    if (p_cmn!=null) {  //previous annotation exists
 /*            if (p_cmn!=null && note !="") { //previous annotation exists
 */		cmn.setUuid(uuid); //assign same UUID to new annotation
 	    }
 	    if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
-                System.out.println("NOT SAVING");
 		if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
 	    } else { //annotated subject exists                   
-                    System.out.println("saving annotation here");
                     cmm.saveNoteSimple(cmn);
                     cml = new CaseManagementNoteLink();
                     cml.setTableName(tableName);
@@ -135,11 +126,9 @@
         if(special!=null)
             note=special+"\nRx annotation: ";
     }
-    System.out.println("uuid="+uuid);
     CaseManagementNote lastCmn=null;
     if(uuid.length()>0){
         lastCmn=cmm.getMostRecentNote(uuid);
-        //System.out.println("lastCmn="+lastCmn.getCreate_date());
     }
 %>
 
@@ -228,7 +217,6 @@
             else{
                 historyStr=note + "\n" + "   ----------------History Record----------------   \n" + historyNote.getHistory().trim() + "\n";
             }
-            System.out.println("historyStr="+historyStr);
             cmNote.setHistory(historyStr);
 	return cmNote;
     }

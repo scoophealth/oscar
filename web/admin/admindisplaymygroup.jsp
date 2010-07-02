@@ -86,7 +86,6 @@
    while (rsgroup.next()) { 
      if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
        bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");
-       //System.out.println(oldNo);
      }
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">

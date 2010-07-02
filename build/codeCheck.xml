@@ -21,6 +21,10 @@
 				<fileset dir="${srcDir}" includes="**/*.j*" excludes="**/*.jar">
 					<or>
 						<contains text="System.err" />
+						<contains text="System.out" />
+						<!--
+						<contains text="printStackTrace" />
+						-->
 					</or>
 				</fileset>
 			</path>			

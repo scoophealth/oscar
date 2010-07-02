@@ -50,7 +50,6 @@ String curUser_no = (String)session.getAttribute("user");
 		if(role_name.equals(request.getParameter("action").substring("edit".length()))) {
 			String	sql   = "update secRole set role_name='" + StringEscapeUtils.escapeSql(role_name) + "' ";
 			sql += "where role_name='" + StringEscapeUtils.escapeSql(role_name) + "'";
-			//System.out.println(sql);
 			if(dbObj.updateDBRecord(sql, curUser_no)) {
 	  			msg = role_name + " is updated.<br>" + "Type in a role name and search it first to see if it is available.";
 	  			action = "search";
@@ -97,7 +96,6 @@ String curUser_no = (String)session.getAttribute("user");
     } else {
 		String	sql   = "select * from secRole where role_name='" + StringEscapeUtils.escapeSql(role_name) + "'";
 		ResultSet rs = dbObj.searchDBRecord(sql);
-		//System.out.println(sql);
 
 		if (rs.next()) {
 		    prop.setProperty("role_name", role_name);

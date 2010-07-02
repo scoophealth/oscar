@@ -180,7 +180,6 @@ function onSub() {
 	      sql = "select * from log force index (datetime) where dateTime <= ?";
 	      sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
       }
-//      System.out.println("sql:" + sql);
       rs = dbObj.queryResults(sql, params);
       while (rs.next()) {
         prop = new Properties();

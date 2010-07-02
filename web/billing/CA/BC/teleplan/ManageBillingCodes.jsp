@@ -32,7 +32,8 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ page import="org.oscarehr.common.dao.BillingServiceDao,org.oscarehr.util.SpringUtils,org.oscarehr.common.model.*" %>
 <%BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao"); %>
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 
 <head>
 <title>
@@ -342,7 +343,7 @@ tr.up{
                                     classStyle = "up";
                                 }
                             }catch(Exception e){
-                                System.out.println("ERROR: oldfee "+oldFee);
+                                MiscUtils.getLogger().error("ERROR: oldfee "+oldFee);
                                 classStyle = "error";
                             }
                             

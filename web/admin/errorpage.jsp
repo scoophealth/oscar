@@ -33,6 +33,6 @@
 <hr>
 <h2><bean:message key="error.msgException" />:<br>
 <font color=red> <%= exception.toString() %><br>
-<% exception.printStackTrace(System.out); %> </font></h2>
+<% exception.printStackTrace(); %> </font></h2>
 </body>
 </html:html>

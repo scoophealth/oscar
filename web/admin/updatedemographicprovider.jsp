@@ -152,7 +152,6 @@ function setregexp2() {
       }
       String instrdemo = sbtemp.toString();
       dbQueries[0][1] = dbQueries[0][1] + "("+ instrdemo +")" ;
-      // System.out.println( dbQueries[0][1] );
       updatedpBean.doConfigure(dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_residentmultiple");
     } %>
@@ -189,7 +188,6 @@ function setregexp2() {
       }
       String instrdemo = sbtemp.toString();
       dbQueries[1][1] += "("+ instrdemo +")" ;
-      // System.out.println( dbQueries[1][1] );
       updatedpBean.doConfigure(dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_nursemultiple");
     } %>
@@ -226,7 +224,6 @@ function setregexp2() {
       }
       String instrdemo = sbtemp.toString();
       dbQueries[2][1] += "("+ instrdemo +")" ;
-      // System.out.println( dbQueries[2][1] );
       updatedpBean.doConfigure(dbQueries,responseTargets);
       rowsAffected = updatedpBean.queryExecuteUpdate(param, "update_midwifemultiple");
     } %>

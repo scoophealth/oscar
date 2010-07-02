@@ -27,7 +27,6 @@
 	  	nameValue = "year_of_birth = " + name.substring(0,4);
 	  	nameValue += " and month_of_birth = " + name.substring(5,7);
 	  	nameValue += " and date_of_birth = " + name.substring(8,10);
-	  	//System.out.println("sql = " +nameValue);
 	} else {
 	    nameValue = request.getParameter("search_mode") + "='" + UtilMisc.charEscape(request.getParameter("keyword"), '\'') +"'";
 	}

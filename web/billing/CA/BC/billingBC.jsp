@@ -111,7 +111,6 @@
     loadFromSession = "y";
   }
   if (loadFromSession == null) {
-    System.out.println("RemovingAttribute from Session");
     request.getSession().removeAttribute("BillingCreateBillingForm");
   }
 
@@ -712,7 +711,6 @@ function checkifSet(icd9,feeitem,extrafeeitem){
 <!-- above here -->
 <%
 List<String> wcbneeds = (List) request.getAttribute("WCBFormNeeds");
-System.out.println("Setting form needed "+wcbneeds);
 if(wcbneeds != null){%>
 <div>
     <h3>WCB Form needs:</h3>
@@ -748,7 +746,6 @@ if(wcbneeds != null){%>
     if (apDate != null && apDate.trim().length() == 0) {
       thisForm.setXml_appointment_date(bean.getApptDate());
     }
-    System.out.println("app date " + thisForm.getXml_appointment_date());
     if (bean != null && bean.getBillType() != null) {
       thisForm.setXml_billtype(bean.getBillType());
     }
@@ -760,7 +757,6 @@ if(wcbneeds != null){%>
     }
     thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
     oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = new oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO();
-    System.out.println("(String) thisForm.getXml_provider()=" + (String) thisForm.getXml_provider());
     oscar.oscarBilling.ca.bc.data.BillingPreference pref = null;
     //checking for a bug where the passed in provider number is actually "none" rather than numeral 0
     if (oscar.util.StringUtils.isNumeric(thisForm.getXml_provider())) {

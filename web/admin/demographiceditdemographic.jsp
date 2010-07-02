@@ -79,7 +79,6 @@ function upCaseCtrl(ctrl) {
   int age=0;
   
   int param = Integer.parseInt(request.getParameter("demographic_no"));
-  // System.out.println("from editcpp : "+ param);
  
   ResultSet rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
   if(rs==null) {

@@ -520,7 +520,6 @@ function pasteAppt() {
             boolean bMoreAddr = bMultisites? true : props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 			String tempLoc = "";
             if(bFirstDisp && bMoreAddr) {
-            	//System.out.println(dateString2 + curProvider_no);
             	tempLoc = (new JdbcApptImpl()).getLocationFromSchedule(dateString2, curProvider_no);
             }
             String loc = bFirstDisp?tempLoc:request.getParameter("location");

@@ -123,7 +123,6 @@ while ((!isOk) && retry < 3) {
 	DBPreparedHandlerParam[] param2= new DBPreparedHandlerParam[1];
 	param2[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("dob")));
 	isOk = (dbObj.queryExecuteUpdate(sql, param2)>0);
-	//System.out.println(sql);
 	
 	retry ++;
 }
