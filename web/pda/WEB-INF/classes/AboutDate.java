@@ -275,7 +275,7 @@ public class AboutDate {
 			//t2=aXX_XXampm.indexOf(58);
 			if(aXX_XXampm.endsWith("am")) {
 				temp=temp.substring(0,temp.length()-2).trim();
-				//System.out.println(hour+" :"+temp);
+
 				temp=getDigitalXX(hour)+":"+getDigitalXX(Integer.parseInt(temp))+":00";
 			} else if(aXX_XXampm.endsWith("pm")) {
 				temp=temp.substring(0,temp.length()-2).trim();
@@ -283,7 +283,7 @@ public class AboutDate {
 				temp=getDigitalXX(hour==12?12:(hour+12))+":"+getDigitalXX(Integer.parseInt(temp))+":00";
 			} else {
 				temp=temp.trim();
-				//System.out.println(hour+" :"+temp);
+
 				temp=getDigitalXX(hour)+":"+getDigitalXX(Integer.parseInt(temp))+":00";
 			}
 		}

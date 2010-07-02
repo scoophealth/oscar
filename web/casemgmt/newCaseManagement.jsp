@@ -5,7 +5,8 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -61,7 +62,7 @@
                 }
 %> <input type="submit" value="Update"> <%                
             }catch(SQLException ex ) {
-                System.out.println("SQL Error " + ex.getMessage());
+                MiscUtils.getLogger().error("SQL Error " + ex.getMessage());
             }
 %>
 </form>

@@ -94,7 +94,7 @@ public class DBHandler {
 	 */
 	synchronized public void queryExecute(String sproc, String[] param) throws SQLException {
 		// called from receiving page, not forwarding page. execute should return a boolean value
-		// System.out.println(sproc);
+
 		pstmt = conn.prepareStatement(sproc);
 		for (int id = 0; id < param.length; id++) {
 			pstmt.setString((id + 1), param[id]);
@@ -107,18 +107,18 @@ public class DBHandler {
 
 	synchronized public int queryExecuteUpdate(String sproc, String[] param) throws SQLException {
 		// called from receiving page, not forwarding page. number of records should be returned
-		// System.out.println(sproc);
+
 		pstmt = conn.prepareStatement(sproc);
 		for (int id = 0; id < param.length; id++) {
 			pstmt.setString((id + 1), param[id]);
-			// System.out.println(param[id]);
+
 		}
 		return (pstmt.executeUpdate());
 	}
 
 	synchronized public int queryExecuteUpdate(String sproc, int[] param) throws SQLException {
 		// called from receiving page, not forwarding page. number of records should be returned
-		// System.out.println(sproc);
+
 		pstmt = conn.prepareStatement(sproc);
 		for (int id = 0; id < param.length; id++) {
 			pstmt.setInt((id + 1), param[id]);
@@ -145,11 +145,11 @@ public class DBHandler {
 		pstmt = conn.prepareStatement(sproc);
 		for (id = 0; id < intparam.length; id++) {
 			pstmt.setInt((id + 1), intparam[id]);
-			// System.out.println((id+1)+" : "+intparam[id]);
+
 		}
 		for (id = 0; id < param.length; id++) {
 			pstmt.setString((intparam.length + id + 1), param[id]);
-			// System.out.println((id+1)+" : "+param[id]);
+
 		}
 		return (pstmt.executeUpdate());
 	}
@@ -159,11 +159,11 @@ public class DBHandler {
 		pstmt = conn.prepareStatement(sproc);
 		for (id = 0; id < param.length; id++) {
 			pstmt.setString((id + 1), param[id]);
-			// System.out.println((id+1)+" : "+param[id]);
+
 		}
 		for (id = 0; id < intparam.length; id++) {
 			pstmt.setInt((param.length + id + 1), intparam[id]);
-			// System.out.println((id+1)+" : "+intparam[id]);
+
 		}
 		rs = pstmt.executeQuery();
 		return rs;

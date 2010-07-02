@@ -38,7 +38,6 @@
     EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
     String famDocName, famDocSurname, famDocColour, inverseUserColour, userColour;
     String user = (String) session.getAttribute("user");
-    System.out.println("USER " + user);
     ProviderColourUpdater colourUpdater = new ProviderColourUpdater(user);
     userColour = colourUpdater.getColour();
     //we calculate inverse of provider colour for text

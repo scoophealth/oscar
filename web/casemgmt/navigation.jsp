@@ -519,10 +519,6 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 </caisi:isModuleLoad>
 </table>
 </div>
-<%
-	long finLoad = System.currentTimeMillis();
-	System.out.println("TOTAL LOAD TIME FOR NAVIGATION:" + (finLoad-loadPage)*.001);
-%>
 
 
 

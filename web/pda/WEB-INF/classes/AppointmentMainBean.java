@@ -71,7 +71,7 @@ public class AppointmentMainBean {
     
     String []qNames=Misc.column(0,dbQueries); //help class to get column 0 for name
     String []qSqlStrings=Misc.column(1,dbQueries);
-    //    System.out.println("qNames: "+qNames[0] +" "+qNames[1]+" sql: "+qSqlStrings[0]);
+
 
     return new DBHandler(dbDriver,dbName,dbUser,dbPwd,qNames,qSqlStrings);
   } //DBHandler is created, ready to run queries
@@ -163,9 +163,9 @@ public class AppointmentMainBean {
 	  	sqlQuery = queryDict.getDef("search*","");//(dboperation,""); temp use "search*" super command
     	rs = dbH.queryResults(sqlQuery); 
 	  } else {
-	  	//System.out.println("sql from appointmentmainbean.java---------------: "+aKeyword[1]+" dboperation: "+dboperation);
+
 	  	sqlQuery = queryDict.getDef(dboperation,"");
-	  	//System.out.println("sql from appointmentmainbean.java---------------: "+sqlQuery);
+
     	rs = dbH.queryResults(sqlQuery, aKeyword);
 	  }
   	return rs;

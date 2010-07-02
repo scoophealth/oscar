@@ -84,7 +84,7 @@ public class CoercionTest {
 			ResultSetMetaData theMetaData = theResults.getMetaData();
 			
 			System.out.println("Column count: " + theMetaData.getColumnCount());
-			//System.out.println("   Row count: " + theMetaData.getRowCount());
+
 
 			
 		do {
@@ -295,17 +295,15 @@ public class CoercionTest {
 			while ((i++ < show) && ((c = in.read()) != -1) ) {
 //				if ( Character.isISOControl((char)c) )
 //					sb.append("0x").append(Integer.toHexString(c).toString()).append(",");
-// System.out.println(i+"---2-----"+new Character((char)c).charValue()+"==");
+
 
   			     if ( Character.isISOControl((char)c)) {
 //                                 if ( (new Character(c)).equals("\n")){  
 
-// System.out.println(i+"---1*****"+Character.getNumericValue((char)c)+"==");
-// System.out.println(i+"---2-----"+new Character((char)c).charValue()+"==");
+
 //                                  if ( (new Character((char)c).charValue()=='\u0010')||(new Character((char)c).charValue()==13) ){  
                                   if ( (new Character((char)c).charValue()==10)||(new Character((char)c).charValue()==13) ){  
 
-// System.out.println("---1++++++++++==+++++++++++++++++++++++++++++++++++++++===");
 //                                        if ( (Character.getNumericValue((char)c)== '\u0010')||(Character.getNumericValue((char)c)== '\u0013' )){  
 //					sb.append(Integer.toHexString(c).toString());
       					sb.append("<br>");

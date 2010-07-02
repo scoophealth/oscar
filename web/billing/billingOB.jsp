@@ -196,7 +196,6 @@ function showHideLayers() { //v3.0
 	user_no = request.getParameter("user_no");
 	String apptProvider_no = request.getParameter("apptProvider_no");
 	String ctlBillForm = request.getParameter("billForm");
-	System.out.println("ctlBillForm" + ctlBillForm);
 	int ctlCount = 0;
 	String assgProvider_no = "", assgProvider_name = "";
 

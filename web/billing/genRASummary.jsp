@@ -120,7 +120,6 @@ while ((nextline=input.readLine())!=null){
 				account = String.valueOf(accountno);
 			}
 			// add a bean
-			//System.out.println(location + " | " + account);
 			if (location.equals(localClinicNo)) {
 				billingLocalInvNoBean.setProperty(account, localClinicNo);
 			}

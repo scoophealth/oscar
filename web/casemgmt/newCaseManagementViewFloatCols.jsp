@@ -1461,125 +1461,6 @@ function autoCompleteShowMenu(element, update){
     }
 </script>
 
-<%-- <div class="tabs" id="tabs">
-
-<%
-	String selectedTab = request.getParameter("tab");
-	if(selectedTab==null || selectedTab.trim().equals("")) {
-		selectedTab=CaseManagementViewFormBean.tabs[0];
-	}
-	pageContext.setAttribute("selectedTab",selectedTab);
-		
-	java.util.List aList=(java.util.List)request.getAttribute("Allergies"); 
-	boolean allergies=false;
-	if (aList!=null){
-		allergies = aList.size() > 0;
-	}
-	
-	boolean reminders = false;
-	CaseManagementCPP cpp = (CaseManagementCPP)request.getAttribute("cpp");
-	if(cpp!=null){
-		reminders = cpp.getReminders().length() > 0;
-	}
-	//get programId
-	String pId=(String)session.getAttribute("case_program_id");
-	if (pId==null) pId="";
-        System.out.println("case_program_id " + pId);
-        System.out.println("Demo No " + request.getParameter("demographicNo"));
-        System.out.println("Provider " + request.getParameter("providerNo"));
-%>
-<table>
-<tr>
-<th width="8%"></th><th style="font-size: 20" colspan="2" width="80%"><b>Case Management Encounter</b></th>
-<%
-WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-%>
-<th width="12%" align="right" nowrap></th>
-</tr>
-
-</table>
-<table cellpadding="0" cellspacing="0" border="0">
-
-	<tr>
-		<% for(int x=0;x<CaseManagementViewFormBean.tabs.length;x++) {%>
-			<%
-				String extra = "";
-				if((allergies && CaseManagementViewFormBean.tabs[x].equals("Allergies"))||(reminders && CaseManagementViewFormBean.tabs[x].equals("Reminders")) ) {
-					extra="color:red;";
-				}
-				
-			%>
-			<%if (CaseManagementViewFormBean.tabs[x].equals("Allergies") || CaseManagementViewFormBean.tabs[x].equals("Prescriptions")){%>
-			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
-			<%if(CaseManagementViewFormBean.tabs[x].equals(selectedTab)) { %>
-				<td style="background-color: #555;<%=extra%>"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>'); return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<%} else { %>
-				<td><a style="<%=extra %>" href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>');return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<% } %>
-			</caisirole:SecurityAccess>
-			<%}else{ %>
-			<%if(CaseManagementViewFormBean.tabs[x].equals(selectedTab)) { %>
-				<td style="background-color: #555;<%=extra%>"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>'); return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<%} else { %>
-				<td><a style="<%=extra %>" href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>');return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
-			<% } %>
-			<%} %>
-		<% } %>
-	</tr>
-</table>
-</div>
-<br/> 
-
-<table width="100%">
-<tr>
-<td width="75%">
-<table cellspacing="1" cellpadding="1">
-<tr>
-	<td align="right" valign="top" nowrap><b>Client Name:</b></td><td><c:out value="${requestScope.casemgmt_demoName}" /></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>Age:</b></td><td><c:out value="${requestScope.casemgmt_demoAge}" /></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>DOB:</b></td><td><c:out value="${requestScope.casemgmt_demoDOB}" /></td>
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>Team:</b></td><td><c:out value="${requestScope.teamName}" /></td>
-</tr>
-<tr>	
-	<td align="right"  valign="top" nowrap></td>
-	<td><c:forEach var="tm" items="${teamMembers}">
-		<c:out value="${tm}" />&nbsp;&nbsp;&nbsp;
-	</c:forEach></td>	
-</tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>Primary Health Care Provider:</b></td><td><c:out value="${requestScope.cpp.primaryPhysician}" /></td>
-</tr>
-<tr>
-	<td align="right" valign="top" nowrap><b>Primary Counsellor/Caseworker:</b></td><td><c:out value="${requestScope.cpp.primaryCounsellor}" /></td>	
-</tr>
-</table>
-</td>
-<td>
-
-	<%String demo=request.getParameter("demographicNo");%>
-	<c:choose>
-		<c:when test="${not empty requestScope.image_filename}">
-			<img style="cursor: pointer;" id="ci" src="<c:out value="${ctx}"/>/images/default_img.jpg" alt="id_photo"  height="100" title="Click to upload new photo." OnMouseOver="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/<c:out value="${requestScope.image_filename}"/>'" OnMouseOut="delay(5000)" window.status='Click to upload new photo'; return true;" onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;"/>	
-		</c:when>
-		<c:otherwise>
-			<img style="cursor: pointer;" src="<c:out value="${ctx}"/>/images/defaultR_img.jpg" alt="No_Id_Photo" height="100" title="Click to upload new photo." OnMouseOver="window.status='Click to upload new photo';return true" onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;"/>
-		</c:otherwise>
-	</c:choose>
-	
-</td>
-
-</tr>
-</table>
- 
-<jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
---%>
-
         <html:form action="/CaseManagementView" method="post">        
             <html:hidden property="demographicNo"/>
             <html:hidden property="providerNo" value="<%=provNo%>" />
@@ -1923,7 +1804,6 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             <%
                             }
                             }
-                            //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
                             %>
                         </div>
                     </div>
@@ -2089,16 +1969,9 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             String apptDate = convertDateFmt(bean.appointmentDate);
             if(bean.eChartTimeStamp==null){
                   encounterText ="\n["+oscar.util.UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy",request.getLocale())+" .: "+bean.reason+"] \n";
-                  //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
-            }else { //if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
-                   //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
-                  //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+            }else {
                    encounterText ="\n["+("".equals(bean.appointmentDate)?oscar.util.UtilDateUtilities.getToday("dd-MMM-yyyy"):apptDate)+" .: "+bean.reason+"]\n";
-            }/*else {//if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
-                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
-                   encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n";
-            }*/
-           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
+            }
            if(!bean.oscarMsg.equals("")){
               encounterText +="\n\n"+bean.oscarMsg;
            }

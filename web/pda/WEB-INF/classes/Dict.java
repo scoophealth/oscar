@@ -35,7 +35,7 @@ public class Dict extends Properties {
   
   public void setDef(String name, String val) {
     setProperty(name.toUpperCase(), val);
-    //System.out.println("setDef(): name: "+name+"   value: " +val);
+
   }
   public void setDef(String [][]pairs) {
     for(int i=0;i<pairs.length;i++)
@@ -45,7 +45,7 @@ public class Dict extends Properties {
     int len=names.length; if(len>vals.length) len=vals.length;
     for(int i=0; i<len; i++) {
       setDef(names[i], vals[i]);
-      //System.out.println("setDef([]): name: "+names[i]+"   value: " +vals[i]);
+
     }
   }
   public void setDef(HttpServletRequest req) {

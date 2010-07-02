@@ -22,7 +22,6 @@
 	String frmName = "caseManagementEntryForm" + demographicNo;
 	CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);
 	String noteId = cform.getNoteId();
-	System.out.println("noteId="+cform.getNoteId());
 	boolean isUpdate=false;
 %>
 <html>

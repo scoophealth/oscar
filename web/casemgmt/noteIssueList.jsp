@@ -39,10 +39,8 @@
 	String demoNo = request.getParameter("demographicNo");
 	String caseMgmtEntryFrm = "caseManagementEntryForm" + demoNo;
 	CaseManagementEntryFormBean frm = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
-	System.out.println("Fetching form bean from request");
 	if (frm == null)
 	{
-		System.out.println("No form bean in request - Fetching from session");
 		frm = (CaseManagementEntryFormBean)session.getAttribute(caseMgmtEntryFrm);
 		request.setAttribute("caseManagementEntryForm", frm);
 	} 

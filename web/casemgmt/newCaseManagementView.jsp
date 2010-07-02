@@ -119,7 +119,6 @@
 </script>
 <%
 	current = System.currentTimeMillis();
-	//System.out.println("NEW CASEMANAGEMENT VIEW jscode loaded " + String.valueOf(current-start));
 	start = current;
 %>
 
@@ -648,7 +647,6 @@
 						<%
 					} }
 			 	}else if(note.isRxAnnotation()){//prescription note
-                                    System.out.println("note is rx annotation");
                                     String winName="dummie";
                                     int hash = Math.abs(winName.hashCode());
                                     //get drug from note id.
@@ -667,7 +665,6 @@
 					} }
                                     if(rx!=null){
                                         String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
-                                        //System.out.println("url="+url);
 
                                         %>
                                         <a class="links" title="<%=rx.getSpecial()%>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.rxView" /> </a>

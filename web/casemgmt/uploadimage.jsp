@@ -29,9 +29,7 @@
 
 <%
 	if(application.getAttribute("javax.servlet.context.tempdir") == null) {
-		System.out.println("no javax.servlet.context.tempdir defined");
 		String tmpDir = System.getProperty("java.io.tmpdir");
-		System.out.println("tmpDir=" + tmpDir);
 		application.setAttribute("javax.servlet.context.tempdir",new java.io.File(tmpDir));
 	}
 %>
