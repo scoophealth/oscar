@@ -157,7 +157,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 					mappedRoleName=mappedRole.getOscarRole().getName();
 					List<SecUserRole> roles = providerManager.getSecUserRoles(providerNo);
 					for(SecUserRole role:roles) {
-						if(role.getRoleName() == mappedRoleName) {
+						if(mappedRoleName.equals(role.getRoleName())) {
 							ok=true;
 						}
 					}
@@ -280,7 +280,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 				//1
 				if(mappingMap.get(caisiRoleId)==null || mappingMap.get(caisiRoleId).getOscarRole()==null) {
 					//delete
-					ppDao.deleteProgramProvider(rs.getLong("id"));
+					ppDao.deleteProgramProvider(rs.getLong("id"));					
 				} else {
 					//change
 					db.RunSQL("update program_provider set role_id=" + mappingMap.get(caisiRoleId).getOscarRole().getId() + " where id=" + rs.getLong("id"));					
@@ -303,8 +303,8 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 					boolean ok=false;
 					mappedRoleName=mappedRole.getOscarRole().getName();
 					List<SecUserRole> roles = providerManager.getSecUserRoles(providerNo);
-					for(SecUserRole role:roles) {
-						if(role.getRoleName() == mappedRoleName) {
+					for(SecUserRole role:roles) {						
+						if(mappedRoleName.equals(role.getRoleName())) {
 							ok=true;
 						}
 					}
@@ -316,6 +316,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 						providerManager.saveUserRole(sur);
 						String providerName = providerManager.getProvider(providerNo).getFormattedName();												
 						result.getMessages().add("Assigned provider " + providerName + ":" + mappedRoleName);
+						logger.info("Assigned provider " + providerName + ":" + mappedRoleName);
 					}
 				} 								
 			}
@@ -328,8 +329,10 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 				Mapping mappedRole = mappingMap.get((long)role_id);
 				if(mappedRole == null) {
 					db.RunSQL("delete from default_role_access where id = " + id);
+					logger.info("delete from default_role_access where id = " + id);
 				} else {
 					db.RunSQL("update default_role_access set role_id=" + mappedRole.getOscarRole().getId() + " where id=" + id);
+					logger.info("update default_role_access set role_id=" + mappedRole.getOscarRole().getId() + " where id=" + id);
 				}
 			}		
 			rs.close();
@@ -352,6 +355,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 			for(String vta:valuesToAdd) {
 				String[] p = vta.split(",");
 				db.RunSQL("insert into program_access_roles  values (" +p[0] + "," + p[1] + ")");
+				logger.info("insert into program_access_roles  values (" +p[0] + "," + p[1] + ")");
 			}
 			
 			rs.close();
@@ -366,9 +370,11 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 					
 				} else {
 					db.RunSQL("update casemgmt_note set reporter_caisi_role="+mappedRole.getOscarRole().getId() + " where note_id="+id);
+					logger.info("update casemgmt_note set reporter_caisi_role="+mappedRole.getOscarRole().getId() + " where note_id="+id);
 				}
 			}
 			rs.close();			
+			logger.info("Migrated caisi roles to oscar roles successfully!");
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
