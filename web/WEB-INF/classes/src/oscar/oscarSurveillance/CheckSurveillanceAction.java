@@ -67,7 +67,11 @@ public class CheckSurveillanceAction extends Action {
                              
       long startTime = System.currentTimeMillis();                                   
       CheckSurveillanceForm frm = (CheckSurveillanceForm) form;
-         
+       
+      String programId = request.getParameter("programId");
+      if(programId!=null)
+    	  request.getSession().setAttribute("case_program_id",programId);
+     
       ActionForward forward = mapping.findForward("close");
       String proceed = frm.getProceed();
       String forwardPath = null;

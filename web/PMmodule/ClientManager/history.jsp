@@ -27,6 +27,7 @@
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
+<%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
@@ -97,17 +98,20 @@
     <display:column sortable="true" title="">	
 		<% if(bShowEncounterLink && !admissionForDisplay.isFromIntegrator()) {	
 			HttpSession se = request.getSession();			
-			String programId = String.valueOf(admissionForDisplay.getProgramId());
-			Integer demographic_no = admissionForDisplay.getClientId();
+			Integer programId = admissionForDisplay.getProgramId();
+			
+			//Integer demographic_no = admissionForDisplay.getClientId();???
+			Demographic currentDemographic=(Demographic)request.getAttribute("client");
+			Integer demographic_no = currentDemographic.getDemographicNo();
 			
 			//Check program is in provider's program domain:
-			if(ppd.isThisProgramInProgramDomain(curUser_no,Integer.valueOf(programId))) {
+			if(ppd.isThisProgramInProgramDomain(curUser_no,programId)) {
 				String eURL = "../oscarEncounter/IncomingEncounter.do?programId="+programId+"&providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curUser_no+"&reason="+java.net.URLEncoder.encode(reason)+"&encType="+java.net.URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+java.net.URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate=null&appointmentDate=null&startTime=0:0"+"&status="+status+"&source=cm";
 		%>	
 		<logic:notEqual value="community" property="programType" name="admission">
 		
 		<a href=#
-			onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;"
+			onClick="popupPage(710, 1024,'../oscarSurveillance/CheckSurveillance.do?programId=<%=programId%>&demographicNo=<%=demographic_no%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>');return false;"
 			title="<bean:message key="global.encounter"/>"> <bean:message
 			key="provider.appointmentProviderAdminDay.btnE" /></a> 
 		

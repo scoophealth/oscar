@@ -87,7 +87,7 @@ $("document").ready(function(){
 	<div id="messages">
 	</div>
 	</br>
-	<form>
+	<form method="post">
 	<input id="migrate_step1" type="button" class="mbttn"
 			style="width: 180px" value="Preview" />
 	&nbsp;&nbsp;	
