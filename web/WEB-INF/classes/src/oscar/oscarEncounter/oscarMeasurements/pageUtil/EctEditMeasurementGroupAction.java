@@ -53,11 +53,8 @@ public class EctEditMeasurementGroupAction extends Action {
         request.getSession().setAttribute("EctEditMeasurementGroupForm", frm);
         String groupName = frm.getGroupName();
 
-        MsgStringQuote str = new MsgStringQuote();
         String requestId = "";
         
-        List messages = new LinkedList();
-        boolean valid = true;
                 
         if(frm.getForward()!=null){
             try{

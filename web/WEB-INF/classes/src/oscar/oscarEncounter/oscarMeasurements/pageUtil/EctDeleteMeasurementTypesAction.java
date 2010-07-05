@@ -53,9 +53,7 @@ public class EctDeleteMeasurementTypesAction extends Action {
         request.getSession().setAttribute("EctDeleteMeasurementTypesForm", frm);
         String[] deleteCheckbox = frm.getDeleteCheckbox();
         GregorianCalendar now=new GregorianCalendar(); 
-        int curYear = now.get(Calendar.YEAR);
-        int curMonth = (now.get(Calendar.MONTH)+1);
-        int curDay = now.get(Calendar.DAY_OF_MONTH);
+       
         String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                 
         try{
