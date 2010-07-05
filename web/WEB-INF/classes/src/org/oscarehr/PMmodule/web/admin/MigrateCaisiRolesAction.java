@@ -179,7 +179,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 			//default_role_access
 			rs = db.GetSQL("SELECT * FROM default_role_access a,access_type b where a.access_id = b.access_id");
 			while(rs.next()) {
-				long id = rs.getLong("id");
+				
 				int role_id = rs.getInt("role_id");
 				String access_name = rs.getString("name");
 				
@@ -193,7 +193,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 			//program_access_roles
 			rs = db.GetSQL("SELECT * FROM program_access_roles");
 			while(rs.next()) {
-				long id = rs.getLong("id");
+				
 				int role_id = rs.getInt("role_id");
 				
 				Mapping mappedRole = mappingMap.get((long)role_id);
@@ -206,7 +206,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 			//casemgmt_note
 			rs = db.GetSQL("SELECT * FROM casemgmt_note");
 			while(rs.next()) {
-				long id = rs.getLong("note_id");
+				
 				int role_id = rs.getInt("reporter_caisi_role");
 				Mapping mappedRole = mappingMap.get((long)role_id);
 				if(mappedRole == null) {

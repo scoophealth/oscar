@@ -175,7 +175,7 @@ public class MergeClientAction extends BaseAdminAction {
 			setLookupLists(request);
 	
 			ActionMessages messages = new ActionMessages();
-			String test = request.getParameter("records");
+			
 			if (request.getParameterValues("records") == null) {
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
 						"message.merge.errors.select", request.getContextPath()));
@@ -187,7 +187,7 @@ public class MergeClientAction extends BaseAdminAction {
 			ArrayList records = new ArrayList(Arrays.asList(request
 					.getParameterValues("records")));
 			String head = request.getParameter("head");
-			String action = request.getParameter("mergeAction");
+			
 			String providerNo = (String) request.getSession().getAttribute(
 					KeyConstants.SESSION_KEY_PROVIDERNO);
 			if (head != null && records.size() > 1 && records.contains(head)) {
