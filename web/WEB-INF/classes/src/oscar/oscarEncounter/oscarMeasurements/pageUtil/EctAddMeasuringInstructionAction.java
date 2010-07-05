@@ -55,7 +55,7 @@ public class EctAddMeasuringInstructionAction extends Action {
     {
         EctAddMeasuringInstructionForm frm = (EctAddMeasuringInstructionForm) form;
 
-        HttpSession session = request.getSession();
+        
         request.getSession().setAttribute("EctAddMeasuringInstructionForm", frm);
         
         MsgStringQuote str = new MsgStringQuote();

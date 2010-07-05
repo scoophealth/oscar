@@ -98,8 +98,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
                 return false;
             }
             //retrieve the file data
-            ByteArrayOutputStream baos = new
-            ByteArrayOutputStream();
+
             InputStream stream = file.getInputStream();                    
             String place= OscarProperties.getInstance().getProperty("oscarMeasurement_css_upload_path");
             

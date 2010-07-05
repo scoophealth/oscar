@@ -54,7 +54,7 @@ public class EctAddMeasurementTypeAction extends Action {
     {
         EctAddMeasurementTypeForm frm = (EctAddMeasurementTypeForm) form;
 
-        HttpSession session = request.getSession();
+       
         request.getSession().setAttribute("EctAddMeasurementTypeForm", frm);
         
         MsgStringQuote str = new MsgStringQuote();     
