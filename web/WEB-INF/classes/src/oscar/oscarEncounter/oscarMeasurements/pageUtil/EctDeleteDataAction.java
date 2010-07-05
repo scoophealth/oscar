@@ -53,12 +53,8 @@ public class EctDeleteDataAction extends Action {
         String[] deleteCheckbox = frm.getDeleteCheckbox();
  
         GregorianCalendar now=new GregorianCalendar(); 
-        int curYear = now.get(Calendar.YEAR);
-        int curMonth = (now.get(Calendar.MONTH)+1);
-        int curDay = now.get(Calendar.DAY_OF_MONTH);
-        String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
 
-        boolean valid = true;
+        String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                 
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                                                                    
