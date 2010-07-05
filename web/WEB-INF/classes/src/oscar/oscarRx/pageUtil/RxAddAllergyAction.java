@@ -54,8 +54,7 @@ public final class RxAddAllergyAction extends Action {
 	throws IOException, ServletException {
                         
             // Extract attributes we will need
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
+            
 
             // Setup variables
             
