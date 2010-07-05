@@ -64,7 +64,7 @@ public class printLabDaySheetAction extends OscarAction{
 
         if (ins == null) {
                 try {
-                        ServletContext context = getServlet().getServletContext();
+                       
                         ins = getClass().getResourceAsStream("/oscar/oscarReport/pageUtil/"+xmlStyleFile);
                         logger.debug("loading from : /oscar/oscarReport/pageUtil/labDaySheet.xml " + ins);
                 }
