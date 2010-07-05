@@ -279,7 +279,7 @@ public class MsgMessageData {
                 pdfAttach = str.q(pdfAttach);
             }
 
-
+         sentToWho = org.apache.commons.lang.StringEscapeUtils.escapeSql(sentToWho);
          String sql = new String("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo,sentByLocation,attachment, pdfattachment)"
                        +" values (now(),now(),'"
                        +str.q(message)+"','"
