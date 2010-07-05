@@ -65,7 +65,7 @@ public class InfirmAction extends BaseAction
 		//if (memob!=null) memob.clear();
 		
 		List programBean;
-		List programBean_oscarClinic;
+		
 		String archiveView = (String)request.getSession().getAttribute("archiveView");
 		/*
 		if(archiveView != null && archiveView.equals("true")){
