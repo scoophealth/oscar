@@ -20,6 +20,30 @@
  *  Ontario, Canada   Creates a new instance of CommonLabResultData
 
  */
+function sendMRP(ele){
+                                                var doclabid=ele.id;
+                                                doclabid=doclabid.split('_')[1];
+                                                var demoId=$('demofind'+doclabid).value;
+                                            if(demoId=='-1'){
+                                                alert('Please enter a valid demographic');
+                                                ele.checked=false;
+                                            }else{
+                                                if(confirm('Send to Most Responsible Provider?')){
+                                                    var type=checkType(doclabid);
+                                                    var url=contextpath + "/oscarMDS/SendMRP.do";
+                                                    var data='demoId='+demoId+'&docLabType='+type+'&docLabId='+doclabid;
+                                                    new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                                                        ele.disabled=true;
+                                                        $('mrp_fail_'+doclabid).hide();
+                                                    },onFailure:function(transport){
+                                                        ele.checked=false;
+                                                        $('mrp_fail_'+doclabid).show();
+                                                    }});
+                                                }else{
+                                                    ele.checked=false;
+                                                }
+                                             }
+                                          }
 
 function hideTopBtn(){
     $('topFRBtn').hide();
