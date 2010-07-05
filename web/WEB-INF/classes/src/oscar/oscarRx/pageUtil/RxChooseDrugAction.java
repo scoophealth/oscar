@@ -44,8 +44,7 @@ public final class RxChooseDrugAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
             // Extract attributes we will need
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
+
        //     p("locale="+locale.toString());
         //    p("message="+messages.toString());
             // Setup variables           
@@ -64,10 +63,10 @@ public final class RxChooseDrugAction extends Action {
                 RxPrescriptionData.Prescription rx =
                         rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
 
-                String GN     = request.getParameter("GN");
+               
                 String BN     = request.getParameter("BN");
                 String drugId = request.getParameter("drugId"); 
-
+                
 
              //   p("GN="+GN);
                     rx.setBrandName(BN);
@@ -126,7 +125,7 @@ public final class RxChooseDrugAction extends Action {
                 rx.setDurationUnit("D");
           //      p("String.valueOf(bean.getStashIndex()): "+String.valueOf(bean.getStashIndex()));
                 bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
-
+                
 
                 bean.setStashIndex(bean.addStashItem(rx));
             //    p("bean.getStashIndex: "+bean.getStashIndex());

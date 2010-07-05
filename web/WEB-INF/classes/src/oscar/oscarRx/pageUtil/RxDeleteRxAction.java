@@ -67,9 +67,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);        
+       
         // Setup variables        
         RxSessionBean bean =(RxSessionBean)request.getSession().getAttribute("RxSessionBean");                
         if(bean==null) {
@@ -115,9 +113,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     throws IOException, ServletException {
 
         System.out.println("===========================Delete2 RxDeleteRxAction========================");
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+
         // Setup variables
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {

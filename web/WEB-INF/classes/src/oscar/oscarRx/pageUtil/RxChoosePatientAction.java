@@ -62,9 +62,7 @@ public final class RxChoosePatientAction extends Action {
             HttpServletResponse response)
             throws IOException, ServletException {
 
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+
         //   p("locale",locale.toString());
         //     p("messages",messages.toString());
         // Setup variables

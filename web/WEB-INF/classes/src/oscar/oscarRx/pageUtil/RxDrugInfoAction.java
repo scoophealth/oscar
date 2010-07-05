@@ -49,9 +49,6 @@ public final class RxDrugInfoAction extends Action {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
 
-            // Extract attributes we will need
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
             
             
             String GN = null;
