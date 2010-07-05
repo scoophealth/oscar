@@ -60,7 +60,7 @@ public class PreventionTag extends TagSupport {
            e.printStackTrace();
         }
 	ArrayList warnings = p.getWarnings();      
-	ArrayList recomendations = p.getReminder();
+	
         StringBuffer sb = new StringBuffer();
         if (warnings != null){
            numWarnings = warnings.size();
