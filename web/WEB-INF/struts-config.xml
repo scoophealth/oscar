@@ -749,6 +749,9 @@
         <action input="/oscarRx/ViewScript2.jsp"  path="/oscarRx/GetRxPageSizeInfo" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRxPageSizeInfoAction">
             <forward name="success" path="/oscarRx/ViewScript2.jsp"></forward>
         </action>
+        <action path="/oscarMDS/SendMRP" scope="request" type="oscar.oscarMDS.pageUtil.SendMostResponProvAction" >
+            <forward name="failure" path="/errorpage.jsp" />
+        </action>
         <action input="/SegmentDisplay.jsp" path="/oscarMDS/UpdateStatus" scope="request" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction">
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/oscarMDS/Close.jsp" />
