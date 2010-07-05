@@ -45,12 +45,10 @@ public final class RxViewScriptAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+
         
         // Setup variables
-        RxWriteScriptForm frm = (RxWriteScriptForm)form;
+       
         
         oscar.oscarRx.pageUtil.RxSessionBean bean =
         (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");

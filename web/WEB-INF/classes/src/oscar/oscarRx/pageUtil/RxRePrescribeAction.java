@@ -183,7 +183,7 @@ public final class RxRePrescribeAction extends DispatchAction {
 
             int drugId;
             int i;
-            int stashIdx;
+           
             for (i = 0; i < drugArr.length; i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
@@ -235,7 +235,7 @@ public final class RxRePrescribeAction extends DispatchAction {
         StringBuffer auditStr = new StringBuffer();
 
         RxPrescriptionData rxData = new RxPrescriptionData();
-        int i;
+       
         //String strId = (request.getParameter("drugId").split("_"))[1];
         String strId = request.getParameter("drugId");
 try{
@@ -300,7 +300,7 @@ try{
         StringBuffer auditStr = new StringBuffer();
 
         RxPrescriptionData rxData = new RxPrescriptionData();
-        int i;
+        
         //String strId = (request.getParameter("drugId").split("_"))[1];
         String strId = request.getParameter("drugId");
   //      p("!!!!!!!!!s", strId);

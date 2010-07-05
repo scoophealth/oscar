@@ -67,7 +67,7 @@ public class RxSendToPhrAction extends Action {
         oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;                                                               
         prescribedDrugs = patient.getPrescribedDrugs();
         
-        int drugsSent = 0;
+        
         System.out.println("prescribed drugs length" + prescribedDrugs.length);
         for( int idx = 0; idx < prescribedDrugs.length; ++idx ) {
               Prescription drug = prescribedDrugs[idx];

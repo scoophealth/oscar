@@ -45,9 +45,7 @@ public final class RxStashAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+
 
         // Setup variables
 
@@ -87,9 +85,7 @@ public final class RxStashAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+
         String wp=null;
         try{
         wp=request.getParameter("randomId");
@@ -134,9 +130,7 @@ public final class RxStashAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
                 System.out.println("===========start in deletePrescribe ===========");
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+
 
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
 

@@ -51,9 +51,7 @@ public final class RxSearchAllergyAction extends Action {
     HttpServletResponse response)
     throws IOException, ServletException {
         
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+
         
         // Setup variables
         
@@ -69,9 +67,6 @@ public final class RxSearchAllergyAction extends Action {
         
         ///Search a drug like another one
         
-        java.util.ArrayList brand = new java.util.ArrayList();
-        java.util.ArrayList gen = new java.util.ArrayList();
-        java.util.ArrayList afhcClass = new java.util.ArrayList();
         RxDrugRef drugRef = new RxDrugRef();
         
         java.util.Vector vec    = new java.util.Vector();
@@ -150,7 +145,7 @@ public final class RxSearchAllergyAction extends Action {
 
 
                 Hashtable hash ;
-                String compString = null;
+            
                 Vector strVec = null;
 
                 if(classVec2!=null) {

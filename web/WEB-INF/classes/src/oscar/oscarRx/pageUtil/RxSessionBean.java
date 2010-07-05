@@ -344,7 +344,7 @@ public class RxSessionBean {
        try{
        start2 = System.currentTimeMillis();
           RxPrescriptionData rxData = new RxPrescriptionData();
-          RxDrugData drugData = new RxDrugData();
+          
           RxInteractionData rxInteract =  RxInteractionData.getInstance();
           Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
 

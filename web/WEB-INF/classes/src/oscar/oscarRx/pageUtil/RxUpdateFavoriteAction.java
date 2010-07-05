@@ -48,9 +48,7 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
 
-            // Extract attributes we will need
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
+
 
             // Setup variables
             RxUpdateFavoriteForm frm = (RxUpdateFavoriteForm)form;
