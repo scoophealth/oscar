@@ -44,9 +44,6 @@ public final class RxAddReactionAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-            // Extract attributes we will need
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
 
             // Setup variables
              

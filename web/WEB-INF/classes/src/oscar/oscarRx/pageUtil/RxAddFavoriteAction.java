@@ -50,10 +50,6 @@ public final class RxAddFavoriteAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
         
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
-        
         // Setup variables        
         
         RxAddFavoriteForm frm = (RxAddFavoriteForm)form;
@@ -96,10 +92,6 @@ public final class RxAddFavoriteAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-
-        // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
 
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
         if(bean==null) {
