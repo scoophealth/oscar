@@ -174,9 +174,10 @@
                                                 };
                                             }
                                             }();
-
+                                         
                                             </script>
-                                                   <input id="mrp_<%=docId%>" type="checkbox" name="demoLink" >Send to MRP
+                                                   <input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" >Send to MRP
+                                                   <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" >Failed to send MRP</a>
                                         </td>
                                     </tr>
 
