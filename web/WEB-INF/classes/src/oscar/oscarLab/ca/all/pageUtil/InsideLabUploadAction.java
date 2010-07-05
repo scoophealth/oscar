@@ -78,9 +78,4 @@ public class InsideLabUploadAction extends Action {
         request.setAttribute("outcome", outcome);
         return mapping.findForward("success");
     }
-    
-    
-    public InsideLabUploadAction() {
-        
-    }
 }

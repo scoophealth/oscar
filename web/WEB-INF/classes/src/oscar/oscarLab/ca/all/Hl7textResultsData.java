@@ -298,7 +298,7 @@ public class Hl7textResultsData {
     /**
      *Populates ArrayList with labs attached to a consultation request
      */
-    public ArrayList populateHL7ResultsData(String demographicNo, String consultationId, boolean attached) {
+    public ArrayList<LabResultData> populateHL7ResultsData(String demographicNo, String consultationId, boolean attached) {
         String sql = "SELECT hl7.lab_no, hl7.obr_date, hl7.discipline, hl7.accessionNum, hl7.final_result_count, patientLabRouting.id " +
                 "FROM hl7TextInfo hl7, patientLabRouting " +
                 "WHERE patientLabRouting.lab_no = hl7.lab_no "+
@@ -308,8 +308,8 @@ public class Hl7textResultsData {
                 "WHERE patientLabRouting.id = consultdocs.document_no AND " +
                 "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY consultdocs.document_no";
         
-        ArrayList labResults = new ArrayList();
-        ArrayList attachedLabs = new ArrayList();
+        ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
+        ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             

@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -48,6 +49,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
@@ -57,6 +59,7 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.StreetAddressDataHolder;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
@@ -64,10 +67,15 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
+import com.lowagie.text.DocumentException;
+
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarMessenger.util.MsgStringQuote;
 import oscar.util.ParameterActionForward;
 import ca.uhn.hl7v2.HL7Exception;
@@ -259,6 +267,7 @@ public class EctConsultationFormRequestAction extends Action {
 		
 	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
 	    ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
+	    Hl7TextInfoDao hl7TextInfoDao=(Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
 
 	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
 	    ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
@@ -279,7 +288,8 @@ public class EctConsultationFormRequestAction extends Action {
     	DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
     	Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());
     	Provider receivingProvider=DataTypeUtils.getReceivingProvider(professionalSpecialist);
-    	
+
+    	//--- process all documents ---
 	    ArrayList<EDoc> attachments=EDocUtil.listDocs(demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), true);
 	    for (EDoc attachment : attachments)
 	    {
@@ -289,9 +299,31 @@ public class EctConsultationFormRequestAction extends Action {
 	        observationData.binaryDataFileName=attachment.getFileName();
 	        observationData.binaryData=attachment.getFileBytes();
 
-	        
 	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);        
 	        SendingUtils.send(hl7Message, professionalSpecialist);	    	
+	    }
+	    
+	    //--- process all labs ---
+        CommonLabResultData labData = new CommonLabResultData();
+        ArrayList<LabResultData> labs = labData.populateLabResultsData(demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), CommonLabResultData.ATTACHED);
+	    for (LabResultData attachment : labs)
+	    {
+	    	try {
+	            byte[] dataBytes=LabPDFCreator.getPdfBytes(attachment.getSegmentID(), sendingProvider.getProviderNo());
+	            Hl7TextInfo hl7TextInfo=hl7TextInfoDao.findLabId(Integer.parseInt(attachment.getSegmentID()));
+	            
+	            ObservationData observationData=new ObservationData();
+	            observationData.dataName=hl7TextInfo.getDiscipline();
+	            observationData.textData="Attachment for consultation : "+consultationRequestId;
+	            observationData.binaryDataFileName=hl7TextInfo.getDiscipline()+".pdf";
+	            observationData.binaryData=dataBytes;
+
+	            
+	            ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);        
+	            SendingUtils.send(hl7Message, professionalSpecialist);
+            } catch (DocumentException e) {
+	            logger.error("Unexpected error.", e);
+            }	    	
 	    }
     }
 

@@ -55,12 +55,12 @@ public class MDSResultsData {
     public ArrayList reportStatus;
     
     
-    public ArrayList labResults;
+    public ArrayList<LabResultData> labResults;
     
     /**
      *Lists labs predicated on relationship to patient's consultation
      */
-    public ArrayList populateCMLResultsData(String demographicNo, String consultationId, boolean attached) {
+    public ArrayList<LabResultData> populateCMLResultsData(String demographicNo, String consultationId, boolean attached) {
         String sql = "SELECT lpp.id, lpp.collection_date, lpp.accession_num, patientLabRouting.id AS labId FROM labPatientPhysicianInfo lpp, patientLabRouting"
                 +" WHERE patientLabRouting.lab_type = 'CML' AND lpp.id = patientLabRouting.lab_no AND"
                 +" patientLabRouting.demographic_no="+demographicNo;
@@ -68,8 +68,8 @@ public class MDSResultsData {
         String attachQuery = "SELECT document_no FROM consultdocs, patientLabRouting WHERE patientLabRouting.id = consultdocs.document_no AND " +
                 "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY document_no";
         
-        labResults = new ArrayList();
-        ArrayList attachedLabs = new ArrayList();
+        labResults = new ArrayList<LabResultData>();
+        ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -320,7 +320,7 @@ public class MDSResultsData {
         }
     }
     
-    public ArrayList populateMDSResultsData2(String demographicNo, String consultationId, boolean attached) {
+    public ArrayList<LabResultData> populateMDSResultsData2(String demographicNo, String consultationId, boolean attached) {
         String sql = "SELECT patientLabRouting.id, mdsMSH.segmentID, mdsMSH.dateTime, mdsZRG.reportGroupDesc " +
                 "FROM " +
                 "patientLabRouting "+
@@ -332,8 +332,8 @@ public class MDSResultsData {
         String attachQuery = "SELECT document_no FROM consultdocs, patientLabRouting WHERE patientLabRouting.id = consultdocs.document_no AND " +
                 "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL";
         
-        labResults = new ArrayList();
-        ArrayList attachedLabs = new ArrayList();
+        labResults = new ArrayList<LabResultData>();
+        ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

@@ -44,6 +44,7 @@ public class Hl7TextInfo extends AbstractModel<Integer> implements Serializable 
 	private Integer id;
 
 	@Column(name = "lab_no")
+	/** This is also refered to as segmentId in parts of the code... */
 	private int labNumber;
 
 	@Column(name = "sex")

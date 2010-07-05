@@ -53,7 +53,7 @@ public class PathnetResultsData {
     /**
      *Populates ArrayList with labs attached to a consultation request
      */
-    public ArrayList populatePathnetResultsData(String demographicNo, String consultationId, boolean attached) {
+    public ArrayList<LabResultData> populatePathnetResultsData(String demographicNo, String consultationId, boolean attached) {
         String sql = "SELECT m.message_id, patientLabRouting.id " +
                 "FROM hl7_message m, patientLabRouting " +
                 "WHERE patientLabRouting.lab_no = m.message_id "+
@@ -63,8 +63,8 @@ public class PathnetResultsData {
                 "WHERE patientLabRouting.id = consultdocs.document_no AND " +
                 "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY consultdocs.document_no";
         
-        ArrayList labResults = new ArrayList();
-        ArrayList attachedLabs = new ArrayList();
+        ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
+        ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             

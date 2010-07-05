@@ -24,6 +24,8 @@
  */
 package org.oscarehr.common.dao;
 
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.springframework.stereotype.Repository;
 
@@ -33,4 +35,18 @@ public class Hl7TextInfoDao extends AbstractDao<Hl7TextInfo> {
 	public Hl7TextInfoDao() {
 		super(Hl7TextInfo.class);
 	}
+	
+	/**
+	 * LabId is also refereed to as Lab_no, and segmentId.
+	 */
+    public Hl7TextInfo findLabId(int labId) {
+
+    	String sqlCommand="select x from Hl7TextInfo x where x.labNumber=?1";
+    	
+    	Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, labId);
+
+		return(getSingleResultOrNull(query));
+    }
+
 }

@@ -67,8 +67,8 @@ public class CommonLabResultData {
         return new String[] {"MDS","CML","BCP","HL7","DOC"};
     }
 
-    public ArrayList populateLabResultsData(String demographicNo, String reqId, boolean attach) {
-        ArrayList labs = new ArrayList();
+    public ArrayList<LabResultData> populateLabResultsData(String demographicNo, String reqId, boolean attach) {
+        ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
         oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
 
         OscarProperties op = OscarProperties.getInstance();
@@ -80,21 +80,21 @@ public class CommonLabResultData {
 
 
         if( cml != null && cml.trim().equals("yes")){
-            ArrayList cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
+            ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
             labs.addAll(cmlLabs);
         }
         if (mds != null && mds.trim().equals("yes")){
-            ArrayList mdsLabs = mDSData.populateMDSResultsData2(demographicNo, reqId, attach);
+            ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsData2(demographicNo, reqId, attach);
             labs.addAll(mdsLabs);
         }
         if (pathnet != null && pathnet.trim().equals("yes")){
             PathnetResultsData pathData = new PathnetResultsData();
-            ArrayList pathLabs = pathData.populatePathnetResultsData(demographicNo, reqId, attach);
+            ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsData(demographicNo, reqId, attach);
             labs.addAll(pathLabs);
         }
         if (hl7text != null && hl7text.trim().equals("yes")){
             Hl7textResultsData hl7Data = new Hl7textResultsData();
-            ArrayList hl7Labs = hl7Data.populateHL7ResultsData(demographicNo, reqId, attach);
+            ArrayList<LabResultData> hl7Labs = hl7Data.populateHL7ResultsData(demographicNo, reqId, attach);
             labs.addAll(hl7Labs);
         }
 
