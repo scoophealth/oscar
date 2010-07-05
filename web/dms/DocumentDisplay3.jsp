@@ -150,6 +150,30 @@
                                             <%}%>
 
          <script type="text/javascript">
+function sendMRP(ele){
+                                                var doclabid=ele.id;
+                                                doclabid=doclabid.split('_')[1];
+                                                var demoId=$('demofind'+doclabid).value;
+                                            if(demoId=='-1'){
+                                                alert('Please enter a valid demographic');
+                                                ele.checked=false;
+                                            }else{
+                                                if(confirm('Send to Most Responsible Provider?')){
+                                                    var type='DOC';
+                                                    var url= "../oscarMDS/SendMRP.do";
+                                                    var data='demoId='+demoId+'&docLabType='+type+'&docLabId='+doclabid;
+                                                    new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                                                        ele.disabled=true;
+                                                        $('mrp_fail_'+doclabid).hide();
+                                                    },onFailure:function(transport){
+                                                        ele.checked=false;
+                                                        $('mrp_fail_'+doclabid).show();
+                                                    }});
+                                                }else{
+                                                    ele.checked=false;
+                                                }
+                                             }
+                                          }
 
         renderCalendar=function(id,inputFieldId){
                 Calendar.setup({ inputField : inputFieldId, ifFormat : "%Y-%m-%d", showsTime :false, button : id });
@@ -215,7 +239,8 @@
                                             }();
 
                                             </script>
-                                            <input tabindex="<%=tabindex++%>" type="checkbox" name="demoLink" >Send to MRP
+                                            <input id="mrp_<%=docId%>" tabindex="<%=tabindex++%>" onclick="sendMRP(this)" type="checkbox" name="demoLink" >Send to MRP
+                                            <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" >Failed to send MRP</a>
                                         </td>
                                     </tr>
 
