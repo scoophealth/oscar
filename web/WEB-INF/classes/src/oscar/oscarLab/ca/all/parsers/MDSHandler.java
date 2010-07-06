@@ -23,8 +23,6 @@ import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.Segment;
 import ca.uhn.hl7v2.model.Structure;
-import ca.uhn.hl7v2.parser.Parser;
-import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
@@ -46,7 +44,7 @@ public class MDSHandler implements MessageHandler {
     
     public void init(String hl7Body) throws HL7Exception {
         
-        Parser p = new PipeParser();
+        MdsParser p = new MdsParser();
         p.setValidationContext(new NoValidation());
         msg = p.parse(hl7Body.replace( "\n", "\r\n"));
         
