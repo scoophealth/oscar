@@ -41,7 +41,7 @@
 
 function doStuff() {
     
-    allSelected = "";
+  var   allSelected = "";
     if ( document.providerSelectForm.selectedProviders.selectedIndex == -1 ) {
         alert ("Please select at least one provider");
     } else {
