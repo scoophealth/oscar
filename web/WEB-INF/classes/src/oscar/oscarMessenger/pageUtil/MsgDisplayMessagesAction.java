@@ -48,10 +48,6 @@ public class MsgDisplayMessagesAction extends Action {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
 
-            // Extract attributes we will need
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
-
             // Setup variables            
             oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;
             String[] messageNo = ((MsgDisplayMessagesForm)form).getMessageNo();
@@ -98,7 +94,6 @@ public class MsgDisplayMessagesAction extends Action {
                 for (int i =0 ; i < messageNo.length ; i++){
                   try{
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                    java.sql.ResultSet rs;
                     String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
                     db.RunSQL(sql);
                   }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
