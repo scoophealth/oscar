@@ -37,14 +37,11 @@ public class MsgDisplayDemographicMessagesAction extends Action {
             // Extract attributes we will need
         
             System.out.println("this is displayDemographicMessages.Action");
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
-
+            
             // Setup variables            
             oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;
             String[] messageNo = ((MsgDisplayDemographicMessagesForm)form).getMessageNo();
             //String unlinkMsg = ((MsgDisplayDemographicMessagesForm)form).getUnlinkMsg();
-            String providerNo;
             
             //Initialize forward location
             String findForward = "success";
