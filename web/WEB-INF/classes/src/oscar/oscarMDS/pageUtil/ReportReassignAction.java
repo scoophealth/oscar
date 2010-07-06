@@ -25,7 +25,6 @@ package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.servlet.ServletException;
@@ -61,6 +60,7 @@ public class ReportReassignAction extends Action {
         String[] flaggedLabs = request.getParameterValues("flaggedLabs");
         String selectedProviders = request.getParameter("selectedProviders");
         String labType = request.getParameter("labType");
+        String ajax=request.getParameter("ajax");
         Hashtable htable = new Hashtable();
         String[] labTypes = CommonLabResultData.getLabTypes();
         ArrayList listFlaggedLabs = new ArrayList();
@@ -105,7 +105,14 @@ public class ReportReassignAction extends Action {
             logger.error("exception in ReportReassignAction", e);
             newURL = mapping.findForward("failure").getPath();
         }
-
-        return (new ActionForward(newURL));
+        //MiscUtils.getLogger().info(ajax);
+        if(ajax!=null && ajax.equals("yes")){
+            //MiscUtils.getLogger().info("if");
+            return null;
+        }
+        else{
+            //MiscUtils.getLogger().info("else");
+            return (new ActionForward(newURL));
+        }
     }
 }
