@@ -187,7 +187,7 @@ function GetTextTop(){
 	textTop += "&lt;!-- scripts to confirm closing of window if haven't saved yet --&gt;\n"
 	textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
 	textTop += "//keypress events trigger dirty flag\n"
-	textTop += "var needToConfirm = true;\n"
+	textTop += "var needToConfirm = false;\n"
 	textTop += "document.onkeyup=setDirtyFlag;\n"
 	textTop += "function setDirtyFlag(){\n"
 	textTop += "\t	needToConfirm = true;\n"
