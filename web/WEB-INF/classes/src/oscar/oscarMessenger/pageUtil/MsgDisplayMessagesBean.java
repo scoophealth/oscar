@@ -328,7 +328,7 @@ public class MsgDisplayMessagesBean {
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
-        String messageLimit="";
+        //String messageLimit="";
         
 /*        if (moreMessages.equals("false"))
         {messageLimit=" Limit "+initialDisplay;}
