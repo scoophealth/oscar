@@ -64,6 +64,9 @@ public class MdsParser extends PipeParser
                 messageStructure = "ACK"; //it's common for people to only populate component 1 in an ACK msg
             }*/
             else {
+// The following is the original code from PipeParser which is commented out for MDS purposes... because MDS files only ever have the message type and never the event & structure
+// This is left here so if we have to update this file from a new PipeParser some one will know what to change.
+//---------            	
 //                StringBuffer buf = new StringBuffer("Can't determine message structure from MSH-9: ");
 //                buf.append(wholeFieldNine);
 //                if (comps.length < 3) {
@@ -71,10 +74,10 @@ public class MdsParser extends PipeParser
 //                    buf.append(comps.length);
 //                    buf.append(" of 3 components present");
 //                }
-                
-                messageStructure=comps[0];
-                
+//                
 //                throw new HL7Exception(buf.toString(), HL7Exception.UNSUPPORTED_MESSAGE_TYPE);
+
+            	messageStructure=comps[0];
             }            
         }
         catch (IndexOutOfBoundsException e) {
