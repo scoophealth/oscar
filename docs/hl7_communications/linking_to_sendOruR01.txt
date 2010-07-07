@@ -1,0 +1,7 @@
+This is a brief document on how to use the sendOruR01.jsp file programmtically.
+
+In general just redirect to the sendOruR01.jsp page and it should "work" as in the page will show up and the provider will fill in the details manually.
+
+To pre-populate data, look at the SendOruR01UIBean.java class. All the member fields can be passed in as parameters. This allows for simple passing in of say the clients information with out need for extra code. For more complex population, look at the code for notes in there. At a high leve, all we do is pass the page the noteId, then added a method that's specific to checking for the noteId and populating the data. So as an example if in the future we want to eSend prescriptions, instead of passing in all the information, just pass the prescriptionId, then add a method checkForDataFromPrescriptions() that looks and works similar to checkForDataFromNotes().
+
+This page / class is only suitable for sending generic data. If you have a specific data to send (like the example of eReferrals) you should not be using this page and you should write it as a custom item. 

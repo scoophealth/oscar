@@ -293,8 +293,8 @@ public class EctConsultationFormRequestAction extends Action {
 	    for (EDoc attachment : attachments)
 	    {
 	        ObservationData observationData=new ObservationData();
-	        observationData.dataName=attachment.getDescription();
-	        observationData.textData="Attachment for consultation : "+consultationRequestId;
+	        observationData.subject=attachment.getDescription();
+	        observationData.textMessage="Attachment for consultation : "+consultationRequestId;
 	        observationData.binaryDataFileName=attachment.getFileName();
 	        observationData.binaryData=attachment.getFileBytes();
 
@@ -312,8 +312,8 @@ public class EctConsultationFormRequestAction extends Action {
 	            Hl7TextInfo hl7TextInfo=hl7TextInfoDao.findLabId(Integer.parseInt(attachment.getSegmentID()));
 	            
 	            ObservationData observationData=new ObservationData();
-	            observationData.dataName=hl7TextInfo.getDiscipline();
-	            observationData.textData="Attachment for consultation : "+consultationRequestId;
+	            observationData.subject=hl7TextInfo.getDiscipline();
+	            observationData.textMessage="Attachment for consultation : "+consultationRequestId;
 	            observationData.binaryDataFileName=hl7TextInfo.getDiscipline()+".pdf";
 	            observationData.binaryData=dataBytes;
 

@@ -12,8 +12,8 @@ public class OruR01UploadForm extends ActionForm {
 	private String clientHealthNumber=null;
 	private String clientBirthDay=null;
 	private String clientGender=null;
-	private String dataName=null;
-	private String textData=null;
+	private String subject=null;
+	private String textMessage=null;
 	private FormFile uploadFile = null;
 	
 	public FormFile getUploadFile() {
@@ -72,20 +72,20 @@ public class OruR01UploadForm extends ActionForm {
     	this.clientGender = clientGender;
     }
 
-	public String getDataName() {
-    	return dataName;
+	public String getSubject() {
+    	return subject;
     }
 
-	public void setDataName(String dataName) {
-    	this.dataName = dataName;
+	public void setSubject(String subject) {
+    	this.subject = subject;
     }
 
-	public String getTextData() {
-    	return textData;
+	public String getTextMessage() {
+    	return textMessage;
     }
 
-	public void setTextData(String textData) {
-    	this.textData = textData;
+	public void setTextMessage(String textMessage) {
+    	this.textMessage = textMessage;
     }
 
 	@Override

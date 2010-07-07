@@ -42,8 +42,8 @@ public class OruR01UploadAction extends Action {
 	        Demographic demographic=getDemographicObject(oruR01UploadForm); 
 	        
 	        ObservationData observationData=new ObservationData();
-	        observationData.dataName=oruR01UploadForm.getDataName();
-	        observationData.textData=oruR01UploadForm.getTextData();
+	        observationData.subject=oruR01UploadForm.getSubject();
+	        observationData.textMessage=oruR01UploadForm.getTextMessage();
 	        observationData.binaryDataFileName=formFile.getFileName();
 	        observationData.binaryData=formFile.getFileData();
 	        

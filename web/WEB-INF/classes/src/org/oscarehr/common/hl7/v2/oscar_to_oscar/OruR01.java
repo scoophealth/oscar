@@ -30,14 +30,14 @@ public final class OruR01 {
 	
 	public static class ObservationData {
 		/**
-		 * dataName i.e. "wcb_form"
+		 * subject i.e. "wcb_form"
 		 */
-		public String dataName;
+		public String subject;
 		
 		/**
-		 * textData can be any text
+		 * textMessage can be any text
 		 */
-		public String textData;
+		public String textMessage;
 		
 		/**
 		 * dataFileName is meant to be the file name for the binary data. This field is important and required if binary data is provided because the extention of the file name determines the type of binary data, i.e. foo.jpg lets us know it's a jpg.
@@ -81,17 +81,17 @@ public final class OruR01 {
 
 		int nteCounter = 0;
 		
-		if (observationData.textData!=null)
+		if (observationData.textMessage!=null)
 		{
 			NTE nte = orderObservation.getNTE(nteCounter);
-			DataTypeUtils.fillNte(nte, observationData.dataName, TEXT_DATA_FILENAME_PLACEHOLDER, observationData.textData.getBytes());
+			DataTypeUtils.fillNte(nte, observationData.subject, TEXT_DATA_FILENAME_PLACEHOLDER, observationData.textMessage.getBytes());
 			nteCounter++;
 		}
 		
 		if (observationData.binaryData!=null)
 		{
 			NTE nte = orderObservation.getNTE(nteCounter);
-			DataTypeUtils.fillNte(nte, observationData.dataName, observationData.binaryDataFileName, observationData.binaryData);
+			DataTypeUtils.fillNte(nte, observationData.subject, observationData.binaryDataFileName, observationData.binaryData);
 		}
 	}
 
@@ -133,12 +133,12 @@ public final class OruR01 {
 	private static void fillObservationDataFromNte(ObservationData observationData, NTE nte) throws UnsupportedEncodingException {
 		
 		String temp=nte.getCommentType().getText().getValue();
-		if (temp!=null) observationData.dataName = temp;
+		if (temp!=null) observationData.subject = temp;
 		
 		temp=nte.getCommentType().getNameOfCodingSystem().getValue();
 		if (TEXT_DATA_FILENAME_PLACEHOLDER.equals(temp))
 		{
-			observationData.textData=new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), MiscUtils.ENCODING);
+			observationData.textMessage=new String(DataTypeUtils.getNteCommentsAsSingleDecodedByteArray(nte), MiscUtils.ENCODING);
 		}
 		else
 		{
@@ -157,8 +157,8 @@ public final class OruR01 {
 		demographic.setBirthDay(new GregorianCalendar(1960, 2, 3));
 
 		ObservationData observationData = new ObservationData();
-		observationData.dataName="txt test";
-		observationData.textData="once upon a time";
+		observationData.subject="txt test";
+		observationData.textMessage="once upon a time";
 		observationData.binaryDataFileName="/tmp/oscar.properties";
 		byte[] b=FileUtils.readFileToByteArray(new File(observationData.binaryDataFileName));;
 		observationData.binaryData = b;

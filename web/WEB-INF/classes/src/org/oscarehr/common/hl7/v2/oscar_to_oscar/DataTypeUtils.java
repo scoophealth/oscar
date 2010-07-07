@@ -455,15 +455,15 @@ public final class DataTypeUtils {
 
 	/**
 	 * @param nte
-	 * @param dataName should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
+	 * @param subject should be a short string denoting what's in the comment data, i.e. "REASON_FOR_REFERRAL" or "ALLERGIES", max length is 250
 	 * @param fileName should be the file name if applicable, can be null if it didn't come from a file.
 	 * @param data and binary data, a String must pass in bytes too as it needs to be base64 encoded for \n and \r's
 	 * @throws HL7Exception
 	 * @throws UnsupportedEncodingException
 	 */
-	public static void fillNte(NTE nte, String dataName, String fileName, byte[] data) throws HL7Exception, UnsupportedEncodingException {
+	public static void fillNte(NTE nte, String subject, String fileName, byte[] data) throws HL7Exception, UnsupportedEncodingException {
 
-		nte.getCommentType().getText().setValue(dataName);
+		nte.getCommentType().getText().setValue(subject);
 		if (fileName != null) nte.getCommentType().getNameOfCodingSystem().setValue(fileName);
 
 		String stringData = encodeToBase64String(data);

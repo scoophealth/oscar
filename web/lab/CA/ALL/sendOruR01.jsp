@@ -6,19 +6,13 @@
 <%@include file="/layouts/html_top.jspf"%>
 
 <%--
-This jsp accepts the following parameters :
-
-	queryParameters.put("hl7TextMessageId", hl7TextMessageId);
-	queryParameters.put("clientFirstName", patientFirstName);
-	queryParameters.put("clientLastName", patientLastName);
-	queryParameters.put("clientHin", patientHealthNum);
-	queryParameters.put("clientBirthDate", patientDOB);
-	queryParameters.put("clientGender", patientSex);
-
-The parameters if set will default the information on the form to the above information.
-The Hl7TextMessageId parameter is used to fill in the receiving professional specialist if a returning professional specialist is available.
- --%>
-
+This jsp accepts parameters with the same name as
+the fields in the SendOruR01UIBean. All parameters are optional
+for pre-populating data.
+--%>
+<%
+	SendOruR01UIBean sendOruR01UIBean=new SendOruR01UIBean(request);
+%>
 
 <%@page import="org.apache.commons.lang.StringUtils"%><h2 class="oscarBlueHeader">
 	Send eData 
@@ -41,13 +35,13 @@ The Hl7TextMessageId parameter is used to fill in the receiving professional spe
 			return(false);
 		}
 
-		if (jQuery("#dataName").val().length==0)
+		if (jQuery("#subject").val().length==0)
 		{
 			alert('The data name is required.');
 			return(false);
 		}
 
-		if (jQuery("#textData").val().length==0 && jQuery("#uploadFile").val().length==0)
+		if (jQuery("#textMessage").val().length==0 && jQuery("#uploadFile").val().length==0)
 		{
 			alert('Either Text Data or an Upload File is required.');
 			return(false);
@@ -69,12 +63,10 @@ The Hl7TextMessageId parameter is used to fill in the receiving professional spe
 				<select name="professionalSpecialistId" id="professionalSpecialistId">
 					<option value="">--- none selected ---</option>
 					<%
-						Integer selectedProfessionalSpecialistId=SendOruR01UIBean.getSelectedProfessionalSpecialistId(request.getParameter("hl7TextMessageId"));
-					
 						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getRemoteCapableProfessionalSpecialists())
 						{
 							%>
-								<option value="<%=professionalSpecialist.getId()%>" <%=(professionalSpecialist.getId().equals(selectedProfessionalSpecialistId)?"selected=\"selected\"":"")%> ><%=SendOruR01UIBean.getProfessionalSpecialistDisplayString(professionalSpecialist)%></option>
+								<option value="<%=professionalSpecialist.getId()%>" <%=sendOruR01UIBean.renderSelectedProfessionalSpecialistOption(professionalSpecialist.getId())%> ><%=SendOruR01UIBean.getProfessionalSpecialistDisplayString(professionalSpecialist)%></option>
 							<%
 						}
 					%>
@@ -87,20 +79,20 @@ The Hl7TextMessageId parameter is used to fill in the receiving professional spe
 				<table style="border-collapse:collapse">
 					<tr>
 						<td style="font-weight:bold;text-align:right">First Name</td>
-						<td><input type="text" id="clientFirstName" name="clientFirstName" value="<%=StringUtils.trimToEmpty(request.getParameter("clientFirstName"))%>" /></td>
+						<td><input type="text" id="clientFirstName" name="clientFirstName" value="<%=sendOruR01UIBean.getClientFirstName()%>" /></td>
 					</tr>
 					<tr>
 						<td style="font-weight:bold;text-align:right">Last Name</td>
-						<td><input type="text" id="clientLastName" name="clientLastName" value="<%=StringUtils.trimToEmpty(request.getParameter("clientLastName"))%>" /></td>
+						<td><input type="text" id="clientLastName" name="clientLastName" value="<%=sendOruR01UIBean.getClientLastName()%>" /></td>
 					</tr>
 					<tr>
 						<td style="font-weight:bold;text-align:right">Health Number<br />(excluding version code)</td>
-						<td><input type="text" name="clientHealthNumber" value="<%=StringUtils.trimToEmpty(request.getParameter("clientHin"))%>" /></td>
+						<td><input type="text" name="clientHealthNumber" value="<%=sendOruR01UIBean.getClientHin()%>" /></td>
 					</tr>
 					<tr>
 						<td style="font-weight:bold;text-align:right;vertical-align:top">BirthDay</td>
 						<td>
-							<input type="text" id="clientBirthDay" name="clientBirthDay" value="<%=StringUtils.trimToEmpty(request.getParameter("clientBirthDate"))%>" />
+							<input type="text" id="clientBirthDay" name="clientBirthDay" value="<%=sendOruR01UIBean.getClientBirthDate()%>" />
 							<script type="text/javascript">
 								jQuery(document).ready(function() {
 									Date.format='yy-mm-dd';
@@ -115,11 +107,10 @@ The Hl7TextMessageId parameter is used to fill in the receiving professional spe
 							<select name="clientGender">
 								<option value="">--- none selected ---</option>
 								<%
-									String tempGender=StringUtils.trimToEmpty(request.getParameter("clientGender"));
 									for (Gender gender : Gender.values())
 									{
 										%>
-											<option value="<%=gender.name()%>" <%=(gender.name().equals(tempGender)?"selected=\"selected\"":"")%> ><%=gender.getText()%></option>
+											<option value="<%=gender.name()%>" <%=sendOruR01UIBean.renderSelectedGenderOption(gender)%> ><%=gender.getText()%></option>
 										<%
 									}
 								%>
@@ -130,12 +121,12 @@ The Hl7TextMessageId parameter is used to fill in the receiving professional spe
 			</td>
 		</tr>
 		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader">Data Name</td>
-			<td><input type="text" id="dataName" name="dataName" value="" /></td>
+			<td class="oscarBlueHeader">Subject</td>
+			<td><input type="text" id="subject" name="subject" value="<%=sendOruR01UIBean.getSubject()%>" /></td>
 		</tr>
 		<tr style="border:solid grey 1px">
-			<td class="oscarBlueHeader">Text Data</td>
-			<td><textarea id="textData" name="textData" style="width:40em;height:8em" ></textarea></td>
+			<td class="oscarBlueHeader">Text Message</td>
+			<td><textarea id="textMessage" name="textMessage" style="width:40em;height:8em" ><%=sendOruR01UIBean.getTextMessage()%></textarea></td>
 		</tr>
 		<tr style="border:solid grey 1px">
 			<td class="oscarBlueHeader">Upload File</td>

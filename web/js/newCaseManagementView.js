@@ -2774,5 +2774,3 @@ function autoCompleteShowMenuCPP(element, update) {
             Event.stop(e);
         }
     }
-
-   

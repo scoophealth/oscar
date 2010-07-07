@@ -639,13 +639,18 @@
 			 		if (note.getRemoteFacilityId()==null ) // only allow editing for local notes
 					{
 			 			if(!note.isReadOnly()) {
-				 		%>
-				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" 
-				 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
-				 		<bean:message key="oscarEncounter.edit.msgEdit" />
-				 		</a> 
-						<%
-					} }
+					 		%>
+					 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" 
+					 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+					 		<bean:message key="oscarEncounter.edit.msgEdit" />
+					 		</a> 
+							<%
+						}
+			 			
+			 			%>
+			 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message key="oscarEncounter.eSend" /></a>
+			 			<%
+			 		}
 			 	}else if(note.isRxAnnotation()){//prescription note
                                     String winName="dummie";
                                     int hash = Math.abs(winName.hashCode());
@@ -662,7 +667,8 @@
 				 		<bean:message key="oscarEncounter.edit.msgEdit" />
 				 		</a>
 				 		<%
-					} }
+					}
+                                    		}
                                     if(rx!=null){
                                         String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
 

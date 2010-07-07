@@ -43,11 +43,11 @@
 	</tr>
 	<tr style="border:solid silver 1px">
 		<td class="oscarBlueHeader">Data Name</td>
-		<td><%=viewOruR01UIBean.getDataNameForDisplay()%></td>
+		<td><%=viewOruR01UIBean.getSubjectForDisplay()%></td>
 	</tr>
 	<tr style="border:solid silver 1px">
 		<td class="oscarBlueHeader" style="vertical-align:top">Text Data</td>
-		<td><textarea id="textData" readonly="readonly" style="width:40em;height:8em" ><%=viewOruR01UIBean.getTextDataForDisplay()%></textarea></td>
+		<td><textarea id="textMessage" readonly="readonly" style="width:40em;height:8em" ><%=viewOruR01UIBean.getTextMessageForDisplay()%></textarea></td>
 	</tr>
 	<tr style="border:solid silver 1px">
 		<td class="oscarBlueHeader" style="vertical-align:top">Uploaded File</td>
