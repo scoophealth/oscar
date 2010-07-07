@@ -88,10 +88,9 @@ public class AddEFormAction extends Action {
          EFormUtil.addEFormValues(paramNames, paramValues, fdid, fid, demographic_no);
          //add to oscarMeasurements
 
-		 //write template message to echart
-		 String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
-		 String eformLink = request.getContextPath()+"/eform/efmshowform_data.jsp?fdid="+fdid;
-		 EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, eformLink, program_no);
+         //write template message to echart
+         String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
+         EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, fdid, program_no);
          
          return(mapping.findForward("close"));
     }
