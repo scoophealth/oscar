@@ -98,7 +98,7 @@ public final class SendOruR01UIBean {
 			List<CaseManagementIssue> caseManagementIssues=caseManagementIssueNotesDao.getNoteIssues(caseManagementNote.getId().intValue());
 			if (caseManagementIssues.size()>0)
 			{
-				sb.append("---------- Attached Issues ---------");
+				sb.append("\n---------- Attached Issues ---------");
 				for (CaseManagementIssue caseManagementIssue : caseManagementIssues)
 				{
 					sb.append('\n');
@@ -118,7 +118,7 @@ public final class SendOruR01UIBean {
 			}
 			else
 			{
-				sb.append("---------- No Attached Issues ---------");
+				sb.append("\n---------- No Attached Issues ---------");
 			}
 			
 			textMessage=StringEscapeUtils.escapeHtml(sb.toString());
