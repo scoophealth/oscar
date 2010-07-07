@@ -143,7 +143,7 @@ public class Startup implements ServletContextListener {
                         log.info("BILLING REGION : "+p.getProperty("billregion","NOTSET"));
                         log.info("DB PROPS: Username :"+p.getProperty("db_username","NOTSET")+ " db name: "+p.getProperty("db_name","NOTSET"));
                         p.setProperty("OSCAR_START_TIME",""+System.currentTimeMillis());
-                        SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
+                       
 		} catch (Exception e) {
 			System.out.println("*** No Property File ***");
 			System.out.println("Property file not found at:");
