@@ -35,8 +35,10 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.SpringUtils;
@@ -527,18 +529,23 @@ public class EFormUtil {
 		return(results);
 	}
 
-	public static void writeEformTemplate(ArrayList paramNames, ArrayList paramValues, EForm eForm, String eformLink, String programNo) {
+	public static void writeEformTemplate(ArrayList paramNames, ArrayList paramValues, EForm eForm, String fdid, String programNo) {
 		if (eForm==null) return;
 
 		String[] template = {"EncounterNote","SocialHistory","FamilyHistory","MedicalHistory","OngoingConcerns","RiskFactors","Reminders","OtherMeds"};
-		String[] code = {"encounter","SocHistory","FamHistory","MedHistory","Concerns","RiskFactors","Reminders","OMeds"};
+		String[] code = {"","SocHistory","FamHistory","MedHistory","Concerns","RiskFactors","Reminders","OMeds"};
 		for (int i=0; i<code.length; i++) {
 			String text = eForm.getTemplate(template[i]);
 			if (empty(text)) continue;
 
 			text = putTemplateValues(paramNames, paramValues, new StringBuffer(text));
-			text += " <a href='"+eformLink+"' title='Open Eform' target='_blank'>[e]</a>";
-			saveCMNote(eForm, programNo, code[i], text);
+			Long noteId = saveCMNote(eForm, programNo, code[i], text);
+
+			if (noteId!=null) {
+				CaseManagementNoteLink cmLink = new CaseManagementNoteLink(CaseManagementNoteLink.EFORMDATA, Long.valueOf(fdid), noteId);
+				CaseManagementNoteLinkDAO cmDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
+				cmDao.save(cmLink);
+			}
 		}
 	}
 
@@ -609,15 +616,16 @@ public class EFormUtil {
 		return sb.toString();
 	}
 
-	private static void saveCMNote(EForm eForm, String programNo, String code, String note) {
-		if (empty(note)) return;
+	private static Long saveCMNote(EForm eForm, String programNo, String code, String note) {
+		if (empty(note)) return null;
 
 		CaseManagementNote cNote = createCMNote(eForm.getDemographicNo(), eForm.getProviderNo(), programNo, note);
-		if (!code.equalsIgnoreCase("encounter")) {
+		if (!empty(code)) {
 			Set<CaseManagementIssue> scmi = createCMIssue(eForm.getDemographicNo(), code);
 			cNote.setIssues(scmi);
 		}
 		cmm.saveNoteSimple(cNote);
+		return cNote.getId();
 	}
 
 	private static CaseManagementNote createCMNote(String demographicNo, String providerNo, String programNo, String note) {
