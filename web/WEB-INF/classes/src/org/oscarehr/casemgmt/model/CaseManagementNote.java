@@ -33,7 +33,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.caisi.model.BaseObject;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarRx.data.RxPrescriptionData;
 
@@ -74,6 +76,8 @@ public class CaseManagementNote extends BaseObject {
 
 	private int hashCode = Integer.MIN_VALUE;
 	private int position = 0;
+
+	CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
 
 	@Override
 	public boolean equals(Object obj) {
@@ -446,36 +450,28 @@ public class CaseManagementNote extends BaseObject {
 		this.facilityName = facilityName;
 	}
 
-         public boolean isDocumentNote() {
-        String sql = "select id from casemgmt_note_link where note_id=" + this.id + " and table_name="+CaseManagementNoteLink.DOCUMENT;
-
-        ResultSet rs = null;
-        rs = getSQL(sql);
-        boolean bool = false;
-        try {
-            bool = rs.first();
-        } catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
-
-        return bool;
-    }
+	public boolean isDocumentNote() {
+		return isLinkTo(CaseManagementNoteLink.DOCUMENT);
+	}
 
 
-    public boolean isRxAnnotation(){
-        boolean bool=false;
-        String sql="select id from casemgmt_note_link where note_id=" + this.id + " and table_name="+CaseManagementNoteLink.DRUGS;
+    public boolean isRxAnnotation() {
+		return isLinkTo(CaseManagementNoteLink.DRUGS);
+	}
 
-        ResultSet rs = null;
-        rs = getSQL(sql);
-        try {
-            bool = rs.first();
-        } catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
-        return bool;
-    }
-   public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){       
+	public boolean isEformData() {
+		return isLinkTo(CaseManagementNoteLink.EFORMDATA);
+	}
+
+	private boolean isLinkTo(Integer tableName) {
+		CaseManagementNoteLink cmnLink = caseManagementNoteLinkDao.getLastLinkByNote(this.id);
+		if (cmnLink!=null && cmnLink.getTableName().equals(tableName)) {
+			return true;
+		}
+		return false;
+	}
+
+	public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){
         if(this.isRxAnnotation()){
             String drugId=cmnl.getTableId().toString();
 
@@ -492,26 +488,6 @@ public class CaseManagementNote extends BaseObject {
             return null;
     }
    
-    public boolean isFirstDocNote(Long tableId) {
-
-        String sql = "select min(note_id) as min_note_id from casemgmt_note_link where table_id=" + tableId;
-        ResultSet rs = null;
-        boolean bool = false;
-        try {
-            rs = getSQL(sql);
-            if (rs.first()) {
-                 String str = rs.getString("min_note_id");
-
-                if (str==null || this.id != Long.parseLong(str)) {
-                    bool = false;
-                } else {bool = true;}
-             }
-        } catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
-        return bool;
-    }
-
     protected static ResultSet getSQL(String sql) {
         ResultSet rs = null;
         try {
