@@ -1414,7 +1414,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 &nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 
-<security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.eForms" rights="r">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
 <oscar:oscarPropertiesCheck property="eform_in_appointment" value="yes">
 	<b><a href="#" onclick="popupPage(500,1000,'../eform/efmformslistadd.jsp?parentAjaxId=eforms&demographic_no=<%=demographic_no%>&apptProvider=<%=curProvider_no[nProvider]%>&appointment=<%=appointment.get("appointment_no")%>'); return false;"
 		  title="eForms">|e</a></b>
