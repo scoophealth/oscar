@@ -50,28 +50,12 @@ import oscar.OscarProperties;
 
 public class UploadImage extends HttpServlet{
     final static int BUFFER = 2048;
-    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException  {
-        int c;
-        int count;
-        byte data[] = new byte[BUFFER];
-        byte data1[] = new byte[BUFFER/2];
-        byte data2[] = new byte[BUFFER/2];
-        byte enddata[] = new byte[2];
-        
-        
-        HttpSession session = request.getSession(true);
-        String backupfilepath = ((String) session.getAttribute("homepath"))!=null?((String) session.getAttribute("homepath")):"null" ;
-        
-        count=request.getContentType().indexOf('=');
-        String temp = request.getContentType().substring(count+1);
-        String filename = "", foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="", doctype="", docxml="";
-        String home_dir="", doc_forward="";
-        String userHomePath = System.getProperty("user.home", "user.dir");
-        
+    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException  {    
+        String foldername="", fileheader="";
+  
         Properties ap = OscarProperties.getInstance();
-        foldername = ap.getProperty("eform_image");        
+        foldername = ap.getProperty("eform_image");
 
-        boolean isMultipart = FileUpload.isMultipartContent(request);
         //		 Create a new file upload handler
         DiskFileUpload upload = new DiskFileUpload();
 
