@@ -71,16 +71,15 @@ public class JdbcBillingRAImpl {
 
 	public boolean importRAFile(String filePathName) throws Exception {
 		String filename = "", header = "", headerCount = "", total = "", paymentdate = "", payable = "", totalStatus = "", deposit = "";
-		String transactiontype = "", providerno = "", specialty = "", account = "", patient_last = "", patient_first = "", provincecode = "", newhin = "", hin = "", ver = "", billtype = "", location = "";
+		String transactiontype = "", providerno = "", specialty = "", account = "", patient_last = "", patient_first = "", newhin = "", hin = "", ver = "", billtype = "", location = "";
 		String servicedate = "", serviceno = "", servicecode = "", amountsubmit = "", amountpay = "", amountpaysign = "", explain = "";
-		String proFirst = "", proLast = "", demoFirst = "", demoLast = "", apptDate = "", apptTime = "", checkAccount = "", strcount = "", strtCount = "";
 		String balancefwd = "", abf_ca = "", abf_ad = "", abf_re = "", abf_de = "";
 		String transaction = "", trans_code = "", cheque_indicator = "", trans_date = "", trans_amount = "", trans_message = "";
 		String message = "", message_txt = "";
                 String claimno = "";
 		String xml_ra = "";
 
-		int accountno = 0, totalsum = 0, txFlag = 0, recFlag = 0, flag = 0, payFlag = 0, count = 0, tCount = 0, amountPaySum = 0, amountSubmitSum = 0;
+		int accountno = 0, totalsum = 0, recFlag = 0, count = 0, tCount = 0, amountPaySum = 0, amountSubmitSum = 0;
 		String raNo = "";
 
 		String sql = "";
@@ -230,7 +229,7 @@ public class JdbcBillingRAImpl {
 					amountpaysign = nextline.substring(43, 44);
 					explain = nextline.substring(44, 46);
 
-					payFlag = 0;
+					
 					tCount = tCount + 1;
 					amountPaySum = Integer.parseInt(amountpay);
 					amountpay = String.valueOf(amountPaySum);
@@ -279,7 +278,7 @@ public class JdbcBillingRAImpl {
 								+ servicecode + "','" + serviceno + "','" + newhin + "','" + amountsubmit + "','"
 								+ amountpaysign + amountpay + "','" + servicedate + "','" + explain + "','" + billtype + "','" + claimno
 								+ "')";
-						int rowsAffected3 = dbObj.saveBillingRecord(sql);
+						//int rowsAffected3 = dbObj.saveBillingRecord(sql);
 						// {"save_radt", "insert into radetail
 						// values('\\N',?,?,?,?,?,?,?,?,?,?,?)"},
 						// int rowsAffected3 =
