@@ -50,8 +50,8 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
 <%@page import="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO"%>
-
-<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 
@@ -660,8 +660,7 @@
                                     String winName="dummie";
                                     int hash = Math.abs(winName.hashCode());
                                     //get drug from note id.
-                                    CaseManagementNoteLink cmnl=caseManagementManager.getLatestLinkByNote(Long.parseLong(note.getNoteId().toString()));
-                                    RxPrescriptionData.Prescription rx=note.getRxFromAnnotation(cmnl);
+                                    RxPrescriptionData.Prescription rx=note.getRxFromAnnotation(note.getNoteLink());
                                     
                                     if (note.getRemoteFacilityId()==null) // only allow editing for local notes
 					{
@@ -708,7 +707,7 @@
 					}}
 			 		%>
 			 		
-			 		<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.docView" /> </a> <%
+					<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> <%
 			 	}
 				else
 				{ //document note
@@ -722,11 +721,23 @@
 					url = url + "return false;";
 			 	%> 
 			 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;">
-			 	<bean:message key="oscarEncounter.view.docView" /> 
+			 	<bean:message key="oscarEncounter.view" /> 
 				</a> 
 				<%
 			 	}
-			 %>
+				if (note.isEformData())
+				{
+					String winName = "eforms"+demographicNo;
+					int hash = Math.abs(winName.hashCode());
+					String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmshowform_data.jsp?fdid=";
+
+					CaseManagementNoteLink noteLink = note.getNoteLink();
+					if (noteLink!=null) url += noteLink.getTableId();
+					url += "'); return false;";
+					%>
+					<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> <%
+				}
+				%>
 			  <span id="txt<%=note.getNoteId()%>"><%=noteStr%></span> 
 			 <%
 			 	if (largeNote(noteStr))
