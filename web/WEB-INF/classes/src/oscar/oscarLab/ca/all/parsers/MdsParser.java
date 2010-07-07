@@ -15,7 +15,6 @@ import ca.uhn.log.HapiLogFactory;
 public class MdsParser extends PipeParser
 {
     private static final HapiLog log = HapiLogFactory.getHapiLog(MdsParser.class);
-
     private final static String segDelim = "\r"; //see section 2.8 of spec
 
     /**
@@ -24,12 +23,8 @@ public class MdsParser extends PipeParser
      */
 	@Override
 	public String getVersion(String message) throws HL7Exception {
-		String version=super.getVersion(message);
-		System.err.println("found:"+version);
-		
+		String version=super.getVersion(message);		
 		if (version.endsWith(".0")) version=version.substring(0, version.length()-2);
-		System.err.println("returning:"+version);
-		
 		return(version);
 	}
 	
