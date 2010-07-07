@@ -128,13 +128,15 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	public boolean isDocument() {
 	    return(false);
     }
-        public boolean isRxAnnotation(){
-            return (false);
-       }
 
-       public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){
-            return (null);
-       }
+	public boolean isRxAnnotation(){
+		return (false);
+	}
+
+	public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl){
+		return (null);
+	}
+
 	public boolean isEditable() {
 	    return(false);
     }
@@ -160,5 +162,13 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	
 	public boolean isGroupNote() {
 		return false;
+	}
+
+	public boolean isEformData() {
+		return false;
+	}
+
+	public CaseManagementNoteLink getNoteLink() {
+		return null;
 	}
 }

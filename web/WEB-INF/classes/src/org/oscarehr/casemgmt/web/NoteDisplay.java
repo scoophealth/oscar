@@ -40,11 +40,10 @@ public interface NoteDisplay {
 			if (note1 == null || note2 == null) {
 				return 0;
 			}
-
 			return note2.getObservationDate().compareTo(note1.getObservationDate());
 		}
 	};
-	
+
 	public Integer getNoteId();
 
 	public boolean isSigned();
@@ -80,21 +79,25 @@ public interface NoteDisplay {
 	public String getNote();
 
 	public boolean isDocument();
-        
-        public boolean isRxAnnotation();
-        
-        public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl);
+
+	public boolean isRxAnnotation();
+
+	public boolean isEformData();
+
+	public CaseManagementNoteLink getNoteLink();
+
+	public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl);
 
 	public String getEncounterType();
 
 	public ArrayList<String> getEditorNames();
-	
+
 	public ArrayList<String> getIssueDescriptions();
-	
+
 	//not controlled by note attributes / business logic like "editable".
 	//use this for a category of notes - like integrator, group notes, etc
 	public boolean isReadOnly();
-	
+
 	public boolean isGroupNote();
-	
+
 }
