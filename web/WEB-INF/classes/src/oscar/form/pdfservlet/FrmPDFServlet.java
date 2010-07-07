@@ -96,8 +96,7 @@ public class FrmPDFServlet extends HttpServlet {
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException,
             java.io.IOException {
-        DocumentException ex = null;
-        
+      
         ByteArrayOutputStream baosPDF = null;
         
         try {
@@ -462,18 +461,10 @@ public class FrmPDFServlet extends HttpServlet {
                 
                 //graphic
                 if ((graphicPageArray.contains(Integer.toString(i)) || i == 1 && graphicPageArray.size() == 0 ) && cfgGraphicFileNo > 0) {
-                    boolean bFormAR = false;
+                   
                     int origX = 0;
                     int origY = 0;
-                    String nMaxPixX = "0";
-                    String nMaxPixY = "0";
-                    String fStartX = "0f";
-                    String fEndX = "0f";
-                    String fStartY = "0f";
-                    String fEndY = "0f";
-                    
-                    String dateFormat = null;
-                    String fEDB = null;
+                   
                     String className = null;
                     
                     for (int k = 0; k < cfgGraphicFileNo; k++) {
