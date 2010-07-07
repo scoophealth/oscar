@@ -56,8 +56,8 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         
         count=request.getContentType().indexOf('=');
         String temp = request.getContentType().substring(count+1);
-        String filename = "test.txt", fileoldname="", foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="", doctype="", docxml="";
-        String home_dir="", doc_forward="";
+        String filename = "test.txt", foldername="", fileheader="", forwardTo="";
+        
         String userHomePath = System.getProperty("user.home", "user.dir");
         System.out.println(userHomePath);
         
@@ -87,7 +87,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         boolean bfbo = true;
         boolean benddata = false;
         boolean bf = false;
-        byte boundary[] = temp.getBytes();
+        
         
         while (bf?true:((count = sis.readLine(data, 0, BUFFER)) != -1)) {
             bf = false;
