@@ -112,7 +112,7 @@ public class PreventionData {
 		String sql = null;
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-			ResultSet rs;
+			
 			sql = "Insert into preventionsExt (prevention_id,keyval,val) values " + "('" + preventionId + "','" + keyval + "','" + StringEscapeUtils.escapeSql(val) + "')";
 			log.debug(sql);
 			db.RunSQL(sql);
@@ -151,7 +151,7 @@ public class PreventionData {
 		String sql = null;
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-			ResultSet rs;
+			
 			sql = "update preventions set deleted = '1' where id = '" + id + "' "; // TODO: logg this in the Deletion record table or generic logging table
 			log.debug(sql);
 			db.RunSQL(sql);
@@ -166,7 +166,7 @@ public class PreventionData {
 		String sql = null;
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-			ResultSet rs;
+			
 			sql = "update preventions set next_date = '" + date + "' where id = '" + id + "' ";
 			log.debug(sql);
 			db.RunSQL(sql);
@@ -446,7 +446,7 @@ public class PreventionData {
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
 				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
-					Date preventionDate = cachedDemographicPrevention.getPreventionDate();
+					
 
 					Hashtable h = new Hashtable();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
