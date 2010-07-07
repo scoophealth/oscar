@@ -47,9 +47,7 @@ RptReportConfigData formConfig = new RptReportConfigData();
 Vector[] vecField = formConfig.getAllFieldNameValue(SAVE_AS, reportId);
 Vector vecFieldCaption = vecField[1];
 Vector vecFieldName = vecField[0];
-//System.out.println("SQL: 1");
 Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
-//System.out.println("SQL: 2");
 
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

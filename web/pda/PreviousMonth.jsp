@@ -40,8 +40,6 @@
 </HEAD>
 
 <%
-//  System.out.print("PreviousMonth--------------");
-
 // the only parameters are start_date 
  
   String start_date = request.getParameter("start_date");
@@ -62,7 +60,6 @@
  
   String end_date = start_date.substring(0,8) + new Integer(maxIndex).toString();
  
-//System.out.print("end_date = new Integer(maxIndex).intValue(----------"+end_date);
    response.sendRedirect("AppointmentMonth.jsp?start_date="+start_date+"&end_date="+end_date); 
 
 %>

@@ -158,7 +158,6 @@
 	  paramName[2]=param[10].getStringValue().trim(); // year of dob
 	  paramName[3]=param[11].getStringValue().trim(); // month of dob
 	  paramName[4]=param[12].getStringValue().trim(); // day of dob
-	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
 
     if(rs.next()) {  %> ***<font color='red'><bean:message
@@ -251,7 +250,6 @@
 	    param2[3]=request.getParameter("cust3");
 	    param2[4]=request.getParameter("cust4");
 	    param2[5]="<unotes>"+request.getParameter("content")+"</unotes>";
-	    //System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
 
        dem = apptMainBean.getString(rs,"demographic_no");
@@ -276,7 +274,6 @@
        // customized key
        if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
-		   //System.out.println("propDemoExt:" + propDemoExt[0] );
 	       for(int k=0; k<propDemoExt.length; k++) {
 	           dExt.addKey(proNo,dem,propDemoExt[k],request.getParameter(propDemoExt[k].replace(' ','_')),"");
 	       }

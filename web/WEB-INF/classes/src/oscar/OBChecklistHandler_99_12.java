@@ -62,7 +62,6 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
 	}
 
 	public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
-		// System.out.print("startElement: " + localName);
 		if (localName.equals("recommendations")) { 
 			results += "<center><table border=0 cellspacing=1 cellpadding=1 width=\"100%\">\n\n";
 		}

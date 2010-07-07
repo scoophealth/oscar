@@ -179,8 +179,6 @@ public class ExtractBean extends Object implements Serializable {
 
                               }// while
                         }else if (billType.equals("WCB")){
-                           /////////////////////////////////////
-                           System.out.println("Type equals WCB for invNo "+invNo);
                            ResultSet rs2 =
                            db.GetSQL("SELECT *, billingservice.value As `feeitem1` FROM billingservice, wcb JOIN billing ON wcb.billing_no=billing.billing_no WHERE wcb.billing_no='"
                            + invNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') AND billingservice.service_code=wcb.w_feeitem");

@@ -37,17 +37,13 @@ String reportName = (new RptReportItem()).getReportName(reportId);
 // get form parameters
 RptReportConfigData tableObj = new RptReportConfigData();
 
-// change order action //System.out.println(request.getParameter("submit"));
+// change order action 
 if (request.getParameter("submit") != null && request.getParameter("submit").equals("Move here")) {
 	String itemId = request.getParameter("nameSelected") != null ? request.getParameter("nameSelected") : "";
 	String newPos = request.getParameter("position") != null ? request.getParameter("position") : "";
 	tableObj.updateRecordOrder(SAVE_AS, reportId, itemId, newPos);
 }
 // get display data
-//Vector [] vecConfig = tableObj.getConfigFieldName(SAVE_AS, reportId);
-//Vector vecConfigName = vecConfig[0];
-//Vector vecConfigCaption = vecConfig[1];getConfigNameList
-//System.out.println("name");
 
 Vector vecConfigObj = tableObj.getConfigObj(SAVE_AS, reportId);
 %>

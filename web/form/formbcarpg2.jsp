@@ -711,7 +711,6 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 	FrmGraphicAR arG = new FrmGraphicAR();
 	edbDate = arG.getStartDate(fedb);
     sDate = UtilDateUtilities.DateToString(edbDate, "MMMMM dd, yyyy"); //"yy,MM,dd");
-	//System.out.println(fedb + ":" + sDate);
 %>
 	    var delta = 0;
         var str_date = getDateField(source.name);

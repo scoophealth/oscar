@@ -86,7 +86,6 @@ function setfocus() {
 	rsdemo = daySheetBean.queryResults(provider_no.substring(5), "searchmygroupall");
     while (rsdemo.next()) { 
 	  myGroupBean.setProperty(rsdemo.getString("provider_no"),"true");
-//System.out.println(provider_no.substring(5)+"  ******"+ rsdemo.getString("provider_no"));
     }
   }
 %>

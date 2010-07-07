@@ -133,8 +133,6 @@
         Properties   savedar1risk1 = risks.getRiskName("../webapps/" + oscarVariables.getProperty("project_home") + 
                 "/decision/annualreview/desannualreviewplannerrisk.xml");
         StringBuffer tt;
-        System.out.println("jsp :" + "../webapps/" + oscarVariables.getProperty("project_home") + 
-                "/decision/annualreview/desannualreviewplannerrisk.xml");
 
         for (Enumeration e = savedar1risk1.propertyNames(); e.hasMoreElements(); ) {
           tt = new StringBuffer().append(e.nextElement());

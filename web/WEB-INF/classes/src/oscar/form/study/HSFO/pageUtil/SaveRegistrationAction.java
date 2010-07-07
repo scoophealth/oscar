@@ -855,43 +855,6 @@ public class SaveRegistrationAction extends DispatchAction{
             e.printStackTrace();
         }
         
-//		if (submitstring !=null && submitstring.equals("Submit")){
-//                    //update old record to locked
-
-//                    try {
-//                            dao.lockVisit(visitData.getID());
-//                            dao.insertVisit(visitData,(String) request.getSession().getAttribute("user"));
-//                    } catch (SQLException e) {
-//                            // TODO Auto-generated catch block
-//                            e.printStackTrace();
-//                    }
-//
-//		}else{ //'save' record by updating db
-//                    //check if a record already exists, if not insert
-
-//                    boolean isrecordexists = dao.isRecordExists(visitData.getVisitDate_Id(),visitData.getPatient_Id());
-//
-//
-////                    System.out.println("does record already exists: "+ isrecordexists);
-////                    if (isrecordexists == true){
-////                            System.out.println("update record");
-////                            try {
-////                                    dao.updateVisit(visitData);
-////                            } catch (SQLException e) {
-////                                    e.printStackTrace();
-////                            }
-////                    }else{
-
-//                            try {
-//                                    dao.insertVisit(visitData,(String) request.getSession().getAttribute("user"));
-//                            } catch (SQLException e) {
-//                                e.printStackTrace();
-//                            }
-////                    }
-//
-//		}
-        
-        
         request.setAttribute("demographic_no", visitData.getPatient_Id());
         request.setAttribute("visitDate", visitData.getVisitDate_Id());
         //request.setAttribute("fromURL", "SubmitFollowup");
@@ -905,13 +868,3 @@ public class SaveRegistrationAction extends DispatchAction{
     }
     
 }
-
-
-
-
-/////OLD CODE SECTION 1
-
-
-
-
-/////

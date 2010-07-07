@@ -71,7 +71,6 @@ function start(){
 </xml>
 
 <p><!-- open and read from database--> <%
-  //System.out.println("kkkkkkkkkkkkkkkkkkkkk"+request.getParameter("template"));
   out.println("<table datasrc='#xml_list' border='0'><tr><td><font color='blue'>Content:</font></td></tr><tr><td><div datafld='xml_content'></td></tr></table>");
 %>
 

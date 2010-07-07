@@ -96,7 +96,6 @@ busy ...
     encounter += "\n[Signed on " + rsdemo.getString("e.encounter_date")  + " " + rsdemo.getString("e.encounter_time")+ " by " + nameBean.get(provider_no) + "]\n\n" ;
     asql = "insert into eChart values ("+ ectno +", '"+ timestamp + "', " + demographic_no +", '"+ provider_no +"', '"
 	      +Misc.charEscape( socialhistory, '\'' ) + "', '" +Misc.charEscape( familyhistory,'\'')  + "', '" +Misc.charEscape( medicalhistory,'\'' ) +"', '" +Misc.charEscape( ongoingconcerns, '\'') +"', '" +Misc.charEscape( reminders, '\'')  +"', '" + Misc.charEscape( encounter, '\'' ) + "' ); \n" ;
-//    System.out.println(timestamp+"  ******"+ demographic_no +"  ******"+  nameBean.get(provider_no) +encounter);
     
   }
 

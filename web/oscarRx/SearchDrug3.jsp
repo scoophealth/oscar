@@ -97,8 +97,6 @@
                 longterm_acute_inactive_external=false;
             }
 
-            //System.out.println("usefav="+usefav);
-            //System.out.println("reRxDrugId="+reRxDrugId);
             RxPharmacyData pharmacyData = new RxPharmacyData();
             RxPharmacyData.Pharmacy pharmacy;
             pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));

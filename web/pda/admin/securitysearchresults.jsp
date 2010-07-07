@@ -123,7 +123,6 @@
     		int index = keyword.indexOf(",");
 	  		param[0]=keyword.substring(0,index).trim()+"%";//(",");
 	  		param[1]=keyword.substring(index+1).trim()+"%";
-	  		//System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     		rs = apptMainBean.queryResults(param, dboperation);
    		}
   } else if(request.getParameter("search_mode").equals("search_dob")) {
@@ -131,25 +130,11 @@
 	  		param[0]=""+MyDateFormat.getYearFromStandardDate(keyword)+"%";//(",");
 	  		param[1]=""+MyDateFormat.getMonthFromStandardDate(keyword)+"%";
 	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%";  
-	      //System.out.println("1111111111111111111 "+param[0]+param[1]+param[2]);
     		rs = apptMainBean.queryResults(param, dboperation);
   } else {
     keyword=request.getParameter("keyword")+"%";
     rs = apptMainBean.queryResults(keyword, dboperation);
   }
-/*
-  String dboperation = request.getParameter("dboperation");
-  if(dboperation.equals("search_lastfirstname")) {
-    String[] param =new String[2];
-    int index = request.getParameter("keyword").indexOf(",");
-	  param[0]=request.getParameter("keyword").trim().substring(0,index-1).trim();//(",");
-	  param[1]=request.getParameter("keyword").substring(index+1).trim();
-	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
-    rs = apptMainBean.queryResults(param, dboperation);
-  } else {
-    rs = apptMainBean.queryResults(request.getParameter("keyword"), dboperation);
-  }
-*/
   
   boolean bodd=false;
   int nItems=0;

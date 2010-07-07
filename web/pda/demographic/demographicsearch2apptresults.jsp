@@ -169,7 +169,6 @@ function addName(lastname, firstname, chartno) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode")||temp.equals("submit") ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
   
   //should close the pipe connected to the database here!!!
@@ -225,7 +224,6 @@ function next() {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("submit")  ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 </form>

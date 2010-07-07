@@ -88,7 +88,6 @@ public class BackupDownload extends GenericDownload {
             }
 
             String sql = new String("select roleUserGroup,privilege from secObjPrivilege where "+ objectWhere.toString() +" order by priority desc");
-            ////System.out.println("sql for roles: "+sql );
             rs = db.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
@@ -146,8 +145,6 @@ public class BackupDownload extends GenericDownload {
 
             boolean[] check = { false, false };
             for (int j = 0; j < vecPrivilName.size(); j++) {
-                //System.out.println("role: " + singleRoleName + " privilege:" +
-                // vecPrivilName.get(j));
                 check = checkRights((String) vecPrivilName.get(j), rights);
 
                 if (check[0]) { // get the rights, stop comparing

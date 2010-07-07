@@ -75,7 +75,6 @@
 <%
   String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );  
   String lastYear = (Integer.parseInt(today.substring(0,today.indexOf('-'))) - 2) + today.substring(today.indexOf('-'));
-  //System.out.println("last year is: " + lastYear);
 
   if(request.getParameter("delete")!= null && request.getParameter("delete").equals("1") ) { //delete rschedule
     String[] param =new String[2];
@@ -411,8 +410,6 @@ function addDataString1() {
 		<center>
 		<%
 
-//System.out.println(":" + scheduleRscheduleBean.day_of_week + scheduleRscheduleBean.avail_hourB + scheduleRscheduleBean.avail_hour); 
-//System.out.println(scheduleRscheduleBean.sdate); 
   String syear = "",smonth="",sday="",eyear="",emonth="",eday="";
   String[] param2 =new String[7];
   for(int i=0; i<7; i++) {param2[i]="";}

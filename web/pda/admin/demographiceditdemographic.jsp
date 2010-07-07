@@ -79,14 +79,13 @@ function upCaseCtrl(ctrl) {
   int age=0;
   
   int param = Integer.parseInt(request.getParameter("demographic_no"));
-  // System.out.println("from editcpp : "+ param);
  
   ResultSet rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
   if(rs==null) {
     out.println("failed!!!");
   } else {
     while (rs.next()) {
-     if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {
+     if(!(rs.getString("month_of_birth").equals(""))) {
     	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {
     		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
     	} else {

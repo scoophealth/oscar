@@ -267,7 +267,6 @@ function gotoAccs() {
 			color="blue"> <%
      String historysubject = enc.get("subject")==null?"No Reason":String.valueOf(enc.get("subject")).equals("")?"No Reason":String.valueOf(enc.get("subject"));
      StringTokenizer st=new StringTokenizer(historysubject,":");
-     //System.out.println(" history = " + historysubject);
      String strForm="", strTemplateURL="";
      while (st.hasMoreTokens()) {
        strForm = (new String(st.nextToken())).trim();

@@ -21,12 +21,8 @@ String segmentID = request.getParameter("segmentID");
 String providerNo = request.getParameter("providerNo");
 String searchProviderNo = request.getParameter("searchProviderNo");
 String patientMatched = request.getParameter("patientMatched");
-//System.out.println("1111111111111111="+segmentID.trim());
 Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
-//System.out.println("88888888888");
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
-//System.out.println("222222222");
-//String sql = "SELECT status FROM providerLabRouting WHERE lab_no='"+segmentID+"';";
 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 ResultSet rs = db.GetSQL(sql);
@@ -60,7 +56,6 @@ Hl7textResultsData data = new Hl7textResultsData();
 String multiLabId = data.getMatchingLabs(segmentID);
 
 String hl7 = Factory.getHL7Body(segmentID);
-//System.out.println("55555555555555");
 // check for errors printing
 if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){
 %>
@@ -654,10 +649,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
                                 boolean obrFlag = false;
                                 int obxCount = handler.getOBXCount(j);
-                                //System.out.println("OBR Count "+OBRCount+" J "+j+" obx count "+obxCount);
                                 for (k=0; k < obxCount; k++){
                                     String obxName = handler.getOBXName(j, k);
-                                    //System.out.println("OBX NAME "+obxName+"  -> "+handler.getObservationHeader(j, k).equals(headers.get(i))+" obsHeader "+ handler.getObservationHeader(j, k) +" header "+ headers.get(i));
                                     if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !obxName.equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
                                         String obrName = handler.getOBRName(j);
                                         if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){%>

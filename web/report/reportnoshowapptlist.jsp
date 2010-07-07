@@ -115,7 +115,6 @@ function setfocus() {
   param[1] = sdate;
   param[2] = createtime;
   int pnum = bGroup?myGroupBean.size():1 ;
-//  System.out.println(myGroupBean.size());
   for(int i=0; i<pnum; i++) {
     param[0] = bGroup?((String) myGroupBean.get(i)):provider_no;
 	  rsdemo = patientBean.queryResults(param, "search_noshowappt");

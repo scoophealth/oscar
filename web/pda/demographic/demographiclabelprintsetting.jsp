@@ -80,8 +80,7 @@ function checkTotal() {
 	int age=0, dob_year=0, dob_month=0, dob_date=0;
   String first_name="",last_name="",chart_no="",address="",city="",province="",postal="",phone="",phone2="",dob="",sex="",hin="";
   int param = Integer.parseInt(request.getParameter("demographic_no"));
-  // System.out.println("from editcpp : "+ param);
- 
+  
   ResultSet rs = apptMainBean.queryResults(param, "search_detail");
   if(rs==null) {
     out.println("failed!!!");

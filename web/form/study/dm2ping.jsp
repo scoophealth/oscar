@@ -183,10 +183,7 @@ if(connected){
 	out.clear();
     out.flush();
 	out.println(UtilXML.toXML(doc, dtdFileName));
-	//out.println("The record was sent to PING server.<br><p><input type='button' name='but' onclick='window.close()' value='Close'>");
-    //System.out.println(UtilXML.toXML(doc));
 
-//	ping.sendCddm(actorTicket, patientPingId,cddmType);
         try{                                        
             ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
         }catch(Exception sendCon){

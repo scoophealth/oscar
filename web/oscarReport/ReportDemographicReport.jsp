@@ -472,7 +472,6 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                     <html:multibox property="rosterStatus" value="<%=ros%>"/>
                     </td>
                     <%}
-                    //System.out.println(rosterStatus.size());
                     %>
 
 
@@ -532,7 +531,6 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                     <html:multibox property="patientStatus" value="<%=pat%>"/>
                     </td>
                     <%}
-                    //System.out.println(rosterStatus.size());
                     %>
 
 

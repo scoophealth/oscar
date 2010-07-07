@@ -549,7 +549,6 @@ function toggleView(form) {
                                         </tr>
 
                                         <%
-                                        //System.out.println("reprint in additionalNotes="+request.getSession().getAttribute("rePrint"));
                         if (request.getSession().getAttribute("rePrint") == null ){%>
 
                                         <tr>

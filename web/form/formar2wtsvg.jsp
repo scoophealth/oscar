@@ -76,7 +76,7 @@
 		if (request.getParameter("x" + i) != null) {
 			ipos = request.getParameter("x" + i).indexOf("|");
 			x = (int) Integer.parseInt(request.getParameter("x" + i).substring(0, ipos)) ;
-			y = (int) Integer.parseInt(request.getParameter("x" + i).substring(ipos+1)) ;//System.out.println(dx + " : " +dy);
+			y = (int) Integer.parseInt(request.getParameter("x" + i).substring(ipos+1)) ;
 %>
 <use xlink:href="#square" transform="translate(<%=x + ", " + y%>)" />
 <%

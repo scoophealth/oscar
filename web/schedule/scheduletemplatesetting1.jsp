@@ -197,8 +197,6 @@ function addDataString1() {
     break;
   }
 
-//System.out.println("llllppppppppppppppp" + scheduleRscheduleBean.day_of_week + scheduleRscheduleBean.day_of_month + scheduleRscheduleBean.avail_hour); 
-//System.out.println(scheduleRscheduleBean.sdate); 
   String syear = "",smonth="",sday="",eyear="",emonth="",eday="";
   String[] param2 =new String[7];
   for(int i=0; i<7; i++) {param2[i]="";}

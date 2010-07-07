@@ -104,7 +104,6 @@ function setfocus() {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 	</tr>
@@ -170,7 +169,6 @@ function addName(lastname, firstname) {
 		temp=e.nextElement().toString();
 		if(temp.equals("keyword") || temp.equals("dboperation") ||temp.equals("displaymode")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 	</form>

@@ -62,9 +62,7 @@
   }
   
   ArrayList warnings = p.getWarnings();      
-  // System.out.println("warnings size ----"+warnings.size());
   ArrayList recomendations = p.getReminder();
-  // System.out.println("recomendations size"+warnings.size());
           
   boolean printError = request.getAttribute("printError") != null;
 %>

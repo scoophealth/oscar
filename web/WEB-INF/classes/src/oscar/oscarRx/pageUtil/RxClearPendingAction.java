@@ -43,7 +43,6 @@ public final class RxClearPendingAction extends Action{
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException{
-      //  System.out.println("***IN RxClearPendingAction.java") ;
 
 
         // Setup variables

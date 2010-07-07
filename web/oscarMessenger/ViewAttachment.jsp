@@ -189,11 +189,9 @@
 <%
     Document xmlDoc = null;
     String attch = (String) request.getAttribute("Attachment");
-    // System.out.println("attach val = "+attch );
     xmlDoc = MsgCommxml.parseXML(attch);
 
     Element root = xmlDoc.getDocumentElement();
-    // System.out.println(MsgCommxml.toXML(root));
 
 %>
 <%!

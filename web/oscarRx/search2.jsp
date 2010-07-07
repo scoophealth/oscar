@@ -12,17 +12,11 @@ if (searchString != null){
 
   System.out.println(" ### in search2.jsp, searchString="+searchString);
     
-    //drugSearch = drugData.listDrugFromElement(searchString);
-    //drugSearch = drugData.listDrugByRoute(searchString, searchRoute);
-    //drugSearch = drugData.
 
     Vector<Hashtable> vec = rxref.list_drug_element2(searchString);
-  //  System.out.println("vec size="+""+vec.size());
     for(Hashtable drug : vec){
         String cat = ""+drug.get("category");
         if (cat.equals("18")){
-  //          System.out.println("drug.get(id)="+drug.get("id"));
-  //          System.out.println("drug.get(name)="+drug.get("name"));
         %>
         <li id="g_<%=drug.get("id")%>"><%=drug.get("name")%></li>
     <%}

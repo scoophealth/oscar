@@ -75,7 +75,6 @@
 			color="yellow"> <%
      String historysubject = enc.get("subject")==null?"NULL":((String)enc.get("subject")).equals("")?"Unknown":(String)enc.get("subject");
      StringTokenizer st=new StringTokenizer(historysubject,":");
-     //System.out.println(" history = " + historysubject);
      String strForm="", strTemplateURL="";
      while (st.hasMoreTokens()) {
        strForm = (new String(st.nextToken())).trim();

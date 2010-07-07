@@ -62,16 +62,10 @@
 
   String curMonthString = curMonth>9?(new Integer(curMonth).toString()):"0"+(new Integer(curMonth).toString());
   String curDayString = curDay>9?(new Integer(curDay).toString()):"0"+(new Integer(curDay).toString());
-
-//    ResultSet RS = null;
-//    int appointment_no = 1;
  
     int provider_no = new Integer((String) session.getAttribute("user")).intValue();
 
     int apt_no = beanDBQuery.getAppointmentNo(todayString,provider_no);
-
- //System.out.println("apt_no"+apt_no);
-
 
 // if have No appointment 
 

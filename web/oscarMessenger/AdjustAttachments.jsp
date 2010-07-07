@@ -49,40 +49,27 @@ oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUt
     while(names.hasMoreElements())
     {
         String name = (String)names.nextElement();
-        // System.out.println("name = "+name);
         if(name.startsWith("item"))
         {
             if(request.getParameter(name).equalsIgnoreCase("on"))
             {
                 checks += name.substring(4) + ",";
-                // System.out.println("checks "+checks);
             }
         }
     }
 
-    //out.println(checks);2
     String xmlDoc = oscar.oscarMessenger.docxfer.util.MsgCommxml.decode64(request.getParameter("xmlDoc"));
     String idEnc = (String) request.getParameter("id");
-    //out.println(xmlDoc);
 
     String sXML = MsgCommxml.toXML(new MsgSendDocument().parseChecks(xmlDoc, checks));
-    //oscar.oscarMessenger.pageUtil.SessionBean bean = null;
-
-//    bean = new oscar.oscarMessenger.pageUtil.SessionBean();
-//    bean.setProviderNo("174");
 
 
-//    bean.setUserName("David");
-     //request.getSession().setAttribute("SessionBean", bean);
      if (bean != null){
-        // System.out.println("\nSet in the bean\n");
         bean.setAttachment(sXML);
         bean.setMessageId(idEnc);
         request.setAttribute("XMLattachment",MsgCommxml.encode64(sXML));
         request.setAttribute("IDenc",idEnc);
 
-
-        // System.out.println("ID idEnc "+idEnc);
      }
      response.sendRedirect("Transfer/DemographicSearch.jsp");
 %>

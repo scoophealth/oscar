@@ -129,78 +129,10 @@ if(session.getAttribute("user") == null || !( ((String) session.getAttribute("us
 		k++;
 	}
 
-/*    //take data from drugs
-    GregorianCalendar now=new GregorianCalendar();
-    now.add(now.DATE, -7);
-    String rxLastTime = now.get(Calendar.YEAR) +"-" +(now.get(Calendar.MONTH)+1) +"-"+now.get(Calendar.DAY_OF_MONTH) ;
-    oscar.oscarRx.data.RxDrugData.GCN gcn = null;
-
-	int ntemp = 1;
-	k = 0;
-    rsdemo = studyBean.queryResults(new String[] {demoNo, rxLastTime}, "search_drugs");
-    while (rsdemo.next()) { 
-    	drug.setProperty("drugs.BN" + k, rsdemo.getString("BN"));
-    	drug.setProperty("drugs.rx_date" + k, rsdemo.getString("rx_date"));
-    	drug.setProperty("drugs.freqcode" + k, rsdemo.getString("freqcode"));
-    	drug.setProperty("drugs.quantity" + k, rsdemo.getString("quantity"));
-    	drug.setProperty("drugs.prn" + k, rsdemo.getString("prn").equals("1")?"true":"false" );
-		ntemp = 1;
-		if (rsdemo.getString("durunit")!=null && !rsdemo.getString("durunit").equals("D")) {
-			ntemp = rsdemo.getString("durunit").equals("W") ? 7 : 30;
-		}
-		if (rsdemo.getString("repeat")!=null) {
-			ntemp = ntemp * (Integer.parseInt(rsdemo.getString("repeat"))+1) ;
-		}
-    	drug.setProperty("drugs.duration" + k, ""+(Integer.parseInt(rsdemo.getString("duration")) * ntemp) );
-    	drug.setProperty("drugs.special" + k, rsdemo.getString("special"));
-    	drug.setProperty("drugs.end_date" + k, rsdemo.getString("end_date"));
-
-        if(rsdemo.getString("BN") != null && rsdemo.getInt("GCN_SEQNO") != 0) {
-            gcn = new oscar.oscarRx.data.RxDrugData().getGCN(rsdemo.getString("BN"), rsdemo.getInt("GCN_SEQNO"));
-		    //System.out.println(Integer.parseInt(rsdemo.getString("GCN_SEQNO")) + gcn.getStrength());
-    	    drug.setProperty("RxDrugData.GCN.getStrength()" + k, gcn.getStrength());
-    	    drug.setProperty("RxDrugData.GCN.getDoseForm()" + k, gcn.getDoseForm());
-    	    drug.setProperty("RxDrugData.GCN.getRoute()" + k, gcn.getRoute());
-		}
-
-		k++;
-	}
-*/
-
     studyBean.closePstmtConn();
 
 	//xml part
     Document doc = UtilXML.newDocument();
-	//UtilXML.addNode(doc, "diabete-tracker");
-/*	factory.setValidating(true);
-xml_document.setDoctype( "-//IETF//DTD RFCxxxx CPL 1.0//EN","cpl.dtd","");
-<!DOCTYPE address SYSTEM "dtd_uri">
-XmlDocument XmlDoc = new XmlDocument();
-XmlDoc.setDoctype("Finance","yyy.dtd", null);
-
-	Node dt = doc.getFirstChild();
-	UtilXML.addNode(dt, "contact");
-
-	Node contact1 = dt.getFirstChild();
-	UtilXML.addNode(contact1, "contact_firstname", demo.getProperty(studyMapping.getProperty("contact.contact_firstname")));
-	UtilXML.addNode(contact1, "contact_lastname", demo.getProperty(studyMapping.getProperty("contact.contact_lastname")));
-	UtilXML.addNode(contact1, "contact_sex", demo.getProperty(studyMapping.getProperty("contact.contact_sex")));
-	UtilXML.addNode(contact1, "contact_dob", form.getProperty(studyMapping.getProperty("contact.contact_dob")));
-
-	UtilXML.addNode(contact1, "conphone");
-	Node conphone = contact1.getLastChild();
-	UtilXML.addNode(conphone, "conphone_phonenumber", demo.getProperty(studyMapping.getProperty("contact.conphone.conphone_phonenumber")));
-
-	UtilXML.addNode(contact1, "conidentity");
-	Node conidentity = contact1.getLastChild();
-	UtilXML.addNode(conidentity, "conidentity_addrpostal", demo.getProperty(studyMapping.getProperty("contact.conidentity.conidentity_addrpostal")));
-
-	UtilXML.addNode(contact1, "conEHRpatient");
-	Node conEHRpatient = contact1.getLastChild();
-	UtilXML.addNode(conEHRpatient, "conEHRpatient_EHR_id", studyMapping.getProperty("contact.conEHRpatient.conEHRpatient_EHR_id"));
-
-	UtilXML.addNode(dt, "encounter");
-*/
 
 	UtilXML.addNode(doc, "encounter");
 
@@ -304,30 +236,9 @@ XmlDoc.setDoctype("Finance","yyy.dtd", null);
 	UtilXML.addNode(adverse_reactions, "adverse_reactions_offending_drug", allergy.getProperty("encounter.adverse_reactions.adverse_reactions_offending_drug^"+n_adverse_reactions));
 	n_adverse_reactions++;
 	}
-/*	
-    int n_medication = 0;
-    Node medication = null;
-	while (drug.getProperty(studyMapping.getProperty("encounter.medication.medication_EHR_supplied_drug_name^*")+n_medication) != null) {
-	UtilXML.addNode(encounter, "medication");
-	medication = encounter.getLastChild();
-	UtilXML.addNode(medication, "medication_EHR_supplied_drug_name", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_EHR_supplied_drug_name^*") + n_medication));
-	UtilXML.addNode(medication, "medication_prescription_date", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_prescription_date^*") + n_medication));
-	UtilXML.addNode(medication, "medication_drug_strength", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_drug_strength^*") + n_medication));
-	UtilXML.addNode(medication, "medication_drug_dose", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_drug_dose^*") + n_medication));
 
-	UtilXML.addNode(medication, "medication_drug_quantity", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_drug_quantity^*") + n_medication));
-	UtilXML.addNode(medication, "medication_drug_PRN", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_drug_PRN^*") + n_medication));
-	UtilXML.addNode(medication, "medication_duration_days", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_duration_days^*") + n_medication));
-	UtilXML.addNode(medication, "medication_special_instructions", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_special_instructions^*") + n_medication));
-	UtilXML.addNode(medication, "medication_end_date", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_end_date^*") + n_medication));
-	UtilXML.addNode(medication, "medication_drug_route_description", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_drug_route_description^*") + n_medication));
-    n_medication++;
-	UtilXML.addNode(medication, "medication_drug_named_frequency_description", drug.getProperty(studyMapping.getProperty("encounter.medication.medication_drug_named_frequency_description^*") + n_medication));
-	}
-*/	
 	out.clear();
     out.flush();
     out.println(UtilXML.toXML(doc, "encounter1_3.dtd"));
-    //System.out.println(UtilXML.toXML(doc));
 
 %>

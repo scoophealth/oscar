@@ -31,8 +31,6 @@
   String query_name = request.getParameter("query_name")!=null?request.getParameter("query_name"):("") ;
   String curUser_no = (String) session.getAttribute("user");
   
-  //System.out.println("demo "+demographic_no+" form_no "+form_no+" queryname "+query_name+" curUser "+curUser_no);
-  
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" %>
 <jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -48,7 +46,6 @@ String [][] dbQueries=new String[][] {
 {"save_desaprisk", "insert into desaprisk (desaprisk_date,desaprisk_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) " }, 
 };
 plannerBean.doConfigure(dbQueries);
-//System.out.println("TOP");
 %>
  
 <html>
@@ -95,7 +92,6 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   //for(int i=0;i<riskdataname.length;i++) {
 	//  riskDataBean.setProperty(riskdataname[i][0],"0");
   //}
-//System.out.println("HERHE 2");
   //get the risk data from formAR1
   String finalEDB = null, wt=null, ht=null;
   
@@ -124,24 +120,18 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           }
       }
   }
-//System.out.println("ABOVE HASHMAP form "+form_no+ " demographic " +demographic_no);
   //get the risk data from table desaprisk for other risk factors
   String[] param2 = {form_no, demographic_no};
   rsdemo = plannerBean.queryResults(param2, "search_desaprisk");
   HashMap dataMap = new HashMap();
-  //System.out.println("ABOVE WHILELOOP searched for formPnbo "+form_no+" dmoe "+demographic_no);
   while (rsdemo.next()) { 
-      //System.out.println("START OF WHILE LOOP");
     String risk_content = rsdemo.getString("risk_content");
     String checklist_content = rsdemo.getString("checklist_content");
-    
-    //System.out.println("IN WHILE LOOP");
 %>
 <script type="text/javascript">
    xmlText = "<xml><planner><%=risk_content%><%=checklist_content%></planner></xml>";
 </script>
 <%
-//System.out.println("above riskFilePath :"+OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerrisks_99_12.xml");
     String riskFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml";
     
         File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml");
@@ -149,19 +139,14 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 			   riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"desantenatalplannerrisks_99_12.xml";
         }
 
-    //System.out.println("riskFilePath:"+riskFilePath);
     //set the riskdata bean from xml file
     Properties savedar1risk1 = risks.getRiskName(riskFilePath); //risk_55
   	StringBuffer tt; 
 
     for (Enumeration e = savedar1risk1.propertyNames() ; e.hasMoreElements() ;) {
       tt = new StringBuffer().append(e.nextElement());
-      //if(SxmlMisc.getXmlContent(risk_content, savedar1risk1.getProperty(tt.toString()))!= null) 
-      //  riskDataBean.setProperty(tt.toString(), savedar1risk1.getProperty(tt.toString()));
       if(SxmlMisc.getXmlContent(risk_content, "risk_"+tt.toString())!= null) {
-        riskDataBean.setProperty(tt.toString(), "checked");
-            
-	    //System.out.println("risk from xml file checked "+tt.toString());
+        riskDataBean.setProperty(tt.toString(), "checked");            
 	  }
     }
 
@@ -194,8 +179,6 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         riskFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerrisks_99_12.xml";
     }
     
-    
-    //System.out.println("riskFilePAth "+riskFilePath);
     out.println(risks.doStuff(new String(riskFilePath)));
 %>
     </td><td>
@@ -235,7 +218,7 @@ else {
     if(file.isFile() || file.canRead()) {
         checkListFilePath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerchecklist_99_12.xml";
     }
-    //System.out.println("CHECJ "+checkListFilePath);
+
   out.println(checklist.doStuff(new String(checkListFilePath), riskDataBean));
 }
 %>    

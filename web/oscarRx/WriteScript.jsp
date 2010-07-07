@@ -64,15 +64,10 @@
 </logic:equal>
 
 <%
-System.out.println("***###IN writescript.jsp");
-
 RxSessionBean bean = (RxSessionBean)pageContext.findAttribute("bean");
 System.out.println("bean.getStashIndex() writescript.jsp="+bean.getStashIndex());
 int n=pageContext.getAttributesScope("bean");
-//System.out.println("scope of attr="+Integer.toString(n));
 Enumeration emn=pageContext.getAttributeNamesInScope(n);
-//while(emn.hasMoreElements())
-  //  System.out.println("attr name in scope n="+emn.nextElement().toString());
  System.out.println("request.getContextPath() in writeScript.jsp="+request.getContextPath());
 int specialStringLen = 0;
 String quan = "";

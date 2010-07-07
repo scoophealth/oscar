@@ -42,7 +42,6 @@
   int rowsAffected = 0;
   OscarProperties props = OscarProperties.getInstance();
   int STEP = request.getParameter("step")!=null&&!request.getParameter("step").equals("")?Integer.parseInt(request.getParameter("step")):(props.getProperty("template_time", "").length()>0?Integer.parseInt(props.getProperty("template_time", "")):15);
-  //System.out.println("step:"+STEP);
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 || request.getParameter("dboperation").equals("Delete") ) ) {
     String pre = request.getParameter("providerid").equals("Public")&&!request.getParameter("name").startsWith("P:")?"P:":"" ;
     String[] param1 =new String[4];
@@ -132,7 +131,6 @@ function changeGroup(s) {
      rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplatesingle");
      while (rsdemo.next()) {
        myTempBean.setScheduleTemplateBean(rsdemo.getString("provider_no"),rsdemo.getString("name"),rsdemo.getString("summary"),rsdemo.getString("timecode") );
-       //System.out.println(":"+rsdemo.getString("timecode").length()+rsdemo.getString("timecode")+"|");
      }
    }
    rsdemo = scheduleMainBean.queryResults(param[0], "search_scheduletemplate");

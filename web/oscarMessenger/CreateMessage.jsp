@@ -449,7 +449,6 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                                                                 for (int g = 0; g < listy.size(); g++){
                                                                                                     oscar.oscarMessenger.data.MsgProviderData pData;
                                                                                                     pData = (oscar.oscarMessenger.data.MsgProviderData) listy.get(g);
-                                                                                                    // System.out.println(g+": pro = "+pData.providerNo+" remo ="+pData.locationId);
                                                                                                 }
                                                                                             }else{
                                                                                                 listy = new java.util.ArrayList();
@@ -588,7 +587,6 @@ function popupAttachDemo(demographic){ // open a new popup window
       depth++;
 
       Element element = (Element) node;
-      // System.out.println("desc = "+element.getAttribute("desc")+"<br>");
       try{
          if (depth > 2){
             if ((element.getTagName()).equals("group")){

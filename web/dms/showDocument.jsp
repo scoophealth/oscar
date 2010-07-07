@@ -5,7 +5,7 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%><%
-//System.out.println("start first part java");
+
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
             String demoName=request.getParameter("demoName");
@@ -43,7 +43,6 @@
                 numOfPageStr=(new Integer(numOfPage)).toString();
             String url = request.getContextPath()+"/dms/ManageDocument.do?method=view&doc_no=" + docId;
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
-            //System.out.println("done first part java");
 %>
        
 
@@ -385,8 +384,6 @@
                                                 </table>
                                             </fieldset>
                                             <%}
-
-//System.out.println("done second part java");
 %>
 
                         <fieldset>

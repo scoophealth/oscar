@@ -27,11 +27,8 @@
     String requestor = OntarioMD.getIncomingRequestor();
     OntarioMD omd = new OntarioMD();
     
-    System.out.println("LOGGING IN WITH u "+uname+" p: "+pword+" r :"+requestor);
-    
     Hashtable loginCreds = omd.loginToOntarioMD(uname,pword,requestor);
     String retCode = (String) loginCreds.get("returnCode");
-    System.out.println("RETURN CODE"+retCode+"   jsession "+loginCreds.get("jsessionID"));
     if ("-1".equals(retCode)){  //Invalid Username/Password
         %>
         Username or Password incorrect.  <a href="../setProviderStaleDate.do?method=viewOntarioMDId">Click here to enter you username and password</a>

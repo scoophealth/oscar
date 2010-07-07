@@ -31,8 +31,6 @@
     Object user = session.getValue("user");
     if (user != null) {
       HashMap hash=(HashMap)application.getAttribute("monitor");
-      //System.out.println("user : " +user);
-      //hash.remove(user);
       session.invalidate();
     }
   }

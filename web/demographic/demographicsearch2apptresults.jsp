@@ -341,7 +341,6 @@ function next() {
 		temp=e.nextElement().toString();
 		if(temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("submit")  ||temp.equals("chart_no")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 </form>

@@ -148,7 +148,7 @@ function upCaseCtrl(ctrl) {
    }
    param = request.getParameter("provider_no");
    rsdemo = scheduleMainBean.queryResults(param, "search_scheduletemplate");
-   while (rsdemo.next()) { //System.out.println(strHour +" : "+rsdemo.getString("name"));
+   while (rsdemo.next()) {
 	%>
 					<option value="<%=rsdemo.getString("name")%>"
 						<%=rsdemo.getString("name").equals(strHour)?"selected":""%>><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>

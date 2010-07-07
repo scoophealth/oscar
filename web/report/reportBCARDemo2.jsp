@@ -119,7 +119,6 @@ while (enumVar.hasMoreElements()) {
 
         vecValue.add(request.getParameter(name));
         vecDateFormat.add(request.getParameter(DATE_FORMAT + serialNo));
-        // System.out.println(" tempVal: " + name.substring(VALUE.length()) );
     }
 }
 // get seq. select string

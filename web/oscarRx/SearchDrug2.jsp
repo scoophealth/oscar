@@ -118,16 +118,12 @@
 
 
 
-            //   System.out.println("pharmacy.address=" + pharmacy.address);
             String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
             if (drugref_route == null) {
                 drugref_route = "";
             }
 
-            //        System.out.println("d_route=" + drugref_route);
             String[] d_route = ("Oral," + drugref_route).split(",");
-            //System.out.println("d_route="+d_route.toString());
-            //     System.out.println("d_route.size" + "" + d_route.length);
 
             String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 
@@ -310,7 +306,6 @@
                                             <td>
                                                 <div style="height: 100px; overflow: auto; background-color: #DCDCDC; border: thin solid green; display: none;" id="reprint">
                                                     <%
-            //   System.out.println("prescribedDrugs.length=" + prescribedDrugs.length);
             for (int i = 0; i < prescribedDrugs.length; i++) {
                 oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
                 if (drug.getScript_no() != null && script_no.equals(drug.getScript_no())) {

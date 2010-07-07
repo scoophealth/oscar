@@ -331,7 +331,7 @@ function showHideLayers() {
 						<%
         			if(name.equals("")) out.println(".Monitor</font></td>");
         			else {
-        			  //System.out.println(name+"/");
+
 				%> <a href=#
 							onClick="popupPage('../cpp/cppcontrol.jsp?hin=<%=hin%>&displaymode=edit&dboperation=searchcpp')"
 							title="edit the patient record"><%=name%></a></font></td>

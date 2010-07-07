@@ -53,7 +53,6 @@ trusted truejava.lang.Boolean ? i think
 <%
     Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");
     Hashtable hiddenResources = (Hashtable) request.getSession().getAttribute("hideResources");
-    //System.out.println("hiddenResources in MyDrugrefDisplay.jsp="+hiddenResources);
     if ( warnings != null && warnings.size() > 0){
         System.out.println("numb warnings "+warnings.size());
 
@@ -64,7 +63,6 @@ trusted truejava.lang.Boolean ? i think
             Vector<Hashtable> commentsVec = (Vector) ht.get("comments");
             displayKeys(ht);
 
-            //System.out.println("\nDrug: "+ht.get("name")+"\nEvidence: "+ht.get("evidence")+"\nSignificance: "+ht.get("significance")+"\nATC: "+ht.get("atc")+"\nReference: "+ht.get("reference")+"\nWarning: "+ht.get("body")+" trusted "+ht.get("trusted"));
             boolean trustedResource = trusted(ht.get("trusted"));
             boolean hideResource = false;
 
@@ -85,17 +83,13 @@ trusted truejava.lang.Boolean ? i think
                 hiddenRes++;
                 hidden ="display:none;";
             }
-           // System.out.println("hidden="+hidden);
             String showHidden="";
             if(hidden.equals("display:none;"));
             else
                 showHidden="display:none;";
-           // System.out.println("showHidden="+showHidden);
             String bodyStr=(String)ht.get("body");
             int rand=Math.abs(rnd.nextInt());
             String elementId=ht.get("id")+"."+getTime(ht.get("updated_at"));
-           // System.out.println("updated at:"+ht.get("updated_at"));
-          //  System.out.println("elementId="+elementId);
           Date lastUpdateTime=(Date)ht.get("updated_at");
           String lastUpdateDate=getDateMonthYear(lastUpdateTime);
             %>

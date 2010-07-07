@@ -70,7 +70,6 @@ function checkForm() {
     	param[0]=request.getParameter(strbuf.toString());
 	    param[1]=strbuf.toString().substring( param[0].length() ); 
 	    rowsAffected = oscarSuperManager.update("providerDao", "deletegroupmember", param);
-	    //System.out.println(" " +rowsAffected+ param[0]+ "     " + param[1]);
     }
     out.println("<script language='JavaScript'>self.close();</script>");
   }

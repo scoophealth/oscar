@@ -408,11 +408,7 @@ function popupPageOfChangePassword(){
 	if(session.getAttribute("expired_days")!=null){
 		expired_days = (String)session.getAttribute("expired_days");
 	}	
-	//System.out.println("***** expired days???"+expired_days);
-	//ed = Integer.valueOf(expired_days);
 	if(!(expired_days.equals(" ")||expired_days.equals("")||expired_days==null)) {
-	//if(ed >= 0) {
-		//System.out.println("***** inside ***** ");
 %>
 	
 window.open("changePassword.jsp","changePassword","resizable=yes,scrollbars=yes,width=400,height=300");
@@ -1376,7 +1372,6 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"><span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span></oscar:oscarPropertiesCheck></td>
         <%
         			} else {
-        			  //System.out.println(name+" / " +demographic_no);
 				%>	<% if (tickler_no.compareTo("") != 0) {%>
 			        	<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
                                         <a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>

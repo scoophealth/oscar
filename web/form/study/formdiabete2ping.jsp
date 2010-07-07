@@ -49,11 +49,9 @@
     String demoNo = request.getParameter("demographic_no");
     String studyId = request.getParameter("study_no");
     oscar.form.data.FrmData.PatientForm pform = (new oscar.form.data.FrmData()).getCurrentPatientForm(demoNo, studyId);
-	//System.out.println(" id: "+pform.getFormId());
     int formId = (pform == null) ? 0: Integer.parseInt(pform.getFormId());
 	String[] studyNameLink = (new oscar.form.data.FrmData()).getStudyNameLink(studyId);
     FrmStudyRecord rec = (new FrmStudyRecordFactory()).factory(studyNameLink[0]);
-	//System.out.println(" id: "+formId);
     java.util.Properties props = rec.getFormRecord(Integer.parseInt(demoNo), formId);
 %>
 

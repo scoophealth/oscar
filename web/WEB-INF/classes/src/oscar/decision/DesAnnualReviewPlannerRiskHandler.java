@@ -65,7 +65,6 @@ public class DesAnnualReviewPlannerRiskHandler extends DefaultHandler {
 
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
             throws SAXException {
-        // System.out.print("startElement: " + rawName);
         if (rawName.equals("section_title")) {
             if (interiortable == 1) { //close content table
                 results += "</center></td></tr></table>";

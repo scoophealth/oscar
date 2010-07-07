@@ -36,6 +36,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -83,9 +84,8 @@ public class UtilXML {
          trans.transform(src, rslt);
       }
       catch(Exception e) {
-         e.printStackTrace(System.out);
+         MiscUtils.getLogger().error("Error", e);
       }
-      //System.out.print(ret.toString());
       return ret.toString();
    }
    public static String toXML(Document xmlDoc, String dtdname) {
@@ -100,9 +100,9 @@ public class UtilXML {
          trans.transform(src, rslt);
       }
       catch(Exception e) {
-         e.printStackTrace(System.out);
+         MiscUtils.getLogger().error("Error", e);
       }
-      //System.out.print(ret.toString());
+
       return ret.toString();
    }
    public static String toXML(Node xmlDoc) {

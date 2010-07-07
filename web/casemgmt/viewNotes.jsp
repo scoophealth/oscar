@@ -107,9 +107,6 @@
 	value="<nested:write name="num"/>">
 <input type="hidden" id="<c:out value="${param.cmd}"/>threshold"
 	value="0">
-<%
-    System.out.println("viewNotes loaded " + String.valueOf(System.currentTimeMillis() - start));
- %>
 <%!
     String getNoteExts(Long noteId, List<CaseManagementNoteExt> lcme) {
 	StringBuffer strcme = new StringBuffer();
@@ -124,7 +121,6 @@
 		}
 		if (strcme.length()>0) strcme.append(";");
 		strcme.append(key + ";" + val);
-                System.out.println("Note ID " + noteId + " Added key '" + key + "' val '" + val  + "'");
 	    }
 	}
 	return strcme.toString();

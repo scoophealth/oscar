@@ -62,7 +62,6 @@
       if (formId == 0 ){
          String labPreSet = request.getParameter("labType");
          props = FrmLabReqPreSet.set(labPreSet,props);
-           //System.out.println(props.toString());
       }
    }
    

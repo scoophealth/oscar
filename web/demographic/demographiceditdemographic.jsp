@@ -1792,7 +1792,6 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									  String	sql   = "select * from billingreferral order by last_name, first_name" ;
 									  oscar.oscarBilling.ca.on.data.BillingONDataHelp dbObj = new oscar.oscarBilling.ca.on.data.BillingONDataHelp();
 									  ResultSet rs1 = dbObj.searchDBRecord(sql);
-										// System.out.println(sql);
 									  Properties prop = null;
 									  Vector vecRef = new Vector();
 									  while (rs1.next()) {

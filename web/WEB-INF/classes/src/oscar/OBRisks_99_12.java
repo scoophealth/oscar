@@ -13,11 +13,6 @@ import org.xml.sax.XMLReader;
 
 public class OBRisks_99_12 {
 
-  public static void main(String args[]) { 
-  	//OBRisks_99_12 aE = new OBRisks_99_12();
-    //System.out.print(aE.doStuff("obarrisks_99_12.xml"));
-  }// End of main 
-
 	public String doStuff(String uri) {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();

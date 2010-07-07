@@ -100,7 +100,6 @@ function setfocus() {
 	  rsdemo = patientBean.queryResults(provider_no.substring(5), "searchmygroupall");
     while (rsdemo.next()) { 
 	    myGroupBean.add(rsdemo.getString("provider_no"));
-//System.out.println(rsdemo.getString("provider_no"));
     }
   }
 %>
@@ -127,9 +126,6 @@ function setfocus() {
 
   for(int i=0; i<pnum; i++) {
     param[0]=bGroup?((String) myGroupBean.get(i)):provider_no;
-//    param[1]=param[0];
-//    param[2]=param[0];
-//  System.out.println(param[0]);
 
     /* this is a fix since a PreparedStatement dont substitute ? between single quotes */
     if (db_type.equalsIgnoreCase("mysql"))

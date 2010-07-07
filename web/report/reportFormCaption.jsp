@@ -36,7 +36,7 @@ String reportName = (new RptReportItem()).getReportName(reportId);
 // get form parameters
 RptTableFieldNameCaption tableObj = new RptTableFieldNameCaption();
 
-// add/delete action //System.out.println(request.getParameter("submit"));
+// add/delete action 
 if (request.getParameter("submit") != null && request.getParameter("submit").equals(" Add ")) {
 	String strName = request.getParameter("name") != null ? request.getParameter("name") : "";
 	String strCaption = request.getParameter("caption") != null ? request.getParameter("caption") : "";

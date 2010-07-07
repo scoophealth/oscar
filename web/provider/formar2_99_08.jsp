@@ -309,7 +309,6 @@ if (fedb != null && fedb.length() == 10 ) {
 	FrmGraphicAR arG = new FrmGraphicAR();
 	java.util.Date edbDate = arG.getStartDate(fedb);
     sDate = UtilDateUtilities.DateToString(edbDate, "MMMMM dd, yyyy"); //"yy,MM,dd");
-	//System.out.println(sDate);
 %>
 	    var delta = 0;
         var str_date = getDateField(source.name);
@@ -1435,7 +1434,6 @@ else {
       if(SxmlMisc.getXmlContent(temp, "<xml_nadr>","</xml_nadr>")!= null) savedar1risk.setProperty("74", "xml_nadr");
       if(SxmlMisc.getXmlContent(temp, "<xml_nadref>","</xml_nadref>")!= null) savedar1risk.setProperty("75", "xml_nadref");
      }
-    //System.out.println(SxmlMisc.getXmlContent(temp, "<xml_cp3s>","</xml_cp3s>") +" "+savedar1risk.getProperty("3") );
 	out.println(checklist.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarchecklist_99_12.xml"), savedar1risk));
 }	
 }

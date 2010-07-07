@@ -6,7 +6,6 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
 <%
-//System.out.println("start first part java");
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
 
@@ -52,7 +51,6 @@
                 numOfPageStr=(new Integer(numOfPage)).toString();
             String url = request.getContextPath()+"/dms/ManageDocument.do?method=view&doc_no=" + docId;
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
-            //System.out.println("done first part java");
 %>
         
 <html>
@@ -447,8 +445,6 @@ function sendMRP(ele){
                                                 </table>
                                             </fieldset>
                                             <%}
-
-//System.out.println("done second part java");
 %>
                         
 
@@ -489,7 +485,6 @@ function sendMRP(ele){
                                                         <input type="button"  tabindex="<%=tabindex++%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
                                                         <% }
 
-                                                        //System.out.println("done third part java");
                                                         %>
                                                     </td>
                                                 </tr>

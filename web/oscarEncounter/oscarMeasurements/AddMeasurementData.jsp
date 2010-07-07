@@ -293,9 +293,7 @@ clear: left;
                 
                 EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measurement);
                 if(ectMeasurementsForm != null && !ectMeasurementsForm.isEmpty()){
-                   //System.out.println("EcTMEasureMentsFoRms "+ectMeasurementsForm.values);
                    h = new Hashtable(ectMeasurementsForm.values);
-                   //System.out.println("EcTMEasureMentsFoRms "+ectMeasurementsForm.getValue("date-"+ctr));
                    prevDate = (String) h.get("date-"+ctr);
                    val = (String) h.get("inputValue-" + ctr);
                    comment = (String) h.get("comments-" + ctr);

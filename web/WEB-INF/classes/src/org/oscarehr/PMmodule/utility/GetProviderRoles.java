@@ -63,7 +63,6 @@ public class GetProviderRoles {
 	    			System.out.println(provider.getFormattedName());
 	    			continue;
 	    		}
-	    		//System.out.print(provider.getProviderNo() + ",");
 	    		int x=0;
 	    		StringBuffer buf = new StringBuffer();
 	    		for(Iterator iter2=roles.iterator();iter2.hasNext();) {

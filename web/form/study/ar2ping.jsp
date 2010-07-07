@@ -77,7 +77,6 @@ if(session.getAttribute("ticket") == null) {
 } else {
 	actorTicket = (String)session.getAttribute("ticket");
 }
-		//System.out.println(" 2 :" + actorTicket);
 
 String owner = actor;
 String originAgent = actor;
@@ -135,14 +134,10 @@ if (rsdemo.next()) {
         
         
         String type = md.getColumnTypeName(i);
-		//System.out.println(demoNo + " l :" + name);
 		if (type.equals("TINY") || name.equals("ID")) {
 			prop.setProperty(jaxbName, "" + rsdemo.getInt(name) );
-			//if (name.equals("pg1Yes37off")) System.out.println(" l :" + rsdemo.getString("pg1_yes37off"));
-			//System.out.println(jaxbName + "  : :" + name);
 		} else {
 			prop.setProperty(jaxbName, (rsdemo.getString(name)==null?"":rsdemo.getString(name) ) );
-			//if (name.equals("pg1DateOfBirth")) System.out.println(" l :" + rsdemo.getString("pg1_dateOfBirth"));
 		}
 	}
 	
@@ -175,28 +170,14 @@ if(connected){
         Method[] theMethods = c.getMethods();
         for (int i = 0; i < theMethods.length; i++) {
 			String methodString = theMethods[i].getName();
-			//System.out.println("Name: " + methodString);
                 
 			if (methodString.startsWith("set")) {
                 String fieldNameU = methodString.substring(3);
-                //System.out.println("fieldNameU: " + fieldNameU);
                 String fieldNameL = fieldNameU.substring(0, 1).toLowerCase()
                         + fieldNameU.substring(1);
-                //System.out.println("fieldNameL: " + fieldNameL);
                 String fieldValue = prop.getProperty(fieldNameL) == null ? prop
                         .getProperty(fieldNameU, "") : prop
                         .getProperty(fieldNameL);
-                //if (fieldValue.length() >= 1) System.out.println("Name: " + methodString + " | " + fieldValue);
-                //if (fieldNameL.equalsIgnoreCase("pg1Yes37off") ) System.out.println("N  ame: " + methodString + " | " + fieldValue);
-                //String returnString =
-                // theMethods[i].getReturnType().getName();
-                //System.out.println(" Return Type: " + returnString);
-                //Class[] parameterTypes = theMethods[i].getParameterTypes();
-                //System.out.print(" Parameter Types:");
-                //for (int k = 0; k < parameterTypes.length; k ++) {
-                //   String parameterString = parameterTypes[k].getName();
-                //System.out.print(" " + parameterString);
-                //}
                 Object[] arguments = new Object[] { fieldValue};
 
                 theMethods[i].invoke(ARRecord, arguments);
@@ -211,15 +192,6 @@ if(connected){
 
 	DataType dataType = ping.getDataType(ARRecord);
 	CddmType cddmType = ping.getCddm(owner,originAgent,author,level1,level2,dataType);
-	
-	//xml part
-	//Document doc = UtilXML.newDocument();
-
-	//out.clear();
-    //out.flush();
-	//out.println(UtilXML.toXML(doc, dtdFileName));
-	//out.println("The record was sent to PING server.<br><p><input type='button' name='but' onclick='window.close()' value='Close'>");
-    //System.out.println(UtilXML.toXML(doc));
 
 	connectErrorMsg = "The record was sent to PING server.<br><p><input type='button' name='but' onclick='window.close()' value='Close'>";
     try{                                        

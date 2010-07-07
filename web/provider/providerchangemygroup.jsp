@@ -101,7 +101,6 @@ function setfocus() {
    for (Map group : resultList) {
      if(!(oldNo.equals(group.get("mygroup_no"))) ) {
        bNewNo=bNewNo?false:true; oldNo=String.valueOf(group.get("mygroup_no"));
-       //System.out.println(oldNo);
      }
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">

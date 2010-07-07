@@ -155,8 +155,6 @@ public final class RptReportCreator {
             prop = new Properties();
             for (int i = 0; i < vecFieldName.size(); i++) {
                 try {
-                    //System.out.println("(String) vecFieldName.get(i): " + (String)
-                    // vecFieldName.get(i));
                     prop.setProperty((String) vecFieldName.get(i),
                             dbObj.getString(rs,(String) vecFieldName.get(i)) == null ? "" : rs
                                     .getString((String) vecFieldName.get(i)));

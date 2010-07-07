@@ -12,15 +12,12 @@
 <%@page import="java.util.Enumeration"%>
 
 <%
-  //      System.out.println("*** in SearchDrug.jsp");
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" 
 reverse="<%=true%>">
 	<%
-        //LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ,  LogConst.CON_PRESCRIPTION, demographic$, request.getRemoteAddr(),demographic$);
-
 		response.sendRedirect("../noRights.html");
 	%>
 </security:oscarSec>

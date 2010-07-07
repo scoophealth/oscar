@@ -412,9 +412,6 @@ div.recommendations li{
 <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
 </body>
 </html:html>
-<% //System.out.println("Template took  "+ (System.currentTimeMillis() - startTime) +" to display");
-
-%>
 <%!
     String refused(Object re){
         String ret = "Given";

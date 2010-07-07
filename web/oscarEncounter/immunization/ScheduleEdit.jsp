@@ -37,14 +37,11 @@
 <title>Record Immunization</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <%
-//System.out.println("we are here ....");
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
 String node = request.getParameter("node").toString();
-//System.out.println("node*************"+node);
 String immName = "";
 if(request.getParameter("name")!=null)
 	immName = request.getParameter("name");
-//System.out.println("immName---------------"+immName);
 %>
 <script lanbuage="javascript">
     function changeStatus(status)

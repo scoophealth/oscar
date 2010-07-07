@@ -290,23 +290,16 @@ function checkAll(formId){
                            java.util.Vector theMessages2 = new java.util.Vector() ;
                         switch(pageType){
                             case 0:
-//                                        theMessages =  DisplayMessagesBeanId.getMessageid();
                                 theMessages2 = DisplayMessagesBeanId.estInbox(orderby,moreMessages,INITIAL_DISPLAY);
-                                // System.out.println("normal messages");
                             break;
                             case 1:
-//                                      theMessages  = DisplayMessagesBeanId.getSentMessageid();
                                 theMessages2 = DisplayMessagesBeanId.estSentItemsInbox(orderby);
-                                // System.out.println("Sent messages");
                             break;
                             case 2:
-///                                    theMessages  = DisplayMessagesBeanId.getDelMessageid();
                                 theMessages2 = DisplayMessagesBeanId.estDeletedInbox(orderby);
-                                // System.out.println("deleted messages");
                             break;
                             case 3:
                                 theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderby,demographic_no);
-                                // System.out.println("demographic messages");
                             break;
                         }   //messageid
 

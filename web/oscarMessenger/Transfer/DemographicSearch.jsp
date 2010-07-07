@@ -84,7 +84,6 @@ function conf()
 			action="/oscarMessenger/SearchDemographic">
 			<%
                                 aId = (String) request.getAttribute("IDenc");
-                                // System.out.println("aId ="+aId);
                                 oscar.oscarMessenger.pageUtil.MsgSessionBean bean;
                                 bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
                                 aId = bean.getMessageId();

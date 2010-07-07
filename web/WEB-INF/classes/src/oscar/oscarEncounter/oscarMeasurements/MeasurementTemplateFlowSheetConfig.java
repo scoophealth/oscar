@@ -223,7 +223,6 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             List<Attribute> attr = e.getAttributes();
             for (Attribute att : attr) {
                 h.put(att.getName(), att.getValue());
-                //System.out.print("DDDDDDD "+att.getName()+" "+att.getValue() );
             }
             FlowSheetItem item = new FlowSheetItem(h);
             Node node = new Node();
@@ -369,88 +368,10 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             List<Element> elements = root.getChildren();
             List<Element> items = root.getChildren("item");
             List<Node> aItems = new ArrayList<Node>();
-//            for (Element e : elements ) {
-                processItems(elements, aItems, null, d);
-                d.setItemHeirarchy(aItems);
-//                List<Attribute> attr = e.getAttributes();
 
-//                Hashtable<String, String> h = new Hashtable<String, String>();
-//               for (Attribute att : attr) {
-//                    h.put(att.getName(), att.getValue());
-                    //System.out.print("DDDDDDD "+att.getName()+" "+att.getValue() );
-//               }
-//                FlowSheetItem item = new FlowSheetItem(h);
-//                if (h.get("measurement_type") != null) {
-//
-//                    log.debug("ADDING " + h.get("measurement_type"));
-//                    //d.addMeasurement("" + h.get("measurement_type"));
-//                    //d.addMeasurementInfo("" + h.get("measurement_type"), mType.getMeasurementType("" + h.get("measurement_type")));
-//                    //d.addMeasurementFlowSheetInfo("" + h.get("measurement_type"), h);
-//
-//
-//                    int ruleCount = 0;
-//                    Element rules  = e.getChild("rules");
-//                    if (rules !=null){
-//                       List<Element> recomends = rules.getChildren("recommendation");
-//                       List ds = new ArrayList();
-//                       for(Element reco: recomends){
-//                           ruleCount++;
-//                           //Hashtable recoHash =  getRecommendationHash( reco);
-//                            //ds.add(getRuleBaseElement("" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type"), recoHash));
-//                            ds.add(new Recommendation(reco,"" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type")));
-//                       }
+            processItems(elements, aItems, null, d);
+            d.setItemHeirarchy(aItems);
 
-//                       //d.addDSElement(""+ h.get("measurement_type"),ds);
-//                       item.setRecommendations(ds);
-//                    }
-//                    //<rules>
-//                    //  <recommendation between="3m-6m">Blood Glucose hasn't been reviewed in $NUMMONTHS months"</recommendation>
-//                    //  <warning gt="6m">Blood Glucose hasn't been reviewed in $NUMMONTHS months</warning>
-//                    //  <warning eq="-1">Blood Glucose hasn't been reviewed</warning>
-//                    //</rules>
-//
-//                    /*
-//                     <ruleset>
-//                        <rule indicationColor="HIGH">
-//                            <condition>m.getDataAsDouble() &gt;= 7</condition>
-//                        </rule>
-//                        <rule indicationColor="HIGH">
-//                            <condition type="getDataAsDouble"  value="&lt;= 2" />
-//                            <condition type="getDataAsDouble"  value="&gt;= 0.07"/>
-//                        </rule>
-//                     </ruleset>
-//                     */
-//                    Element rulesets = e.getChild("ruleset");
-//                    List<TargetColour> rs = new ArrayList();
-//                    if (rulesets != null){
-//                        List<Element> rulez = rulesets.getChildren("rule");
-//                        if (rulez != null){
-//                            for(Element r: rulez){
-//                                rs.add(new TargetColour(r));
-//                                //r.getAttributeValue("indicatorColour");
-//                            }
-//                        }
-//
-//                    }
-//
-//                    log.debug(" meas "+h.get("measurement_type")+"  size "+rs.size());
-//
-//                    if (rs.size() > 0){
-//                        item.setTargetColour(rs);
-//                    }
-//
-//                }// else {
-                 //   d.addMeasurement("" + h.get("prevention_type"));
-                 //   d.addMeasurementFlowSheetInfo("" + h.get("prevention_type"), h);
-                //}
-                //log.debug("ADDING ITEM "+item);
-                //d.addListItem(item);
-                
-                
-                
-                //prevList.add(h);
-                //prevHash.put(h.get("name"), h);
-            //}
             if (root.getAttribute("name") != null) {
                 d.setName(root.getAttribute("name").getValue());
             }
@@ -705,7 +626,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             List<Attribute> attr = root.getAttributes();
                 Hashtable<String, String> h = new Hashtable<String, String>();
                 for (Attribute att : attr) {
-                    h.put(att.getName(), att.getValue());//System.out.print(att.getName()+" "+att.getValue() );
+                    h.put(att.getName(), att.getValue());
                 }
                 item = new FlowSheetItem(h);
                 

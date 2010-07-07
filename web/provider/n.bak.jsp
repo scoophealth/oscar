@@ -343,7 +343,6 @@ function tsr(s) {
        me = nProvider; break;
      }
    }
-//   System.out.println(me +"    "+userInGroup);
 
    String [] param1 = new String[2];
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
@@ -469,7 +468,6 @@ function tsr(s) {
 										.<%=view==0?(name.length()>len?name.substring(0,len):name):name%></font></a></td>
 										<%
         			} else {
-        			  //System.out.println(name+" / " +demographic_no);
 				%>
 										<a href=#
 											onClick="popupPage(360,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appt.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"

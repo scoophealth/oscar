@@ -74,7 +74,6 @@ function BackToOscar()
    if (grpNo.equals("")){
      grpNo = "0";
    }
-   // System.out.println("grpNo "+grpNo+"<" );
 
    String currGroupName = adminUtil.getMyName(grpNo);
     currGroupName = adminUtil.printAllBelowGroups(grpNo);

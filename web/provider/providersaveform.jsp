@@ -113,12 +113,6 @@
           response.sendRedirect("providercontrol.jsp?appointment_no="+request.getParameter("appointment_no")+"&demographic_no="+request.getParameter("demographic_no")+"&curProvider_no=&status=T"+"&reason="+request.getParameter("reason")+"&appointment_date="+form_date+"&start_time="+form_time+"&displaymode=encounter&dboperation=search_demograph&template="+
             "&encounterattachment="+URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+form.get("form_no")+"&bNewForm=0</form>") +
             "&attachmentdisplay=" +request.getParameter("xml_subject") );
-//          if(true) {
-            //out.clear();
-//System.out.println("providercontrol.jsp?appointment_no="+request.getParameter("appointment_no")+"&demographic_no="+request.getParameter("demographic_no")+"&curProvider_no=0001&status=T"+"&reason=arform"+"&appointment_date="+form_date+"&start_time="+form_time+"&displaymode=encounter&dboperation=search_demograph&template=");
-//            pageContext.forward("providercontrol.jsp?appointment_no="+request.getParameter("appointment_no")+"&demographic_no="+request.getParameter("demographic_no")+"&curProvider_no=&status=T"+"&reason=arform"+"&appointment_date="+form_date+"&start_time="+form_time+"&displaymode=encounter&dboperation=search_demograph&template="); 
-//            return;
-//          }
         }
         
         //update or add a record to the demoaccess
@@ -135,14 +129,7 @@
           content1 = String.valueOf(acc.get("content"));
           content1=SxmlMisc.replaceOrAddXmlContent(content1, "<xml_Alert>","</xml_Alert>",alert);
           content1=SxmlMisc.replaceOrAddXmlContent(content1, "<xml_Medication>","</xml_Medication>",medication);
-/*
-          if(content1.indexOf("<xml_Alert>")==-1 ) //there is no tag value inside content1, should add it
-            content1 = content1 + "<xml_Alert>" +alert+ "</xml_Alert>";
 
-          content1=SxmlMisc.replaceXmlContent(content1, "<xml_Medication>","</xml_Medication>",medication);
-          if(content1.indexOf("<xml_Medication>")==-1 ) //there is no tag value inside tempcontent, should add it
-            content1 = content1 + "<xml_Medication>" +medication+ "</xml_Medication>";
-*/ //System.out.println(content1); 
           param3[0]=content1; 
           param3[1]=request.getParameter("demographic_no");
     	  rowsAffected2 = oscarSuperManager.update("providerDao", "update_demographicaccessory", param3);

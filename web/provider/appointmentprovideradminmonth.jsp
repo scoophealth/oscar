@@ -609,7 +609,7 @@ function refreshTabAlerts(id) {
     if(!String.valueOf(date.get("sdate")).equals(_scheduleDate) ) {
       bFistEntry = false;
       break;
-    } else {    //System.out.println("ok "+rsgroup.getString("sdate")+" "+dateGrid[i][j]);
+    } else {
       bFistEntry = true;
       if(String.valueOf(date.get("available")).equals("0")) continue;
     }

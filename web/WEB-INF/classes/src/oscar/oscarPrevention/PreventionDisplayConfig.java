@@ -113,7 +113,6 @@ public class PreventionDisplayConfig {
             for (int j = 0; j < attr.size(); j++){           
                Attribute att = (Attribute) attr.get(j);
                h.put(att.getName(),att.getValue() );
-               //System.out.print(att.getName()+" "+att.getValue() );               
             }            
             prevList.add(h);            
             prevHash.put(h.get("name"), h);            

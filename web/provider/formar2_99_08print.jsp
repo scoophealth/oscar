@@ -676,7 +676,7 @@ if (fedb != null && fedb.length() == 10 ) {
 			if (arG.getWeekInt() < 19 || arG.getWeekInt() > 40 || request.getParameter("xml_sv" + i + "sf") == null  || (request.getParameter("xml_sv" + i + "sf")).equals("-") || arG.getHt(request.getParameter("xml_sv" + i + "sf")).equals("")) continue;
        		dy = Float.parseFloat(arG.getHt(request.getParameter("xml_sv" + i + "sf")));
 	        x = (int) ((ox + (dx -19) * width / (11.5 * 2)) -2) ;
-	        y = (int) ((oy - (dy - 11.818) * height / (5.636 * 5)) -1) ; //System.out.println(dx + " : " +dy);
+	        y = (int) ((oy - (dy - 11.818) * height / (5.636 * 5)) -1) ;
             urlparam += "&x" + (i-1) + "=" + x + "|" + y;
 			System.out.println(urlparam);
 		}

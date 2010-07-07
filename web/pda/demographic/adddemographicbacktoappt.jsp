@@ -91,7 +91,6 @@
 <%  
   if(true) {
     out.clear();
-    //System.out.println("appointmentcontrol.jsp: -------- ");
     pageContext.forward("../appointment/editappointmentfromcpp.jsp?name="+name+"&cpp_id="+cpp_id); //forward request&response to the target page
     return;
   }

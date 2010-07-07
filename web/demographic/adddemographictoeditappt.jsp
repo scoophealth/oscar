@@ -109,7 +109,6 @@ function goback(){
 		temp=e.nextElement().toString();
 		if(temp.equals("cpp_id") || temp.equals("dboperation") ||temp.equals("displaymode")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 	</form>

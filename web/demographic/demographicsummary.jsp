@@ -64,7 +64,6 @@
     
     for(int i=0;i<=ii;i++) {
       if(request.getParameter("encounter_no"+i)==null) {
-// System.out.println("      1     ");
         continue;
       }
        
@@ -219,7 +218,6 @@
 			color="blue"> <%
      String historysubject = rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject");
      StringTokenizer st=new StringTokenizer(historysubject,":");
-     //System.out.println(" history = " + historysubject);
      String strForm="", strTemplateURL="";
      while (st.hasMoreTokens()) {
        strForm = (new String(st.nextToken())).trim();

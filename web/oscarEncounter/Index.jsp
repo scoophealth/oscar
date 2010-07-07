@@ -1515,7 +1515,6 @@ function removeSaveFeedback()  {
 						</td>
 					</tr>
 					<%
-                            //System.out.println("reason "+bean.reason+" subject "+bean.subject);
                             String encounterText = "";
                             try{
                                if(!bSplit){
@@ -1528,16 +1527,11 @@ function removeSaveFeedback()  {
                                System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
-                                  //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
                                }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
-                                   //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
-                                  //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                                    encounterText +="\n__________________________________________________\n["+("".equals(bean.appointmentDate)?UtilDateUtilities.getToday("yyyy-MM-dd"):bean.appointmentDate)+" .: "+bean.reason+"]\n";
                                }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
-                                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                                    encounterText +="\n__________________________________________________\n["+bean.appointmentDate+" .: "+bean.reason+"]\n";
                                }
-                               //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
                                if(!bean.oscarMsg.equals("")){
                                   encounterText +="\n\n"+bean.oscarMsg;
                                }

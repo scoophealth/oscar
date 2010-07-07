@@ -201,7 +201,7 @@ public class FrmFormAction extends Action {
                 //Write to Measurement Table
 
                 if(inputValue!=null){
-                    if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))                    //System.out.println("write to measurement table: " + mt.getType());
+                    if(submit.equalsIgnoreCase("exit") && !inputValue.equalsIgnoreCase(""))
                         write2MeasurementTable(demographicNo, providerNo, mt, inputValue, observationDate, comments);                
                 }
                 

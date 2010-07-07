@@ -109,7 +109,6 @@ function goback(){
 		temp=e.nextElement().toString();
 		if(temp.equals("demographic_no") || temp.equals("dboperation") ||temp.equals("displaymode")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 	</form>
@@ -131,7 +130,6 @@ function goback(){
 		temp=e.nextElement().toString();
 		if(temp.equals("demographic_no") || temp.equals("dboperation") ||temp.equals("displaymode")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 	
@@ -295,7 +293,6 @@ No : <%=rs.getString("demographic_no")%></font></b></div>
 		temp=e.nextElement().toString();
 		if(temp.equals("demographic_no") || temp.equals("dboperation") ||temp.equals("displaymode")) continue;
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
-         //System.out.println();
   }
 	%>
 	</tr>

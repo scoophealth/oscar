@@ -84,7 +84,7 @@ function start(){
 %> <a href=#
 			onClick="popupPage(600,800, '<%=st.nextToken("<").substring(1)%>')">
 		<%=temp%></a> <%
-     st.nextToken(">"); //System.out.println(st.nextToken(">"));
+     st.nextToken(">");
    }
 %>
 		</td>

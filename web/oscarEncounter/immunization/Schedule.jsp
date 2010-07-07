@@ -29,7 +29,6 @@
 <%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-//System.out.println(bean.demographicNo+" "+ bean.providerNo+"  this is the demoNO *****");
 
 String sDoc = null;
 String demoNo = request.getParameter("demographic_no");
@@ -376,8 +375,6 @@ System.out.println("****************"+colCount);
                             s += "</span>";
 
                             s += "<span style='text-align:right;width:15px'><a href=\"javascript:edit('" + id + "', '"+ colName +"');\"><img border=0 src='img/edit.gif' /></a></span>";
-	//s += "<span style='text-align:right;width:15px'><a href=\"javascript:edit(id,colName);\"><img border=0 src='img/edit.gif' /></a></span>";
-	//System.out.println(s);
                             s += "</span>\n";
 
                             return s;

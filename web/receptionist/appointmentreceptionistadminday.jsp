@@ -206,7 +206,6 @@ function findProvider(p,m,d) {
      resultList = oscarSuperManager.find("receptionistDao", "searchmygroupcount", new Object[] {mygroupno});
      for (Map count : resultList) {
        numProvider = ((Long)(count.get(count.keySet().toArray()[0]))).intValue();
-//       System.out.print(count.keySet()+"\n\nnumProvider="+numProvider+"\n\n");
      }
 
      if (session.getAttribute(mygroupno+"_$navailprovider")!=null) {
@@ -218,7 +217,6 @@ function findProvider(p,m,d) {
        resultList = oscarSuperManager.find("receptionistDao", "search_numgrpscheduledate", param3);
        for (Map count : resultList) {
          numAvailProvider = ((Long)(count.get(count.keySet().toArray()[0]))).intValue();
-//         System.out.print(count.keySet()+"\n\nnumAvailProvider="+numAvailProvider+"\n\n");
        }
        session.setAttribute(mygroupno+"_$navailprovider", ""+numAvailProvider);
      }
@@ -638,7 +636,6 @@ notes: <%=Misc.htmlEscape(notes)%>">
 										.<%=(view==0?(name.length()>len?name.substring(0,len):name):name).toUpperCase()%></font></a></td>
 <%
         	  } else {
-        			  //System.out.println(name+" / " +demographic_no);
                 if (tickler_no.compareTo("") != 0) {
 %>
 										<a href="#"

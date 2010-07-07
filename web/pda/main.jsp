@@ -228,7 +228,6 @@ System.out.print("request.getParameter( year )!!!!!==null)");
    String start_date = curYear+"-"+curMonthString+"-"+"01";
 
 //  reset the switch
-//System.out.print("beanSwitchControl.set_main_switch(0)");
 
     beanSwitchControl.set_main_switch(0);
 

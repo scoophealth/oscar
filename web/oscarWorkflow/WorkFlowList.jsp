@@ -236,7 +236,6 @@ String checked(String first,String second){
 
 String sel(String s1,String s2){
      String ret = "";
-     //System.out.println("s1 "+s1+" s2 "+s2);
      if (s1 != null && s2 != null && s1.equals(s2)){
         ret = "selected";    
      }

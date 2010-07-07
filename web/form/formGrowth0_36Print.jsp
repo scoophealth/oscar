@@ -49,7 +49,6 @@
 	String[] cfgGraphic = null;
 	if(request.getParameterValues("__cfgGraphicFile")!=null) {
 		cfgGraphic = request.getParameterValues("__cfgGraphicFile");
-		//System.out.println("vvvvvvvvvvvvvvvvvvvvv");
 	}
 
   //response.sendRedirect("../form/createpdf");
@@ -102,7 +101,6 @@
 <%
 	for (Enumeration e = prop.propertyNames() ; e.hasMoreElements() ;) {
 		String temp = e.nextElement().toString();
-		//System.out.println(temp);
 		String[] str = temp.split("date_|age_|length_|weight_|comment_|headCirc_");
 		int nC = Integer.parseInt(str[1]);
 		System.out.println(" qaz :" + nC);
@@ -118,7 +116,6 @@
 			String baseValue = prop.getProperty(newName, "");
 			prop.setProperty(newName,newValue);
 			prop.setProperty(baseName,baseValue);
-			//System.out.println(temp + " : " + tempName);
 		}
 	}
 

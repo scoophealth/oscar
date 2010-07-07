@@ -157,7 +157,6 @@
 					color="blue"> <%
      String historysubject = rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject");
      StringTokenizer st=new StringTokenizer(historysubject,":");
-     //System.out.println(" history = " + historysubject);
      String strForm="", strTemplateURL="";
      while (st.hasMoreTokens()) {
        strForm = (new String(st.nextToken())).trim();

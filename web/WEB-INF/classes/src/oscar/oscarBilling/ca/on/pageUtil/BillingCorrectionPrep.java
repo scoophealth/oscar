@@ -291,8 +291,6 @@ public class BillingCorrectionPrep {
 			String serviceDate, Vector vecName, Vector vecUnit, Vector vecFee,
 			Vector vecStatus) {
 		boolean ret = true;
-		//System.out.println("status:" + oldObj.getService_code() + ":" +
-		//vecName.get(0) + ":");
 		if (vecName.contains(oldObj.getService_code())) {
 			ret = true;
 			int i = vecName.indexOf(oldObj.getService_code());
@@ -433,8 +431,6 @@ public class BillingCorrectionPrep {
 			fee = dbObj.getCodeFee(codeName,billReferenceDate);
 			// calculate fee
 			BigDecimal bigCodeFee = new BigDecimal(fee);
-			// System.out.println((String) vecUnit.get(i) + "big bigCodeFee: " +
-			// bigCodeFee.toString());
 			BigDecimal bigCodeUnit = new BigDecimal(unit);
 			BigDecimal bigFee = bigCodeFee.multiply(bigCodeUnit);
 			bigFee = bigFee.setScale(2, BigDecimal.ROUND_HALF_UP);

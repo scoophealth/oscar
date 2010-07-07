@@ -24,11 +24,9 @@
 	String sep = project_home.substring(project_home.length()-1);
 	project_home = project_home.substring(0, project_home.length()-1) ;
 	project_home = project_home.substring(project_home.lastIndexOf(sep)+1) ;
-	//System.out.println(project_home);
-%>
-<%
-  boolean bView = false;
-  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+
+	boolean bView = false;
+  	if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
 %>
 <!--  
 /*

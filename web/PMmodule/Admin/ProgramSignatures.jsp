@@ -1,9 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.List"%>
-<%
-//	List pss = (List) request.getAttribute("programSignatures");
-//	System.out.println("size of ........"+pss.size());
-%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html:html locale="true">
 <head>

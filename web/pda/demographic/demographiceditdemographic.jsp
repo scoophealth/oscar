@@ -100,8 +100,7 @@ function upCaseCtrl(ctrl) {
   int age=0, dob_year=0, dob_month=0, dob_date=0;
   
   int param = Integer.parseInt(request.getParameter("demographic_no"));
-  // System.out.println("from editcpp : "+ param);
- 
+  
   ResultSet rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
   if(rs==null) {
     out.println("failed!!!");
@@ -111,8 +110,6 @@ function upCaseCtrl(ctrl) {
       dob_month = Integer.parseInt(rs.getString("month_of_birth"));
       dob_date = Integer.parseInt(rs.getString("date_of_birth"));
       if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
-/*  if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {    	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {    		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));    	} else {    		if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&    			curDay>Integer.parseInt(rs.getString("date_of_birth"))) {    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"));    		} else {    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1;     		}    	}	     }
-*/   
 %>
 <table width="100%" border="0" cellspacing="1" cellpadding="1"
 	bgcolor="#0066CC" bordercolor="#0066CC">

@@ -44,7 +44,6 @@
      for(int i=0; i<btOldPasswd.length; i++) sbTemp = sbTemp.append(btOldPasswd[i]);
 
      String stroldpasswd = sbTemp.toString();
-//   System.out.println(stroldpasswd+ " oldpassword ");
 
      String strDBpasswd = (String) pwd.get("password");
      if (strDBpasswd.length()<20) {

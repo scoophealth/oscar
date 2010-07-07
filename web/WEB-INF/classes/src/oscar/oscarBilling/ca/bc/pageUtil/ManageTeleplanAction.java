@@ -189,7 +189,6 @@ public class ManageTeleplanAction extends DispatchAction {
 //                           linesThatShouldnthappen ++;
 //                       }else{
 //                          BillingDxCode dx = dxList.get(0);
-//                          //System.out.println("DESC>"+desc+":"+dx.getDescription());
 //                          existingCodes++;
 //                       }
 //

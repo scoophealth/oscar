@@ -292,10 +292,8 @@ function showHideLayers() {
 							class="adhour"> <%=(hourCursor+" "+am_pm)%> &nbsp;</a></font></b></td>
 						<%
           	while (bFirstTimeRs?rs.next():true) { //if it's not the first time to parse the standard time, should pass it by
-              //System.out.println("efore resulbtSet: " + param[0]+param[1]);
           	  iS=Integer.parseInt(rs.getString("start_time").substring(0,2));
           	  if((ih) < iS) { //means no events at this period, get to the next hour
-          	  	//out.println("<td width='10'>888</td>");
           	  	bFirstTimeRs=false;
           	  	break;
           	  }
@@ -320,7 +318,6 @@ function showHideLayers() {
 						<%
         			if(demographic_no==0) out.println("."+name+"</font></td>");
         			else {
-        			  //System.out.println(name+" / " +demographic_no);
 				%> <a href=#
 							onClick="popupPage('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail')"
 							title="edit patient record"><%=name%></a></font></td>

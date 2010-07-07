@@ -254,9 +254,7 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                             int totalNoPages=labdocs.size()/number_of_rows_per_page;
                             if(labdocs.size()%number_of_rows_per_page!=0)
                                 totalNoPages+=1;
-                            //System.out.println("totalNoPages="+totalNoPages);
                             int total_row_index=labdocs.size()-1;
-                            //System.out.println("total_row_index="+total_row_index);
                             for (int i = 0; i < labdocs.size(); i++) {
 
                                 LabResultData   result =  (LabResultData) labdocs.get(i);

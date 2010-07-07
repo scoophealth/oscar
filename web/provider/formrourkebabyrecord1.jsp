@@ -71,7 +71,6 @@ function setfocus() {
     String[] param2 =new String[2];
     param2[0]=request.getParameter("demographic_no");
     param2[1]="Old Rourke" ; //form_name;
-//System.out.println(param2[0]+param2[1]);
     List<Map> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
     for (Map form : resultList) {
       bNew = false;

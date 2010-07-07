@@ -71,7 +71,6 @@ public class DesAntenatalPlannerRisksHandler_99_12 extends DefaultHandler {
 	}
 
         public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
-            // System.out.print("\n startElement: localName " + localName+" rawName "+rawName);
             if (rawName.equals("section_title")) {
                 if (interiortable == 1) { //close content table
                     results += "</center></td></tr></table>";

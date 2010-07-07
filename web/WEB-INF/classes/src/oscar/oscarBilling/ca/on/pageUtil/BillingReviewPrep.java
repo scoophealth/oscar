@@ -83,8 +83,6 @@ public class BillingReviewPrep {
 
 			// calculate fee
 			BigDecimal bigCodeFee = new BigDecimal(fee);
-			// System.out.println((String) vecUnit.get(i) + "big bigCodeFee: " +
-			// bigCodeFee.toString());
 			BigDecimal bigCodeUnit = new BigDecimal((String) vecUnit.get(i));
 			BigDecimal bigCodeAt = new BigDecimal((String) vecAt.get(i));
 

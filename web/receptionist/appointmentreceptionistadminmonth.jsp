@@ -428,7 +428,6 @@ function refresh1() {
         bFistEntry = false;
         break;
       } else {  
-        //System.out.println("ccc "+dateGrid[i][j]);
         bFistEntry = true;
         if(String.valueOf(date.get("available")).equals("0")) continue;
       }

@@ -55,8 +55,6 @@ if(listRxDrugs!=null){
          if(specialInstruction!=null&&!specialInstruction.equalsIgnoreCase("null")&&specialInstruction.trim().length()>0){
             isSpecInstPresent=true;
          }
-      //   System.out.println("customName="+customName);
-      //   System.out.println("drugName="+drugName);
          //for display
          if(drugName==null || drugName.equalsIgnoreCase("null"))
              drugName="" ;
@@ -64,7 +62,6 @@ if(listRxDrugs!=null){
          boolean pastMed        = rx.getPastMed();
          String quantity        = rx.getQuantity();
          String quantityText="";
-         //System.out.println("in prescribe.jsp, unitName="+rx.getUnitName());
 
          if(rx.getUnitName()==null || rx.getUnitName().equalsIgnoreCase("null")){
              quantityText=quantity;
@@ -81,21 +78,16 @@ if(listRxDrugs!=null){
          boolean isOutsideProvider ;
          System.out.println("---"+outsideProvOhip+"--");System.out.println("---"+outsideProvName+"--");
          if(isDiscontinuedLatest){
-                //System.out.println("isDiscontinuedLatest true");
                 archivedReason=rx.getLastArchReason();
                 archivedDate=rx.getLastArchDate();
-                //System.out.println("---"+archivedDate +"--"+archivedReason);
          }
          else{
-             //System.out.println("isDiscontinuedLatest false");
          }
           if((outsideProvOhip!=null && !outsideProvOhip.equals("")) || (outsideProvName!=null && !outsideProvName.equals(""))){
              isOutsideProvider=true;
-               // System.out.println("isOutsideProvider true");
          }
          else{
              isOutsideProvider=false;
-             //System.out.println("isOutsideProvider false");
          }
          System.out.println("instructions ="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
          if(route==null || route.equalsIgnoreCase("null")) route="";
@@ -115,8 +107,6 @@ if(listRxDrugs!=null){
                     String prnStr="";
                     if(prn)
                         prnStr="prn";
-       // System.out.println("is spec inst present ="+isSpecInstPresent+";spec="+specialInstruction);
-                    //System.out.println("drugname in prescribe.jsp="+drugName);
 %>
 
 <fieldset style="margin-top:2px;width:580px;" id="set_<%=rand%>">

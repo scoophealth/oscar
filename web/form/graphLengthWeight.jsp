@@ -52,9 +52,6 @@
     String red = "graphics/redMark.gif";
     String blue = "graphics/blueMark.gif";
 	String chart = ((FrmRourkeRecord) rec).isFemale(demoNo) == true ? "graphics/girlLength36m.jpg" : "graphics/boyLength36m.jpg" ;
-//    props.list(System.out); 
-//    System.out.println("female = "+props.getProperty("female",""));
-//    if(props.getProperty("female", "").equalsIgnoreCase("1"))
 %>
 
 

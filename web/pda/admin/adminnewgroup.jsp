@@ -72,7 +72,6 @@ function checkForm() {
   		if( strbuf.toString().indexOf("displaymode")!=-1 || strbuf.toString().indexOf("submit")!=-1) continue;
       param[0]=request.getParameter(strbuf.toString());
 	    param[1]=strbuf.toString().substring( strbuf.toString().indexOf(param[0])+1 ); 
-	    //System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq      " + param[0]+ "     " + param[1]);
   
       rowsAffected = apptMainBean.queryExecuteUpdate(param,"deletegroupmember");
     }

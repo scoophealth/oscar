@@ -53,7 +53,6 @@ busy ...
 
 	String slimit = request.getParameter("d") != null ? request.getParameter("d") : "0";
 	String sql="select * from billing order by billing_no limit " + slimit + ", 1000000";
- 	//System.out.println(sql);
 	ResultSet rs = dbObj.searchDBRecord(sql);
 	while(rs.next()) {
     	billing_no =id = "" + rs.getInt("billing_no");
@@ -167,10 +166,7 @@ busy ...
 			else
 				ret[1] += name.charAt(i);
 		}
-	} else {
-		//System.out.println(" no hin!!!");
 	}
-	// System.out.println(ret[0] + " name!" + ret[1]);
 	return ret;
 }
 %>
@@ -185,7 +181,6 @@ busy ...
 	if(amount != null && amount.length()>2) {
 		int n = amount.length();
 		ret = amount.substring(0, (n-2)) + "." + amount.substring(n-2);
-		//System.out.println(ret);
 	} else if(amount != null && amount.length()==2) {
 		ret = "0." + amount;
 	} else if(amount != null && amount.length()==1) {

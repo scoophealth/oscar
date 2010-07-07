@@ -166,7 +166,6 @@
      // customized key
      if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
-		   //System.out.println("propDemoExt:" + propDemoExt[0] );
 	       for(int k=0; k<propDemoExt.length; k++) {
 	           dExt.addKey(proNo,request.getParameter("demographic_no"),propDemoExt[k].replace(' ','_'),request.getParameter(propDemoExt[k].replace(' ','_')),request.getParameter(propDemoExt[k].replace(' ','_')+"Orig"));
 	       }

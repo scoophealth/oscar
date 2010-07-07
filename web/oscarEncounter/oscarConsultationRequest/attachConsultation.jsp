@@ -55,7 +55,6 @@ String providerNo = request.getParameter("provNo");
 if(demoNo == null && requestId == null ) response.sendRedirect("../error.jsp");
 
 if( demoNo == null || demoNo.equals("null")  ) {
-    //System.out.println("attach " + requestId + " demo " + demoNo);
     ConsultationAttachDocs docsUtil = new ConsultationAttachDocs(requestId);
     demoNo = docsUtil.getDemoNo();
     

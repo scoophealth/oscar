@@ -41,7 +41,7 @@ String formTableName = request.getParameter("formTableName");
 String configTableName = request.getParameter("configTableName");
 //if(tableName==null) tableName = vecTableName.size() >= 1? (String)vecTableName.get(0) : "";
 
-// add/delete action //System.out.println(request.getParameter("submit"));
+// add/delete action 
 if (request.getParameter("submit") != null && request.getParameter("submit").equals(" Add ")) {
 	String strCapName = request.getParameter("selField") != null ? request.getParameter("selField") : "";
 	String[] strTemp = strCapName.split("\\|");
@@ -58,7 +58,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 }
 if (request.getParameter("submit") != null && request.getParameter("submit").equals("Delete")) {
 	String strCapName = request.getParameter("selConfig") != null ? request.getParameter("selConfig") : "";
-	//System.out.println(strCapName);
+	
 	String[] strTemp = strCapName.split("\\|");
 	if(strTemp.length>1) {
 	    String fieldName = strTemp[1];

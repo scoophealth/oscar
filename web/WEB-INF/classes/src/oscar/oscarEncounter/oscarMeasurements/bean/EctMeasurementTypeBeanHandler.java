@@ -53,29 +53,6 @@ public class EctMeasurementTypeBeanHandler {
         MeasurementTypes mt =  MeasurementTypes.getInstance();
         return mt.getByType(mType);
         
-//        EctMeasurementTypesBean ret = null;
-//        try {
-//            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-//
-//            String sql = "SELECT * FROM measurementType where type = '"+mType+"'";   
-//            //System.out.println(sql);
-//            ResultSet rs = db.GetSQL(sql);        
-//            while(rs.next()){                
-
-//               ret = new EctMeasurementTypesBean(rs.getInt("id"), db.getString(rs,"type"), 
-//                                                 db.getString(rs,"typeDisplayName"), 
-//                                                 db.getString(rs,"typeDescription"), 
-//                                                 db.getString(rs,"measuringInstruction"), 
-//                                                 //getValidation(db.getString(rs,"validation"))); 
-//                                                 db.getString(rs,"validation")); 
-//               ret.setValidationName(getValidation(db.getString(rs,"validation")));
-//            }
-//            rs.close();            
-//        }
-//        catch(SQLException e) {
-
-//        }
-//        return ret;
     }
     
     public String getValidation(String val){

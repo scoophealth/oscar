@@ -210,20 +210,11 @@ function t(s1,s2,s3,s4,s5,s6) {
                     ++numOfAppts;
                     DateTimeCodeBean.put(hourmin.toString(),numOfAppts);
                 }
-/*          	else if(DateTimeCodeBean.get(hourmin.toString() ).equals("1") ) {
-            		//DateTimeCodeBean.put(hourmin.toString(), "||");
-                        DateTimeCodeBean.put(hourmin.toString(), "2");
-                }
-          	else {
-            		DateTimeCodeBean.put(hourmin.toString(), "3");
-                }*/
                  
-          		//System.out.println(hourmin.toString()+"*wwwwwww*"+rsdemo.getString("appointment_date")+rsdemo.getString("start_time")+rsdemo.getString("end_time"));
 	        continue;
 		  } else break; //e<=k
 	  }
 	}
-//    System.out.println(rsdemo.getString("appointment_date")+rsdemo.getString("start_time")+rsdemo.getString("end_time"));
   }
   
   //store timecode for every available day
@@ -231,7 +222,6 @@ function t(s1,s2,s3,s4,s5,s6) {
   rsdemo = flipviewMainBean.queryResults(param, "search_timecode");
   while (rsdemo.next()) { 
     DateTimeCodeBean.put(rsdemo.getString("sdate"), rsdemo.getString("timecode"));
-//    System.out.println(param[1]+"-----"+rsdemo.getString("sdate")+rsdemo.getString("timecode"));
   }
   
   //color for template code
@@ -284,7 +274,6 @@ function t(s1,s2,s3,s4,s5,s6) {
     if(DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))!=null ) {
 	  int nLen = 24*60 / ((String) DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))).length();
 	  int ratio = (hour*60+min)/nLen;
-	  //System.out.println((hour*60+min)+"  "+nLen +"  "+ratio);
 	  temp = new StringBuffer( ((String) DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))).substring(ratio,ratio+1) ); //(nStartTime*60*ratio/nStep+j*ratio),(nStartTime*60*ratio/nStep+j*ratio)+1)
           scheduleCode = temp.toString();  
         bookinglimit = (String)DateTimeCodeBean.get("bookinglimit"+scheduleCode);
@@ -300,7 +289,6 @@ function t(s1,s2,s3,s4,s5,s6) {
         int limitDelta = 0;
         int limit = bookinglimit.length() > 0 ? Integer.parseInt(bookinglimit) : 1;
         hourmin = new StringBuffer(strTempDate+ (hour<10?"0":"") +hour + (min<10?":0":":") +min +":00");
-//System.out.println(hourmin.toString());
 	if(DateTimeCodeBean.get(hourmin.toString() ) != null) {
 	  numOfAppts = (Integer) DateTimeCodeBean.get(hourmin.toString());
           strNumOfAppts = String.valueOf(numOfAppts);
@@ -315,8 +303,6 @@ function t(s1,s2,s3,s4,s5,s6) {
             temp = new StringBuffer("||");
           }
   	
-//	temp = new StringBuffer("-");
-//System.out.println("temp"+temp);
 	}
         
 

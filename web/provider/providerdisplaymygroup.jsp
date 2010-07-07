@@ -83,7 +83,6 @@
 	 String groupNo = String.valueOf(group.get("mygroup_no"));
      if(!(groupNo.equals(oldNo)) ) {
        bNewNo=bNewNo?false:true; oldNo=groupNo;
-       //System.out.println(oldNo);
      }
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">

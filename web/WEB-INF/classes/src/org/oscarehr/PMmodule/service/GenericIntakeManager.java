@@ -590,9 +590,6 @@ public class GenericIntakeManager {
 					if (ia.getNode().getId().intValue() != ia.getNode()
 							.getEq_to_id().intValue()) {
 						try {
-							// System.out.println(ia.getId() + "," +
-							// ia.getNode().getIdStr() + "," +
-							// ia.getNode().getLabelStr());
 							String value = source.getAnswerMapped(
 									String.valueOf(ia.getNode().getEq_to_id()))
 									.getValue();

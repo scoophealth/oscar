@@ -310,7 +310,6 @@ function showHideLayers() {
 	 				param[1]=year+"-"+month+"-"+firstDayOfWeek;//e.g."2001-02-02";
 	 				param[2]=year+"-"+month+"-"+endDayOfWeek;//e.g."2001-02-02";
 	  			String strsearchappointmentweek=request.getParameter("dboperation");
-          //System.out.println("from appointmentprovideradminweek resultSet: " + firstDayOfWeek +" "+strsearchappointmentweek);
    				ResultSet rs = apptMainBean.queryResults(param, strsearchappointmentweek);
    				
    				//store the result to an array for displaying
@@ -334,7 +333,6 @@ lf:								for(ih=startHour; ih<=endHour; ih++) { //from hour 7 - 9
            						((ih+1)>MyDateFormat.getHourFromStandardTime(rs.getString("start_time")))) {
             					apptWeek[ih-startHour][id-firstDayOfWeek]+=MyDateFormat.getTimeXX_XXampm(rs.getString("start_time"))+"-"
             					+MyDateFormat.getTimeXX_XXampm(rs.getString("end_time")) +" "+rs.getString("name")+" ";
-            					//System.out.println((ih-startHour)+" "+(id-firstDayOfWeek)+" "+apptWeek[ih-startHour][id-firstDayOfWeek]);
 
             					while(rs.next()){
             						if(ih<=MyDateFormat.getHourFromStandardTime(rs.getString("start_time")) && 

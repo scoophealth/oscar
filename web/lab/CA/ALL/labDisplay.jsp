@@ -644,7 +644,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 
                                 boolean obrFlag = false;
                                 int obxCount = handler.getOBXCount(j);
-                                //System.out.println("OBR Count "+OBRCount+" J "+j+" obx count "+obxCount);
                                 for (k=0; k < obxCount; k++){ 
                                     String obxName = handler.getOBXName(j, k);
                                     System.out.println("OBX NAME "+obxName+"  -> "+handler.getObservationHeader(j, k).equals(headers.get(i))+" obsHeader "+ handler.getObservationHeader(j, k) +" header "+ headers.get(i));

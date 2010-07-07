@@ -33,7 +33,6 @@
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
 	int provNo = Integer.parseInt((String) session.getAttribute("user"));
-	//System.out.println(" here");
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
     FrmData fd = new FrmData();
@@ -594,7 +593,6 @@ function calToday(field) {
 			  vecR.remove(nv);
 		  }
 	  }else {
-		  //System.out.println("h e re" + vecR.size());
 		  if(vecR.size()>0 && formId!=0) {
 			  bgcolor = "bgcolor='pink'";
 			  props.setProperty("date"+i, (String)vecR.get(0));

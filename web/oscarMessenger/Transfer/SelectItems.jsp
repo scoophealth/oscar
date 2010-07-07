@@ -47,9 +47,6 @@
 String demoNo   = request.getParameter("val2");
 String prov     = request.getParameter("val1");
 
-// System.out.println("select Itemsdemo "+demoNo+" prov "+prov);
-
-
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;
 bean = new oscar.oscarMessenger.pageUtil.MsgSessionBean();
 
@@ -206,7 +203,6 @@ bean.setProviderNo(prov);
         MsgGenerate gen = new MsgGenerate();
 
         xmlDoc = gen.getDocument(demographicNo);
-        // System.out.println("xmlDoc = "+xmlDoc.toString());
     }catch (Exception ex){
         ex.printStackTrace();
         response.sendRedirect("error.html");
@@ -217,7 +213,6 @@ bean.setProviderNo(prov);
     }
 
     Element root = xmlDoc.getDocumentElement();
-    // System.out.println(MsgCommxml.toXML(root));
 
 %>
 <%!
@@ -256,20 +251,16 @@ bean.setProviderNo(prov);
     void DrawTable(Element tbl, JspWriter out)
             throws javax.servlet.jsp.JspException, java.io.IOException{
         NodeList lst = tbl.getChildNodes();
-        //if (lst.getLength() > 0){
 
-            out.print(spanStart + tbl.getAttribute("name") + spanEnd);
-            out.print(tblStart);
+        out.print(spanStart + tbl.getAttribute("name") + spanEnd);
+        out.print(tblStart);
 
-
-            // System.out.println("/n there are "+lst.getLength()+" nodes \n");
-            for(int i=0; i<lst.getLength(); i++){
-                out.print(tblRowStart);
-                DrawItem((Element)lst.item(i), out);
-                out.print(tblRowEnd);
-            }
-            out.print(tblEnd);
-        //}
+        for(int i=0; i<lst.getLength(); i++){
+            out.print(tblRowStart);
+            DrawItem((Element)lst.item(i), out);
+            out.print(tblRowEnd);
+        }
+        out.print(tblEnd);
     }
 
     void DrawItem(Element item, JspWriter out)

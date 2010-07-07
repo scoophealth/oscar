@@ -34,7 +34,6 @@
 
 	EctPatientData.Patient p = new EctPatientData().getPatient(demoNo);
     String s = p.getSex();
-    //System.out.println("loading ann health formId"+formId+" prov no = "+provNo+" sex = "+s);
 
     if(true) {
         out.clear();

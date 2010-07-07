@@ -238,7 +238,6 @@ function checkTypeIn() {
     		int index = keyword.indexOf(",");
 	  		param[0]=keyword.substring(0,index).trim()+"%";//(",");
 	  		param[1]=keyword.substring(index+1).trim()+"%";
-	  		//System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     		rs = db.queryResults(sql, param);
    	}
   } else if(request.getParameter("search_mode").equals("search_dob")) {      
@@ -246,7 +245,6 @@ function checkTypeIn() {
 	  		param[0]=""+MyDateFormat.getYearFromStandardDate(keyword)+"%";//(",");
 	  		param[1]=""+MyDateFormat.getMonthFromStandardDate(keyword)+"%";
 	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%";  
-	  		//System.out.println("1111111111111111111 " +param[0]+param[1]+param[2]);
     		rs = db.queryResults(sql, param);
   } else {      
     keyword=keyword+"%";

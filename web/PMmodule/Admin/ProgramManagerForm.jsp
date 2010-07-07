@@ -140,7 +140,7 @@
 			</table>
 			</div>
 			<%@ include file="/common/messages.jsp"%>
-			<% //System.out.println("/PMmodule/Admin/ProgramEdit/" + selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp");
+			<%
 				if (selectedTab == null || selectedTab.trim().equals("")) {
 			%>
 			<security:oscarSec roleName="<%=roleName$%>"

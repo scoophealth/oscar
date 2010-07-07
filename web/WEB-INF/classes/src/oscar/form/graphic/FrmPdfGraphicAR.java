@@ -102,8 +102,6 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
 		yNum = deltaY * (yNum - fStartY);
 
 		prop.setProperty("" + xNum, "" + yNum);
-		//System.out.println(xNum + " : " + yNum + "|" + deltaX + ":" +
-		// deltaY);
 		return;
 	}
 

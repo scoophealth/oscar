@@ -51,8 +51,6 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
         results += "<tr><td width='5%'><font color='yellow'><B>Done</B></font></td><td width='5%'><font color='yellow'><B>N/A</B></font></td><td align='center' width='90%' ><font size=-1 color='#FFFFFF'>Long Term Care Checklist Based on Presented Risk Factors</font></td></tr></table>";
         results += "<center><table width='100%' border='0' cellpadding='0' CELLSPACING='0' BGCOLOR='ivory' datasrc='#xml_list'><tr><td>\n";
         System.out.println("savedar1params: " + savedar1params);
-        //System.out.println("savedar1.params.getProperty('002'):
-        // "+savedar1params.getProperty("002"));
     }
 
     public void endDocument() throws SAXException {

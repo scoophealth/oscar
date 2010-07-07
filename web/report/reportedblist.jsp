@@ -118,7 +118,6 @@ function setfocus() {
 	        param2[2]=rsdemo.getString("provider_no");
 	        param2[3]="<age>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_age"):"") + "</age>" +  "<gravida>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_gra"):"") + "</gravida>" +   "<term>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_term"):"") + "</term>" +   "<phone>"+(SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp")!=null?SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_hp"):"") + "</phone>";
 	        param2[4]=curUser_no; 
-           //	System.out.println("from -------- :"+ rsdemo.getString("form_date")+ ": next :"+param2[3]+param2[0]+param2[2]);
 	 	    rowsAffected = reportMainBean.queryExecuteUpdate(itemp,param2,  "add_reporttemp"); //lock the table
 	   } 
    } 
@@ -131,7 +130,6 @@ function setfocus() {
    int[] itemp1 = new int[2];
      itemp1[0] = Integer.parseInt(strLimit1);
      itemp1[1] = Integer.parseInt(strLimit2);
-	//System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
 	rs = reportMainBean.queryResults(param, itemp1, "search_reporttemp"); //unlock the table
    boolean bodd=false;
    int nItems=0;

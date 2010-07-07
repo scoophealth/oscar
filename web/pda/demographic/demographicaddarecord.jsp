@@ -96,13 +96,10 @@
 	  paramName[2]=param[8].trim();
 	  paramName[3]=param[9].trim();
 	  paramName[4]=param[10].trim();
-	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
     
     if(rs.next()) //!rs.getString("cpp_id").equals("")) 
       out.println("***<font color='red'>You may have Demographic the  record already!!! Please search it first, then delete the duplicated one.</font>***<br>");
-
-    // int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, param, request.getParameter("dboperation"));
     
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
