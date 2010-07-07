@@ -23,36 +23,45 @@
 package org.oscarehr.casemgmt.dao;
 
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class CaseManagementNoteLinkDAO extends HibernateDaoSupport {
 
-	private static Log log = LogFactory.getLog(CaseManagementNoteDAO.class);
-
 	public CaseManagementNoteLink getNoteLink(Long id) {
-	    CaseManagementNoteLink noteLink = (CaseManagementNoteLink) this.getHibernateTemplate().get(CaseManagementNoteLink.class, id);
-	    return noteLink;
+		CaseManagementNoteLink noteLink = (CaseManagementNoteLink) this.getHibernateTemplate().get(CaseManagementNoteLink.class, id);
+		return noteLink;
 	}
-	
+
 	public List getLinkByTableId(Integer tableName, Long tableId) {
-	    Object[] param = {tableName, tableId};
-	    String hql = "from CaseManagementNoteLink cLink where cLink.tableName = ? and cLink.tableId = ? order by cLink.id";
-	    return this.getHibernateTemplate().find(hql, param);
+		Object[] param = {tableName, tableId};
+		String hql = "from CaseManagementNoteLink cLink where cLink.tableName = ? and cLink.tableId = ? order by cLink.id";
+		return this.getHibernateTemplate().find(hql, param);
 	}
-	
+
 	public List getLinkByNote(Long noteId) {
-	    String hql = "from CaseManagementNoteLink cLink where cLink.noteId = ? order by cLink.id";
-	    return this.getHibernateTemplate().find(hql, noteId);
+		String hql = "from CaseManagementNoteLink cLink where cLink.noteId = ? order by cLink.id";
+		return this.getHibernateTemplate().find(hql, noteId);
 	}
-	
+
+	public CaseManagementNoteLink getLastLinkByTableId(Integer tableName, Long tableId) {
+		return getLast(getLinkByTableId(tableName, tableId));
+	}
+
+	public CaseManagementNoteLink getLastLinkByNote(Long noteId) {
+		return getLast(getLinkByNote(noteId));
+	}
+
+	private CaseManagementNoteLink getLast(List<CaseManagementNoteLink> listLink) {
+		if (listLink.isEmpty()) return null;
+		return listLink.get(listLink.size()-1);
+	}
+
 	public void save(CaseManagementNoteLink cLink) {
-	    this.getHibernateTemplate().save(cLink);
+		this.getHibernateTemplate().save(cLink);
 	}
-	
+
 	public void update(CaseManagementNoteLink cLink) {
-	    this.getHibernateTemplate().update(cLink);
+		this.getHibernateTemplate().update(cLink);
 	}
 }
