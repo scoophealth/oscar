@@ -54,7 +54,7 @@ public class dxQuickListBeanHandler {
     }
     
     public boolean init(String providerNo,String codingSystem) {
-        int NameLength = 10; //max length of quicklistname in quicklistuser table
+        
         String codSys = "";
         if ( codingSystem != null ){
             codSys = " where codingSystem = '"+codingSystem+"' ";
@@ -62,11 +62,11 @@ public class dxQuickListBeanHandler {
         
         boolean verdict = true;
         try {
-            ResultSet rsLastUsed;
+          
             ResultSet rs;
             String quickListName;
-            boolean truncateName = false;
-            
+           
+           
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String lastUsed = "";
             String sql;
@@ -108,11 +108,11 @@ public class dxQuickListBeanHandler {
         
         boolean verdict = true;
         try {
-            ResultSet rsLastUsed;
+            
             ResultSet rs;
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String lastUsed = "";
+           
             String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName"; 
 
             rs = db.GetSQL(sql);
