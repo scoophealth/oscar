@@ -439,7 +439,7 @@ public class EForm extends EFormBase {
 				templateFound = 0;
 			} else if (template.indexOf("-->", commentBegin)<templateBegin || 
 					   template.lastIndexOf("<!--", commentEnd)>templateEnd) { //Template tags outside of comment, look again
-				templateBegin = findIgnoreCase(template, sTemplateBegin, templateBegin+sTemplateBegin.length());
+				templateBegin = findIgnoreCase(template, sTemplateBegin, templateBegin+1);
 				templateEnd = findIgnoreCase(template, sTemplateEnd, templateBegin);
 			} else {
 				templateFound = 1;
@@ -463,10 +463,10 @@ public class EForm extends EFormBase {
 		if (text==null) return null;
 
 		text = text.trim();
-		while (text.startsWith("\n") || text.startsWith("\r") || text.startsWith("\t")) {
-			text = text.substring(1).trim();
+		if (text.startsWith("\n") || text.startsWith("\r")) { //remove first linebreak from the template tag
+			text = text.substring(1);
 		}
-		while (text.endsWith("\n") || text.endsWith("\r") || text.endsWith("\t")) {
+		while (text.endsWith("\n") || text.endsWith("\r") || text.endsWith("\t")) { //remove all trailing blanks
 			text = text.substring(0, text.length()-1).trim();
 		}
 		return text;
