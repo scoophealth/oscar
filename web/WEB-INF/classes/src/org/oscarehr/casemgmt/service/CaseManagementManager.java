@@ -85,7 +85,6 @@ import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
-import org.oscarehr.casemgmt.web.NoteDisplay;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -137,14 +136,14 @@ public class CaseManagementManager {
 	private DxResearchDAO dxResearchDAO;
 	private ProgramProviderDAO programProviderDao;
 	private ProgramAccessDAO programAccessDAO;
-	
+
 	private boolean enabled;
 
 	private static final Log logger = LogFactory.getLog(CaseManagementManager.class);
 
 	/*
-	 * check to see if issue has been saved for this demo beforeif it has return issue; else return null
-	 */
+	* check to see if issue has been saved for this demo beforeif it has return issue; else return null
+	*/
 	public CaseManagementIssue getIssueById(String demo, String issue_id) {
 		return this.caseManagementIssueDAO.getIssuebyId(demo, issue_id);
 	}
@@ -406,19 +405,16 @@ public class CaseManagementManager {
 		return this.caseManagementNoteLinkDAO.getLinkByNote(noteId);
 	}
 
-        public CaseManagementNoteLink getLatestLinkByNote(Long noteId){
-                List<CaseManagementNoteLink> lcml =getLinkByNote(noteId);
-                if (lcml.isEmpty()) return null;
-		else return lcml.get(lcml.size() - 1);
-        }
+	public CaseManagementNoteLink getLatestLinkByNote(Long noteId){
+		return this.caseManagementNoteLinkDAO.getLastLinkByNote(noteId);
+	}
+
 	public List getLinkByTableId(Integer tableName, Long tableId) {
 		return this.caseManagementNoteLinkDAO.getLinkByTableId(tableName, tableId);
 	}
 
 	public CaseManagementNoteLink getLatestLinkByTableId(Integer tableName, Long tableId) {
-		List<CaseManagementNoteLink> lcml = getLinkByTableId(tableName, tableId);
-		if (lcml.isEmpty()) return null;
-		else return lcml.get(lcml.size() - 1);
+		return this.caseManagementNoteLinkDAO.getLastLinkByTableId(tableName, tableId);
 	}
 
 	public Integer getTableNameByDisplay(String disp) {
