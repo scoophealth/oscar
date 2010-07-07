@@ -61,7 +61,7 @@ public class SurveyModelManager {
 	}
 	
 	public static void removeQuestion(Survey surveyModel, String pageNumber, int  sectionId, int questionId) {
-		Question question = null;
+		
 		//get page
 		Page page = surveyModel.getBody().getPageArray(Integer.parseInt(pageNumber)-1);
 		if(sectionId == 0) {

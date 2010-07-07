@@ -395,8 +395,8 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		DynaActionForm surveyForm = (DynaActionForm)form;
 		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
 		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
-		
-		String pageName = formBean.getPage();
+
+                
 		SurveyDocument.Survey survey = model.getSurvey();
 		int pageNumber = Integer.parseInt(request.getParameter("id"));
 		
