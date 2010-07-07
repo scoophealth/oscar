@@ -38,7 +38,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.util.SpringUtils;
 
@@ -70,6 +70,7 @@ public class EDocUtil extends SqlUtilBaseS {
     public static final String REVIEW_DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
     private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
+	private static CaseManagementNoteLinkDAO caseManagementNoteLinkDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
 
     public static ArrayList getCurrentDocs(String tag) {
         // return TagUtil.getObjects(tag, "EDoc");
@@ -123,13 +124,8 @@ public class EDocUtil extends SqlUtilBaseS {
  
 
     public static void addCaseMgmtNoteLink(CaseManagementNoteLink cmnl) {
-
-        String cnSQL = "INSERT INTO casemgmt_note_link (" +
-                "table_name,table_id,note_id) " +
-                "VALUES ('" +
-                cmnl.getTableName() + "','" + cmnl.getTableId() + "','" + cmnl.getNoteId() + "')";
-        System.out.println("ADD CASEMGMT NOTE LINK : " + cnSQL);
-        runSQL(cnSQL);
+		caseManagementNoteLinkDao.save(cmnl);
+        System.out.println("ADD CASEMGMT NOTE LINK : Id=" + cmnl.getId());
     }
 
     public static String addDocumentSQL(EDoc newDocument) {
@@ -779,76 +775,41 @@ public static String getLastDocumentDesc() {
 
        //get noteId from tableId
     public static Long getNoteIdFromDocId(Long docId){
-        String getNoteIdSql = "select note_id from casemgmt_note_link where table_name=5 and table_id=" + docId;
-
-        Long returnVal=0L;
-        try {
-            ResultSet rs = getSQL(getNoteIdSql);
-            if (!rs.first()) {
-                return returnVal;
-            } else {
-
-                returnVal = Long.parseLong(rs.getString("note_id"));
-                }
-            }
-        catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
-        return returnVal;
-
+		Long noteId = 0L;
+		CaseManagementNoteLink cmnLink = caseManagementNoteLinkDao.getLastLinkByTableId(CaseManagementNoteLink.DOCUMENT, docId);
+		if (cmnLink!=null) noteId = cmnLink.getNoteId();
+		return noteId;
     }
 
     //get tableId from noteId when table_name is document
     public static Long getTableIdFromNoteId(Long noteId){
-
-        String getTableIdSql = "select table_id from casemgmt_note_link where table_name=5 and note_id=" + noteId;
-
-        Long returnVal=0L;
-        try {
-            ResultSet rs = getSQL(getTableIdSql);
-            if (!rs.first()) {
-                return returnVal;
-            } else {
-
-                returnVal = Long.parseLong(rs.getString("table_id"));
-                }
-            }
-        catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
-        return returnVal;
-
+		Long tableId = 0L;
+		CaseManagementNoteLink cmnLink = caseManagementNoteLinkDao.getLastLinkByNote(noteId);
+		if (cmnLink!=null && cmnLink.getTableName().equals(CaseManagementNoteLink.DOCUMENT)) {
+			tableId = cmnLink.getTableId();
+		}
+		return tableId;
     }
 
     //get document from its note
     public static EDoc getDocFromNote(Long noteId) {
-        String getDocIdSql = "select table_id from casemgmt_note_link where table_name=5 and note_id=" + noteId;
-
-        EDoc doc = new EDoc();
-        int counter=0;
-        try {
-            ResultSet rs = getSQL(getDocIdSql);
-            if (!rs.first()) {
-                return doc;
-            } else {
-
-                Integer docId = Integer.parseInt(rs.getString("table_id"));
-                String getDocSql = "select document_no, docfilename, status from document where document_no=" + docId;
-                ResultSet rs2 = getSQL(getDocSql);
-                if (!rs2.first()) {
-                    return doc;
-                } else {
-                    counter++;
-
-                    doc.setDocId(rs2.getString("document_no"));
-                    doc.setFileName(rs2.getString("docfilename"));
-                    doc.setStatus(rs2.getString("status").charAt(0));
-                }
-            }
-        } catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
-        return doc;
+		EDoc doc = new EDoc();
+		Long docIdL = getTableIdFromNoteId(noteId);
+		if (docIdL>0L) {
+			Integer docId = docIdL.intValue();
+			String getDocSql = "select document_no, docfilename, status from document where document_no=" + docId;
+			ResultSet rs = getSQL(getDocSql);
+			try {
+				if (rs.first()) {
+					doc.setDocId(rs.getString("document_no"));
+					doc.setFileName(rs.getString("docfilename"));
+					doc.setStatus(rs.getString("status").charAt(0));
+				}
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return doc;
     }
 
 
