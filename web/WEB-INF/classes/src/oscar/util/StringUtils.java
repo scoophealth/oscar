@@ -332,8 +332,6 @@ public class StringUtils {
         StringBuffer mystringBuffer = new StringBuffer();
         mystringBuffer.append(str);
 
-        char currentchar = ' ';
-
         boolean spaces = true;
 
         int position = 0;
