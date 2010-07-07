@@ -62,5 +62,10 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 		List<ProfessionalSpecialist> results=query.getResultList();
 		
 		return(results);
-	}    
+	}
+    
+    public boolean hasRemoteCapableProfessionalSpecialists()
+    {
+    	return(findByEDataUrlNotNull().size()>0);
+    }
 }

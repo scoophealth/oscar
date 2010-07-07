@@ -50,13 +50,15 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
 <%@page import="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 
 <%
+	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
 	CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
-        CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+    CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
       
 	String demographicNo = request.getParameter("demographicNo");
 	oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
@@ -647,9 +649,12 @@
 							<%
 						}
 			 			
-			 			%>
-			 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message key="oscarEncounter.eSend" /></a>
-			 			<%
+			 			if (professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists())
+			 			{
+				 			%>
+				 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message key="oscarEncounter.eSend" /></a>
+				 			<%
+			 			}
 			 		}
 			 	}else if(note.isRxAnnotation()){//prescription note
                                     String winName="dummie";
