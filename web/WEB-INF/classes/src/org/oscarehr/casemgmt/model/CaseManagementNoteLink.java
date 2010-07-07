@@ -27,21 +27,29 @@ public class CaseManagementNoteLink {
 	
 	// Table Name constants
 	public static Integer CASEMGMTNOTE = 1;
-	public static Integer DRUGS	   = 2;
-	public static Integer ALLERGIES    = 3;
-	public static Integer LABTEST	   = 4;
-	public static Integer DOCUMENT     = 5;
+	public static Integer DRUGS = 2;
+	public static Integer ALLERGIES = 3;
+	public static Integer LABTEST = 4;
+	public static Integer DOCUMENT = 5;
+	public static Integer EFORMDATA = 6;
 	
 	public static String DISP_PRESCRIP = "Prescriptions";
-	public static String DISP_ALLERGY  = "Allergies";
-	public static String DISP_LABTEST  = "Lab Reports";
+	public static String DISP_ALLERGY = "Allergies";
+	public static String DISP_LABTEST = "Lab Reports";
 	public static String DISP_DOCUMENT = "Documents";
 	
-
 	private Long id;
 	private Integer tableName;
 	private Long tableId;
 	private Long noteId;
+
+	public CaseManagementNoteLink() {}
+	public CaseManagementNoteLink(Integer tableName, Long tableId, Long noteId) {
+		this.tableName = tableName;
+		this.tableId = tableId;
+		this.noteId = noteId;
+	}
+
 
 	public Long getId() {
 	    return this.id;
