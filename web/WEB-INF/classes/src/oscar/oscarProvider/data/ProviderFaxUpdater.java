@@ -86,7 +86,7 @@ public class ProviderFaxUpdater {
    public boolean setFax(String fax) {
        DBHandler db;
        String sql;
-       ResultSet rs;
+       
        boolean ret = true;
        
        try {

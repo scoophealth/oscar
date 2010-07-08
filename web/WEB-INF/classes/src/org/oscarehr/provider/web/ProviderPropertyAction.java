@@ -412,7 +412,7 @@ public class ProviderPropertyAction extends DispatchAction {
         String provider=(String)request.getSession().getAttribute("user");
         UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.DOC_DEFAULT_QUEUE);
         UserProperty propNew=new UserProperty();
-        String propValue="";
+        
         if(prop==null){
             prop=new UserProperty();
         }

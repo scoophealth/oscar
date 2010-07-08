@@ -80,7 +80,7 @@ public class RptByExamplesFavoriteAction extends Action {
             System.out.println("STEP:1 "+frm.getQuery());
             String favoriteName = frm.getFavoriteName();
             String query = frm.getQuery();   
-            oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();       
+            //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
             //String queryWithEscapeChar = exampleData.replaceSQLString ("\"","\'",query);
            
             StringEscapeUtils strEscUtils = new StringEscapeUtils();                                

@@ -43,7 +43,7 @@ public class RptByExamplesAllFavoritesAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
     {   
-        RptByExamplesAllFavoritesForm frm = (RptByExamplesAllFavoritesForm) form;     
+          
         String providerNo = (String) request.getSession().getAttribute("user");
         RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler(providerNo);  
         request.setAttribute("allFavorites", hd);      
