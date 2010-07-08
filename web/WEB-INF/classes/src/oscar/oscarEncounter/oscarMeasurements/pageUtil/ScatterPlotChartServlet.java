@@ -262,7 +262,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     rs.previous();
                     points = new long[2][nbPatient*2];                    
                     
-                    boolean hasNext = true;
+                   
                     System.out.println("number of record: " + Integer.toString(nbPatient));
                     for(int i=0; i<nbPatient; i++){
                         if(rs.next()){                            
