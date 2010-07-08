@@ -59,9 +59,9 @@ public class ReportReassignAction extends Action {
         
         String[] flaggedLabs = request.getParameterValues("flaggedLabs");
         String selectedProviders = request.getParameter("selectedProviders");
-        String labType = request.getParameter("labType");
+       // String labType = request.getParameter("labType");
         String ajax=request.getParameter("ajax");
-        Hashtable htable = new Hashtable();
+        //Hashtable htable = new Hashtable();
         String[] labTypes = CommonLabResultData.getLabTypes();
         ArrayList listFlaggedLabs = new ArrayList();
        /* Enumeration em=request.getParameterNames();
