@@ -65,14 +65,14 @@ public class QuatroReportViewerAction extends Action {
 	    try{
 			ReportTempValue rptTemp = _rptValue.getReportTemp();
 	        int reportNo = rptTemp.getReportNo();
-			String loginId = (String)request.getSession().getAttribute("user");
+			
 	        String datepartDis = "Date ";
 	        if ("M".equals(_rptValue.getDatePart()))
 	           datepartDis = "Month ";
 	        else if ("Y".equals(_rptValue.getDatePart()))
 	           datepartDis = "Year ";
 
-			int templateNo = rptTemp.getTemplateNo();
+			
 			//prepare to run the report
  
             //1. get he report Value bean and date filter
@@ -102,8 +102,7 @@ public class QuatroReportViewerAction extends Action {
 			
 			if (!Utility.IsEmpty(sPP)) dateRangeDis = datepartDis + sPP;
 			
-			String optionId = String.valueOf(rptTemp.getReportOptionID());
-
+			
 			//2. get the org list (not include the users limitations)
 	        String orgDis = "";
             String orgs = "";
