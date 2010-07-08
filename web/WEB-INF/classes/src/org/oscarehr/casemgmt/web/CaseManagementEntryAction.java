@@ -982,7 +982,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String strBeanName = "casemgmt_oscar_bean" + demo;
         EctSessionBean sessionBean = (EctSessionBean) request.getSession().getAttribute(strBeanName);
         String verify = request.getParameter("verify");
-        ResourceBundle prop;
+       
         Date now = new Date();
         String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
         
@@ -1271,7 +1271,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         HttpSession session = request.getSession();
         if (session == null || session.getAttribute("userrole") == null) return mapping.findForward("expired");
 
-        String providerNo = getProviderNo(request);
+        //String providerNo = getProviderNo(request);
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
         request.setAttribute("change_flag", "false");
 
@@ -1464,7 +1464,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         //check if previous note is doc note.
 
         Long prevNoteId=note.getId();
-        boolean docAnno=false;
+        
 
         this.caseManagementMgr.saveNoteSimple(note);
         this.caseManagementMgr.getEditors(note);
@@ -1572,7 +1572,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         ActionMessages messages = new ActionMessages();
         messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("note.saved"));
         saveMessages(request, messages);
-        boolean docAnno=false;
+        
 System.out.println("before notesave in saveandexit");
         long noteId = noteSave(cform, request);        
         if( noteId == -1 ) {
@@ -1829,10 +1829,10 @@ System.out.println("before notesave in saveandexit");
 
     // we need to convert single issue into checkbox array so we can play nicely with CaseManagementEntryFormBean
     public ActionForward makeIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String programId = (String) request.getSession().getAttribute("case_program_id");
+        //String programId = (String) request.getSession().getAttribute("case_program_id");
         // grab the issue we want to add
         String issueId = request.getParameter("newIssueId");
-        String providerNo = getProviderNo(request);
+        //String providerNo = getProviderNo(request);
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
         String sessionFrmName = "caseManagementEntryForm" + this.getDemographicNo(request);
