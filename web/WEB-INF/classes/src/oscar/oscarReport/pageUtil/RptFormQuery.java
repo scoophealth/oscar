@@ -23,7 +23,7 @@ public class RptFormQuery {
 
     // sql: select formBCAR.pg1_ethOrig as Ethnic Origin, ...
     public String getQueryStr(String reportId, HttpServletRequest request) throws Exception {
-        String ret = "";
+        
         RptReportCreator reportCreator = new RptReportCreator();
 
         // sql:select

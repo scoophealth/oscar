@@ -48,7 +48,7 @@ public final class RptSetupSelectCDMReportAction extends Action {
         
         RptGroupNameBeanHandler hd = new RptGroupNameBeanHandler();
         Collection groups = hd.getGroupNameVector();
-        HttpSession session = request.getSession();
+        
         List messages = new LinkedList();
         messages.add("hello");
         request.setAttribute("messages", messages);

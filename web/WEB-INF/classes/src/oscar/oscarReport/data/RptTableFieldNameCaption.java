@@ -26,7 +26,7 @@ public class RptTableFieldNameCaption {
     DBHelp dbObj = new DBHelp();
 
     public boolean insertOrUpdateRecord() {
-        boolean ret = false;
+        boolean ret;
         String sql = "select id from reportTableFieldCaption where table_name = '"
                 + StringEscapeUtils.escapeSql(table_name) + "' and name='" + StringEscapeUtils.escapeSql(name) + "'";
         try {
