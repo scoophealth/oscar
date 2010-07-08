@@ -137,10 +137,10 @@ public class Doc2PDF {
     // Main entry for htmldoc class
     public static void HTMLDOC(HttpServletRequest request, HttpServletResponse response, String url)// I - Command-line args
     {
-        String server_name, // SERVER_NAME env var
-        server_port, // SERVER_PORT env var
-        path_info, // PATH_INFO env var
-        query_string, // QUERY_STRING env var
+        //String server_name, // SERVER_NAME env var
+        //server_port, // SERVER_PORT env var
+        //path_info, // PATH_INFO env var
+        String query_string, // QUERY_STRING env var
         filename; // File to convert
 
         filename = url;
@@ -210,8 +210,6 @@ public class Doc2PDF {
 
     public static void SavePDF2File(String fileName, String docBin) {
 
-        FileOutputStream fos;
-        DataOutputStream ds;
         try {
 
             FileOutputStream ostream = new FileOutputStream(fileName);
