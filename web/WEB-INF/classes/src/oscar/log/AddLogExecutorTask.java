@@ -2,7 +2,10 @@ package oscar.log;
 
 import org.oscarehr.common.model.OscarLog;
 
-public class AddLogExecutorTask implements Runnable {
+/**
+ * No one should be calling / using this class except the LogAction.java class.
+ */
+class AddLogExecutorTask implements Runnable {
 
 	private OscarLog oscarLog;
 	
