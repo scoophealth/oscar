@@ -185,7 +185,7 @@ public class ProgramManagerAction extends BaseAction {
 	}
 
 	public ActionForward programSignatures(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm programForm = (DynaActionForm) form;
+		//DynaActionForm programForm = (DynaActionForm) form;
 		String programId = request.getParameter("programId");
 		if (programId != null) {
 			// List<ProgramSignature> pss = programManager.getProgramSignatures(Integer.valueOf(programId));
@@ -504,7 +504,7 @@ public class ProgramManagerAction extends BaseAction {
 	}
 
 	public ActionForward removeBedCheckTime(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String id = request.getParameter("id");
+		
 		String removeId = request.getParameter("removeId");
 
 		bedCheckTimeManager.removeBedCheckTime(Integer.valueOf(removeId));

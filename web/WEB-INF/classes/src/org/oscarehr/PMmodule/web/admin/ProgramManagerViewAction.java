@@ -507,7 +507,7 @@ public class ProgramManagerViewAction extends BaseAction {
 				if (type != null) {
 					if (type.equals("community")) {
 						Integer clientId = admission.getClientId();
-						String program_type = admission.getProgramType();
+						
 						// if discharged program is service program,
 						// then should check if the client is in one bed program
 						/*
@@ -592,9 +592,9 @@ public class ProgramManagerViewAction extends BaseAction {
 		Program program = programManager.getProgram(String.valueOf(programId));
 		ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
 
-		int numMembers = program.getNumOfMembers().intValue();
-		int maxMem = program.getMaxAllowed().intValue();
-		int familySize = clientManager.getDependents(new Long(clientId)).size();
+		//int numMembers = program.getNumOfMembers().intValue();
+		//int maxMem = program.getMaxAllowed().intValue();
+		//int familySize = clientManager.getDependents(new Long(clientId)).size();
 		// TODO: add warning if this admission ( w/ dependents) will exceed the maxMem
 
 		/*
