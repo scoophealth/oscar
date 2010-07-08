@@ -54,7 +54,7 @@ public final class WLEditWaitingListNameAction extends Action {
         System.out.println("WLEditWaitingListNameAction/execute(): just entering.");
         HttpSession session = request.getSession();
     	LazyValidatorForm wlnForm = (LazyValidatorForm)form;
-    	ActionMessages msgs = new ActionMessages();
+    	
 
         String edit = request.getParameter("edit");
         String actionChosen = request.getParameter("actionChosen");

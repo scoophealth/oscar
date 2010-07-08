@@ -43,7 +43,7 @@ public class WLWaitingListAction extends Action {
         throws ServletException, IOException
     {
  
-        WLWaitingListForm frm = (WLWaitingListForm) form;                
+                       
         return mapping.findForward("success");
         
     }

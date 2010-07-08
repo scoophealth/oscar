@@ -55,7 +55,7 @@ public class TeleplanSubmissionLinkDAO {
     String nsql ="insert into teleplan_submission_link (bill_activity_id,billingmaster_no) values (?,?)";
     public void save(int billActId,List billingMasterList ){
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
             for (int i =0; i < billingMasterList.size(); i++){
                String bi = (String) billingMasterList.get(i);

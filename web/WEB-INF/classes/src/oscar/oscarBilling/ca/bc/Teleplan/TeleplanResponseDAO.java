@@ -58,7 +58,7 @@ public class TeleplanResponseDAO {
     
     public void save(TeleplanResponse tr){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             String query = "insert into teleplan_response_log (transaction_no,result,filename,msgs,real_filename) values (?,?,?,?,?)" ;
             Connection conn = DBHandler.getConnection();
             PreparedStatement pstat = conn.prepareStatement(query);
