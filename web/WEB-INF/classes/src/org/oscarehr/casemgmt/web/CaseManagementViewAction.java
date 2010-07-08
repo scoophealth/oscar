@@ -1096,7 +1096,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		log.debug("List Notes start");
 		long beginning = System.currentTimeMillis();
 		long start = beginning;
-		long current = 0;
+		
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
 		Collection notes = null;

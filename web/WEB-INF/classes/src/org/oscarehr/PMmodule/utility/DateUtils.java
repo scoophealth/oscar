@@ -402,7 +402,7 @@ public class DateUtils {
 //##########################################################################
   public String NextDay(int day, int month, int year, int numDays) {
 
-    boolean leapyear;
+   
 
     int modValue = 28;
 
