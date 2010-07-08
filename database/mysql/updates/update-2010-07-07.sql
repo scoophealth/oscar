@@ -24,3 +24,5 @@ insert into log (dateTime,provider_no,action,content,contentId,ip,demographic_no
 
 update log set content=null where content='';
 update log set provider_no=null where provider_no='';
+
+drop table log_temp;
