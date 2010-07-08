@@ -180,10 +180,10 @@ public class IntakeAAction2 extends BaseAction {
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm intakeForm = (DynaActionForm) form;
         IntakeAFormBean formBean = (IntakeAFormBean) intakeForm.get("view2");
-        IntakeFormBean intakeFormBean = (IntakeFormBean) intakeForm.get("bean");
+        //IntakeFormBean intakeFormBean = (IntakeFormBean) intakeForm.get("bean");
 
         Formintakea intakea = (Formintakea) intakeForm.get("intake");
-        String demographicNo = request.getParameter("demographicNo");
+        //String demographicNo = request.getParameter("demographicNo");
 
         boolean update = false;
 
