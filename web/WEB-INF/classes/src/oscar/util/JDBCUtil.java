@@ -95,7 +95,8 @@ public class JDBCUtil
             
             transformer.transform(source, result); 
             System.out.println("Next is to call zip function!");
-            zip z = new zip("xml");
+            zip z = new zip();
+            z.write2Zip("xml");
         }
         catch(Exception e){            
             System.out.println(e.getMessage() + "cannot saveAsXML");

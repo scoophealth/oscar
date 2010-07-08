@@ -34,6 +34,11 @@ import java.util.zip.ZipOutputStream;
 import oscar.OscarProperties;
 public class zip
 {
+    /**
+     * default contructor
+     * this constructor is used to avoid unused local variables/for clean code
+     */
+    zip(){}
     zip(String fileformat){
         write2Zip(fileformat);
     }
