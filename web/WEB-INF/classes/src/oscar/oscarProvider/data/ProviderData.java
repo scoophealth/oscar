@@ -783,7 +783,7 @@ public class ProviderData {
                                       "and title=?          and lastUpdateUser=?    and lastUpdateDate=? " + 
                                       "and signed_confidentiality=?     where provider_no=?";
             }
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection conn = DBHandler.getConnection();
             PreparedStatement write_rec = conn.prepareStatement(sql);
             

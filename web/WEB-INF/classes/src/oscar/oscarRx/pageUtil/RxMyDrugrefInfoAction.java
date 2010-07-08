@@ -245,7 +245,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         String provider = (String) request.getSession().getAttribute("user");
         String postId = request.getParameter("resId");
         String date = request.getParameter("updatedat");
-        String elementId=postId+"."+date;
+        
 
         long datel = Long.parseLong(date);
         Date updatedatId = new Date();
@@ -286,7 +286,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         String provider = (String) request.getSession().getAttribute("user");
         String resId = request.getParameter("resId");
         String date = request.getParameter("updatedat");
-        String elementId=resId+"."+date;
+      
 
         long datel = Long.parseLong(date);
         Date updatedatId = new Date();

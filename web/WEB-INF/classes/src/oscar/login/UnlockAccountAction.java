@@ -56,7 +56,7 @@ public final class UnlockAccountAction extends BaseAdminAction {
 	    	DynaValidatorForm myForm = (DynaValidatorForm) form;
 	    	String [] userIds = myForm.getString("userId").split(",");
 	    	
-	    	  String msg = "Unlock";
+	    	 
 	    	  LoginList vec = null;
 	    	  LoginCheckLogin cl = new LoginCheckLogin();
 	    	  //LoginList vec = cl.findLockList();
@@ -83,7 +83,7 @@ public final class UnlockAccountAction extends BaseAdminAction {
     {
     	try {
     		super.getAccess(request, KeyConstants.FUN_ADMIN_UNLOCKUSER);
-    		LoginCheckLogin cl = new LoginCheckLogin();
+    		//LoginCheckLogin cl = new LoginCheckLogin();
     		//List users = cl.getLockUserList();
     		//request.setAttribute("users", users);
     		return mapping.findForward("list");

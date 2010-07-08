@@ -444,8 +444,7 @@ public class TicklerAction extends DispatchAction {
     }
 
     public boolean isModuleLoaded(HttpServletRequest request, String moduleName) {
-        String propFile = request.getContextPath().substring(1) + ".properties";
-        String sep = System.getProperty("file.separator");
+    
         
         OscarProperties proper = OscarProperties.getInstance();
         // proper.loader(propFileName);
