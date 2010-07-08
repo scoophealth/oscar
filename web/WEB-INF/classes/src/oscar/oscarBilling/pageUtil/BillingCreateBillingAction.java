@@ -49,9 +49,7 @@ public class BillingCreateBillingAction extends Action {
         
         oscar.oscarBilling.pageUtil.BillingSessionBean bean;
         bean = (oscar.oscarBilling.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
-        String patientNo   = bean.getPatientNo();
-        String patientName = bean.getPatientName();
-        String apptNo     = bean.getApptNo();
+      
         
         String[] service  = ((BillingCreateBillingForm)form).getService();
         String other_service1 = ((BillingCreateBillingForm)form).getXml_other1();
