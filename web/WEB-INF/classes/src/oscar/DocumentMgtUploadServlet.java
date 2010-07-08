@@ -51,7 +51,7 @@ public class DocumentMgtUploadServlet extends HttpServlet{
 
 
   public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException  {
-	  int c;
+	  
     int count;
     byte data[] = new byte[BUFFER];
     byte data1[] = new byte[BUFFER/2];
@@ -60,15 +60,15 @@ public class DocumentMgtUploadServlet extends HttpServlet{
 
 
     HttpSession session = request.getSession(true);
-    String backupfilepath = ((String) session.getAttribute("homepath"))!=null?((String) session.getAttribute("homepath")):"null" ;
+   
     formatter = new SimpleDateFormat("yyyyMMddHmmss");
     today = new java.util.Date();
     output = formatter.format(today);
 
     count=request.getContentType().indexOf('=');
-    String temp = request.getContentType().substring(count+1);
-    String filename = "test.txt", fileoldname="", foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="", doctype="", docxml="";
-    String home_dir="", doc_forward="";
+    
+    String foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="";
+   
 
     // Get properties from oscar_mcmaster.properties
     Properties ap = OscarProperties.getInstance();
@@ -78,7 +78,7 @@ public class DocumentMgtUploadServlet extends HttpServlet{
 
     if (forwardTo == null || forwardTo.length() < 1) return;
 
-        boolean isMultipart = FileUpload.isMultipartContent(request);
+        
         //		 Create a new file upload handler
         DiskFileUpload upload = new DiskFileUpload();
 
