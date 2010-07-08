@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,8 +60,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
-import oscar.log.LogAction;
-import oscar.log.model.Log;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarDemographic.data.DemographicRelationship;
@@ -922,17 +919,18 @@ public class ImportDemographicDataAction2 extends Action {
 		 * Read data from xml *
 		 **********************/
 		
-		/***** Write to database *****/
-		ArrayList<Log> lglist = new ArrayList<Log>();
+// umm this doesn't do anything, you declare and empty list and iterate through it. I'm commenting it out for now
+//		/***** Write to database *****/
+//		ArrayList<Log> lglist = new ArrayList<Log>();
+//		
+//		/************************
+//		 * Put data into lglist *
+//		 ************************/
+//		for (Log lg : lglist) {
+//		    Timestamp dt = Timestamp.valueOf(lg.getDateTime().toString());
+//		    LogAction.addFullLog(dt, lg.getProviderNo(), lg.getAction(), lg.getContent(), lg.getContentId(), lg.getIp());
+//		}
 		
-		/************************
-		 * Put data into lglist *
-		 ************************/
-		
-		for (Log lg : lglist) {
-		    Timestamp dt = Timestamp.valueOf(lg.getDateTime().toString());
-		    LogAction.addFullLog(dt, lg.getProviderNo(), lg.getAction(), lg.getContent(), lg.getContentId(), lg.getIp());
-		}
 		/***** Write to database *****/
 		
 		/***** Write to file *****/

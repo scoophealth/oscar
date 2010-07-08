@@ -18,124 +18,108 @@
  */
 package oscar.log;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.OscarLogDao;
+import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
-import oscar.log.model.Log;
-import oscar.login.DBHelp;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
 
-/**
- * @author yilee18
- */
 public class LogAction {
-    private static final Logger _logger = Logger.getLogger(LogAction.class);
+	private static Logger logger = MiscUtils.getLogger();
+	private static OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+	private static ExecutorService executorService = Executors.newFixedThreadPool(16);
 
-    public static void addLog(String provider_no, String action, String content, String contentId, String ip) {
-        LogWorker logWorker = new LogWorker(provider_no, action, content, contentId, ip);
-        logWorker.start();
-    }
-    
-    public static void addLog(String provider_no, String action, String content, String contentId, String ip,String demographicNo) {
-        LogWorker logWorker = new LogWorker(provider_no, action, content, contentId, ip,demographicNo);
-        logWorker.start();
-    }
-
-    public static void addLog(String provider_no, String action, String content, String contentId, String ip,String demographicNo, String data) {
-        LogWorker logWorker = new LogWorker(provider_no, action, content, contentId, ip,demographicNo, data);
-        logWorker.start();
-    }    
-
-    public static void addLog(String provider_no, String action, String content, String data)
-    {
-    	LogWorker logWorker=new LogWorker();
-    	logWorker.provider_no=provider_no;
-    	logWorker.action=action;
-    	logWorker.content=content;
-    	logWorker.data=data;
-    	
-    	logWorker.start();
-    }
-    
-    public static boolean addALog(String provider_no, String action, String content, String contentId, String ip) {
-        boolean ret = false;
-        DBHelp db = new DBHelp();
-        String sql = "insert into log (provider_no,action,content,contentId, ip) values('" + provider_no;
-        sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + StringEscapeUtils.escapeSql(contentId) + "','" + ip + "')";
-        try {
-            ret = db.updateDBRecord(sql, provider_no);
-        } catch (SQLException e) {
-            _logger.error("failed to insert into logging table providerNo" + provider_no + ", action " + action
-                    + ", content " + content + ", contentId " + contentId + ", ip " + ip);
-        }
-        return ret;
-    }
-    
-    public static boolean addFullLog(Timestamp dateTime, String provider_no, String action, String content, String contentId, String ip) {
-        boolean ret = false;
-        DBHelp db = new DBHelp();
-        String sql = "insert into log (dateTime,provider_no,action,content,contentId,ip) values('";
-        sql += dateTime+"','"+provider_no+"','"+action+"','"+StringEscapeUtils.escapeSql(content)+"','"+StringEscapeUtils.escapeSql(contentId)+"','"+ip+"')";
-        try {
-            ret = db.updateDBRecord(sql, provider_no);
-        } catch (SQLException e) {
-            _logger.error("failed to insert into logging table dateTime " + dateTime + ", providerNo " + provider_no
-			  + ", action " + action + ", content " + content + ", contentId " + StringEscapeUtils.escapeSql(contentId) + ", ip " + ip);
-        }
-        return ret;
-    }
-    
-    public static ArrayList<Log> getLogByProvider(String provider_no) throws SQLException {
-	ArrayList<Log> _log = new ArrayList<Log>();
-	
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	ResultSet rs;
-	String sql = "SELECT * FROM log WHERE provider_no = '" + provider_no +"'";
-	rs = db.GetSQL(sql);
-
-	while (rs.next()) {
-	    _log.add(new Log(rs.getTimestamp("dateTime"), provider_no, rs.getString("action"),
-		    rs.getString("content"), rs.getString("contentId"), rs.getString("ip")));
+	/**
+	 * This method will add a log entry asynchronously in a separate thread.
+	 */
+	public static void addLog(String provider_no, String action, String content, String data) {
+		addLog(provider_no, action, content, null, null, null, data);
 	}
-	rs.close();
-	return _log;
-    }
-    
-    public static ArrayList<Log> getLogByDemo(String demo_no) throws SQLException {
-	ArrayList<Log> _log = new ArrayList<Log>();
-	
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	ResultSet rs;
-	String sql = "SELECT * FROM log WHERE demographic_no = '" + demo_no +"'";
-	rs = db.GetSQL(sql);
 
-	while (rs.next()) {
-	    _log.add(new Log(rs.getTimestamp("dateTime"), rs.getString("provider_no"), rs.getString("action"),
-		    rs.getString("content"), rs.getString("contentId"), rs.getString("ip")));
+	/**
+	 * This method will add a log entry asynchronously in a separate thread.
+	 */
+	public static void addLog(String provider_no, String action, String content, String contentId, String ip) {
+		addLog(provider_no, action, content, contentId, ip, null, null);
 	}
-	rs.close();
-	return _log;
-    }
-    
-    public static boolean logAccess(String provider_no, String className, String method, String programId, String shelterId,String clientId,
-    		String queryStr,String sessionId,long timeSpan, String ex, int result) {
-        boolean ret = false;
-        DBPreparedHandler db = new DBPreparedHandler();
-        String sql = "insert into access_log (Id,provider_no,ACTIONCLASS,METHOD,QUERYSTRING,PROGRAMID,SHELTERID,CLIENTID,TIMESPAN,EXCEPTION,RESULT, SESSIONID)";
-        sql += " values(seq_log_id.nextval,'" + provider_no + "', '" + className + "','" + method + "'," ; 
-        sql += "'" + queryStr + "'," + programId + "," + shelterId + "," + clientId + "," + String.valueOf(timeSpan) + ",'" + ex + "'," + result + ",'" + sessionId + "')";
-        try {
-            db.queryExecuteUpdate(sql);
-            ret = true;
-        } catch (SQLException e) {
-        	;
-        }
-        return ret;
-    }
+
+	/**
+	 * This method will add a log entry asynchronously in a separate thread.
+	 */
+	public static void addLog(String provider_no, String action, String content, String contentId, String ip, String demographicNo) {
+		addLog(provider_no, action, content, contentId, ip, demographicNo, null);
+	}
+
+	/**
+	 * This method will add a log entry asynchronously in a separate thread.
+	 */
+	public static void addLog(String provider_no, String action, String content, String contentId, String ip, String demographicNo, String data) {
+		OscarLog oscarLog = new OscarLog();
+
+		oscarLog.setProviderNo(provider_no);
+		oscarLog.setAction(action);
+		oscarLog.setContent(content);
+		oscarLog.setContentId(contentId);
+		oscarLog.setIp(ip);
+
+		try {
+			demographicNo=StringUtils.trimToNull(demographicNo);
+			if (demographicNo != null) oscarLog.setDemographicId(Integer.parseInt(demographicNo));
+		} catch (Exception e) {
+			logger.error("Unexpected error", e);
+		}
+
+		oscarLog.setData(data);
+
+		executorService.execute(new AddLogExecutorTask(oscarLog));
+	}
+
+	/**
+	 * This method will add a log entry in the same thread and can participate in the same transaction if one exists.
+	 */
+	public static void addLogSynchronous(String provider_no, String action, String content, String contentId, String ip) {
+		OscarLog oscarLog = new OscarLog();
+
+		oscarLog.setProviderNo(provider_no);
+		oscarLog.setAction(action);
+		oscarLog.setContent(content);
+		oscarLog.setContentId(contentId);
+		oscarLog.setIp(ip);
+
+		addLogSynchronous(oscarLog);
+	}
+
+	/**
+	 * This method will add the log entry in the same thread and transaction as it's being called in. This method will not throw exceptions, it will log to the file / console / log4j logger if an error occurs.
+	 */
+	public static void addLogSynchronous(OscarLog oscarLog) {
+		try {
+			oscarLogDao.persist(oscarLog);
+		} catch (Exception e) {
+			logger.error("Error in logger.", e);
+			logger.error("Error logging entry : " + oscarLog);
+		}
+	}
+
+	public static boolean logAccess(String provider_no, String className, String method, String programId, String shelterId, String clientId, String queryStr, String sessionId, long timeSpan, String ex, int result) {
+		boolean ret = false;
+		DBPreparedHandler db = new DBPreparedHandler();
+		String sql = "insert into access_log (Id,provider_no,ACTIONCLASS,METHOD,QUERYSTRING,PROGRAMID,SHELTERID,CLIENTID,TIMESPAN,EXCEPTION,RESULT, SESSIONID)";
+		sql += " values(seq_log_id.nextval,'" + provider_no + "', '" + className + "','" + method + "',";
+		sql += "'" + queryStr + "'," + programId + "," + shelterId + "," + clientId + "," + String.valueOf(timeSpan) + ",'" + ex + "'," + result + ",'" + sessionId + "')";
+		try {
+			db.queryExecuteUpdate(sql);
+			ret = true;
+		} catch (SQLException e) {
+			logger.error("Error", e);
+		}
+		return ret;
+	}
 }

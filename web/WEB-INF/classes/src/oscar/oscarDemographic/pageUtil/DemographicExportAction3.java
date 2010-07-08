@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
@@ -61,6 +60,9 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.OscarLogDao;
+import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -70,8 +72,6 @@ import oscar.appt.ApptData;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
-import oscar.log.LogAction;
-import oscar.log.model.Log;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
@@ -1395,9 +1395,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    String audReport = "";
 		    String audSummary = "";
 		    
-		    ArrayList<Log> logList = LogAction.getLogByDemo(this.demographicNo);
-		    for (Log lg : logList) {
-			rCont[0] = lg.getDateTime()==null ? "" : lg.getDateTime().toString();
+		    OscarLogDao oscarLogDao=(OscarLogDao) SpringUtils.getBean("oscarLogDao");
+		    
+		    List<OscarLog> logList = oscarLogDao.findByDemographicId(Integer.parseInt(demographicNo));
+		    
+		    for (OscarLog lg : logList) {
+			rCont[0] = lg.getCreated().toString();
 			rCont[1] = lg.getProviderNo();
 			rCont[2] = lg.getAction();
 			rCont[3] = lg.getContent();

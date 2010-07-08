@@ -6921,19 +6921,20 @@ CREATE TABLE surveyData (
 ) ;
 
 CREATE TABLE `log` (
-  `dateTime` timestamp,
-  `provider_no` varchar(10) NOT NULL default '',
-  `action` varchar(64) default NULL,
-  `content` varchar(80) NOT NULL default '',
-  `contentId` varchar(80) default NULL,
-  `ip` varchar(30) default NULL,
-  `demographic_no` int(10),
-  `data` text,
+  id bigint auto_increment primary key,
+  `dateTime` datetime not null,
+  `provider_no` varchar(10),
   index datetime (`dateTime`, `provider_no`),
+  `action` varchar(64),
   INDEX `action` (`action`),
+  `content` varchar(80),
   INDEX `content` (`content`),
+  `contentId` varchar(80),
   INDEX `contentId` (`contentId`),
-  INDEX `demographic_no` (`demographic_no`)
+  `ip` varchar(30),
+  `demographic_no` int(10),
+  INDEX `demographic_no` (`demographic_no`),
+  `data` text
 ) ;
 
 CREATE TABLE preventions (
