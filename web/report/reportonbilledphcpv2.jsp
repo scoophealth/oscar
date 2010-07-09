@@ -241,7 +241,6 @@ if(bDx) {
         sql =
                 "select distinct(bd.dx), dt.description from billing_on_item bd, diagnosticcode dt where bd.status!='D' and bd.dx = dt.diagnostic_code and bd.service_date>='"
                  + startDate + "' and bd.service_date<='" + endDate + "' order by diagnostic_code";
-        System.out.println("SQL "+sql);
         rs = dbObj.queryResults(sql);
         while (rs.next()) {
           vServiceCode.add(dbObj.getString(rs,"bd.dx"));
@@ -250,13 +249,11 @@ if(bDx) {
 } else {
 	// get service code list
 	sql = "select distinct(service_code), service_desc from billing_on_item bd where bd.status!='D' and bd.service_date>='" + startDate + "' and bd.service_date<='" + endDate + "' order by service_code";
-    System.out.println("SQL "+sql);
         rs = dbObj.queryResults(sql);
 	while (rs.next()) {
 		vServiceCode.add(dbObj.getString(rs,"service_code"));
 		vServiceDesc.add(dbObj.getString(rs,"service_desc"));
 	}
-	System.out.println("PHCP service code :" + sql);
 }
 
         for (int i = 0; i < vServiceCode.size(); i++) {
@@ -270,7 +267,6 @@ if(bDx) {
 	sql = "select count(distinct(b.demographic_no)) from billing_on_cheader1 b, billing_on_item bd where b.id=bd.ch1_id  and b.billing_date>='"
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -288,7 +284,6 @@ if(bDx) {
 	sql = "select count(distinct(b.id)) from billing_on_cheader1 b, billing_on_item bd where b.id=bd.ch1_id  and b.billing_date>='"
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i), dbObj.getString(rs,"count(distinct(b.id))"
@@ -305,7 +300,6 @@ if(bDx) {
 	sql = "select count(distinct(b.demographic_no)) from billing_on_cheader1 b, billing_on_item bd, demographic d  where b.id=bd.ch1_id and b.demographic_no=d.demographic_no  and b.billing_date>='"
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='F'";
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "patSexF" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -321,7 +315,6 @@ if(bDx) {
 	sql = "select count(distinct(b.demographic_no)) from billing_on_cheader1 b, billing_on_item bd, demographic d  where b.id=bd.ch1_id and b.demographic_no=d.demographic_no  and b.billing_date>='"
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='M'";
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "patSexM" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -338,7 +331,6 @@ if(bDx) {
 	sql = "select count(distinct(b.id)) from billing_on_cheader1 b, billing_on_item bd, demographic d where b.id=bd.ch1_id and b.demographic_no=d.demographic_no  and b.billing_date>='"
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='F'";
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "visSexF" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -354,7 +346,6 @@ if(bDx) {
 	sql = "select count(distinct(b.id)) from billing_on_cheader1 b, billing_on_item bd, demographic d where b.id=bd.ch1_id and b.demographic_no=d.demographic_no  and b.billing_date>='"
 	 + startDate + "' and b.billing_date<='" + endDate + "' and b.creator='" + providerNo  + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'" + " and d.sex='M'";
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "visSexM" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -375,7 +366,6 @@ if(bDx) {
      + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 "
 	 ;
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
 
           while (rs.next()) {
@@ -396,7 +386,6 @@ if(bDx) {
      + " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) <=1 "
 	 ;
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
 
           while (rs.next()) {
@@ -422,7 +411,6 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 "
 	 ;
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat2_11" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -446,7 +434,6 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=2 "
 	 ;
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis2_11" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -471,7 +458,6 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 "
 	 ;
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat12_20" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -495,7 +481,6 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=12 "
 	 ;
 }
-          System.out.println("SQL "+sql);
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis12_20" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -520,7 +505,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat21_34" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -544,7 +529,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=21 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis21_34" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -569,7 +554,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat35_50" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -593,7 +578,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=35 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis35_50" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -618,7 +603,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat51_64" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -642,7 +627,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=51 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis51_64" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -667,7 +652,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat65_70" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -691,7 +676,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=65 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis65_70" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -712,7 +697,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i), dbObj.getString(rs,
@@ -732,7 +717,7 @@ if(bDx) {
                   " and (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'))) - (RIGHT(CURRENT_DATE,5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth), '-', (d.date_of_birth)), '%Y-%m-%d'),5)) >=71 "
 	 ;
 }
-          System.out.println("SQL "+sql);
+          
           rs = dbObj.queryResults(sql);
           while (rs.next()) {
             props.setProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i), dbObj.getString(rs,

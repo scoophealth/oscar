@@ -27,6 +27,8 @@ package oscar.oscarEncounter.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilMisc;
 
@@ -64,7 +66,7 @@ public class EChartDAO {
       System.out.println("qry=" + qry);
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 

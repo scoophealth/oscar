@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBPreparedHandler;
 
 
@@ -89,7 +91,7 @@ rs = accessDB.queryResults(this.sql);
 
 
 
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
+        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
 
      return results;
     }

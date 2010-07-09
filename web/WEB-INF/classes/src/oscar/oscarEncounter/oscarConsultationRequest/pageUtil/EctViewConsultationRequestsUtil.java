@@ -30,6 +30,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -138,7 +140,7 @@ public class EctViewConsultationRequestsUtil {
          }            
          rs.close();            
       } catch(SQLException e) {            
-         System.out.println(e.getMessage());            
+         MiscUtils.getLogger().error("Error", e);            
          verdict = false;            
       }                     
       return verdict;      
@@ -172,7 +174,7 @@ public class EctViewConsultationRequestsUtil {
          }                  
          rs.close();         
       } catch(SQLException e) {         
-         System.out.println(e.getMessage());         
+         MiscUtils.getLogger().error("Error", e);         
          verdict = false;         
       }      
       return verdict;      

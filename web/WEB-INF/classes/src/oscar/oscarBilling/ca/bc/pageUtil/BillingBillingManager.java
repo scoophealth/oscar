@@ -29,6 +29,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class BillingBillingManager {
@@ -79,7 +81,7 @@ public class BillingBillingManager {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      MiscUtils.getLogger().error("Error", e);
     }
 
     return arr;
@@ -136,7 +138,7 @@ public class BillingBillingManager {
     }
     catch (SQLException e) {
       e.printStackTrace();
-      System.out.println(e.getMessage());
+      MiscUtils.getLogger().error("Error", e);
     }
     return billingItemsArray;
   }
@@ -382,7 +384,7 @@ public class BillingBillingManager {
 
       }
       catch (SQLException e) {
-        System.out.println(e.getMessage());
+        MiscUtils.getLogger().error("Error", e);
       }
 
     }

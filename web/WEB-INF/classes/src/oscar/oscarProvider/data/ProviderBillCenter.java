@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -50,7 +52,7 @@ public class ProviderBillCenter {
             rs.close();
         } catch(SQLException e) {
             System.out.println("There has been an error while checking if a provider had a bill center");
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return retval;
@@ -67,7 +69,7 @@ public class ProviderBillCenter {
             rs.close();
         } catch(SQLException e) {
             System.out.println("There has been an error while checking if a provider had a bill center");
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return retval;
@@ -81,7 +83,7 @@ public class ProviderBillCenter {
             db.RunSQL(sql);
         } catch(SQLException e){
             System.out.println("There has been an error while adding a provider's bill center");
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -96,7 +98,7 @@ public class ProviderBillCenter {
             rs.close();
         } catch(SQLException e){
             System.out.println("There has been an error while retrieving a provider's bill center");
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return billCenterCode;
@@ -112,7 +114,7 @@ public class ProviderBillCenter {
                 db.RunSQL(sql);
             } catch (SQLException e) {
                 System.out.println("There has been an error while updating a provider's bill center");
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
         }    
     }
@@ -129,7 +131,7 @@ public class ProviderBillCenter {
             rs.close();
         } catch(SQLException e){
             System.out.println("There has been an error while retrieving info from table billcenter");
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return allBillCenter;

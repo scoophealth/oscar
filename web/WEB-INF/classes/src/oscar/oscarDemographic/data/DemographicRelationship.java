@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -83,7 +84,7 @@ public class DemographicRelationship {
             db.RunSQL(sql);
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }       
    }
    
@@ -93,7 +94,7 @@ public class DemographicRelationship {
          String sql = "update relationships  set deleted = '1' where  id = '"+id+"'";
          db.RunSQL(sql);
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }       
    }
    
@@ -116,7 +117,7 @@ public class DemographicRelationship {
             list.add(h);
          }            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }       
       return list; 
    }
@@ -140,7 +141,7 @@ public class DemographicRelationship {
             list.add(h);
          }            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }       
       return list; 
    }
@@ -157,7 +158,7 @@ public class DemographicRelationship {
             sdm = db.getString(rs,"relation_demographic_no");
          }            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }       
       return sdm; 
    }
@@ -189,7 +190,7 @@ public class DemographicRelationship {
             list.add(h);
          }            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }       
       return list; 
    }
@@ -220,7 +221,7 @@ public class DemographicRelationship {
 	            list.add(h);
 	         }            
 	      } catch (SQLException e) {
-	         System.out.println(e.getMessage());
+	         MiscUtils.getLogger().error("Error", e);
 	      }       
 	      return list; 
 	   }

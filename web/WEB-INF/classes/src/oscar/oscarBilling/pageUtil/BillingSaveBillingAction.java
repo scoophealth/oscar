@@ -37,6 +37,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
@@ -85,7 +86,7 @@ public class BillingSaveBillingAction
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      MiscUtils.getLogger().error("Error", e);
     }
 
     sql = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator)";
@@ -109,7 +110,7 @@ public class BillingSaveBillingAction
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      MiscUtils.getLogger().error("Error", e);
     }
 
     ArrayList billItem = bean.getBillItem();
@@ -235,7 +236,7 @@ public class BillingSaveBillingAction
             this.createBillArchive(billingMasterNo++, "O");
           }
           catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
           }
           System.out.println(sql);
         }
@@ -304,7 +305,7 @@ public class BillingSaveBillingAction
             this.createBillArchive(billingMasterNo++, "O");
           }
           catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
           }
           System.out.println(sql);
         }

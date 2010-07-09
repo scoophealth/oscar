@@ -29,9 +29,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
-import java.util.ResourceBundle;
 import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData;
@@ -91,7 +93,7 @@ public class EctConConstructSpecialistsScriptsFile
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
             fileWriter.write("\n");
             fileWriter.write("}\n");
@@ -150,7 +152,7 @@ public class EctConConstructSpecialistsScriptsFile
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         stringBuffer.append("\n");
         stringBuffer.append("}\n");

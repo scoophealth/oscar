@@ -162,7 +162,7 @@ public class BillingSessionBean {
     //                userName =  rs.getString("first_name")+" "+rs.getString("last_name");
     //             }
     //             rs.close();
-    //     }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+    //     }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
     // }
     
     

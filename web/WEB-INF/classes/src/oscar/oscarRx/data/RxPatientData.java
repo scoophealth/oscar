@@ -31,6 +31,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class RxPatientData {
@@ -66,7 +68,7 @@ public class RxPatientData {
          arr = (Patient[]) lst.toArray(arr);         
       }
       catch (SQLException e) {         
-         System.out.println(e.getMessage());         
+         MiscUtils.getLogger().error("Error", e);         
       }      
       return arr;
       
@@ -98,7 +100,7 @@ public class RxPatientData {
          rs.close();         
       }
       catch (SQLException e) {         
-         System.out.println(e.getMessage());         
+         MiscUtils.getLogger().error("Error", e);         
       }
       
       return p;      
@@ -128,7 +130,7 @@ public class RxPatientData {
          rs.close();         
       }
       catch (SQLException e) {         
-         System.out.println(e.getMessage());         
+         MiscUtils.getLogger().error("Error", e);         
       }
       
       return p;      
@@ -264,7 +266,7 @@ public class RxPatientData {
             
          }
          catch (SQLException e) {            
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
          }  
            
          return allergy;
@@ -300,7 +302,7 @@ public class RxPatientData {
             arr = (Allergy[]) lst.toArray(arr);            
          }
          catch (SQLException e) {            
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
          }
          
          return arr;         
@@ -312,7 +314,7 @@ public class RxPatientData {
             allergy = new Allergy(0, entryDate, allergyCode);            
             allergy.Save();                               
          }catch (SQLException e) {            
-            System.out.println(e.getMessage());                               
+            MiscUtils.getLogger().error("Error", e);                               
          }  
          return allergy;     
       }
@@ -324,7 +326,7 @@ public class RxPatientData {
             String sql = "update allergies set archived = '1'  WHERE allergyid = '"+allergyId+"'";            
             b = db.RunSQL(sql);                                  
          }catch (SQLException e) {            
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
             b = false;            
          }
          return b;
@@ -345,7 +347,7 @@ public class RxPatientData {
             rs.close();            
             arr = (Disease[]) lst.toArray(arr);            
          }catch (SQLException e) {            
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
          }         
          return arr;         
       }

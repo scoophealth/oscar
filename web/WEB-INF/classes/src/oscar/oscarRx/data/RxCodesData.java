@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class RxCodesData {
@@ -54,7 +56,7 @@ public class RxCodesData {
             arr = (FrequencyCode[])lst.toArray(arr);
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return arr;
@@ -78,7 +80,7 @@ public class RxCodesData {
             rs.close();
             arr = (String[])lst.toArray(arr);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return arr;

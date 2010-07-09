@@ -27,6 +27,8 @@ package oscar.oscarRx.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class RxProviderData {
@@ -80,7 +82,7 @@ public class RxProviderData {
 
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return provider;

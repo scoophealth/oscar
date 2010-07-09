@@ -100,7 +100,6 @@ td {
     String edate = request.getParameter("edate")!=null?request.getParameter("edate"):"" ;
     String sTime = request.getParameter("sTime")!=null? (request.getParameter("sTime")+":00:00") : "00:00:00" ;
     String eTime = request.getParameter("eTime")!=null? (request.getParameter("eTime")+":00:00") : "24:00:00" ;
-    System.out.println(sTime + " " + eTime);
     String provider_no = request.getParameter("provider_no")!=null?request.getParameter("provider_no"):"175" ;
     ResultSet rsdemo = null ;
     boolean bodd = false;
@@ -139,15 +138,11 @@ td {
   parama[2] = sTime;
   parama[3] = eTime;
   parama[4] = provider_no;
-  System.out.println("provider_no = "+provider_no);
   if(request.getParameter("dsmode")!=null && request.getParameter("dsmode").equals("all") ) {
-    	System.out.println("we are here !!!!!!!!!!!!!!!!!!!!!!");
 	  if(!provider_no.equals("*") && !provider_no.startsWith("_grp_") ) {
-		  System.out.println("@@@@@@@@@@@@ "+parama[0]+"  ||  "+ parama[1]);
 	  rsdemo = daySheetBean.queryResults(parama, "search_daysheetsingleall");
 	  
     } else { //select all providers
-    	System.out.println(parama[0]+" *** " + parama[1]);
 	  rsdemo = daySheetBean.queryResults(new String[] {parama[0], parama[1], sTime, eTime}, "search_daysheetall");
     }
   } else { //new appt, need to update status
@@ -159,7 +154,6 @@ td {
 	  int rowsAffected = daySheetBean.queryExecuteUpdate(param[0], "update_apptstatus");
     }
   }
-System.out.println("out of here ##############");
   while (rsdemo.next()) {
     //if it is a group and a group member
 	if(!myGroupBean.isEmpty()) {

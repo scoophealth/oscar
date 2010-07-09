@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctSearchDemographicData
@@ -182,7 +184,7 @@ public class EctSearchDemographicData
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         return vector;

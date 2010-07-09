@@ -69,35 +69,7 @@
   String priority = "c";
   String reason = "";
   String hour = "";
-/*
-  //delete the old scheduledate
-  int rowsAffected = 0;
-  String[] param1 =new String[2];
-  param1[0]=provider_no;
-  param1[1]=priority;
-  rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_scheduledate_all");
-  param1[1]="b";
-  rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_scheduledate_all");
 
-  //change to StringBuffer
-  String[] param2 =new String[7];
-  Object aO = null;
-  param2[1]=provider_no;
-  param2[3]=priority;
-  param2[6]=creator;
-
-  //save new scheduledate from the bean
-  for (Enumeration e = scheduleDateBean.keys() ; e.hasMoreElements() ;) {
-    aO = e.nextElement();
-    HScheduleDate aHScheduleDate = (HScheduleDate) scheduleDateBean.get(aO);
-    param2[0] = aO.toString();
-    param2[2] = aHScheduleDate.available;
-    param2[4] = aHScheduleDate.reason;
-    param2[5] = aHScheduleDate.hour;
-    rowsAffected = scheduleMainBean.queryExecuteUpdate(param2,"add_scheduledate");
-         System.out.println(aHScheduleDate.available + aHScheduleDate.priority + aHScheduleDate.reason +aHScheduleDate.hour);
-  }
-*/
 %>
 <html:html locale="true">
 <head>

@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem;
 
@@ -71,7 +73,7 @@ public class dxResearchBeanHandler {
             }
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;

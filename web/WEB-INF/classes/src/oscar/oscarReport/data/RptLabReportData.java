@@ -34,6 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
  * This classes main function ConsultReportGenerate collects a group of patients with consults in the last specified date
@@ -63,7 +65,7 @@ public class RptLabReportData {
                  arrayList.add(a);
               }
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
+        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
     return arrayList;
     }
 
@@ -93,7 +95,7 @@ public class RptLabReportData {
               }
 
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
+        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
 
     }
 

@@ -87,7 +87,6 @@
       edate= rsgroup.getString("edate");
     }
     
-    System.out.println("START DATE " + request.getParameter("sdate") + " END DATE " + edate);
     String[] param1 =new String[3];
     param1[0]=param[0];
     param1[1]="1";

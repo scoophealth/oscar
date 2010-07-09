@@ -26,6 +26,8 @@ package oscar.oscarReport.data;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
 *This classes main function ConsultReportGenerate collects a group of patients with consults in the last specified date
@@ -53,7 +55,7 @@ public class RptConsultReportData {
                  arrayList.add(a);
               }
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  e.printStackTrace();}
+        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  e.printStackTrace();}
     return arrayList;
     }
 
@@ -94,7 +96,7 @@ public class RptConsultReportData {
               }
 
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   System.out.println(e.getMessage());  }
+        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
 
 
     }

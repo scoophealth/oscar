@@ -12,6 +12,8 @@ package oscar.oscarReport.data;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.bean.ProviderNameBean;
 
@@ -39,7 +41,7 @@ public class DoctorList {
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         } 
         return dnl;
     }

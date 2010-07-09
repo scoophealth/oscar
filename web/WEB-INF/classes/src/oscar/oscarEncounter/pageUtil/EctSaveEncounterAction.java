@@ -40,6 +40,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.log.LogAction;
@@ -106,7 +107,7 @@ public class EctSaveEncounterAction
       catch  (NumberFormatException e) {
           // already handled the null/empy string case, so shouldn't ever get this
           // exception.
-          System.out.println(e.getMessage());
+          MiscUtils.getLogger().error("Error", e);
           return true;
       }
  }

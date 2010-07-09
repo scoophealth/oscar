@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -101,7 +102,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return mapping.findForward("success");
@@ -181,7 +182,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                         }
                         catch(SQLException e)
                         {
-                            System.out.println(e.getMessage());
+                            MiscUtils.getLogger().error("Error", e);
                         }
                     }
                 }
@@ -421,7 +422,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         else{
@@ -544,7 +545,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         

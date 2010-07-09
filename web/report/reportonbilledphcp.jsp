@@ -254,7 +254,6 @@ if(bDx) {
 		vServiceCode.add(dbObj.getString(rs,"service_code"));
 		vServiceDesc.add(dbObj.getString(rs,"service_desc"));
 	}
-	System.out.println("PHCP service code :" + sql);
 }
 
         for (int i = 0; i < vServiceCode.size(); i++) {

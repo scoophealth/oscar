@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -77,7 +78,7 @@ public class RptByExampleQueryBeanHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         }
         return favoriteVector;
     }
@@ -103,7 +104,7 @@ public class RptByExampleQueryBeanHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         }
         return allQueryVector;
     }
@@ -128,7 +129,7 @@ public class RptByExampleQueryBeanHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         }
         return queryVector;
     }

@@ -30,6 +30,8 @@
 package oscar.oscarClinic;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
  *
@@ -99,7 +101,7 @@ public class ClinicData {
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             } 
             filled = true;
         }

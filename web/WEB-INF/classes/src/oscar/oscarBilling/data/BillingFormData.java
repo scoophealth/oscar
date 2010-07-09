@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 
@@ -75,7 +77,7 @@ public class BillingFormData {
             arr = (BillingService[])lst.toArray(arr);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
 
@@ -114,7 +116,7 @@ public class BillingFormData {
             arr = (Diagnostic[])lst.toArray(arr);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
 
@@ -153,7 +155,7 @@ public class BillingFormData {
             arr = (Location[])lst.toArray(arr);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
 
@@ -192,7 +194,7 @@ public class BillingFormData {
             arr = (BillingVisit[])lst.toArray(arr);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
 
@@ -231,7 +233,7 @@ public class BillingFormData {
             arr = (BillingPhysician[])lst.toArray(arr);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
 
@@ -272,7 +274,7 @@ public class BillingFormData {
             arr = (BillingForm[])lst.toArray(arr);
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
 
@@ -458,7 +460,7 @@ public class BillingFormData {
 
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return provider_n;
 
@@ -491,7 +493,7 @@ public class BillingFormData {
 
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return prac_no;
 
@@ -523,7 +525,7 @@ public class BillingFormData {
 
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return prac_no;
 
@@ -548,7 +550,7 @@ public class BillingFormData {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return dxdesc;
     }
@@ -567,7 +569,7 @@ public class BillingFormData {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return codeDesc;
     }
@@ -592,7 +594,7 @@ public class BillingFormData {
 
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return ret;

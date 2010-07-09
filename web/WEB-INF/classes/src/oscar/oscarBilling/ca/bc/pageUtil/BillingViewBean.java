@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.entities.PaymentType;
 import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
@@ -134,7 +136,7 @@ public class BillingViewBean {
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      MiscUtils.getLogger().error("Error", e);
     }
 
   }

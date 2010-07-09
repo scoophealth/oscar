@@ -26,9 +26,10 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
-import java.util.Vector;
 import java.util.ResourceBundle;
+import java.util.Vector;
+
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -75,7 +76,7 @@ public class EctMeasurementTypesBeanHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -169,7 +170,7 @@ public class EctMeasurementTypesBeanHandler {
             rsMGr.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;

@@ -30,6 +30,8 @@ import com.quatro.util.Utility;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.MiscUtils;
+
 import java.util.Calendar;
 
 public class LookupDao extends HibernateDaoSupport {
@@ -333,7 +335,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		catch(SQLException e)
 		{
-			System.out.println(e.getStackTrace());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return codes;
 	}
@@ -343,16 +345,12 @@ public class LookupDao extends HibernateDaoSupport {
 		String sql = "select max(" + idFieldName + ")";
 		sql += " from " + tableName;
 		DBPreparedHandler db = new DBPreparedHandler();
-		try {
-			ResultSet rs = db.queryResults(sql);
-			int id = 0;
-			if (rs.next()) 
-				 id = rs.getInt(1);
-			return id + 1;
-		}
-		finally
-		{
-		}
+
+		ResultSet rs = db.queryResults(sql);
+		int id = 0;
+		if (rs.next()) 
+			 id = rs.getInt(1);
+		return id + 1;
 	}
 	
 	public String SaveCodeValue(boolean isNew, LookupTableDefValue tableDef, List fieldDefList) throws SQLException

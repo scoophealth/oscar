@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
@@ -39,8 +40,6 @@ import org.apache.struts.util.MessageResources;
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.on.data.BillingClaimHeader1Data;
-
-//import oscar.oscarSecurity.CookieSecurity;
 import oscar.oscarBilling.ca.on.data.BillingItemData;
 import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
 

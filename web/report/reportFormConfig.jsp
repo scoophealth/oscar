@@ -78,7 +78,6 @@ Vector vecFormTable = new Vector();
 if("".equals(tableName)) {
 	// get form table list to choose: name/tablename
 	vecFormTable = tableObj.getFormTableNameList();
-	System.out.println("11");
 } else {
 	// standard
 	vecConfigField = confObj.getConfigNameList(SAVE_AS, reportId);

@@ -58,6 +58,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -101,7 +103,7 @@ public class DemographicExt {
             pstmt.close();
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
       return retval;
    }
@@ -137,7 +139,7 @@ public class DemographicExt {
             pstmt.close();
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
       System.out.println("size of hash "+retval.size());
       return retval;
@@ -189,7 +191,7 @@ public class DemographicExt {
             pstmt.close();
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
       /*
        insert into demographicExt (demographic_no,key_val,key_desc,value,date_time) values ('1','test','test for this','this value2',now());
@@ -224,7 +226,7 @@ public class DemographicExt {
             pstmt.close();
             
          } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
          }
       }
       /*

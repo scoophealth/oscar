@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -57,7 +58,7 @@ public class EctValidationsBeanHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -117,7 +118,7 @@ public class EctValidationsBeanHandler {
         }
         
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             validationId = -1;
         }
         
@@ -177,7 +178,7 @@ public class EctValidationsBeanHandler {
         }
         
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             validationId = -1;
         }
         
@@ -203,7 +204,7 @@ public class EctValidationsBeanHandler {
                 validation.setIsDate(db.getString(rs,"isDate"));
             }
         }catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return validation;

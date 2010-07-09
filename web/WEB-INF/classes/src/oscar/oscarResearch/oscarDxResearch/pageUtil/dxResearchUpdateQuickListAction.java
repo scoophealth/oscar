@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -116,7 +117,7 @@ public class dxResearchUpdateQuickListAction extends Action {
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }    
 
         if(!valid){

@@ -24,8 +24,6 @@
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
@@ -39,8 +37,6 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarDB.DBHandler;
 
 public class EctConEditSpecialistsAction extends Action {
 	

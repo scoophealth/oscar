@@ -22,6 +22,7 @@ import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import org.oscarehr.PMmodule.model.FieldDefinition;
+import org.oscarehr.util.MiscUtils;
 
 import com.quatro.common.KeyConstants;
 
@@ -423,23 +424,16 @@ public class Utility {
 				}
 				in.close();
 
-			} catch (IOException e) {
-				// catch io errors from FileInputStream or readLine()
-				System.out.println("Uh oh, got an IOException error!"
-						+ e.getMessage());
-
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Uh oh, got an IOException error!", e);
 			} 
-			catch(Exception ex){
-				System.out.println(" from read template!"
-						+ ex.getMessage());
-			}
 			finally {
 				if (in != null)
 					in.close();
 			}
 
 		} catch (Exception e) {
-			// log.warn(e);
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 		return list;

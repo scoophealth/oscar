@@ -32,6 +32,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -71,7 +73,7 @@ public class EfmData {
             ret.put("provider", db.getString(rs,"form_provider"));                          
          }            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }
       return ret;
    }

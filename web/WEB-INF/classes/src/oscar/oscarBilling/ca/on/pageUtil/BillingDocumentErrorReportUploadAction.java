@@ -50,6 +50,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.on.bean.BillingClaimBatchAcknowledgementReportBeanHandler;
@@ -148,7 +149,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			System.out.println("Sql Statement: " + sql);
 			db.RunSQL(sql);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 	}
 
@@ -353,7 +354,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 				}
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 		return hd;

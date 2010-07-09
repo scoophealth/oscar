@@ -24,6 +24,7 @@
  */
 
 package oscar.oscarReport.data;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -115,7 +116,7 @@ public class RptDemographicQueryLoader {
                     String[] t = fromXMLtoArray(mPatientStatus);
                     dRF.setPatientStatus(t);
                   }
-       }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+       }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
 
 
 

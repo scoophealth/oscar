@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
@@ -28,7 +29,7 @@ public class DBHelp {
             ret = true;
         } catch (SQLException e) {
             ret = false;
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         } finally {
         }
         return ret;
@@ -56,7 +57,7 @@ public class DBHelp {
             db = new DBHandler(DBHandler.OSCAR_DATA);
             ret = db.GetSQL(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         } finally {
         }
         return ret;
@@ -69,7 +70,7 @@ public class DBHelp {
             db = new DBPreparedHandler();
             ret = db.queryResults_paged(sql, params, 0);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         } finally {
         }
         return ret;

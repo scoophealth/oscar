@@ -49,6 +49,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.common.model.FlowSheetCustomization;
 import org.springframework.beans.factory.InitializingBean;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
@@ -58,7 +59,6 @@ import oscar.oscarEncounter.oscarMeasurements.data.ImportMeasurementTypes;
 import oscar.oscarEncounter.oscarMeasurements.util.DSCondition;
 import oscar.oscarEncounter.oscarMeasurements.util.Recommendation;
 import oscar.oscarEncounter.oscarMeasurements.util.RuleBaseCreator;
-import org.oscarehr.common.model.FlowSheetCustomization;
 import oscar.oscarEncounter.oscarMeasurements.util.TargetColour;
 
 /**

@@ -26,6 +26,8 @@ package oscar.oscarProvider.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 
@@ -46,7 +48,7 @@ public class ProSignatureData {
             catch(SQLException e)
             {
                 System.out.println("There has been an error while checking if a provider had a signature");
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
 
        return retval;
@@ -64,7 +66,7 @@ public class ProSignatureData {
           }
           catch(SQLException e){
              System.out.println("There has been an error while retrieving a provider's signature");
-             System.out.println(e.getMessage());
+             MiscUtils.getLogger().error("Error", e);
           }
 
        return retval;
@@ -90,7 +92,7 @@ public class ProSignatureData {
           }
           catch(SQLException e){
              System.out.println("There has been an error while adding a provider's signature");
-             System.out.println(e.getMessage());
+             MiscUtils.getLogger().error("Error", e);
           }
 
 
@@ -105,7 +107,7 @@ public class ProSignatureData {
           }
           catch(SQLException e){
              System.out.println("There has been an error while updating a provider's signature");
-             System.out.println(e.getMessage());
+             MiscUtils.getLogger().error("Error", e);
           }
 
 

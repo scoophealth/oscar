@@ -5,18 +5,17 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.decisionSupport.model.DSConsequence;
-import org.oscarehr.decisionSupport.model.DSDemographicAccess;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.service.DSService;
 import org.oscarehr.decisionSupport.web.DSGuidelineAction;

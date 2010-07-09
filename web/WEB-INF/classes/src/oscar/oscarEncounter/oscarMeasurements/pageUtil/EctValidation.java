@@ -31,7 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import oscar.OscarProperties;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctValidation{
@@ -61,7 +62,7 @@ public class EctValidation{
                 }
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return rs;
@@ -239,7 +240,7 @@ public class EctValidation{
             }
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         }
 
         return cssLocation;
@@ -270,7 +271,7 @@ public class EctValidation{
             }
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         }
 
         return cssName;

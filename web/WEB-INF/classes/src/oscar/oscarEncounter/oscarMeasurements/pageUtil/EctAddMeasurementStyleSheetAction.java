@@ -24,7 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,6 +45,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -128,7 +128,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
             return isAdded=false;
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         } 
         return isAdded;
     }
@@ -148,7 +148,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
             db.RunSQL(sql);
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         }       
     }
     

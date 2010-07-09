@@ -115,13 +115,6 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   }
   rset.close();
 
-  //if we already have a schedule tell the user! -- See below, we just warn the user for now
-  /*if( scheduleOverlaps ) {
-      String redirect = request.getHeader("Referer") + "&overlap=true";
-      System.out.println("Redirecting to " + redirect);
-      response.sendRedirect(redirect);
-      return;
-  }*/
       
   //if the schedule is the same we are editing instead
   String[] searchParams1 = new String[3];

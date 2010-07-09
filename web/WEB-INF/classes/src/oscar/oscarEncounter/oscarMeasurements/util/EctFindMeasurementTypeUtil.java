@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import org.apache.commons.digester.Digester;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
@@ -100,7 +101,7 @@ public class EctFindMeasurementTypeUtil {
             rs.close();            
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return measurementTypeVector;
@@ -147,7 +148,7 @@ public class EctFindMeasurementTypeUtil {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -165,7 +166,7 @@ public class EctFindMeasurementTypeUtil {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -186,7 +187,7 @@ public class EctFindMeasurementTypeUtil {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -217,7 +218,7 @@ public class EctFindMeasurementTypeUtil {
             }
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());         
+            MiscUtils.getLogger().error("Error", e);         
         }
     }
     
@@ -232,7 +233,7 @@ public class EctFindMeasurementTypeUtil {
             
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());           
+            MiscUtils.getLogger().error("Error", e);           
         }        
     }*/    
         

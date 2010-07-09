@@ -30,6 +30,8 @@ package oscar.oscarFax.client;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
  *
@@ -62,7 +64,7 @@ public class FaxClientLog {
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
        
     }
@@ -77,7 +79,7 @@ public class FaxClientLog {
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
             }else{
                throw new Exception("faxLogId must be set before you can call this method");
@@ -96,7 +98,7 @@ public class FaxClientLog {
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
             }else{
                throw new Exception("faxLogId must be set before you can call this method");

@@ -26,6 +26,8 @@
 package oscar.oscarReport.data;
 
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
  *
@@ -52,7 +54,7 @@ public class RptSearchData {
 
               }
               rs.close();
-            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
             return retval;
     }
 
@@ -70,7 +72,7 @@ public class RptSearchData {
 
               }
               rs.close();
-            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
             return retval;
     }
 
@@ -86,7 +88,7 @@ public class RptSearchData {
 
               }
               rs.close();
-            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
             return retval;
     }
 
@@ -106,7 +108,7 @@ public class RptSearchData {
 
               }
               rs.close();
-            }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }
+            }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
             return retval;
     }
 

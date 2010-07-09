@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -134,7 +136,7 @@ public class ProviderData {
                 rs.close();
                                
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }         
         return list;
    }
@@ -181,7 +183,7 @@ public class ProviderData {
                 rs.close();
                                
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }            
       
    }

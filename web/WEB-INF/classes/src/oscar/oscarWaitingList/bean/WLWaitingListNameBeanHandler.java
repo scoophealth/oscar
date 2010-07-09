@@ -31,6 +31,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class WLWaitingListNameBeanHandler {
@@ -65,7 +67,7 @@ public class WLWaitingListNameBeanHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;

@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.util.MessageResources;
-import org.oscarehr.util.SessionConstants;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;

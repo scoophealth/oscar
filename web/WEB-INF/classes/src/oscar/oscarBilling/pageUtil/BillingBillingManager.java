@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 
@@ -72,7 +74,7 @@ public class BillingBillingManager {
             arr = (BillingItem[])lst.toArray(arr);
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         
         
@@ -107,7 +109,7 @@ public class BillingBillingManager {
             
             rs.close();
             
-        } catch (SQLException e){ System.out.println(e.getMessage());  }
+        } catch (SQLException e){ MiscUtils.getLogger().error("Error", e);  }
         
         return billingItemsArray;
         
@@ -318,7 +320,7 @@ public class BillingBillingManager {
                 
                 rs.close();
                 
-            } catch (SQLException e){ System.out.println(e.getMessage());  }
+            } catch (SQLException e){ MiscUtils.getLogger().error("Error", e);  }
             
         }
         public double getLineTotal() {

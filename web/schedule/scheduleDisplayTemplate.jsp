@@ -93,9 +93,6 @@
                 int ratio = (hourCursor*60+minuteCursor)/nLen;
                 //hourmin = new StringBuffer((String)dateTimeCodeBean.get(((String) dateTimeCodeBean.get(provider)).substring(ratio,ratio+1)));
                 hourmin = new StringBuffer(hourCode.substring(ratio,ratio+1));
-                System.out.println("RATIO " + ratio);
-                System.out.println("LENGTH " + hourCode.substring(ratio,ratio+1));
-                System.out.println("CODE " + (String)dateTimeCodeBean.get("color"+hourCode.substring(ratio,ratio+1)));
                 bColorHour=minuteCursor==0?true:false;
          %>
 	<tr>

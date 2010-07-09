@@ -85,7 +85,7 @@ public class ObecData {
 			}
 		} catch (SQLException e) {
 			System.out.println("There has been an error while retrieving a Obec");
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 		return filename;

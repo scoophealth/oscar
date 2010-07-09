@@ -51,7 +51,6 @@
   
   
   String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
-  System.out.println("uuid "+uuid);
   String text = "";
   String id = "";
   

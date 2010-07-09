@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class PatientData
@@ -58,7 +60,7 @@ public class PatientData
             rs.close();
         } catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
 	    }
 
         return p;

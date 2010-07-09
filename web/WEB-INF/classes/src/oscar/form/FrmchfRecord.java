@@ -15,10 +15,8 @@ package oscar.form;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Properties;
-// if we are going to access or write meausurements we should..
-// import oscar.oscarEncounter.oscarMeasurements;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 

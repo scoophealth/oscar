@@ -43,10 +43,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-
 import org.oscarehr.common.dao.FlowSheetCustomizerDAO;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
@@ -282,7 +283,7 @@ public class EctMeasurementsAction extends Action {
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
 
 

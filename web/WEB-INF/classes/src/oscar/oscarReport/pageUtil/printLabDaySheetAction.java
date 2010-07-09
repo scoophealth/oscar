@@ -5,30 +5,26 @@
 
 package oscar.oscarReport.pageUtil;
 
-import oscar.OscarAction;
-import oscar.OscarDocumentCreator;
-
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 
-
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.oscarehr.util.DbConnectionFilter;
+
+import oscar.OscarAction;
+import oscar.OscarDocumentCreator;
 
 /**
  *

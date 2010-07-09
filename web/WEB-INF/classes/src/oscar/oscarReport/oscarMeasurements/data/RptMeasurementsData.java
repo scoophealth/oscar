@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
 *This classes main function ConsultReportGenerate collects a group of patients with consults in the last specified date
@@ -55,7 +57,7 @@ public class RptMeasurementsData {
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return nbPatient;
@@ -84,7 +86,7 @@ public class RptMeasurementsData {
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
        
         return patients;

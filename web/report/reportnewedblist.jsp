@@ -333,7 +333,6 @@ function loadPage() {
         cal.add(Calendar.YEAR, 1);
         paramI[1]=sdf.format(cal.getTime());
         rs = reportMainBean.queryResults(paramI, "select_maxformar_id");
-        System.out.println("sdate " + paramI[0] + " edate " + paramI[1]);
         while (rs.next()) {
         arMaxId.setProperty(""+rs.getInt("max(ID)"), "1");
         }
@@ -357,12 +356,9 @@ function loadPage() {
         rs = reportMainBean.queryResults(paramb,itemp1, "select_backwardscompatible");
         } catch (Exception e) {  // ...in which case we go with the standard version
         rs = reportMainBean.queryResults(param,itemp1, "select_formar");
-        System.out.println("sdate " + param[0] + " edate " + param[1] + " itemp1 " + itemp1[0] + " itemp2 " + itemp1[1]);
         }
         while (rs.next()) {
-        System.out.println("testing ID");
         if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
-        System.out.println("checking demographic_no");
         if (demoProp.containsKey(reportMainBean.getString(rs,"demographic_no")) ) continue;
         else demoProp.setProperty(reportMainBean.getString(rs,"demographic_no"), "1");
         

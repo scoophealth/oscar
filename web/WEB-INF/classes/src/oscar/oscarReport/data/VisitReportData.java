@@ -26,6 +26,8 @@ package oscar.oscarReport.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 
@@ -82,7 +84,7 @@ public class VisitReportData {
           }
           catch(SQLException e){
              System.out.println("There has been an error while retrieving a visit count");
-             System.out.println(e.getMessage());
+             MiscUtils.getLogger().error("Error", e);
           }
 
        return retVisit;
@@ -118,7 +120,7 @@ public class VisitReportData {
 	          }
 	          catch(SQLException e){
 	             System.out.println("There has been an error while retrieving a visit count");
-	             System.out.println(e.getMessage());
+	             MiscUtils.getLogger().error("Error", e);
 	          }
 
 	       return retVisit;

@@ -17,6 +17,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultation.data.EctConProviderData;
 import oscar.util.UtilDateUtilities;
@@ -219,7 +221,7 @@ public class EctSessionBean {
             }
 
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 
@@ -256,7 +258,7 @@ public class EctSessionBean {
             }
             rs.close();
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         try {
             sql = "select * from appointment where provider_no='" + curProviderNo + "' and appointment_date='"
@@ -275,7 +277,7 @@ public class EctSessionBean {
             }
             rs.close();
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         try {
             //            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -304,7 +306,7 @@ public class EctSessionBean {
             }
             rs.close();
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         //apointmentsIdArray and the appointmentsNamesArray are
         //already set up so no need to get them again
@@ -340,7 +342,7 @@ public class EctSessionBean {
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 
@@ -375,7 +377,7 @@ public class EctSessionBean {
             }
             rs.close();
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
 
         try {
@@ -409,7 +411,7 @@ public class EctSessionBean {
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 

@@ -27,8 +27,6 @@ package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,10 +36,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarMessenger.util.MsgStringQuote;
 
 
 public class EctEditMeasurementGroupAction extends Action {
@@ -104,7 +102,7 @@ public class EctEditMeasurementGroupAction extends Action {
            
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
      
         }                          

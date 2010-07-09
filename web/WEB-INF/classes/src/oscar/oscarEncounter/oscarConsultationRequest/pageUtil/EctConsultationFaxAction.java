@@ -39,6 +39,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarClinic.ClinicData;
@@ -244,7 +245,7 @@ public class EctConsultationFaxAction extends Action {
             retval = db.getString(rs,"locationId");
       }
       catch(SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }
       return retval;
    }

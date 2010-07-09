@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class QueueData {
@@ -85,7 +87,7 @@ public class QueueData {
             }
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
        return retList;
    }
@@ -106,7 +108,7 @@ public class QueueData {
                 rs.close();
 
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
    }*/
   //get queue name
@@ -123,7 +125,7 @@ public class QueueData {
                 rs.close();
 
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
       return retStr;
    }
@@ -143,7 +145,7 @@ public class QueueData {
                 if(retN>0)
                     retStr=retN.toString();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
       return retStr;
    }

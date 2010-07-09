@@ -26,9 +26,9 @@ package oscar.oscarProvider.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
+
 import oscar.oscarDB.DBHandler;
 
 /**

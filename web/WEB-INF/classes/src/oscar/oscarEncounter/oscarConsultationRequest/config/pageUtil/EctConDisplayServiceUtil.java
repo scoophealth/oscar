@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctConDisplayServiceUtil
@@ -47,7 +49,7 @@ public class EctConDisplayServiceUtil
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -86,7 +88,7 @@ public class EctConDisplayServiceUtil
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 
@@ -103,7 +105,7 @@ public class EctConDisplayServiceUtil
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return vector;
     }
@@ -124,7 +126,7 @@ public class EctConDisplayServiceUtil
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 

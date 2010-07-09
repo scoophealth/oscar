@@ -3,6 +3,8 @@ package oscar.oscarResearch.oscarDxResearch.bean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class dxCodeHandler {
@@ -24,7 +26,7 @@ public class dxCodeHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());            
+            MiscUtils.getLogger().error("Error", e);            
         }
         return result;
     }   

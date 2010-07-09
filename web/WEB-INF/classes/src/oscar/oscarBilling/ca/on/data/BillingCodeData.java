@@ -35,6 +35,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -55,7 +56,7 @@ public class BillingCodeData {
          }
          rs.close();
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }      
       return list;
    }
@@ -96,7 +97,7 @@ public class BillingCodeData {
          }
          rs.close();
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }        
       return h;
    }
@@ -114,7 +115,7 @@ public class BillingCodeData {
          }                  
          rs.close();
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }        
       return count;
    }
@@ -132,7 +133,7 @@ public class BillingCodeData {
          }
          rs.close();
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
       }            
    }
    

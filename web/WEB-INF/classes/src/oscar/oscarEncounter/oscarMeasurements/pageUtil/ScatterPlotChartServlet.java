@@ -58,6 +58,7 @@ import org.jCharts.properties.PointChartProperties;
 import org.jCharts.properties.ScatterPlotProperties;
 import org.jCharts.properties.util.ChartFont;
 import org.jCharts.types.ChartType;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
@@ -301,7 +302,7 @@ public class ScatterPlotChartServlet extends HttpServlet
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
             
             return points;
@@ -332,7 +333,7 @@ public class ScatterPlotChartServlet extends HttpServlet
             }
             catch(SQLException e)
             {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
             
             return isNumeric;

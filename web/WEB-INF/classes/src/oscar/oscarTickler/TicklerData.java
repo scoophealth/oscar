@@ -32,6 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -83,7 +84,7 @@ public class TicklerData {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);         
       } catch (SQLException e) {         
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
          e.printStackTrace();
       }      
    }
@@ -102,7 +103,7 @@ public class TicklerData {
          }
          rs.close();         
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         MiscUtils.getLogger().error("Error", e);
          e.printStackTrace();
       }      
       return hastickler;

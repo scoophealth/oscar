@@ -27,6 +27,8 @@ package oscar.oscarEncounter.oscarConsultationRequest.config.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctConConfigurationJavascriptData {
@@ -41,7 +43,7 @@ public class EctConConfigurationJavascriptData {
 	    String sql = "update specialistsJavascript set javascriptString = '" +quotedString+ "' where setId = '1'";
             db.RunSQL(sql);
         } catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 
@@ -54,7 +56,7 @@ public class EctConConfigurationJavascriptData {
             if(rs.next())
                 retval = db.getString(rs,"javascriptString");
         } catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }

@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 
 import oscar.oscarDB.DBHandler;
@@ -82,7 +83,7 @@ public class EctImmImmunizationSetData {
 
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 			verdict = false;
 		}
 		return verdict;
@@ -105,7 +106,7 @@ public class EctImmImmunizationSetData {
 
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 			verdict = false;
 		}
 		return verdict;
@@ -127,7 +128,7 @@ public class EctImmImmunizationSetData {
 				xmlDoc = db.getString(rs,"setXmlDoc");
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return xmlDoc;
 	}

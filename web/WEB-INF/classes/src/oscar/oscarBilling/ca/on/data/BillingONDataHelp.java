@@ -32,6 +32,8 @@ package oscar.oscarBilling.ca.on.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 
@@ -68,7 +70,7 @@ public class BillingONDataHelp {
 				ret = rs.getInt(1);
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return ret;
 	}
@@ -82,7 +84,7 @@ public class BillingONDataHelp {
 			ret = true;
 		} catch (SQLException e) {
 			ret = false;
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return ret;
 	}
@@ -94,7 +96,7 @@ public class BillingONDataHelp {
 			db = new DBHandler(DBHandler.OSCAR_DATA);
 			ret = db.GetSQL(sql);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return ret;
 	}

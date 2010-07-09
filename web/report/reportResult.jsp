@@ -41,7 +41,6 @@ String reportName = (new RptReportItem()).getReportName(reportId);
 
 RptFormQuery formQuery = new RptFormQuery();
 String reportSql = formQuery.getQueryStr(reportId, request);
-System.out.println("SQL: " + reportSql);
 
 RptReportConfigData formConfig = new RptReportConfigData();
 Vector[] vecField = formConfig.getAllFieldNameValue(SAVE_AS, reportId);

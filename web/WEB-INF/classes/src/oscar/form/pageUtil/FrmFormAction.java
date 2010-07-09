@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.form.FrmRecordHelp;
@@ -245,7 +246,7 @@ public class FrmFormAction extends Action {
                 frh.setDateFormat(_dateFormat);
                 (frh).saveFormRecord(props, sql);
             }catch(SQLException e){
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
             
             System.out.println("current mem 9 "+currentMem()); 
@@ -386,7 +387,7 @@ public class FrmFormAction extends Action {
             }
         }
         catch(SQLException e){
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return newDataAdded;
     }

@@ -36,6 +36,8 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -87,7 +89,7 @@ public class DemographicData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return date;
 	}
@@ -106,7 +108,7 @@ public class DemographicData {
 			rs.close();
 			return demographicNo;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return demographicNo;
 	}
@@ -133,7 +135,7 @@ public class DemographicData {
 			rs.close();
 			return demographicNo;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return demographicNo;
 	}
@@ -151,7 +153,7 @@ public class DemographicData {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return num;
 	}
@@ -175,7 +177,7 @@ public class DemographicData {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return list;
 	}
@@ -214,7 +216,7 @@ public class DemographicData {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return list;
 	}
@@ -237,7 +239,7 @@ public class DemographicData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return nameage;
 	}
@@ -260,7 +262,7 @@ public class DemographicData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return nameage;
 	}
@@ -282,7 +284,7 @@ public class DemographicData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return retval;
 	}
@@ -316,7 +318,7 @@ public class DemographicData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 		return demographic;
@@ -336,7 +338,7 @@ public class DemographicData {
 			rs.close();
 			return demographicNo;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return demographicNo;
 	}
@@ -357,7 +359,7 @@ public class DemographicData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return date;
 	}
@@ -513,7 +515,7 @@ public class DemographicData {
 				this.EctInfo = getEctInformation();
 
 			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}
 
@@ -790,7 +792,7 @@ public class DemographicData {
 					}
 					this.allergies = stringBuffer.toString();
 				} catch (SQLException e) {
-					System.out.println(e.getMessage());
+					MiscUtils.getLogger().error("Error", e);
 				}
 				return this.allergies;
 			}
@@ -811,7 +813,7 @@ public class DemographicData {
 					this.patient = patientData.getPatient(demographic_no);
 					this.eChart = patient.getEChart();
 				} catch (SQLException e) {
-					System.out.println(e.getMessage());
+					MiscUtils.getLogger().error("Error", e);
 				}
 			}
 

@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 
 import oscar.OscarProperties;
@@ -94,7 +95,7 @@ public class FrmRecordHelp {
                 Document doc = JDBCUtil.toDocument(rs);
                 JDBCUtil.saveAsXML(doc, fileName);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         rs.close();

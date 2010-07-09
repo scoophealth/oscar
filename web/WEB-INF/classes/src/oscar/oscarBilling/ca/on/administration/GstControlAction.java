@@ -22,6 +22,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -42,7 +43,7 @@ public class GstControlAction extends Action{
                 db.RunSQL(sql);   
             }
         catch(SQLException e) {
-                System.out.println(e.getMessage());            
+                MiscUtils.getLogger().error("Error", e);            
         }
     }
     

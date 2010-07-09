@@ -124,7 +124,6 @@ function fillIn(dxcode, level1, level2, description) {
         vec.add(prop);
       }
 
-      System.out.println(" 3." + curUser_no);
 %>
 <table width="100%" border="0" bgcolor="ivory" cellspacing="1"
 	cellpadding="1">

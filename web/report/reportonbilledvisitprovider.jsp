@@ -43,8 +43,6 @@
     String number = request.getParameter("providerId");
     String name   = request.getParameter("name" + number);
 
-    System.out.println(number + "  " + name);
-
     String sql = "update secUserRole set role_name='" + name + "' where provider_no='" + number + "'";
 
     dbObj.queryExecuteUpdate(sql);

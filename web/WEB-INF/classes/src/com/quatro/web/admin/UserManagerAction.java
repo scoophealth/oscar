@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
+import org.oscarehr.util.MiscUtils;
 import org.apache.struts.actions.DispatchAction;
 
 import com.quatro.common.KeyConstants;
@@ -619,7 +620,7 @@ public class UserManagerAction extends BaseAdminAction {
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.getMessage());
+			MiscUtils.getLogger().error("Error", e);
 			// duplicate detected;
 		}
 		if(!(hasBlanks || hasDuplicates)){

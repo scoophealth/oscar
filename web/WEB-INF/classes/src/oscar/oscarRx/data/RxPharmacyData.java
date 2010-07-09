@@ -35,6 +35,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -104,7 +106,7 @@ public class RxPharmacyData {
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
    }
    
@@ -146,7 +148,7 @@ public class RxPharmacyData {
             db.RunSQL(sql);
         } catch (SQLException e) {
            e.printStackTrace();
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
    }
    
@@ -161,7 +163,7 @@ public class RxPharmacyData {
             String sql = "update pharmacyInfo set status = '0' where ID = '"+ID+"'";                                                
             db.RunSQL(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
    }
    
@@ -182,7 +184,7 @@ public class RxPharmacyData {
             }                                                
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
       
       return pharmacy;
@@ -205,7 +207,7 @@ public class RxPharmacyData {
             }                                                
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
       
       return pharmacy;
@@ -228,7 +230,7 @@ public class RxPharmacyData {
             }                                                
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
       return pharmacyList;
    }
@@ -252,7 +254,7 @@ public class RxPharmacyData {
             db.RunSQL(sql);
         } catch (SQLException e) {
            e.printStackTrace();
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
    }
    
@@ -276,7 +278,7 @@ public class RxPharmacyData {
             }                                                
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
       
       return pharmacy;      

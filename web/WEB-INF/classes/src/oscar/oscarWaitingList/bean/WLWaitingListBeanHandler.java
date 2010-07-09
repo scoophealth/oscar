@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jfree.util.Log;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarWaitingList.util.WLWaitingListUtil;
@@ -84,7 +84,7 @@ public class WLWaitingListBeanHandler {
             rs.close();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -137,7 +137,7 @@ public class WLWaitingListBeanHandler {
             }
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());         
+            MiscUtils.getLogger().error("Error", e);         
         }        
     } 
         

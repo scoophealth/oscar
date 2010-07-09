@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 
@@ -87,7 +89,7 @@ public class PatientListByAppt extends HttpServlet {
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         } 
         response.sendRedirect(response.encodeRedirectURL("oscarReport/downloadpatientlist.jsp"));
     }

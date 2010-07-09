@@ -30,6 +30,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -66,7 +68,7 @@ public class EctPatientData {
                         db.getString(rs,"roster_status"));
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            MiscUtils.getLogger().error("Error", e);
         }
         return p;
     }
@@ -183,7 +185,7 @@ public class EctPatientData {
                     }
                     rs.close();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    MiscUtils.getLogger().error("Error", e);
                 }
             }
 
