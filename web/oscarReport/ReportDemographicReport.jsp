@@ -146,11 +146,9 @@ thisForm.copyConstructor((oscar.oscarReport.pageUtil.RptDemographicReportForm)re
 }
 oscar.oscarReport.pageUtil.RptDemographicReportForm thisForm;
 thisForm = (oscar.oscarReport.pageUtil.RptDemographicReportForm)request.getAttribute("RptDemographicReportForm");
-System.out.println(" val = "+thisForm);
 
 
 if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle().equals("2") ){
-    System.out.println("I get called");
     thisForm.setAgeStyle("1");
  }
 %>
@@ -630,7 +628,6 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
         Search Returned : <%=searchList.size()%> Results
         <html:form action="/report/CreateDemographicSet" >
         <% boolean includesDemo = false;
-           System.out.println("checking select array "+ selectArray[0]);
            if (selectArray[0].equals("demographic_no")){ 
               includesDemo = true; %>      
               <div class="hiddenInPrint">

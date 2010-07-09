@@ -646,7 +646,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 int obxCount = handler.getOBXCount(j);
                                 for (k=0; k < obxCount; k++){ 
                                     String obxName = handler.getOBXName(j, k);
-                                    System.out.println("OBX NAME "+obxName+"  -> "+handler.getObservationHeader(j, k).equals(headers.get(i))+" obsHeader "+ handler.getObservationHeader(j, k) +" header "+ headers.get(i));
                                     if ( !handler.getOBXResultStatus(j, k).equals("DNS") /*&& !obxName.equals("")*/ && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
                                         String obrName = handler.getOBRName(j);
                                         if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){%>

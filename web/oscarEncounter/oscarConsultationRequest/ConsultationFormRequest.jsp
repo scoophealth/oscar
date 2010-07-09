@@ -1299,7 +1299,6 @@ function fetchAttached() {
 <%
 	String aburl2 = "/EyeForm.do?method=specialConRequest&demographicNo=" + demo + "&appNo=" + request.getParameter("appNo");
 					if (requestId != null) aburl2 += "&requestId=" + requestId;
-					System.out.println("requestId:" + requestId);
 %>
 <html:hidden property="specialencounterFlag" value="true"/>
 <plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl2 %>"></plugin:include>

@@ -295,7 +295,6 @@
                 ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
 
                 if(rsWL.next()){
-                    System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
                     String[] paramWL = new String[6]; 
                     paramWL[0] = request.getParameter("list_id");
                     paramWL[1] = apptMainBean.getString(rs,"demographic_no");

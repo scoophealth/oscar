@@ -73,7 +73,6 @@
   String prevention = request.getParameter("prevention");
   if (prevention == null && existingPrevention != null){
       prevention = (String) existingPrevention.get("preventionType");
-      System.out.println(prevention);      
   }
   
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();

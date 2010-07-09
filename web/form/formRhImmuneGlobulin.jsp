@@ -70,7 +70,6 @@
     if (demographicNo == null){
         demographicNo = (String) request.getAttribute("demographic_no");
     }    
-    System.out.println("demographic_no "+demographicNo);
     int demoNo = Integer.parseInt(demographicNo);
     
     
@@ -224,7 +223,6 @@
 <%   
              Hashtable h = null;
              String newFlowNeeded = (String) request.getAttribute("newWorkFlowNeeded"); 
-             System.out.println("HERE 1");
            %>
 <div>
 <fieldset><legend>Current Pregnancy </legend> <% 
@@ -236,12 +234,10 @@
                     ArrayList currentWorkFlows = flow.getActiveWorkFlowList(demographicNo);
 
                     if(currentWorkFlows != null && currentWorkFlows.size() > 0){
-                        System.out.println("size of current workflows "+currentWorkFlows.size());
                         request.setAttribute("currentWorkFlow",currentWorkFlows.get(0));
                          h = (Hashtable) currentWorkFlows.get(0);
                     }
                     
-                System.out.println("HERE 2");
                 if(h != null){
                     String gestAge = "";
                     try{
@@ -279,7 +275,7 @@
 		<%}%>
 
 	</select>
-	<%} System.out.println("HERE 3");%>
+	<%}%>
 </fieldset>
 
 <fieldset><legend>Mother's Information</legend> <label>Date
@@ -537,12 +533,12 @@ sample drawn?</label></fieldset>
 <fieldset><legend>Comments</legend> <textarea name="comments"
 	style="width: 45em;"><%=props.getProperty("comments","")%></textarea></fieldset>
 
-<input type="submit" value="Save" /> <% System.out.println("HERE 4");%> <% 
+<input type="submit" value="Save" /> <% 
                 if ( h != null && h.get("ID") != null){ %> <input
 	type="button"
 	onClick="javascript: popup(700,600,'addRhInjection.jsp?demographic_no=<%=demographicNo%>&amp;workflowId=<%=h.get("ID")%>&amp;formId=<%=formId%>','addInjection');"
 	value="Add Injection" /> <%-- a style="color:blue; " href="javascript: function myFunction() {return false; }" onClick="popup(700,600,'addRhInjection.jsp?demographic_no=<%=demographicNo%>&amp;workflowId=<%=h.get("ID")%>&amp;formId=<%=formId%>','addInjection')">Add Injection</a --%>
-<%}%> <% System.out.println("HERE 5");%> </html:form>
+<%}%> </html:form>
 
 <div id="injectionInfo"></div>
 

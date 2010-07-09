@@ -78,4 +78,3 @@
 
 </ul>
 <input type="hidden" id="modCount" value="7">
-<% System.out.println("clinicModules.jsp load time: " + (System.currentTimeMillis()-startTime) + "ms"); %>

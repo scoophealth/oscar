@@ -6,12 +6,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%
 
-
-
-System.out.println(" test name "+request.getParameter("testName"));
-System.out.println(" demo "+request.getParameter("demo"));
-System.out.println(" labType  "+request.getParameter("labType"));
-
 String labType = request.getParameter("labType");
 String demographicNo = request.getParameter("demo");
 String testName = request.getParameter("testName");
@@ -28,12 +22,9 @@ CommonLabTestValues comVal =  new CommonLabTestValues();
 ArrayList list = null;
 
 if (!demographicNo.equals("null")){
-    System.out.println("sdfsdf");
  list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
  
 }
-
-System.out.println("idididid "+list);
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <!--  
@@ -213,7 +204,6 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 			</tr>
 			<%  int linenum = 0;
                             if (list != null){ 
-                                System.out.println("list . size "+list.size());
                                for (int i = 0 ;  i < list.size(); i++){
                                    Hashtable h = (Hashtable) list.get(i);
                                    String lineClass = "NormalRes";

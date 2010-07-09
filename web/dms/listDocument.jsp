@@ -26,14 +26,10 @@
  * Ontario, Canada
  */
 -->
-<%  System.out.println("in listDocument.jsp");
+<%
             if (session.getValue("user") == null) {
                 response.sendRedirect("../logout.htm");
             }
-            System.out.println("1");
-            //String user_no = (String) session.getAttribute("user");
-            //String userfirstname = (String) session.getAttribute("userfirstname");
-            //String userlastname = (String) session.getAttribute("userlastname");
             String moduleid = "-1";
             String curUser = "";
             if (request.getParameter("curUser") != null) {
@@ -438,9 +434,6 @@
 <%
                         Hashtable providerDocs=(Hashtable)request.getSession().getAttribute("providerDocs");
                         Hashtable queueDocs=(Hashtable)request.getSession().getAttribute("queueDocs");
-                        System.out.println("queueDocs.size()="+queueDocs.size());
-                        System.out.println("providerDocs.size()="+providerDocs.size());
-                        //request.setAttribute("providerPrivateDocs", providerPrivateDocs);
                         List<String> providerNos=new ArrayList();
                         if(providerDocs!=null && !providerDocs.isEmpty()){
                             Enumeration keys= providerDocs.keys();

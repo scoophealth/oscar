@@ -1524,7 +1524,7 @@ function removeSaveFeedback()  {
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }
-                               System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
+                              
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
                                }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
@@ -1654,7 +1654,7 @@ function removeSaveFeedback()  {
 	<%}%>
 </table>
 </div>
-<%}System.out.println("Session:" + session.getAttribute("user"));%>
+<%}%>
 
 </body>
 </html:html>

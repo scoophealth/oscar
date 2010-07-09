@@ -93,19 +93,10 @@
 <%
 String module = "demographic";
 String currentProvider=request.getParameter("currentProvider");
-System.out.println("current user="+currentProvider);
 String updateParent="false";
 String parentAjaxId = "";
 Hashtable providerDocs=(Hashtable)request.getSession().getAttribute("providerDocs");
-if(providerDocs!=null)
-    System.out.println("providerDocs.size()="+providerDocs.size());
 
-for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();) {
-    String name = (String) e.nextElement();
-    System.out.println(name + " -> " + request.getAttribute(name));
-}
-//String pp=request.getParameter("publicOrPrivate");
-//pp="Private";
 ArrayList doctypes = EDocUtil.getDoctypes(module);%>
         
 

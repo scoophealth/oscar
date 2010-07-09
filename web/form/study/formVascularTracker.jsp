@@ -51,10 +51,5 @@ String userlastname  = pd.getLast_name();
 String popupUrl = "../form/SetupForm.do?formName=VTForm&demographic_no="+demo+"&study_no="+study_no+"&provNo="+prov_no+"&formId=0";
 
 String url = "../../oscarEncounter/IncomingEncounter.do?providerNo="+prov_no+"&appointmentNo=&demographicNo="+demo+"&curProviderNo=&reason="+URLEncoder.encode("Vascular Study")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate=&startTime=&status=&popupUrl="+URLEncoder.encode(popupUrl);
-System.out.println("url "+url);
-
-System.out.println(url);
 response.sendRedirect(url );
-
-
 %>

@@ -87,7 +87,6 @@
     PreventionData pd = new PreventionData();
     Prevention p = pd.getPrevention(demographic_no);
 
-    System.out.println("Getting preventions took  "+ (System.currentTimeMillis() - startTimeToGetP) );
     boolean dsProblems = false;
 
     String temp = request.getParameter("template");
@@ -109,18 +108,11 @@
     ArrayList<String> measurements = new ArrayList(measurementLs);
     long startTimeToGetM = System.currentTimeMillis();
      
-    System.out.println("Measurements size "+measurements.size());
     mi.getMeasurements(measurements);
-    System.out.println("Getting measurements  took  "+ (System.currentTimeMillis() - startTimeToGetM) );
 
     mFlowsheet.getMessages(mi);
 
     ArrayList recList = mi.getList();
-    System.out.println("RECLIST "+recList.size());
-    
-    for(Object rec: recList){
-        System.out.println("REF : "+rec);
-    }
     
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
@@ -132,8 +124,6 @@
     String flowSheet = mFlowsheet.getDisplayName();
     ArrayList<String> warnings = mi.getWarnings();
     ArrayList<String> recomendations = mi.getRecommendations();
-    System.out.println(" warnings "+mi.getWarnings().size());
-    System.out.println(" recommendations "+mi.getRecommendations().size());
     ArrayList comments = new ArrayList();
 
 %>
@@ -443,11 +433,9 @@ div.recommendations li{
     for (String measure:measurements){
         Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
-        System.out.println(">>>>"+item.getItemName()+" "+item.isHide());
         setToPrint = phandout.contains(measure);
         String hidden= "";
         
-        System.out.println("For PRint "+measure+" : "+ forPrint.get(measure) + " view "+printView);
         if (item.isHide() || (forPrint.get(measure) == null && printView)  ){
             hidden= "display:none;";
         }
@@ -537,7 +525,6 @@ div.recommendations li{
                 if ( oj instanceof Integer){
                     num = (Integer) oj;
                 }else if (oj instanceof Hashtable){
-                    System.out.println("\n\b IN HERERERE !");
                     Hashtable dates = (Hashtable)oj;
                     Date sdate = (Date) dates.get("sdate");
                     Date edate = (Date)dates.get("edate");
@@ -545,8 +532,6 @@ div.recommendations li{
                     if (itDate.before(sdate) || itDate.after(edate)){
                         hider = "style=\"display:none\"";
                     }
-                }else{
-                    System.out.println(">>>"+oj.getClass().getName()+"<<<");
                 }
             }
             
@@ -559,7 +544,6 @@ div.recommendations li{
 
             String indColour = "";
             if ( mdb.getIndicationColour() != null ){
-                System.out.println("INDICAT: "+mdb.getIndicationColour());
                 indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
             }
             
@@ -582,10 +566,6 @@ div.recommendations li{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
     ArrayList alist = pd.getPreventionData(prevType, demographic_no);
-
-    System.out.println("Getting prev  "+prevType+" data took "+(System.currentTimeMillis() - startPrevType) );
-
-
 %>
 
 
@@ -617,7 +597,6 @@ div.recommendations li{
             Hashtable hdata = (Hashtable) alist.get(k);
             String com = pd.getPreventionComment(""+hdata.get("id"));
             boolean comb = false;
-            System.out.println(com);
             if (com != null ){
                 comments.add(com);
                 comb = true;
@@ -646,7 +625,6 @@ div.recommendations li{
                 if ( oj instanceof Integer){
                     num = (Integer) oj;
                 }else if (oj instanceof Hashtable){
-                    System.out.println("\n\b IN HERERERE !");
                     Hashtable dates = (Hashtable)oj;
                     Date sdate = (Date) dates.get("sdate");
                     Date edate = (Date)dates.get("edate");
@@ -654,8 +632,6 @@ div.recommendations li{
                     if (itDate.before(sdate) || itDate.after(edate)){
                         hider = "style=\"display:none\"";
                     }
-                }else{
-                    System.out.println(">>>"+oj.getClass().getName()+"<<<");
                 }
             }
             
@@ -682,16 +658,9 @@ div.recommendations li{
     <%}%>
 </div>
 
-<%System.out.println("Prev took  "+prevType+" "+(System.currentTimeMillis() - startPrevType) );
-}%>
-
-<%}
-    System.out.println("Looping display took  "+ (System.currentTimeMillis() - startTimeToLoopAndPrint) );
-%>
-
-
-
 <%
+}
+}
 
 
     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
@@ -699,9 +668,7 @@ div.recommendations li{
     
     List<FlowSheetDrug> atcCodes = flowSheetDrugDAO.getFlowSheetDrugs(temp,demographic_no);
     for(FlowSheetDrug fsd : atcCodes){
-    System.out.println("GET DA ATC CODE ");
             arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());   
-        System.out.println("arr num "+arr.length);
        String measure = fsd.getAtcCode();
        String hidden = "";
         if (forPrint.get(measure) == null && printView  ){
@@ -754,7 +721,6 @@ div.recommendations li{
                 if ( oj instanceof Integer){
                     num = (Integer) oj;
                 }else if (oj instanceof Hashtable){
-                    System.out.println("\n\b IN HERERERE !");
                     Hashtable dates = (Hashtable)oj;
                     Date sdate = (Date) dates.get("sdate");
                     Date edate = (Date)dates.get("edate");
@@ -762,8 +728,6 @@ div.recommendations li{
                     if (itDate.before(sdate) || itDate.after(edate)){
                         hider = "style=\"display:none\"";
                     }
-                }else{
-                    System.out.println(">>>"+oj.getClass().getName()+"<<<");
                 }
             }
             
@@ -831,7 +795,6 @@ div.recommendations li{
 <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
 </body>
 </html:html>
-<% System.out.println("Template took  "+ (System.currentTimeMillis() - startTime) +" to display"); %>
 <%!
     String refused(Object re){
         String ret = "Given";
@@ -862,14 +825,5 @@ div.recommendations li{
         }
         return ret;
     }
-    
-    
-    public void printOutStringLists(List<String> measurements){
-       for (String measurement : measurements){
-          System.out.println(":*:measurement= "+measurement);
-       }
-    }
-    
-    
     
 %>

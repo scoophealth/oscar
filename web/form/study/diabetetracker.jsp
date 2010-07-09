@@ -33,7 +33,8 @@ if(session.getAttribute("user") == null || !( ((String) session.getAttribute("us
 <%@ page
 	import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"
 	errorPage="../../appointment/errorpage.jsp"%>
-<jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
+
+<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
 	scope="page" />
 <%--database command part  --%>
@@ -62,7 +63,11 @@ if(session.getAttribute("user") == null || !( ((String) session.getAttribute("us
 	//read the mapping file
     try {
       studyMapping.load(new FileInputStream("../webapps/"+ oscarVariables.getProperty("project_home") +"/form/study/formdiabete2studymapping.txt")); //change to speciallll name
-    } catch(Exception e) {System.out.println("*** No Mapping File ***"); }
+    }
+	catch(Exception e) 
+    {
+    	MiscUtils.getLogger().error("*** No Mapping File ***", e);
+    }
 
 	//take data from demographic
     ResultSet rsdemo = studyBean.queryResults(demoNo, "search_demographic");

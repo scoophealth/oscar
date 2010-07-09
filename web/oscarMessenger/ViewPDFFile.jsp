@@ -44,12 +44,5 @@
 </logic:present>
 <%
     String pdfAttch = (String) request.getAttribute("PDFAttachment");
-    String id  = request.getParameter("id");
-    
-    System.out.println( "Get integer " + pdfAttch ) ;
-    /*
-    Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "CONTENT" );
-    String pdfFile = attVector.get( Integer.parseInt(id ) );
-    Doc2PDF.PrintPDFFromBin ( response, pdfFile );
-*/
+    String id  = request.getParameter("id");    
 %>

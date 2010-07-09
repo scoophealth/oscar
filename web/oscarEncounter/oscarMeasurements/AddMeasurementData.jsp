@@ -297,12 +297,6 @@ clear: left;
                    prevDate = (String) h.get("date-"+ctr);
                    val = (String) h.get("inputValue-" + ctr);
                    comment = (String) h.get("comments-" + ctr);
-                }else{
-                   System.out.println("EcTMEasureMentsFoRms was null or empty");
-                }
-                System.out.println("state of the hashtable "+h);
-                if (h != null){
-                    //prevDate = (String) h.get("date-"+ctr);
                 }
                 %>
                

@@ -63,7 +63,8 @@ String demographic_no = (String) request.getAttribute("demographic_no");
 
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarMessenger.CreateMessage.title" />
@@ -652,8 +653,7 @@ function popupAttachDemo(demographic){ // open a new popup window
          }
 
        }catch(Exception e){
-           System.out.println("Exception in CreateMessage.jsp.displayNodes():");
-           e.printStackTrace(System.out);
+    	   MiscUtils.getLogger().error("Exception in CreateMessage.jsp.displayNodes():", e);
        }
    }//display nodes
     

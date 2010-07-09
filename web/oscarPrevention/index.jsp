@@ -549,7 +549,7 @@ div.recommendations li {
                     for ( int setNum = 0; setNum < configSets.size(); setNum++){ 
                     Hashtable setHash = (Hashtable) configSets.get(setNum);
                     String[] prevs = (String[]) setHash.get("prevList");
-                    System.out.println("length prevs"+prevs.length);%>
+                    %>
 		<div class="immSet">
 		<h2 style="display: block;"><%=setHash.get("title")%> <span><%=setHash.get("effective")%></span></h2>
 		<!--a style="font-size:xx-small;" onclick="javascript:showHideItem('<%="prev"+setNum%>')" href="javascript: function myFunction() {return false; }" >show/hide</a-->

@@ -260,7 +260,6 @@ NodeList sets = root.getElementsByTagName("immunizationSet");
 						<tr>
 							<td class="head">&nbsp;</td>
 							<%
- System.out.println("***********   are we here?");
                                      for(int j=0; j<columns.getLength(); j++){
                                         Element column = (Element)columns.item(j);%>
 							<td class="head"><%= column.getAttribute("name") %>&nbsp;</td>
@@ -270,7 +269,6 @@ NodeList sets = root.getElementsByTagName("immunizationSet");
 								key="oscarEncounter.immunization.Schedule.msgComments" /></td>
 						</tr>
 						<%}
-System.out.println("****************"+colCount);
                                   Element rowList = (Element)set.getElementsByTagName("rowList").item(0);
                                   NodeList rows = rowList.getElementsByTagName("row");
 

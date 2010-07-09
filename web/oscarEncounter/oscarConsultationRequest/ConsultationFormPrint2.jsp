@@ -627,11 +627,9 @@ public String divy (String str){
 	stringBuffer.append(str);
 	int j =0;
 	int i = 0 ;
-	System.out.println("str "+str);
 	while (i < stringBuffer.length() ){
 		if (stringBuffer.charAt(i) == '\n'){
 			stringBuffer.insert(i,"<BR>");
-			System.out.println("i = "+stringBuffer.charAt(i)+" i-1 = "+stringBuffer.charAt(i-1)+" i+1 "+stringBuffer.charAt(i+4));
 			i = i + 4;
 		}
 		i++;
@@ -644,7 +642,6 @@ public String divyup (String str){
 	stringBuffer.append(str);
 	int i = 2 ;
 	int k = 0;
-	System.out.println("str "+str);
 	while ((i < (stringBuffer.length()-2)) && (i > 0)){
 		k = 0;
 		while ((stringBuffer.charAt(i) == '\n') || (stringBuffer.charAt(i) == '\r')) {

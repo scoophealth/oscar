@@ -183,11 +183,9 @@ window.onload = stripe;
                                 <th valign="bottom" class="Header">Desc</th>
                                 <th valign="bottom" class="Header">--</th>
                                 <%
-                                System.out.println("HEHREHRE");
                                 MeasurementMapConfig map = new MeasurementMapConfig();
                                 List<String> types = map.getLabTypes();
                                 types.remove("FLOWSHEET");
-                                System.out.println("and here "+types.size());
                                 for(String type:types){%>
                                 <th valign="bottom" class="Header"><%=type%></th>
                                 <%}%>

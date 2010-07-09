@@ -20,8 +20,6 @@
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
     //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
     
-    System.out.println("Demographic  "+demographicNo);
-    
     ArrayList labs = comLab.populateLabResultsData("",demographicNo, "", "","","U");
     
     
@@ -229,7 +227,6 @@ function checkAll(formId){
                 endIndex = labs.size();
             }
 
-            System.out.println("pagenum :"+pageNum+ " startIndex "+startIndex+" endIndex "+endIndex +" total size "+labs.size());
             for (int i = startIndex; i < endIndex; i++) {
                 
                 

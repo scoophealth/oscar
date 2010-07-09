@@ -117,7 +117,6 @@ You have no rights to access the data!
 	<%
             EctProgram prgrmMgr = new EctProgram(session);
             session.setAttribute("case_program_id", prgrmMgr.getProgram(bean.providerNo));
-            System.out.println("case_program_id " + session.getAttribute("case_program_id"));
             session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
             String strBeanName = "casemgmt_oscar_bean" + bean.getDemographicNo();
             session.setAttribute(strBeanName, bean);
@@ -1605,7 +1604,7 @@ function grabEnterGetTemplate(event){
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }
-                               System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
+                              
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
                                }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
@@ -1730,12 +1729,10 @@ function grabEnterGetTemplate(event){
 	<%}%>
 </table>
 </div>
-<%}System.out.println("Session:" + session.getAttribute("user"));%>
+<%}%>
 <script type="text/javascript">
     setTimeout("updateDiv();", 1000);
 </script>
 
 </body>
 </html:html>
-
-<% System.out.println("index2.jsp load time: " + (System.currentTimeMillis()-startTime) + "ms"); %>

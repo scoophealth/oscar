@@ -29,7 +29,6 @@
 if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-System.out.println("Role Name " + roleName$);
 String user_no = (String) session.getAttribute("user");
 String demographicNo=(String)session.getAttribute("casemgmt_DemoNo");
 String userfirstname = (String) session.getAttribute("userfirstname");
@@ -52,11 +51,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
-for( Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
-    String name = (String)e.nextElement();
-    System.out.println(name + " -> " + request.getParameter(name));
-}
-    
+   
 //if delete request is made
 if (request.getParameter("delDocumentNo") != null) {
     EDocUtil.deleteDocument(request.getParameter("delDocumentNo"));

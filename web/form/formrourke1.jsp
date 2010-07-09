@@ -1300,7 +1300,6 @@ var maxYear=3100;
 			3</a></td>
 		</tr>
 	</table>
-	<% //props.list(System.out);%>
 </html:form>
 </body>
 </html:html>

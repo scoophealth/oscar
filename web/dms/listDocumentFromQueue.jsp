@@ -98,18 +98,8 @@
 String module = "demographic";
 String currentQueue=request.getParameter("currentQueueId");
 String currentQueueName=request.getParameter("currentQueueName");
-System.out.println("current queue="+currentQueue);
 Hashtable queueDocs=(Hashtable)request.getSession().getAttribute("queueDocs");
-System.out.println("queueDocs.size()="+queueDocs.size());
 
-/*
-for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();) {
-    String name = (String) e.nextElement();
-    System.out.println(name + " -> " + request.getAttribute(name));
-}
-*/
-//String pp=request.getParameter("publicOrPrivate");
-//pp="Private";
 ArrayList doctypes = EDocUtil.getDoctypes(module);%>
 
 

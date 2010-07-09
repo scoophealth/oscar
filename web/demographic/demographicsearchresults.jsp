@@ -264,7 +264,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 		 //param[1] = param[1].startsWith("0") ? param[1].substring(1) : param[1];
 		 param[2] = keyword.substring(keyword.lastIndexOf("-")+1);
 		 //param[2] = param[2].startsWith("0") ? param[2].substring(1) : param[2];
-		 System.out.println(param[1] + " "+ param[2] );
+		 
 		 rs = apptMainBean.queryResults(param, dboperation);
                  
       } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {

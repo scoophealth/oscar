@@ -1397,7 +1397,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 				</tr>
 			</table>
 
-			</html:form> <%props.list(System.out);%>
+			</html:form>
 			
 </body>
 </html:html>

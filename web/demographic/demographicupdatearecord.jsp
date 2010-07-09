@@ -41,7 +41,8 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
 
-<%@page import="org.apache.commons.lang.StringUtils"%><html:html locale="true">
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script></head>
 
@@ -210,8 +211,7 @@
     DemographicNameAgeString nameAgeString  = DemographicNameAgeString.getInstance();
     nameAgeString.resetDemographic(request.getParameter("demographic_no"));   
     }catch(Exception nameAgeEx){
-        nameAgeEx.printStackTrace();
-        System.out.println("ERROR RESETTING NAME AGE ");
+    	MiscUtils.getLogger().error("ERROR RESETTING NAME AGE", nameAgeEx);
     }
     rs = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_custrecordno");
     if(rs.next() ) { //update
@@ -310,10 +310,8 @@
             rs = apptMainBean.queryResults(paramWLChk, "search_demo_waiting_list");
 
             if(!rs.next()){
-                System.out.println("not on the selected waiting list");
                 ResultSet rsAppt = apptMainBean.queryResults(paramWLChk[0], "search_future_appt");
                 if(rsAppt.next()){                
-                    System.out.println("has appointment in the future");
             %> <script language="JavaScript">                    
                     var add2List = confirm("The patient already has an appointment, do you still want to add him/her to the waiting list?");                
                     if(add2List){                       

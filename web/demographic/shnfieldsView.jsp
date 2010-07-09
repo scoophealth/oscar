@@ -9,8 +9,7 @@ Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
 Hashtable h = new Hashtable();
             h.put("-1","Not Asked");
             h.put("1","Has Given Consent");
-            h.put("2","Has Refused Consent");	
-System.out.println("CONSENT "+demoExt.get("given_consent"));                
+            h.put("2","Has Refused Consent");                
 %>
 <li>Consent: <b><%=getText(h,apptMainBean.getString(demoExt.get("given_consent")) )%></b>
 </li>

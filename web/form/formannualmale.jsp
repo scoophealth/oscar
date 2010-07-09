@@ -770,6 +770,5 @@ o=<%=provNo%>');"><bean:message
 	</table>
 
 </html:form>
-<%props.list(System.out);%>
 </body>
 </html:html>

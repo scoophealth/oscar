@@ -50,7 +50,6 @@
     if (demographicNo == null){
         demographicNo = (String) request.getAttribute("demographic_no");
     }    
-    System.out.println("demographic_no "+demographicNo);
     int demoNo = Integer.parseInt(demographicNo);
     
     String workflowId = request.getParameter("workflowId");

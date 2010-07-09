@@ -11,11 +11,9 @@ Hashtable[] harray = (Hashtable[]) session.getAttribute(id);
 
 for (Hashtable dat : harray){
     String name = (String) dat.get("name");
-    System.out.println("name is "+name);
     Hashtable[] setData = (Hashtable[]) dat.get("data");
     TimeSeries s1 = new TimeSeries(name, Day.class); 
     for(Hashtable d : setData){
-        System.out.println(d);
         if(d !=null){
            s1.addOrUpdate(new Day( (Date) d.get("date")) ,
                 Double.parseDouble(""+d.get("data")) );

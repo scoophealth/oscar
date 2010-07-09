@@ -135,8 +135,6 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
 
                 java.util.ArrayList lis = remoAttach.getFromLocation(mesId);
 
-                System.out.println("sys = "+lis.size());
-
                 String fromLoco = (String) lis.get(0);
                 String subject  = (String) lis.get(1);
                 %>

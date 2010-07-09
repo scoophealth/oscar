@@ -404,14 +404,12 @@ table.ele td{
                          DemographicData demoData= new DemographicData();
                          boolean setBill;
                          
-                         for (int i = 0; i < list.size(); i++){
-                             System.out.println("for # "+i); 
+                         for (int i = 0; i < list.size(); i++){ 
                              setBill = false;
                             PreventionReportDisplay dis = (PreventionReportDisplay) list.get(i);
                             Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);
                             DemographicData.Demographic demo = demoData.getDemographic(dis.demographicNo);
                             
-                            System.out.println("next suggested Procedure "+dis.nextSuggestedProcedure);
                             if ( dis.nextSuggestedProcedure != null ){
                                 if (dis.nextSuggestedProcedure.equals("L1")){
                                     firstLetter.add(dis.demographicNo);

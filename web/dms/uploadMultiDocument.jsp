@@ -49,12 +49,6 @@
 <%
             ArrayList providers = ProviderData.getProviderList();
             String provider = "";
-//ArrayList doctypes = EDocUtil.getDoctypes("demographic");
-
-            for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
-                String name = (String) e.nextElement();
-                System.out.println(name + " -> " + request.getParameter(name));
-            }
 
 //if delete request is made
             if (request.getParameter("delDocumentNo") != null) {
@@ -68,7 +62,7 @@
             } else if (request.getAttribute("view") != null) {
                 view = (String) request.getAttribute("view");
             }
-//preliminary JSP code
+//preliminary JSP codec
 
 // "Module" and "function" is the same thing (old dms module)
             String module = "demographic";

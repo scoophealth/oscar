@@ -66,7 +66,6 @@
     PreventionData pd = new PreventionData();
     Prevention p = pd.getPrevention(demographic_no);
 
-    System.out.println("Getting preventions took  "+ (System.currentTimeMillis() - startTimeToGetP) );
     boolean dsProblems = false;
 
     
@@ -88,18 +87,11 @@
     ArrayList<String> measurements = new ArrayList(measurementLs);
     long startTimeToGetM = System.currentTimeMillis();
      
-    System.out.println("Measurements size "+measurements.size());
     mi.getMeasurements(measurements);
-    System.out.println("Getting measurements  took  "+ (System.currentTimeMillis() - startTimeToGetM) );
 
     mFlowsheet.getMessages(mi);
 
     ArrayList recList = mi.getList();
-    System.out.println("RECLIST "+recList.size());
-    
-    for(Object rec: recList){
-        System.out.println("REF : "+rec);
-    }
     
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
@@ -111,8 +103,6 @@
     String flowSheet = mFlowsheet.getDisplayName();
     ArrayList<String> warnings = mi.getWarnings();
     ArrayList<String> recomendations = mi.getRecommendations();
-    System.out.println(" warnings "+mi.getWarnings().size());
-    System.out.println(" recommendations "+mi.getRecommendations().size());
     ArrayList comments = new ArrayList();
 
 %>
@@ -649,7 +639,6 @@ div.recommendations li{
     EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
     List<MeasurementTemplateFlowSheetConfig.Node>nodes = mFlowsheet.getItemHeirarchy();
-    System.out.println("NODES " + nodes.size());
     String measure;
     int marginLeft = 20;
     int step = 1;
@@ -658,8 +647,6 @@ div.recommendations li{
     while( node != null ) {
         FlowSheetItem item = node.flowSheetItem;
         if( node.children != null ) {
-
-            System.out.println("'" + item.getDisplayName() + "' has a child");
             if( !flatformat ) {
                 ++step;
     %>
@@ -669,7 +656,6 @@ div.recommendations li{
             //numSibling = 0;
             //nodes = node.children;
             node = node.getFirstChild();            
-            System.out.println("STEP = " + step);
         }
         else {
 
@@ -677,7 +663,6 @@ div.recommendations li{
     //for (String measure:measurements){
         Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
         //FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
-        System.out.println(">>>>"+item.getItemName()+" "+item.isHide());
         
         String hidden= "";
         if (item.isHide()){
@@ -718,8 +703,6 @@ div.recommendations li{
                <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
             <%}%>
            <%}%>
-            <% System.out.println(h2.get("display_name")+ " "+ h2.get("value_name")); %>
-            <% System.out.println("NAME " + h.get("name")); %>
             <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
                 <span  class="noborder" style="font-weight:bold;"><%=h2.get("display_name")%></span>
             </a>
@@ -748,10 +731,8 @@ div.recommendations li{
             if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
             }
-            System.out.println("sdate "+sdate+" edate "+edate);
             if(sdate != null && edate != null){
                 Date itDate = mdb.getDateObservedAsDate();
-                System.out.println("DEBUGDISPLAY"+measure+" "+sdate+" "+edate+" "+itDate);
                 if (itDate.before(sdate) || itDate.after(edate)){
                         hider = "display:none;";
                 }
@@ -761,7 +742,6 @@ div.recommendations li{
 
             String indColour = "";
             if ( mdb.getIndicationColour() != null ){
-                System.out.println("INDICAT: "+mdb.getIndicationColour());
                 indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
             }
             
@@ -784,10 +764,6 @@ div.recommendations li{
     String prevType = (String) h2.get("prevention_type");
     long startPrevType = System.currentTimeMillis();
     ArrayList alist = pd.getPreventionData(prevType, demographic_no);
-
-    System.out.println("Getting prev  "+prevType+" data took "+(System.currentTimeMillis() - startPrevType) );
-
-
 %>
 
 
@@ -808,7 +784,6 @@ div.recommendations li{
             Hashtable hdata = (Hashtable) alist.get(k);
             String com = pd.getPreventionComment(""+hdata.get("id"));
             boolean comb = false;
-            System.out.println(com);
             if (com != null ){
                 comments.add(com);
                 comb = true;
@@ -827,34 +802,28 @@ div.recommendations li{
     <%}%>
 </div>
 
-<%System.out.println("Prev took  "+prevType+" "+(System.currentTimeMillis() - startPrevType) );
+<%
 }%>
 
     <%          while( !node.hasNextSibling() && node.parent != null) {
                     out.println("</div>");
                     node = node.parent;
                     step = flatformat ? step : --step;
-                    System.out.println("STEP = " + step);
-                    System.out.println("UP TO PARENT " + node.flowSheetItem.getDisplayName());
                 }
 
                 if( node.parent == null ) {
                     if( numSibling < nodes.size()-1) {
                         node = nodes.get(++numSibling);
-                        System.out.println("PARENT IS NULL GETTING NEXT " + node.flowSheetItem.getDisplayName());
                     }
                     else {
                         node = null;
-                        System.out.println("SETTING NODE NULL");
                     }
                 }
                 else {
                     node = node.getNextSibling();
-                    System.out.println("GETTING NEXT SIBLING " + node.flowSheetItem.getDisplayName());
                 }
         }
   }
-    System.out.println("Looping display took  "+ (System.currentTimeMillis() - startTimeToLoopAndPrint) );
 %>
 
 
@@ -937,7 +906,6 @@ div.recommendations li{
 <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
 </body>
 </html:html>
-<% System.out.println("Template took  "+ (System.currentTimeMillis() - startTime) +" to display"); %>
 <%!
     String refused(Object re){
         String ret = "Given";
@@ -968,14 +936,5 @@ div.recommendations li{
         }
         return ret;
     }
-    
-    
-    public void printOutStringLists(List<String> measurements){
-       for (String measurement : measurements){
-          System.out.println(":*:measurement= "+measurement);
-       }
-    }
-    
-    
     
 %>

@@ -157,7 +157,6 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
 					</tr>
 					<%  
                                     for (int i = 0; i < theRequests.ids.size(); i++){
-                                        System.out.println("requestID: " + theRequests.ids);
                                     String id      = (String) theRequests.ids.elementAt(i);
                                     String status  = (String) theRequests.status.elementAt(i);
                                     String patient = (String) theRequests.patient.elementAt(i);

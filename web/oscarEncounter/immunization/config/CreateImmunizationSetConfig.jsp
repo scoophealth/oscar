@@ -30,10 +30,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
-
         String co = (String) request.getAttribute("cols");
         String ro = (String) request.getAttribute("rows");
-        System.out.println("co ="+co+" ro ="+ro);
         int cols = 0;
         int rows = 0;
     try{
@@ -42,12 +40,15 @@
         rows++;
         cols++;
 
-    }catch(Exception e){System.out.println("there was a boo-boo co="+co+" ro="+ro);}
+    }catch(Exception e){
+    	MiscUtils.getLogger().error("there was a boo-boo co="+co+" ro="+ro, e);
+    }
 
     String setName = ((String) request.getAttribute("name"));
 %>
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 
 
 <head>

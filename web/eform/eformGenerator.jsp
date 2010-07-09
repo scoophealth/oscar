@@ -31,7 +31,8 @@
  *
  */
 -->
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 
 <title>OSCAR e-Form Generator</title>
@@ -1747,8 +1748,7 @@ function _CompInt(x, y)
                         try {
                             dir =new File(oscarProps.getProperty("eform_image"));
                         } catch(Exception e){
-                         // Print out the exception that occurred
-                        System.out.println("Unable to locate image directory"+e.getMessage());
+                        	MiscUtils.getLogger().error("Unable to locate image directory", e);
                         }
                      String output = null;
                      for(int i=0;i<(test.visitAllFiles(dir)).length;i++){

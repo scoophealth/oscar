@@ -30,7 +30,8 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 
 <%--@ page contentType="text/xml" --%>
 <%@ page import="java.lang.reflect.*, java.sql.*"%>
-<jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
+
+<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
 	scope="page" />
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
@@ -184,10 +185,8 @@ if(connected){
             }
         }
 
-    } catch (IllegalAccessException e) {
-        System.out.println(e);
-    } catch (InvocationTargetException e) {
-        System.out.println(e);
+    } catch (Exception e) {
+        MiscUtils.getLogger().error("Error", e);
     }
 
 	DataType dataType = ping.getDataType(ARRecord);

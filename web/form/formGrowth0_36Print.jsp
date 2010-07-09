@@ -103,13 +103,10 @@
 		String temp = e.nextElement().toString();
 		String[] str = temp.split("date_|age_|length_|weight_|comment_|headCirc_");
 		int nC = Integer.parseInt(str[1]);
-		System.out.println(" qaz :" + nC);
 		if(nC>=nS && nC<=nE) {
-			System.out.println(" qaz :" + nS + ":" + nE + ":" + nC);
 			// swap: set tempName = 1 - 7
 			nC = nC - ((n-1)*(nE-nS+1));
 			String newName = temp.substring(0, temp.indexOf("_")+1) + nC;
-			System.out.println(" newName :" + newName);
 			String newValue = prop.getProperty(temp, "");
 			// 1-7 change to nS-nE
 			String baseName = temp;

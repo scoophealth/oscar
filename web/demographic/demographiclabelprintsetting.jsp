@@ -183,7 +183,7 @@ function ClipBoard4() {
 	String refDoc = "";
   int param = Integer.parseInt(request.getParameter("demographic_no"));
 
-  // find the family doctor's name System.out.println("from editcpp : "+ param);
+  // find the family doctor's name
   String providername = "";
   ResultSet rs = apptMainBean.queryResults(param, "search_provider");
   while (rs.next()) {

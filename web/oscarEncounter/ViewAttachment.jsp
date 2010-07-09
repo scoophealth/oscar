@@ -21,8 +21,6 @@
     xmlDoc = UtilXML.parseXML(attachment);
 
     Element root = xmlDoc.getDocumentElement();
-    System.out.println(UtilXML.toXML(root));
-
 %>
 
 

@@ -1,7 +1,6 @@
 <%  
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
   Vector<Hashtable> eforms = getEforms();
-  System.out.println("CODES count "+eforms.size());
   boolean gridlayout = false;
   if(request.getParameter("grid") != null && request.getParameter("grid").equals("true")){
      gridlayout = true;
@@ -63,7 +62,6 @@
 
             <%
             for (Hashtable ht: eforms){
-                listKeys(ht);
             %>
 
             <tr>
@@ -86,7 +84,6 @@
     <%
 
         for (Hashtable ht: eforms){
-             listKeys(ht);
     %>
 
     <div style="background-color:#EEEEFF;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
@@ -137,13 +134,11 @@
 
 
    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
-        System.out.println("#CALLDRUGREF-"+procedureName);
         Object object = null;
         //String server_url = "http://dev2.mydrugref.org/backend/api";
         //String server_url = "http://192.168.1.117:3000/backend/api";
         String server_url = "http://mydrugref.org/backend/api";
         try{
-            System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
         }catch (XmlRpcException exception) {
@@ -173,11 +168,6 @@
             if (holbrook instanceof Vector){
                 vec = (Vector) holbrook;
             }
-            Enumeration e = ((Hashtable) obj).keys();
-            while (e.hasMoreElements()){
-                String s = (String) e.nextElement();
-                System.out.println(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
-            }
         }
 
         return vec;
@@ -199,14 +189,5 @@
             v.remove(null);
         }
     }
-
-    public void listKeys(Hashtable ht){
-       Enumeration en = ht.keys();
-       while(en.hasMoreElements()){
-          Object s = en.nextElement();
-          System.out.println(s+" -- "+ht.get(s));
-       }
-    }
-
 
 %>

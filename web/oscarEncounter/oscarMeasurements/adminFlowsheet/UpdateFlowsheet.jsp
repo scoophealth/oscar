@@ -58,7 +58,6 @@ MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(flowsheet,custList
 long end = System.currentTimeMillis() ;       
 long diff = end - start;
 
-System.out.println(" Flowsheet "+diff);
 Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
 List<Recommendation> dsR = mFlowsheet.getDSElements((String) h2.get("measurement_type"));
 FlowSheetItem fsi =mFlowsheet.getFlowSheetItem(measurement);
@@ -529,12 +528,6 @@ div.recommendations li{
         return ret;
     }
     
-    
-    public void printOutStringLists(List<String> measurements){
-       for (String measurement : measurements){
-          System.out.println(":*:measurement= "+measurement);
-       }
-    }
     
     String s(String s){
     if (s ==null || s.equalsIgnoreCase("null")){

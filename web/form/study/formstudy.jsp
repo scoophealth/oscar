@@ -92,7 +92,6 @@ function setfocus() {
     while (rs.next()) { 
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
-		System.out.println(nItems);
 %>
 	<tr bgcolor="<%=bgcolor%>">
 		<td align="center"><%=studyBean.getString(rs,"s.study_no")%></td>

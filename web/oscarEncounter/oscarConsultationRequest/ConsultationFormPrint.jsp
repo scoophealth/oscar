@@ -718,11 +718,9 @@ public String divy (String str){
     stringBuffer.append(str);
     int j =0;
     int i = 0 ;
-    System.out.println("str "+str);
     while (i < stringBuffer.length() ){
         if (stringBuffer.charAt(i) == '\n'){
         stringBuffer.insert(i,"<BR>");
-        System.out.println("i = "+stringBuffer.charAt(i)+" i-1 = "+stringBuffer.charAt(i-1)+" i+1 "+stringBuffer.charAt(i+4));
         i = i + 4;
         }
     i++;

@@ -51,16 +51,13 @@
             }
             String flowsheet = temp;
             String demographic = request.getParameter("demographic");
-            System.out.println("TEMP "+temp);
             MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
             Hashtable<String, String> flowsheetNames = templateConfig.getFlowsheetDisplayNames();
             
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
             List<FlowSheetCustomization> custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),demographic);
-            
-            System.out.println("CUST SIZE LISt "+custList.size());
-            
+                        
             Enumeration en = flowsheetNames.keys();
             
             EctMeasurementTypesBeanHandler hd = new EctMeasurementTypesBeanHandler();
@@ -296,13 +293,11 @@ div.recommendations li{
    
    <ul style="width:200px; float:left;list-style-type:none;padding-left:5px;">
             <%
-            System.out.println("TEMP "+temp);
             MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
             Element va = templateConfig.getExportFlowsheet(mFlowsheet);
            
             List<String> measurements = mFlowsheet.getMeasurementList();
             
-            System.out.println("SET HAS MEASUREMENTS" + measurements);
             int count = 0;
             if (measurements != null) {
                 for (String mstring : measurements) { 
@@ -443,13 +438,5 @@ div.recommendations li{
         return ret;
     }
     
-    
-    public void printOutStringLists(List<String> measurements){
-       for (String measurement : measurements){
-          System.out.println(":*:measurement= "+measurement);
-       }
-    }
-    
-    
-    
+        
 %>
