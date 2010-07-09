@@ -79,6 +79,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
+        //    System.out.println("***===========IN unspecified RxWriteScriptAction.java");
 
         RxWriteScriptForm frm = (RxWriteScriptForm) form;
         String fwd = "refresh";
@@ -172,8 +173,8 @@ public final class RxWriteScriptAction extends DispatchAction {
             if (annotation_attrib == null) {
                 annotation_attrib = "";
             }
-
-
+            //      System.out.println("SETTING ANNOTATE NAME '" + annotation_attrib + "'");
+            //      System.out.println("SETTING StashIndex '" + "" + bean.getStashIndex() + "'");
             bean.addAttributeName(annotation_attrib, bean.getStashIndex());
             bean.setStashItem(bean.getStashIndex(), rx);
             //   p("bean.getStashIndex() in unspecified=" + "" + bean.getStashIndex());
@@ -195,7 +196,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 StringBuffer auditStr = new StringBuffer();
                 for (i = 0; i < bean.getStashSize(); i++) {
                     rx = bean.getStashItem(i);
-
+                    // System.out.println("*** before rx.Save(" + scriptId.toString() + ")");
                     rx.Save(scriptId);
                     auditStr.append(rx.getAuditString());
                     auditStr.append("\n");
@@ -221,7 +222,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                     }
                     rx = null;
                 }
-
+                //   System.out.println("bean.getStashIndex() after update,print,save=" + bean.getStashIndex());
                 fwd = "viewScript";
                 String ip = request.getRemoteAddr();
                 //    p("ip", ip);
@@ -229,7 +230,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, scriptId, ip, "" + bean.getDemographicNo(), auditStr.toString());
             }
         }
-
+        //   System.out.println("***===========End of unspecified RxWriteScriptAction.java");
         return mapping.findForward(fwd);
     }
     public ActionForward updateReRxDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
@@ -267,7 +268,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             String randomId = request.getParameter("randomId");
             String customName = request.getParameter("customName");
             //    p("randomId from request",randomId);
-            p("customName from request", customName);
+            //p("customName from request", customName);
             RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
             if (rx == null) {
                 logger.error("rx is null", new NullPointerException());
@@ -279,17 +280,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             //bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
             //  p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
-            //RxUtil.printStashContent(bean);
-            //check for most recent drug,
-            p("rx.getCustomName in saveCustomName", rx.getCustomName());
-            RxUtil.setSpecialQuantityRepeat(rx);
-            HashMap hm = new HashMap();
-            hm.put("instructions", rx.getSpecial());
-            hm.put("quantity", rx.getQuantity());
-            hm.put("repeat", rx.getRepeat());
-            JSONObject jsonObject = JSONObject.fromObject(hm);
-            //      p("jsonObject", jsonObject.toString());
-            response.getOutputStream().write(jsonObject.toString().getBytes());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -302,11 +293,11 @@ public final class RxWriteScriptAction extends DispatchAction {
         try {
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             String provider = (String) request.getSession().getAttribute("user");
-
+            //System.out.println("provider=" + provider);
             if (provider != null) {
                 userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
                 UserProperty prop = userPropertyDAO.getProp(provider, UserProperty.RX_DEFAULT_QUANTITY);
-
+                //System.out.println("prop="+prop);
                 if(prop!=null)
                     RxUtil.setDefaultQuantity(prop.getValue());
                 else
@@ -318,11 +309,27 @@ public final class RxWriteScriptAction extends DispatchAction {
             e.printStackTrace();
         }
     }
+    private RxPrescriptionData.Prescription setCustomRxDurationQuantity(RxPrescriptionData.Prescription rx){
+            String quantity=rx.getQuantity();
+            if(RxUtil.isMitte(quantity)){
+                //MiscUtils.getLogger().info("quantity is mitte");
+                String duration=RxUtil.getDurationFromQuantityText(quantity);
+                String durationUnit=RxUtil.getDurationUnitFromQuantityText(quantity);
+                rx.setDuration(duration);
+                rx.setDurationUnit(durationUnit);
+                rx.setQuantity(RxUtil.getQuantityFromQuantityText(quantity));
+                rx.setUnitName(RxUtil.getUnitNameFromQuantityText(quantity));//this is actually an indicator for Mitte rx
+            }
+            else
+                rx.setDuration(RxUtil.findDuration(rx));
 
+            return rx;
+    }
     public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         p("=============Start newCustomNote RxWriteScriptAction.java===============");
-   
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources(request);
         //set default quantity;
         //setDefaultQuantity(request);
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
@@ -333,7 +340,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         try {
             RxPrescriptionData rxData = new RxPrescriptionData();
-           
+            RxDrugData drugData = new RxDrugData();
             // create Prescription
             RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
             String ra = request.getParameter("randomId");
@@ -348,8 +355,8 @@ public final class RxWriteScriptAction extends DispatchAction {
             rx.setGCN_SEQNO(0);
             rx.setRegionalIdentifier("");
             rx.setAtcCode("");
-            RxUtil.setDefaultSpecialQuantityRepeat(rx);//1 OD, 20, 0;
-            rx.setDuration(RxUtil.findDuration(rx));
+            RxUtil.setDefaultSpecialQuantityRepeat(rx);
+            rx=setCustomRxDurationQuantity(rx);
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             List<RxPrescriptionData.Prescription> listRxDrugs = new ArrayList();
 
@@ -408,7 +415,8 @@ public final class RxWriteScriptAction extends DispatchAction {
     }
     public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start newCustomDrug RxWriteScriptAction.java===============");
- 
+        Locale locale = getLocale(request);
+        MessageResources messages = getResources(request);
         //set default quantity;
         setDefaultQuantity(request);
 
@@ -420,7 +428,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         try {
             RxPrescriptionData rxData = new RxPrescriptionData();
-           
+            RxDrugData drugData = new RxDrugData();
             // create Prescription
             RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
             String ra = request.getParameter("randomId");
@@ -435,7 +443,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             rx.setRegionalIdentifier("");
             rx.setAtcCode("");
             RxUtil.setDefaultSpecialQuantityRepeat(rx);//1 OD, 20, 0;
-            rx.setDuration(RxUtil.findDuration(rx));
+            rx=setCustomRxDurationQuantity(rx);
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             List<RxPrescriptionData.Prescription> listRxDrugs = new ArrayList();
 
@@ -520,7 +528,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         p("=============Start createNewRx RxWriteScriptAction.java===============");
         //set default quantity
         setDefaultQuantity(request);
-
+        //    System.out.println("***IN RxChooseDrugAction.java");
         // Extract attributes we will need
 
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
@@ -594,11 +602,11 @@ public final class RxWriteScriptAction extends DispatchAction {
             String atcCode = dmono.atc;
             rx.setAtcCode(atcCode);
             RxUtil.setSpecialQuantityRepeat(rx);
-            System.out.println("after setSpecialQuantityRepeat ,quantity="+rx.getQuantity()+" unitName="+rx.getUnitName());
+            //System.out.println("after setSpecialQuantityRepeat ,quantity="+rx.getQuantity()+" unitName="+rx.getUnitName());
             String calculatedDur=RxUtil.findDuration(rx);
-            System.out.println("after findDuration ,quantity="+rx.getQuantity()+" unitName="+rx.getUnitName());
+            //System.out.println("after findDuration ,quantity="+rx.getQuantity()+" unitName="+rx.getUnitName());
             if(calculatedDur!=null) rx.setDuration(calculatedDur);
-            System.out.println("duration=" + rx.getDuration());
+            //System.out.println("duration=" + rx.getDuration());
             //    p("set atc code to ", rx.getAtcCode());
             List<RxPrescriptionData.Prescription> listRxDrugs = new ArrayList();
             if (RxUtil.isRxUniqueInStash(bean, rx)) {
@@ -690,7 +698,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             p("===================END parseInstruction RxWriteScriptAction.java======================");
             return null;
         } else if (action != null && action.equals("updateQty")) {
-
+            //    System.out.println("==========***### IN updateQty RxWriteScriptAction.java");
             try {
                 String quantity = request.getParameter("quantity");
                 String randomId = request.getParameter("randomId");
@@ -784,13 +792,13 @@ public final class RxWriteScriptAction extends DispatchAction {
     public ActionForward iterateStash(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException, Exception {
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-
+        //System.out.println("iterateStash");
         //RxUtil.printStashContent(bean);
         List<RxPrescriptionData.Prescription> listP = Arrays.asList(bean.getStash());
         if (listP.size() == 0) {
             return null;
         } else {
-
+            //System.out.println("size "+listP.size()+" ; "+listP.get(0));
             request.setAttribute("listRxDrugs", listP);
             return (mapping.findForward("newRx"));
         }
@@ -804,7 +812,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         // rx.setspecialisntruction
         String randomId=request.getParameter("randomId");
         String specialInstruction=request.getParameter("specialInstruction");
-
+        //System.out.println("specialInstruction  ="+specialInstruction.trim());
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
         if(specialInstruction.trim().length()>0&&!specialInstruction.trim().equalsIgnoreCase("Enter Special Instruction")){
@@ -1135,7 +1143,7 @@ public final class RxWriteScriptAction extends DispatchAction {
         String scriptId = prescription.saveScript(bean);
         StringBuffer auditStr = new StringBuffer();
         ArrayList<String> attrib_names = bean.getAttributeNames();
-
+        //  System.out.println("here3");
         //   p("bean.getStashSize()", Integer.toString(bean.getStashSize()));
         for (int i = 0; i < bean.getStashSize(); i++) {
             try {
