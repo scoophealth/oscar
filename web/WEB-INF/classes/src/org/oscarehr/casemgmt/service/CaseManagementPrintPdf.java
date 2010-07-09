@@ -101,7 +101,7 @@ public class CaseManagementPrintPdf {
         //Create the font we are going to print to        
         bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, FONTSIZE, Font.NORMAL);
-        float leading = font.leading(LINESPACING);
+       
         
         //set up document title and header
         ResourceBundle propResource = ResourceBundle.getBundle("oscarResources");
@@ -200,8 +200,8 @@ public class CaseManagementPrintPdf {
         oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
         oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
         arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demoNo));
-        long now = System.currentTimeMillis();
-        long month = 1000L * 60L * 60L * 24L * 30L;
+       
+        
         Font curFont;
         for(int idx = 0; idx < arr.length; ++idx ) {
             oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
@@ -243,8 +243,8 @@ public class CaseManagementPrintPdf {
         
         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
                 
-        float lworkingYcoord, rworkingYcoord;
-        int written;
+       
+       
         
         Paragraph p = new Paragraph();
         p.setAlignment(Paragraph.ALIGN_CENTER);
@@ -402,7 +402,7 @@ public class CaseManagementPrintPdf {
             cb.saveState();
             
             String strFooter = promoTxt + " " + formatter.format(now);
-            float textSize = font.getBaseFont().getWidthPoint(strFooter,FONTSIZE);
+           
             float textBase = document.bottom();
             cb.beginText();
             cb.setFontAndSize(font.getBaseFont(),FONTSIZE);
