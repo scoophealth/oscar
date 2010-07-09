@@ -231,9 +231,13 @@
                 "<span class=match>" +full.substr(matchindex, snippet.length) +"</span>" + full.substring(matchindex + snippet.length)+"</span>"+"</a>";
            };
            var highlightMatchInactive = function(full, snippet, matchindex) {
-                //oscarLog(full+"--"+snippet+"--"+matchindex);
-                return "<a title='"+full+"'>"+"<span class=matchInactive>"+full.substring(0, matchindex) +
-                full.substr(matchindex, snippet.length) +full.substring(matchindex + snippet.length)+"</span>"+"</a>";
+               /* oscarLog(full+"--"+snippet+"--"+matchindex);
+                oscarLog(" aa "+full.substring(0, matchindex) );
+                oscarLog(" bb "+full.substr(matchindex, snippet.length) );
+                oscarLog(" cc "+ full.substring(matchindex + snippet.length));*/
+               /*return "<a title='"+full+"'>"+"<span class=matchInactive>"+full.substring(0, matchindex) +
+                full.substr(matchindex, snippet.length) +full.substring(matchindex + snippet.length)+"</span>"+"</a>";*/
+                return "<a title='"+full+"'>"+"<span class=matchInactive>"+full+"</span>"+"</a>";
            };
            var resultFormatter = function(oResultData, sQuery, sResultMatch) {
                //oscarLog("oResultData, sQuery, sResultMatch="+oResultData+"--"+sQuery+"--"+sResultMatch);
@@ -254,10 +258,10 @@
                return  display;
            };
             var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
-               //oscarLog("oResultData, sQuery, sResultMatch="+oResultData+"--"+sQuery+"--"+sResultMatch);
-               //oscarLog("oResultData[0]="+oResultData[0]);
-               //oscarLog("oResultData.name="+oResultData.name);
-               //oscarLog("oResultData.name="+oResultData.id);
+               /*oscarLog("oResultData, sQuery, sResultMatch="+oResultData+"--"+sQuery+"--"+sResultMatch);
+               oscarLog("oResultData[0]="+oResultData[0]);
+               oscarLog("oResultData.name="+oResultData.name);
+               oscarLog("oResultData.name="+oResultData.id);*/
                var query = sQuery.toUpperCase();
                var drugName = oResultData.name;
                var isInactive=oResultData.isInactive;
@@ -944,6 +948,7 @@ function changeLt(drugId){
     }
     function addInstruction(content,randomId){
         $('instructions_'+randomId).value=content;
+        parseIntr($('instructions_'+randomId));
     }
     function addSpecialInstruction(content,randomId){
                 //oscarLog("in show hide spec inst="+randomId);
@@ -1372,7 +1377,12 @@ function customWarning2(){
         var randomId=Math.round(Math.random()*1000000);
         var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=newCustomDrug";
         var data="randomId="+randomId;
-        new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom})
+        new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,
+            insertion: Insertion.Bottom, onComplete:function(transport){
+                //oscarLog('xxxxxxxxxxxxxxxxxxxxxxxx');
+                updateQty($('quantity_'+randomId));
+            }});
+
     }
 
 }
@@ -1387,13 +1397,13 @@ function saveCustomName(element){
     var repeat="repeats_"+rand;
     new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
             //output default instructions
-            var json=transport.responseText.evalJSON();
+         /*   var json=transport.responseText.evalJSON();
                 oscarLog("json: "+json.instructions);
             if(json!=null){
                 $(instruction).value=json.instructions;
                 $(quantity).value=json.quantity;
                 $(repeat).value=json.repeat;
-            }
+            }*/
             }});
 }
 function updateDeleteOnCloseRxBox(){
@@ -1722,23 +1732,6 @@ function updateQty(element){
        var prnVal="prnVal_"+rand;
         new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
-         /*       str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
-                    +json.takeMax +"; Duration:";
-                    if(json.duration==null || json.duration=="null"){
-                        str+=  "; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
-                    }else{
-                        str+= json.duration+ "; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
-                    }
-                oscarLog("json.duration="+json.duration);
-                if(json.unitName!=null && json.unitName!="null"){
-                    str+=" "+json.unitName;
-                }
-                if(json.prn){
-                    str=str+" prn";
-                } else{ }
-                oscarLog("str="+str);
-                $(rxString).innerHTML=str;//display parsed string below instruction.
-*/
                 $(methodStr).innerHTML=json.method;
                 $(routeStr).innerHTML=json.route;
                 $(frequencyStr).innerHTML=json.frequency;
@@ -1774,15 +1767,8 @@ function updateQty(element){
         var rand=ar[1];
         var instruction="instruction="+element.value+"&action=parseInstructions&randomId="+rand;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/UpdateScript.do?parameterValue=updateDrug";
-        /*var rxMethod="rxMethod_"+rand;
-        var rxRoute="rxRoute_"+rand;
-        var rxFreq="rxFreq_"+rand;
-        var rxDrugForm="rxDrugForm_"+rand;
-        var rxDuration="rxDuration_"+rand;
-        var rxDurationUnit="rxDurationUnit_"+rand;*/
         var quantity="quantity_"+rand;
         var str;
-       //var rxString="rxString_"+rand;
        var methodStr="method_"+rand;
        var routeStr="route_"+rand;
        var frequencyStr="frequency_"+rand;
@@ -1796,23 +1782,6 @@ function updateQty(element){
        var prnVal="prnVal_"+rand;
         new Ajax.Request(url, {method: 'get',parameters:instruction,asynchronous:false, onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
-            /*    str="Method:"+json.method+"; Route:"+json.route+"; Frequency:"+json.frequency+"; Min:"+json.takeMin+"; Max:"
-                    +json.takeMax +"; Duration:";
-                if(json.duration==null || json.duration=="null"){
-                        str+="; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
-                }else{
-                        str+=json.duration+"; DurationUnit:"+json.durationUnit+"; Quantity:"+json.calQuantity;
-                }
-                oscarLog("json.duration="+json.duration);
-                if(json.unitName!=null && json.unitName!="null"){
-                    str+=" "+json.unitName;
-                }
-                if(json.prn){
-                    str=str+" prn";
-                } else{ }
-                oscarLog("str="+str);
-                $(rxString).innerHTML=str;//display parsed string below instruction.
-                */
                 $(methodStr).innerHTML=json.method;
                 $(routeStr).innerHTML=json.route;
                 $(frequencyStr).innerHTML=json.frequency;
@@ -1839,13 +1808,6 @@ function updateQty(element){
                 } else{
                     $(prnStr).innerHTML="";$(prnVal).value=false;
                 }
-               // oscarLog("$(prnStr).innerHTML="+$(prnStr).innerHTML);
-              /*  var quantityText;
-                if(json.unitName!=null && json.unitName!="null"){
-                    quantityText=json.calQuantity+" "+json.unitName;
-                }else
-                    quantityText=json.calQuantity;*/
-            //oscarLog("$(quantityStr).innerHTML+$(unitNameStr).innerHTML="+$(quantityStr).innerHTML+$(unitNameStr).innerHTML);
             if($(unitNameStr).innerHTML!='')
                 $(quantity).value=$(quantityStr).innerHTML+" "+$(unitNameStr).innerHTML;
             else
