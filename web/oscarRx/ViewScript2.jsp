@@ -73,7 +73,6 @@ vecPageSizeValues.add("PageSize.A6");
 //String reprint = (String)request.getAttribute("rePrint") != null ? (String)request.getAttribute("rePrint") : "false";
 
 String reprint = (String)request.getSession().getAttribute("rePrint") != null ? (String)request.getSession().getAttribute("rePrint") : "false";
-System.out.println("reprint="+reprint);
 
 String createAnewRx;
 if(reprint.equalsIgnoreCase("true") ) {
@@ -129,7 +128,6 @@ if(bMultisites) {
 
 
 } else if(props.getProperty("clinicSatelliteName") != null) {
-    System.out.println("bean.getProviderNo()="+bean.getProviderNo());
     oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
     ProSignatureData sig = new ProSignatureData();
     boolean hasSig = sig.hasSignature(bean.getProviderNo());
@@ -158,12 +156,6 @@ if(bMultisites) {
         vecAddressName.add(temp0[i]);
         vecAddress.add("<b>"+doctorName+"</b><br>"+temp0[i]+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>"+rb.getString("RxPreview.msgTel")+": " + temp5[i] + "<br>"+rb.getString("RxPreview.msgFax")+": " + temp6[i]);
     }
-
-    for(int h=0;h<vecAddressName.size();h++){
-        System.out.print(", vecAddressName: "+vecAddressName.get(h));
-        System.out.print(",vecAddress"+vecAddress.get(h));
-    }
-    System.out.println(provider.getClinicName().replaceAll("\\(\\d{6}\\)",""));
 }
 String comment = (String) request.getSession().getAttribute("comment");
 RxPharmacyData pharmacyData = new RxPharmacyData();

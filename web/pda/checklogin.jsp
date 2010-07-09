@@ -27,7 +27,8 @@
 <%@ page language="java" import="java.util.*, java.io.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 
-<jsp:useBean id="loginBean" scope="page" class="oscar.Login">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="loginBean" scope="page" class="oscar.Login">
 	<jsp:setProperty name="loginBean" property="*" />
 </jsp:useBean>
 <jsp:useBean id="monitor" scope="session" class="java.util.HashMap" />
@@ -45,7 +46,9 @@
     String strTemp = oscarVariables.getProperty("working_dir").substring(0,oscarVariables.getProperty("working_dir").indexOf(sep));
     try {
       oscarVariables.load(new FileInputStream(strTemp + sep + "root" + sep +"oscar_sfhc.properties")); //change to speciallll name
-    } catch(Exception e) {System.out.println("*** No Property File ***"); }
+    } catch(Exception e) {
+    	MiscUtils.getLogger().error("*** No Property File ***", e); 
+    	}
 
   //judge the local network
   boolean bWAN = true ;
@@ -87,7 +90,6 @@
     session.setAttribute("userprofession", strAuth[3]);
     
     monitor.put(strAuth[0], session);
-    System.out.println("Assigned new session for: " + strAuth[0]+ " : "+ strAuth[3] );
 
     //GregorianCalendar now=new GregorianCalendar();
     int nowYear =now.get(Calendar.YEAR);
@@ -152,7 +154,6 @@
         info.updateLoginInfoBean(now, 1);
       }
       loginInfo.put( request.getRemoteAddr(), info);
-    System.out.println(request.getRemoteAddr()+"  status: "+ ((LoginInfoBean) loginInfo.get( request.getRemoteAddr())).getStatus() + " times: "+ info.getTimes()+ " time: " );
     }
   }
   response.sendRedirect(displaypage);

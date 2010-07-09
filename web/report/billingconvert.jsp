@@ -8,7 +8,8 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing</title>
@@ -112,12 +113,8 @@ busy ...
 				+ sex + "', '" + province + "', '" + billing_date + "','" +billing_time+"','"+total+"','','"
 				+status+"','','"+visittype+"','"+provider_ohip_no+"','"+provider_rma_no+"','"+apptProvider_no+"','"
 				+asstProvider_no+"','" +creator+"','"+timestamp+"')";
-		 System.out.println(sql);
-		if(!dbObj.updateDBRecord(sql)) {
-			System.out.println("error:" + id);
-		} else {
-			System.out.println("::" + id);
-		}
+		 
+		dbObj.updateDBRecord(sql);
 	}
 	rs.close();
 	
@@ -148,9 +145,7 @@ busy ...
 				+ billing_amount + "', '"+billingunit+"','"
 				+ appointment_date + "', '" + diagnostic_code + "', '','','" +status + "',\\N)";
 		if(!dbObj.updateDBRecord(sql)) {
-			System.out.println("error billing_on_item:" + id);
-		} else {
-			System.out.println("billing_on_item::" + id + sql);
+			MiscUtils.getLogger().error("error billing_on_item:" + id);
 		}
 	}
 	rs.close();

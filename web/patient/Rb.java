@@ -68,7 +68,7 @@ class Rb {
 		oldS = a.substring(i).substring(0+oldS1.length(),ie);
 
 		temp+=temp1+ newS1+ oldS +newS2 +temp2;
-    System.out.println(oldS);
+    
 		return temp;
 	}
 
@@ -82,7 +82,7 @@ class Rb {
     temp2 = a.substring(i).substring(ie+oldS2.length()); 
 
 		temp+=temp1+ newS +temp2;
-    System.out.println(temp);
+    
 		return temp;
 	}
 

@@ -13,7 +13,6 @@
         }
         action = request.getParameter("getXLS");
         if (action != null) {
-            System.out.println("Generating Spread Sheet file for the 'report by template' module ..");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=\"oscarReport.xls\"");
             String[][] data = CSVParser.parse(csv);

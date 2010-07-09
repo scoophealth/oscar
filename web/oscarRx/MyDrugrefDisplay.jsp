@@ -54,7 +54,6 @@ trusted truejava.lang.Boolean ? i think
     Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");
     Hashtable hiddenResources = (Hashtable) request.getSession().getAttribute("hideResources");
     if ( warnings != null && warnings.size() > 0){
-        System.out.println("numb warnings "+warnings.size());
 
         int untrustedRes = 0;
         int hiddenRes = 0;
@@ -68,8 +67,6 @@ trusted truejava.lang.Boolean ? i think
 
             String interactStr=(String)ht.get("interactStr");
             if(interactStr==null) interactStr="";
-            System.out.println("---interactStr="+interactStr);
-            //MessageResources messageResources=getResources(request);
             if (hiddenResources != null ) {
                 hideResource = hiddenResources.containsKey("mydrugref"+ht.get("id"));
             }
@@ -120,7 +117,7 @@ Last Update:<%=s(lastUpdateDate)%><br/>
 
 
 <%if (commentsVec != null && commentsVec.size() > 0){
-    System.out.println("commentsVec != null && commentsVec.size() > 0"); %> <!--a style="float:right;" href="javascript:void(0);" onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a-->
+     %> <!--a style="float:right;" href="javascript:void(0);" onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a-->
 <fieldset style="border: 1px solid white; display: none; padding: 2px;"	id="comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>">
 <legend>Comments</legend> <%for(Hashtable comment : commentsVec){ %>
 <div><%= getCommentDisplay( comment ) %></div>
@@ -202,7 +199,6 @@ resources</a></div>
            if (o != null && o instanceof Boolean){
               Boolean c  = (Boolean) o;
               b = c.booleanValue();
-              System.out.println(b);
            }
            return b;
        }
@@ -300,11 +296,6 @@ resources</a></div>
             for (Object o :ht.keySet()){
                 String s  = "key:"+o+" val "+ht.get(o)+"  class : "+ht.get(o).getClass().getName();
                 sb.append(s);
-                System.out.println(s);
-                if ( o instanceof Vector){
-                   Vector v =  (Vector) o;
-                   System.out.println("SS "+v.size());
-                }
             }
        }
        return sb.toString();

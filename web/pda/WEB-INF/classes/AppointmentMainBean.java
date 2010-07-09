@@ -102,7 +102,6 @@ public class AppointmentMainBean {
 	  // called from receiving page, not forwarding page.
 	  String sqlExec = queryDict.getDef("dboperation","");
   	dbH.queryExecute(sqlExec, param);
-    System.out.println("finish "+sqlExec);
   }
   public void queryExecute(String aKeyword) throws Exception{
 	  // called from receiving page, not forwarding page.
@@ -115,7 +114,6 @@ public class AppointmentMainBean {
 	  // called from receiving page, not forwarding page.
 	  String sqlExec = queryDict.getDef(dboperation,"");
   	dbH.queryExecute(sqlExec, param);
-    System.out.println("finish "+sqlExec);
   }
   public void queryExecute(String aKeyword, String dboperation) throws Exception{
 	  // called from receiving page, not forwarding page.

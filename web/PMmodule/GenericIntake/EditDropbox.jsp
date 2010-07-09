@@ -14,7 +14,6 @@
     
     IntakeNodeTemplate iTemplate = null;
     if (dbNode==null) {
-	System.out.println("IntakeNode cannot be NULL!!!");
 	response.sendRedirect("close.jsp");
     } else {
 	iTemplate = dbNode.getNodeTemplate();

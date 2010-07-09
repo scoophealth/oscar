@@ -83,7 +83,7 @@
   } else {
   	endDayOfWeek=day+(7-dayOfWeek);
   }
-  System.out.println(preZero+" / "+surZero);
+  
 %>
 
 <html>
@@ -323,7 +323,7 @@ function showHideLayers() {
           bFirstTime = true; 
           for(int id=firstDayOfWeek; id<=endDayOfWeek; id++ ) { //from day 1 - 7
           	if(bFirstTime?rs.next():true) {
-            System.out.println(" =id "+rs.getString("start_time"));
+            
           		
           		if(id==(MyDateFormat.getDayFromStandardDate(rs.getString("appointment_date")))) {
           			bFirstTime = true;

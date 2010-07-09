@@ -40,20 +40,12 @@ if ( bean == null ){
     Vector prices = getTreatment(treatment);
     Object[] pricesArray = null;
     if (prices != null){
-    System.out.println("CODES count "+prices.size());
     pricesArray = prices.toArray();
     }
     if ( pricesArray != null && pricesArray.length > 0){
         for (int i=0; i < pricesArray.length; i++){
             Hashtable ht = (Hashtable) pricesArray[i]; 
-           /* Enumeration en = ht.keys();
-            
-            while(en.hasMoreElements()){
-                Object s = en.nextElement();
-                System.out.println(s+" -- "+ht.get(s));
-            }
-            */
-            System.out.println("\nName: "+ht.get("name")
+
             +"\nPrice: "+ht.get("cost")
             +"\nRetailer: "+ht.get("reference"));
             String author=(String)ht.get("author");
@@ -221,7 +213,6 @@ String DrugLing(String s){
         //String server_url = "http://130.113.106.88:3000/backend/api";
         String server_url = "http://mydrugref.org/backend/api";
         try{
-            System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
         }catch (XmlRpcException exception) {
@@ -255,13 +246,7 @@ String DrugLing(String s){
             if (holbrook instanceof Vector){
                 vec = (Vector) holbrook;
             }
-            Enumeration e = ((Hashtable) obj).keys();
-            while (e.hasMoreElements()){
-                String s = (String) e.nextElement();
-                System.out.println(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
-            }
         }
-        System.out.println("RETURN TREAT VEC +"+vec.size());
         return vec;
     }
      

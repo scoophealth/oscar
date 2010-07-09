@@ -34,9 +34,7 @@ if ( bean == null ){
     if ( pricesArray != null && pricesArray.length > 0){
         for (int i=0; i < pricesArray.length; i++){
             Hashtable ht = (Hashtable) pricesArray[i]; 
-            System.out.println("\nName: "+ht.get("name")
-            +"\nPrice: "+ht.get("cost")
-            +"\nRetailer: "+ht.get("reference"));%>
+            %>
 
 
 <%@page import="org.oscarehr.util.MiscUtils"%><div
@@ -121,11 +119,9 @@ Retailer:<%=ht.get("reference")%></div>
    }
    
    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
-        System.out.println("#CALLDRUGREF-"+procedureName);
         Object object = null;
         String server_url = "http://dev2.mydrugref.org/backend/api";
         try{
-            System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
         }catch (XmlRpcException exception) {
@@ -161,7 +157,6 @@ Retailer:<%=ht.get("reference")%></div>
             Enumeration e = ((Hashtable) obj).keys();
             while (e.hasMoreElements()){
                 String s = (String) e.nextElement();
-                System.out.println(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
             }
         }
         

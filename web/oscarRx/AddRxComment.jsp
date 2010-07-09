@@ -25,8 +25,6 @@
  * Ontario, Canada 
  */
 
-System.out.println("scriptNo "+request.getParameter("scriptNo")+"  "+request.getParameter("comment"));
-
 String scriptNo = request.getParameter("scriptNo");
 String comment  = request.getParameter("comment");
 if (scriptNo != null && comment != null){

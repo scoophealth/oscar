@@ -69,7 +69,7 @@
   strDay=MyDateFormat.getDigitalXX(day);
   strMonthOfYear=arrayMonthOfYear[month-1];
   strDayOfWeekInMonth=now.get(Calendar.DAY_OF_WEEK_IN_MONTH));
-            System.out.println("before resultSet: ");
+            
 %>
 
 <html>
@@ -280,7 +280,7 @@ function showHideLayers() {
 	 				param[1]=year+"-"+month+"-"+(day-dayOfWeek+1);//e.g."2001-02-02";
 	 				param[2]=year+"-"+month+"-"+(day+(7-dayOfWeek));//e.g."2001-02-02";
 	  			String strsearchappointmentweek=request.getParameter("dboperation");
-            System.out.println("before resultSet: ");
+
    				ResultSet rs = mainBean.queryResults(param, "searchappointmentweek");
 
           for(ih=startHour; ih<=endHour; ih++) {

@@ -9,17 +9,14 @@
 <%@page import="oscar.oscarRx.util.*" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
     <%
-System.out.println("***### IN prescribe.jsp");
 
 List<RxPrescriptionData.Prescription> listRxDrugs=(List)request.getAttribute("listRxDrugs");
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
 
-System.out.println("listRxDrugs="+listRxDrugs);
 if(listRxDrugs!=null){
             String specStr=RxUtil.getSpecialInstructions();
 
   for(RxPrescriptionData.Prescription rx : listRxDrugs ){
-         System.out.println("display prescribe :"+rx);
          String rand            = Long.toString(rx.getRandomId());
          String instructions    = rx.getSpecial();
          String specialInstruction=rx.getSpecialInstruction();
@@ -76,7 +73,6 @@ if(listRxDrugs!=null){
          String archivedDate="";
          String archivedReason="";
          boolean isOutsideProvider ;
-         System.out.println("---"+outsideProvOhip+"--");System.out.println("---"+outsideProvName+"--");
          if(isDiscontinuedLatest){
                 archivedReason=rx.getLastArchReason();
                 archivedDate=rx.getLastArchDate();
@@ -89,7 +85,6 @@ if(listRxDrugs!=null){
          else{
              isOutsideProvider=false;
          }
-         System.out.println("instructions ="+instructions+ " rand="+rand+" drugName="+drugName+" startDate="+startDate+" writtenDate="+writtenDate);
          if(route==null || route.equalsIgnoreCase("null")) route="";
          String rxString="Method:"+method+"; Route:"+route+"; Frequency:"+frequency+"; Min:"+takeMin+"; Max:"
                     +takeMax+"; Duration:"+duration+"; DurationUnit:"+durationUnit+"; Quantity:"+quantityText;

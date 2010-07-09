@@ -276,7 +276,7 @@ function showHideLayers() {
 	 				param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 	  			String strsearchappointmentday=request.getParameter("dboperation");
    				ResultSet rs = apptMainBean.queryResults(param, strsearchappointmentday);
-          System.out.println("before resultSet: " + param[0]+param[1]);
+          
 
           for(int ih=startHour; ih<=endHour; ih++) {
             hourCursor = ih>12?ih-12:ih;

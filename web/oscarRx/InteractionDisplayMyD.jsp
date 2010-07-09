@@ -34,14 +34,7 @@ if ( bean == null ){
     if ( interactionsArray != null && interactionsArray.length > 0){
         for (int i=0; i < interactionsArray.length; i++){
             Hashtable ht = (Hashtable) interactionsArray[i]; 
-            System.out.println("\nEffect: "+ht.get("effect")
-            +"\nAffected Drug: "+ht.get("drug2")
-            +"\nAffecting Drug: "+ht.get("name")
-            +"\nEvidence: "+ht.get("evidence")
-            +"\nSignificance: "+ht.get("significance")
-            +"\nAffecting ATC: "+ht.get("atc")
-            +"\nAffected ATC: "+ht.get("atc2")
-            +"\nComment: "+ht.get("body"));%>
+            %>
 
 
 <%@page import="org.oscarehr.util.MiscUtils"%><div
@@ -142,11 +135,9 @@ if ( bean == null ){
    }
    
    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
-        System.out.println("#CALLDRUGREF-"+procedureName);
         Object object = null;
         String server_url = "http://dev2.mydrugref.org/backend/api";
         try{
-            System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
         }catch (XmlRpcException exception) {
@@ -182,7 +173,6 @@ if ( bean == null ){
             Enumeration e = ((Hashtable) obj).keys();
             while (e.hasMoreElements()){
                 String s = (String) e.nextElement();
-                System.out.println(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
             }
         }
         

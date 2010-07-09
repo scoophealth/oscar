@@ -82,31 +82,15 @@
 
 <%
 
-            System.out.println("***### in SearchDrug2.jsp");
             int n = pageContext.getAttributesScope("bean");
-            System.out.println("scope of attr=" + Integer.toString(n));
-            Enumeration emn = pageContext.getAttributeNamesInScope(n);
-            while (emn.hasMoreElements()) {
-                System.out.println("attr name in scope n=" + emn.nextElement().toString());
-            }
-            System.out.println("bean.getStashIndex() searchDrug2.jsp=" + bean.getStashIndex());
 
             RxDrugData drugData = new RxDrugData();
-
 
             String id = request.getParameter("id");
             String text = request.getParameter("text");
             String rand = request.getParameter("rand");
-            System.out.println("rand=" + rand);
 
-            Enumeration emnn = request.getAttributeNames();
-            while (emnn.hasMoreElements()) {
-                System.out.println("request attr in SearchDrug2.jsp=" + emnn.nextElement());
-            }
             RxDrugData.DrugSearch drugSearch = (RxDrugData.DrugSearch) request.getAttribute("drugSearch");
-            if (drugSearch != null) {
-                System.out.println("durgSearch is not null");
-            }
 
             RxPharmacyData pharmacyData = new RxPharmacyData();
             RxPharmacyData.Pharmacy pharmacy;
@@ -208,9 +192,7 @@
     %>
 
     <%
-    String s=request.getParameter("represcribe2");if(s!=null){System.out.println("is represcribe2 here?"+s);}
-    else{
-    System.out.println("represcribe2 is not here");}
+    String s=request.getParameter("represcribe2");
 %>
 
     <body topmargin="0" leftmargin="0" vlink="#0000FF"  onload="initmb();document.forms[0].searchString.focus();"> <%--onload="load()">--%>
@@ -374,12 +356,7 @@
 
                                                                     <%
             CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-            System.out.println("patient.getDemographicNo()=" + patient.getDemographicNo());
-            if (showall) {
-                System.out.println("showall=true");
-            } else {
-                System.out.println("showall=false");
-            }
+
             List<PrescriptDrug> prescriptDrugs = caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
 
             long now = System.currentTimeMillis();
@@ -389,7 +366,7 @@
             // int counter=0;
             for (PrescriptDrug prescriptDrug : prescriptDrugs) { //loop through all drugs prescribed
                 String styleColor = "";
-                System.out.println("prescriptDrug's local id=" + Integer.toString(prescriptDrug.getLocalDrugId()));
+
                 if (request.getParameter("status") != null) { //TODO: Redo this in a better way
                     String stat = request.getParameter("status");
                     if (stat != null && stat.equals("active") && prescriptDrug.isExpired()) {
@@ -400,7 +377,7 @@
                 }
                 //add all long term med drugIds to an array.
                 if (prescriptDrug.isLongTerm()) {
-                    System.out.println("long term med's prescriptDrug.getLocalDrugId()=" + prescriptDrug.getLocalDrugId());
+                    
                     // listLongTermMed[counter]=""+prescriptDrug.getLocalDrugId();
                     // counter++;
                     listLongTermMed.add(prescriptDrug.getLocalDrugId());
@@ -455,8 +432,7 @@
                                                                            <%
                if (prescriptDrug.getRemoteFacilityName() == null) {
                                                                            %>
-                                                                           <a name="delete" id="<%=prescriptDrug.getLocalDrugId()%><%
-                                System.out.println("drugId in SearchDrug2.jsp=" + prescriptDrug.getLocalDrugId());%>" <%=styleColor%> href="javascript:void()" onclick="Delete(this);"> <%="Delete"%>
+                                                                           <a name="delete" id="<%=prescriptDrug.getLocalDrugId()%>" <%=styleColor%> href="javascript:void()" onclick="Delete(this);"> <%="Delete"%>
                                                                             </a>
                                                                         <!--input type="checkbox" name="chkDelete" align="center" drugId="<%--=prescriptDrug.getLocalDrugId()--%>" /-->
                                                                             <%
@@ -546,11 +522,6 @@
 </tr>
 </table>
 <%
-            Enumeration em = request.getAttributeNames();
-            System.out.println("attributes in request in search");
-            while (em.hasMoreElements()) {
-                System.out.println("attribute=" + em.nextElement().toString());
-            }
             if (pharmacy != null) {%>
 <div id="Layer1" style="position: absolute; left: 1px; top: 1px; width: 350px; height: 311px; visibility: hidden; z-index: 1"><!--  This should be changed to automagically fill if this changes often -->
 

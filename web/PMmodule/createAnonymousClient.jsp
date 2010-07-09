@@ -20,7 +20,6 @@
 		//error has occured
 	} else {
 		demographic = org.oscarehr.PMmodule.web.CreateAnonymousClientAction.generateAnonymousClient(programId);
-		System.out.println("anonymous - demographic no = " + demographic.getDemographicNo());
 	}
 	
 	Provider provider = LoggedInInfo.loggedInInfo.get().loggedInProvider;

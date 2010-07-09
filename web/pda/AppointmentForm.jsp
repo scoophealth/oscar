@@ -54,8 +54,6 @@
       if(RS.getString("demographic_no")!=null){
         demographic_no = RS.getInt("demographic_no") ;
       }
-
-System.out.print("AppointmrntForm-demographic_no "+demographic_no );
 %>
 
 

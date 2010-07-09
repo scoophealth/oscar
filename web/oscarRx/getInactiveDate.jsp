@@ -23,7 +23,6 @@
  * Ontario, Canada
 --%>
 <%@page import="java.util.*,net.sf.json.*,java.io.*,org.apache.xmlrpc.*,oscar.oscarRx.util.*,oscar.oscarRx.data.*"  %><%
-System.out.println("In getInactiveDate");
 String din =  request.getParameter("din");
 String id = request.getParameter("id");
 Vector vec=new Vector();

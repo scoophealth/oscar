@@ -78,8 +78,6 @@ if  ( weight > 0){ weightb = true;}
 if  ( sCr > 0){    sCrb = true;}
 
 
-System.out.println("age "+ageb+ " weightb "+ weightb+ " scrb "+sCrb);
-
 int Clcr = 0;
 if (ageb & weightb & sCrb){
     equate = true;

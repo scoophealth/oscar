@@ -10,9 +10,6 @@ RxDrugData.DrugSearch drugSearch = null;
 
 if (searchString != null){
 
-  System.out.println(" ### in search2.jsp, searchString="+searchString);
-    
-
     Vector<Hashtable> vec = rxref.list_drug_element2(searchString);
     for(Hashtable drug : vec){
         String cat = ""+drug.get("category");

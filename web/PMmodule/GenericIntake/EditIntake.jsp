@@ -203,7 +203,7 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
     
     
     String si = ""+in.getChildren().size();
-    System.out.println(node.getId()+" : "+si);
+  
     
     boolean hasChildren = false;
     

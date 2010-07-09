@@ -175,7 +175,7 @@ void copyCommonElements(IntakeNode org, Integer nodeId,Integer lastElementId,Htt
 		//listIterator.
 		
 		while(listIterator.hasPrevious()) {
-			System.out.println("iterating");
+			
 			IntakeAnswerElement iae = listIterator.previous();
 			//make a copy, and add to current.
 			   IntakeAnswerElement intakeAnswerElement = new IntakeAnswerElement();

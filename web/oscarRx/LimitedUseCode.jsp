@@ -15,7 +15,6 @@
             ArrayList<LimitedUseCode> luList = LimitedUseLookup.getLUInfoForDin(din);
 
             if (luList != null){
-            System.out.println("inside luList size is "+luList.size());
      %>
             <div style="float:left; margin-left:2px; margin-right: 2px;">
             <table style="border-width: 1px; border-spacing: 2px; border-style: outset; border-color: black;">

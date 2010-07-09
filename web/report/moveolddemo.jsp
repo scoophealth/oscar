@@ -69,7 +69,7 @@ Vector props = new Vector();
 RandomAccessFile raf = new RandomAccessFile(filename, "r");
 while(true) {
 	String s = raf.readLine();
-	if(s == null ) {System.out.println(" break!!!!" +s);break;}
+	if(s == null ) {break;}
 
 	s = s.trim()
 	if (s.length() < 1) continue;

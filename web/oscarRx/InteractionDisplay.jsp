@@ -31,7 +31,6 @@ if ( bean == null ){
 
      RxDrugData.Interaction[] interactions = (RxDrugData.Interaction[]) bean.getInteractions();
      if (interactions != null && interactions.length > 0){
-        System.out.println("interactions.length "+interactions.length);
         for (int i = 0 ; i < interactions.length; i++){  %>
 <div
 	style="background-color:<%=sigColor(interactions[i].significance)%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">

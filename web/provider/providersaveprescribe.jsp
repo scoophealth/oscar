@@ -66,7 +66,6 @@
 	temp=e.nextElement().toString();
 	if( temp.indexOf("xml_")==-1) continue;
   	content+="<" +temp+ ">" +request.getParameter(temp)+ "</" +temp+ ">";
-    System.out.println(temp+"         "+content);
   }
 
     String[] param =new String[5];

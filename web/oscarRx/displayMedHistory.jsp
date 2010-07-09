@@ -45,7 +45,6 @@
 <body onload="addHandle(document.getElementsByTagName('body').item(0), window);">
     <%
 try{
-    System.out.println("in displaymedhistory.jsp");
     oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
     String randomId=(String)request.getParameter("randomId");
         if(randomId!=null){
@@ -54,8 +53,6 @@ try{
                 if(drugName==null || drugName.equalsIgnoreCase("null") || drugName.trim().length()==0)
                     drugName=rx.getCustomName();
                 List<HashMap<String,String>> listMedHistory=(List<HashMap<String,String>>)bean.getListMedHistory();
-                System.out.println("drugName="+drugName+"--randomId="+randomId+"--listMedHistory="+listMedHistory);
-
                 %>
 
 <a style="position:fixed;top:0px;right:4px;color:red;font-size:12pt" onmouseover="this.style.cursor='pointer';" onclick="parent.mb.hide();">X</a>

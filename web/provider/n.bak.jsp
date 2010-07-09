@@ -42,7 +42,6 @@
   int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   n_t_w_w= (String) session.getAttribute("newticklerwarningwindow");
-  System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@"+n_t_w_w);
 }
   int view=0;
   int lenLimitedL=11, lenLimitedS=3;

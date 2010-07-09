@@ -208,7 +208,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	  curYear = Integer.parseInt(request.getParameter("year"));
 	  curMonth = Integer.parseInt(request.getParameter("month"));
 	  curDay = Integer.parseInt(request.getParameter("day"));
-System.out.print("request.getParameter( year )!!!!!==null)");
     
    }
    

@@ -41,8 +41,6 @@ reverse="<%=true%>">
 %>
 
 <%
-System.out.println("bean.getStashIndex() searchDrug.jsp="+bean.getStashIndex());
-
 	RxPharmacyData pharmacyData = new RxPharmacyData();
 	RxPharmacyData.Pharmacy pharmacy;
 	pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
@@ -620,7 +618,7 @@ function load() {
 								<td><a href="javascript:ShowDrugInfo('<%=((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName()%>');"><bean:message key="SearchDrug.msgInfo"/></a></td>
 							</tr>
 							<%
-								i++;System.out.println("i in searchdrug.jsp="+i);
+								i++;
 							%>
 						</logic:iterate>
 					</table></element>

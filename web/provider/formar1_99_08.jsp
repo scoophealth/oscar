@@ -131,7 +131,7 @@ function checkTypeIn(obj) {
 	  newbornCare = newbornCare==null?"":newbornCare;
       riskFactors = SxmlMisc.getXmlContent(content,"<xml_rfi>","</xml_rfi>");
 	  riskFactors = riskFactors==null?"":riskFactors;
-System.out.println("formar1:"+riskFactors);
+
       finalEDB = SxmlMisc.getXmlContent(content,"<xml_fedb>","</xml_fedb>");
 	  finalEDB = finalEDB==null?"":finalEDB;
       g = SxmlMisc.getXmlContent(content,"<xml_gra>","</xml_gra>");

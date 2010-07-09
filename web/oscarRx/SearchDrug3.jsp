@@ -65,7 +65,9 @@
             boolean all=true;
             boolean longterm_acute=true;
             boolean longterm_acute_inactive_external=true;
-            if(hm==null) {System.out.println("hm is null");}
+            if(hm==null) {
+			// do nothing
+            }
             else{
              if(hm.get("show_current")!=null)
                 show_current=(Boolean)hm.get("show_current");

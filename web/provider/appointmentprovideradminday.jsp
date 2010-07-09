@@ -865,7 +865,6 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <!-- plugins menu extension point add -->
 <%int pluginMenuTagNumber=0; %> 
 <plugin:pageContextExtension serviceName="oscarMenuExtension" stemFromPrefix="Oscar"/>
-<%System.out.println("enter plugin---"); %>
 <logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
 <%if (oscar.util.plugin.IsPropertiesOn.propertiesOn(pt.getName().toLowerCase())) {
 	pluginMenuTagNumber++;
@@ -1651,7 +1650,3 @@ document.onkeydown=function(e){
 </script>
 <!-- end of keycode block -->
 </html:html>
-<%
-long finLoad = System.currentTimeMillis();
-System.out.println("TOTAL LOAD TIME FOR DAY SHEET:" + (finLoad-loadPage)*.001);
-%>

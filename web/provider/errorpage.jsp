@@ -25,13 +25,17 @@
 -->
 
 <%@ page isErrorPage="true"%><!-- only true can access exception object -->
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <body>
 <h1>Error Page</h1>
 <hr>
 <h2>Received the exception:<br>
 <font color=red> <%= exception.toString() %><br>
-<%= exception.getMessage() %> <% exception.printStackTrace(System.out); %>
+<%= exception.getMessage() %> 
+<%
+MiscUtils.getLogger().error("Error", exception);
+%>
 </font></h2>
 </body>
 </html>

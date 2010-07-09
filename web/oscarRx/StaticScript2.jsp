@@ -82,7 +82,6 @@
             response.sendRedirect("../logout.jsp");
 	String curUser_no = (String) session.getAttribute("user");
 	String regionalIdentifier=request.getParameter("regionalIdentifier");
-        System.out.println("req ctx "+request.getContextPath());
 	String cn=request.getParameter("cn");
         String bn=request.getParameter("bn");
 	Integer currentDemographicNo=bean.getDemographicNo();

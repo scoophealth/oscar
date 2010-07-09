@@ -250,17 +250,6 @@ String replaceHeading(String s){
     }
     return s;
 }
-
-void showKeys(Hashtable h){
-    Enumeration en = h.keys();
-    while (en.hasMoreElements()){
-        String ssss = (String) en.nextElement();
-        System.out.println(ssss+" "+h.get(ssss)); 
-    }
-}
-
-
-
-                          
+       
 
 %>

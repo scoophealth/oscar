@@ -65,10 +65,8 @@
 
 <%
 RxSessionBean bean = (RxSessionBean)pageContext.findAttribute("bean");
-System.out.println("bean.getStashIndex() writescript.jsp="+bean.getStashIndex());
 int n=pageContext.getAttributesScope("bean");
 Enumeration emn=pageContext.getAttributeNamesInScope(n);
- System.out.println("request.getContextPath() in writeScript.jsp="+request.getContextPath());
 int specialStringLen = 0;
 String quan = "";
 boolean isCustom = true;
@@ -822,10 +820,8 @@ String annotation_attrib = "";// = "anno"+now;
 
 // define current form
 RxWriteScriptForm thisForm = (RxWriteScriptForm)request.getAttribute("RxWriteScriptForm");
-System.out.println("RxWriteScriptForm thisForm="+thisForm);
 
 if(bean.getStashIndex() > -1){ //new way
-    System.out.println("bean.getStashIndex() writescript.jsp="+bean.getStashIndex());
     RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
     annotation_attrib = rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex());
     RxDrugData drugData = new RxDrugData();
@@ -834,9 +830,8 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setEndDate(RxUtil.DateToString(rx.getEndDate(),"yyyy-MM-dd"));
     thisForm.setWrittenDate(RxUtil.DateToString(rx.getWrittenDate(),"yyyy-MM-dd"));
     if (thisForm.getWrittenDate().length()==0) thisForm.setWrittenDate(RxUtil.DateToString(RxUtil.Today(),"yyyy-MM-dd"));
-    try{
-        System.out.println(RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
-    }catch(Exception e){ e.printStackTrace(); }
+   
+
     if(! rx.isCustom()){
         thisForm.setGenericName(rx.getGenericName());
         thisForm.setBrandName(rx.getBrandName() );
@@ -881,9 +876,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setOutsideProviderName(rx.getOutsideProviderName());
     thisForm.setOutsideProviderOhip(rx.getOutsideProviderOhip());
 
-    System.out.println("SETTING FROM STASH " + rx.getCustomInstr());
     atcCode= rx.getAtcCode();
-    System.out.println("route "+rx.getRoute());
 }
 
 isCustom = thisForm.getGCN_SEQNO() == 0;
@@ -1458,7 +1451,7 @@ int i;
 										<td><a href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');"><bean:message key="WriteScript.msgInfo"/></a></td>
 										<td><a href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');"><bean:message key="WriteScript.msgAddtoFavorites"/></a></td>
 									</tr>
-									<% i++; System.out.println("i in writescript.jsp="+i);%>
+									<% i++; %>
 								</logic:iterate>
 							</table>
 							</td>
@@ -1555,7 +1548,7 @@ int i;
 	</table>
 </body>
 </html:html>
-<%long end  = System.currentTimeMillis() -start; System.out.println("millis "+end);%>
+<%long end  = System.currentTimeMillis() -start; %>
 
 <%!
 

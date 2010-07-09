@@ -40,7 +40,6 @@
 </HEAD>
 
 <%
-  System.out.print("NextMonth--------------");
 
 // the only parameters are start_date 
  
@@ -49,7 +48,6 @@
 //***********************************************************
  
     start_date = beanAboutDate.getNextMonth_start_date(start_date);
-System.out.print("start_date = new Integer---"+start_date);
 
     int in_year, in_month, in_date ;
       in_year = new Integer(start_date.substring(0,4)).intValue();

@@ -149,7 +149,6 @@ function goback(){
 <%
   } else {
   int param = Integer.parseInt(request.getParameter("demographic_no"));
-  System.out.println("from editcpp : "+ param);
   String dboperation="search_detail";
  
   ResultSet rs = apptMainBean.queryResults(param, dboperation);

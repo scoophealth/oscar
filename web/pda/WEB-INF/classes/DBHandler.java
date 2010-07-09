@@ -98,7 +98,6 @@ public class DBHandler {
 		pstmt = conn.prepareStatement(sproc);
 		for (int id = 0; id < param.length; id++) {
 			pstmt.setString((id + 1), param[id]);
-			System.out.println(param[id]);
 		}
 		pstmt.execute();
 		// stmt = conn.createStatement();
@@ -131,11 +130,9 @@ public class DBHandler {
 		pstmt = conn.prepareStatement(sproc);
 		for (id = 0; id < param.length; id++) {
 			pstmt.setString((id + 1), param[id]);
-			System.out.println((id + 1) + " : " + param[id]);
 		}
 		for (id = 0; id < intparam.length; id++) {
 			pstmt.setInt((param.length + id + 1), intparam[id]);
-			System.out.println((id + 1) + " : " + intparam[id]);
 		}
 		return (pstmt.executeUpdate());
 	}

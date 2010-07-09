@@ -81,7 +81,7 @@
 	  else intparam[0]=0;
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,intparam,request.getParameter("dboperation"));
   if (rowsAffected ==1) {
-    System.out.println("***************************************** -------- ");
+
 %>
 <p>
 <h1>Successful Addition of an appointment Record.</h1>
