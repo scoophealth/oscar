@@ -36,6 +36,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -68,7 +69,7 @@ public class SetColor extends TagSupport {
                 pageContext.getOut().print(noNewMessagesHtml);
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            MiscUtils.getLogger().error("Error", ioe);
             return SKIP_BODY;
         }
         return EVAL_BODY_INCLUDE;
@@ -78,7 +79,7 @@ public class SetColor extends TagSupport {
         try {
             pageContext.getOut().println(closingHtml);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            MiscUtils.getLogger().error("Error", ioe);
         }
         return EVAL_PAGE;
     }

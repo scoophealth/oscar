@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.utility.Utility;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * This is the object class that relates to the demographic table. Any customizations belong here.
@@ -633,7 +634,7 @@ public class Demographic implements Serializable {
 			Date d = sdf.parse(formattedDate);
 			this.setEffDate(d);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 	}
@@ -650,7 +651,7 @@ public class Demographic implements Serializable {
 			Date d = sdf.parse(formattedDate);
 			this.setHcRenewDate(d);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 	}
@@ -788,7 +789,7 @@ public class Demographic implements Serializable {
 			cal.setTime(d);
 			this.setBirthDay(cal);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 	}

@@ -100,7 +100,7 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
             }
         }
         catch (IOException ioe) {
-            ioe.printStackTrace();         
+            MiscUtils.getLogger().error("Error", ioe);         
         }
         catch(SQLException e)
         {

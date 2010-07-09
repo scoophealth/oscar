@@ -26,7 +26,9 @@
 package oscar.oscarEncounter.oscarMeasurements.util;
 
 import java.io.ByteArrayInputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.drools.RuleBase;
@@ -35,7 +37,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import oscar.oscarEncounter.oscarMeasurements.util.DSCondition;
 
 /**
  * Class used to create Drools XML files

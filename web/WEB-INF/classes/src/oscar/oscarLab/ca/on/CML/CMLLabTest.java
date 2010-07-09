@@ -30,13 +30,13 @@ package oscar.oscarLab.ca.on.CML;
 
 import java.sql.ResultSet;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -128,7 +128,7 @@ public class CMLLabTest {
             rs.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         log.debug("going out "+this.demographicNo);
     }
@@ -174,7 +174,7 @@ public class CMLLabTest {
             rs.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         if (labReportInfoId != null){
@@ -238,7 +238,7 @@ public class CMLLabTest {
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return dis;
         
@@ -264,7 +264,7 @@ public class CMLLabTest {
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -307,7 +307,7 @@ public class CMLLabTest {
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return alist;
     }

@@ -24,28 +24,39 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Vector;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import java.util.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
-import org.apache.xmlrpc.*;
-import oscar.oscarRx.util.MyDrugrefComparator;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.apache.xmlrpc.XmlRpcClientLite;
+import org.oscarehr.common.dao.UserDSMessagePrefsDAO;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserDSMessagePrefs;
+import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
-import org.oscarehr.common.dao.*;
-import org.oscarehr.common.model.*;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.OscarProperties;
+import oscar.oscarRx.util.MyDrugrefComparator;
+import oscar.oscarRx.util.RxUtil;
 import oscar.oscarRx.util.TimingOutCallback;
 import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
-import oscar.oscarRx.util.RxUtil;
 
 public final class RxMyDrugrefInfoAction extends DispatchAction {
 
@@ -69,7 +80,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             if(pp==23)
                 throw new Exception();*/
      }catch(Exception e){
-        e.printStackTrace();
+        MiscUtils.getLogger().error("Error", e);
         ResourceBundle prop = ResourceBundle.getBundle("oscarResources");
         String failedMsg=prop.getString("oscarRx.MyDrugref.InteractingDrugs.error.msgFailed");
         bean.setInteractingDrugList(failedMsg);
@@ -125,7 +136,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 
             }catch(Exception e){
                 log2.debug("command :"+command+" "+e.getMessage());
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         Collections.sort(all, new MyDrugrefComparator());
@@ -159,7 +170,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
                 System.out.println("ineractStr="+interactStr);
             }
         }catch(NullPointerException npe){
-            npe.printStackTrace();
+            MiscUtils.getLogger().error("Error", npe);
         }
         //Vector idWarningVec=new Vector();
         Vector<Hashtable> allRetVec=new Vector();
@@ -219,7 +230,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         if(target!=null && target.equals("interactionsRx")) return mapping.findForward("updateInteractions");
         else return mapping.findForward("success");
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return mapping.findForward("failure");
     }
     }

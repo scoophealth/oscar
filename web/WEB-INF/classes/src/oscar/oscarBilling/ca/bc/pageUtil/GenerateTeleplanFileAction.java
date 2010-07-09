@@ -38,11 +38,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.Misc;
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.TeleplanFileWriter;
@@ -131,7 +130,7 @@ public class GenerateTeleplanFileAction extends Action{
             submission.commit( filename, home_dir,bActDao.getMonthCode(), batchCount, providerNo);
             
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
                 request.setAttribute("error",e.getMessage());
             }
         }

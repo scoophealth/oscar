@@ -29,9 +29,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.IntakeCDao;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.service.IntakeCManager;
+import org.oscarehr.common.model.Demographic;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional

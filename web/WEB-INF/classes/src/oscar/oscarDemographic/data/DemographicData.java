@@ -953,7 +953,7 @@ public class DemographicData {
 				rs.close();
 			} catch (Exception e) {
 				System.out.println("LOG ADD RECORD " + chart_no);
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 				ret = null;
 			}
 		} else {

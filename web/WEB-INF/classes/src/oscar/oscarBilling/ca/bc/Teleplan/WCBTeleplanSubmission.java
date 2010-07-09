@@ -28,14 +28,16 @@ package oscar.oscarBilling.ca.bc.Teleplan;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+
 import oscar.Misc;
 import oscar.OscarProperties;
-import oscar.entities.WCB;
 import oscar.entities.Billingmaster;
+import oscar.entities.WCB;
 /**
  *
  * @author jaygallagher

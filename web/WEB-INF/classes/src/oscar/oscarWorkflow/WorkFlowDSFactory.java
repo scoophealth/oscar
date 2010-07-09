@@ -35,6 +35,7 @@ import java.net.URL;
 
 import org.drools.RuleBase;
 import org.drools.io.RuleBaseLoader;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -80,7 +81,7 @@ public class WorkFlowDSFactory {
                 ruleBase = RuleBaseLoader.loadFromUrl( url );
             }
         }catch(Exception e){
-            e.printStackTrace();                
+            MiscUtils.getLogger().error("Error", e);                
         }
         return ruleBase;             
    }

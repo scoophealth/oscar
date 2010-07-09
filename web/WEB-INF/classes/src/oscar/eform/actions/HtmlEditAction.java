@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.WebUtils;
 
 import oscar.eform.EFormUtil;
@@ -94,7 +95,7 @@ public class HtmlEditAction extends Action {
             
             request.setAttribute("errors", errors);
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return(mapping.findForward("success"));
     }

@@ -34,6 +34,7 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.MD5;
@@ -73,7 +74,7 @@ public class FileUploadCheck {
             hasFileBeenUploaded = true;
          }         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return hasFileBeenUploaded;
    }
@@ -83,7 +84,7 @@ public class FileUploadCheck {
       try{
          md5sum = MD5.getHashString(is);                  
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return md5sum;
    }
@@ -101,7 +102,7 @@ public class FileUploadCheck {
             fileInfo.put("dateTime",db.getString(rs,"date_time"));
          }         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return fileInfo;
    }
@@ -129,7 +130,7 @@ public class FileUploadCheck {
          conE.printStackTrace();            
          throw new Exception("Database Is not Running");
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       System.out.println("returning "+fileUploaded);
       return fileUploaded;

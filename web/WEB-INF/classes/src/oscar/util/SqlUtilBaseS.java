@@ -12,6 +12,8 @@ package oscar.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
@@ -23,7 +25,7 @@ public class SqlUtilBaseS {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
        } catch (SQLException sqe) {
-           sqe.printStackTrace();
+           MiscUtils.getLogger().error("Error", sqe);
        }
    }
    
@@ -37,7 +39,7 @@ public class SqlUtilBaseS {
            String lastID = rs.getString("LAST_INSERT_ID()");
            rs.close();
            return(lastID);
-       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
        return "";
    }
    
@@ -63,7 +65,7 @@ public class SqlUtilBaseS {
 			   rs.close();
 		   }
            return(lastID);
-       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
        return "";
    }
    
@@ -72,7 +74,7 @@ public class SqlUtilBaseS {
 		   DBPreparedHandler dbPre = new DBPreparedHandler();
 		   dbPre.queryExecuteUpdate(preparedSql, params);
 	   } catch (SQLException sqe) { 
-		   sqe.printStackTrace(); 
+		   MiscUtils.getLogger().error("Error", sqe); 
 	   }       
    }
    
@@ -82,7 +84,7 @@ public class SqlUtilBaseS {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            rs = db.GetSQL(sql);
        } catch (SQLException sqe) {
-           sqe.printStackTrace();
+           MiscUtils.getLogger().error("Error", sqe);
        }
        return(rs);
    }

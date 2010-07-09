@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
@@ -139,7 +141,7 @@ public class SupServiceCodeAssocDAO {
       stmt.execute();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     finally {
       try {
@@ -194,7 +196,7 @@ public class SupServiceCodeAssocDAO {
       db.RunSQL(qry);
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 }

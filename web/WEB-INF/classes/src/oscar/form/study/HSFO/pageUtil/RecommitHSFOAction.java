@@ -17,6 +17,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -168,7 +169,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
                 }
             }
             catch (Exception e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
             finally {
     			LoggedInInfo.loggedInInfo.remove();

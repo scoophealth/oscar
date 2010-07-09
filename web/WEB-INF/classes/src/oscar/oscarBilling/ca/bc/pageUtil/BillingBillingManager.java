@@ -137,7 +137,7 @@ public class BillingBillingManager {
 
     }
     catch (SQLException e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
       MiscUtils.getLogger().error("Error", e);
     }
     return billingItemsArray;

@@ -17,8 +17,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
 
-import oscar.OscarProperties;
-
 /**
  *
  * @author Paul

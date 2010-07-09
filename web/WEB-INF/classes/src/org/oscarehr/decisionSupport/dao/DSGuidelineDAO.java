@@ -102,7 +102,7 @@ public class DSGuidelineDAO extends HibernateDaoSupport {
             String xmlString = FileUtils.readFileToString(file);
             dsGuidelineFake.setXml(xmlString);
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return dsGuidelineFake;

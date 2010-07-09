@@ -187,7 +187,7 @@ public class EctSaveEncounterAction
         sessionbean.template = "";
       }
       catch (Exception e) {
-        e.printStackTrace();
+        MiscUtils.getLogger().error("Error", e);
       }
      
       //This code is synchronized to ensure that only one person is modifying the same patient

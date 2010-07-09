@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.EFormUtil;
 import oscar.util.StringUtils;
@@ -53,7 +54,7 @@ public class HtmlUploadAction extends Action {
             String fileName = formHtml.getFileName();
             String lastfid = EFormUtil.saveEForm(formName, subject, fileName, formHtmlStr, patientIndependent);
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return(mapping.findForward("success"));
     }

@@ -29,6 +29,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
 
@@ -65,7 +67,7 @@ public class DAO {
             try {
                 conn.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
 
             conn = null;
@@ -77,7 +79,7 @@ public class DAO {
             try {
                 conn.rollback();
             } catch (SQLException e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
 
             conn = null;

@@ -150,9 +150,9 @@ public class PHRMedication extends PHRDocument{
             version.setVersionBody(body);
             client.updateDocument(sessionTicket, recipientId, docIndex, version);            
         } catch(ActionNotPerformedException anpe) {
-            anpe.printStackTrace();
+            aMiscUtils.getLogger().error("Error", npe);
         } catch(IndivoException ie ) {
-            ie.printStackTrace();
+            iMiscUtils.getLogger().error("Error", e);
         } */
 }
 

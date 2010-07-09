@@ -85,7 +85,7 @@ public class TicklerData {
             db.RunSQL(sql);         
       } catch (SQLException e) {         
          MiscUtils.getLogger().error("Error", e);
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }      
    }
    
@@ -104,7 +104,7 @@ public class TicklerData {
          rs.close();         
       } catch (SQLException e) {
          MiscUtils.getLogger().error("Error", e);
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }      
       return hastickler;
    }

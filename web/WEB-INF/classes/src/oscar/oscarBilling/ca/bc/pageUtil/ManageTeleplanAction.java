@@ -34,10 +34,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Date;
 import java.util.Enumeration;
-
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Map.Entry;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,25 +47,23 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-
-
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.OscarProperties;
 import oscar.entities.Billactivity;
+import oscar.entities.BillingDxCode;
+import oscar.oscarBilling.ca.bc.MSP.MspErrorCodes;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanAPI;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanCodesManager;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanResponse;
+import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanService;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanUserPassDAO;
-import oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO;
-
-import oscar.entities.BillingDxCode;
-import oscar.oscarBilling.ca.bc.MSP.MspErrorCodes;
-import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
+import oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO;
 import oscar.util.UtilDateUtilities;
 
 /**

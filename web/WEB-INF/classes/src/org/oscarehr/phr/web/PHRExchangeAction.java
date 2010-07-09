@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -82,7 +83,7 @@ public class PHRExchangeAction extends DispatchAction {
                 log.info("Time taken to perform OSCAR-myOSCAR exchange: " + (System.currentTimeMillis()-startTime) + "ms");
                 out.print("1");
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
                 out.print("0");
                 request.getSession().removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
             }

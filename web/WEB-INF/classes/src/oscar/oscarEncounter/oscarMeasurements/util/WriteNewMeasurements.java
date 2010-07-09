@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
@@ -122,7 +123,7 @@ public class WriteNewMeasurements {
                 }
                 curmeasure.put("dateEntered", dateEntered);
             }
-        } catch (SQLException sqe) { sqe.printStackTrace(); }
+        } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
     }
     
     static private ActionMessages validate(Vector measures, String demographicNo) {
@@ -219,7 +220,7 @@ public class WriteNewMeasurements {
                     continue;
                 }
             }
-        } catch (SQLException sqe) { sqe.printStackTrace(); }
+        } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
         return errors;   
     }
 
@@ -244,7 +245,7 @@ public class WriteNewMeasurements {
                 db.RunSQL(sql);
             }
         }
-        catch(SQLException e) { e.printStackTrace(); }
+        catch(SQLException e) { MiscUtils.getLogger().error("Error", e); }
     }
     
     static public void write(Hashtable measure, String demographicNo, String providerNo) {
@@ -264,7 +265,7 @@ public class WriteNewMeasurements {
             System.out.println("SQL measure ====" + sql);
             db.RunSQL(sql);
         }
-        catch(SQLException e) { e.printStackTrace(); }
+        catch(SQLException e) { MiscUtils.getLogger().error("Error", e); }
     }
     
      public void write(final String followUpType, final String followUpValue, final String demographicNo, final String providerNo,final java.util.Date dateObserved,final String comment ) {        

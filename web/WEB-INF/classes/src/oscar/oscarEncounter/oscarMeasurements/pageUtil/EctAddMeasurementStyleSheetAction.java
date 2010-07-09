@@ -119,12 +119,12 @@ public class EctAddMeasurementStyleSheetAction extends Action {
         catch (FileNotFoundException fnfe) {
             
             System.out.println("File not found");
-            fnfe.printStackTrace();            
+            MiscUtils.getLogger().error("Error", fnfe);            
             return isAdded=false;
             
         }
         catch (IOException ioe) {
-            ioe.printStackTrace();
+            MiscUtils.getLogger().error("Error", ioe);
             return isAdded=false;
         }
         catch(SQLException e) {

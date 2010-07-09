@@ -25,16 +25,13 @@
 
 package oscar.oscarReport.reportByTemplate;
 
-import java.io.StringWriter;
 import java.sql.ResultSet;
-import java.sql.Date;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.MiscUtils;
 
-import com.Ostermiller.util.CSVPrinter;
+import oscar.oscarDB.DBHandler;
 
 /**
  *
@@ -132,7 +129,7 @@ public class UnusedMinutesReporter implements Reporter{
                 
             }
         }catch(Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             
         }
         rsHtml = makeHTML(booked,unbooked);

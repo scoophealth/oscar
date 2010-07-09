@@ -24,26 +24,21 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import java.util.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.actions.DispatchAction;
-import org.apache.xmlrpc.*;
-import oscar.oscarRx.util.MyDrugrefComparator;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
 import org.springframework.web.context.WebApplicationContext;
-import org.oscarehr.common.dao.*;
-import org.oscarehr.common.model.*;
-import oscar.OscarProperties;
-import oscar.oscarRx.util.TimingOutCallback;
-import oscar.oscarRx.util.TimingOutCallback.TimeoutException;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 public final class RxRxPageSizeInfoAction extends DispatchAction {

@@ -6,7 +6,9 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
+
 import org.hibernate.Session;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -28,7 +30,7 @@ public class MyGroupDAO extends HibernateDaoSupport {
             session = getSession();
             dList = session.createQuery(HQL).list();
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } finally {
             if (session != null) {
                 releaseSession(session);

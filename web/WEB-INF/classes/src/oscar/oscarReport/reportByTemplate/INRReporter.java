@@ -25,15 +25,13 @@
 
 package oscar.oscarReport.reportByTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.StringWriter;
 import java.sql.ResultSet;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
-import oscar.util.UtilMisc;
-
-import com.Ostermiller.util.CSVPrinter;
 
 /**
  *
@@ -139,7 +137,7 @@ public class INRReporter implements Reporter {
                         
          }
          catch(Exception e) {
-            e.printStackTrace();            
+            MiscUtils.getLogger().error("Error", e);            
         }
 
         request.setAttribute("csv", csv.toString());

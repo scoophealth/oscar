@@ -32,6 +32,7 @@ package org.oscarehr.phr.web;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,13 +43,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.service.PHRService;
-import org.oscarehr.phr.PHRAuthentication;
+
 import oscar.oscarDemographic.data.DemographicData;
 
 

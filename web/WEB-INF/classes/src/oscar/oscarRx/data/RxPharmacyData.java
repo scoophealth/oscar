@@ -105,7 +105,7 @@ public class RxPharmacyData {
                                     
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             MiscUtils.getLogger().error("Error", e);
         }
    }
@@ -147,7 +147,7 @@ public class RxPharmacyData {
                                     
             db.RunSQL(sql);
         } catch (SQLException e) {
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
             MiscUtils.getLogger().error("Error", e);
         }
    }
@@ -253,7 +253,7 @@ public class RxPharmacyData {
                                     
             db.RunSQL(sql);
         } catch (SQLException e) {
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
             MiscUtils.getLogger().error("Error", e);
         }
    }

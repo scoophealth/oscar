@@ -6,7 +6,9 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
+
 import org.oscarehr.common.model.QueueProviderLink;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -39,7 +41,7 @@ public class QueueProviderLinkDao extends HibernateDaoSupport{
                 this.getHibernateTemplate().save(qpl);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
     }

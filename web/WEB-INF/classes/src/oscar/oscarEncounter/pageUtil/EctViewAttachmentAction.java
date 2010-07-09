@@ -35,6 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -80,7 +81,7 @@ public final class EctViewAttachmentAction extends Action {
           sentBy     = db.getString(rs,"sentBy");
        }
        rs.close();
-    }catch(SQLException e){System.out.println("CrAsH"); e.printStackTrace();}
+    }catch(SQLException e){System.out.println("CrAsH"); MiscUtils.getLogger().error("Error", e);}
 
     request.setAttribute("remoteName",remoteName);
     request.setAttribute("themessage",themessage);

@@ -22,8 +22,9 @@
 
 package oscar.appt;
 
-import org.oscarehr.common.model.OscarAppointment;
 import java.util.List;
+
+import org.oscarehr.common.model.OscarAppointment;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class AppointmentDao extends HibernateDaoSupport {

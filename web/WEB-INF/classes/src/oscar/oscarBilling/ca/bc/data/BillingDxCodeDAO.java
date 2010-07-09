@@ -30,13 +30,16 @@
 package oscar.oscarBilling.ca.bc.data;
 
 import java.util.List;
-import javax.persistence.Query;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import oscar.entities.*;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import oscar.entities.BillingDxCode;
 /**
  *
  * @author jaygallagher

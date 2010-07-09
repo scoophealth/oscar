@@ -55,6 +55,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -161,7 +162,7 @@ public class SqlUtils {
 						// store fileHolder as a whole (this way we don't lose file meta-info!)
 					}
 					catch (IOException ioe) {
-						ioe.printStackTrace();
+						MiscUtils.getLogger().error("Error", ioe);
 						logger.info(ioe.toString());
 						throw new SQLException("error storing BLOB in database - " + ioe.toString(), null, 2);
 					}
@@ -281,16 +282,16 @@ public class SqlUtils {
 			}
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		catch (IllegalAccessException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		catch (InvocationTargetException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		catch (InstantiationException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		finally {
 			try {
@@ -341,7 +342,7 @@ public class SqlUtils {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return null;
 	}
@@ -372,7 +373,7 @@ public class SqlUtils {
 		}
 		catch (SQLException e) {
 			records = null;
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		finally {
 			if (rs != null) {
@@ -442,7 +443,7 @@ public class SqlUtils {
 		}
 		catch (SQLException e) {
 			records = null;
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		finally {
 			if (rs != null) {

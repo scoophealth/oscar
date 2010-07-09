@@ -14,6 +14,7 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
@@ -230,7 +231,7 @@ public class Message {
           }
           rsr.close();
        }catch(Exception e){
-          e.printStackTrace();  
+          MiscUtils.getLogger().error("Error", e);  
        }
        return ret;
     }
@@ -303,7 +304,7 @@ public class Message {
             rs.close();                
          } catch (Exception e) {
             System.out.println("Error in patientRouteReport:"+e); 
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";                            
             db.RunSQL(sql);
          }            

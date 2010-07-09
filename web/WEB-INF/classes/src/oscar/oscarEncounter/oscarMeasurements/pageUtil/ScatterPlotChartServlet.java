@@ -380,9 +380,9 @@ public class ScatterPlotChartServlet extends HttpServlet
                             }
                         }
 		}
-		catch( Throwable throwable )
+		catch( Throwable t )
 		{			
-			throwable.printStackTrace();
+			MiscUtils.getLogger().error("Error", t);
 		}
 
 	}

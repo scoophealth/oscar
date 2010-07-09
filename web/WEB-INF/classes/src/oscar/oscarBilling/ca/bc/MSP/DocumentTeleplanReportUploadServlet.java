@@ -40,6 +40,7 @@ import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.DocumentBean;
 import oscar.OscarProperties;
@@ -101,10 +102,10 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
             }
         } catch (FileUploadException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         //
         

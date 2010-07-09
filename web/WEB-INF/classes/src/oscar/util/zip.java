@@ -31,6 +31,8 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 public class zip
 {
@@ -73,7 +75,7 @@ public class zip
             out.close();
         } 
         catch(Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }    
     }
 }

@@ -36,6 +36,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -61,7 +62,7 @@ public class ProcessSurveyFile{
          }            
          rs.close();         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return maxprocessed;
    }
@@ -72,7 +73,7 @@ public class ProcessSurveyFile{
          String sql = "update surveyData set processed = '"+processedId+"' where surveyDataId = '"+surveyDataId+"'  ";         
          db.RunSQL(sql);         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
    }
                
@@ -133,14 +134,14 @@ public class ProcessSurveyFile{
                   }        
                   out.close();
                } catch (IOException e) {
-                  e.printStackTrace();
+                  MiscUtils.getLogger().error("Error", e);
                }             
             }
          }
          rs.close();
          
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return sStatus;
    }

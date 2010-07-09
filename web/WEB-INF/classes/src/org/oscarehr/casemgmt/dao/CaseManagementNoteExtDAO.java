@@ -24,6 +24,7 @@ package org.oscarehr.casemgmt.dao;
 
 import java.util.Date;
 import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;

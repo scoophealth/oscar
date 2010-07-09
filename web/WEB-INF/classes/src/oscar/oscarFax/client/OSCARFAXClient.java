@@ -37,6 +37,8 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+
+import org.oscarehr.util.MiscUtils;
 /**
  *
  * @author  Jay
@@ -58,7 +60,7 @@ public class OSCARFAXClient {
             
             mf = MessageFactory.newInstance();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -102,7 +104,7 @@ public class OSCARFAXClient {
                    oscarSoapMessageError = getTheValue(soapElement,  enve, "ErrorMessage");                    
                 }
             }
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
             
         return retval;
     }

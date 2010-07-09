@@ -35,6 +35,7 @@ import noNamespace.SitePatientVisitRecordsDocument;
 
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
@@ -235,13 +236,13 @@ public class FrmToXMLUtil{
                                         
         }
         catch(NoSuchMethodException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         catch(IllegalAccessException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
       xmlStr = xmlStr + visitDocument.xmlText(xmlOptions);

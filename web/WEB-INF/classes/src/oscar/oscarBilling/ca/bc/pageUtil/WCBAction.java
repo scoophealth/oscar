@@ -1,25 +1,20 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.entities.WCB;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
-import oscar.oscarDB.DBHandler;
-import oscar.util.SqlUtils;
 
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *

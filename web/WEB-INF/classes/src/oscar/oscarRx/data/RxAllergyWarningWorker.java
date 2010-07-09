@@ -30,6 +30,7 @@ package oscar.oscarRx.data;
 
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
@@ -76,7 +77,7 @@ public class RxAllergyWarningWorker extends Thread {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         finally {
     		LoggedInInfo.loggedInInfo.remove();

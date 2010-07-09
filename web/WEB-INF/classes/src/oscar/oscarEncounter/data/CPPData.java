@@ -36,6 +36,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -131,7 +133,7 @@ public class CPPData {
          ps.execute();         
          ps.close();
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
          //inserted = false;
       }                        
                         
@@ -178,7 +180,7 @@ public class CPPData {
                         
          }
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
          //inserted = false;
       }                        
       return hm;

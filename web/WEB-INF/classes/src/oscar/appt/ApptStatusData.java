@@ -5,6 +5,9 @@ package oscar.appt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarBilling.ca.on.data.BillingONDataHelp;
 
 /**
@@ -211,7 +214,7 @@ public final class ApptStatusData {
                 }
             }
         } catch (SQLException e) {
-             e.printStackTrace();
+             MiscUtils.getLogger().error("Error", e);
         }
 
         return rstr;

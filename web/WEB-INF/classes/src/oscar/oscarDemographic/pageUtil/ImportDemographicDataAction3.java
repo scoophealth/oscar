@@ -75,6 +75,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.appt.ApptStatusData;
@@ -214,7 +215,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 		}
 	} catch (Exception e) {
 		warnings.add("Error processing file: " + imp.getFileName());
-		e.printStackTrace();
+		MiscUtils.getLogger().error("Error", e);
 	}
 
 		//channel warnings and importlog to browser

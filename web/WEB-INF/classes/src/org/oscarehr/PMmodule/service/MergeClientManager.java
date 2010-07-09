@@ -7,8 +7,8 @@ import java.util.List;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.MergeClientDao;
 import org.oscarehr.PMmodule.model.ClientMerge;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.common.model.Demographic;
 
 public class MergeClientManager {
 	private MergeClientDao mergeClientDao;

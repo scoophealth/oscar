@@ -211,7 +211,7 @@ public class LookupDao extends HibernateDaoSupport {
 	   }
 	   catch(SQLException e)
 	   {
-		  e.printStackTrace();
+		  MiscUtils.getLogger().error("Error", e);
 	   }
 	   return list;
 	}
@@ -291,7 +291,7 @@ public class LookupDao extends HibernateDaoSupport {
 		}
 		catch(SQLException e)
 		{
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return fs;
 	}

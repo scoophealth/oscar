@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-
 import java.util.List;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -60,6 +60,7 @@ import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.indivo.IndivoConstantsImpl;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
 import oscar.oscarDemographic.data.DemographicData;
@@ -284,7 +285,7 @@ public class PHRMessage  extends PHRDocument implements Serializable{
                }
            } catch (Exception e) {
                log.error("ERROR: rawMessageId is formatted poorly: " + rawMessageId);
-               e.printStackTrace();
+               MiscUtils.getLogger().error("Error", e);
            }
            m.put(this.MESSAGE_ID,indexStr);
            this.setExts(m);

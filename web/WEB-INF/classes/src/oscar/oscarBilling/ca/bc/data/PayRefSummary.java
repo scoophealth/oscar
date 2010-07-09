@@ -26,6 +26,8 @@ package oscar.oscarBilling.ca.bc.data;
 
 import java.text.NumberFormat;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 /**
@@ -98,7 +100,7 @@ public class PayRefSummary {
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 
@@ -155,7 +157,7 @@ public class PayRefSummary {
       }
     }
     catch (NumberFormatException e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 

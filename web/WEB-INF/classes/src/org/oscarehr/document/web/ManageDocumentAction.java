@@ -25,10 +25,6 @@
  */
 package org.oscarehr.document.web;
 
-import java.nio.ByteBuffer;
-
-import com.sun.pdfview.PDFFile;
-import com.sun.pdfview.PDFPage;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.RenderedImage;
@@ -36,15 +32,22 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Date;
+import java.util.HashMap;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -54,23 +57,25 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
-import oscar.log.LogAction;
-import oscar.log.LogConst;
-import oscar.util.UtilDateUtilities;
-import org.oscarehr.common.dao.ProviderInboxRoutingDao;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.dms.EDocUtil;
-import oscar.oscarEncounter.data.EctProgram;
-import com.lowagie.text.pdf.PdfReader;
-import java.io.IOException;
-import java.util.HashMap;
-import net.sf.json.JSONObject;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarLab.ca.on.LabResultData;
+import oscar.util.UtilDateUtilities;
+
+import com.lowagie.text.pdf.PdfReader;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
 
 
 /**
@@ -130,7 +135,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
                     System.out.println("proNo="+proNo+"; documentId="+documentId);
                     providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
                 }
-             }catch(Exception e){e.printStackTrace();}
+             }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         }
         Document d = documentDAO.getDocument(documentId);
 
@@ -156,7 +161,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
                 saveDocNote(request,d.getDocdesc(),demog,documentId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         if (flagproviders != null) {
             for (String str : flagproviders) {
@@ -204,7 +209,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
                     System.out.println("proNo="+proNo+"; documentId="+documentId);
                     providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
                 }
-             }catch(Exception e){e.printStackTrace();}
+             }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         }
         Document d = documentDAO.getDocument(documentId);
 
@@ -230,7 +235,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
                 saveDocNote(request,d.getDocdesc(),demog,documentId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         if (flagproviders != null) {
             for (String str : flagproviders) {
@@ -407,10 +412,10 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         outs.close();
        } 
        catch(java.net.SocketException se){
-            se.printStackTrace();
+            MiscUtils.getLogger().error("Error", se);
        }
        catch(Exception e){
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
        }
         return null;
     }
@@ -490,7 +495,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
             JSONObject jsonObject = JSONObject.fromObject(hm);
             response.getOutputStream().write(jsonObject.toString().getBytes());
         }catch(IOException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return null;//execute2(mapping, form, request, response);

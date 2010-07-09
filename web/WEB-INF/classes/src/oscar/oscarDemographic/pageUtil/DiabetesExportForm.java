@@ -28,8 +28,8 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import java.util.Date;
 import org.apache.struts.action.ActionForm;
+
 import oscar.util.UtilDateUtilities;
 
 /**

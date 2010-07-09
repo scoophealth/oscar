@@ -40,13 +40,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.common.PassIntakeFormVars;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
 import org.oscarehr.PMmodule.utility.DateUtils;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.PMmodule.utility.Utility;
+import org.oscarehr.common.model.Demographic;
 
 public class IntakeAReport1Action extends BaseAction {
     private static Log log = LogFactory.getLog(IntakeAReport1Action.class);

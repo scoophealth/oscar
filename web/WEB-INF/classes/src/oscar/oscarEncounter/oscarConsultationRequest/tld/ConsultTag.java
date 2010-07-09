@@ -38,6 +38,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
@@ -106,7 +107,7 @@ public class ConsultTag extends TagSupport {
 
                
                 }catch(Exception ee){
-                    ee.printStackTrace();
+                    MiscUtils.getLogger().error("Error", ee);
                 }
 	    }  
 	   

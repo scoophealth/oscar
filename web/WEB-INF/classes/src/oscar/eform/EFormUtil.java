@@ -41,6 +41,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -116,7 +117,7 @@ public class EFormUtil {
 			}
 			rs.close();
 		} catch (Exception sqe) {
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return(results);
 	}
@@ -160,7 +161,7 @@ public class EFormUtil {
 			}
 			rs.close();
 		} catch (Exception sqe) {
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return(results);
 	}
@@ -186,7 +187,7 @@ public class EFormUtil {
 		} catch (SQLException sqe) {
 			curht.put("formName", "");
 			curht.put("formHtml", "No Such Form in Database");
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return(curht);
 	}
@@ -211,7 +212,7 @@ public class EFormUtil {
 			curht.put("formName", "");
 			curht.put("formSubject", "");
 			curht.put("formHtml", "No Such Form in Database");
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return(curht);
 	}
@@ -267,7 +268,7 @@ public class EFormUtil {
 				return rsGetString(rs, dbColumn);
 			}
 		} catch (SQLException sqe) {
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return null;
 	}
@@ -308,12 +309,12 @@ public class EFormUtil {
 						System.out.println("VALUE ====" + rs.getObject((String) names.get(i)) + "|");
 					} catch (Exception sqe) {
 						values.add("<(" + names.get(i) + ")NotFound>");
-						sqe.printStackTrace();
+						MiscUtils.getLogger().error("Error", sqe);
 					}
 				}
 			}
 			rs.close();
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 		return(values);
 	}
 
@@ -334,7 +335,7 @@ public class EFormUtil {
 			String lastID = oscar.Misc.getString(rs,"LAST_INSERT_ID()");
 			rs.close();
 			return(lastID);
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 		return "";
 	}
 
@@ -373,7 +374,7 @@ public class EFormUtil {
 				System.out.println("SQL ====" + sql);
 				db.RunSQL(sql);
 			}
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 	}
 
 	public static boolean formExistsInDB(String eFormName) {
@@ -387,7 +388,7 @@ public class EFormUtil {
 				rs.close();
 				return false;
 			}
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 		return false;
 	}
 
@@ -401,7 +402,7 @@ public class EFormUtil {
 				rs.close();
 				return numberRecords;
 			}
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 		return 0;
 	}
 
@@ -420,7 +421,7 @@ public class EFormUtil {
 				curhash.put("count", oscar.Misc.getString(rs,"count"));
 				al.add(curhash);
 			}
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 		return al;
 	}
 
@@ -439,7 +440,7 @@ public class EFormUtil {
 				curhash.put("count", oscar.Misc.getString(rs,"count"));
 				al.add(curhash);
 			}
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 		return al;
 	}
 
@@ -459,7 +460,7 @@ public class EFormUtil {
 				"VALUES (" + fid + ", '" + groupName + "')";
 				db.RunSQL(sql);
 			}
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 	}
 
 	public static void remEFormFromGroup(String groupName, String fid) {
@@ -492,7 +493,7 @@ public class EFormUtil {
 			}
 			rs.close();
 		} catch (Exception sqe) {
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return(results);
 	}
@@ -524,7 +525,7 @@ public class EFormUtil {
 			}
 			rs.close();
 		} catch (Exception sqe) {
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return(results);
 	}
@@ -556,7 +557,7 @@ public class EFormUtil {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			db.RunSQL(sql);
 		} catch (SQLException sqe) {
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 	}
 
@@ -570,7 +571,7 @@ public class EFormUtil {
 			String lastID = oscar.Misc.getString(rs,"LAST_INSERT_ID()");
 			rs.close();
 			return(lastID);
-		} catch (SQLException sqe) { sqe.printStackTrace(); }
+		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
 		return "";
 	}
 
@@ -580,7 +581,7 @@ public class EFormUtil {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			rs = db.GetSQL(sql);
 		} catch (SQLException sqe) {
-			sqe.printStackTrace();
+			MiscUtils.getLogger().error("Error", sqe);
 		}
 		return(rs);
 	}

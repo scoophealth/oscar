@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -65,7 +67,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -87,7 +89,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -110,7 +112,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -171,7 +173,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             verdict = false;
         }
         return verdict;
@@ -206,7 +208,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
 
@@ -229,7 +231,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -245,7 +247,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -261,7 +263,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -277,7 +279,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -293,7 +295,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -309,7 +311,7 @@ public class EctConsultationFormRequestUtil {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }

@@ -29,6 +29,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -42,6 +44,9 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
+import oscar.OscarProperties;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -57,9 +62,6 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
-import java.util.HashMap;
-import java.util.List;
-import oscar.OscarProperties;
 
 /**
  *
@@ -367,7 +369,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                 String footer = "" + writer.getPageNumber();
                 writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_RIGHT, footer, 280, endPara - 57, 0);
             } catch (Exception e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
     }
@@ -618,14 +620,14 @@ String clinicFax;
                 document.add(p);
             }
         } //catch (Exception e) {
-        // e.printStackTrace();
+        // MiscUtils.getLogger().error("Error", e);
         //  }
         catch (DocumentException dex) {
             baosPDF.reset();
             throw dex;
         }
         catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }finally {
             if (document != null) {
                 document.close();

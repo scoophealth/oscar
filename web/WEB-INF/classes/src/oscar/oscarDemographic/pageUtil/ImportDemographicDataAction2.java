@@ -55,6 +55,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.jdom.Element;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -144,7 +145,7 @@ public class ImportDemographicDataAction2 extends Action {
 
 	} catch (Exception e) {
 	    warnings.add("Error processing file: " + imp.getFileName());
-	    e.printStackTrace();
+	    MiscUtils.getLogger().error("Error", e);
 	}
         request.setAttribute("warnings",warnings);
 	if (importLog!=null) request.setAttribute("importlog",importLog.getPath());
@@ -240,7 +241,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    eff_date = getCalDate(healthCard.getExpirydate());
 		} catch (Exception e) {
 		    errWarnings.add("Error! Invalid health card expiry date!");
-		    e.printStackTrace();
+		    MiscUtils.getLogger().error("Error", e);
 		}
 	    }
 	    String address="", city="", province="", postalCode="";
@@ -952,7 +953,7 @@ public class ImportDemographicDataAction2 extends Action {
 	    
 	} catch (Exception e) {
 	    errWarnings.addAll(demoRes.getWarningsCollection());
-	    e.printStackTrace();
+	    MiscUtils.getLogger().error("Error", e);
 	}
 	if (demoNo.equals("")) {
 	    return null;

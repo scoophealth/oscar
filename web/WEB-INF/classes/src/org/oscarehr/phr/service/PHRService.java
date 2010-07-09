@@ -30,6 +30,7 @@ package org.oscarehr.phr.service;
 
 import java.util.Hashtable;
 import java.util.List;
+
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;

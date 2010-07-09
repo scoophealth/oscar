@@ -29,6 +29,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.model.Appointment;
 import oscar.billing.model.Demographic;
 import oscar.billing.model.Diagnostico;
@@ -102,7 +104,7 @@ public class AppointmentDAO extends DAO {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             throw new SQLException(e.toString());
         } finally {
             pstmDiag.close();
@@ -135,7 +137,7 @@ public class AppointmentDAO extends DAO {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             throw new SQLException(e.toString());
         } finally {
             pstmDiag.close();
@@ -163,7 +165,7 @@ public class AppointmentDAO extends DAO {
                 new Long(app.getAppointmentNo()), FieldTypes.LONG);
             db.execute(pstmDiag);
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             throw new SQLException(e.toString());
         } finally {
             pstmDiag.close();

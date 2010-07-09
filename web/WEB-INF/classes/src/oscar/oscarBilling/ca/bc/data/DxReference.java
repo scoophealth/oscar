@@ -40,13 +40,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import oscar.oscarDB.DBHandler;
-import oscar.util.UtilDateUtilities;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.entities.BillingDxCode;
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 /**
  *
@@ -102,7 +103,7 @@ public class DxReference {
             }
             pstmt.close();
        }catch (SQLException e) {
-          e.printStackTrace();
+          MiscUtils.getLogger().error("Error", e);
        }
        Collections.sort(list);
        

@@ -53,6 +53,7 @@ import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.EncounterUtil;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
@@ -114,7 +115,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			}
 			catch (ParseException e) {
 				d = cal.getTime();
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}
 		else {
@@ -148,7 +149,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		catch (ParseException e) {
 			GregorianCalendar cal = new GregorianCalendar(1970, 1, 1);
 			d = cal.getTime();
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list
 				+ ") and cmn.demographic_no = ?  and cmn.id in (select max(cmn.id) from cmn where cmn.observation_date >= ? GROUP BY uuid) ORDER BY cmn.observation_date asc";

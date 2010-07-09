@@ -33,9 +33,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import oscar.oscarReport.reportByTemplate.Reporter;
-import oscar.oscarReport.reportByTemplate.SQLReporter;
 import oscar.oscarReport.reportByTemplate.ReportFactory;
+import oscar.oscarReport.reportByTemplate.Reporter;
 
 /**
  * Created on December 21, 2006, 10:47 AM

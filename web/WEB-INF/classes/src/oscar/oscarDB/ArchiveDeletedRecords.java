@@ -34,6 +34,7 @@ import java.sql.SQLException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * This class is used to archive deleted or updated rows that won't be used again.
@@ -87,7 +88,7 @@ public class ArchiveDeletedRecords {
             rs.close();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return 0;
     }
@@ -108,7 +109,7 @@ public class ArchiveDeletedRecords {
             db.RunSQL(insertSql);
         }
         catch(SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }        
     }
     

@@ -32,6 +32,8 @@ package oscar.oscarRx.util;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 /**
  *
  * @author jay
@@ -141,7 +143,7 @@ public class DosingRecomendation {
             
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return valueInRange;
     }

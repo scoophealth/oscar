@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -192,7 +193,7 @@ public class EctFormData {
             rs.close();
         }
         catch(SQLException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return formName;
     }

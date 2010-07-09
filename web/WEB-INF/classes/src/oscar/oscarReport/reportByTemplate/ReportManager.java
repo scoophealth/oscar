@@ -38,6 +38,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilXML;
@@ -63,7 +64,7 @@ public class ReportManager {
                 reports.add(curReport);
             }
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return reports;
     }
@@ -85,7 +86,7 @@ public class ReportManager {
                 curReport.setDescription(templatedescription);
             }
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return curReport;
     }
@@ -146,7 +147,7 @@ public class ReportManager {
                 return new ReportObjectGeneric(templateid, "Template Not Found");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return new ReportObjectGeneric(templateid, "Parameter Parsing Exception: check the configuration file");
         }
         /*
@@ -175,7 +176,7 @@ public class ReportManager {
                 return rs.getString("templatesql");
             } else return "";
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
             return "";
         }
     }
@@ -189,7 +190,7 @@ public class ReportManager {
             if (rs.next()) xml = rs.getString("templatexml");
             if (xml == null) xml = "";
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return xml;
     }
@@ -203,7 +204,7 @@ public class ReportManager {
             db.RunSQL(sqldelete);
             db.RunSQL(sqlinsert);
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return loadInReports();
     }
@@ -261,13 +262,13 @@ CREATE TABLE reportTemplates (
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                     db.RunSQL(sql);
                 } catch (SQLException sqe) {
-                    sqe.printStackTrace();
+                    MiscUtils.getLogger().error("Error", sqe);
                     System.out.println("Report Error Caught: assumed duplicate report id");
                     return "Database Error: check for duplicate report id on the '" + templateTitle + "' report";
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return "Error parsing template file.";
         }
         
@@ -338,13 +339,13 @@ CREATE TABLE reportTemplates (
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                     db.RunSQL(sql);
                 } catch (SQLException sqe) {
-                    sqe.printStackTrace();
+                    MiscUtils.getLogger().error("Error", sqe);
                     System.out.println("Report Template Writing Error Caught");
                     return "Database Error: Could not write to database";
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return "Error parsing template file, make sure the root element is set.";
         }
         return "Saved Successfully";
@@ -356,7 +357,7 @@ CREATE TABLE reportTemplates (
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
             return "Database Error: Could not delete template";
         }
         return "";
@@ -367,7 +368,7 @@ CREATE TABLE reportTemplates (
             Document templateXMLdoc = readXml(templateXML);
             return addUpdateTemplate(null, templateXMLdoc);
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return "Error: Error parsing file, make sure the root element is set.";
         }
     }
@@ -377,7 +378,7 @@ CREATE TABLE reportTemplates (
             Document templateXMLdoc = readXml(templateXML);
             return addUpdateTemplate(templateId, templateXMLdoc);
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return "Error: Error parsing file";
         }
     }

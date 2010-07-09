@@ -111,6 +111,7 @@ import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 import org.springframework.beans.factory.annotation.Required;
@@ -507,7 +508,7 @@ public class ClientManagerAction extends BaseAction {
 
 				request.setAttribute("program", program);
 			} catch (Exception e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 		}
 
@@ -1228,7 +1229,7 @@ public class ClientManagerAction extends BaseAction {
 				try {
 					admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
 				} catch (Exception e) {
-					e.printStackTrace();
+					MiscUtils.getLogger().error("Error", e);
 					ActionMessages messages = new ActionMessages();
 					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 					saveMessages(request, messages);

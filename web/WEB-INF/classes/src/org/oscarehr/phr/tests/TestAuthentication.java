@@ -6,13 +6,11 @@
 package org.oscarehr.phr.tests;
 
 import java.util.Date;
-import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.indivo.xml.talk.AuthenticateResultType;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.indivo.IndivoAuthentication;
-import oscar.oscarEncounter.data.EctProviderData;
 
 /**
  *

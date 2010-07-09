@@ -26,14 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.AgencyDao;
-import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.Provider;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional

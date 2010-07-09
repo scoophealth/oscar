@@ -47,6 +47,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm;
@@ -92,7 +93,7 @@ public class ScheduleOfBenefitsUploadAction extends Action {
           warnings = sob.processNewFeeSchedule(is,showNewCodes,showChangedCodes);                    
           
        }catch(Exception e){ 
-          e.printStackTrace(); 
+          MiscUtils.getLogger().error("Error", e); 
           outcome = "exception";
        } 
        System.out.println("warnings "+warnings.size());
@@ -146,12 +147,12 @@ public class ScheduleOfBenefitsUploadAction extends Action {
         catch (FileNotFoundException fnfe) {
             
             System.out.println("File not found");
-            fnfe.printStackTrace();            
+            MiscUtils.getLogger().error("Error", fnfe);            
             return isAdded=false;
             
         }
         catch (IOException ioe) {
-            ioe.printStackTrace();
+            MiscUtils.getLogger().error("Error", ioe);
             return isAdded=false;
         }
 

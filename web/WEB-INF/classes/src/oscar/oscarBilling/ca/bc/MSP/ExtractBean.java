@@ -30,7 +30,6 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
@@ -265,7 +264,7 @@ public class ExtractBean extends Object implements Serializable {
                    ohipClaim = String.valueOf(pCount);
                }
            }catch (SQLException e) {
-               e.printStackTrace();
+               MiscUtils.getLogger().error("Error", e);
            }
         }
     }
@@ -278,7 +277,7 @@ public class ExtractBean extends Object implements Serializable {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(query30);
          }catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
          }
       }
     }
@@ -291,7 +290,7 @@ public class ExtractBean extends Object implements Serializable {
             db.RunSQL(query30);
             createBillArchive(newInvNo);
          }catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
          }
       }
     }
@@ -312,7 +311,7 @@ public class ExtractBean extends Object implements Serializable {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(nsql);
          }catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
          }
       }
     }
@@ -332,7 +331,7 @@ public class ExtractBean extends Object implements Serializable {
             }
             rs.close();
          }catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
          }
       }
       return n;

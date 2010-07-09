@@ -37,6 +37,7 @@ import org.apache.commons.logging.LogFactory;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -81,7 +82,7 @@ public class PreventionDS {
          ruleBase = RuleBaseLoader.loadFromUrl( url );
         }
       }catch(Exception e){
-         e.printStackTrace();                
+         MiscUtils.getLogger().error("Error", e);                
       }
       loaded = true;             
    }
@@ -92,7 +93,7 @@ public class PreventionDS {
          WorkingMemory workingMemory = ruleBase.newWorkingMemory();
          workingMemory.assertObject(p);
          workingMemory.fireAllRules();
-      }catch(Exception e){e.printStackTrace(); throw new Exception("ERROR: Drools ",e);}
+      }catch(Exception e){MiscUtils.getLogger().error("Error", e); throw new Exception("ERROR: Drools ",e);}
          return p;
    }
 

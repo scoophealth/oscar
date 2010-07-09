@@ -28,13 +28,13 @@
 
 package oscar.oscarEncounter.oscarMeasurements.util;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Calendar;
-import java.text.DateFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -114,7 +114,7 @@ public class MeasurementDSHelper {
         try{
             equal = mdb.getDataField().equalsIgnoreCase(str);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             problem = true;
         }
         return equal;
@@ -126,7 +126,7 @@ public class MeasurementDSHelper {
         try{
            ret = Double.parseDouble(mdb.getDataField());
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             problem =true;
         }  
         log.debug("DOUBLE val : "+ret);
@@ -140,7 +140,7 @@ public class MeasurementDSHelper {
            log.debug("Trying to parse "+data);
            ret = Double.parseDouble(  data.split(delimiter)[number]  );
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             problem = true;
         }
         return ret;

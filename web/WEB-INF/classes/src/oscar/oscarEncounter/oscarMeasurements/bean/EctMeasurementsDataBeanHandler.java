@@ -34,6 +34,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
@@ -259,7 +260,7 @@ public class EctMeasurementsDataBeanHandler {
             rs.close();
             return measurements;
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return null;
     }

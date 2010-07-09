@@ -35,6 +35,8 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -70,7 +72,7 @@ public class EctSplitChart {
          rs.close();
          
       }catch(SQLException e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
          vec = null;
       }
       return vec;

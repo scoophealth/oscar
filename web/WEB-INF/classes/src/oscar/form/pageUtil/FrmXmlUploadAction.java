@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.util.JDBCUtil;
 
@@ -76,7 +77,7 @@ public class FrmXmlUploadAction extends Action {
             }
         }
         catch(Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         //ArrayList messages = new ArrayList();
         //ActionErrors errors = new ActionErrors();  

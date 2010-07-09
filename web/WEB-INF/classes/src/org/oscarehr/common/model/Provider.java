@@ -23,8 +23,8 @@ package org.oscarehr.common.model;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Set;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * This is the object class that relates to the provider table. Any customizations belong here.

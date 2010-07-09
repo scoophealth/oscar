@@ -26,9 +26,11 @@
 package oscar.oscarBilling.ca.bc.Teleplan;
 
 import java.util.Arrays;
+
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import oscar.OscarProperties;
 
 /**

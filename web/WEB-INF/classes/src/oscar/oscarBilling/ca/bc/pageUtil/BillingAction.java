@@ -30,19 +30,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-
 import org.oscarehr.decisionSupport.model.DSConsequence;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines;
 import oscar.util.SqlUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public final class BillingAction extends Action {
   protected static Log _log = LogFactory.getLog(BillingAction.class);
@@ -110,7 +111,7 @@ public final class BillingAction extends Action {
                 errors.add("",new ActionMessage("message.custom",dscon.getText()));
            }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
       }else if ("true".equals(encounter)) {
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.

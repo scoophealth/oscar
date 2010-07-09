@@ -27,6 +27,7 @@
  */
 package oscar.login;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,10 +38,7 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import oscar.oscarSurveillance.SurveillanceMaster;
-
-import java.io.File;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * This ContextListener is used to Initialize classes at startup - Initialize the DBConnection Pool.
@@ -73,7 +71,7 @@ public class Startup implements ServletContextListener {
 
 			contextPath = url;
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		
 		String propName = contextPath + ".properties";
@@ -106,7 +104,7 @@ public class Startup implements ServletContextListener {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 				return;
 			}
 		}

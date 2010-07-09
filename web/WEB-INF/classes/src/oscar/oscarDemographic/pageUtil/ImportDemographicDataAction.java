@@ -44,6 +44,7 @@ import org.apache.struts.upload.FormFile;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
@@ -183,7 +184,7 @@ public class ImportDemographicDataAction extends Action {
                   
         }catch(Exception e) {
             warnings.add("Error processing file: "+filename);
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }        
         request.setAttribute("warnings",warnings);
         

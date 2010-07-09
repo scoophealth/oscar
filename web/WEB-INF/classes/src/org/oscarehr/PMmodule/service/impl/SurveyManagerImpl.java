@@ -46,6 +46,7 @@ import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.Section;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -176,7 +177,7 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
             	SurveyDocument model = SurveyDocument.Factory.parse(new StringReader(xml));
             	return model.getSurvey();
             }catch(Exception e) {
-            	e.printStackTrace();
+            	MiscUtils.getLogger().error("Error", e);
             }
 		}
 		return null;

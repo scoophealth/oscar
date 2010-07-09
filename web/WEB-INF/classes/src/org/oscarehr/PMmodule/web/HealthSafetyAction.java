@@ -13,8 +13,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.HealthSafety;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.HealthSafetyManager;
+import org.oscarehr.common.model.Provider;
 
 public class HealthSafetyAction extends DispatchAction {
 	private static Log log = LogFactory.getLog(HealthSafetyAction.class);

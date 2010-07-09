@@ -33,6 +33,7 @@ import java.sql.SQLException;
 
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicNameAgeString;
@@ -75,7 +76,7 @@ public class TicklerWorker extends Thread {
             rs.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         finally {
     		LoggedInInfo.loggedInInfo.remove();

@@ -41,6 +41,7 @@ import org.hibernate.Session;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -161,7 +162,7 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
                     list = getReferencedMessagesById(message.getReferenceMessage());
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
             return list;
         }

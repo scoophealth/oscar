@@ -62,6 +62,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -1619,7 +1620,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    String inFile = this.demographicNo+"-"+demoName+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
 		    files[i] = new File(directory,inFile);
 		}catch(Exception e){
-		    e.printStackTrace();
+		    MiscUtils.getLogger().error("Error", e);
 		}
 		try {
 			omdCdsDoc.save(files[i], options);

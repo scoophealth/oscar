@@ -27,7 +27,6 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -40,9 +39,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.Misc;
 import oscar.OscarProperties;
 import oscar.entities.Billing;
@@ -196,7 +196,7 @@ public class BillingReProcessBillAction extends Action {
         dateRecieved = dateRecieved.trim();
         Integer.parseInt(dateRecieved);
       }catch (Exception e) {
-        e.printStackTrace();
+        MiscUtils.getLogger().error("Error", e);
         dateRecieved = "";
       }
 
@@ -254,7 +254,7 @@ public class BillingReProcessBillAction extends Action {
 
       billingServicePrice = bdFee.toString();
     } catch(NumberFormatException e){
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
     }
     bill.setProviderOhipNo(practitionerNo);

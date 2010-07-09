@@ -9,18 +9,17 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
+
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.indivo.xml.JAXBUtils;
+
 import org.indivo.xml.phr.contact.AddressType;
 import org.indivo.xml.phr.contact.CommunicationType;
 import org.indivo.xml.phr.contact.ContactInformationType;
 import org.indivo.xml.phr.contact.NameType;
 import org.indivo.xml.phr.demographics.DemographicsType;
-import org.indivo.xml.phr.document.IndivoDocumentType;
+
 import oscar.util.UtilDateUtilities;
 
 /**

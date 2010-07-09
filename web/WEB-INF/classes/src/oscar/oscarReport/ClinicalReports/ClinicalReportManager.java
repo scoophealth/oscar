@@ -28,9 +28,9 @@
 
 package oscar.oscarReport.ClinicalReports;
 
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -38,6 +38,7 @@ import java.util.List;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -264,7 +265,7 @@ public class ClinicalReportManager {
                         }
                    } 
                 }catch(Exception e){
-                    e.printStackTrace();
+                    MiscUtils.getLogger().error("Error", e);
                 }
                 loaded = true;
             }

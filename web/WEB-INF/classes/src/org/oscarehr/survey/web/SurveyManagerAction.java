@@ -62,6 +62,7 @@ import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.PossibleAnswersDocument.PossibleAnswers;
 import org.oscarehr.surveymodel.SelectDocument.Select;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
 
 
@@ -981,7 +982,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
 			this.oscarFormManager.generateCSV(Long.valueOf(id), response.getOutputStream());
 		}catch(IOException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return null;
 	}
@@ -995,7 +996,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
 			this.oscarFormManager.generateInverseCSV(Long.valueOf(id), response.getOutputStream());
 		}catch(IOException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return null;
 	}

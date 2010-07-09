@@ -286,7 +286,7 @@ public class FrmFormAction extends Action {
         try{
             formPath = (new FrmData()).getShortcutFormValue(demographicNo, formNameByFormTable);    
         }catch(SQLException e){            
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return (new ActionForward("/form/SetupForm.do?formName="+formName+"&formId="+formPath[1]));
     }
@@ -409,15 +409,15 @@ public class FrmFormAction extends Action {
             return result;
         }
         catch(XmlRpcException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return null;
         }
         catch(IOException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return null;
         }
         /*catch(MalformedURLException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }*/        
     }
     
@@ -434,7 +434,7 @@ public class FrmFormAction extends Action {
                 is.close();
         } catch (IOException e) {
                 System.out.println("IO error.");
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
         }
         return osdsf;
     }

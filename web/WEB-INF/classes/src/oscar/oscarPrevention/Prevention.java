@@ -41,6 +41,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -178,7 +179,7 @@ public class Prevention {
             withinRange = true;
          }
       } catch (ParseException e) {
-         e.printStackTrace(); 
+         MiscUtils.getLogger().error("Error", e); 
       } catch (Exception ex){
          ex.printStackTrace();
       }

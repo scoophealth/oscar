@@ -22,6 +22,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
@@ -82,7 +83,7 @@ public class printLabDaySheetAction extends OscarAction{
             osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return actionMapping.findForward(this.target);

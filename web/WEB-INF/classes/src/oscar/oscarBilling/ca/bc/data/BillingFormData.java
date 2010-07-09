@@ -31,14 +31,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.entities.BillingStatusType;
 import oscar.entities.PaymentType;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 import oscar.util.UtilDateUtilities;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 public class BillingFormData {
@@ -805,7 +806,7 @@ public class BillingFormData {
       rs = db.GetSQL(qry);
     }
     catch (SQLException e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return rs;
   }

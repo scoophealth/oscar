@@ -19,8 +19,8 @@ package oscar.oscarBilling.ca.on.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Vector;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;

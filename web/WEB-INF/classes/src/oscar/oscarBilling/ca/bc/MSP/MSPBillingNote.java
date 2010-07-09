@@ -32,6 +32,8 @@ package oscar.oscarBilling.ca.bc.MSP;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.Misc;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilMisc;
@@ -95,7 +97,7 @@ public class MSPBillingNote {
       }
       rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       return n;
    }
@@ -112,7 +114,7 @@ public class MSPBillingNote {
          }
          rs.close();                    
          }catch (Exception e){
-            e.printStackTrace();        
+            MiscUtils.getLogger().error("Error", e);        
          }
       return retStr;
    }

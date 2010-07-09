@@ -187,7 +187,7 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 
 			catch (SQLException e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 
 			request.setAttribute("transType", "2");
@@ -209,7 +209,7 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 
 			catch (SQLException e) {
-				e.printStackTrace();
+				MiscUtils.getLogger().error("Error", e);
 			}
 
 			request.setAttribute("transType", "1");

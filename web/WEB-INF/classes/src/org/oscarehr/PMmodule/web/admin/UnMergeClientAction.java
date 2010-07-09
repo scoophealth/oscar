@@ -10,14 +10,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.Program;
-
 import org.oscarehr.PMmodule.service.MergeClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
-
-
 
 import com.quatro.common.KeyConstants;
 import com.quatro.model.security.NoAccessException;

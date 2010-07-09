@@ -26,7 +26,6 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 import java.util.Map;
 
 import org.displaytag.decorator.TableDecorator;
-
 import org.oscarehr.common.model.BillingService;
 
 /**

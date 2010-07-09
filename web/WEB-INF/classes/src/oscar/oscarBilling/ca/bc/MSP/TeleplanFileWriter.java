@@ -38,8 +38,9 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.Misc;
 import oscar.entities.Billingmaster;
 import oscar.entities.WCB;
@@ -449,7 +450,7 @@ public class TeleplanFileWriter {
        String retval = "1";
        try{
           retval = new java.math.BigDecimal(str).setScale(0,BigDecimal.ROUND_UP).toString();
-       }catch(Exception e){ e.printStackTrace();}
+       }catch(Exception e){ MiscUtils.getLogger().error("Error", e);}
        return retval;
     }
     

@@ -1272,7 +1272,7 @@ public class RxPrescriptionData {
 
             this.endDate = cal.getTime();
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
             //     p("endDate",RxUtil.DateToString(this.endDate));
         }

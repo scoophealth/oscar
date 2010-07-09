@@ -35,7 +35,9 @@ import java.util.Set;
 import org.caisi.model.BaseObject;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarRx.data.RxPrescriptionData;
 
@@ -494,7 +496,7 @@ public class CaseManagementNote extends BaseObject {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             rs = db.GetSQL(sql);
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return (rs);
     }

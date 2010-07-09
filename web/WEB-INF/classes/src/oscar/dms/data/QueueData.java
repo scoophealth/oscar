@@ -66,7 +66,7 @@ public class QueueData {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
        return queues;
@@ -164,7 +164,7 @@ public class QueueData {
                 rs.close();
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
    }*/
    public static boolean isQueueExist(String qn){
@@ -186,7 +186,7 @@ public class QueueData {
         }
 
     }catch(SQLException e){
-        e.printStackTrace();
+        MiscUtils.getLogger().error("Error", e);
     }
        return retId;
    }
@@ -202,7 +202,7 @@ public class QueueData {
            }else
                return false;
        }catch (SQLException e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
                 return false;
        }
    }

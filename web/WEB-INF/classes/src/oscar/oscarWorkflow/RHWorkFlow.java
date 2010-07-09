@@ -34,6 +34,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 /**
  * Generic WorkFlow Description 
  * @author jay
@@ -113,7 +115,7 @@ public class RHWorkFlow implements WorkFlow {
         try{
         wfi = wfDS.getMessages(wfi);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return wfi;
     }
@@ -123,7 +125,7 @@ public class RHWorkFlow implements WorkFlow {
         try{
         wfi = wfDS.getMessages(wfi);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return wfi;
     }

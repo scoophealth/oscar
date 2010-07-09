@@ -45,6 +45,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.entities.MSPBill;
 import oscar.entities.Provider;
@@ -133,7 +134,7 @@ public class MSPReconcile {
       patchInd.store(new FileOutputStream(propFile), null);
     }
     catch (IOException e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 
@@ -148,7 +149,7 @@ public class MSPReconcile {
       }
     }
     catch (IOException e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     finally {
       return ret;
@@ -274,7 +275,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return map;
 
@@ -312,7 +313,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     String hasC12Records = "hasC12Records" + String.valueOf(p.isEmpty());
     debugC12Records += hasC12Records;
@@ -344,7 +345,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return s;
   }
@@ -409,7 +410,7 @@ public class MSPReconcile {
         catch (Exception e) {
           System.out.println("Through an error in getCurrentErrorMessages:" +
                              e.getMessage());
-          e.printStackTrace();
+          MiscUtils.getLogger().error("Error", e);
         }
       }
       System.out.println("errorsProps=" + errorsProps.isEmpty());
@@ -446,7 +447,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return retval;
   }
@@ -472,7 +473,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return map;
   }
@@ -621,7 +622,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return billSearch;
   }
@@ -665,7 +666,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return list;
   }
@@ -926,7 +927,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return retval;
   }
@@ -1030,7 +1031,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return retval;
   }
@@ -1060,7 +1061,7 @@ public class MSPReconcile {
     }
     catch (Exception e) {
       System.out.println("name: " + name + " value: " + value);
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return p;
   }
@@ -1115,7 +1116,7 @@ public class MSPReconcile {
       stmt.execute();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     finally {
       try {
@@ -1176,7 +1177,7 @@ public class MSPReconcile {
                 "' where billingmaster_no = '" + billingNo + "'");
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
   
@@ -1189,7 +1190,7 @@ public class MSPReconcile {
                 "' where billing_no = '" + billingNo + "'");
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 
@@ -1216,7 +1217,7 @@ public class MSPReconcile {
                 " where billing_no = " + billingNo + "");
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 
@@ -1250,7 +1251,7 @@ public class MSPReconcile {
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 
@@ -1283,7 +1284,7 @@ public class MSPReconcile {
         }
       }
       catch (Exception e) {
-        e.printStackTrace();
+        MiscUtils.getLogger().error("Error", e);
       }
     }
   }
@@ -1338,7 +1339,7 @@ public class MSPReconcile {
                 "' where billingmaster_no = '" + billingMasterNo + "'");
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 
@@ -1358,7 +1359,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     if (!currStat.equals(SETTLED)) {
       if (stat.equals(REJECTED)) {
@@ -1416,7 +1417,7 @@ public class MSPReconcile {
         dao.createBillingHistoryArchive(billingNo);
       }
       catch (Exception e) {
-        e.printStackTrace();
+        MiscUtils.getLogger().error("Error", e);
       }
     }
     return updated;
@@ -1624,7 +1625,7 @@ public class MSPReconcile {
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     finally {
       try {
@@ -1904,7 +1905,7 @@ public class MSPReconcile {
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     finally {
       try {
@@ -2001,7 +2002,7 @@ public class MSPReconcile {
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     finally {
       try {
@@ -2037,7 +2038,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (SQLException e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return desc;
   }
@@ -2421,7 +2422,7 @@ public class MSPReconcile {
           BigDecimal.ROUND_HALF_UP);
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
       return curValue.toString();
     }
     return curValue.toString();

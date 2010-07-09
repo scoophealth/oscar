@@ -30,6 +30,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarRx.data.RxAllergyWarningWorker;
 import oscar.oscarRx.data.RxDrugData;
@@ -264,7 +266,7 @@ public class RxSessionBean {
          RxAllergyWarningWorker worker = new RxAllergyWarningWorker(this,atccode,allergies);
          addToWorkingAllergyWarnings(atccode,worker);
          worker.start();
-       }catch( Exception e ){e.printStackTrace();}
+       }catch( Exception e ){MiscUtils.getLogger().error("Error", e);}
     }
 
     public void addAllergyWarnings(String atc,oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergy){
@@ -299,7 +301,7 @@ public class RxSessionBean {
                  } catch (InterruptedException e) {
                     // Thread was interrupted
 
-                    e.printStackTrace();
+                    MiscUtils.getLogger().error("Error", e);
                  }
 
 
@@ -316,7 +318,7 @@ public class RxSessionBean {
                        addAllergyWarnings(atccode,allergies);
                     }
              }catch(Exception e){
-                 e.printStackTrace();
+                 MiscUtils.getLogger().error("Error", e);
              }
           }
       }
@@ -366,7 +368,7 @@ public class RxSessionBean {
                  }
                  Arrays.sort(interactions);
               }catch(Exception e){
-                 e.printStackTrace();
+                 MiscUtils.getLogger().error("Error", e);
               }
           }
 

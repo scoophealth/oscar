@@ -28,7 +28,6 @@
 
 package oscar.oscarEncounter.oscarMeasurements.data;
 
-import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +35,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
 public class ImportExportMeasurements {
     

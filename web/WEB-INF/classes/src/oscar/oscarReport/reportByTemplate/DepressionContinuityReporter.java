@@ -27,10 +27,12 @@ package oscar.oscarReport.reportByTemplate;
 
 import java.sql.ResultSet;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Iterator;
-import java.util.Properties;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -116,7 +118,7 @@ public class DepressionContinuityReporter implements Reporter{
 
             rsHtml.append("</table>");
         }catch(Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             
         }
         

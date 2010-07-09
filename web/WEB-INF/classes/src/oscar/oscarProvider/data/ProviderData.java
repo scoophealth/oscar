@@ -601,7 +601,7 @@ public class ProviderData {
            }
            return retList;
        }catch(SQLException se){
-           se.printStackTrace();
+           MiscUtils.getLogger().error("Error", se);
            return null;
        }
    
@@ -681,7 +681,7 @@ public class ProviderData {
 		   defaultView = db.getString(rs,"default_servicetype");
                } 
          }catch (Exception e){
-             e.printStackTrace();
+             MiscUtils.getLogger().error("Error", e);
          }
          return defaultView;
     }

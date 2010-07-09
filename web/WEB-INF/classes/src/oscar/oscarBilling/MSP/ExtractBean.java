@@ -314,7 +314,7 @@ public class ExtractBean extends Object implements Serializable {
 
         }
         catch (SQLException e) {            
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
     }
@@ -327,7 +327,7 @@ public class ExtractBean extends Object implements Serializable {
             db.RunSQL(query30);
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -338,7 +338,7 @@ public class ExtractBean extends Object implements Serializable {
             db.RunSQL(query30);
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -354,7 +354,7 @@ public class ExtractBean extends Object implements Serializable {
             db.RunSQL(nsql);
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -376,7 +376,7 @@ public class ExtractBean extends Object implements Serializable {
             rs.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return n;
@@ -574,7 +574,7 @@ public class ExtractBean extends Object implements Serializable {
        String retval = "1";
        try{
           retval = new java.math.BigDecimal(str).setScale(0,BigDecimal.ROUND_UP).toString();               
-       }catch(Exception e){ e.printStackTrace();}
+       }catch(Exception e){ MiscUtils.getLogger().error("Error", e);}
        return retval;
     }
     

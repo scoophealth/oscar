@@ -9,6 +9,8 @@ package oscar.oscarLab.ca.bc.PathNet;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -59,7 +61,7 @@ public class PathNetInfo {
          String labTab = "<font size=\"2\" " + ((getNotSignedLabCount(providerNo)>0)? "color='red'" : "") + ">" + labText + "</font>";
          retval = labTab;
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
          retval = "Lab";
       }
       return retval;

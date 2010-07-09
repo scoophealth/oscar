@@ -23,6 +23,7 @@
 package org.oscarehr.casemgmt.model;
 
 import java.util.Date;
+
 import oscar.util.UtilDateUtilities;
 
 public class CaseManagementNoteExt {

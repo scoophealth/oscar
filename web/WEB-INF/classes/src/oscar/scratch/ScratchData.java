@@ -34,6 +34,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -68,7 +70,7 @@ public class ScratchData {
             }
             rs.close();
         } catch (SQLException e) {
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -88,7 +90,7 @@ public class ScratchData {
             }
             rs.close();
         } catch (SQLException e) {
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
         }
         return scratch_id;
     }
@@ -113,7 +115,7 @@ public class ScratchData {
               rs.close();
              pstat.close();
         } catch (SQLException e) {
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
         }
         return scratch_id;
     }

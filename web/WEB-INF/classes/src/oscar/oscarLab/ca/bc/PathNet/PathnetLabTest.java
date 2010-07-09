@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -157,7 +158,7 @@ public class PathnetLabTest {
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return ret;
     }
@@ -202,7 +203,7 @@ public class PathnetLabTest {
                 ccedDocs = sb.toString();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -276,7 +277,7 @@ public class PathnetLabTest {
                 list.add(gr);
             }
             rs.close();
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return list;
     }
     /////////
@@ -325,7 +326,7 @@ public class PathnetLabTest {
                 rs2.close();
             }
             rs.close();
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return list;
     }
     

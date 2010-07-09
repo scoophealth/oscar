@@ -12,17 +12,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class PrintDemoLabelAction extends OscarAction {
     
@@ -75,7 +74,7 @@ public class PrintDemoLabelAction extends OscarAction {
             osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return actionMapping.findForward(this.target);

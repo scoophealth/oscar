@@ -35,6 +35,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.commons.digester.Digester;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.data.DatabaseAP;
 
@@ -141,7 +142,7 @@ public class EFormLoader {
           }
           digester.parse(fs);
           fs.close();
-      } catch (Exception e) { e.printStackTrace(); }
+      } catch (Exception e) { MiscUtils.getLogger().error("Error", e); }
     }
     
  }

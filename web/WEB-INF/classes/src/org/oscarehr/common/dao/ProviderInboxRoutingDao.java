@@ -28,9 +28,12 @@ package org.oscarehr.common.dao;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.oscarehr.common.model.ProviderInboxItem;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -102,7 +105,7 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
            }
            
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
        

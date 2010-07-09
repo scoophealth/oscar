@@ -41,7 +41,6 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.caisi.event.OscarCaisiEvent;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -53,6 +52,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
+import org.oscarehr.common.model.Demographic;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class IntakeAAction2 extends BaseAction {

@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -94,7 +96,7 @@ public class WorkFlowState {
             }
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return id;
@@ -112,7 +114,7 @@ public class WorkFlowState {
             pstmt.executeUpdate();
             pstmt.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -129,7 +131,7 @@ public class WorkFlowState {
             pstmt.executeUpdate();
             pstmt.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -154,7 +156,7 @@ public class WorkFlowState {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return list;
     }
@@ -179,7 +181,7 @@ public class WorkFlowState {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return list;
     }
@@ -219,7 +221,7 @@ public class WorkFlowState {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return list;
     }

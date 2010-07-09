@@ -31,6 +31,8 @@ package oscar.oscarRx.data;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 /**
  *
  * @author Jay Gallagher
@@ -87,7 +89,7 @@ public class RxInteractionData {
              } catch (InterruptedException e) {
                 // Thread was interrupted
                 System.out.println("Already been searched PROBLEM!");
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
              }
             
              
@@ -103,7 +105,7 @@ public class RxInteractionData {
                addToHash(atccodes,interact);
             }
          }catch(Exception e){
-             e.printStackTrace();
+             MiscUtils.getLogger().error("Error", e);
          }         
       }
       return interact;

@@ -29,6 +29,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -71,7 +73,7 @@ public class ProviderMyOscarIdData {
         
        }
        catch( SQLException ex ) {
-           System.out.println(ex.getMessage());           
+           MiscUtils.getLogger().error("Error", ex);           
        }
        
        return myOscarId;
@@ -135,7 +137,7 @@ public class ProviderMyOscarIdData {
               providerNo = db.getString(rs,"provider_no");
           }
       } catch( SQLException ex ) {
-          System.out.println(ex.getMessage());
+          MiscUtils.getLogger().error("Error", ex);
       }
       return providerNo;
   }
@@ -156,7 +158,7 @@ public class ProviderMyOscarIdData {
           }
    
       } catch (SQLException sqe) {
-          sqe.printStackTrace();        
+          MiscUtils.getLogger().error("Error", sqe);        
       }
       
       return providerList;

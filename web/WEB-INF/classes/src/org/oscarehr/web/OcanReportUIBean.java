@@ -229,7 +229,7 @@ public class OcanReportUIBean {
 					
 				}			
 				
-			}catch(IOException e) {e.printStackTrace();}
+			}catch(IOException e) {MiscUtils.getLogger().error("Error", e);}
 		}
 		*/
 		try {

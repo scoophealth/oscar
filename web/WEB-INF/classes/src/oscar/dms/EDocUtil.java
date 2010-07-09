@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.MyDateFormat;
@@ -87,7 +88,7 @@ public class EDocUtil extends SqlUtilBaseS {
             }
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return moduleName;
     }
@@ -100,7 +101,7 @@ public class EDocUtil extends SqlUtilBaseS {
             if (rs.next()) info = rs.getString(fieldName);
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return info;
     }
@@ -117,7 +118,7 @@ public class EDocUtil extends SqlUtilBaseS {
             }
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return doctypes;
     }
@@ -295,7 +296,7 @@ public class EDocUtil extends SqlUtilBaseS {
 
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
 
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
@@ -363,7 +364,7 @@ public class EDocUtil extends SqlUtilBaseS {
             rs.close();
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
 
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
@@ -418,7 +419,7 @@ public class EDocUtil extends SqlUtilBaseS {
             }
             rs.close();
        }catch(Exception e){
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
        }
        //mysql> SELECT DISTINCT c.module, c.module_id, d.doccreator, d.source, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and module_id = -1
        return list;
@@ -461,7 +462,7 @@ public class EDocUtil extends SqlUtilBaseS {
             rs.close();
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
 
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
@@ -481,7 +482,7 @@ public class EDocUtil extends SqlUtilBaseS {
             }
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return modules;
     }
@@ -531,7 +532,7 @@ public class EDocUtil extends SqlUtilBaseS {
             rs.close();
         }
         catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return currentdoc;
     }
@@ -548,7 +549,7 @@ public class EDocUtil extends SqlUtilBaseS {
             rs.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return filename;
     }
@@ -579,7 +580,7 @@ public class EDocUtil extends SqlUtilBaseS {
 
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 
@@ -670,7 +671,7 @@ public class EDocUtil extends SqlUtilBaseS {
             }
             rs.close();
         }        catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return documentNo;
     }
@@ -687,7 +688,7 @@ public static String getLastDocumentDesc() {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return docDesc;
@@ -704,7 +705,7 @@ public static String getLastDocumentDesc() {
             }
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return noteId;
     }
@@ -749,7 +750,7 @@ public static String getLastDocumentDesc() {
             rs.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     	return flag;
     }
@@ -768,7 +769,7 @@ public static String getLastDocumentDesc() {
             rs.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     	return flag;
     }

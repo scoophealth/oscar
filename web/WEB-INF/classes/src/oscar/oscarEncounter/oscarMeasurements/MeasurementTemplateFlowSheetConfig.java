@@ -50,6 +50,7 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.oscarehr.common.model.FlowSheetCustomization;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
@@ -404,7 +405,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         d.loadRuleBase();
@@ -543,7 +544,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             personalizedFlowsheet.loadRuleBase();
             return personalizedFlowsheet;
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         log.debug("Returning normal flowsheet");
@@ -571,7 +572,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 //                
 //            return personalizedFlowsheet;
 //            }catch(Exception e){
-//                e.printStackTrace();
+//                MiscUtils.getLogger().error("Error", e);
 //            }
 //        }
 //            
@@ -669,7 +670,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                     
                     
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
          return item;     
     }

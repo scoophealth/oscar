@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 public class dbExtract implements Serializable {
 
@@ -162,7 +163,7 @@ public class dbExtract implements Serializable {
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
     } //closeConnection ends

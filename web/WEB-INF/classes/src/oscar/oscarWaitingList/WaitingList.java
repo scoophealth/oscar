@@ -26,6 +26,8 @@ package oscar.oscarWaitingList;
 
 import java.sql.ResultSet;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /*
  * This class is an interface with the file WEB-INF/classes
@@ -57,7 +59,7 @@ public class WaitingList{
            int count = rs.getInt(1);
            return count > 0;
        } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return false;
        }finally{
     	   try{

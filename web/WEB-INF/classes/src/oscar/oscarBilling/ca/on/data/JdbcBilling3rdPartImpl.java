@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -158,7 +159,7 @@ public class JdbcBilling3rdPartImpl {
                 }
             }
             catch( SQLException e ) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
 
             return ret;

@@ -576,7 +576,7 @@ public class TeleplanCorrectionFormWCB
         try {
             retval = String.valueOf(MyDateFormat.getAge(this.getYearOfBirth(), this.getMonthOfBirth(), this.getDayOfBirth()));
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }

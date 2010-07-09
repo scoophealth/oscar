@@ -41,6 +41,7 @@ import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -161,7 +162,7 @@ public class ChildImmunizationReport implements PreventionReport{
                    prevDateStr = (String) hDtap.get("prevention_date");                   
                    try{
                       lastDate = (java.util.Date)formatter.parse(prevDateStr);
-                   }catch (Exception e){e.printStackTrace();}
+                   }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
                 }                
                 /*if(prevs2.size() > 0){
                    Hashtable hHib  = (Hashtable) prevs2.get(prevs2.size()-1);                
@@ -177,7 +178,7 @@ public class ChildImmunizationReport implements PreventionReport{
                          lastDate = prevDate;
                          prevDateStr = hibDateStr;
                       }
-                   }catch (Exception e){e.printStackTrace();}
+                   }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
                    
                 } 
                  */                                               
@@ -195,7 +196,7 @@ public class ChildImmunizationReport implements PreventionReport{
                          lastDate = prevDate;
                          prevDateStr = mmrDateStr;
                       }
-                   }catch (Exception e){e.printStackTrace();}
+                   }catch (Exception e){MiscUtils.getLogger().error("Error", e);}
                 }
                 
                 String numMonths = "------";

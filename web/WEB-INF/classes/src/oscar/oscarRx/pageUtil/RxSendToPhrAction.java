@@ -21,6 +21,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProviderData;
@@ -61,7 +62,7 @@ public class RxSendToPhrAction extends Action {
         try {
             patient = rxPatientData.getPatient(Integer.parseInt(demoNo));
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;                                                               
@@ -90,7 +91,7 @@ public class RxSendToPhrAction extends Action {
                       }
                       //throw new Exception("Error: Cannot marshal the document");
                   } catch (Exception e) {
-                      e.printStackTrace();
+                      MiscUtils.getLogger().error("Error", e);
                       errorMsg = e.getMessage();
                       //errors = true;
                       request.setAttribute("error_msg", errorMsg);

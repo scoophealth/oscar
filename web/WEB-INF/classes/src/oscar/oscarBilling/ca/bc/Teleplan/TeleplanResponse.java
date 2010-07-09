@@ -39,6 +39,7 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -98,7 +99,7 @@ public class TeleplanResponse {
             
            
         } catch (IOException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 	

@@ -55,7 +55,7 @@ public class RptConsultReportData {
                  arrayList.add(a);
               }
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  e.printStackTrace();}
+        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  MiscUtils.getLogger().error("Error", e);}
     return arrayList;
     }
 

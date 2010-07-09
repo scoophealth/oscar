@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class EctRemoteAttachments
@@ -89,7 +91,7 @@ public class EctRemoteAttachments
         catch(SQLException e)
         {
             System.out.println("CrAsH");
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }

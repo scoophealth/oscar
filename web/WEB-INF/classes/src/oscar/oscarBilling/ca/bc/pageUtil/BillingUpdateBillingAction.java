@@ -43,6 +43,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
@@ -82,7 +83,7 @@ public final class BillingUpdateBillingAction
       n.addNoteFromBillingNo(frm.getBillingNo(), creator, frm.getMessageNotes());
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
 
     return mapping.findForward("success");

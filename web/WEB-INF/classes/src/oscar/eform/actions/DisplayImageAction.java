@@ -30,9 +30,7 @@
 package oscar.eform.actions;
 
 import java.io.File;
-import java.io.IOException;
 
-import java.io.InputStream;
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DownloadAction;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -78,7 +77,7 @@ public class DisplayImageAction extends DownloadAction{
                throw new Exception("Could not open file " + fileName + ".  Check the file path");
            }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             throw new Exception("Could not open file "+home_dir+fileName +" does "+home_dir+ " exist ?",e);
         }
         //gets content type from image extension
@@ -114,7 +113,7 @@ public class DisplayImageAction extends DownloadAction{
            }
            return file;
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             throw new Exception("Could not open file "+home_dir+imageFileName +" does "+home_dir+ " exist ?",e);
         }
     }

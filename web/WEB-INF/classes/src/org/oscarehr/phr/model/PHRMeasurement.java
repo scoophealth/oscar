@@ -6,10 +6,12 @@
 package org.oscarehr.phr.model;
 
 import java.sql.SQLException;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.xml.JAXBUtils;
@@ -26,7 +28,9 @@ import org.indivo.xml.phr.vital.VitalSign;
 import org.indivo.xml.phr.vital.VitalSignType;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.indivo.IndivoConstantsImpl;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
+
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
@@ -153,8 +157,8 @@ public class PHRMeasurement extends PHRDocument{
                     unitCVT.setCodingSystem(csrt);
                     result.setUnit(unitCVT);
                 }
-            } catch (SQLException sqe) {
-                sqe.printStackTrace();
+            } catch (SQLException e) {
+                MiscUtils.getLogger().error("Error", e);
             }
             
         }
@@ -163,8 +167,8 @@ public class PHRMeasurement extends PHRDocument{
         indivoMeasurement.setSite("Family Physician Office");
         try {
             indivoMeasurement.setDate(this.dateToXmlGregorianCalendar(measurement.getDateObservedAsDate()));
-        } catch (DatatypeConfigurationException dce) {
-            dce.printStackTrace();;
+        } catch (DatatypeConfigurationException e) {
+            MiscUtils.getLogger().error("Error", e);;
         }
         indivoMeasurement.setOrigin(this.getClinicOrigin());  //not sure what to send here, just sending clinic name for tracking puproses
         indivoMeasurement.setProvider(providerContactInfo);

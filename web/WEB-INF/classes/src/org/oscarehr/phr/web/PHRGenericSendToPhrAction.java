@@ -8,8 +8,10 @@ package org.oscarehr.phr.web;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -23,6 +25,7 @@ import org.oscarehr.phr.model.PHRBinaryData;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.dms.EDoc;
 import oscar.dms.EDocFactory;
 import oscar.dms.EDocUtil;

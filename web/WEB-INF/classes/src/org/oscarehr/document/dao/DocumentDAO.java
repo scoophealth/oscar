@@ -26,11 +26,13 @@
 package org.oscarehr.document.dao;
 
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -58,7 +60,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	    c=c.add(Expression.eq("id.documentNo", docId));
 	    cList=c.list();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }finally{
             if (session != null){
                releaseSession(session);

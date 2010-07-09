@@ -30,6 +30,8 @@ import java.sql.SQLException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
@@ -78,11 +80,11 @@ public class indivoCheck extends TagSupport {
             }                         
              
         }catch(SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         catch(NullPointerException e) {
             System.out.println("INVALID provider or demographic no");
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         if (conditionMet)         

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -85,7 +86,7 @@ public class TestServlet extends HttpServlet {
 			exporter.setFacilityId(facilityId);
 			response.getWriter().print(exporter.export());
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 	}
 	

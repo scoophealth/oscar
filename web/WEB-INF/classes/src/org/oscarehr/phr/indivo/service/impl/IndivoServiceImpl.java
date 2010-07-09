@@ -57,6 +57,10 @@ import org.indivo.xml.phr.DocumentUtils;
 import org.indivo.xml.phr.DocumentVersionGenerator;
 import org.indivo.xml.phr.RecordGenerator;
 import org.indivo.xml.phr.annotation.DocumentReferenceType;
+import org.indivo.xml.phr.contact.ContactInformation;
+import org.indivo.xml.phr.contact.ContactInformationType;
+import org.indivo.xml.phr.demographics.Demographics;
+import org.indivo.xml.phr.demographics.DemographicsType;
 import org.indivo.xml.phr.document.DocumentClassificationType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.DocumentVersionType;
@@ -64,9 +68,6 @@ import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.document.VersionBodyType;
 import org.indivo.xml.phr.message.MessageType;
 import org.indivo.xml.phr.record.IndivoRecordType;
-import org.indivo.xml.phr.contact.*;
-import org.indivo.xml.phr.demographics.Demographics;
-import org.indivo.xml.phr.demographics.DemographicsType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.indivo.xml.talk.AddDocumentResultType;
@@ -92,6 +93,7 @@ import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
 import oscar.OscarProperties;
@@ -568,7 +570,7 @@ public class IndivoServiceImpl  implements PHRService{
            TalkClient client = getTalkClient();
            SendMessageResultType sendMessageResultType = client.sendMessage(auth.getToken(),recipientId,priorThreadMessage,subject,messageText); 
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -577,7 +579,7 @@ public class IndivoServiceImpl  implements PHRService{
            TalkClient client = getTalkClient();
            SendMessageResultType sendMessageResultType = client.sendMessage(auth.getToken(),recipientId,priorThreadMessage,subject,messageText); 
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     

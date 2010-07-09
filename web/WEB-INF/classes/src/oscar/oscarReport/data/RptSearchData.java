@@ -118,7 +118,7 @@ public class RptSearchData {
           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
           db.RunSQL("update demographicQueryFavourites set archived = '0' where favId = '"+id+"'");
        }catch (java.sql.SQLException e){ 
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
        }
     }
     

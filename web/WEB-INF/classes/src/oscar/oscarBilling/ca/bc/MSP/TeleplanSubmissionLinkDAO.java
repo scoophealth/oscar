@@ -33,6 +33,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -64,7 +66,7 @@ public class TeleplanSubmissionLinkDAO {
             }
             pstmt.close();
          }catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
          }
     }
     

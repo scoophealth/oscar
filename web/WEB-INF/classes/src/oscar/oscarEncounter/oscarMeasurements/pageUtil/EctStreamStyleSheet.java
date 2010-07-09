@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DownloadAction;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -79,7 +80,7 @@ public class EctStreamStyleSheet extends DownloadAction{
                throw new Exception("Could not open file " + fileName + ".  Check the file path"); 
            }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             throw new Exception("Could not open file "+home_dir+fileName +" does "+home_dir+ " exist ?",e);
         }
         //gets content type from image extension

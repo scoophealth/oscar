@@ -34,9 +34,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-
 import org.oscarehr.document.DocumentResultsData;
 import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.ArchiveDeletedRecords;
 import oscar.oscarDB.DBHandler;
@@ -387,7 +387,7 @@ public class CommonLabResultData {
             rs.close();
 
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return demoNo;
     }

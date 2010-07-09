@@ -25,7 +25,6 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -96,7 +95,7 @@ public final class RxAddAllergyAction extends Action {
                 RxDrugData.DrugMonograph f = drugData.getDrug(""+id);      
                 allergy.setRegionalIdentifier(f.regionalIdentifier);
                 }catch(Exception e){
-                    e.printStackTrace();
+                    MiscUtils.getLogger().error("Error", e);
                 }
             }
             

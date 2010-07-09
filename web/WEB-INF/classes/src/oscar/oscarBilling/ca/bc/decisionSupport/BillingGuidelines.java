@@ -36,11 +36,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.decisionSupport.model.DSGuideline;
 import org.oscarehr.decisionSupport.model.DSGuidelineFactory;
 import org.oscarehr.decisionSupport.model.DecisionSupportException;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * Class used to Manage BillingGuidelines.
@@ -101,7 +101,7 @@ public class BillingGuidelines  {
                 guideline = dsFactory.createGuidelineFromXml(sb.toString());
                 billingGuideLines.add(guideline);
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
     }

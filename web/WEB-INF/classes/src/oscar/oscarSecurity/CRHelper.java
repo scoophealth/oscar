@@ -14,6 +14,7 @@ import net.sf.cookierevolver.CRFactory;
 import net.sf.cookierevolver.service.RolesProvider;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -75,7 +76,7 @@ public class CRHelper implements RolesProvider {
 			st.close();
 			return (String[]) list.toArray(new String[list.size()]);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 			return new String[0];
 		}finally{
 			if(db!=null) try{}catch(Throwable t){}

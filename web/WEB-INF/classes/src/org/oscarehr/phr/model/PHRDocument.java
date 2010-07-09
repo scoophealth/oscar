@@ -33,11 +33,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
+
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import org.indivo.xml.phr.contact.ConciseContactInformation;
+
 import org.indivo.xml.phr.contact.ConciseContactInformationType;
+
 import oscar.oscarClinic.ClinicData;
 /**
  *

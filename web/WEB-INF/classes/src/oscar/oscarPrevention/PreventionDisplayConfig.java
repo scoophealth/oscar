@@ -40,6 +40,7 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDemographic.data.DemographicData;
@@ -118,7 +119,7 @@ public class PreventionDisplayConfig {
             prevHash.put(h.get("name"), h);            
          }                
       }catch(Exception e ){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
    }
 
@@ -166,7 +167,7 @@ public class PreventionDisplayConfig {
             configHash.put(h.get("title"), h);            
          }                
       }catch(Exception e ){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
        
     }
@@ -223,7 +224,7 @@ public class PreventionDisplayConfig {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return display;
     }
@@ -299,7 +300,7 @@ public class PreventionDisplayConfig {
                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return display;
     }

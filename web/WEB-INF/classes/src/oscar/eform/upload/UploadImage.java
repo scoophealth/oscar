@@ -39,12 +39,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileUploadException;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -84,10 +83,10 @@ public class UploadImage extends HttpServlet{
             }
         } catch (FileUploadException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }   
         
         // Call the output page.

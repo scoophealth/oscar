@@ -23,18 +23,18 @@
 package org.oscarehr.provider.model;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.collections.map.LRUMap;
-
+import org.apache.commons.lang.StringUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarPrevention.Prevention;
-import oscar.oscarPrevention.PreventionDisplayConfig;
-import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDS;
+import oscar.oscarPrevention.PreventionData;
+import oscar.oscarPrevention.PreventionDisplayConfig;
 
 /**
  *
@@ -79,7 +79,7 @@ public class PreventionManager {
 
                 } catch(Exception e) {
                     ret = "";
-                    e.printStackTrace();
+                    MiscUtils.getLogger().error("Error", e);
                 }
             //}
         }

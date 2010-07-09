@@ -23,16 +23,17 @@
 
 package oscar.dms.actions;
 
-import com.lowagie.text.pdf.PdfReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Hashtable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -44,6 +45,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -56,6 +58,8 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.util.UtilDateUtilities;
+
+import com.lowagie.text.pdf.PdfReader;
 
 public class AddEditDocumentAction extends DispatchAction {
 
@@ -124,7 +128,7 @@ public class AddEditDocumentAction extends DispatchAction {
             reader.close();
 
         }catch(IOException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
          return numOfPage;
     }
@@ -278,7 +282,7 @@ public class AddEditDocumentAction extends DispatchAction {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             //ActionRedirect redirect = new ActionRedirect(mapping.findForward("failAdd"));
             request.setAttribute("docerrors", errors);
             request.setAttribute("completedForm", fm);
@@ -359,7 +363,7 @@ public class AddEditDocumentAction extends DispatchAction {
                 fos.write(buf, 0, i);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } finally {
             if (fis != null) fis.close();
             if (fos != null) fos.close();

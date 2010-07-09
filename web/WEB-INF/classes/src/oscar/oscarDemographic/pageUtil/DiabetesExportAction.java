@@ -1,15 +1,5 @@
 package oscar.oscarDemographic.pageUtil;
 
-import cdsdiabetes.OmdCdsDiabetesDocument;
-import cdsdiabetes.CareElementsDocument.CareElements;
-import cdsdiabetes.DemographicsDocument.Demographics;
-import cdsdiabetes.ImmunizationsDocument.Immunizations;
-import cdsdiabetes.LaboratoryResultsDocument.LaboratoryResults;
-import cdsdiabetes.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
-import cdsdiabetes.PatientRecordDocument.PatientRecord;
-import cdsdiabetes.ProblemListDocument.ProblemList;
-import cdsdiabetes.ReportInformationDocument.ReportInformation;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,9 +15,11 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -41,10 +33,16 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.dx.model.DxResearch;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import oscar.oscarDemographic.data.*;
-import oscar.oscarEncounter.oscarMeasurements.data.*;
+
+import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarDemographic.data.DemographicExt;
+import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
+import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
+import oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig;
+import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarPrevention.PreventionData;
@@ -53,6 +51,15 @@ import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.util.UtilDateUtilities;
+import cdsdiabetes.OmdCdsDiabetesDocument;
+import cdsdiabetes.CareElementsDocument.CareElements;
+import cdsdiabetes.DemographicsDocument.Demographics;
+import cdsdiabetes.ImmunizationsDocument.Immunizations;
+import cdsdiabetes.LaboratoryResultsDocument.LaboratoryResults;
+import cdsdiabetes.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
+import cdsdiabetes.PatientRecordDocument.PatientRecord;
+import cdsdiabetes.ProblemListDocument.ProblemList;
+import cdsdiabetes.ReportInformationDocument.ReportInformation;
 
 
 /**
@@ -168,7 +175,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 String inFile = "omd_diabetes"+i+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
                 files[i] = new File(dir,inFile);
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
             try {
                     omdCdsDiabetesDoc.save(files[i], options);
@@ -242,7 +249,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }*/
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
            return listOfDINS;
         

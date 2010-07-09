@@ -25,7 +25,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.admin.BaseAdminAction;
@@ -34,8 +33,6 @@ import org.oscarehr.util.SpringUtils;
 import com.quatro.common.KeyConstants;
 import com.quatro.model.security.NoAccessException;
 import com.quatro.service.LookupManager;
-import java.util.*;
-import oscar.log.LogAction;
 
 public final class UnlockAccountAction extends BaseAdminAction {
     private static final Logger _logger = Logger.getLogger(LoginAction.class);

@@ -48,14 +48,11 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.StaffEditProgramContainer;
-import org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
-
-import com.quatro.service.security.RolesManager;
 
 public class StaffManagerAction extends BaseAction {
 	private static Log log = LogFactory.getLog(StaffManagerAction.class);

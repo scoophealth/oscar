@@ -34,6 +34,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarPrevention.Prevention;
 import oscar.oscarPrevention.PreventionDS;
 import oscar.oscarPrevention.PreventionData;
@@ -57,7 +59,7 @@ public class PreventionTag extends TagSupport {
 	PreventionDS pf = PreventionDS.getInstance();
 	pf.getMessages(p);
         }catch(Exception e){
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
         }
 	ArrayList warnings = p.getWarnings();      
 	

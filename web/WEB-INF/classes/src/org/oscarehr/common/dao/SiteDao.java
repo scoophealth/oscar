@@ -35,6 +35,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Site;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -74,12 +75,12 @@ public class SiteDao extends HibernateDaoSupport {
 							.setParameter("oldname", old.getName())
 							.setParameter("newname", s.getName()).executeUpdate();
 				} catch (Exception e) {
-					e.printStackTrace();
+					MiscUtils.getLogger().error("Error", e);
 				} finally {
 					try {
 						sess.close();
 					} catch (HibernateException e) {
-						e.printStackTrace();
+						MiscUtils.getLogger().error("Error", e);
 					}
 				}
 						

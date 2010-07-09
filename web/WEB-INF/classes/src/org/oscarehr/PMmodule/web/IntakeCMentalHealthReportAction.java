@@ -46,9 +46,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.common.PassIntakeFormVars;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * create IntakeCReport1 Action
@@ -3756,7 +3757,7 @@ public class IntakeCMentalHealthReportAction extends BaseAction {
             out2.close();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 

@@ -18,6 +18,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 
 /*
@@ -117,11 +119,11 @@ public class ICLUtilities {
             //close the stream
             stream.close();
         }catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
+            MiscUtils.getLogger().error("Error", fnfe);
             return retVal;
             
         }catch (IOException ioe) {
-            ioe.printStackTrace();
+            MiscUtils.getLogger().error("Error", ioe);
             return retVal;
         }
         return retVal;

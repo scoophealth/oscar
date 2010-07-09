@@ -26,9 +26,11 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
+
+import org.oscarehr.common.model.QueueDocumentLink;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.oscarehr.common.model.QueueDocumentLink;
 
 /**
  *
@@ -69,7 +71,7 @@ public class QueueDocumentLinkDao extends HibernateDaoSupport {
                this.getHibernateTemplate().save(qdl);
            }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 }

@@ -24,17 +24,16 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.apache.struts.util.MessageResources;
-import javax.servlet.http.HttpServletRequest;
+import org.oscarehr.util.MiscUtils;
 
 public final class RxStashAction extends DispatchAction {
 
@@ -119,7 +118,7 @@ public final class RxStashAction extends DispatchAction {
         }
 
 
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
 
         return mapping.findForward("success");
     }

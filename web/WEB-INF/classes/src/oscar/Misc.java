@@ -30,6 +30,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 public class Misc {
 
 public static Hashtable hashDefs(String [] names, String [] values){
@@ -102,7 +104,7 @@ public static String phoneNumber(String num){
          String retval = num;
          try{
             retval = cleanNumber(num).substring(3);
-         }catch(Exception e){e.printStackTrace();}
+         }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
 	return retval;
 }
 
@@ -110,7 +112,7 @@ public static String areaCode(String num){
         String retval = num;
         try{
             retval = cleanNumber(num).substring(0, 3);
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return retval;
 }
 

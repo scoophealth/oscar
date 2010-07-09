@@ -33,6 +33,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
@@ -95,7 +96,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
         }
         catch( SQLException e ) {
             System.out.println("ERROR FETCHING ALLERGIES");
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return false;
         }
         return true;     

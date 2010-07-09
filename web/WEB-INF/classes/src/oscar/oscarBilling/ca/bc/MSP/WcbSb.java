@@ -272,7 +272,7 @@ public class WcbSb {
       }catch(Exception e){
          retval = invNo;
          System.out.println("PROBLEM SENDING WCB: Could not find billing master no for billing_no:"+invNo+" sending bill with that invNo");
-         e.printStackTrace();         
+         MiscUtils.getLogger().error("Error", e);         
       }
       return retval;      
    }

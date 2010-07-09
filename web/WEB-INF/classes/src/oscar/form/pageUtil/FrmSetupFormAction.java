@@ -43,6 +43,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.form.data.FrmVTData;
@@ -230,16 +231,16 @@ public final class FrmSetupFormAction extends Action {
         }
         /*
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         /*catch (Exception e) {
-            e.printStackTrace();            
+            MiscUtils.getLogger().error("Error", e);            
         } */       
         catch (IOException e) {
                 System.out.println("IO error.");
                 System.out.println("Error, file " + formName + ".xml not found.");
                 System.out.println("This file must be placed at web/form");
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
         }                        
         return (new ActionForward("/form/form"+formName+".jsp"));        
     }
@@ -262,7 +263,7 @@ public final class FrmSetupFormAction extends Action {
             }
         }
         catch(SQLException e){
-            e.printStackTrace();   
+            MiscUtils.getLogger().error("Error", e);   
         }
         return drugs;
     }
@@ -281,7 +282,7 @@ public final class FrmSetupFormAction extends Action {
             }
         }
         catch(SQLException e){
-            e.printStackTrace();   
+            MiscUtils.getLogger().error("Error", e);   
         }
         return allergyLst;
     }
@@ -331,7 +332,7 @@ public final class FrmSetupFormAction extends Action {
                 return null;
         }
         catch(SQLException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return props;
     }
@@ -353,15 +354,15 @@ public final class FrmSetupFormAction extends Action {
             return result;
         }
         catch(XmlRpcException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return null;
         }
         catch(IOException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return null;
         }                
         catch(Exception e){
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
            return null;
         }
     }
@@ -384,11 +385,11 @@ public final class FrmSetupFormAction extends Action {
             return result;
         }
         catch(XmlRpcException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return null;
         }
         catch(IOException e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return null;
         }               
     }
@@ -408,7 +409,7 @@ public final class FrmSetupFormAction extends Action {
                 is.close();
         } catch (IOException e) {
                 System.out.println("IO error.");
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
         }
         return osdsf;
     }
@@ -429,7 +430,7 @@ public final class FrmSetupFormAction extends Action {
             rs.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
     }

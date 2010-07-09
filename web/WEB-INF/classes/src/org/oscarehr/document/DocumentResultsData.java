@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -102,7 +103,7 @@ public class DocumentResultsData {
                 }else
                     return false;
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
                 return false;
             }
         }else{

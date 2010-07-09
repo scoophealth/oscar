@@ -30,9 +30,9 @@ package oscar.eform.upload;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-
 import java.io.IOException;
 import java.io.OutputStream;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -53,7 +54,7 @@ public class ImageUploadAction extends Action {
              byte[] imagebytes = image.getFileData();
              OutputStream fos = this.getEFormImageOutputStream(image.getFileName());
              fos.write(imagebytes);
-         } catch (Exception e) { e.printStackTrace(); }
+         } catch (Exception e) { MiscUtils.getLogger().error("Error", e); }
          return mapping.findForward("success");
     }
 

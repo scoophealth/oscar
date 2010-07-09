@@ -67,6 +67,8 @@ import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 
@@ -179,7 +181,7 @@ public class FrmStudyXMLClientSend {
 //			message.writeTo(System.out);
 			connection.close();
 		} catch (Throwable e)	{
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 	}
 }

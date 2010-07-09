@@ -25,9 +25,9 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.Enumeration;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,8 +40,8 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.MiscUtils;
-
 import org.oscarehr.util.SpringUtils;
+
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -279,7 +279,7 @@ try{
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(), "" + bean.getDemographicNo(), auditStr.toString());
         //RxUtil.printStashContent(beanRX);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
             System.out.println("================end saveReRxDrugIdToStash of RxRePrescribeAction.java=================");
             return null;
@@ -348,7 +348,7 @@ try{
         //RxUtil.printStashContent(beanRX);
         request.setAttribute("listRxDrugs", listReRx);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return (mapping.findForward("represcribe"));

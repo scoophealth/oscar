@@ -29,6 +29,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -60,7 +61,7 @@ public class HashAuditImpl extends BaseHashAudit {
             }
         }        
         catch(NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
      }     
     

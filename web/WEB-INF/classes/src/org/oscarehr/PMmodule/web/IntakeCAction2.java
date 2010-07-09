@@ -40,7 +40,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -56,6 +55,7 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCFormBean;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 import org.oscarehr.PMmodule.web.formbean.IntakeCIdentification;
 import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
+import org.oscarehr.common.model.Demographic;
 
 public class IntakeCAction2 extends BaseAction {
 

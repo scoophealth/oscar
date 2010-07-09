@@ -45,6 +45,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 
@@ -122,7 +123,7 @@ public class TeleplanAPI {
             TeleplanResponseDAO trDAO = new TeleplanResponseDAO();
             trDAO.save(tr);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return tr; 
             //display(in);
@@ -141,7 +142,7 @@ public class TeleplanAPI {
             trDAO.save(tr);
 
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
             return tr; 
     }

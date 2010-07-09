@@ -45,20 +45,12 @@
 
 package oscar.util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.jsp.PageContext;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -140,7 +132,7 @@ public class OscarRoleObjectPrivilege {
             return x.compareToIgnoreCase(propPrivilege) >= 0;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return(false);
         }
     }

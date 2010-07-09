@@ -37,10 +37,11 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.TeleplanFileWriter;
 import oscar.oscarBilling.ca.bc.MSP.TeleplanSubmission;
@@ -96,7 +97,7 @@ public class SimulateTeleplanFileAction extends Action{
                 TeleplanSubmission submission = teleplanWr.getSubmission(testRun, pdArr, dataCenterId);
                 response.getWriter().print(submission.getHtmlFile());
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         return null;

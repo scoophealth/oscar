@@ -27,6 +27,7 @@ import java.sql.Statement;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 public class AccessTypeDAO {
     public void addAccessType(String name, String type) {
@@ -39,7 +40,7 @@ public class AccessTypeDAO {
             stmt.close();
             conn.close();
         }catch(Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
     }

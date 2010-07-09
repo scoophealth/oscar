@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarBilling.ca.on.data.BillingCodeData;
 
 /**
@@ -142,7 +144,7 @@ public class ScheduleOfBenefits {
 
 
       } catch (IOException e) {
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return changes;     
    }

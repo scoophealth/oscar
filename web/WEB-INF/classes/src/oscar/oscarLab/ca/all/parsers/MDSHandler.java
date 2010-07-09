@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
 import ca.uhn.hl7v2.HL7Exception;
@@ -691,7 +692,7 @@ public class MDSHandler implements MessageHandler {
             date = getDateTime(getString(terser.get("/.MSH-7-1"))); 
         }catch(Exception e){
             //Not sure what to do here
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return date;
     }
@@ -837,7 +838,7 @@ public class MDSHandler implements MessageHandler {
         try{
             messageDate = dayFormatter.format(getMsgDateAsDate());
             messageTime = timeFormatter.format(getMsgDateAsDate());
-        }catch(Exception e){e.printStackTrace();}    
+        }catch(Exception e){MiscUtils.getLogger().error("Error", e);}    
         
         retVal = getAuditLine(procDate, procTime, "REC",getOrderStatus(), getFormType(), getAccessionNum(), getHealthNum(), getHealthNumVersion(), getUnescapedName(),getClientRef(),messageDate, messageTime);
      

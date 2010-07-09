@@ -222,7 +222,7 @@ public class EctConsultationFaxAction extends Action {
          
          
       } catch(Throwable e) {
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       System.out.println("Client Has Finished Running");
       

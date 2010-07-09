@@ -38,6 +38,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
@@ -199,7 +200,7 @@ public class MeasurementInfo {
             try{ 
              value = Integer.parseInt(mdata.getDataField());
             }catch (Exception e ){
-               e.printStackTrace();    
+               MiscUtils.getLogger().error("Error", e);    
             } 
         }
         log.debug("Returning the number of months "+value);

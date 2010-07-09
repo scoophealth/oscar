@@ -36,6 +36,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import com.Ostermiller.util.CSVParser;
 
@@ -58,7 +59,7 @@ public class GenerateOutFilesAction extends Action {
             try {
                 response.getWriter().write(csv);
             } catch (Exception ioe) {
-                ioe.printStackTrace();
+                MiscUtils.getLogger().error("Error", ioe);
             }
             return null;
         }
@@ -84,7 +85,7 @@ public class GenerateOutFilesAction extends Action {
             try {    
                 wb.write(response.getOutputStream());
             } catch(Exception e) {
-                e.printStackTrace();   
+                MiscUtils.getLogger().error("Error", e);   
             }
             return null;
         }

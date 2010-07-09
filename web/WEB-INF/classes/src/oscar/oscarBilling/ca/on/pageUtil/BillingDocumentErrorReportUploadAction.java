@@ -120,14 +120,12 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 
 			// close the stream
 			stream.close();
-		} catch (FileNotFoundException fnfe) {
-
-			System.out.println("File not found");
-			fnfe.printStackTrace();
+		} catch (FileNotFoundException e) {
+			MiscUtils.getLogger().error("File not found", e);
 			return isAdded = false;
 
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			MiscUtils.getLogger().error("Error", ioe);
 			return isAdded = false;
 		}
 
@@ -205,11 +203,11 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 		} catch (FileNotFoundException fnfe) {
 
 			System.out.println("File not found");
-			fnfe.printStackTrace();
+			MiscUtils.getLogger().error("Error", fnfe);
 			return isGot = false;
 
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			MiscUtils.getLogger().error("Error", ioe);
 			return isGot = false;
 		}
 		return isGot;
@@ -290,7 +288,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			}
 
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			MiscUtils.getLogger().error("Error", ioe);
 		} catch (StringIndexOutOfBoundsException ioe) {
 			reportXIsGenerated = false;
 		}

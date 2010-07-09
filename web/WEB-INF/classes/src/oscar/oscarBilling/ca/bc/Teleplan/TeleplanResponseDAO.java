@@ -32,6 +32,8 @@ package oscar.oscarBilling.ca.bc.Teleplan;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -70,7 +72,7 @@ public class TeleplanResponseDAO {
             pstat.executeUpdate();
             pstat.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
 }

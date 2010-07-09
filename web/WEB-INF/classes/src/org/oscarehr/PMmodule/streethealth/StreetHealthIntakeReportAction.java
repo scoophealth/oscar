@@ -21,13 +21,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.service.StreetHealthReportManager;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * 
@@ -1009,7 +1009,7 @@ public class StreetHealthIntakeReportAction extends BaseAction {
     private Date stringToDate(String date, String pattern){
     	try {
     		return new SimpleDateFormat(pattern).parse(date);
-    	}catch(ParseException e) {e.printStackTrace();}
+    	}catch(ParseException e) {MiscUtils.getLogger().error("Error", e);}
     	return null;
     }
     

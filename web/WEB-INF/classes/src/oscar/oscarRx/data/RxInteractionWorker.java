@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -72,7 +73,7 @@ public class RxInteractionWorker extends Thread {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         finally {
     		LoggedInInfo.loggedInInfo.remove();

@@ -40,6 +40,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * Parses xml file, creating DosingRecomendation Objects storing them in a hashtable with the ATC code as the key
@@ -112,7 +113,7 @@ public class LimitedUseLookup {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
             loaded = true;
         }

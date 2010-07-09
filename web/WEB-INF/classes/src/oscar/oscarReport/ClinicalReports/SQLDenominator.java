@@ -34,6 +34,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -85,7 +87,7 @@ public class SQLDenominator implements Denominator{
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return list;
     }
@@ -133,7 +135,7 @@ public class SQLDenominator implements Denominator{
                     replaceKeys[0] = str;
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
     }

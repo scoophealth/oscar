@@ -25,7 +25,6 @@ package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,12 +34,12 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.MessageResources;
-
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarRx.data.RxPatientData;
 
@@ -123,7 +122,7 @@ public final class RxChoosePatientAction extends Action {
 
                         request.getSession().setAttribute("profileViewSpec", hm);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        MiscUtils.getLogger().error("Error", e);
                     }
                     return (mapping.findForward("successRX3"));
                 } else {

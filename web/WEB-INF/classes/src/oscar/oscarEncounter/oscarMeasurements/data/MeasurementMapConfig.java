@@ -14,10 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -161,7 +162,7 @@ public class MeasurementMapConfig {
             if (rs.next()) return rsToLoincMapEntry(rs);
             else return null;
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         return null;
     }

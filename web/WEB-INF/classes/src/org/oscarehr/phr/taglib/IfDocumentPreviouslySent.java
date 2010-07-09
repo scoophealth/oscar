@@ -15,7 +15,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.log4j.Logger;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.service.PHRService;
-
 import org.oscarehr.util.SpringUtils;
 
 

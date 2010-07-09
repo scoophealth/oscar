@@ -30,6 +30,8 @@ package oscar.oscarBilling.ca.bc.MSP;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -66,7 +68,7 @@ public class WcbHelper {
       }
       rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       return employers;
    }
@@ -95,7 +97,7 @@ public class WcbHelper {
       }
       rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       
    }
@@ -129,7 +131,7 @@ public class WcbHelper {
       }
       rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       return claimList;
    }

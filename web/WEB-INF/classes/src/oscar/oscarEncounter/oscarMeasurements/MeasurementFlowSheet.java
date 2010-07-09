@@ -46,6 +46,7 @@ import org.apache.commons.logging.LogFactory;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -228,7 +229,7 @@ public class MeasurementFlowSheet {
                     bReader.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         return sb.toString();
@@ -271,7 +272,7 @@ public class MeasurementFlowSheet {
             }catch(Exception e){
                 log.debug("LOADING EXEPTION");
         
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }else{
             if (true);
@@ -300,7 +301,7 @@ public class MeasurementFlowSheet {
                 ruleBase = RuleBaseLoader.loadFromUrl(url);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         rulesLoaded = true;
     }
@@ -331,7 +332,7 @@ public class MeasurementFlowSheet {
             }catch(Exception e){
                 log.debug("loadMeasuremntRuleBase EXEPTION");
         
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
          return measurementRuleBase;
         
@@ -362,7 +363,7 @@ public class MeasurementFlowSheet {
                 measurementRuleBase = RuleBaseLoader.loadFromUrl(url);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return measurementRuleBase;
     }
@@ -383,7 +384,7 @@ public class MeasurementFlowSheet {
                 workingMemory.assertObject(new MeasurementDSHelper(mdb));
                 workingMemory.fireAllRules();
             } catch (Exception e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             //throw new Exception("ERROR: Drools ",e);
             }
         }
@@ -400,7 +401,7 @@ public class MeasurementFlowSheet {
             workingMemory.assertObject(mi);
             workingMemory.fireAllRules();
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         //throw new Exception("ERROR: Drools ",e);
         }
         return mi;

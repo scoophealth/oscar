@@ -33,6 +33,8 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class MSPReconcile{    
@@ -77,7 +79,7 @@ public class MSPReconcile{
             }            
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }        
         return p;
     }
@@ -104,7 +106,7 @@ public class MSPReconcile{
             }            
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         if ( i > 1 ){  System.out.println(" billingNo "+billingNo +" had " + i + "rows in the table"); }
         return s;
@@ -162,7 +164,7 @@ public class MSPReconcile{
                          }
                       }            
                       rs.close();                   }catch(Exception e){
-                      e.printStackTrace();
+                      MiscUtils.getLogger().error("Error", e);
                    }
                 }   
             return errorsProps;
@@ -184,7 +186,7 @@ public class MSPReconcile{
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }
@@ -253,7 +255,7 @@ public class MSPReconcile{
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return billSearch;
     }
@@ -291,7 +293,7 @@ public class MSPReconcile{
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return list;
     }    
@@ -358,7 +360,7 @@ public class MSPReconcile{
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;        
     }
@@ -368,7 +370,7 @@ public class MSPReconcile{
         Properties p = new Properties();
         try {
             p.load(new FileInputStream("/home/jay/documents/PEMP/mspEditCodes.properties"));
-        } catch (IOException e) { e.printStackTrace(); }        
+        } catch (IOException e) { MiscUtils.getLogger().error("Error", e); }        
         try {            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL("select distinct t_dataseq, t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 from teleplanS00 where t_officeno = '"+forwardZero(billingNo,7)+"'");
@@ -390,7 +392,7 @@ public class MSPReconcile{
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;        
     }
@@ -416,7 +418,7 @@ public class MSPReconcile{
             rs.close();
         }catch(Exception e){
             System.out.println("name: "+name+" value: "+value);
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }        
         return p;
     }    
@@ -434,7 +436,7 @@ public class MSPReconcile{
             }		
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }                         
         if (!currStat.equals(SETTLED)){
             if (stat.equals(REJECTED)){
@@ -474,7 +476,7 @@ public class MSPReconcile{
                 System.out.println("Updating billing no "+billingNo+" to "+newStat);
                 db.RunSQL("update billingmaster set billingstatus = '"+newStat+"' where billingmaster_no = '"+billingNo+"'");
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         return updated;

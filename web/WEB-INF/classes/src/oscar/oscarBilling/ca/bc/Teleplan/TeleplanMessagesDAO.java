@@ -33,6 +33,7 @@ import java.sql.ResultSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -53,7 +54,7 @@ public class TeleplanMessagesDAO {
             String query = "insert into property (name,value) values ('teleplan_message','"+sequenceNum+"') " ;
             db.RunSQL(query);           
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -63,7 +64,7 @@ public class TeleplanMessagesDAO {
             String query = "update property set value = '"+sequenceNum+"' where name = 'teleplan_message' " ;
             db.RunSQL(query);            
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -77,7 +78,7 @@ public class TeleplanMessagesDAO {
                 hasSequence = true;
             }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return hasSequence;
     }

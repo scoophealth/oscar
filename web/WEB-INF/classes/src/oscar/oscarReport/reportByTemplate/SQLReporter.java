@@ -31,10 +31,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarReport.data.RptResultStruct;
-import oscar.oscarReport.reportByTemplate.ReportManager;
-import oscar.oscarReport.reportByTemplate.ReportObject;
 import oscar.util.UtilMisc;
 
 import com.Ostermiller.util.CSVPrinter;
@@ -75,7 +75,7 @@ public class SQLReporter implements Reporter {
                                               //this line fixes it but messes up XLS generation.
             //csv = UtilMisc.getCSV(rs);
         } catch (Exception sqe) {
-            sqe.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqe);
         }
         request.getSession().setAttribute("csv", csv);
         request.setAttribute("csv", csv);

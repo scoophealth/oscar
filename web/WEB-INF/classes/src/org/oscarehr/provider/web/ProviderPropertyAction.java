@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-import java.util.Hashtable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,10 +43,12 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.dms.data.QueueData;
+import oscar.eform.EFormUtil;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
-import oscar.eform.EFormUtil;
 
 /**
  *
@@ -523,7 +525,7 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("providermsgSuccess","provider.setRxProfileView.msgSuccess"); //=Rx Profile View saved
          request.setAttribute("method","saveRxProfileView");
        }catch(Exception e){
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
        }
 
          return actionmapping.findForward("genRxProfileView");
@@ -1003,7 +1005,7 @@ public class ProviderPropertyAction extends DispatchAction {
                  serviceList.add(new LabelValueBean(servicetypename,servicetype));
              }
          }catch(Exception e){
-             e.printStackTrace();
+             MiscUtils.getLogger().error("Error", e);
          }
          serviceList.add(new  LabelValueBean("None",""));
 
@@ -1059,7 +1061,7 @@ public class ProviderPropertyAction extends DispatchAction {
                  serviceList.add(new LabelValueBean(servicetypename,servicetype));
              }
          }catch(Exception e){
-             e.printStackTrace();
+             MiscUtils.getLogger().error("Error", e);
          }
 
          request.setAttribute("dropOpts",serviceList);

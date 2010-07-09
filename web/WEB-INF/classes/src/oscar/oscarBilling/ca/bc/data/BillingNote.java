@@ -10,6 +10,8 @@ package oscar.oscarBilling.ca.bc.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.Misc;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilMisc;
@@ -45,7 +47,7 @@ public class BillingNote {
          }
          rs.close();
       }catch (Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return hasNote;
    }
@@ -78,7 +80,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
          }
          rs.close();
       }catch (Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
 
 }
@@ -103,7 +105,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
       }
       rs.close();
       }catch (Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return n;
    }
@@ -120,7 +122,7 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
          }
          rs.close();
          }catch (Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
          }
       return retStr;
    }

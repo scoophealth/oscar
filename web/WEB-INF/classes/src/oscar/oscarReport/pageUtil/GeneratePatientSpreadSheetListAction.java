@@ -39,6 +39,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicData.Demographic;
@@ -84,7 +85,7 @@ public class GeneratePatientSpreadSheetListAction  extends Action {
     try{    
        wb.write(response.getOutputStream());
     }catch(Exception e){
-       e.printStackTrace();   
+       MiscUtils.getLogger().error("Error", e);   
     }   
        return null;
    }

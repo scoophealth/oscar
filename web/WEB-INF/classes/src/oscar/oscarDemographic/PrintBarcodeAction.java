@@ -14,6 +14,7 @@ import net.sf.jasperreports.engine.JREmptyDataSource;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
@@ -70,7 +71,7 @@ public class PrintBarcodeAction extends OscarAction {
             osc.fillDocumentStream( parameters, sos, "pdf", ins, new JREmptyDataSource());
         }
         catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         return actionMapping.findForward(this.target);

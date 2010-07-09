@@ -19,13 +19,14 @@ package oscar.oscarBilling.ca.on.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
@@ -57,10 +58,10 @@ public class JdbcBillingReviewImpl {
 			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getCodeFee(sql = " + sql + ")");
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
 		} catch(ParseException e ) {
             _logger.error("Parse service date error");
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
 

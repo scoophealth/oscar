@@ -26,8 +26,8 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
-
 import java.util.UUID;
+
 import org.oscarehr.common.model.OscarAnnotation;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

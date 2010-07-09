@@ -28,6 +28,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.oscarehr.util.MiscUtils;
+
 public class ReadLocalFile {
     public static String getStringFromFile(String fileName) {
         StringBuffer fileStr = new StringBuffer();
@@ -51,7 +53,7 @@ public class ReadLocalFile {
                 outWriter.flush();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         //return outWriter;
     }

@@ -27,6 +27,8 @@ package oscar.oscarProvider.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -75,7 +77,7 @@ public class ProviderFaxUpdater {
         
        }
        catch( SQLException ex ) {
-           System.out.println(ex.getMessage());           
+           MiscUtils.getLogger().error("Error", ex);           
        }
        
        return faxNum;

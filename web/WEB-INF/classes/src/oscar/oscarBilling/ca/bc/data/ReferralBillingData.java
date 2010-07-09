@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -101,7 +102,7 @@ public class ReferralBillingData {
          }
          rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       return h;
    }
@@ -116,7 +117,7 @@ public class ReferralBillingData {
          }
          rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       return l;
    }
@@ -164,7 +165,7 @@ public class ReferralBillingData {
          }
          rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       return retval;
    }
@@ -180,7 +181,7 @@ public class ReferralBillingData {
          }
          rs.close();                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
       return ret;
    }
@@ -207,7 +208,7 @@ public class ReferralBillingData {
          
          db.RunSQL(sql);                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
    }
    
@@ -239,7 +240,7 @@ public class ReferralBillingData {
          
          db.RunSQL(sql);                    
       }catch (Exception e){
-         e.printStackTrace();        
+         MiscUtils.getLogger().error("Error", e);        
       }
    }
    

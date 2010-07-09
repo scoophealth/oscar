@@ -48,6 +48,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -119,7 +120,7 @@ public class LabUploadAction extends Action {
              }
              
           }catch(Exception e){ 
-             e.printStackTrace(); 
+             MiscUtils.getLogger().error("Error", e); 
              outcome = "exception";
           }  
        
@@ -170,11 +171,11 @@ public class LabUploadAction extends Action {
       }catch (FileNotFoundException fnfe) {
 
          System.out.println("File not found");
-         fnfe.printStackTrace();            
+         MiscUtils.getLogger().error("Error", fnfe);            
          return retVal;
 
       }catch (IOException ioe) {
-         ioe.printStackTrace();
+         MiscUtils.getLogger().error("Error", ioe);
          return retVal;
       }   
       return retVal;

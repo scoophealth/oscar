@@ -172,7 +172,7 @@ public class BillingViewBean {
       }
     }
     catch (Exception e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
   }
 

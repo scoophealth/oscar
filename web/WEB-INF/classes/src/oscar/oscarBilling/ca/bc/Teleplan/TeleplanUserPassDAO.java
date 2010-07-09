@@ -33,6 +33,7 @@ import java.sql.ResultSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -53,7 +54,7 @@ public class TeleplanUserPassDAO {
             String query = "insert into property (name,value) values ('teleplan_username','"+username+"') " ;
             db.RunSQL(query);           
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -63,7 +64,7 @@ public class TeleplanUserPassDAO {
             String query = "insert into property (name,value) values ('teleplan_password','"+password+"') " ;
             db.RunSQL(query);           
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -74,7 +75,7 @@ public class TeleplanUserPassDAO {
             String query = "update property set value = '"+username+"' where name = 'teleplan_username' " ;
             db.RunSQL(query);            
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -84,7 +85,7 @@ public class TeleplanUserPassDAO {
             String query = "update property set value = '"+password+"' where name = 'teleplan_password' " ;
             db.RunSQL(query);            
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -103,7 +104,7 @@ public class TeleplanUserPassDAO {
                 hasSequence = true;
             }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return hasSequence;
     }
@@ -119,7 +120,7 @@ public class TeleplanUserPassDAO {
                 hasSequence = true;
             }
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return hasSequence;
     }
@@ -161,7 +162,7 @@ public class TeleplanUserPassDAO {
             }
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return str;
     }

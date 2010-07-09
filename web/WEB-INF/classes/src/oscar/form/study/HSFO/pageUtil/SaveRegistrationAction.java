@@ -43,6 +43,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.form.study.HSFO.HSFODAO;
 import oscar.form.study.HSFO.PatientData;
@@ -466,14 +467,14 @@ public class SaveRegistrationAction extends DispatchAction{
 //                dao.insertPatient(patientData);
 //                dao.insertVisit(visitData, (String) request.getSession().getAttribute("user"));
 //            } catch (SQLException e) {
-//                e.printStackTrace();
+//                MiscUtils.getLogger().error("Error", e);
 //            }
 //        } else {
 //            try {
 //                dao.updatePatient(patientData);
 //                dao.insertVisit(visitData, (String) request.getSession().getAttribute("user"));
 //            } catch (SQLException e) {
-//                e.printStackTrace();
+//                MiscUtils.getLogger().error("Error", e);
 //            }
 //        }
 //
@@ -844,7 +845,7 @@ public class SaveRegistrationAction extends DispatchAction{
         try {
             dao.savePatient(patientData);
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
 
         try {
@@ -852,7 +853,7 @@ public class SaveRegistrationAction extends DispatchAction{
            System.out.println(" insert ID to "+insertId);
            request.setAttribute("formId",new Integer(insertId));
         } catch (SQLException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         request.setAttribute("demographic_no", visitData.getPatient_Id());

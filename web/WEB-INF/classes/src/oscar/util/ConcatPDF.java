@@ -31,7 +31,7 @@ package oscar.util;
 
 
 /*
- * $Id: ConcatPDF.java,v 1.2 2008-03-18 19:41:35 tedleung Exp $
+ * $Id: ConcatPDF.java,v 1.3 2010-07-09 21:56:39 tedleung Exp $
  * $Name:  $
  *
  * This code is free software. It may only be copied or modified
@@ -56,6 +56,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PRAcroForm;
 import com.lowagie.text.pdf.PdfCopy;
@@ -71,7 +73,7 @@ public class ConcatPDF {
         OutputStream os = new FileOutputStream(filename);
         concat(alist,os);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -137,7 +139,7 @@ public class ConcatPDF {
             document.close();
         }
         catch(Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
    

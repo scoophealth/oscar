@@ -40,6 +40,7 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -202,7 +203,7 @@ public class Survey {
          rs.close();
          
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
    }
    
@@ -221,7 +222,7 @@ public class Survey {
          rs.close();
          
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return sStatus;
    }
@@ -252,7 +253,7 @@ public class Survey {
             insertId = db.getString(rs,1);
          }         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return insertId;
    }
@@ -280,7 +281,7 @@ public class Survey {
          rs.close();
          
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }
       return surveyDataId;
    }
@@ -307,7 +308,7 @@ public class Survey {
                      +"'"+surveyDataId+"'";
          db.RunSQL(sql);         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }      
    }
    
@@ -535,7 +536,7 @@ public class Survey {
             list.add(s);
          }         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }      
       return list;
    }
@@ -553,7 +554,7 @@ public class Survey {
             list.add(s);
          }         
       }catch(Exception e){
-         e.printStackTrace();
+         MiscUtils.getLogger().error("Error", e);
       }      
       return list;
    }

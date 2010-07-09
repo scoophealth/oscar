@@ -8,11 +8,14 @@ package org.oscarehr.common.dao;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.hibernate.Session;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DxRegistedPTInfo;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 import oscar.oscarResearch.oscarDxResearch.bean.dxCodeSearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxQuickListItemsHandler;
 
@@ -60,7 +63,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } finally {
             if (session != null) {
                 releaseSession(session);
@@ -107,7 +110,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
             session = getSession();
             dList = session.createQuery(HQL).list();
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } finally {
             if (session != null) {
                 releaseSession(session);
@@ -157,7 +160,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
             session = getSession();
             dList = session.createQuery(HQL).list();
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } finally {
             if (session != null) {
                 releaseSession(session);
@@ -218,7 +221,7 @@ public class DxresearchDAO extends HibernateDaoSupport{
             session = getSession();
             dList = session.createQuery(HQL).list();
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } finally {
             if (session != null) {
                 releaseSession(session);

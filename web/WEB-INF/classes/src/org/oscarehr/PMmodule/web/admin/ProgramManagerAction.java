@@ -69,6 +69,7 @@ import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.FunctionalCentreDao;
 import org.oscarehr.common.model.FunctionalCentre;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.quatro.service.security.RolesManager;
@@ -650,7 +651,7 @@ public class ProgramManagerAction extends BaseAction {
 		try {
 			program.setFacilityId(Integer.parseInt(request.getParameter("program.facilityId")));
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 
 		if (request.getParameter("program.allowBatchAdmission") == null) {

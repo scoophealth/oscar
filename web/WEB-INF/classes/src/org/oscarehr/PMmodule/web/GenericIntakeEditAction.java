@@ -67,6 +67,7 @@ import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
@@ -470,7 +471,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			saveErrors(request, messages);
 		}
 		catch (AdmissionException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 			LOG.error(e);
 
 			ActionMessages messages = new ActionMessages();

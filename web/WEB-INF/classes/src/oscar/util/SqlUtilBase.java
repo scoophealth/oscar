@@ -12,6 +12,8 @@ package oscar.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class SqlUtilBase {
@@ -21,7 +23,7 @@ public class SqlUtilBase {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
        } catch (SQLException sqe) {
-           sqe.printStackTrace();
+           MiscUtils.getLogger().error("Error", sqe);
        }
    }
    
@@ -35,7 +37,7 @@ public class SqlUtilBase {
            String lastID = db.getString(rs,"LAST_INSERT_ID()");
            rs.close();
            return(lastID);
-       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       } catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
        return "";
    }
    
@@ -45,7 +47,7 @@ public class SqlUtilBase {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            rs = db.GetSQL(sql);
        } catch (SQLException sqe) {
-           sqe.printStackTrace();
+           MiscUtils.getLogger().error("Error", sqe);
        }
        return(rs);
    }

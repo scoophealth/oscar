@@ -22,19 +22,19 @@
 
 package org.oscarehr.billing.CA.ON.web;
 
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.Action;
-
 import org.oscarehr.billing.CA.ON.dao.BillingClaimDAO;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -60,7 +60,7 @@ public class BatchBillAction extends Action {
                 billingDate = dateFmt.parse(strDate);
             }
             catch(ParseException e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
                 servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return null;
             }

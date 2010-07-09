@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
@@ -86,7 +87,7 @@ public class HsfoQuartzServlet implements Servlet
 			schedule();
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 	}
 

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -98,7 +99,7 @@ public class BillingData {
 			}
 			rs.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 		return list;
 	}

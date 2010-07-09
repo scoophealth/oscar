@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -103,10 +105,10 @@ public class HSFODAO {
             st.clearParameters();
         }catch (SQLException se) {
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
-            se.printStackTrace();
+            MiscUtils.getLogger().error("Error", se);
         }catch (Exception ne) {
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
-            ne.printStackTrace();
+            MiscUtils.getLogger().error("Error", ne);
         }finally {			
 			if (st != null)
 				try {
@@ -486,10 +488,10 @@ public class HSFODAO {
             st.clearParameters();
             //st.close();
         }catch (SQLException se) {
-            se.printStackTrace();
+            MiscUtils.getLogger().error("Error", se);
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
-            ne.printStackTrace();
+            MiscUtils.getLogger().error("Error", ne);
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
         }
         finally {

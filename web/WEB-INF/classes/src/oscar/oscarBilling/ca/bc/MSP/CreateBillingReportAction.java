@@ -50,6 +50,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarAction;
 import oscar.OscarDocumentCreator;
@@ -200,7 +201,7 @@ public class CreateBillingReportAction extends OscarAction {
                 osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream, DbConnectionFilter.getThreadLocalDbConnection());
             }
             catch (SQLException e) {
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
 
         }

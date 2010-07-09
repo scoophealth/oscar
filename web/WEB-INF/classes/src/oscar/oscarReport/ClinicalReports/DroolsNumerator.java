@@ -36,6 +36,7 @@ import java.util.Hashtable;
 import org.drools.RuleBase;
 import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
@@ -98,7 +99,7 @@ public class DroolsNumerator implements Numerator{
           
             System.out.println("right before catch");
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return evalTrue;
     }
@@ -135,7 +136,7 @@ public class DroolsNumerator implements Numerator{
              measurementRuleBase = RuleBaseLoader.loadFromUrl( url );
             }
         }catch(Exception e){
-            e.printStackTrace();                
+            MiscUtils.getLogger().error("Error", e);                
         }
         return measurementRuleBase;        
     }
@@ -154,7 +155,7 @@ public class DroolsNumerator implements Numerator{
                  outputfields[0] = str;
               }
            }catch(Exception e){
-              e.printStackTrace();
+              MiscUtils.getLogger().error("Error", e);
            }
         }
     }
@@ -180,7 +181,7 @@ public class DroolsNumerator implements Numerator{
                     replaceKeys[0] = str;
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
     }

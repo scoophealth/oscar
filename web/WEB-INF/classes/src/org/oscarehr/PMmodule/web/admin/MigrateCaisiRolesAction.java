@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +23,7 @@ import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -377,7 +377,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 			logger.info("Migrated caisi roles to oscar roles successfully!");
 			
 		} catch(SQLException e) {
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 			logger.error(e);
 			result.setStatus("error");
 		}

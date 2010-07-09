@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
@@ -134,7 +136,7 @@ public class TeleplanSubmission {
            htmlFile = new File(directory,fileName+".html");
            mspFile  = new File(directory,fileName);
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             throw new Exception("Could not open file "+dirToSaveFiles+fileName +" does "+dirToSaveFiles+ " exist ?",e);
         }
         

@@ -193,7 +193,7 @@ public class LoginCheckLoginBean {
 
             return secBean;
         //} catch (SQLException e) {
-        // e.printStackTrace();
+        // MiscUtils.getLogger().error("Error", e);
         //    return null;
         //}
     }

@@ -58,6 +58,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.xmlbeans.GDateBuilder;
 import org.apache.xmlbeans.XmlCalendar;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -889,7 +890,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    inFiles = demoNo+"-"+demoName+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
 		    files[i] = new File(directory,inFiles);
 		}catch(Exception e){
-		    e.printStackTrace();
+		    MiscUtils.getLogger().error("Error", e);
 		}
 		try {
 			omdCdsDoc.save(files[i]);

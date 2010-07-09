@@ -31,7 +31,6 @@ package org.oscarehr.phr.web;
 
 import java.util.Calendar;
 
-import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -45,6 +44,7 @@ import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -88,7 +88,7 @@ public class PHRLoginAction extends DispatchAction {
        try {
            phrAuth = phrService.authenticate(providerNo, request.getParameter("phrPassword"));
        } catch (Exception e) {
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
             /*if ((e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
             || (e.getCause() != null && e.getCause().getClass() == java.net.NoRouteToHostException.class)
             || (e.getCause() != null && e.getCause().getClass(). == )) {*/

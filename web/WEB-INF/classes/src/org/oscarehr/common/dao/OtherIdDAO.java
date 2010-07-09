@@ -26,6 +26,7 @@
 package org.oscarehr.common.dao;
 
 import java.util.List;
+
 import org.oscarehr.common.model.OtherId;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

@@ -102,7 +102,7 @@ public class EChartDAO {
       rs.close();
     }
     catch (SQLException e) {
-      e.printStackTrace();
+      MiscUtils.getLogger().error("Error", e);
     }
     return echart;
   }

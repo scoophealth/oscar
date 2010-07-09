@@ -31,6 +31,8 @@ package oscar.oscarReport.ClinicalReports;
 import java.sql.ResultSet;
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -69,7 +71,7 @@ public class SQLNumerator implements Numerator {
                  outputfields[0] = str;
               }
            }catch(Exception e){
-              e.printStackTrace();
+              MiscUtils.getLogger().error("Error", e);
            }
         }
     }
@@ -102,7 +104,7 @@ public class SQLNumerator implements Numerator {
             System.out.println("demo "+demographicNo+" eval: "+evalTrue);
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return evalTrue;
@@ -135,7 +137,7 @@ public class SQLNumerator implements Numerator {
             System.out.println("demo "+demographicNo+" eval: "+evalTrue);
             rs.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         return evalTrue;
@@ -175,7 +177,7 @@ public class SQLNumerator implements Numerator {
                     replaceKeys[0] = str;
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
     }

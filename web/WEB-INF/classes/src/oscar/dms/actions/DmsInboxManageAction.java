@@ -26,12 +26,9 @@
 
 package oscar.dms.actions;
 
-import com.quatro.dao.security.SecObjectNameDao;
-import com.quatro.model.security.Secobjectname;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -40,15 +37,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
@@ -57,6 +55,8 @@ import org.oscarehr.common.dao.QueueProviderLinkDao;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.common.model.QueueDocumentLink;
 import org.oscarehr.document.DocumentResultsData;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.data.QueueData;
@@ -64,6 +64,9 @@ import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.OscarRoleObjectPrivilege;
+
+import com.quatro.dao.security.SecObjectNameDao;
+import com.quatro.model.security.Secobjectname;
 
 /**
  *
@@ -122,7 +125,7 @@ public class DmsInboxManageAction extends DispatchAction {
         setQueueDocsInSession(privatedocs,request);
         
        }catch(Exception e){
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
        }
         return mapping.findForward("success");
     }
@@ -252,7 +255,7 @@ public class DmsInboxManageAction extends DispatchAction {
      public ActionForward prepareForIndexPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session=request.getSession();
         try{if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");}
-        catch(Exception e){e.printStackTrace();}
+        catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
     //oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
@@ -526,7 +529,7 @@ public class DmsInboxManageAction extends DispatchAction {
                 addQueueSecObjectName(qn,QueueData.getLastId());
            }
        }catch(Exception e){
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
        }
 
         HashMap hm = new HashMap();
@@ -535,7 +538,7 @@ public class DmsInboxManageAction extends DispatchAction {
         try{
             response.getOutputStream().write(jsonObject.toString().getBytes());
         }catch(java.io.IOException ioe){
-            ioe.printStackTrace();
+            MiscUtils.getLogger().error("Error", ioe);
         }
         return null;
     }

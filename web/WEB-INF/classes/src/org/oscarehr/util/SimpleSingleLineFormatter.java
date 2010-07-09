@@ -67,7 +67,7 @@ public class SimpleSingleLineFormatter extends Formatter
 			}
 			catch (Exception e)
 			{
-			    e.printStackTrace();
+			    MiscUtils.getLogger().error("Error", e);
 			}
 		}
 

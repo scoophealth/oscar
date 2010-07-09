@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 public class StringUtils {
 
@@ -97,7 +98,7 @@ public class StringUtils {
 
             return matchFound;
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             logger.error("Erro ao validar expressao regular", e);
 
             return false;
@@ -255,7 +256,7 @@ public class StringUtils {
             }
             return (strb.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return ("");
     }

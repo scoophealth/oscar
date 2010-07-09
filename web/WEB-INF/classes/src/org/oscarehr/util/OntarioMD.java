@@ -86,7 +86,7 @@ public class OntarioMD {
                 }
                 h = parseReturn(post.getResponseBodyAsStream());
         }catch(Exception e ){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         } finally{
                 // Release current connection to the connection pool
                 post.releaseConnection();
@@ -116,7 +116,7 @@ public class OntarioMD {
             h.put("jsessionID",jsessionID);
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return h;
     }

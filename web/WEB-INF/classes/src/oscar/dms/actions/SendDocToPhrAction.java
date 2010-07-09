@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -80,7 +81,7 @@ public class SendDocToPhrAction extends Action {
                     }
                     //throw new Exception("Error: Cannot marshal the document");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    MiscUtils.getLogger().error("Error", e);
                     error = e.getMessage();
                 }
             }

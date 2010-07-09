@@ -26,21 +26,22 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
-
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
 import oscar.util.UtilDateUtilities;
 

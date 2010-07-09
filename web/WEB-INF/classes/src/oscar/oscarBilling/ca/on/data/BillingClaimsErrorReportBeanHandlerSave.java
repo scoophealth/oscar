@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarBilling.ca.on.bean.BillingClaimsErrorReportBean;
 import oscar.oscarBilling.ca.on.bean.BillingClaimsErrorReportBeanHandler;
 
@@ -173,7 +175,7 @@ public class BillingClaimsErrorReportBeanHandlerSave {
 
 			}
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			MiscUtils.getLogger().error("Error", ioe);
 		} catch (StringIndexOutOfBoundsException ioe) {
 			verdict = false;
 		}

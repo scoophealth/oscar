@@ -38,6 +38,9 @@ import java.util.Hashtable;
 
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperReport;
+
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarDocumentCreator;
 import oscar.oscarDB.DBHandler;
 
@@ -79,7 +82,7 @@ public class ManageLetters {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -96,7 +99,7 @@ public class ManageLetters {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
     }
     
@@ -122,7 +125,7 @@ public class ManageLetters {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return jasperReport;
     }
@@ -173,7 +176,7 @@ public class ManageLetters {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
         
@@ -200,7 +203,7 @@ public class ManageLetters {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return list;
     }   
@@ -221,7 +224,7 @@ public class ManageLetters {
             rs.close();
             pstmt.close();
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return h;
     }
@@ -264,7 +267,7 @@ public class ManageLetters {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         
     }

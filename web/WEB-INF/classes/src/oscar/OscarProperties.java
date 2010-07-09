@@ -58,7 +58,7 @@ public class OscarProperties extends Properties {
 			readFromFile("/oscar_mcmaster.properties", oscarProperties);
 		} catch (IOException e) {
 			// don't use a logger here or your asking for trouble, it's a static initialiser
-			e.printStackTrace();
+			MiscUtils.getLogger().error("Error", e);
 		}
 	}
         
@@ -87,7 +87,7 @@ public class OscarProperties extends Properties {
 	 * InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties"); try { load(is); } catch (Exception e) { System.out.println("Error, file oscar_mcmaster.properties not found.");
 	 * System.out.println("This file must be placed at WEB-INF/classes."); }
 	 * 
-	 * try{ is.close(); } catch (IOException e) { System.out.println("IO error."); e.printStackTrace(); } } //OscarProperties - end
+	 * try{ is.close(); } catch (IOException e) { System.out.println("IO error."); MiscUtils.getLogger().error("Error", e); } } //OscarProperties - end
 	 */
 
 	/* Do not use this constructor. Use getInstance instead */

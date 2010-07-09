@@ -41,6 +41,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.Appointment;
 import org.oscarehr.casemgmt.dao.ApptDAO;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -105,7 +106,7 @@ public class BillingSaveBillingAction extends Action {
             }catch (SQLException e) {
                 log.error(e.getMessage(),e);
                 log.error("LLLOOK: APPT ERROR FOR demo:" + bean.getPatientName() +" date " + curDate);
-                e.printStackTrace();
+                MiscUtils.getLogger().error("Error", e);
             }
         }
         ////////////
@@ -269,7 +270,7 @@ public class BillingSaveBillingAction extends Action {
 //                }
 //            } catch (SQLException e) {
 //                log.error(e.getMessage(), e);
-//                e.printStackTrace();
+//                MiscUtils.getLogger().error("Error", e);
 //            } finally {
 //                if (db != null) {
 //                    try {
@@ -314,7 +315,7 @@ public class BillingSaveBillingAction extends Action {
 //            rs.close();
 //        } catch (SQLException e) {
 //            log.error(e.getMessage(), e);
-//            e.printStackTrace();
+//            MiscUtils.getLogger().error("Error", e);
 //        }
 //        return billingId;
 //    }
@@ -433,7 +434,7 @@ public class BillingSaveBillingAction extends Action {
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             log.error("LLLOOK: APPT ERROR FOR demo:" + bean.getPatientName() + " date " + curDate);
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         ////End of updating appt information
         return sql;

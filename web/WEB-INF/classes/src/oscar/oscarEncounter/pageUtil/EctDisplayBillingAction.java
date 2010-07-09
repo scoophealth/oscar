@@ -36,6 +36,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
@@ -76,7 +77,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                      aL   = dbObj.getBillingHist(bean.demographicNo, 10, 0, null);
                 }catch(Exception e){
 
-                    e.printStackTrace();
+                    MiscUtils.getLogger().error("Error", e);
                 }
                 int nItems=0;
                 for(int i=0; i<aL.size(); i=i+2) {
@@ -137,7 +138,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
 //                     aL   = dbObj.getBillingHist(bean.demographicNo, 10, 0, null);
 //                }catch(Exception e){
 //
-//                    e.printStackTrace();
+//                    MiscUtils.getLogger().error("Error", e);
 //                }
                 int nItems=0;
                 for(int i=0; i<list.size(); i++) {

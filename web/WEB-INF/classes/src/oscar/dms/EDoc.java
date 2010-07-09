@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarTags.TagObject;
@@ -169,7 +170,7 @@ public class EDoc extends TagObject implements Comparable {
 				os.write(buf, 0, i);
 			}
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			MiscUtils.getLogger().error("Error", ioe);
 			if (is != null) is.close();
 			if (os != null) os.close();
 			throw ioe;

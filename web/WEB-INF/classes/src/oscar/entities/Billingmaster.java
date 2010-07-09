@@ -34,8 +34,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -521,7 +524,7 @@ public class Billingmaster {
         try{
            d = UtilDateUtilities.getDateFromString(serviceDate, "yyyyMMdd");
         }catch(Exception e){
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return d;
     }
@@ -1335,7 +1338,7 @@ public class Billingmaster {
             }
         } catch (Exception e) {
             retval = false;
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
         }
         return retval;
     }

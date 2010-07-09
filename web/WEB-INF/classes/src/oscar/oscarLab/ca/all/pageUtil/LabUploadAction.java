@@ -98,7 +98,7 @@ public class LabUploadAction extends Action {
 
         }catch(Exception e){
             logger.debug("Exception: "+e);
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             outcome = "exception";
         }
         request.setAttribute("outcome", outcome);
@@ -170,7 +170,7 @@ public class LabUploadAction extends Action {
 
         }catch(Exception e){
             logger.debug("Could not validate signature: "+e);
-            e.printStackTrace();
+            MiscUtils.getLogger().error("Error", e);
             return(false);
         }
     }
