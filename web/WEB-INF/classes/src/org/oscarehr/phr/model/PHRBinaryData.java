@@ -53,8 +53,6 @@ public class PHRBinaryData extends PHRDocument {
         //if( bfile == null )
         //    return false;
         
-        String providerFullName = sender.getFirst_name() + " " + sender.getLast_name();
-        
         //Temp data: We're not setting the document just yet
         
         GregorianCalendar calendar = new GregorianCalendar();

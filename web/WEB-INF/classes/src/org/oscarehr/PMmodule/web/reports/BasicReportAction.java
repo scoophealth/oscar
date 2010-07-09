@@ -57,11 +57,10 @@ public class BasicReportAction extends BaseAction {
 	}
 	
 	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		Date endDate= new Date();
+		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -12);
-		Date startDate = cal.getTime();
-		
+			
 		request.setAttribute("programStatistics", this.getProgramStatistics());
 		request.setAttribute("providerStatistics", this.getProviderStatistics());
 		
