@@ -22,11 +22,7 @@
  * Hamilton
  * Ontario, Canada
  */
-<%-- 
-    Document   : displayMedHistory
-    Created on : Mar 31, 2010, 3:02:41 PM
-    Author     : jackson
---%>
+-->
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%> 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
