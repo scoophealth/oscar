@@ -428,7 +428,6 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
     //used by decision support to search through the notes for a string
 	public List<CaseManagementNote> searchDemographicNotes(String demographic_no, String searchString) {
-		String list = null;
 		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) and cmn.demographic_no = ? and cmn.note like ? and cmn.archived = 0";
 
 		List<CaseManagementNote> result = getHibernateTemplate().find(hql, new Object[] {demographic_no, demographic_no, searchString });
