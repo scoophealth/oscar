@@ -50,6 +50,7 @@ import java.sql.Types;
 import java.io.InputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 public class CoercionTest {
@@ -81,7 +82,7 @@ public class CoercionTest {
 				}
 			}
 		} catch (IOException ioe) {
-			logger.error("Error", e);
+			logger.error("Error", ioe);
 		}
 
 		return sb.toString();

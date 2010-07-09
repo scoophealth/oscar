@@ -64,7 +64,7 @@ public class DBConnect {
           insert=true;
     }
     catch(SQLException ex) {
-        logger.error("Unexpected error", e);
+        logger.error("Unexpected error", ex);
     }
 
     return insert;
@@ -80,7 +80,7 @@ public class DBConnect {
 
     }
     catch(SQLException ex) {
-        logger.error("Unexpected error", e);
+        logger.error("Unexpected error", ex);
     }
     return rs;
   }

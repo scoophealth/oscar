@@ -72,7 +72,7 @@ public class DBHandler {
 			OpenConn(driverName, dbUrl, theUser, thePwd);
 			// closeConn();
 		} catch (Exception ex) {
-			logger.error("Unexpected error", e);
+			logger.error("Unexpected error", ex);
 		}
 	}
 
