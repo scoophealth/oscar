@@ -47,10 +47,6 @@ public class StudentImportAction extends DispatchAction {
 		logger.info("upload student data");
     	StudentImportBean f = (StudentImportBean)form;
     	FormFile formFile = f.getFile();
-    	String filename=formFile.getFileName();
-    	int filesize=formFile.getFileSize();
-    	String contentType=formFile.getContentType();
-    	
     	String[][] data = ExcelCSVParser.parse(new InputStreamReader(formFile.getInputStream()));
     	
     	List<StudentInfo> studentInfoList = new ArrayList<StudentInfo>();
