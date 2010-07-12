@@ -74,7 +74,7 @@ public class MsgNewMessagesTag extends TagSupport{
       else{
          out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">msg</font>  ");
       }
-   } catch(Exception p){p.printStackTrace(System.out);}
+   } catch(Exception p){ MiscUtils.getLogger().error("Error", p);}
   return(SKIP_BODY);
   }//doStartTag
 

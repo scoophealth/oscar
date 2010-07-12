@@ -51,7 +51,6 @@ public class FrmMentalHealthForm1Record extends FrmRecord {
             props = (new FrmRecordHelp()).getFormRecord(sql);            
         }
 
-        //props.list(System.out);
         return props;
     }
 

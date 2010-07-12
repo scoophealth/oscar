@@ -112,7 +112,6 @@ public class SQLDenominator implements Denominator{
         while(e.hasMoreElements()){
            String processString = (String) e.nextElement();         
            String replaceValue = (String) replacers.get(processString);
-           System.out.println ("key :"+processString+" value :"+replaceValue);
            str = str.replaceAll("\\$\\{"+processString+"\\}", replaceValue);
            MiscUtils.getLogger().debug(str);
            

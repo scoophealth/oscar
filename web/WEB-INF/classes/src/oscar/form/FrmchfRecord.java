@@ -53,7 +53,6 @@ public class FrmchfRecord extends FrmRecord {
             props = (new FrmRecordHelp()).getFormRecord(sql);
         }
 
-        //props.list(System.out);
         return props;
     }
 

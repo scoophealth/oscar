@@ -159,7 +159,7 @@ public  class MsgRemoteMessageData extends Thread{
                fileWriter.write(XMLstring.toString());
                fileWriter.close();
                }
-               catch(java.io.IOException io){ io.printStackTrace(System.out); }
+               catch(java.io.IOException io){ MiscUtils.getLogger().error("Error", io); }
 
                rs_message.close();
                rs_whotoo.close();

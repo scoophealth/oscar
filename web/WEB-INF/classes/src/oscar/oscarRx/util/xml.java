@@ -78,7 +78,6 @@ public class xml {
         catch(Exception e) {
            MiscUtils.getLogger().error("Error", e);
         }
-        System.out.print(ret.toString());
         return ret.toString();
     }
     

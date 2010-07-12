@@ -194,8 +194,8 @@ public class ScheduleOfBenefits {
          double dgpFees = Double.parseDouble(gpFees);
          BigDecimal bd = new BigDecimal(dgpFees);
          bd.setScale(2);
-         System.out.println (feeCode+" "+effectiveDate+" "+terminactionDate+" "+gpFees+" "+assistantCompFee+" "+specFee+" "+anaesthetistFee+" "+nonAnaesthetistFee);
-         System.out.println (feeCode+" "+effectiveDate+" "+terminactionDate+" "+getJBD(gpFees)+" "+getJBD(assistantCompFee)+" "+getJBD(specFee)+" "+getJBD(anaesthetistFee)+" "+getJBD(nonAnaesthetistFee));
+         MiscUtils.getLogger().debug(feeCode+" "+effectiveDate+" "+terminactionDate+" "+gpFees+" "+assistantCompFee+" "+specFee+" "+anaesthetistFee+" "+nonAnaesthetistFee);
+         MiscUtils.getLogger().debug(feeCode+" "+effectiveDate+" "+terminactionDate+" "+getJBD(gpFees)+" "+getJBD(assistantCompFee)+" "+getJBD(specFee)+" "+getJBD(anaesthetistFee)+" "+getJBD(nonAnaesthetistFee));
          MiscUtils.getLogger().debug(dgpFees+" "+(dgpFees/10000)+" "+bd.toString());
          
       }

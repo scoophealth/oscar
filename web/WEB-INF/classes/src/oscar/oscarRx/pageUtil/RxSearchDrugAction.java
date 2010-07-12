@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.util.RxDrugRef;
@@ -72,9 +73,8 @@ public final class RxSearchDrugAction extends DispatchAction {
 		} else {
                     drugSearch = drugData.listDrug(searchString);
                 }
-            }catch(Exception connEx){                
-                System.out.print(connEx.getMessage());
-                connEx.printStackTrace();
+            }catch(Exception connEx){
+            	MiscUtils.getLogger().error("Error", connEx);
             }
             request.setAttribute("drugSearch", drugSearch);
             request.setAttribute("demoNo", reqForm.getDemographicNo());

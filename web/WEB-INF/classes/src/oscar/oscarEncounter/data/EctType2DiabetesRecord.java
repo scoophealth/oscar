@@ -75,7 +75,6 @@ public class EctType2DiabetesRecord {
             }
             rs.close();
         }
-        props.list(System.out);
         return props;
     }
 

@@ -87,8 +87,7 @@ public class TeleplanLogDAO {
             }
             pstmt.close();
          }catch (SQLException e) {
-            System.out.append("LOG LIST NULL?"+list); 
-            MiscUtils.getLogger().error("Error", e);
+            MiscUtils.getLogger().error("LOG LIST NULL?"+list, e);
          }
         
     }

@@ -297,7 +297,7 @@ public class MammogramReport implements PreventionReport{
               
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
               //NO Contact
-              System.out.print("fluFollowupData size = "+followupData.size());
+
               if ( followupData.size() == 0 ){
                   prd.nextSuggestedProcedure = this.LETTER1;
                   return this.LETTER1;
@@ -354,7 +354,7 @@ public class MammogramReport implements PreventionReport{
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
-              System.out.print("fluFollowupData size = "+followupData.size());
+
               if ( followupData.size() > 0 ){
                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
                   prd.lastFollowup = measurementData.getDateObservedAsDate();
@@ -372,7 +372,7 @@ public class MammogramReport implements PreventionReport{
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
               log.debug("getting followup data for "+prd.demographicNo);
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
-              System.out.print("fluFollowupData size = "+followupData.size());
+
               if ( followupData.size() > 0 ){
                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
                   prd.lastFollowup = measurementData.getDateObservedAsDate();

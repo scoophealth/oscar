@@ -160,8 +160,7 @@ public class PreventionDisplayConfig {
                }else{
                   h.put(att.getName(),att.getValue() );
                }
-               
-               System.out.print(att.getName()+" "+att.getValue() );               
+                              
             }                        
             configList.add(h);        
             configHash.put(h.get("title"), h);            

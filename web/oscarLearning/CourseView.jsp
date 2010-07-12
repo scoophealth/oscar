@@ -38,8 +38,6 @@
 <%
 	//get list of courses for the drop down
 	List<Program> courses = org.oscarehr.learning.web.CourseManagerAction.getCoursesByModerator();
-	System.out.println(courses);
-
 %>
 <html:html locale="true">
 

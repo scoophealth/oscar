@@ -55,7 +55,7 @@ public class FrmStudyPING_DiabetesRecord extends FrmStudyRecord {
                 + demographicNo + " AND ID = " + existingID;
 			props = (new oscar.form.FrmRecordHelp()).getFormRecord(sql);
         }
-        //props.list(System.out);
+
         return props;
     }
     

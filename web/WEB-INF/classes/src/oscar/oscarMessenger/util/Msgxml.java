@@ -95,8 +95,6 @@ public class Msgxml
            MiscUtils.getLogger().error("Error", e);
         }
 
-        System.out.print(ret.toString());
-
         return ret.toString();
     }
 

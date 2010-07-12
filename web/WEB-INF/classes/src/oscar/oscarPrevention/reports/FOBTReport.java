@@ -305,7 +305,7 @@ public class FOBTReport implements PreventionReport{
               
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
               //NO Contact
-              System.out.print("fluFollowupData size = "+followupData.size());
+              
               if ( followupData.size() == 0 ){
                   prd.nextSuggestedProcedure = this.LETTER1;
                   return this.LETTER1;

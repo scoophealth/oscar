@@ -353,7 +353,6 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             
             ///
             XMLOutputter outp = new XMLOutputter();
-            //outp.output(root, System.out);
  
             
             ///
@@ -603,15 +602,12 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             
             ByteArrayOutputStream byteArrayout = new ByteArrayOutputStream();
             outp.output(va, byteArrayout);
-
-            //outp.output(va,System.out);
  
             InputStream is = new ByteArrayInputStream(byteArrayout.toByteArray());
 
             EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
             MeasurementFlowSheet d = createflowsheet(mType,is);
 
-            //outp.output(getExportFlowsheet( d),System.out);
             return d;
             
     }

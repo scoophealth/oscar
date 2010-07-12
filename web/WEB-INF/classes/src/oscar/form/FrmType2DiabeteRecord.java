@@ -48,7 +48,6 @@ public class FrmType2DiabeteRecord extends FrmRecord {
             props = (new FrmRecordHelp()).getFormRecord(sql);
         }
 
-        //props.list(System.out);
         return props;
     }
 

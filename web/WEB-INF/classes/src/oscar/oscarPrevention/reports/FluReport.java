@@ -219,7 +219,7 @@ public class FluReport implements PreventionReport {
                 EctMeasurementsDataBeanHandler measurementData = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
                 log.debug("getting FLUF data for "+prd.demographicNo);
                 Collection fluFollowupData = measurementData.getMeasurementsDataVector();
-                System.out.print("fluFollowupData size = "+fluFollowupData.size());
+
                 if ( fluFollowupData.size() > 0 ){
                       EctMeasurementsDataBean fluData = (EctMeasurementsDataBean) fluFollowupData.iterator().next();
                       log.debug("fluData "+fluData.getDataField());
@@ -375,7 +375,7 @@ public class FluReport implements PreventionReport {
               
               Collection fluFollowupData = measurementData.getMeasurementsDataVector();
               //NO Contact
-              System.out.print("fluFollowupData size = "+fluFollowupData.size());
+
               if ( fluFollowupData.size() == 0 ){
                   prd.nextSuggestedProcedure = this.LETTER1;
                   return this.LETTER1;
@@ -414,7 +414,7 @@ public class FluReport implements PreventionReport {
               EctMeasurementsDataBeanHandler measurementData = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
               log.debug("getting FLUF data for "+prd.demographicNo);
               Collection fluFollowupData = measurementData.getMeasurementsDataVector();
-              System.out.print("fluFollowupData size = "+fluFollowupData.size());
+
               if ( fluFollowupData.size() > 0 ){
                   EctMeasurementsDataBean fluData = (EctMeasurementsDataBean) fluFollowupData.iterator().next();
                   log.debug("fluData "+fluData.getDataField());
@@ -431,7 +431,7 @@ public class FluReport implements PreventionReport {
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
               log.debug("getting followup data for "+prd.demographicNo);
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
-              System.out.print("fluFollowupData size = "+followupData.size());
+
               if ( followupData.size() > 0 ){
                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
                   prd.lastFollowup = measurementData.getDateObservedAsDate();

@@ -199,7 +199,7 @@ public class DemographicExportAction extends Action {
       outp.setFormat(Format.getPrettyFormat());
             
       try{
-      //outp.output(doc, System.out);
+
          response.setContentType("application/octet-stream");
          response.setHeader("Content-Disposition", "attachment; filename=\"export-"+setName+"-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".xml\"" );
          

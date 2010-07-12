@@ -52,7 +52,6 @@ public class BillingReProcessBillAction extends Action {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-        System.out.print("BillingReProcessBillAction Jackson");
         if(request.getSession().getAttribute("user") == null  ){
             return (mapping.findForward("Logout"));
         }

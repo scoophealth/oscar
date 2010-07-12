@@ -113,7 +113,6 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                     result = (String)hExt.get("result");
 
                     date = (Date)hdata.get("prevention_date_asDate");
-                    System.out.println("Prevention Date " +  date);
                     item.setDate(date);
                     if( date == null ) {
                         serviceDateStr = "";

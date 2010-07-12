@@ -210,7 +210,6 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             props = (new FrmRecordHelp()).getFormRecord(sql);
         }
 
-        //props.list(System.out);
         return props;
     }
 
@@ -243,7 +242,6 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             props = (new FrmRecordHelp()).getFormRecord(sql);
         }
 
-        //props.list(System.out);
         return props;
     }
 

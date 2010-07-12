@@ -93,8 +93,6 @@ public class GenerateTeleplanFileAction extends Action{
             pdArr[i] = new ProviderData(provNo);
         }
         
-        System.out.print("sending "+pdArr.length+ " to submission");
-        
         //This needs to be replaced for sim
         boolean testRun = false;
         //To prevent multiple submissions being generated at the same time

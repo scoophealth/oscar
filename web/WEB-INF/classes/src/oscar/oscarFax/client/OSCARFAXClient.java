@@ -86,7 +86,6 @@ public class OSCARFAXClient {
     public boolean handleResponse(SOAPMessage msg){
         boolean retval = false;
         try{
-            msg.writeTo(System.out);
             SOAPEnvelope enve = msg.getSOAPPart().getEnvelope();
             SOAPBody bod1 = enve.getBody();
                                              
@@ -119,7 +118,8 @@ public class OSCARFAXClient {
                 SOAPElement SBE2 = ( SOAPElement )  subMain.next();                
                 retval = SBE2.getValue();                    
             }                              
-        }catch(Exception e){System.out.print("I had probs with "+currNode);}
+        }catch(Exception e){
+        	MiscUtils.getLogger().error("I had probs with "+currNode, e);}
         return retval;
     }  
     

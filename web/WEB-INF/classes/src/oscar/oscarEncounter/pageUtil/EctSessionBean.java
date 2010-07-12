@@ -251,7 +251,6 @@ public class EctSessionBean {
                 this.appointmentNo = appointmentNo;
                 reason = db.getString(rs,"reason");
                 encType = new String("face to face encounter with client");
-                System.out.println("SETTING FACE TO FACE");
                 appointmentDate = db.getString(rs,"appointment_date");
                 startTime = db.getString(rs,"start_time");
                 status = db.getString(rs,"status");

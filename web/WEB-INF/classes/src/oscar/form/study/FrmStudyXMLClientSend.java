@@ -178,7 +178,7 @@ public class FrmStudyXMLClientSend {
 			
 			URLEndpoint endPoint = new URLEndpoint (URLService);  //"https://67.69.12.115:8443/OscarComm/DummyReceiver");
 			SOAPMessage reply = connection.call(message, endPoint);
-//			message.writeTo(System.out);
+
 			connection.close();
 		} catch (Throwable e)	{
 			MiscUtils.getLogger().error("Error", e);

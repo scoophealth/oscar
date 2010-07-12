@@ -159,18 +159,15 @@ public class EctAnnualRecord
                         if(value.equalsIgnoreCase("on"))
                         {
                             rs.updateInt(name, 1);
-			    System.out.print("annHealth na = "+name+" = 1");
                         }
                         else
                         {
                             rs.updateInt(name, 0);
-			    System.out.print("annHealth na = "+name+" = 0");
                         }
                     }
                     else
                     {
                         rs.updateInt(name, 0);
-			System.out.print("this is why it doesn't work");
                     }
                 }
                 else

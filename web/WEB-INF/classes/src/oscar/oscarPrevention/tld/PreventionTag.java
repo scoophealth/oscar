@@ -80,7 +80,7 @@ public class PreventionTag extends TagSupport {
             else
                 out.print("<span>  ");
         } catch(Exception eWriter) {
-            eWriter.printStackTrace(System.out);
+        	MiscUtils.getLogger().error("Error", eWriter);
         }        
         return(EVAL_BODY_INCLUDE);
     }
