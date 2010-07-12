@@ -59,8 +59,8 @@ if(listRxDrugs!=null){
          boolean pastMed        = rx.getPastMed();
          String quantity        = rx.getQuantity();
          String quantityText="";
-
-         if(rx.getUnitName()==null || rx.getUnitName().equalsIgnoreCase("null")){
+         String unitName=rx.getUnitName();
+         if(unitName==null || unitName.equalsIgnoreCase("null") || unitName.trim().length()==0){
              quantityText=quantity;
          }
          else{
@@ -86,8 +86,6 @@ if(listRxDrugs!=null){
              isOutsideProvider=false;
          }
          if(route==null || route.equalsIgnoreCase("null")) route="";
-         String rxString="Method:"+method+"; Route:"+route+"; Frequency:"+frequency+"; Min:"+takeMin+"; Max:"
-                    +takeMax+"; Duration:"+duration+"; DurationUnit:"+durationUnit+"; Quantity:"+quantityText;
                     String methodStr = method;
                     String routeStr = route;
                     String frequencyStr = frequency;
@@ -136,7 +134,7 @@ if(listRxDrugs!=null){
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('duration_<%=rand%>')">Duration:</a><a  id="duration_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationStr%></a>
            <a tabindex="-1" href="javascript:void(0);" onclick="focusTo('durationUnit_<%=rand%>')">DurationUnit:</a><a  id="durationUnit_<%=rand%>" onclick="focusTo(this.id) " onfocus="lookEdittable(this.id)" onblur="lookNonEdittable(this.id);updateProperty(this.id);"> <%=durationUnitStr%></a>
            <a tabindex="-1" >Qty/Mitte:</a><a tabindex="-1" id="quantityStr_<%=rand%>"> <%=quantityStr%></a>
-           <a> </a><a tabindex="-1" id="unitName_<%=rand%>"> <%=unitNameStr%></a>
+           <a> </a><a tabindex="-1" id="unitName_<%=rand%>"> </a>
            <a> </a><a tabindex="-1" href="javascript:void(0);" id="prn_<%=rand%>" onclick="setPrn('<%=rand%>');updateProperty('prnVal_<%=rand%>');"><%=prnStr%></a>
            <input id="prnVal_<%=rand%>"  style="display:none" <%if(prnStr.trim().length()==0){%>value="false"<%} else{%>value="true" <%}%> />
        </div>
@@ -232,12 +230,12 @@ if(listRxDrugs!=null){
             checkIfInactive('<%=rand%>','<%=rx.getRegionalIdentifier()%>');
 
             var isDiscontinuedLatest=<%=isDiscontinuedLatest%>;
-            oscarLog("isDiscon "+isDiscontinuedLatest);
+            //oscarLog("isDiscon "+isDiscontinuedLatest);
             //pause(1000);
             if(isDiscontinuedLatest){
                var archD='<%=archivedDate%>';
                var archR='<%=archivedReason%>';
-               oscarLog("in js discon "+archR+"--"+archD);
+               //oscarLog("in js discon "+archR+"--"+archD);
 
                     if(confirm('This drug was discontinued on <%=archivedDate%> because of <%=archivedReason%> are you sure you want to continue it?')==true){
                         //do nothing
@@ -250,14 +248,14 @@ if(listRxDrugs!=null){
                     }
             }
             var listRxDrugSize=<%=listRxDrugs.size()%>;
-            oscarLog("listRxDrugsSize="+listRxDrugSize);
+            //oscarLog("listRxDrugsSize="+listRxDrugSize);
             counterRx++;
-            oscarLog("counterRx="+counterRx);
+            //oscarLog("counterRx="+counterRx);
            var gcn_val=<%=gcn%>;
            if(gcn_val==0){
                $('drugName_<%=rand%>').focus();
            } else if(counterRx==listRxDrugSize){
-               oscarLog("counterRx="+counterRx+"--listRxDrugSize="+listRxDrugSize);
+               //oscarLog("counterRx="+counterRx+"--listRxDrugSize="+listRxDrugSize);
                $('instructions_<%=rand%>').focus();
            }
 
