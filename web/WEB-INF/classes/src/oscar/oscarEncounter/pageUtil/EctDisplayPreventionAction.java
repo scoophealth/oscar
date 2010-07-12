@@ -88,14 +88,14 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         ArrayList prevList = pdc.getPreventions();
         Hashtable warningTable = p.getWarningMsgs();    
         
-        int hash; 
-        String dbFormat = "yyyy-MM-dd";
+         
+        
         String serviceDateStr;
         String highliteColour = "FF0000";
         String inelligibleColour = "FF6600";
         String pendingColour = "FF00FF";
         Date date = null;
-        Date defaultDate = new Date(System.currentTimeMillis());
+        //Date defaultDate = new Date(System.currentTimeMillis());
         url += "; return false;";
         ArrayList warnings = new ArrayList();
         ArrayList items = new ArrayList();
