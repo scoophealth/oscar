@@ -72,7 +72,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
             throws SAXException {
         System.out.println("startElement: localName " + localName + " rawName " + rawName);
-        String starttag, endtag, savedriskname, riskName, clName;
+        String starttag, endtag, riskName, clName;
 
         if ((rawName.toLowerCase()).equals("section")) {
             sectionno = "";
@@ -199,7 +199,7 @@ public class DesAnnualReviewPlannerChecklistHandler extends DefaultHandler {
     }
 
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-        String s = new String(ch, start, length);
+        new String(ch, start, length);
 
     }
 
