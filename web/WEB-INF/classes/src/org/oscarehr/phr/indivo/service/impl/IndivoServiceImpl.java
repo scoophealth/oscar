@@ -128,7 +128,7 @@ public class IndivoServiceImpl  implements PHRService{
     }
     
     public boolean validAuthentication(PHRAuthentication auth){
-        Date now= new Date();
+      
         if (auth == null){
             return false;
         }//else if ( now.after(auth.getExpirationDate() )){
@@ -339,7 +339,7 @@ public class IndivoServiceImpl  implements PHRService{
                 
                 PHRMessage mess =  new PHRMessage(indivoDoc);
                 
-                String oscarId   =  mess.getSenderOscar();
+               
                 //second check for known demographics
                 //this if statement can replace both checks  if ((dd.getDemographic(mess.getSenderOscar()) == null) && (dd.getDemographic(mess.getReceiverOscar()) == null))
                 if (sendingDocument && dd.getDemographicNoByPIN(mess.getReceiverPhr()).equals(""))
