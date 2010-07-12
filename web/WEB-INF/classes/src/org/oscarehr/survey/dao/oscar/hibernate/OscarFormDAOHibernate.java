@@ -174,7 +174,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		
 		int page=1;
 		int section=0;
-		String id="";
+		
 		for(Page p:model.getSurvey().getBody().getPageArray()) {
 			section=0;
 			
