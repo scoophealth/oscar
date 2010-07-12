@@ -139,9 +139,7 @@ public class WriteNewMeasurements {
                 String inputValue = (String) measure.get("value");
                 String dateObserved = (String) measure.get("dateObserved");
                 String comments = (String) measure.get("comments");
-                String dateEntered = (String) measure.get("dateEntered");
                 String mInstrc, regCharExp;
-                String msg = null;
                 String regExp = null;
                 double dMax = 0;
                 double dMin = 0;
