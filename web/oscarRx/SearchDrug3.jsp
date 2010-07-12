@@ -1497,7 +1497,7 @@ YAHOO.example.FnMultipleFields = function(){
     // when an item gets selected and populate the input field
     //var myHiddenField = YAHOO.util.Dom.get("myHidden");
     var myHandler = function(type, args) {
-                    oscarLog(type+" :: "+args);
+                    //oscarLog(type+" :: "+args);
                     //oscarLog(args[2]);
                     var arr = args[2];
                     //oscarLog('In yahoo----'+arr.name);
@@ -1515,7 +1515,14 @@ YAHOO.example.FnMultipleFields = function(){
 
    };
     oAC.itemSelectEvent.subscribe(myHandler);
-
+    var collapseFn=function(){
+        $('autocomplete_choices').hide();
+    }
+    oAC.containerCollapseEvent.subscribe(collapseFn);
+    var expandFn=function(){
+        $('autocomplete_choices').show();
+    }
+    oAC. dataRequestEvent.subscribe(expandFn);
     return {
         oDS: oDS,
         oAC: oAC
