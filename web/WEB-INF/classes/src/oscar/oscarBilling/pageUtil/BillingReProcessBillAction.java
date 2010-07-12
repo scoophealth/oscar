@@ -61,9 +61,9 @@ public class BillingReProcessBillAction extends Action {
         GregorianCalendar now=new GregorianCalendar();
         int curYear = now.get(Calendar.YEAR);
         int curMonth = (now.get(Calendar.MONTH)+1);
-        int curDay = now.get(Calendar.DAY_OF_MONTH);
+        int curDay = now.get(Calendar.DAY_OF_MONTH);  
         String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) + "-" + String.valueOf(curDay);
-        String billingid = "";
+       
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");                                                
         
         String billingmasterNo = frm.getBillingmasterNo();
@@ -113,7 +113,6 @@ public class BillingReProcessBillAction extends Action {
         String serviceStartTime =frm.getStartTime();//f
         String serviceEndTime = frm.getFinishTime();//f
         String birthDate = demo.getDob();//d
-        String office_number = "";
         String correspondenceCode = frm.getCorrespondenceCode();//f
         String claimComment = frm.getShortComment();//f
         
@@ -137,7 +136,6 @@ public class BillingReProcessBillAction extends Action {
         String hcType = demo.getHCType(); //d
         String billRegion =OscarProperties.getInstance().getProperty("billregion");
         ////
-            String billType = request.getParameter("billType");  
             
         String submit = frm.getSubmit();
         String secondSQL = null;
