@@ -152,7 +152,7 @@ public class EctSessionBean {
                 }
             }
             rs.close();
-            UtilDateUtilities dateUtil = new UtilDateUtilities();
+            
             if(yearOfBirth!="" && yearOfBirth!=null)
             	patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
@@ -338,7 +338,7 @@ public class EctSessionBean {
                 }
             }
             rs.close();
-            UtilDateUtilities dateUtil = new oscar.util.UtilDateUtilities();
+            
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
         } catch (java.sql.SQLException e) {
@@ -354,7 +354,7 @@ public class EctSessionBean {
     public void setUpEncounterPage(String echartid, String demographicNo) {
         resetAll();
 
-        String tmp;
+        
         DBHandler db = null;
         ResultSet rs;
         String sql;
@@ -407,7 +407,7 @@ public class EctSessionBean {
                 }
             }
             rs.close();
-            UtilDateUtilities dateUtil = new oscar.util.UtilDateUtilities();
+            
             patientAge = UtilDateUtilities
                     .calcAge(UtilDateUtilities.calcDate(yearOfBirth, monthOfBirth, dateOfBirth));
         } catch (java.sql.SQLException e) {
