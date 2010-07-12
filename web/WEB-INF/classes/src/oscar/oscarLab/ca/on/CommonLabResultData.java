@@ -279,7 +279,7 @@ public class CommonLabResultData {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
             String[] providersArray = selectedProviders.split(",");
-            String insertString = "";
+           
             CommonLabResultData data = new CommonLabResultData();
             ProviderLabRouting plr = new ProviderLabRouting();
            //MiscUtils.getLogger().info(flaggedLabs.size()+"--");
@@ -327,8 +327,7 @@ public class CommonLabResultData {
 
     ////
     public static boolean fileLabs(ArrayList flaggedLabs, String provider) {
-        boolean result;
-        ArrayList matchingLabs;
+        
         CommonLabResultData data = new CommonLabResultData();
 
         Properties props = OscarProperties.getInstance();
