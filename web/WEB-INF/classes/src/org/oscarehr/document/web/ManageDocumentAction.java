@@ -117,9 +117,9 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, documentId, request.getRemoteAddr());
 
         String demog = request.getParameter("demog");
-        String demographicKeyword = request.getParameter("demographicKeyword");
+        
         String[] flagproviders = request.getParameterValues("flagproviders");
-        String demoLink=request.getParameter("demoLink");
+        //String demoLink=request.getParameter("demoLink");
 
 
         //TODO: if demoLink is "on", check if msp is in flagproviders, if not save to providerInboxRouting, if yes, don't save.
@@ -191,9 +191,9 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, documentId, request.getRemoteAddr());
 
         String demog = request.getParameter("demog");
-        String demographicKeyword = request.getParameter("demographicKeyword");
+        
         String[] flagproviders = request.getParameterValues("flagproviders");
-        String demoLink=request.getParameter("demoLink");
+        //String demoLink=request.getParameter("demoLink");
 
 
         //TODO: if demoLink is "on", check if msp is in flagproviders, if not save to providerInboxRouting, if yes, don't save.
