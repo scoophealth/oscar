@@ -34,6 +34,8 @@ import java.sql.SQLException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -59,7 +61,7 @@ public class UnclaimedLabTag extends TagSupport {
             }
             rs.close();
         }catch(SQLException e){
-           e.printStackTrace(System.out);
+          MiscUtils.getLogger().error("Error", e);
         }
         
         if(numNewLabs > 0){

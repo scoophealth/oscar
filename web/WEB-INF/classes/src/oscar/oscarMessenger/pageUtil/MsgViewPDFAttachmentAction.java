@@ -34,6 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -61,7 +62,7 @@ public class MsgViewPDFAttachmentAction extends Action {
               pdfAtt = db.getString(rs,"pdfattachment");
         }//while
         rs.close();
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
     request.setAttribute("PDFAttachment", pdfAtt);
     request.setAttribute("attId",attachId);

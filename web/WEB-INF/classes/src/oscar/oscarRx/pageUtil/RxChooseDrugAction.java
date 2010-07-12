@@ -33,6 +33,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -133,7 +134,7 @@ public final class RxChooseDrugAction extends Action {
             //    p("bean.getStashIndex: "+bean.getStashIndex());
             }
             catch (Exception e){
-                e.printStackTrace(System.out);
+               MiscUtils.getLogger().error("Error", e);
             }
 
 		return (mapping.findForward("success"));

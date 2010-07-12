@@ -18,10 +18,12 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.crystaldecisions.report.web.viewer.CrPrintMode;
@@ -44,6 +46,8 @@ import com.quatro.service.QuatroReportManager;
 import com.quatro.util.Utility;
 
 public class QuatroReportViewerAction extends Action {
+	
+	private static Logger logger=MiscUtils.getLogger();
 	ReportValue _rptValue;
     ReportOptionValue _rptOption;
 //	protected CrystalDecisions.CrystalReports.Engine.ReportDocument reportDocument1;
@@ -131,7 +135,7 @@ public class QuatroReportViewerAction extends Action {
                PaintReport(request, response, startPayPeriod, endPayPeriod, orgs, criteria, dateRangeDis, orgDis, criteriaDis);
             }
 		}catch(Exception e){
-			System.out.println("Validation Error Detected:<BR>" + e.toString());
+			logger.error("Validation Error Detected", e);
 		}
 
 	}
@@ -586,8 +590,8 @@ public class QuatroReportViewerAction extends Action {
           }
           crystalReportViewer.dispose(); 
 
-      }catch(Exception ex2) {
-         System.out.println(ex2.toString());
+      }catch(Exception e) {
+    	  logger.error("Error", e);
       }    
         
    }
@@ -853,10 +857,9 @@ public class QuatroReportViewerAction extends Action {
           }
           crystalReportViewer.dispose(); 
 
-      }catch(Exception ex2) {
-         System.out.println(ex2.toString());
-      }    
-
+        }catch(Exception e) {
+      	  logger.error("Error", e);
+        }    
    }
 	
 }

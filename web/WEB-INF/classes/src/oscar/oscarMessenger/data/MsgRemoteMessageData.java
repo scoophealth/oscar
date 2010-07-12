@@ -163,7 +163,7 @@ public  class MsgRemoteMessageData extends Thread{
 
                rs_message.close();
                rs_whotoo.close();
-            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+            }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
             return XMLstring.toString();
          }

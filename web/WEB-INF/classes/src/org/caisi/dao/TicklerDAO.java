@@ -118,7 +118,6 @@ public class TicklerDAO extends HibernateDaoSupport {
             String query = "select count(*) from Tickler t where t.service_date >= ? and t.service_date <= ? ";   
             query = getTicklerQueryString(query,  paramList,  filter);
             Object params[] = paramList.toArray(new Object[paramList.size()]);
-            listParams(params);
             Long count = (Long) getHibernateTemplate().find(query ,params).get(0);
             return count.intValue();
      }
@@ -209,21 +208,7 @@ public class TicklerDAO extends HibernateDaoSupport {
                     paramList.add(filter.getDemographic_no());
             }
             return query;
-    }
-   
-     
-    
-
-
-    private void listParams(Object params[]){
-        for(Object obj: params){
-            System.out.print("Object Type:"+obj.getClass().getName());
-            System.out.print(" "+obj.toString());
-            System.out.println("");
-        }
-        
-    }
-    
+    }    
     
     private void updateTickler(Long tickler_id, String provider, char status) {
         Tickler tickler = this.getTickler(tickler_id);

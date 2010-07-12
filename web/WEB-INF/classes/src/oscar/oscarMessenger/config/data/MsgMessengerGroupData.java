@@ -31,6 +31,8 @@ import java.util.ResourceBundle;
 
 import javax.servlet.jsp.JspWriter;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
  * <p>Title: </p>
@@ -60,7 +62,7 @@ public class MsgMessengerGroupData {
                     retval = db.getString(rs,"groupDesc");
                  }
               rs.close();
-         }catch (Exception e){ e.printStackTrace(System.out); }
+         }catch (Exception e){MiscUtils.getLogger().error("Error", e); }
       }
 
 
@@ -79,7 +81,7 @@ public class MsgMessengerGroupData {
                  retval = db.getString(rs,"parentID");
               }
            rs.close();
-         }catch (Exception e){ e.printStackTrace(System.out); }
+         }catch (Exception e){MiscUtils.getLogger().error("Error", e); }
       return retval;
    }
 
@@ -99,7 +101,7 @@ public class MsgMessengerGroupData {
                  numGroups++;
               }
            rs.close();
-      }catch (Exception e){ e.printStackTrace(System.out); }
+      }catch (Exception e){MiscUtils.getLogger().error("Error", e); }
    return stringBuffer.toString();
    }
 
@@ -117,7 +119,7 @@ public class MsgMessengerGroupData {
           groupMemberVector.add(db.getString(rs,"provider_No"));
         }
         rs.close();
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
       return groupMemberVector;
    }
@@ -176,7 +178,7 @@ public class MsgMessengerGroupData {
 
 
               rs.close();
-          }catch (Exception e){ e.printStackTrace(System.out); }
+          }catch (Exception e){MiscUtils.getLogger().error("Error", e); }
 
    }
 
@@ -201,7 +203,7 @@ public class MsgMessengerGroupData {
                  }
               rs.close();
            }
-         }catch (Exception e){ e.printStackTrace(System.out); }
+         }catch (Exception e){MiscUtils.getLogger().error("Error", e); }
          stringBuffer.insert(0,"<a href=\"MessengerAdmin.jsp?groupNo=0\">Root</a>");
          return stringBuffer.toString();
    }

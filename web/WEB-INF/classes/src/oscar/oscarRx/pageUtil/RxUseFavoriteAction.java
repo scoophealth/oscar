@@ -80,7 +80,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
             request.setAttribute("BoxNoFillFirstLoad", "true");
         }
         catch (Exception e) {
-            e.printStackTrace(System.out);
+           MiscUtils.getLogger().error("Error", e);
         }
         
         return (mapping.findForward("success"));
@@ -134,7 +134,7 @@ public final class RxUseFavoriteAction extends DispatchAction {
             request.setAttribute("BoxNoFillFirstLoad", "true");
         }
         catch (Exception e) {
-            e.printStackTrace(System.out);
+           MiscUtils.getLogger().error("Error", e);
         }
 
         RxUtil.printStashContent(bean);

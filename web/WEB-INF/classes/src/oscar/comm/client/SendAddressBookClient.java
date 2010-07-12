@@ -43,7 +43,7 @@ public class SendAddressBookClient {
 
         try {
             db = new DBHandler(databaseURL, databaseName);
-            System.out.println("");
+            
 
             String sql = "SELECT remoteServerURL FROM oscarcommlocations WHERE current1 = 1";
             ResultSet rs = db.GetSQL(sql);

@@ -26,6 +26,8 @@ package oscar.oscarMessenger.pageUtil;
 
 import java.util.Hashtable;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class MsgDisplayMessagesBean {
@@ -105,7 +107,7 @@ public class MsgDisplayMessagesBean {
                 currentLocationId = db.getString(rs,"locationId");
               }
               rs.close();
-            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+            }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
         }
         return currentLocationId;
   }
@@ -281,7 +283,7 @@ public class MsgDisplayMessagesBean {
 
        rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
   }//getMessageIDs
 ////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +376,7 @@ public class MsgDisplayMessagesBean {
 
        rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
     return msg;
   }
@@ -446,7 +448,7 @@ public java.util.Vector estDemographicInbox(){
 
        rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
     return msg;
   }
@@ -510,7 +512,7 @@ public java.util.Vector estDemographicInbox(){
 
        rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
     return msg;
   }
@@ -544,7 +546,7 @@ public java.util.Vector estDemographicInbox(){
 
        rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
   }//getDeletedMessageIDs
 
@@ -581,7 +583,7 @@ public java.util.Vector estDemographicInbox(){
 
        rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
   }//getSentMessageIDs
 
@@ -635,7 +637,7 @@ public java.util.Vector estDemographicInbox(){
 
        rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
     return msg;
   }
@@ -692,7 +694,7 @@ public java.util.Vector estDemographicInbox(){
            }//while
         rs.close();
 
-    }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+    }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
   } //getInfo
 
 }//DisplayMessageBean

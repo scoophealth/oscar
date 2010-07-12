@@ -273,7 +273,7 @@ public class EctSaveEncounterAction
       dbhandler.RunSQL(s);
     }
     catch (Exception e) {
-      e.printStackTrace(System.out);
+     MiscUtils.getLogger().error("Error", e);
     }
 
     String forward = null;

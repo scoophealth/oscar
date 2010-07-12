@@ -23,6 +23,8 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class MsgDocListForm {
@@ -113,7 +115,7 @@ public class MsgDocListForm {
 
        rs.close();
 
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
   }//setUpDaVectorJaySTyle
 
 

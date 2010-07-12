@@ -25,6 +25,7 @@
 package oscar.oscarMessenger.data;
 import java.sql.ResultSet;
 
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -77,7 +78,7 @@ public class MsgMessageData {
                 currentLocationId = db.getString(rs,"locationId");
               }
               rs.close();
-            }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+            }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
         }
         return currentLocationId;
     }
@@ -152,7 +153,7 @@ public class MsgMessageData {
 
         rs.close();
 
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
 
 
@@ -205,7 +206,7 @@ public class MsgMessageData {
 
         rs.close();
 
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
 
 
@@ -253,7 +254,7 @@ public class MsgMessageData {
              db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status) values ('"+messageid+"','"+providers[i]+"','new')");
           }
 
-       }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+       }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
       return messageid;
     }//=------------------------------------------------------------------------
 
@@ -314,7 +315,7 @@ public class MsgMessageData {
             db.queryExecuteUpdate("insert into messagelisttbl (message,provider_no,status,remoteLocation) values ('"+messageid+"','"+providerData.providerNo+"','new','"+providerData.locationId+"')");
          }
 
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
       return messageid;
     }//=------------------------------------------------------------------------
 
@@ -429,7 +430,7 @@ public class MsgMessageData {
                theAddressBook = db.getString(rs,"addressBook");
             }
             rs.close();
-        }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+        }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
         // get a node list of all the providers for that addressBook then search for ones i need
 
         Document xmlDoc = Msgxml.parseXML(theAddressBook);

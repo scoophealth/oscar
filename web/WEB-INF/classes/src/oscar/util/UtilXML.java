@@ -114,7 +114,7 @@ public class UtilXML {
          trans.transform(src, rslt);
       }
       catch(Exception e) {
-         e.printStackTrace(System.out);
+        MiscUtils.getLogger().error("Error", e);
       }
       return ret.toString();
    }

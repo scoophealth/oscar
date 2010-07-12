@@ -57,7 +57,7 @@ public class ScratchTag extends TagSupport {
 
             rs.close();
         }      catch(SQLException e)        {
-            e.printStackTrace(System.out);
+           MiscUtils.getLogger().error("Error", e);
         }
 */
     	if(providerNo!=null){

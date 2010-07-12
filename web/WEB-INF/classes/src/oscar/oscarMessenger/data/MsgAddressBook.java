@@ -26,6 +26,7 @@ package oscar.oscarMessenger.data;
 
 import javax.servlet.jsp.JspWriter;
 
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -78,7 +79,7 @@ public class MsgAddressBook {
                CurrentLocationName = db.getString(rs,"locationDesc");
             }
             rs.close();
-         }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+         }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
       return retval;
    }
@@ -104,7 +105,7 @@ public class MsgAddressBook {
                remoteLocationId.add(db.getString(rs,"locationId"));
             }
             rs.close();
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
 
       return vector;
@@ -187,7 +188,7 @@ public class MsgAddressBook {
             }
          }
 
-       }catch(Exception e){ e.printStackTrace(System.out); }
+       }catch(Exception e){MiscUtils.getLogger().error("Error", e); }
    }
 //------------------------------------------------------------------------------------------------------------
 
@@ -260,7 +261,7 @@ public class MsgAddressBook {
             }
          }
 
-       }catch(Exception e){ e.printStackTrace(System.out); }
+       }catch(Exception e){MiscUtils.getLogger().error("Error", e); }
    }
 //------------------------------------------------------------------------------------------------------------
 
@@ -334,7 +335,7 @@ public class MsgAddressBook {
             }
          }
 
-       }catch(Exception e){ e.printStackTrace(System.out); }
+       }catch(Exception e){MiscUtils.getLogger().error("Error", e); }
    }
 //------------------------------------------------------------------------------------------------------------
 

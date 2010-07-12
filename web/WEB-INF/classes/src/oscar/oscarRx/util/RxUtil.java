@@ -39,8 +39,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
-import oscar.oscarRx.data.RxPrescriptionData;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,9 +51,11 @@ import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarRx.data.RxCodesData;
+import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.pageUtil.RxMyDrugrefInfoAction;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 import oscar.oscarRx.util.TimingOutCallback.TimeoutException;

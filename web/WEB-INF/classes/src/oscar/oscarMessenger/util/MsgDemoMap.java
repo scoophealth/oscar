@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 /**
  *
@@ -42,7 +44,7 @@ public class MsgDemoMap {
             db.RunSQL(sql);
         }
         catch (java.sql.SQLException e){ 
-            e.printStackTrace(System.out); 
+           MiscUtils.getLogger().error("Error", e); 
         }
     }
     

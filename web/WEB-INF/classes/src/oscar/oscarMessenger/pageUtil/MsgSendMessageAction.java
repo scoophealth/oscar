@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -135,7 +136,7 @@ public class MsgSendMessageAction extends Action {
               }
         rs.close();
 
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
        MsgSentMessageForm  trial = new MsgSentMessageForm();
         trial.setSample(sentToWho.toString());
@@ -169,7 +170,7 @@ public class MsgSendMessageAction extends Action {
               }
         rs.close();
 
-      }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+      }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
 
             // for (int i =0 ; i < providers.length ; i++)
             // {

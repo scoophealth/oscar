@@ -29,12 +29,14 @@
 package oscar.util;
 
 import java.io.IOException;
-
 import java.util.Properties;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -99,7 +101,7 @@ public class BackupDownload extends GenericDownload {
 
             rs.close();
         } catch (java.sql.SQLException e) {
-            e.printStackTrace(System.out);
+           MiscUtils.getLogger().error("Error", e);
         }
         return ret;
     }

@@ -41,6 +41,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProviderData;
@@ -99,7 +100,7 @@ public class MsgViewMessageByPositionAction extends Action {
 
         }
         catch (java.sql.SQLException e){ 
-            e.printStackTrace(System.out); 
+           MiscUtils.getLogger().error("Error", e); 
         }
                                
         return actionforward;

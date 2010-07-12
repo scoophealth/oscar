@@ -34,6 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -63,7 +64,7 @@ public class MsgReDisplayMessagesAction extends Action {
                 java.sql.ResultSet rs;
                 String sql = new String("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
                 db.RunSQL(sql);
-              }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+              }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
             }//for
 
     return (mapping.findForward("success"));

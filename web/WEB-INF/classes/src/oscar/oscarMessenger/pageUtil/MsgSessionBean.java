@@ -24,6 +24,8 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarMessenger.pageUtil;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class MsgSessionBean
@@ -67,7 +69,7 @@ public class MsgSessionBean
                    userName =  db.getString(rs,"first_name")+" "+db.getString(rs,"last_name");
                 }
                 rs.close();
-        }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+        }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
     }
 
     public String getAttachment (){

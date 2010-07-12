@@ -97,7 +97,7 @@ public final class RxDeleteRxAction extends DispatchAction {
             }
         }
         catch (Exception e) {
-            e.printStackTrace(System.out);
+           MiscUtils.getLogger().error("Error", e);
         }        
 
          return (mapping.findForward("success"));
