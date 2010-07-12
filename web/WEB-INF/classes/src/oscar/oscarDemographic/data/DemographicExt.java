@@ -173,9 +173,7 @@ public class DemographicExt {
     */
    public void addKey(String providerNo, String demo,String key, String value){
       try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;
-                                    
+                                      
             String sql = "insert into demographicExt (provider_no,demographic_no,key_val,value,date_time) values (?,?,?,?,now())";
             
             Connection conn = DBHandler.getConnection();
@@ -206,11 +204,7 @@ public class DemographicExt {
       if (newValue != null && !oldValue.equalsIgnoreCase(newValue)){
          
          try {
-         
-            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;
-                                    
+                       
             String sql = "insert into demographicExt (provider_no,demographic_no,key_val,value,date_time) values (?,?,?,?,now())";
             
             Connection conn = DBHandler.getConnection();
