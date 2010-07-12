@@ -57,7 +57,7 @@ public class Message {
    private MSH msh = null;
    private Node current;
    public Message(String now) {
-      System.out.println("Should be a new LOG MESSAGE FILE NOW"+now);
+      MiscUtils.getLogger().debug("Should be a new LOG MESSAGE FILE NOW"+now);
       _logger.debug("Message object Instantiated now = "+now);
       this.now = now;
       this.current = null;
@@ -110,7 +110,7 @@ public class Message {
    //Method runs insert into hl7_message table and retrieves the insert id. 
    //The calls the MSH.toDatabase method passing in the insert id from hl7_message
    public void ToDatabase(DBHandler db) throws SQLException {
-      System.out.println("sql "+this.getSql());
+      MiscUtils.getLogger().debug("sql "+this.getSql());
       db.RunSQL(this.getSql());
       ResultSet result = db.GetSQL(this.getLastInsertedIdSql());
       int parent = 0;
@@ -147,7 +147,7 @@ public class Message {
                     subStrings = db.getString(rs,"ordering_provider").split("\\^");
                     providerMinistryNo = subStrings[0]; //StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");
                     // check that this is a legal provider
-                    System.out.println("looking for "+providerMinistryNo);
+                    MiscUtils.getLogger().debug("looking for "+providerMinistryNo);
                     providerNo = getProviderNoFromBillingNo(providerMinistryNo);                    
                     if ( providerNo != null) {  // provider found in database
                         listOfProviderNo.add(providerNo);
@@ -160,7 +160,7 @@ public class Message {
                             subStrings = conDoctors[i-1].split("\\^");
                             providerMinistryNo = subStrings[0];//StringUtils.returnStringToFirst(subStrings[0].substring(1, subStrings[0].length())," ");
                             // check that this is a legal provider
-                            System.out.println("looking for 2 "+providerMinistryNo);
+                            MiscUtils.getLogger().debug("looking for 2 "+providerMinistryNo);
                             providerNo = getProviderNoFromBillingNo(providerMinistryNo);                                                
                             if ( providerNo != null) {  // provider found in database
                                if (!listOfProviderNo.contains(providerNo)){
@@ -185,24 +185,24 @@ public class Message {
                     
                     if(!addedToProviderLabRouting){
                        sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+parent+"', 'N','BCP')";
-                       System.out.println(sql);
+                       MiscUtils.getLogger().debug(sql);
                        db.RunSQL(sql);                        
                     }
                     
                 } else { // major error
-                    System.out.println("sql "+sql);
+                    MiscUtils.getLogger().debug("sql "+sql);
                     throw new Exception("Corresponding PV1 entry not found!");
                 }                
                 rs.close();                
             } catch (Exception e) {
-                System.out.println("Error in providerRouteReport:"+e);
+                MiscUtils.getLogger().debug("Error in providerRouteReport:"+e);
                 
                 sql ="insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('0', '"+parent+"', 'N','BCP')";
-                System.out.println(sql);
+                MiscUtils.getLogger().debug(sql);
                 db.RunSQL(sql);
             }            
         } catch (Exception e) {
-            System.out.println("Database error in providerRouteReport:"+e);
+            MiscUtils.getLogger().debug("Database error in providerRouteReport:"+e);
         }        
 
 
@@ -211,14 +211,14 @@ public class Message {
    public String getProviderNoFromBillingNo(String providerMinistryNo){
        String ret = null;
        String sql = "select provider_no from provider where ohip_no='"+providerMinistryNo+"'";
-       System.out.println(sql);
+       MiscUtils.getLogger().debug(sql);
        boolean hasNext = false;       
        try {
           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                   
           ResultSet rsr = db.GetSQL(sql);	               
           if (!rsr.next()){
              sql = "select provider_no from provider where ohip_no='0"+providerMinistryNo+"'";
-             System.out.println("\n\n"+sql+"\n\n");
+             MiscUtils.getLogger().debug("\n\n"+sql+"\n\n");
              rsr = db.GetSQL(sql);	               
              if (rsr.next()){
                 hasNext = true;
@@ -283,7 +283,7 @@ public class Message {
                         "first_name like '"+StringEscapeUtils.escapeSql(firstName)+"%' and year_of_birth='"+dobYear+"' and " +
                         "month_of_birth='"+dobMonth+"' and date_of_birth='"+dobDay+"' and sex like '"+db.getString(rs,"sex").toUpperCase()+"%' and " +
                         "patient_status='AC'";
-                  System.out.println(sql);
+                  MiscUtils.getLogger().debug(sql);
                   ResultSet rs3 = db.GetSQL(sql);
                   if ( rs3.next() ) {
                      demoNo = rs3.getString("demographic_no");                                    
@@ -303,13 +303,13 @@ public class Message {
             }                
             rs.close();                
          } catch (Exception e) {
-            System.out.println("Error in patientRouteReport:"+e); 
+            MiscUtils.getLogger().debug("Error in patientRouteReport:"+e); 
             MiscUtils.getLogger().error("Error", e);
             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('0', '"+segmentID+"','BCP')";                            
             db.RunSQL(sql);
          }            
       } catch (Exception e) {
-         System.out.println("Database error in patientRouteReport:"+e);
+         MiscUtils.getLogger().debug("Database error in patientRouteReport:"+e);
       }        
    }    
 
@@ -325,7 +325,7 @@ public class Message {
              String prov_no  = db.getString(rs,"provider_no");                                        
              if ( prov_no != null && !prov_no.trim().equals("")){
                 sql = "select status from providerLabRouting where lab_type = 'BCP' and provider_no ='"+prov_no+"' and lab_no = '"+lab_no+"'";                               
-                System.out.println(sql);
+                MiscUtils.getLogger().debug(sql);
                 ResultSet rs2 = db.GetSQL(sql);
                 if ( !rs2.next() ) {                            
                    //sql = "insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov_no+"', '"+lab_no+"', 'N','BCP')";
@@ -334,14 +334,14 @@ public class Message {
                    ProviderLabRouting router = new ProviderLabRouting();
                    router.route(lab_no, prov_no, DBHandler.getConnection(), "BCP");
                 } else {
-                   System.out.println("prov was "+prov_no);
+                   MiscUtils.getLogger().debug("prov was "+prov_no);
                 }
                 rs2.close();                      
              }                 
           }
           rs.close();            
        } catch (Exception e) {
-          System.out.println("Database error in patientProviderRoute:"+e);
+          MiscUtils.getLogger().debug("Database error in patientProviderRoute:"+e);
        }        
     }
    

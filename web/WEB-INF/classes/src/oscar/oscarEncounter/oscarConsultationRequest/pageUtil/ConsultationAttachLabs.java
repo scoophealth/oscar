@@ -27,6 +27,8 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
@@ -97,28 +99,28 @@ public class ConsultationAttachLabs {
     
     public static void detachLabConsult(String LabNo, String consultId) {
         String sql = "UPDATE consultdocs SET deleted = 'Y' WHERE requestId = " + consultId + " AND document_no = " + LabNo + " AND doctype = 'L'";                     
-        System.out.println("detachDoc: " + sql);
+        MiscUtils.getLogger().debug("detachDoc: " + sql);
         
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);
         }
         catch(SQLException e) {
-            System.out.println("Error detaching lab: " + e.getMessage());
+            MiscUtils.getLogger().debug("Error detaching lab: " + e.getMessage());
         }
         
     }
     
     public static void attachLabConsult(String providerNo, String LabNo, String consultId) {
         String sql = "INSERT INTO consultdocs (requestId,document_no,doctype,attach_date,provider_no) VALUES(" + consultId + "," + LabNo + ",'L',now(),'" + providerNo + "')";
-        System.out.println("attachLab: " + sql);
+        MiscUtils.getLogger().debug("attachLab: " + sql);
         
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);
         }
         catch(SQLException e) {
-            System.out.println("Error attaching lab: " + e.getMessage());
+            MiscUtils.getLogger().debug("Error attaching lab: " + e.getMessage());
         }
         
     }

@@ -8,8 +8,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
-import oscar.appt.ApptUtil;
 import oscar.oscarBilling.ca.on.data.BillingClaimHeader1Data;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
 import oscar.oscarBilling.ca.on.data.BillingItemData;
@@ -234,30 +234,30 @@ public class BillingCorrectionPrep {
 		String temp = request.getParameter("m_review") == null ? "" : "Y";
 		if (!existObj.getStatus().equals(
 				request.getParameter("status").substring(0, 1)))
-			System.out.println("status");
+			MiscUtils.getLogger().debug("status");
 		if (!existObj.getPay_program().equals(
 				request.getParameter("payProgram")))
-			System.out.println("payProgram");
+			MiscUtils.getLogger().debug("payProgram");
 		if (!existObj.getRef_num().equals(request.getParameter("rdohip")))
-			System.out.println("rdohip");
+			MiscUtils.getLogger().debug("rdohip");
 		if (!existObj.getVisittype().equals(request.getParameter("visittype")))
-			System.out.println("visittype");
+			MiscUtils.getLogger().debug("visittype");
 		if (!existObj.getAdmission_date().equals(
 				request.getParameter("xml_vdate")))
-			System.out.println("xml_vdate");
+			MiscUtils.getLogger().debug("xml_vdate");
 
 		if (!existObj.getFacilty_num().equals(
 				request.getParameter("clinic_ref_code")))
-			System.out.println("facNum:" + existObj.getFacilty_num());
+			MiscUtils.getLogger().debug("facNum:" + existObj.getFacilty_num());
 		if (!existObj.getMan_review().equals(temp))
-			System.out.println("|" + existObj.getMan_review() + ":temp:" + temp
+			MiscUtils.getLogger().debug("|" + existObj.getMan_review() + ":temp:" + temp
 					+ "|");
 		if (!existObj.getBilling_date().equals(
 				request.getParameter("xml_appointment_date")))
-			System.out.println("Billing_date");
+			MiscUtils.getLogger().debug("Billing_date");
 		if (!existObj.getProviderNo().equals(
 				request.getParameter("provider_no")))
-			System.out.println("getProvider_no");
+			MiscUtils.getLogger().debug("getProvider_no");
 
 		if (!existObj.getStatus().equals(
 				request.getParameter("status").substring(0, 1))

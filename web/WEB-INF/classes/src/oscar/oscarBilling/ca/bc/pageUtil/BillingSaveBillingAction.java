@@ -76,7 +76,7 @@ public class BillingSaveBillingAction extends Action {
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
         BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
         ApptDAO apptDAO = (ApptDAO) ctx.getBean("ApptDAO");
-        System.out.println("appointment_no---: " + bean.getApptNo());
+        MiscUtils.getLogger().debug("appointment_no---: " + bean.getApptNo());
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String sql = "";
 
@@ -147,7 +147,7 @@ public class BillingSaveBillingAction extends Action {
             Billingmaster billingmaster = saveBill(billingid, "" + billingAccountStatus, dataCenterId, billedAmount, "" + paymentMode, bean, bItem);//billItem.get(i));
             
             String WCBid = request.getParameter("WCBid");
-            System.out.println("WCB:"+WCBid);
+            MiscUtils.getLogger().debug("WCB:"+WCBid);
             if (bean.getBillingType().equals("WCB")) {
                 billingmaster.setWcbId(Integer.parseInt(bean.getWcbId()));
             }
@@ -194,7 +194,7 @@ public class BillingSaveBillingAction extends Action {
                 ===============================================================================================
              
              */ 
-            System.out.println("WCB BILL!!");
+            MiscUtils.getLogger().debug("WCB BILL!!");
             
             
         }

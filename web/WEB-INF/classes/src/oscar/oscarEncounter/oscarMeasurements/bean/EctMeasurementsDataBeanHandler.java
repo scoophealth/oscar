@@ -240,7 +240,7 @@ public class EctMeasurementsDataBeanHandler {
                     " m.dateObserved, m.dateEntered, mt.typeDisplayName, mt.typeDescription, p.first_name AS provider_first," +
                     " p.last_name AS provider_last FROM measurements m LEFT JOIN provider p ON m.providerNo=p.provider_no," +
                     " measurementType mt WHERE m.type = mt.type AND m.type = '" + type + "' AND m.demographicNo = " + demographicNo;
-            System.out.println("Measurements retreival sql: " + sql);
+            MiscUtils.getLogger().debug("Measurements retreival sql: " + sql);
             ResultSet rs;
             
             ArrayList<EctMeasurementsDataBean> measurements = new ArrayList();

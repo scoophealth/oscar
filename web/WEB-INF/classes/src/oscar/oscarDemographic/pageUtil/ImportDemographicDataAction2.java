@@ -150,10 +150,10 @@ public class ImportDemographicDataAction2 extends Action {
         request.setAttribute("warnings",warnings);
 	if (importLog!=null) request.setAttribute("importlog",importLog.getPath());
         
-        System.out.println("warnings size "+warnings.size());
+        MiscUtils.getLogger().debug("warnings size "+warnings.size());
         for( int i = 0; i < warnings.size(); i++ ){
            String str = (String) warnings.get(i);
-           System.out.println(str);
+           MiscUtils.getLogger().debug(str);
         }
         return mapping.findForward("success");
     }

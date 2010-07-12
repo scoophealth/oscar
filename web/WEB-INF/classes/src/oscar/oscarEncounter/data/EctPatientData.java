@@ -48,7 +48,7 @@ public class EctPatientData {
                 ret = db.getString(rs,"provider_no");
             rs.close();
         } catch (SQLException e) {
-            System.out.println("error - EctPatientData.getProviderNo");
+            MiscUtils.getLogger().debug("error - EctPatientData.getProviderNo");
         }
         return ret;
     }

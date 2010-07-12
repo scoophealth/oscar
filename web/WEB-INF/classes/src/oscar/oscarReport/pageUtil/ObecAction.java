@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.EctValidation;
 import oscar.oscarReport.data.ObecData;
@@ -54,7 +55,7 @@ public class ObecAction extends Action {
       
       String startDate = frm.getXml_vdate()==null?"":frm.getXml_vdate();
       if(!validation.isDate(startDate)){
-         System.out.println("Invalid date format!");
+         MiscUtils.getLogger().debug("Invalid date format!");
          errors.add(startDate,
          new ActionMessage("errors.invalid", "StartDate"));
          saveErrors(request, errors);

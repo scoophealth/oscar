@@ -29,6 +29,7 @@
 package oscar.oscarReport.pageUtil;
 
 import org.apache.struts.action.ActionForm;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -38,7 +39,7 @@ public class DemographicSetEditForm extends ActionForm  {
    String patientSet = null;
    
    public DemographicSetEditForm() {
-      System.out.println("Con DemographicSetEditForm");
+      MiscUtils.getLogger().debug("Con DemographicSetEditForm");
    }
    
    /**
@@ -54,7 +55,7 @@ public class DemographicSetEditForm extends ActionForm  {
     * @param patientSet New value of property patientSet.
     */
    public void setPatientSet(java.lang.String patientSet) {
-      System.out.println("set PatientSet to "+patientSet);
+      MiscUtils.getLogger().debug("set PatientSet to "+patientSet);
       this.patientSet = patientSet;
    }
    

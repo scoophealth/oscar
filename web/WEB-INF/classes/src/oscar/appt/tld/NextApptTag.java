@@ -84,8 +84,7 @@ public class NextApptTag extends TagSupport {
           }
           JspWriter out = super.pageContext.getOut();          
           out.print(s);                          
-       }catch(Exception p) {
-          p.printStackTrace(System.out);
+       }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
        }
        return(SKIP_BODY);
     }

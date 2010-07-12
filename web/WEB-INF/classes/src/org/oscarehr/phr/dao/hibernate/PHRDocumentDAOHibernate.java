@@ -192,7 +192,6 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             public Object doInHibernate(Session session)
                     throws HibernateException, SQLException {
                 Query q = session.createQuery("select count(*) from PHRDocument d where d.phrClassification = '" + classification + "' and d.receiverOscar = '" + providerNo + "' and d.status = " + PHRMessage.STATUS_NEW);
-                System.out.println(q.getQueryString());
                 q.setCacheable(true);
                 return q.uniqueResult();
                 }

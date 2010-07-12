@@ -72,7 +72,7 @@ public class MsgAttachPDFAction extends Action {
 				if (bean != null) {
 
 					if (frm.getIsNew()) {
-						System.out.println("null attachment");
+						MiscUtils.getLogger().debug("null attachment");
 						bean.nullAttachment();
 					}
 

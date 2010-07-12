@@ -96,7 +96,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                             date = (Date)formatter.parse(obj.getBilling_date());
                         }
                         catch(ParseException e ) {
-                                System.out.println("EctDisplayMsgAction: Error creating date " + e.getMessage());
+                                MiscUtils.getLogger().debug("EctDisplayMsgAction: Error creating date " + e.getMessage());
                                 date = null;
                         }                
 
@@ -130,7 +130,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                 MSPReconcile.BillSearch bSearch = msp.getBills("%", null, null ,null,bean.demographicNo);//,true,true,true,true);
                 ArrayList list = bSearch.list;
                 
-                System.out.println("list size for bills is "+list.size());
+                MiscUtils.getLogger().debug("list size for bills is "+list.size());
                 
 //                JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 //                List aL = null;
@@ -159,7 +159,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                                 date = (Date)formatter.parse(b.getApptDate());
                             }
                             catch(ParseException e ) {
-                                    System.out.println("EctDisplayMsgAction: Error creating date " + e.getMessage());
+                                    MiscUtils.getLogger().debug("EctDisplayMsgAction: Error creating date " + e.getMessage());
                                     date = null;
                             }                
 

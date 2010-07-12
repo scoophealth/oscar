@@ -102,7 +102,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     //Create export files
     String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
     if (!Util.checkDir(tmpDir)) {
-        System.out.println("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+        MiscUtils.getLogger().debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
     } else {
         tmpDir = Util.fixDirName(tmpDir);
     }
@@ -119,7 +119,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     //Zip export files
     String zipName = "omd_diabetes-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
-    if (!Util.zipFiles(exportFiles, zipName, tmpDir)) System.out.println("Error! Failed zipping export files");
+    if (!Util.zipFiles(exportFiles, zipName, tmpDir)) MiscUtils.getLogger().debug("Error! Failed zipping export files");
     
     //Download zip file
     Util.downloadFile(zipName, tmpDir, response);

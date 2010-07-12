@@ -167,12 +167,12 @@ public class DepressionContinuityReporter implements Reporter{
 
         String apptSQLwDemo;
         apptSQLwDemo = apptSQL.replaceAll("\\?", demos.toString());
-        System.out.println(apptSQLwDemo);
+        MiscUtils.getLogger().debug(apptSQLwDemo);
         rs2 = db.GetSQL(apptSQLwDemo);        
         String rxName, rxPrescriber, tmpDemo = "";
         while(rs2.next()) {
             if( !tmpDemo.equals(rs2.getString(7))) {
-                System.out.println(rs2.getString(7));
+                MiscUtils.getLogger().debug(rs2.getString(7));
                 rsHtml.append(demographics.get(rs2.getString(7)));
                 csv.append(csvMap.get(rs2.getString(7)));
                 tmpDemo = rs2.getString(7);
@@ -211,7 +211,7 @@ public class DepressionContinuityReporter implements Reporter{
         }
 
         if( curDemo != null && tmpDemo.equals("") ) {
-            System.out.println(curDemo);
+            MiscUtils.getLogger().debug(curDemo);
             rsHtml.append(demographics.get(curDemo));
             csv.append(csvMap.get(curDemo));
         }

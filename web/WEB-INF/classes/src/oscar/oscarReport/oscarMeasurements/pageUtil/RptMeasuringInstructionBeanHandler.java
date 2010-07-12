@@ -46,7 +46,7 @@ public class RptMeasuringInstructionBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT measuringInstruction FROM measurementType WHERE typeDisplayName='" + measurementType + "'";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {

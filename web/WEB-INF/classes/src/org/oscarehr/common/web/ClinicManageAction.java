@@ -17,14 +17,11 @@ public class ClinicManageAction extends DispatchAction {
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("ClinicManageAction-unspec");
         return view(mapping, form, request, response);
     }
 
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("ClinicManageAction-view");
         Clinic clinic = clinicDAO.getClinic();
-        System.out.println("Clinic view :"+clinic);
         DynaActionForm frm = (DynaActionForm)form;
         frm.set("clinic",clinic);
         request.setAttribute("clinicForm",form);
@@ -32,12 +29,9 @@ public class ClinicManageAction extends DispatchAction {
     }
 
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("ClinicManageAction-update");
         DynaActionForm frm = (DynaActionForm)form;
         Clinic clinic = (Clinic) frm.get("clinic");
         clinicDAO.save(clinic);
-        
-        System.out.println("clinic : "+clinic);
         
         return mapping.findForward("success");
     }

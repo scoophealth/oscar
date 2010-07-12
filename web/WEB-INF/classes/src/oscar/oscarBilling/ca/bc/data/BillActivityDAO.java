@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.entities.Billactivity;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
@@ -115,7 +117,7 @@ public class BillActivityDAO {
                 batchCount = String.valueOf(fileCount);    
             pstmt.close();
          }catch (SQLException sqlexception) {
-            System.out.println(sqlexception.getMessage());
+            MiscUtils.getLogger().debug(sqlexception.getMessage());
          }
         return batchCount;
     }
@@ -172,7 +174,7 @@ public class BillActivityDAO {
             
             pstmt.close();
         }catch (SQLException sqlexception) {
-           System.out.println(sqlexception.getMessage());
+           MiscUtils.getLogger().debug(sqlexception.getMessage());
         }
         ////
         return id;
@@ -194,7 +196,7 @@ public class BillActivityDAO {
 
             pstmt.close();
         }catch (SQLException sqlexception) {
-           System.out.println(sqlexception.getMessage());
+           MiscUtils.getLogger().debug(sqlexception.getMessage());
         }
     }
     

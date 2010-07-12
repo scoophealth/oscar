@@ -102,7 +102,7 @@ public class SaveRegistrationAction extends DispatchAction{
             try {
                 parsedDate = formater.parse(dateStr);
             } catch (ParseException pe) {
-                System.out.println("Error parsing date");
+                MiscUtils.getLogger().debug("Error parsing date");
             }
         }
         return parsedDate;
@@ -484,11 +484,11 @@ public class SaveRegistrationAction extends DispatchAction{
 //
     public ActionForward flowsheet(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
         
-        System.out.println("in submitfollowupservlet");
+        MiscUtils.getLogger().debug("in submitfollowupservlet");
         int ID = Integer.parseInt(request.getParameter("ID"));
         
         
-        System.out.println("Record ID received: " + ID);
+        MiscUtils.getLogger().debug("Record ID received: " + ID);
         String Patient_Id = request.getParameter("Patient_Id").toString().trim();
         
         
@@ -515,9 +515,9 @@ public class SaveRegistrationAction extends DispatchAction{
             java.sql.Date result = new java.sql.Date(parsedDate.getTime());
             BirthDate = result;
         } catch (ParseException pe) {
-            System.out.println("Error parsing date");
+            MiscUtils.getLogger().debug("Error parsing date");
         }
-        System.out.println(BirthDate.toString());
+        MiscUtils.getLogger().debug(BirthDate.toString());
         
         String Sex = request.getParameter("Sex");
         String PostalCode = request.getParameter("PostalCode");
@@ -528,9 +528,9 @@ public class SaveRegistrationAction extends DispatchAction{
         boolean Ethnic_White =  isStringEqual(request,"Ethnic_White");
         boolean Ethnic_Black = isStringEqual(request,"Ethnic_Black");
         boolean Ethnic_EIndian = isStringEqual(request,"Ethnic_EIndian");
-        System.out.println("Ethnic_Pakistani should be equal "+request.getParameter("Ethnic_Pakistani"));
+        MiscUtils.getLogger().debug("Ethnic_Pakistani should be equal "+request.getParameter("Ethnic_Pakistani"));
         boolean Ethnic_Pakistani = isStringEqual(request,"Ethnic_Pakistani");
-        System.out.println("Ethnic_Pakistani "+Ethnic_Pakistani);
+        MiscUtils.getLogger().debug("Ethnic_Pakistani "+Ethnic_Pakistani);
         boolean Ethnic_SriLankan = isStringEqual(request,"Ethnic_SriLankan");
         boolean Ethnic_Bangladeshi = isStringEqual(request,"Ethnic_Bangladeshi");
         boolean Ethnic_Chinese = isStringEqual(request,"Ethnic_Chinese");
@@ -563,9 +563,9 @@ public class SaveRegistrationAction extends DispatchAction{
             java.sql.Date result = new java.sql.Date(parsedDate.getTime());
             VisitDate_Id = result;
         } catch (ParseException pe) {
-            System.out.println("Error parsing date");
+            MiscUtils.getLogger().debug("Error parsing date");
         }
-        System.out.println("35");
+        MiscUtils.getLogger().debug("35");
         String Drugcoverage = request.getParameter("Drugcoverage");
         int SBP = getIntFromRequest(request,"SBP");
         int SBP_goal = getIntFromRequest(request,"SBP_goal");
@@ -690,16 +690,16 @@ public class SaveRegistrationAction extends DispatchAction{
         String consentDate_year = request.getParameter("consentDate_year");
         String consentDate_month = request.getParameter("consentDate_month");
         String consentDate_day = request.getParameter("consentDate_day");
-        System.out.println("consentDate_year "+consentDate_year+"  consentDate_month "+consentDate_month +" consentDate_day "+consentDate_day);
+        MiscUtils.getLogger().debug("consentDate_year "+consentDate_year+"  consentDate_month "+consentDate_month +" consentDate_day "+consentDate_day);
         
         Date consentDate = getDate(formater,consentDate_year,consentDate_month,consentDate_day);
-        System.out.println(consentDate);
+        MiscUtils.getLogger().debug(consentDate);
         
 //		determine if data should be locked
         String savestring = request.getParameter("Save");
-        System.out.println("save: " + savestring);
+        MiscUtils.getLogger().debug("save: " + savestring);
         String submitstring = request.getParameter("Submit");
-        System.out.println("submit: " + submitstring);
+        MiscUtils.getLogger().debug("submit: " + submitstring);
         boolean locked = false;
         
         
@@ -834,7 +834,7 @@ public class SaveRegistrationAction extends DispatchAction{
                 A1C_LabresultsDate,
                 locked);
         
-        System.out.println("record id set as: " + visitData.getID());
+        MiscUtils.getLogger().debug("record id set as: " + visitData.getID());
         //XMLTranslate translator = new XMLTranslate();
         
         //translator.run(patientData, visitData);
@@ -850,7 +850,7 @@ public class SaveRegistrationAction extends DispatchAction{
 
         try {
            int insertId = dao.insertVisit(visitData,(String) request.getSession().getAttribute("user"));
-           System.out.println(" insert ID to "+insertId);
+           MiscUtils.getLogger().debug(" insert ID to "+insertId);
            request.setAttribute("formId",new Integer(insertId));
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -859,9 +859,9 @@ public class SaveRegistrationAction extends DispatchAction{
         request.setAttribute("demographic_no", visitData.getPatient_Id());
         request.setAttribute("visitDate", visitData.getVisitDate_Id());
         //request.setAttribute("fromURL", "SubmitFollowup");
-        System.out.println("Save "+request.getParameter("Save"));
+        MiscUtils.getLogger().debug("Save "+request.getParameter("Save"));
         if(request.getParameter("Save") != null && request.getParameter("Save").equals("Save and Exit")){
-            System.out.println("forward exit");
+            MiscUtils.getLogger().debug("forward exit");
             return mapping.findForward("exit");
         }
         

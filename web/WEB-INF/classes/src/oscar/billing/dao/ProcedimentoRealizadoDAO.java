@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.model.ProcedimentoRealizado;
 import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
@@ -55,7 +57,7 @@ public class ProcedimentoRealizadoDAO extends DAO {
             "where pr.co_procedimento = p.co_procedimento and " +
             "pr.appointment_no = " + id;
             
-        System.out.println(sql);
+        MiscUtils.getLogger().debug(sql);
 
         DBHandler db = getDb();
 
@@ -94,7 +96,7 @@ public class ProcedimentoRealizadoDAO extends DAO {
         	"SET co_tipo_atendimento = '" + atType + "' " +
         	"WHERE appointment_no = " + id;
         	
-        System.out.println(sql);
+        MiscUtils.getLogger().debug(sql);
 
         DBHandler db = getDb();
         try {

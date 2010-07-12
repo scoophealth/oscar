@@ -568,7 +568,7 @@ public class ProviderData {
             }
             return result;
         }catch(Exception e){
-            System.out.println("exception in ProviderData:"+e);
+            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
         }        
     }
@@ -628,7 +628,7 @@ public class ProviderData {
             }
             return result;
         }catch(Exception e){
-            System.out.println("exception in ProviderData:"+e);
+            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
         }
     }
@@ -655,7 +655,7 @@ public class ProviderData {
                 return "";
             }
         }catch(Exception e){
-            System.out.println("exception in ProviderData:"+e);
+            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
         }        
     }

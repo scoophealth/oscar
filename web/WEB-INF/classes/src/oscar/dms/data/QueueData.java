@@ -196,7 +196,7 @@ public class QueueData {
            if(!isQueueExist(qn)){
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 String sql = "INSERT INTO queue (name) " + "VALUES ('" + qn+ "')";
-                System.out.println("sql="+sql);
+                MiscUtils.getLogger().debug("sql="+sql);
                 db.RunSQL(sql);
                 return true;
            }else

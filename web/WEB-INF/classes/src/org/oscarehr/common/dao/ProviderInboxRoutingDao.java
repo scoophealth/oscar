@@ -60,7 +60,6 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
     }
     
     public void addToProviderInbox(String providerNo,String labNo,String labType){
-        System.out.println("Add to PRoviderInbox");
         
         ArrayList<String> listofAdditionalProviders = new ArrayList();
         boolean fileForMainProvider = false;

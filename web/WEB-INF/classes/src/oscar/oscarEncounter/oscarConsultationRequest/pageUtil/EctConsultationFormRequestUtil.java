@@ -191,7 +191,7 @@ public class EctConsultationFormRequestUtil {
                 specFax = db.getString(rs, "fax");
                 specAddr = db.getString(rs, "address");
                 specEmail = db.getString(rs, "email");
-                System.out.println("getting Null" + specEmail + "<");
+                MiscUtils.getLogger().debug("getting Null" + specEmail + "<");
 
                 if (specPhone == null || specPhone.equals("null")) {
                     specPhone = new String();
@@ -215,7 +215,7 @@ public class EctConsultationFormRequestUtil {
     }
 
     public String getSpecailistsEmail(String id) {
-        System.out.println("in Get SPECAILISTS EMAIL \n\n" + id);
+        MiscUtils.getLogger().debug("in Get SPECAILISTS EMAIL \n\n" + id);
         String retval = new String();
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -223,7 +223,7 @@ public class EctConsultationFormRequestUtil {
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 specEmail = db.getString(rs, "email");
-                System.out.println("meial" + specEmail + "<");
+                MiscUtils.getLogger().debug("meial" + specEmail + "<");
                 if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
                     specEmail = new String();
                 }

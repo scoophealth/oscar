@@ -71,7 +71,7 @@ public class DemographicNameAgeString {
             if (dArray != null){
                hashtable.put(demoNo,dArray);
             }        
-         }//else{System.out.println("name age in buffer "+demoNo);}
+         }//else{MiscUtils.getLogger().debug("name age in buffer "+demoNo);}
          String[] nameage =  (String[]) hashtable.get(demoNo);      
          if (nameage != null){
             retval = nameAgeSexString(nameage);
@@ -114,7 +114,7 @@ public class DemographicNameAgeString {
             if (dArray != null){
                hashtable.put(demoNo,dArray);
             }                                
-         }//else{System.out.println("name age in buffer "+demoNo);}         
+         }//else{MiscUtils.getLogger().debug("name age in buffer "+demoNo);}         
          String[] s =  (String[]) hashtable.get(demoNo);
          if ( s != null){
 

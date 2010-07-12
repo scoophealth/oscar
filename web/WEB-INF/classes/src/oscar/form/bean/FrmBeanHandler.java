@@ -49,7 +49,7 @@ public class FrmBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT form_name, hidden FROM encounterForm order by hidden, form_name";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {

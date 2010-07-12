@@ -95,7 +95,6 @@ public class ProcedimentoRealizadoAction extends OscarAction {
                 myforward = performGravar(mapping, form, request, response);
             }
         } else if ("INIT".equalsIgnoreCase(myaction)) {
-			System.out.println(" [ProcedimentoRealizadoAction] Vai chamar Init");
             myforward = performInit(mapping, form, request, response);
         } else if ("DEL_PROC".equalsIgnoreCase(myaction)) {
             myforward = performDeleteProcedimento(mapping, form, request,
@@ -120,11 +119,9 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 
         try {
             String appId = request.getParameter("appId");
-			System.out.println(" [ProcedimentoRealizadoAction] appId = " + appId);
 
             if (appId == null || appId.trim().length() <= 0) {
                 generalError(request, "faturamento.notfound");
-				System.out.println(" [ProcedimentoRealizadoAction] faturamento.notfound");
 
                 return mapping.findForward("failure");
             }

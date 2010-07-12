@@ -128,11 +128,6 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
          if (flagproviders !=null && flagproviders.length > 0){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
              try{
                 for(String proNo:flagproviders){
-
-                    for(int i=0;i<flagproviders.length;i++){
-                        System.out.println("element="+flagproviders[i]);
-                    }
-                    System.out.println("proNo="+proNo+"; documentId="+documentId);
                     providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
                 }
              }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
@@ -202,11 +197,6 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
          if (flagproviders !=null && flagproviders.length > 0){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
              try{
                 for(String proNo:flagproviders){
-
-                    for(int i=0;i<flagproviders.length;i++){
-                        System.out.println("element="+flagproviders[i]);
-                    }
-                    System.out.println("proNo="+proNo+"; documentId="+documentId);
                     providerInboxRoutingDAO.addToProviderInbox(proNo, documentId, LabResultData.DOCUMENT);
                 }
              }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
@@ -383,11 +373,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
 
         File outfile = hasCacheVersion(d);
         if (outfile == null){
-            System.out.println("No Cache Version");
            outfile = createCacheVersion( d);
-
-        }else{
-            System.out.println("THERE WAS A CACHE Version "+outfile);
         }
 
         response.setContentType("image/png");

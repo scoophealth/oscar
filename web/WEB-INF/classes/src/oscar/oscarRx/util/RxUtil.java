@@ -397,7 +397,7 @@ public class RxUtil {
      public static String findDuration(RxPrescriptionData.Prescription rx) {//calculate duration based on quantity, takemax,takemin,frequency,durationUnit.
         //get frequency,takemax,takemin,durationUnit by parsing special.
         instrucParser(rx);
-        System.out.println("after  instrucParser,quantity="+rx.getQuantity());
+        MiscUtils.getLogger().debug("after  instrucParser,quantity="+rx.getQuantity());
         String qStr = rx.getQuantity();
         if (rx.getUnitName() == null) {
             qStr = qStr.trim();
@@ -630,7 +630,7 @@ public class RxUtil {
 
             p("route", route);
             if (route.equals("")) {
-                System.out.println("route is not set");
+                MiscUtils.getLogger().debug("route is not set");
             }
 
             //find frequency
@@ -832,7 +832,7 @@ public class RxUtil {
 
             //match the pattern when there is no space between number and durationUnit.
             if (durationUnitSpec.equals("")) {
-                    System.out.println("no space between duration and duration unit.");
+                    MiscUtils.getLogger().debug("no space between duration and duration unit.");
                 for (String s : durUnits2) {
                     String instructionToCheck=checkInstructionStr(instructions);
                     Pattern p = Pattern.compile(s);
@@ -843,15 +843,15 @@ public class RxUtil {
                         p("instructionToCheck="+ instructionToCheck);
                         p(s);
                         String str1 = instructionToCheck.substring(m.start(), m.end());
-                               System.out.println("str1=" + str1);
+                               MiscUtils.getLogger().debug("str1=" + str1);
                         //get numUnit out
                         Pattern p1 = Pattern.compile("[0-9]+");
                         Matcher m1 = p1.matcher(str1);
                         if (m1.find()) {
                             duration = str1.substring(m1.start(), m1.end());
                             durationUnitSpec = (str1.substring(m1.end())).trim();
-                                    System.out.println("duration=" + duration);
-                                     System.out.println("durationUnitSpec=" + durationUnitSpec);
+                                    MiscUtils.getLogger().debug("duration=" + duration);
+                                     MiscUtils.getLogger().debug("durationUnitSpec=" + durationUnitSpec);
                             break;
                         }
                     }
@@ -929,7 +929,7 @@ public class RxUtil {
             double nPerDay = 0d;//number of drugs per day
             double nDays = 0d;//number of days per duration unit
 
-            System.out.println("in instrucParser,unitName="+rx.getUnitName());
+            MiscUtils.getLogger().debug("in instrucParser,unitName="+rx.getUnitName());
             boolean isUnitNameUsed=true;
             if(rx.getUnitName()==null ||rx.getUnitName().trim().length()==0 )
                 isUnitNameUsed=false;
@@ -937,7 +937,7 @@ public class RxUtil {
                 isUnitNameUsed=false;
             else
                 isUnitNameUsed=true;
-            System.out.println("isUnitNameUsed="+isUnitNameUsed);
+            MiscUtils.getLogger().debug("isUnitNameUsed="+isUnitNameUsed);
             //if duration is 0 or null or length==0,it means duration is not specified by user
                 //if quantity,frequency, durationUnit are valid values,isUnitNameUsed==false
                         //yes,calculate duration based on quantity because duration is not specified
@@ -968,11 +968,11 @@ public class RxUtil {
                 if (!isUnitNameUsed && !durationUnit.equals("") && !takeMin.equals("0") && !takeMax.equals("0") && !frequency.equals("")) {
                     nPerDay = findNPerDay(frequency);
                     nDays = findNDays(durationUnit);
-                    System.out.println("in instrucParser duration="+duration);
+                    MiscUtils.getLogger().debug("in instrucParser duration="+duration);
                     //quantity=takeMax * nDays * duration * nPerDay
                     double quantityD = (Double.parseDouble(takeMax)) * nPerDay * nDays * (Double.parseDouble(duration));
                     quantity = (int) quantityD;
-                    System.out.println("in instrucParser,else="+quantity+"-- "+takeMax+" --"+nPerDay+"-- "+ nDays+"-- "+ duration);
+                    MiscUtils.getLogger().debug("in instrucParser,else="+quantity+"-- "+takeMax+" --"+nPerDay+"-- "+ nDays+"-- "+ duration);
                 }
 
             }
@@ -988,7 +988,7 @@ public class RxUtil {
             rx.setFrequencyCode(frequency);
             rx.setDurationUnit(durationUnit);
             rx.setPrn(prn);
-            System.out.println("in instrucParser,quantity="+quantity +" ; unitName="+rx.getUnitName());
+            MiscUtils.getLogger().debug("in instrucParser,quantity="+quantity +" ; unitName="+rx.getUnitName());
             if (!isUnitNameUsed && quantity != 0) {
                 rx.setQuantity(Integer.toString(quantity));
             }
@@ -1010,7 +1010,7 @@ public class RxUtil {
         hm.put("prn", rx.getPrn());
         hm.put("quantity", rx.getQuantity());
         //    p(instructions);
-        System.out.println("in parse instruction: " + hm);
+        MiscUtils.getLogger().debug("in parse instruction: " + hm);
         return;
     }
 
@@ -1075,12 +1075,12 @@ public class RxUtil {
             regex5=regex5.trim();
             special=special.replace(regex5, "");
         }
-        System.out.println("before trimming mitte="+special);
+        MiscUtils.getLogger().debug("before trimming mitte="+special);
         String regex6= "Mitte:\\s*[0-9]+\\s*\\w+";
         p = Pattern.compile(regex6);
         m = p.matcher(special);
         special = m.replaceAll("");
-        System.out.println("after trimming mitte special=" + special);
+        MiscUtils.getLogger().debug("after trimming mitte special=" + special);
         //assume drug name is before method and drug name is the first part of the instruction.
         if (special.indexOf("Take") != -1) {
             special = special.substring(special.indexOf("Take"));
@@ -1149,7 +1149,7 @@ public class RxUtil {
                 //get the quantity unit
                 String qUnit=qStr.replace(qNum, "").trim();
                 if(qUnit!=null && qUnit.length()>0){
-                    System.out.println("changing unitName in setResultSpecialQuantityRepeat ");
+                    MiscUtils.getLogger().debug("changing unitName in setResultSpecialQuantityRepeat ");
                     rx.setUnitName(qUnit);
                 }
             }
@@ -1171,7 +1171,7 @@ public class RxUtil {
             DBHandler db=new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
             String sql="select special ,special_instruction from drugs where "+parameter+" = '"+value+"' order by drugid desc" ;
-            System.out.println("in drugsTableQuery,sql="+sql);
+            MiscUtils.getLogger().debug("in drugsTableQuery,sql="+sql);
             rs = db.GetSQL(sql);
             while(rs.next()){
                 HashMap hm=new HashMap();
@@ -1182,7 +1182,7 @@ public class RxUtil {
        }catch(Exception e){
             e.printStackTrace();
        }
-        System.out.println("in drugsTableQuery,retList="+retList);
+        MiscUtils.getLogger().debug("in drugsTableQuery,retList="+retList);
         return retList;
     }
     private static List<HashMap<String,String>> getCustomNamePrevInstructions(String customName){
@@ -1254,7 +1254,7 @@ public class RxUtil {
         return retList;
     }
     private static List<HashMap<String,String>> commonUniqueMedHistory(List<HashMap<String,String>> l){
-        System.out.println("in commonUniqueMedHistory l="+l);
+        MiscUtils.getLogger().debug("in commonUniqueMedHistory l="+l);
 
        if(l!=null&&l.size()>0){
             HashMap elementCount=new HashMap();
@@ -1283,7 +1283,7 @@ public class RxUtil {
                 }
             }
            }catch(Exception e){e.printStackTrace();}
-            System.out.println("in commonUniqueMedHistory retList="+retList);
+            MiscUtils.getLogger().debug("in commonUniqueMedHistory retList="+retList);
             return retList;
        }else
            return l;
@@ -1309,27 +1309,27 @@ public class RxUtil {
     private static String removeQuantityMitteRepeat(String s){
                 Pattern p;
                 Matcher m;
-                System.out.println("in removeQuantityMitteRepeat s="+s);
+                MiscUtils.getLogger().debug("in removeQuantityMitteRepeat s="+s);
                 String regex2 = "Repeats:\\s*[0-9]*\\.?[0-9]*\\s*";
                 p = Pattern.compile(regex2);
                 m = p.matcher(s);
                 s = m.replaceAll("");
-                System.out.println("in removeQuantityMitteRepeat regex="+regex2);
-                System.out.println("in removeQuantityMitteRepeat after remove repeat s="+s);
+                MiscUtils.getLogger().debug("in removeQuantityMitteRepeat regex="+regex2);
+                MiscUtils.getLogger().debug("in removeQuantityMitteRepeat after remove repeat s="+s);
 
                 String regex1 = "Qty:\\s*[0-9]*\\.?[0-9]*\\s*\\w*";
                 p = Pattern.compile(regex1);
                 m = p.matcher(s);
                 s = m.replaceAll("");
-                System.out.println("in removeQuantityMitteRepeat regex="+regex1);
-                System.out.println("in removeQuantityMitteRepeat after remove quantity ="+s);
+                MiscUtils.getLogger().debug("in removeQuantityMitteRepeat regex="+regex1);
+                MiscUtils.getLogger().debug("in removeQuantityMitteRepeat after remove quantity ="+s);
 
                 String regex6= "Mitte:\\s*[0-9]*\\.?[0-9]*\\s*\\w*";
                 p = Pattern.compile(regex6);
                 m = p.matcher(s);
                 s = m.replaceAll("");
-                System.out.println("in removeQuantityMitteRepeat regex="+regex6);
-                System.out.println("in removeQuantityMitteRepeat after remove mitte ="+s);
+                MiscUtils.getLogger().debug("in removeQuantityMitteRepeat regex="+regex6);
+                MiscUtils.getLogger().debug("in removeQuantityMitteRepeat after remove mitte ="+s);
                 s=s.trim();
                 return s;
     }
@@ -1344,13 +1344,13 @@ public class RxUtil {
                 //query the database to see if there is a rx with same din as this rx.
                 // String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' order by written_date desc"; //most recent is the first.
                 String sql = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
-                System.out.println("sql 1="+sql);
+                MiscUtils.getLogger().debug("sql 1="+sql);
                 rs = db.GetSQL(sql);
                 if (rs.first()) {//use the first result if there are multiple.
                     setResultSpecialQuantityRepeat(rx, rs);
                 } else {
                     String sql2 = "SELECT * FROM drugs WHERE regional_identifier='" + rx.getRegionalIdentifier() + "' and BN='"+rx.getBrandName()+"' order by drugid desc"; //most recent is the first.
-                    System.out.println("sql 2="+sql2);
+                    MiscUtils.getLogger().debug("sql 2="+sql2);
                     rs = db.GetSQL(sql2);
                     if (rs.first()) {//use the first result if there are multiple.
                         setResultSpecialQuantityRepeat(rx, rs);
@@ -1363,7 +1363,7 @@ public class RxUtil {
                     p("if2");
                     //String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by written_date desc"; //most recent is the first.
                     String sql2 = "SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
-                    System.out.println("sql 2="+sql2);
+                    MiscUtils.getLogger().debug("sql 2="+sql2);
                     //if none, query database to see if there is rx with same brandname.
                     //if there are multiple, use latest.
                     rs = db.GetSQL(sql2);
@@ -1371,7 +1371,7 @@ public class RxUtil {
                         setResultSpecialQuantityRepeat(rx, rs);
                     } else {
                         String sql3="SELECT * FROM drugs WHERE BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' order by drugid desc"; //most recent is the first.
-                        System.out.println("sql 3="+sql3);
+                        MiscUtils.getLogger().debug("sql 3="+sql3);
                         rs = db.GetSQL(sql3);
                         if (rs.first()) {//use the first result if there are multiple.
                             setResultSpecialQuantityRepeat(rx, rs);
@@ -1384,7 +1384,7 @@ public class RxUtil {
                         p("customName is not null");
                         //String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "' order by written_date desc"; //most recent is the first.
                         String sql3 = "SELECT * FROM drugs WHERE customName='" + StringEscapeUtils.escapeSql(rx.getCustomName()) + "'  AND demographic_no="+rx.getDemographicNo()+" order by drugid desc"; //most recent is the first.
-                        System.out.println("sql 3="+sql3);
+                        MiscUtils.getLogger().debug("sql 3="+sql3);
                         //if none, query database to see if there is rx with same customName.
                         //if there are multiple, use latest.
                         rs = db.GetSQL(sql3);
@@ -1427,7 +1427,7 @@ public class RxUtil {
             rs = db.GetSQL(sql);
             if (rs.next()) {
                 int compareId = rs.getInt("max(drugid)");
-                System.out.println("compareId: " + compareId);
+                MiscUtils.getLogger().debug("compareId: " + compareId);
                 if (drugId > compareId) {
                     lastPrescribed = true;
                 } else {
@@ -1474,7 +1474,7 @@ public class RxUtil {
                     discontinuedLatest = true;
                 } else {
                     discontinuedLatest = false;
-                    System.out.println("not last drug ");
+                    MiscUtils.getLogger().debug("not last drug ");
                 }
             } else {
 
@@ -1580,7 +1580,7 @@ public class RxUtil {
             String myDrugrefId = null;
             if (prop != null){
                 myDrugrefId = prop.getValue();
-                System.out.println("3myDrugrefId"+myDrugrefId);
+                MiscUtils.getLogger().debug("3myDrugrefId"+myDrugrefId);
             }
             RxPrescriptionData.Prescription[] rxs=bean.getStash();
             //acd contains all atccodes in stash
@@ -1588,18 +1588,18 @@ public class RxUtil {
             for(RxPrescriptionData.Prescription rxItem:rxs){
                 acd.add(rxItem.getAtcCode());
             }
-            System.out.println("3acd="+acd);
+            MiscUtils.getLogger().debug("3acd="+acd);
 
             String[] str = new String[]{"warnings_byATC,bulletins_byATC,interactions_byATC,get_guidelines"};   //NEW more efficent way of sending multiple requests at the same time.
             Vector allInteractions = new Vector();
             for (String command : str){
                 try{
                     Vector v = getMyDrugrefInfo(command,  acd,myDrugrefId) ;
-                    System.out.println("2v in for loop: "+v);
+                    MiscUtils.getLogger().debug("2v in for loop: "+v);
                     if (v !=null && v.size() > 0){
                         allInteractions.addAll(v);
                     }
-                    System.out.println("3after all.addAll(v): "+allInteractions);
+                    MiscUtils.getLogger().debug("3after all.addAll(v): "+allInteractions);
                 }catch(Exception e){
                     log2.debug("3command :"+command+" "+e.getMessage());
                     e.printStackTrace();
@@ -1608,7 +1608,7 @@ public class RxUtil {
         String retStr="";
             HashMap rethm=new HashMap();
             for (RxPrescriptionData.Prescription rxItem:rxs){
-                System.out.println("rxItem="+rxItem.getDrugName());
+                MiscUtils.getLogger().debug("rxItem="+rxItem.getDrugName());
                 Vector uniqueDrugNameList=new Vector();
                 for(int i=0;i<allInteractions.size();i++){
                     Hashtable hb=(Hashtable)allInteractions.get(i);
@@ -1616,7 +1616,7 @@ public class RxUtil {
                     String interactingDrugName=(String)hb.get("drug2");
                     String effectStr=(String)hb.get("effect");
                     String sigStr=(String)hb.get("significance");
-                    System.out.println("findInterDrugStr="+hb);
+                    MiscUtils.getLogger().debug("findInterDrugStr="+hb);
                     if(sigStr!=null){
                         if(sigStr.equals("1")){
                             sigStr="minor";
@@ -1632,11 +1632,11 @@ public class RxUtil {
                     }
                     if(interactingAtc!=null && interactingDrugName!=null &&  rxItem.getAtcCode().equals(interactingAtc) && effectStr!=null &&
                             effectStr.length()>0 && !effectStr.equalsIgnoreCase("N")&& !effectStr.equals(" ")){
-                        System.out.println("interactingDrugName="+interactingDrugName);
+                        MiscUtils.getLogger().debug("interactingDrugName="+interactingDrugName);
                         RxPrescriptionData.Prescription rrx=findRxFromDrugNameOrGN(rxs,interactingDrugName);
 
                         if(rrx!=null && !uniqueDrugNameList.contains(rrx.getDrugName())) {
-                            System.out.println("rrx.getDrugName()="+rrx.getDrugName());
+                            MiscUtils.getLogger().debug("rrx.getDrugName()="+rrx.getDrugName());
                             uniqueDrugNameList.add(rrx.getDrugName());
 
                             String key=sigStr+"_"+rxItem.getRandomId();
@@ -1660,9 +1660,9 @@ public class RxUtil {
                         }
                     }
                 }
-                System.out.println("***next rxItem***");
+                MiscUtils.getLogger().debug("***next rxItem***");
             }
-            System.out.println("rethm="+rethm);
+            MiscUtils.getLogger().debug("rethm="+rethm);
             retStr=rethm.toString();
             retStr=retStr.replace("}", "");
             retStr=retStr.replace("{", "");
@@ -1683,10 +1683,10 @@ public class RxUtil {
 
     }
     private static Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {
-        System.out.println("3in getMyDrugrefInfo");
+        MiscUtils.getLogger().debug("3in getMyDrugrefInfo");
         RxMyDrugrefInfoAction.removeNullFromVector(drugs);
         Vector params = new Vector();
-        System.out.println("3command,drugs,myDrugrefId= "+command+"--"+drugs+"--"+myDrugrefId);
+        MiscUtils.getLogger().debug("3command,drugs,myDrugrefId= "+command+"--"+drugs+"--"+myDrugrefId);
         params.addElement(command);
         params.addElement(drugs);
         if (myDrugrefId != null && !myDrugrefId.trim().equals("")){
@@ -1698,21 +1698,21 @@ public class RxUtil {
         Object obj =  callWebserviceLite("Fetch",params);
         log2.debug("RETURNED "+obj);
         if (obj instanceof Vector){
-            System.out.println("3obj is instance of vector");
+            MiscUtils.getLogger().debug("3obj is instance of vector");
             vec = (Vector) obj;
-            System.out.println(vec);
+            MiscUtils.getLogger().debug(vec);
         }else if(obj instanceof Hashtable){
-            System.out.println("3obj is instace of hashtable");
+            MiscUtils.getLogger().debug("3obj is instace of hashtable");
             Object holbrook = ((Hashtable) obj).get("Holbrook Drug Interactions");
             if (holbrook instanceof Vector){
-                System.out.println("3holbrook is instance of vector ");
+                MiscUtils.getLogger().debug("3holbrook is instance of vector ");
                 vec = (Vector) holbrook;
-                System.out.println(vec);
+                MiscUtils.getLogger().debug(vec);
             }
             Enumeration e = ((Hashtable) obj).keys();
             while (e.hasMoreElements()){
                 String s = (String) e.nextElement();
-                System.out.println(s);
+                MiscUtils.getLogger().debug(s);
                 log2.debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
             }
         }
@@ -1725,7 +1725,7 @@ public class RxUtil {
         Object object = null;
 
         String server_url = OscarProperties.getInstance().getProperty("MY_DRUGREF_URL","http://mydrugref.org/backend/api");
-        System.out.println("server_url: "+server_url);
+        MiscUtils.getLogger().debug("server_url: "+server_url);
         TimingOutCallback callback = new TimingOutCallback(10 * 1000);
         try{
             log2.debug("server_url :"+server_url);
@@ -1741,10 +1741,10 @@ public class RxUtil {
     }
 
     public static void p(String str, String s) {
-        System.out.println(str + "=" + s);
+        MiscUtils.getLogger().debug(str + "=" + s);
     }
 
     public static void p(String str) {
-        System.out.println(str);
+        MiscUtils.getLogger().debug(str);
     }
 }

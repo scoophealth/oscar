@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
@@ -157,7 +159,7 @@ public class ABCDParser {
             }
             
             
-            System.out.println(sql);
+            MiscUtils.getLogger().debug(sql);
             PreparedStatement pstmt = conn.prepareStatement(sql);                                                                
             ResultSet rs = pstmt.executeQuery();            
             while(rs.next()){
@@ -180,7 +182,7 @@ public class ABCDParser {
             pstmt.executeUpdate();
             pstmt.close();                                                                                                                                      
          }catch (SQLException sqlE){
-            System.out.println("NO MATCHING PATIENT FOR LAB id ="+labId);
+            MiscUtils.getLogger().debug("NO MATCHING PATIENT FOR LAB id ="+labId);
             sqlE.printStackTrace();
          }                                                    
     }    
@@ -220,7 +222,7 @@ public class ABCDParser {
          process(str);
       }
       in.close();    
-      System.out.println("sss "+reportFile.btypes.size());
+      MiscUtils.getLogger().debug("sss "+reportFile.btypes.size());
    }
    
    
@@ -347,7 +349,7 @@ public class ABCDParser {
             this.pPhone = (String) lst.get(19);
             this.docPhone = (String) lst.get(20);
             this.collectionDate = (String) lst.get(21);
-            System.out.println("B "+pFirstName+" "+pLastName+" "+pHealthNum+" "+docRoute+docNum);
+            MiscUtils.getLogger().debug("B "+pFirstName+" "+pLastName+" "+pHealthNum+" "+docRoute+docNum);
          }
       }
       
@@ -450,7 +452,7 @@ public class ABCDParser {
             this.result = (String) lst.get(9);
             this.locationId = (String) lst.get(10);
             this.last = (String) lst.get(11);
-            System.out.println("C "+title+" "+testName+" "+abn+" "+result+ " ("+minimum+"-"+maximum+")");
+            MiscUtils.getLogger().debug("C "+title+" "+testName+" "+abn+" "+result+ " ("+minimum+"-"+maximum+")");
          }
       }
       
@@ -508,9 +510,9 @@ public class ABCDParser {
             this.description = (String) lst.get(3);
             this.locationId = (String) lst.get(4);
             this.last = (String) lst.get(5);
-            System.out.println("D "+title+" "+description);
+            MiscUtils.getLogger().debug("D "+title+" "+description);
          }else{
-            System.out.println("DTYPE INVALID");
+            MiscUtils.getLogger().debug("DTYPE INVALID");
          }
       }
       

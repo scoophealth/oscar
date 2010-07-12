@@ -47,7 +47,7 @@ public class EctStyleSheetBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT * from measurementCSSLocation ORDER BY cssID";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {

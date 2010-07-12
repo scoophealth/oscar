@@ -62,9 +62,9 @@ public class EctDeleteDataAction extends Action {
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
-                    System.out.println(deleteCheckbox[i]);
+                    MiscUtils.getLogger().debug(deleteCheckbox[i]);
                     String sql = "SELECT * FROM `measurements` WHERE id='"+ deleteCheckbox[i] +"'";                                        
-                    System.out.println(" sql statement "+sql);
+                    MiscUtils.getLogger().debug(" sql statement "+sql);
                     ResultSet rs = db.GetSQL(sql);
                     if(rs.next()){
                         sql = "INSERT INTO measurementsDeleted"

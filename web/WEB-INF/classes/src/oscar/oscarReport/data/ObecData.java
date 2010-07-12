@@ -84,7 +84,7 @@ public class ObecData {
 				filename = writeFile(retval, pp);
 			}
 		} catch (SQLException e) {
-			System.out.println("There has been an error while retrieving a Obec");
+			MiscUtils.getLogger().debug("There has been an error while retrieving a Obec");
 			MiscUtils.getLogger().error("Error", e);
 		}
 

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.login.DBHelp;
@@ -68,7 +69,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 int n = 0;
                 int FIXED_LEN = 2048;
                 String contentType = "application/unknow";
-                System.out.println("contentType: " + contentType);
+                MiscUtils.getLogger().debug("contentType: " + contentType);
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
                 while (n <= len - FIXED_LEN) {
                     out.write(b, n, FIXED_LEN); // out.write(b);
@@ -148,7 +149,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
             ARTYPE = "formBCAR2007";
         }
 
-        System.out.println("AR TYPE "+ARTYPE);
+        MiscUtils.getLogger().debug("AR TYPE "+ARTYPE);
         
 
         Properties propDemoSelect = new Properties();
@@ -267,8 +268,8 @@ public class RptDownloadCSVServlet extends HttpServlet {
             }
         }
 
-        System.out.println(":" + bDemoSelect + bSpecSelect + bARSelect);
-        System.out.println(":" + sDemoSelect + sSpecSelect + sARSelect);
+        MiscUtils.getLogger().debug(":" + bDemoSelect + bSpecSelect + bARSelect);
+        MiscUtils.getLogger().debug(":" + sDemoSelect + sSpecSelect + sARSelect);
 
 //        get replaced filter
 //         filling the var with the real date value
@@ -316,8 +317,8 @@ public class RptDownloadCSVServlet extends HttpServlet {
 
                 sARFilter += (sARFilter.length()<1?"":" and ") + strFilter; 
             }
-            System.out.println(i + tempVal + " tempVal: " + vecVarValue);
-            System.out.println(i + strFilter);
+            MiscUtils.getLogger().debug(i + tempVal + " tempVal: " + vecVarValue);
+            MiscUtils.getLogger().debug(i + strFilter);
             vecFilter.add(strFilter);
         }
 
@@ -330,12 +331,12 @@ public class RptDownloadCSVServlet extends HttpServlet {
         String ORDER_BY = " order by demographic.last_name, demographic.first_name";
         if(bDemoSelect && !bARSelect && !bSpecSelect && bDemoFilter && !bARFilter && !bSpecFilter) {
             String sql = "select " + sDemoSelect + " from demographic where " + sDemoFilter + ORDER_BY;
-            System.out.println(" one table: demographic: " + sql);
+            MiscUtils.getLogger().debug(" one table: demographic: " + sql);
             String [] temp = sDemoSelect.replaceAll("demographic.","").split(",");
             for(int i=0; i<temp.length; i++) {
                 vecFieldCaption.add(propDemoSelect.getProperty(temp[i].trim()));
                 vecFieldName.add(temp[i].trim());
-                System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
+                MiscUtils.getLogger().debug(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
             }
             vecFieldValue = (new RptReportCreator()).query(sql, vecFieldName);
         }
@@ -347,12 +348,12 @@ public class RptDownloadCSVServlet extends HttpServlet {
             if(bDemoSelect && !bARSelect && bSpecSelect && !bSpecFilter) {
                 vecFieldName.add("demographic_no");
                 String sql = "select demographic_no," + sDemoSelect + " from demographic where " + sDemoFilter + ORDER_BY;
-                System.out.println(" demographic and demographicExt: " + sql);
+                MiscUtils.getLogger().debug(" demographic and demographicExt: " + sql);
                 String [] temp = sDemoSelect.replaceAll("demographic.","").split(",");
                 for(int i=0; i<temp.length; i++) {
                     vecFieldCaption.add(propDemoSelect.getProperty(temp[i].trim()));
                     vecFieldName.add(temp[i].trim());
-                    System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
+                    MiscUtils.getLogger().debug(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
                 }
                 vecFieldValue = (new RptReportCreator()).query(sql, vecFieldName);
                 vecFieldName.remove(0); // remove "demographic_no"
@@ -373,7 +374,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                         propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
                     }
                 }
-                System.out.println(" demographic and demographicExt: " + sql);
+                MiscUtils.getLogger().debug(" demographic and demographicExt: " + sql);
             }
             if(bSpecFilter) {
                 vecFieldName.add("demographic_no");
@@ -383,7 +384,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 String sTempEle = sSpecFilter.length()>0? (" and "+sSpecFilter) : "";
                 String subQuery = "select distinct(demographic.demographic_no) from demographicExt, demographic where demographic.demographic_no=demographicExt.demographic_no ";
                 subQuery += " and " + sDemoFilter + sTempEle + "  ";
-                System.out.println(" demographic and demographicExt subQuery: " + subQuery);
+                MiscUtils.getLogger().debug(" demographic and demographicExt subQuery: " + subQuery);
                 String subFormDemoNo = "";
                 rs = dbObj.searchDBRecord(subQuery);
                 while (rs.next()) {
@@ -396,7 +397,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                     vecSpecCaption.add(propSpecSelect.getProperty(temp[i].trim()));
                     sql = "select demographic_no,value from demographicExt where key_val='" + temp[i] + "' and demographic_no in (";
                     sql += subFormDemoNo + ") order by date_time desc limit 1";
-                    System.out.println(" demographic and demographicExt: " + sql);
+                    MiscUtils.getLogger().debug(" demographic and demographicExt: " + sql);
                     rs = dbObj.searchDBRecord(sql);
                     while (rs.next()) {
                         propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
@@ -406,13 +407,13 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 //sTempEle = sSpecSelect.length()>0? (","+sSpecSelect) : "";
                 sql = "select demographic.demographic_no," + sDemoSelect + " from demographic where ";
                 sql += " demographic.demographic_no in (" + subFormDemoNo + ") " + ORDER_BY;
-                System.out.println(" demographic and demographicExt: " + sql);
+                MiscUtils.getLogger().debug(" demographic and demographicExt: " + sql);
 
                 temp = sDemoSelect.replaceAll("demographic.","").split(",");
                 for(int i=0; i<temp.length; i++) {
                     vecFieldCaption.add(propDemoSelect.getProperty(temp[i].trim()));
                     vecFieldName.add(temp[i].trim());
-                    System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
+                    MiscUtils.getLogger().debug(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
                 }
                 /*
                 if(bSpecSelect) {
@@ -420,7 +421,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                     for(int i=0; i<temp.length; i++) {
                         vecFieldCaption.add(propSpecSelect.getProperty(temp[i].trim()));
                         vecFieldName.add(temp[i].trim());
-                        System.out.println(" vecFieldCaption: " + propSpecSelect.getProperty(temp[i].trim()));
+                        MiscUtils.getLogger().debug(" vecFieldCaption: " + propSpecSelect.getProperty(temp[i].trim()));
                     }
                 }
                 */
@@ -436,7 +437,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
             String sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
             String subQuery = "select max(ID) from "+ARTYPE+", demographic where demographic.demographic_no="+ARTYPE+".demographic_no ";
             subQuery += " and " + sDemoFilter + sTempEle + " group by "+ARTYPE+".demographic_no,"+ARTYPE+".formCreated ";
-            System.out.println(" demographic and "+ARTYPE+" subQuery: " + subQuery);
+            MiscUtils.getLogger().debug(" demographic and "+ARTYPE+" subQuery: " + subQuery);
             String subFormId = "";
             ResultSet rs = dbObj.searchDBRecord(subQuery);
             while (rs.next()) {
@@ -447,20 +448,20 @@ public class RptDownloadCSVServlet extends HttpServlet {
             subFormId = subFormId.length()>0? subFormId : "0";
             String sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,"+ ARTYPE+" where ";
             sql += " "+ARTYPE+".ID in (" + subFormId + ") and demographic.demographic_no="+ARTYPE+".demographic_no " + ORDER_BY;
-            System.out.println(" demographic and "+ARTYPE+": " + sql);
+            MiscUtils.getLogger().debug(" demographic and "+ARTYPE+": " + sql);
 
             String [] temp = sDemoSelect.replaceAll("demographic.","").split(",");
             for(int i=0; i<temp.length; i++) {
                 vecFieldCaption.add(propDemoSelect.getProperty(temp[i].trim()));
                 vecFieldName.add(temp[i].trim());
-                System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
+                MiscUtils.getLogger().debug(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
             }
             if(bARSelect) {
                 temp = sARSelect.replaceAll(ARTYPE+".","").split(",");
                 for(int i=0; i<temp.length; i++) {
                     vecFieldCaption.add(propARSelect.getProperty(temp[i].trim()));
                     vecFieldName.add(temp[i].trim());
-                    System.out.println(" vecFieldCaption: " + propARSelect.getProperty(temp[i].trim()));
+                    MiscUtils.getLogger().debug(" vecFieldCaption: " + propARSelect.getProperty(temp[i].trim()));
                 }
             }
             vecFieldValue = (new RptReportCreator()).query(sql, vecFieldName);
@@ -475,7 +476,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 String sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
                 String subQuery = "select max(ID) from "+ ARTYPE+", demographic where demographic.demographic_no="+ARTYPE+".demographic_no ";
                 subQuery += " and " + sDemoFilter + sTempEle + " group by "+ARTYPE+".demographic_no,"+ARTYPE+".formCreated ";
-                System.out.println(" demographic and "+ ARTYPE+" subQuery: " + subQuery);
+                MiscUtils.getLogger().debug(" demographic and "+ ARTYPE+" subQuery: " + subQuery);
                 String subFormId = "";
                 ResultSet rs = dbObj.searchDBRecord(subQuery);
                 while (rs.next()) {
@@ -486,20 +487,20 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 subFormId = subFormId.length()>0? subFormId : "0";
                 String sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,"+ARTYPE+" where ";
                 sql += " "+ARTYPE+".ID in (" + subFormId + ") and demographic.demographic_no="+ARTYPE+".demographic_no " + ORDER_BY;
-                System.out.println(" demographic and "+ARTYPE+": " + sql);
+                MiscUtils.getLogger().debug(" demographic and "+ARTYPE+": " + sql);
 
                 String [] temp = sDemoSelect.replaceAll("demographic.","").split(",");
                 for(int i=0; i<temp.length; i++) {
                     vecFieldCaption.add(propDemoSelect.getProperty(temp[i].trim()));
                     vecFieldName.add(temp[i].trim());
-                    System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
+                    MiscUtils.getLogger().debug(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
                 }
                 if(bARSelect) {
                     temp = sARSelect.replaceAll(ARTYPE+".","").split(",");
                     for(int i=0; i<temp.length; i++) {
                         vecFieldCaption.add(propARSelect.getProperty(temp[i].trim()));
                         vecFieldName.add(temp[i].trim());
-                        System.out.println(" vecFieldCaption: " + propARSelect.getProperty(temp[i].trim()));
+                        MiscUtils.getLogger().debug(" vecFieldCaption: " + propARSelect.getProperty(temp[i].trim()));
                     }
                 }
                 vecFieldValue = (new RptReportCreator()).query(sql, vecFieldName);
@@ -522,7 +523,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                     }
                 }
             }
-            System.out.println(" table: all: " );
+            MiscUtils.getLogger().debug(" table: all: " );
             
             if(bARFilter && bSpecFilter) {
                 // spec first
@@ -533,7 +534,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 String sTempEle = sSpecFilter.length()>0? (" and "+sSpecFilter) : "";
                 String subQuery = "select distinct(demographic.demographic_no) from demographicExt, demographic where demographic.demographic_no=demographicExt.demographic_no ";
                 subQuery += " and " + sDemoFilter + sTempEle + "  ";
-                System.out.println(" demographic and demographicExt subQuery: " + subQuery);
+                MiscUtils.getLogger().debug(" demographic and demographicExt subQuery: " + subQuery);
                 String subFormDemoNo = "";
                 rs = dbObj.searchDBRecord(subQuery);
                 while (rs.next()) {
@@ -555,7 +556,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
                 subQuery = "select max(ID) from "+ ARTYPE+ ", demographic where demographic.demographic_no="+ARTYPE+".demographic_no ";
                 subQuery += " and " + sDemoFilter + sTempEle + " group by "+ARTYPE+".demographic_no,"+ARTYPE+".formCreated ";
-                System.out.println(" demographic and "+ARTYPE+" subQuery: " + subQuery);
+                MiscUtils.getLogger().debug(" demographic and "+ARTYPE+" subQuery: " + subQuery);
                 String subFormId = "";
                 rs = dbObj.searchDBRecord(subQuery);
                 while (rs.next()) {
@@ -568,20 +569,20 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,"+ARTYPE+" where ";
                 sql += " demographic.demographic_no in (" +  subFormDemoNo + ") and ";
                 sql += " "+ARTYPE+".ID in (" + subFormId + ") and demographic.demographic_no="+ARTYPE+".demographic_no " + ORDER_BY;
-                System.out.println(" total: " + sql);
+                MiscUtils.getLogger().debug(" total: " + sql);
 
                 temp = sDemoSelect.replaceAll("demographic.","").split(",");
                 for(int i=0; i<temp.length; i++) {
                     vecFieldCaption.add(propDemoSelect.getProperty(temp[i].trim()));
                     vecFieldName.add(temp[i].trim());
-                    System.out.println(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
+                    MiscUtils.getLogger().debug(" vecFieldCaption: " + propDemoSelect.getProperty(temp[i].trim()));
                 }
                 if(bARSelect) {
                     temp = sARSelect.replaceAll(ARTYPE+".","").split(",");
                     for(int i=0; i<temp.length; i++) {
                         vecFieldCaption.add(propARSelect.getProperty(temp[i].trim()));
                         vecFieldName.add(temp[i].trim());
-                        System.out.println(" vecFieldCaption: " + propARSelect.getProperty(temp[i].trim()));
+                        MiscUtils.getLogger().debug(" vecFieldCaption: " + propARSelect.getProperty(temp[i].trim()));
                     }
                 }
                 vecFieldValue = (new RptReportCreator()).query(sql, vecFieldName);

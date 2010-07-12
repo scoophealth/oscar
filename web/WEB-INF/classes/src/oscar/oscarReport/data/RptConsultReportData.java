@@ -55,7 +55,7 @@ public class RptConsultReportData {
                  arrayList.add(a);
               }
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  MiscUtils.getLogger().error("Error", e);}
+        }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Problems");   MiscUtils.getLogger().error("Error", e);  MiscUtils.getLogger().error("Error", e);}
     return arrayList;
     }
 
@@ -96,7 +96,7 @@ public class RptConsultReportData {
               }
 
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
+        }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Problems");   MiscUtils.getLogger().error("Error", e);  }
 
 
     }
@@ -129,7 +129,7 @@ public class DemoConsultDataStruct{
              consultList.add(con);
           }
           rs.close();
-       }catch (java.sql.SQLException e2) { System.out.println(e2.getMessage()); }
+       }catch (java.sql.SQLException e2) { MiscUtils.getLogger().debug(e2.getMessage()); }
       return consultList;
     }
     public ArrayList getConReplys(){
@@ -151,7 +151,7 @@ public class DemoConsultDataStruct{
              conReplyList.add(conLetter);
           }         
           rs.close(); 
-       }catch (java.sql.SQLException e3) { System.out.println(e3.getMessage()); }
+       }catch (java.sql.SQLException e3) { MiscUtils.getLogger().debug(e3.getMessage()); }
     return conReplyList;
     }
 
@@ -166,7 +166,7 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
-       }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
+       }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
        return retval;
     }
 
@@ -181,7 +181,7 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
-       }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
+       }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
        return retval;
     }
 
@@ -196,7 +196,7 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
            }
            rs.close();
-       }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
+       }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
        return retval;
     }
 
@@ -219,7 +219,7 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"serviceDesc");
            }
            rs.close();
-       }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
+       }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
        return retval;
     }
 
@@ -234,7 +234,7 @@ public class DemoConsultDataStruct{
               retval = db.getString(rs,"lname")+", "+db.getString(rs,"fname");
            }
            rs.close();
-       }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
+       }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
        return retval;
     }
 

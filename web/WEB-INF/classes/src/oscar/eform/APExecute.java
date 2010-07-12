@@ -31,6 +31,8 @@ package oscar.eform;
 
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.eform.data.DatabaseAP;
 
 /**
@@ -47,7 +49,7 @@ public class APExecute {
         DatabaseAP dap = EFormLoader.getInstance().getAP(ap);
         String  sql = DatabaseAP.parserReplace("demographic", demographicNo, dap.getApSQL());
         String output = dap.getApOutput();
-        System.out.println("SQL----" + sql);
+        MiscUtils.getLogger().debug("SQL----" + sql);
         ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
         sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
         ArrayList values = EFormUtil.getValues(names, sql);

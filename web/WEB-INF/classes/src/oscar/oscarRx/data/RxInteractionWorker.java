@@ -51,7 +51,7 @@ public class RxInteractionWorker extends Thread {
     }
 
     public void run() {
-        System.out.println("STARTING THREAD");
+        MiscUtils.getLogger().debug("STARTING THREAD");
 
         LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
@@ -67,8 +67,8 @@ public class RxInteractionWorker extends Thread {
                     interactionData.removeFromWorking(atcCodes);
                 }
                 else {
-                    System.out.println("What to do");
-                    System.out.println("atc codes " + atcCodes);
+                    MiscUtils.getLogger().debug("What to do");
+                    MiscUtils.getLogger().debug("atc codes " + atcCodes);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class RxInteractionWorker extends Thread {
             DbConnectionFilter.releaseAllThreadDbResources();
         }
         long end = System.currentTimeMillis() - start;
-        System.out.println("THREAD ENDING " + end);
+        MiscUtils.getLogger().debug("THREAD ENDING " + end);
     }
 
 }

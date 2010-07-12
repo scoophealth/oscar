@@ -33,6 +33,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
@@ -59,7 +60,7 @@ public class PatientMatchAction extends Action {
          newURL = mapping.findForward("success").getPath();
          newURL = newURL + "?demographicNo="+demographicNo;
       } catch (Exception e) {
-         System.out.println("exception in ReportReassignAction:"+e);
+         MiscUtils.getLogger().debug("exception in ReportReassignAction:"+e);
          newURL = mapping.findForward("failure").getPath();
       }
 

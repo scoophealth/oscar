@@ -106,9 +106,9 @@ public final class RxChooseDrugAction extends Action {
                         }          
                     }
                     
-                    System.out.println("In here --=-=--=-_--=="+compString+"\n\n\n\n");
+                    MiscUtils.getLogger().debug("In here --=-=--=-_--=="+compString+"\n\n\n\n");
                     if (compString != null){
-                        System.out.println("In here --=-=--=-_--=="+compString.toString());
+                        MiscUtils.getLogger().debug("In here --=-=--=-_--=="+compString.toString());
                        rx.setGenericName(compString.toString());
                     }else{
                        rx.setGenericName(genName);

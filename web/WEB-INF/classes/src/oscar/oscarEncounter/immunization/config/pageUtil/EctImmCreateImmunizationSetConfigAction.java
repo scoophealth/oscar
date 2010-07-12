@@ -36,6 +36,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.immunization.config.data.EctImmHeading;
 import oscar.oscarEncounter.immunization.config.data.EctImmImmunizationSetWriter;
@@ -60,7 +61,7 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
       String setName = ((EctImmCreateImmunizationSetConfigForm)form).getName();
       String headers = "true";
       String str;
-      for(; e.hasMoreElements(); System.out.println("str ".concat(String.valueOf(String.valueOf(str))))) {
+      for(; e.hasMoreElements(); MiscUtils.getLogger().debug("str ".concat(String.valueOf(String.valueOf(str))))) {
          str = (String)e.nextElement();
          if(str.startsWith("heading")) {
             headingVec.add(str);
@@ -97,7 +98,7 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
             forTheCol = Integer.parseInt(shouldBeCol);
          }
          catch(Exception colE) {
-            System.out.println("Kick'm out");
+            MiscUtils.getLogger().debug("Kick'm out");
          }
          header.col = forTheCol;
          headingVector.setElementAt(header, header.col - 1);
@@ -117,7 +118,7 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
             forTheRow = Integer.parseInt(shouldBeRow);
          }
          catch(Exception colE) {
-            System.out.println("Kick'm out");
+            MiscUtils.getLogger().debug("Kick'm out");
          }
          String immVal = request.getParameter(immName);
          immVal = immVal.trim();
@@ -147,7 +148,7 @@ public class EctImmCreateImmunizationSetConfigAction extends Action {
             intCol = Integer.parseInt(colToBeParsed);
          }
          catch(Exception rowAndCole) {
-            System.out.println("kickum out");
+            MiscUtils.getLogger().debug("kickum out");
          }
          EctImmImmunizations immunizations = (EctImmImmunizations)immunizationVector.elementAt(intRow - 1);
          immunizations.indexAge.add(colToBeParsed);

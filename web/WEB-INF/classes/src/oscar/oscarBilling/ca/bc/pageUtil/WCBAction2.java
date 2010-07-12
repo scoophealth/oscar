@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -64,7 +65,7 @@ public class WCBAction2 extends DispatchAction {
         if (request.getSession().getAttribute("user") == null) {
             return (mapping.findForward("Logout"));
         }
-        System.out.println("In WCBAction2 Jackson");
+        MiscUtils.getLogger().debug("In WCBAction2 Jackson");
 
         //Get rid of this
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
@@ -87,7 +88,7 @@ public class WCBAction2 extends DispatchAction {
 
 
         if (request.getParameter("saveAndClose") != null) {
-            System.out.println("QUITINN");
+            MiscUtils.getLogger().debug("QUITINN");
             request.setAttribute("WCBFormId",wcb.getId());
             return mapping.findForward("saveAndClose");
         }
@@ -113,7 +114,7 @@ public class WCBAction2 extends DispatchAction {
         }
 
 
-        System.out.println("OVER AND OUT.");
+        MiscUtils.getLogger().debug("OVER AND OUT.");
         return (mapping.getInputForward());
     }
 }

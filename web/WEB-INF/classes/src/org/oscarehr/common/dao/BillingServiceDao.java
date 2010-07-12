@@ -53,7 +53,6 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 
 	public List<BillingService> findBillingCodesByCode(String code, String region, Date billingDate, int order) {
 		String orderByClause = order == 1 ? "desc" : "";
-		System.out.println("Order by " + orderByClause + " code " + code);
 		Query query = entityManager
 		        .createQuery("select bs  from BillingService bs where bs.region = (:region) and bs.serviceCode like (:code) and bs.billingserviceDate = (select max(b2.billingserviceDate) from BillingService b2 where b2.serviceCode = bs.serviceCode and b2.billingserviceDate <= (:billDate))  order by bs.serviceCode "
 		                + orderByClause);// (:order) ");

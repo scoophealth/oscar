@@ -113,7 +113,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     
      Dao.sortItems(NavBarDisplayDAO.DATESORT);
  }catch( Exception e ) {
-     System.out.println("Error retrieving " + cmd + " : " + e.getMessage());
+     MiscUtils.getLogger().debug("Error retrieving " + cmd + " : " + e.getMessage());
      MiscUtils.getLogger().error("Error", e);
      return false;
  }

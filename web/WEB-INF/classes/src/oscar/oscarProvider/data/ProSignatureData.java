@@ -47,7 +47,7 @@ public class ProSignatureData {
             }
             catch(SQLException e)
             {
-                System.out.println("There has been an error while checking if a provider had a signature");
+                MiscUtils.getLogger().debug("There has been an error while checking if a provider had a signature");
                 MiscUtils.getLogger().error("Error", e);
             }
 
@@ -65,7 +65,7 @@ public class ProSignatureData {
              rs.close();
           }
           catch(SQLException e){
-             System.out.println("There has been an error while retrieving a provider's signature");
+             MiscUtils.getLogger().debug("There has been an error while retrieving a provider's signature");
              MiscUtils.getLogger().error("Error", e);
           }
 
@@ -91,7 +91,7 @@ public class ProSignatureData {
              db.RunSQL(sql);
           }
           catch(SQLException e){
-             System.out.println("There has been an error while adding a provider's signature");
+             MiscUtils.getLogger().debug("There has been an error while adding a provider's signature");
              MiscUtils.getLogger().error("Error", e);
           }
 
@@ -106,7 +106,7 @@ public class ProSignatureData {
              db.RunSQL(sql);
           }
           catch(SQLException e){
-             System.out.println("There has been an error while updating a provider's signature");
+             MiscUtils.getLogger().debug("There has been an error while updating a provider's signature");
              MiscUtils.getLogger().error("Error", e);
           }
 

@@ -71,7 +71,7 @@ public class GenerateTeleplanFileAction extends Action{
                                ActionForm form,
                                HttpServletRequest request,
                                HttpServletResponse response) throws Exception{
-        System.out.println("SimulateTeleplanAction2 action jackson");
+        MiscUtils.getLogger().debug("SimulateTeleplanAction2 action jackson");
     
         String home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
@@ -105,7 +105,7 @@ public class GenerateTeleplanFileAction extends Action{
             DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");    //ctx.getBean("demographicDao");
             TeleplanFileWriter teleplanWr = new TeleplanFileWriter();  
             teleplanWr.setBillingmasterDAO(billingmasterDAO);
-            System.out.println("\ndemographic DAO -->"+demographicDao);
+            MiscUtils.getLogger().debug("\ndemographic DAO -->"+demographicDao);
             teleplanWr.setDemographicDao(demographicDao);
             TeleplanSubmission submission = teleplanWr.getSubmission(testRun,pdArr,dataCenterId);
 
@@ -116,8 +116,8 @@ public class GenerateTeleplanFileAction extends Action{
             //Create Filename
             String filename = "H"+bActDao.getMonthCode()+UtilDateUtilities.getToday("yyMMdd_HHmmss")+"_"+Misc.forwardZero(batchCount,3);
             
-            System.out.println("filename: "+filename+ " home_dir "+home_dir);
-            System.out.println(submission.toString());
+            MiscUtils.getLogger().debug("filename: "+filename+ " home_dir "+home_dir);
+            MiscUtils.getLogger().debug(submission.toString());
             
             
             /*

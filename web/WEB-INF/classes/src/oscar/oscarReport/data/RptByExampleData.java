@@ -91,7 +91,7 @@ rs = accessDB.queryResults(this.sql);
 
 
 
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
+        }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Problems");   MiscUtils.getLogger().error("Error", e);  }
 
      return results;
     }

@@ -620,7 +620,7 @@ public class TeleplanCorrectionFormWCB
     //TODO check to see if this works.  i think if you escape a prepared statement you end up with double escaped text
     public String[] getWcb(String billamt) {
 
-        System.out.println("reseting wcb with bill amount " + billamt);
+        MiscUtils.getLogger().debug("reseting wcb with bill amount " + billamt);
 
         DemographicData demoData = new DemographicData();
         DemographicData.Demographic demo = demoData.getDemographic(this.demographicNumber);

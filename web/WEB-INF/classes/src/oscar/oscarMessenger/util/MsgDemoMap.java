@@ -40,7 +40,7 @@ public class MsgDemoMap {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "";                   
             sql = "insert into msgDemoMap values ('"+msgId+"','"+demographic_no+"')";
-            System.out.println(sql);
+            MiscUtils.getLogger().debug(sql);
             db.RunSQL(sql);
         }
         catch (java.sql.SQLException e){ 
@@ -91,7 +91,7 @@ public class MsgDemoMap {
     public void unlinkMsg (String demographic_no, String messageID){
         Vector msgVector= new Vector();
         try{          
-            System.out.println("input msgId: " + messageID + "  input demographic_no: " + demographic_no);
+            MiscUtils.getLogger().debug("input msgId: " + messageID + "  input demographic_no: " + demographic_no);
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 

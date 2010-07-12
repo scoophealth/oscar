@@ -89,7 +89,7 @@ public class FrmStudyXMLClientSend {
 
 	public static void main (String[] args) throws java.sql.SQLException, java.io.IOException  {
 		if (args.length != 3) {
-			System.out.println("Please run: java path/FrmStudyXMLClient dbname WebServiceUrl");
+			MiscUtils.getLogger().debug("Please run: java path/FrmStudyXMLClient dbname WebServiceUrl");
 			return; 
 		}
 		FrmStudyXMLClientSend aStudy = new FrmStudyXMLClientSend();

@@ -36,6 +36,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxAllergyData;
 import oscar.oscarRx.util.RxDrugRef;
@@ -128,7 +129,7 @@ public final class RxSearchAllergyAction extends Action {
                     classVec.add(""+arr[i].getPickID());
                 }
             }else{
-                System.out.println("IM FLAGGING IT AS NOT FOUND");
+                MiscUtils.getLogger().debug("IM FLAGGING IT AS NOT FOUND");
                 itemsFound = false;
                 arr= null;
             }
@@ -149,7 +150,7 @@ public final class RxSearchAllergyAction extends Action {
                 if(classVec2!=null) {
                 	for(int j = 0; j < classVec2.size(); j++){
                 
-                    System.out.println("LOOPING");
+                    MiscUtils.getLogger().debug("LOOPING");
                     hash = (java.util.Hashtable) classVec2.get(j);
                     //'id_drug'     'id_class'      'name'
                     String idDrug  = String.valueOf(hash.get("id_drug"));
@@ -158,7 +159,7 @@ public final class RxSearchAllergyAction extends Action {
                     String[] strArr = new String[2];
                     strArr[0] = idClass;
                     strArr[1] = name;
-                    System.out.println(j+" idDrug "+idDrug+" idClass "+idClass+" name "+name);
+                    MiscUtils.getLogger().debug(j+" idDrug "+idDrug+" idClass "+idClass+" name "+name);
                     if(returnHash.containsKey(idDrug)){
                         strVec = (Vector) returnHash.get(idDrug);
                         strVec.add(strArr);
@@ -171,7 +172,7 @@ public final class RxSearchAllergyAction extends Action {
                 }
                 }
             }
-            System.out.println("Sending this many vector of this size back "+returnHash.values().size());
+            MiscUtils.getLogger().debug("Sending this many vector of this size back "+returnHash.values().size());
 
             if(arr.length>0) {
                 request.setAttribute("allergies", arr);

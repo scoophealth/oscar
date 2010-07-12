@@ -76,7 +76,7 @@ public class UploadImage extends HttpServlet{
             		File savedFile = new File(foldername, fullFile[fullFile.length-1]);
 
                     fileheader = fullFile[fullFile.length-1];
-                    System.out.println(fileheader + "uploaded to \n" +
+                    MiscUtils.getLogger().debug(fileheader + "uploaded to \n" +
                                       foldername);
                     item.write(savedFile);
                 }

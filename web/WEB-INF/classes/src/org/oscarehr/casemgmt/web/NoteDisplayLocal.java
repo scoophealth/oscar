@@ -106,7 +106,6 @@ public class NoteDisplayLocal implements NoteDisplay {
 	}
 
 	public boolean isRxAnnotation(){
-		System.out.println("in isRxAnnotation in notedisplaylocal.java, note id="+caseManagementNote.getId());
 		return (caseManagementNote.isRxAnnotation());
 	}
 

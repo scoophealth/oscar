@@ -224,27 +224,7 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
             if (num > 0) return true;
             return false;
             
-            /*System.out.println("starting isIndivoReg");
-            List<PHRAction> list = this.getSession().createCriteria(PHRAction.class)
-                   .add(Restrictions.eq("phrClassification", classification))
-                   .add(Restrictions.eq("oscarId", oscarId))
-                   .setMaxResults(1)
-                   .list();
-            System.out.println("listFirst");
-            System.out.println("closing conn");
-            if (list.size() > 0) return true;
-            return false;*/
         }
-        
-        /*public boolean isIndivoRegistered(String classification, String oscarId) {
-            String sql = "FROM PHRAction a WHERE a.phrClassification = ? AND a.oscarId = ? AND a.sent = " + PHRAction.STATUS_SENT;
-            String[] f = new String[2];
-            f[0] = classification;
-            f[1] = oscarId;
-            List<PHRAction> list = this.getHibernateTemplate().find(sql, f);
-            if (list.size() > 0) return true;
-            return false; 
-        }*/
        
         
         public String getPhrIndex(final String classification, final String oscarId) {

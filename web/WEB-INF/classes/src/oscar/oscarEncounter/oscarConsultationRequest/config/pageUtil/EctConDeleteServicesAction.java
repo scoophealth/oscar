@@ -43,7 +43,7 @@ public class EctConDeleteServicesAction extends Action {
    
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
-      System.out.println("Delete Services Action Jackson");
+      MiscUtils.getLogger().debug("Delete Services Action Jackson");
       EctConDeleteServicesForm frm = (EctConDeleteServicesForm)form;
       String servs[] = frm.getService();
       if(servs.length > 0) {
@@ -57,7 +57,7 @@ public class EctConDeleteServicesAction extends Action {
          try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "update consultationServices set active = '02' where ".concat(String.valueOf(String.valueOf(stringBuffer.toString())));
-            System.out.println("sql = ".concat(String.valueOf(String.valueOf(sql))));
+            MiscUtils.getLogger().debug("sql = ".concat(String.valueOf(String.valueOf(sql))));
             db.RunSQL(sql);
          }
          catch(SQLException e) {

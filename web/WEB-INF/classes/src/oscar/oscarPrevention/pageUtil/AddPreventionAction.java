@@ -29,21 +29,20 @@ package oscar.oscarPrevention.pageUtil;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-
+import org.oscarehr.provider.model.PreventionManager;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.oscarPrevention.PreventionData;
-import org.oscarehr.provider.model.PreventionManager;
 /**
  *
  * @author Jay Gallagher
@@ -65,9 +64,9 @@ public class AddPreventionAction  extends Action {
          String id = request.getParameter("id");
          String delete = request.getParameter("delete");
          
-         System.out.println("id "+id+"  delete "+ delete);
+         MiscUtils.getLogger().debug("id "+id+"  delete "+ delete);
          
-         System.out.println("prevention Type "+preventionType);
+         MiscUtils.getLogger().debug("prevention Type "+preventionType);
          
          String given = request.getParameter("given");
          String prevDate = request.getParameter("prevDate");
@@ -79,7 +78,7 @@ public class AddPreventionAction  extends Action {
          String neverWarn = request.getParameter("neverWarn");
          
          
-         System.out.println("nextDate "+nextDate+" neverWarn "+neverWarn);
+         MiscUtils.getLogger().debug("nextDate "+nextDate+" neverWarn "+neverWarn);
          
 	 String refused = "0";
 	 if (given != null && given.equals("refused")){
@@ -139,7 +138,7 @@ public class AddPreventionAction  extends Action {
          WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(servletCtx);
          PreventionManager prvMgr = (PreventionManager)ctx.getBean("preventionMgr");
          prvMgr.removePrevention(demographic_no); 
-         System.out.println("Given "+given+" prevDate "+prevDate+" providerName "+providerName+" provider "+providerNo);
+         MiscUtils.getLogger().debug("Given "+given+" prevDate "+prevDate+" providerName "+providerName+" provider "+providerNo);
 
       return mapping.findForward("success");                                
    }

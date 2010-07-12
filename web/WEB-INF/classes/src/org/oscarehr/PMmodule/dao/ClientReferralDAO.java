@@ -99,7 +99,6 @@ public class ClientReferralDAO extends HibernateDaoSupport {
     	
     	for(Object element : lResult) {
     		ClientReferral cr = (ClientReferral) element;
-    		System.out.println(cr.getId() + "|" + cr.getProgramName() + "|" + cr.getClientId());
 
             ClientReferral result = null;
             List results = this.getHibernateTemplate().find("from ClientReferral r where r.ClientId = ? and r.Id < ? order by r.Id desc", new Object[] {cr.getClientId(), cr.getId()});
@@ -109,13 +108,10 @@ public class ClientReferralDAO extends HibernateDaoSupport {
         	String notes = "";
             if (!results.isEmpty()) {
                 result = (ClientReferral)results.get(0);
-        		System.out.println("--" + result.getId() + "|" + result.getProgramName() + "|" + result.getClientId());
             	completionNotes = result.getProgramName();
             	notes = isExternalProgram(Integer.parseInt(result.getProgramId().toString())) ? "Yes" : "No";
-        		System.out.println("--" + result.getProgramId().toString());
             } else {
             	// get program from table admission
-        		System.out.println("--" + cr.getClientId());
             	List lr = getAdmissions(Integer.parseInt(cr.getClientId().toString()));
             	Admission admission = (Admission) lr.get(lr.size() - 1);
             	completionNotes = admission.getProgramName(); 

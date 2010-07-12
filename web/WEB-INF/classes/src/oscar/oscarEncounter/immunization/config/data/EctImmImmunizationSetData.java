@@ -63,7 +63,7 @@ public class EctImmImmunizationSetData {
 					+ "')";
 			db.RunSQL(sql);
 		} catch (SQLException eee) {
-			System.out.println(eee.getMessage());
+			MiscUtils.getLogger().debug(eee.getMessage());
 		}
 	}
 
@@ -143,7 +143,7 @@ public class EctImmImmunizationSetData {
 					+ setId;
 			db.RunSQL(sql);
 		} catch (SQLException eee) {
-			System.out.println(eee.getMessage());
+			MiscUtils.getLogger().debug(eee.getMessage());
 		}
 	}
 }

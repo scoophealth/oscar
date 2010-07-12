@@ -73,7 +73,7 @@ public class DisplayImageAction extends DownloadAction{
            //String canonicalPath = file.getParentFile().getCanonicalPath(); //absolute path of the retrieved file
 
            if (!directory.equals(file.getParentFile())) {
-               System.out.println("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
+               MiscUtils.getLogger().debug("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
                throw new Exception("Could not open file " + fileName + ".  Check the file path");
            }
         }catch(Exception e){
@@ -90,7 +90,7 @@ public class DisplayImageAction extends DownloadAction{
         //check if the file type you are using is included
         if(contentType.equalsIgnoreCase("application/octet-stream")){
             contentType = "image/png";
-            System.out.println("----hard-coded-file type:<error-check the mimetype file to see if the filetype of file: "+file.getName()+" is in there> ...");
+            MiscUtils.getLogger().debug("----hard-coded-file type:<error-check the mimetype file to see if the filetype of file: "+file.getName()+" is in there> ...");
         }
         return new FileStreamInfo(contentType, file);
     }
@@ -108,7 +108,7 @@ public class DisplayImageAction extends DownloadAction{
            //String canonicalPath = file.getParentFile().getCanonicalPath(); //absolute path of the retrieved file
 
            if (!directory.equals(file.getParentFile())) {
-               System.out.println("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
+               MiscUtils.getLogger().debug("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
                throw new Exception("Could not open file " + imageFileName + ".  Check the file path");
            }
            return file;

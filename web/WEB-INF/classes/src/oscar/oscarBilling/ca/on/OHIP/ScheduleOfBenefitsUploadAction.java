@@ -96,7 +96,7 @@ public class ScheduleOfBenefitsUploadAction extends Action {
           MiscUtils.getLogger().error("Error", e); 
           outcome = "exception";
        } 
-       System.out.println("warnings "+warnings.size());
+       MiscUtils.getLogger().debug("warnings "+warnings.size());
        request.setAttribute("warnings",warnings);
        request.setAttribute("outcome", outcome);
        return mapping.findForward("success");
@@ -129,7 +129,7 @@ public class ScheduleOfBenefitsUploadAction extends Action {
             if(!place.endsWith("/"))
                     place = new StringBuffer(place).insert(place.length(),"/").toString();
             retVal = place+"LabUpload."+filename+"."+(new Date()).getTime();
-            System.out.println(retVal);
+            MiscUtils.getLogger().debug(retVal);
             //write the file to the file specified
             OutputStream bos = new FileOutputStream(retVal);
             int bytesRead = 0;
@@ -146,7 +146,7 @@ public class ScheduleOfBenefitsUploadAction extends Action {
         }
         catch (FileNotFoundException fnfe) {
             
-            System.out.println("File not found");
+            MiscUtils.getLogger().debug("File not found");
             MiscUtils.getLogger().error("Error", fnfe);            
             return isAdded=false;
             

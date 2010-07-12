@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 public final class RptDemographicReportForm extends ActionForm {
         public String[] select         = null;
@@ -78,7 +79,7 @@ public final class RptDemographicReportForm extends ActionForm {
         }
 
         public void setQuery( String str){
-            System.out.println("setQuery "+str);
+            MiscUtils.getLogger().debug("setQuery "+str);
             query = str;
         }
         //=---------------------------------------------------------------------
@@ -253,7 +254,7 @@ public final class RptDemographicReportForm extends ActionForm {
 
      ActionErrors errors = new ActionErrors();
      
-     System.out.println("step1");
+     MiscUtils.getLogger().debug("step1");
 //     
 //
 //     if ((select == null || select.length == 0) ){
@@ -303,7 +304,7 @@ public final class RptDemographicReportForm extends ActionForm {
 //         }
 //    }
 
-     System.out.println("step2 "+errors.size());
+     MiscUtils.getLogger().debug("step2 "+errors.size());
      return errors;
   }
 
@@ -311,7 +312,7 @@ public final class RptDemographicReportForm extends ActionForm {
     boolean retval = false;
     if (str != null && str.length() > 0){
             str = str.trim();
-            System.out.println("Start Year = "+str+"< len = "+str.length());
+            MiscUtils.getLogger().debug("Start Year = "+str+"< len = "+str.length());
             try{
                 Integer.parseInt(str);
                 retval = true;

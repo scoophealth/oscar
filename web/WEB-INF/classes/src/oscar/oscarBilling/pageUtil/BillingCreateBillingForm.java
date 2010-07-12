@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 public final class BillingCreateBillingForm extends ActionForm {
     
@@ -430,7 +431,7 @@ public final class BillingCreateBillingForm extends ActionForm {
      */
     public void reset(ActionMapping mapping, HttpServletRequest request){
         this.service = null;
-        System.out.println("RESET IS CALLED IN BILLING CREATE BILLING FORM");
+        MiscUtils.getLogger().debug("RESET IS CALLED IN BILLING CREATE BILLING FORM");
         // this.message = null;
         // this.subject = null;
         

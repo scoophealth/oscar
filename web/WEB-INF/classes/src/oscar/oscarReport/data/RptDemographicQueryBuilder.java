@@ -62,7 +62,7 @@ public class RptDemographicQueryBuilder {
     }
 
     public java.util.ArrayList buildQuery(RptDemographicReportForm frm,String asofRosterDate){
-      System.out.println("in buildQuery");
+      MiscUtils.getLogger().debug("in buildQuery");
 
         String[] select = frm.getSelect();
         stringBuffer =  new StringBuffer("select " );
@@ -176,7 +176,7 @@ public class RptDemographicQueryBuilder {
        // value="3">born in
        // value="4">born between
 
-       System.out.println("date style"+yStyle);
+       MiscUtils.getLogger().debug("date style"+yStyle);
         switch (yStyle){
             case 1:
                 whereClause();
@@ -207,10 +207,10 @@ public class RptDemographicQueryBuilder {
                 break;
             case 4:
                 whereClause();
-                System.out.println("age style "+ageStyle);
+                MiscUtils.getLogger().debug("age style "+ageStyle);
                 if (!ageStyle.equals("2")){
                   // stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" and ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
-                  System.out.println("VERIFYING INT"+startYear);
+                  MiscUtils.getLogger().debug("VERIFYING INT"+startYear);
                   //check to see if its a number 
                   if ( verifyInt (startYear) ){
                      stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" ) ");
@@ -279,7 +279,7 @@ public class RptDemographicQueryBuilder {
         }
 
         if (lastName != null && lastName.length() != 0 ){
-            System.out.println("last name = "+lastName+"<size = "+lastName.length());
+            MiscUtils.getLogger().debug("last name = "+lastName+"<size = "+lastName.length());
             whereClause();
             firstClause();
             theFirstFlag = 1;
@@ -342,19 +342,19 @@ public class RptDemographicQueryBuilder {
                     Integer.parseInt(limit);
                     stringBuffer.append(" limit "+limit+" ");
                 }
-                catch(Exception u){System.out.println("limit was not numeric >"+limit+"<");}
+                catch(Exception u){MiscUtils.getLogger().debug("limit was not numeric >"+limit+"<");}
             }
        }
 
 
 
-        System.out.println("SEARCH SQL STATEMENT \n"+stringBuffer.toString());
+        MiscUtils.getLogger().debug("SEARCH SQL STATEMENT \n"+stringBuffer.toString());
         java.util.ArrayList searchedArray = new java.util.ArrayList();
         try{
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
               rs = db.GetSQL(stringBuffer.toString());
-              System.out.println(stringBuffer.toString());
+              MiscUtils.getLogger().debug(stringBuffer.toString());
 
               while (rs.next()) {
 
@@ -386,12 +386,12 @@ public class RptDemographicQueryBuilder {
    }
    
    String  getInterval(String startYear){
-      System.out.println("in getInterval startYear "+startYear); 
+      MiscUtils.getLogger().debug("in getInterval startYear "+startYear); 
       String str = "";
       if (startYear.charAt(startYear.length()-1) == 'm' ){
          str = startYear.substring(0,(startYear.length()-1)) + " month";
       }
-      System.out.println(str);
+      MiscUtils.getLogger().debug(str);
       return str;
    }
 }

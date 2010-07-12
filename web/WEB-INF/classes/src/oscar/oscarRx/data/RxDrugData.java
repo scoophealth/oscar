@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarRx.util.RxDrugRef;
 
 public class RxDrugData {
@@ -73,7 +75,7 @@ public class RxDrugData {
           public DrugMonograph(){};
           
           public DrugMonograph(Hashtable hash){
-              System.out.println(hash);
+              MiscUtils.getLogger().debug(hash);
               name    = (String) hash.get("name");
               atc     = (String) hash.get("atc");
               product = (String) hash.get("product");
@@ -169,7 +171,7 @@ public class RxDrugData {
             this.name = (String) h.get("name");
             //this.type = (String) h.get("category");//type
             this.type = ((Integer) h.get("category")).toString();
-            System.out.println("pkey "+pKey+" name "+name+" type "+type);
+            MiscUtils.getLogger().debug("pkey "+pKey+" name "+name+" type "+type);
             //d.tag  = (Tag)    h.get("tag");
         }
         
@@ -543,7 +545,7 @@ public class RxDrugData {
                  String str = (String) alli.get(k);
                  int id = Integer.parseInt(str);
                  li.add(allerg[id]);
-                 System.out.println(str);
+                 MiscUtils.getLogger().debug(str);
               }
               
            }
@@ -569,7 +571,7 @@ public class RxDrugData {
         RxDrugRef d = new RxDrugRef();
         for(int i = 0; i < atcCodes.size(); i++){
            String ss = (String) atcCodes.get(i);
-           System.out.println(ss);           
+           MiscUtils.getLogger().debug(ss);           
         }
         
         v = d.getInteractions(atcCodes);
@@ -585,11 +587,11 @@ public class RxDrugData {
             inact.significance = (String) h.get("significance");
             inact.comment = (String) h.get("comment");
             lst.add(inact);
-            System.out.println("affectingDrug"+inact.affectingdrug);
+            MiscUtils.getLogger().debug("affectingDrug"+inact.affectingdrug);
         }
-        System.out.println(lst.size());
+        MiscUtils.getLogger().debug(lst.size());
         arr = (Interaction[])lst.toArray(arr);
-        System.out.println(arr.length);
+        MiscUtils.getLogger().debug(arr.length);
         return arr;
      }
      

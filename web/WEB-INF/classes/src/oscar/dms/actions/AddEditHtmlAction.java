@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionRedirect;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -106,7 +107,7 @@ public class AddEditHtmlAction extends Action {
 	    reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
 	}
         EDoc currentDoc;
-        System.out.println("mode: " + fm.getMode());
+        MiscUtils.getLogger().debug("mode: " + fm.getMode());
         if (fm.getMode().indexOf("add") != -1) {
             currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, fm.getHtml(), fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'H', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             currentDoc.setContentType("text/html");

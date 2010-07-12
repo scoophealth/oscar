@@ -89,9 +89,9 @@ public class RHWorkFlow implements WorkFlow {
     }
 
     public String getState(String state) {
-        System.out.println("state: "+state);
+        MiscUtils.getLogger().debug("state: "+state);
         WFState wf = (WFState) states.get(state);
-        System.out.println("wf "+wf);
+        MiscUtils.getLogger().debug("wf "+wf);
         
         String ret = "None";
         if (wf != null){

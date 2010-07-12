@@ -98,7 +98,7 @@ public class ProviderMyOscarIdData {
         db.RunSQL(sql);
        
        }catch( SQLException ex ) {
-           System.out.println("Error adding provider myOscar Login Id: " + ex.getMessage());
+           MiscUtils.getLogger().debug("Error adding provider myOscar Login Id: " + ex.getMessage());
            ret = false;
        }
        
@@ -130,7 +130,7 @@ public class ProviderMyOscarIdData {
           db = new DBHandler(DBHandler.OSCAR_DATA);
           
           sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarId+ "'";
-          System.out.println(sql);
+          MiscUtils.getLogger().debug(sql);
           rs = db.GetSQL(sql);
           
           if( rs.next() ) {

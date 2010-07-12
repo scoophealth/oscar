@@ -69,7 +69,7 @@ public class RxSendToPhrAction extends Action {
         prescribedDrugs = patient.getPrescribedDrugs();
         
         
-        System.out.println("prescribed drugs length" + prescribedDrugs.length);
+        MiscUtils.getLogger().debug("prescribed drugs length" + prescribedDrugs.length);
         for( int idx = 0; idx < prescribedDrugs.length; ++idx ) {
               Prescription drug = prescribedDrugs[idx];
               if(drug.isCurrent() == true && !drug.isArchived() ){
@@ -77,7 +77,7 @@ public class RxSendToPhrAction extends Action {
                       // if updating removed because drugs are never edited, only represcribed
                       /*if (phrService.isIndivoRegistered(phrConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"")) {
                            //if updating
-                           System.out.println("running update");
+                           MiscUtils.getLogger().debug("running update");
                            String phrDrugIndex = phrService.getPhrIndex(phrConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"");
                            phrService.sendUpdateMedication(prov, demoNo, patientMyOscarId, drug, phrDrugIndex);
                            //drug.setIndivoIdx(newIndex);

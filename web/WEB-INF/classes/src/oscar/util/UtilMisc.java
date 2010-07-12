@@ -365,7 +365,7 @@ public class UtilMisc {
       stop = stop < step ? start : step++;
       step = step < 1 ? 1 : step;
       int arrayLen = (stop - start) / step + (stop - start) % step;
-      System.out.println(arrayLen);
+      MiscUtils.getLogger().debug(arrayLen);
       int[] rangeArray = new int[arrayLen];
       for (int i = 0; i < arrayLen; i++) {
         if (i == 0) {

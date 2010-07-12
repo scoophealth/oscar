@@ -46,7 +46,7 @@ public class EctImmDeleteImmunizationSetAction extends Action {
       String sets[] = frm.getImmuSets();
       StringBuffer stringBuffer = new StringBuffer(" Update config_Immunization set archived = 1 where ");
       for(int i = 0; i < sets.length; i++) {
-         System.out.println(String.valueOf(String.valueOf((new StringBuffer("set len ")).append(sets.length - 1).append(" i = ").append(i))));
+         MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer("set len ")).append(sets.length - 1).append(" i = ").append(i))));
          if(i == sets.length - 1)
             stringBuffer.append("setId = ".concat(String.valueOf(String.valueOf(sets[i]))));
          else

@@ -180,17 +180,17 @@ public class ScatterPlotChartServlet extends HttpServlet
                         
                         for( int x = 0; x < results[1].length/2; x++ )
                         {                                
-                                System.out.println("systolic" + x + " " + results[1][x]);
+                                MiscUtils.getLogger().debug("systolic" + x + " " + results[1][x]);
                                 points[0][x] = results[1][x];
                                 int testNum = x + 1;
                                 String xAxisLabel = "test" + testNum;
                                 xAxisLabels[x] = xAxisLabel;
-                                System.out.println("xAxisLabel is " + xAxisLabels[x]);
+                                MiscUtils.getLogger().debug("xAxisLabel is " + xAxisLabels[x]);
                         }                                           
                         
                         for( int x = 0; x < results[1].length/2; x++ )
                         {                                                               
-                                System.out.println("Diastolic" + x + results[1][x+offset]);
+                                MiscUtils.getLogger().debug("Diastolic" + x + results[1][x+offset]);
                                 points[1][x] = results[1][x+offset];                                                               
                         }
                         
@@ -198,11 +198,11 @@ public class ScatterPlotChartServlet extends HttpServlet
                             AxisChartDataSet acds = new AxisChartDataSet(points, legendLabels, paints,ChartType.LINE, lineChartProperties );
                             dataSeries = new DataSeries( xAxisLabels, xAxisTitle, yAxisTitle, chartTitle );
                             dataSeries.addIAxisPlotDataSet(acds);
-                            System.out.println("the diastolic data has been added successfully");
+                            MiscUtils.getLogger().debug("the diastolic data has been added successfully");
                         }
                         catch(Exception e)
                         {
-                                System.out.println(e);
+                                MiscUtils.getLogger().debug(e);
                         }                                                                        
                         
                     }
@@ -226,7 +226,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                     String sql = "SELECT DISTINCT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
                                  + "' ORDER BY dateObserved";
-                    System.out.println("SQL Statement: " + sql);
+                    MiscUtils.getLogger().debug("SQL Statement: " + sql);
                     ResultSet rs;
                     rs = db.GetSQL(sql);                
                     rs.last();
@@ -243,7 +243,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                             Date dateObserved = rs.getDate("dateObserved");
                             points[0][i] = dateObserved.getTime()/1000/60/60/24;                        
                             points[1][i] = rsData.getLong("dataField");
-                            System.out.println("Date: " + points[0][i] + " Value: " + points[1][i]);
+                            MiscUtils.getLogger().debug("Date: " + points[0][i] + " Value: " + points[1][i]);
                         }
                         rsData.close();
                         rs.next();
@@ -254,7 +254,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                     String sql = "SELECT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
                                  + "' GROUP BY dateObserved ORDER BY dateObserved";
-                    System.out.println("SQL Statement: " + sql);
+                    MiscUtils.getLogger().debug("SQL Statement: " + sql);
                     ResultSet rs;
                     rs = db.GetSQL(sql);                
                     rs.last();                    
@@ -264,38 +264,38 @@ public class ScatterPlotChartServlet extends HttpServlet
                     points = new long[2][nbPatient*2];                    
                     
                    
-                    System.out.println("number of record: " + Integer.toString(nbPatient));
+                    MiscUtils.getLogger().debug("number of record: " + Integer.toString(nbPatient));
                     for(int i=0; i<nbPatient; i++){
                         if(rs.next()){                            
                             sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
                                     + "' AND dateObserved='"+db.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
-                            System.out.println("sql dateObserved: " + sql);
+                            MiscUtils.getLogger().debug("sql dateObserved: " + sql);
                             ResultSet rsData;
                             rsData = db.GetSQL(sql);
                             if(rsData.next()){
                                 String bloodPressure = rsData.getString("dataField");
-                                System.out.println("bloodPressure: " + bloodPressure);
+                                MiscUtils.getLogger().debug("bloodPressure: " + bloodPressure);
                                 int slashIndex = bloodPressure.indexOf("/");            
                                 if (slashIndex >= 0){
                                     String systolic = bloodPressure.substring(0, slashIndex);
                                     Date dateObserved = rs.getDate("dateObserved");
                                     points[0][i] = dateObserved.getTime()/1000/60/60/24;                                
                                     points[1][i] = Long.parseLong(systolic);
-                                    System.out.println("systolic: " + i + " " + systolic);
+                                    MiscUtils.getLogger().debug("systolic: " + i + " " + systolic);
 
                                     String diastolic = bloodPressure.substring(slashIndex+1);
                                     points[0][i+nbPatient] = dateObserved.getTime()/1000/60/60/24;
                                     points[1][i+nbPatient] = Long.parseLong(diastolic);
-                                    System.out.println("diastolic: " + points[1][i+nbPatient]);
+                                    MiscUtils.getLogger().debug("diastolic: " + points[1][i+nbPatient]);
                                 }                                                                          
                             }
                             rsData.close();
                         }
                     }
                     /*for(int i=0; i<nbPatient; i++){ 
-                        System.out.println("the result is: " + points[i]);
+                        MiscUtils.getLogger().debug("the result is: " + points[i]);
                     }*/
-                    System.out.println("Store blood pressure data to a new array successfully" );
+                    MiscUtils.getLogger().debug("Store blood pressure data to a new array successfully" );
                     rs.close();
                 }
                 
@@ -314,7 +314,7 @@ public class ScatterPlotChartServlet extends HttpServlet
             try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 String sql = "SELECT * FROM measurementType WHERE type='"+ type + "' AND measuringInstruction='" + mInstrc + "'";
-                System.out.println("SQL Statement: " + sql);
+                MiscUtils.getLogger().debug("SQL Statement: " + sql);
                 ResultSet rs;
                 rs = db.GetSQL(sql);                
                 rs.next();

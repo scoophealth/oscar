@@ -120,7 +120,6 @@ public class PHRMessageAction extends DispatchAction {
 
         if (actionsPendingApproval != null) {
             request.getSession().setAttribute("actionsPendingApproval", actionsPendingApproval);
-            System.out.println("====actionPendinapproval is not null");
         }
             
         return mapping.findForward("view");

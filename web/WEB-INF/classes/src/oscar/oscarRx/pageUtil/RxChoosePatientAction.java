@@ -48,11 +48,11 @@ public final class RxChoosePatientAction extends Action {
     private static UserPropertyDAO userPropertyDAO;
 
     public void p(String s) {
-        System.out.println(s);
+        MiscUtils.getLogger().debug(s);
     }
 
     public void p(String s, String s2) {
-        System.out.println(s + "=" + s2);
+        MiscUtils.getLogger().debug(s + "=" + s2);
     }
 
     public ActionForward execute(ActionMapping mapping,
@@ -101,7 +101,7 @@ public final class RxChoosePatientAction extends Action {
         if(patient!=null) {
             request.getSession().setAttribute("Patient", patient);
             if(OscarProperties.getInstance().getBooleanProperty("RX3", "yes")||providerUseRx3){//if rx3 is set to yes.
-                System.out.println("successRX3");
+                MiscUtils.getLogger().debug("successRX3");
                 //set the profile view
                 UserProperty prop = userPropertyDAO.getProp(provider, UserProperty.RX_PROFILE_VIEW);
                 if (prop != null) {

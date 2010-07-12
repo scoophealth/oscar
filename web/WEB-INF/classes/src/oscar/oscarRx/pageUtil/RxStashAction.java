@@ -72,9 +72,9 @@ public final class RxStashAction extends DispatchAction {
                 }
             }
         }
-   /*     System.out.println("bean.getStashIndex()="+bean.getStashIndex());
-         System.out.println("bean.getStashSize()="+bean.getStashSize());
-        System.out.println("===========end in rxstatshaction.java===========");
+   /*     MiscUtils.getLogger().debug("bean.getStashIndex()="+bean.getStashIndex());
+         MiscUtils.getLogger().debug("bean.getStashSize()="+bean.getStashSize());
+        MiscUtils.getLogger().debug("===========end in rxstatshaction.java===========");
      */   return mapping.findForward("success");
     }
 
@@ -128,7 +128,7 @@ public final class RxStashAction extends DispatchAction {
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-                System.out.println("===========start in deletePrescribe ===========");
+                MiscUtils.getLogger().debug("===========start in deletePrescribe ===========");
 
 
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -139,7 +139,7 @@ public final class RxStashAction extends DispatchAction {
         }
 
         int randomId=Integer.parseInt(request.getParameter("randomId"));
-       System.out.println("randomId="+randomId);
+       MiscUtils.getLogger().debug("randomId="+randomId);
        int stashId=bean.getIndexFromRx(randomId);
        if(stashId!=-1){
                 bean.removeStashItem(stashId);
@@ -147,7 +147,7 @@ public final class RxStashAction extends DispatchAction {
                     bean.setStashIndex(bean.getStashSize() - 1);
                 }
        }else{
-        System.out.println("stashId iss  -1");
+        MiscUtils.getLogger().debug("stashId iss  -1");
        }
 
         return mapping.findForward("success");

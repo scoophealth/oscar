@@ -44,6 +44,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
 import oscar.form.study.HSFO.HSFODAO;
@@ -82,7 +83,7 @@ public class ManageHSFOAction extends Action{
         String isfirstrecord = "";
         boolean firstrecord=false;
         String user = (String) request.getSession().getAttribute("user");
-        System.out.println(request.getAttribute("Id"));
+        MiscUtils.getLogger().debug(request.getAttribute("Id"));
         
         
         HSFODAO hsfoDAO = new HSFODAO();
@@ -106,25 +107,17 @@ public class ManageHSFOAction extends Action{
             patientData = hsfoDAO.retrievePatientRecord(id);
             patientHistory = hsfoDAO.retrieveVisitRecord(id);
             
-            System.out.println("Size: " + patientHistory.size());
             int size = patientHistory.size();
             
             //retrieve the most recent record
             if ( request.getParameter("refresh") != null && request.getParameter("refresh").equals("true")){
-                System.out.println("IN REFRESH == ");
                 int num = Integer.parseInt(request.getParameter("recordNumber"));
-                System.out.print(num);
-                System.out.println();
                 latestVisitData = hsfoDAO.retrieveSelectedRecord(num);
             }else if ( request.getParameter("formId") != null  ){   
                 int num = Integer.parseInt(request.getParameter("formId"));
-                System.out.print(num);
-                System.out.println();
                 latestVisitData = hsfoDAO.retrieveSelectedRecord(num);
             }else if ( request.getAttribute("formId") != null  ){   
                 Integer num = (Integer) request.getAttribute("formId");
-                System.out.print("NUUMM "+num);
-                System.out.println();
                 latestVisitData = hsfoDAO.retrieveSelectedRecord(num.intValue());
             }else{
                 latestVisitData = (VisitData)patientHistory.get(size-1);
@@ -134,7 +127,6 @@ public class ManageHSFOAction extends Action{
                 //Should is set todays date as the visit Date?
                 
             }
-            System.out.println("Recent: " + latestVisitData.getVisitDate_Id());
             
             
             int SBPArray[] = new int[size];
@@ -351,7 +343,7 @@ public class ManageHSFOAction extends Action{
     }
     //method to convert the date
     protected String setDate(int mnth, int year){
-        System.out.println("month "+ mnth+" year "+year);
+        MiscUtils.getLogger().debug("month "+ mnth+" year "+year);
         
         String date="";
         String month="";

@@ -141,11 +141,11 @@ public class ExtractBean extends Object implements Serializable {
             // htmlValue = htmlContentHeader;
             value = batchHeader;
             dbExtract dbExt = new dbExtract();
-            System.out.println("1st billing query d");
+            MiscUtils.getLogger().debug("1st billing query d");
             
             dbExt.openConnection();
             query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
-            System.out.println("1st billing query "+query);
+            MiscUtils.getLogger().debug("1st billing query "+query);
             ResultSet rs = dbExt.executeQuery(query);
             if (rs != null){
                 while(rs.next()) {
@@ -256,7 +256,7 @@ public class ExtractBean extends Object implements Serializable {
                         //String dataLine =     rs2.getString("claimcode") + rs2.getString("datacenter") + forwardZero(logNo,7) + rs2.getString("payee_no") + rs2.getString("practitioner_no") +     forwardZero(rs2.getString("phn"),10)    + rs2.getString("name_verify") + rs2.getString("dependent_num") + forwardZero(rs2.getString("billing_unit"),3) + rs2.getString("clarification_code") + rs2.getString("anatomical_area") + rs2.getString("after_hour") + rs2.getString("new_program") + rs2.getString("billing_code") + moneyFormat(rs2.getString("bill_amount"),7) + rs2.getString("payment_mode") + rs2.getString("service_date") +rs2.getString("service_to_day") + rs2.getString("submission_code") + space(1) + backwardSpace(rs2.getString("dx_code1"), 5) + backwardSpace(rs2.getString("dx_code2"), 5) + backwardSpace(rs2.getString("dx_code3"), 5)+ space(15) + rs2.getString("service_location")+ forwardZero(rs2.getString("referral_flag1"), 1) + forwardZero(rs2.getString("referral_no1"),5)+ forwardZero(rs2.getString("referral_flag2"),1) + forwardZero(rs2.getString("referral_no2"),5) + forwardZero(rs2.getString("time_call"),4) + zero(4) + zero(4)+ forwardZero(rs2.getString("birth_date"),8) + forwardZero(rs2.getString("billingmaster_no"), 7) +rs2.getString("correspondence_code")+ space(20) + rs2.getString("mva_claim_code") + rs2.getString("icbc_claim_no") + rs2.getString("original_claim") + rs2.getString("facility_no")+ rs2.getString("facility_sub_no")+ space(58) + backwardSpace(rs2.getString("oin_insurer_code"),2) + backwardSpace(rs2.getString("oin_registration_no"),12)+ backwardSpace(rs2.getString("oin_birthdate"),8)+backwardSpace(rs2.getString("oin_first_name"),12) +backwardSpace(rs2.getString("oin_second_name"),1) + backwardSpace(rs2.getString("oin_surname"),18)+ backwardSpace(rs2.getString("oin_sex_code"),1) + backwardSpace(rs2.getString("oin_address"),25) + backwardSpace(rs2.getString("oin_address2"),25) + backwardSpace(rs2.getString("oin_address3"),25)+ backwardSpace(rs2.getString("oin_address4"),25)+ backwardSpace(rs2.getString("oin_postalcode"),6);
                         String dataLine = getClaimDetailRecord(rs2,logNo);
                         if (dataLine.length() != 424 ){
-                            System.out.println("dataLine2 "+logNo+" Len"+dataLine.length());
+                            MiscUtils.getLogger().debug("dataLine2 "+logNo+" Len"+dataLine.length());
                         }                        
                         value = value + "\n"+dataLine+"\r";
                         logValue =  dataLine;

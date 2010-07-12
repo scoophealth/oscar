@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.login.DBHelp;
 
@@ -123,7 +124,7 @@ public final class RptReportCreator {
             //ret = DateFormatUtils.format(DateUtils.parseDate(strDate, new String[] { oDate }),
             // nDate);
         } else {
-            System.out.println(" getDate wrong!!!");
+            MiscUtils.getLogger().debug(" getDate wrong!!!");
         }
         return ret;
     }
@@ -133,7 +134,7 @@ public final class RptReportCreator {
         String ret = "0";
 
         ResultSet rs = dbObj.searchDBRecord(sql);
-        System.out.println(" tempVal: " + sql);
+        MiscUtils.getLogger().debug(" tempVal: " + sql);
         while (rs.next()) {
             if ("0".equals(ret)) {
                 ret = "";

@@ -130,7 +130,7 @@ public class DemographicExt {
                String key = db.getString(rs,"key_val");
                String val = db.getString(rs,"value");
                
-               System.out.println("for hash Key "+key+" value "+val);
+               MiscUtils.getLogger().debug("for hash Key "+key+" value "+val);
                if(key != null && val != null){
                   retval.put(key,val);
                }
@@ -141,7 +141,7 @@ public class DemographicExt {
         } catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }
-      System.out.println("size of hash "+retval.size());
+      MiscUtils.getLogger().debug("size of hash "+retval.size());
       return retval;
       
    }
@@ -155,7 +155,7 @@ public class DemographicExt {
          String val = (String) h.get(key);
          String[] sArr = new String[] {key,val};
          arr.add(sArr);
-         System.out.println("has2Arr "+key+" val "+val);
+         MiscUtils.getLogger().debug("has2Arr "+key+" val "+val);
       }
       
       return  arr;
@@ -199,7 +199,7 @@ public class DemographicExt {
    
    
    public void addKey(String providerNo, String demo,String key, String newValue,String oldValue){
-      System.out.println("String providerNo "+providerNo+" String demo "+demo+" String key "+key+" String newValue "+newValue+" String oldValue"+oldValue);
+      MiscUtils.getLogger().debug("String providerNo "+providerNo+" String demo "+demo+" String key "+key+" String newValue "+newValue+" String oldValue"+oldValue);
       if ( oldValue == null ){ oldValue = ""; }
       if (newValue != null && !oldValue.equalsIgnoreCase(newValue)){
          

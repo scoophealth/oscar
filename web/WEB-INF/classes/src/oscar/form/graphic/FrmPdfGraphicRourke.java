@@ -32,6 +32,8 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -72,7 +74,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
                     range = 1;
                 
                 deltaX = nMaxPixX / range;
-                System.out.println("deltaX " + deltaX);
+                MiscUtils.getLogger().debug("deltaX " + deltaX);
                 
                 str = prop.getProperty("__fStartY");
                 fStartY = toFloat(str);
@@ -85,7 +87,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
                     range = 1;
                 
                 deltaY = nMaxPixY / range;
-                System.out.println("deltaY " + deltaY);
+                MiscUtils.getLogger().debug("deltaY " + deltaY);
                 
                 dateFormat_ = prop.getProperty("__dateFormat");
                 
@@ -102,7 +104,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             date = dateFormat.parse(strDate);
         }
         catch( ParseException ex ) {
-            System.out.println("FrmPdfGraphicRourke: Error creating calendar " + ex.getMessage());
+            MiscUtils.getLogger().debug("FrmPdfGraphicRourke: Error creating calendar " + ex.getMessage());
             date = new Date();
         }
         GregorianCalendar cal = new GregorianCalendar();
@@ -130,10 +132,10 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
         GregorianCalendar curDate;
         xDate = makeDateStr(xDate);
         
-        System.out.println("xDate: " + xDate);
-        System.out.println("yHeight = " + yHeight );
+        MiscUtils.getLogger().debug("xDate: " + xDate);
+        MiscUtils.getLogger().debug("yHeight = " + yHeight );
         if( (ycoord = toFloat(yHeight)) > -1 ) {
-            System.out.println("ycoord = " + ycoord );
+            MiscUtils.getLogger().debug("ycoord = " + ycoord );
             //calc diff between start date and current date
             curDate = createCalendar(xDate);                        
             
@@ -145,7 +147,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             sday = (float)startDate.get(Calendar.DAY_OF_MONTH);
             eday = (float)curDate.get(Calendar.DAY_OF_MONTH);
             
-            System.out.println("sday, eday " + sday + ", " + eday);
+            MiscUtils.getLogger().debug("sday, eday " + sday + ", " + eday);
             
             smonth += (sday / (float)startDate.getActualMaximum(Calendar.DAY_OF_MONTH));
             emonth += (eday / (float)curDate.getActualMaximum(Calendar.DAY_OF_MONTH));                        
@@ -155,21 +157,21 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             emonth += (float)curDate.get(Calendar.YEAR) * 12.0;
             
             if ( smonth > emonth ) {
-                System.out.println("FrmPdfGraphicRourke: Start date after xDate");
+                MiscUtils.getLogger().debug("FrmPdfGraphicRourke: Start date after xDate");
                 return;
             }                
             if( fStartY > ycoord ) {
-                System.out.println("FrmPdfGraphicRourke: Ycoord less than starting Y value");
+                MiscUtils.getLogger().debug("FrmPdfGraphicRourke: Ycoord less than starting Y value");
                 return;
             }
                 
-            System.out.println("emonth,  smonth " + emonth + ", " + smonth);
+            MiscUtils.getLogger().debug("emonth,  smonth " + emonth + ", " + smonth);
             
             //calc xcoord and ycoord
             xcoord = deltaX * (emonth - smonth);            
             ycoord = deltaY * (ycoord - fStartY);
             
-            System.out.println("Graphic x y: " + xcoord + ", " + ycoord );
+            MiscUtils.getLogger().debug("Graphic x y: " + xcoord + ", " + ycoord );
             xyProp.setProperty(String.valueOf(xcoord), String.valueOf(ycoord));
         }
     }
@@ -178,7 +180,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
         
         str = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(str, dateFormat_), DATEFORMAT);                        
         if( str.equals("") )            
-            System.out.println("FrmPdfGraphicRourke: bad date format " + str);            
+            MiscUtils.getLogger().debug("FrmPdfGraphicRourke: bad date format " + str);            
         
         return str;
     } 
@@ -191,7 +193,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
         }
         catch( NumberFormatException ex) {
             num = -1f;
-            System.out.println("FrmPdfGraphicRourke class: error parsing float " + ex.getMessage() );
+            MiscUtils.getLogger().debug("FrmPdfGraphicRourke class: error parsing float " + ex.getMessage() );
         }
         
         return num;
@@ -206,7 +208,7 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
         }
         catch( NumberFormatException ex) {
             num = 0;
-            System.out.println("FrmPdfGraphicRourke class: error parsing integer " + ex.getMessage());
+            MiscUtils.getLogger().debug("FrmPdfGraphicRourke class: error parsing integer " + ex.getMessage());
         }
         
         return num;

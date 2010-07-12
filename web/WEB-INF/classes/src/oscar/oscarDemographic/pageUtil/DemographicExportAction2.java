@@ -1315,7 +1315,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    for (int j=0; j<params.length; j++){
 		System.out.print(" "+params[j].getName());
 	    }
-	    System.out.println(")");
+	    MiscUtils.getLogger().debug(")");
 	}
     }
     

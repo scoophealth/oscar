@@ -53,8 +53,6 @@ public class TipoAtendimentoDAO extends DAO {
         String sql = "select ta.co_tipo_atendimento, ta.ds_tipo_atendimento " +
             "from cad_tipos_atendimento ta";
         
-        System.out.println(sql);
-
         DBHandler db = getDb();
 
         try {

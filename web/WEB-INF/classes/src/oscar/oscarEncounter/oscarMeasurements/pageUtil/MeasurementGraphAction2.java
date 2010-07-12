@@ -77,6 +77,7 @@ import org.jfree.data.xy.DefaultOHLCDataset;
 import org.jfree.data.xy.OHLCDataItem;
 import org.jfree.data.xy.XYDataset;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -599,13 +600,13 @@ public class MeasurementGraphAction2 extends Action {
             
             CommonLabTestValues comVal =  new CommonLabTestValues();
             ArrayList<Hashtable> list = null;
-            System.out.println(" lab type >"+labType+"< >"+labType.equals("loinc")+"<"+testName+" "+identifier);
+            MiscUtils.getLogger().debug(" lab type >"+labType+"< >"+labType.equals("loinc")+"<"+testName+" "+identifier);
             if (labType.equals("loinc")){
               try{  
               DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
               Connection conn = DBHandler.getConnection();
               list = comVal.findValuesByLoinc2(demographicNo, identifier, conn );
-              System.out.println("List ->"+list.size());
+              MiscUtils.getLogger().debug("List ->"+list.size());
               conn.close();
               }catch(Exception ed){
                   ed.printStackTrace();
@@ -917,7 +918,7 @@ public class MeasurementGraphAction2 extends Action {
      * Just Drugs
      */
     JFreeChart ChartMeds(String demographicNo,String patientName, String chartTitle,String[] drugs) {
-            System.out.println("In ChartMeds");
+            MiscUtils.getLogger().debug("In ChartMeds");
             org.jfree.data.time.TimeSeriesCollection dataset = new org.jfree.data.time.TimeSeriesCollection();
             JFreeChart chart = ChartFactory.createTimeSeriesChart(chartTitle, "Days", "MEDS", dataset, true, true, true);
 

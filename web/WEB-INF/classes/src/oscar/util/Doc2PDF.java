@@ -73,7 +73,7 @@ public class Doc2PDF {
 
             tidy.parse(in, tidyout);
 
-            System.out.println(tidyout.toString());
+            MiscUtils.getLogger().debug(tidyout.toString());
             String documentTxt = AddAbsoluteTag(request, tidyout.toString(), uri);
 
             PrintPDFFromHTMLString(response, documentTxt);
@@ -222,7 +222,7 @@ public class Doc2PDF {
 
         }
         catch (IOException ioe) {
-            System.out.println("IO error: " + ioe);
+            MiscUtils.getLogger().debug("IO error: " + ioe);
         }
     }
 
@@ -233,7 +233,7 @@ public class Doc2PDF {
 
             URL url = new URI(uri + ";jsessionid=" + jsessionid).toURL();
 
-            System.out.println(" " + uri + ";jsessionid=" + jsessionid);
+            MiscUtils.getLogger().debug(" " + uri + ";jsessionid=" + jsessionid);
 
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 

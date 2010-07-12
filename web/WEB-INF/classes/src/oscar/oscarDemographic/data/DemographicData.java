@@ -50,16 +50,16 @@ public class DemographicData {
 	public String getDemographicFirstLastName(String demographicNo) {
 		String fullName = "";
 		_log.debug("test");
-		System.out.println("test");
+		MiscUtils.getLogger().debug("test");
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
 			String sql = "SELECT first_name, last_name FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = db.GetSQL(sql);
-			System.out.println("sql: " + sql);
+			MiscUtils.getLogger().debug("sql: " + sql);
 
 			if (rs.next()) {
-				System.out.println(db.getString(rs, "first_name"));
+				MiscUtils.getLogger().debug(db.getString(rs, "first_name"));
 				fullName = db.getString(rs, "first_name") + " " + db.getString(rs, "last_name");
 			}
 			rs.close();
@@ -952,12 +952,12 @@ public class DemographicData {
 				add_record.close();
 				rs.close();
 			} catch (Exception e) {
-				System.out.println("LOG ADD RECORD " + chart_no);
+				MiscUtils.getLogger().debug("LOG ADD RECORD " + chart_no);
 				MiscUtils.getLogger().error("Error", e);
 				ret = null;
 			}
 		} else {
-			System.out.println("NOT ADDED");
+			MiscUtils.getLogger().debug("NOT ADDED");
 		}
 
 		return ret;

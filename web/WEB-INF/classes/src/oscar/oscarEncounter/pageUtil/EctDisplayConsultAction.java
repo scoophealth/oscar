@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.util.DateUtils;
@@ -118,7 +119,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                     }
                 }
                 catch(ParseException ex ) {
-                    System.out.println("EctDisplayConsultationAction: Error creating date " + ex.getMessage());
+                    MiscUtils.getLogger().debug("EctDisplayConsultationAction: Error creating date " + ex.getMessage());
                     serviceDateStr = "Error";
                     date = null;
                 }

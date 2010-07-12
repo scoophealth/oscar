@@ -65,7 +65,7 @@ public class FileLabsAction extends Action {
 
                if (s != null){  //This means that the lab was of this type.
                   String[] la =  new String[] {flaggedLabs[i],labTypes[j]}; 
-                  System.out.println("ADDING lab "+flaggedLabs[i]+" of lab type "+labTypes[j]);
+                  MiscUtils.getLogger().debug("ADDING lab "+flaggedLabs[i]+" of lab type "+labTypes[j]);
                   listFlaggedLabs.add(la);
                   j = labTypes.length;
 

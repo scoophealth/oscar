@@ -53,7 +53,7 @@ public class EctRemoteAttachments
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
             String sql ="Select * from remoteAttachments where demographic_no = '"+demoNo+"' order by date";
-            System.out.println("sql message "+sql);
+            MiscUtils.getLogger().debug("sql message "+sql);
             rs = db.GetSQL(sql); 
             //for(rs = db.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM remoteAttachments WHERE demographic_no = '")).append(demoNo).append("' order by date ")))); rs.next(); dates.add(db.getString(rs,"date")))
             while(rs.next())
@@ -67,7 +67,7 @@ public class EctRemoteAttachments
         }
         catch(SQLException e)
         {
-            System.out.println("CrAsH");
+            MiscUtils.getLogger().debug("CrAsH");
         }
     }
 
@@ -79,7 +79,7 @@ public class EctRemoteAttachments
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
             String sql = "select ocl.locationDesc, mess.thesubject from messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '"+messId+"' ";
-	    System.out.println("sql ="+sql);
+	    MiscUtils.getLogger().debug("sql ="+sql);
 	    rs = db.GetSQL(sql);
 //            for(rs = db.GetSQL(String.valueOf(String.valueOf((new StringBuffer("SELECT ocl.locationDesc, mess.thesubject FROM messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '")).append(messId).append("'"))));
              while ( rs.next()){
@@ -90,7 +90,7 @@ public class EctRemoteAttachments
         }
         catch(SQLException e)
         {
-            System.out.println("CrAsH");
+            MiscUtils.getLogger().debug("CrAsH");
             MiscUtils.getLogger().error("Error", e);
         }
         return retval;

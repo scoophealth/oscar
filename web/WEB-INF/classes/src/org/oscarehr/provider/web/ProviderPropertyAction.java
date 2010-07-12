@@ -300,7 +300,6 @@ public class ProviderPropertyAction extends DispatchAction {
 
          DynaActionForm frm = (DynaActionForm)actionform;
          String provider = (String) request.getSession().getAttribute("user");
-         System.out.println("provider # "+provider);
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_PAGE_SIZE);
 
 
@@ -321,7 +320,6 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("method","saveRxPageSize");
 
          frm.set("rxPageSizeProperty", prop);
-         System.out.println("Finish in viewRxPageSize");
          return actionmapping.findForward("genRxPageSize");
      }
 
@@ -352,7 +350,6 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("providerbtnSubmit","provider.setRxPageSize.btnSubmit"); //=Save
          request.setAttribute("providermsgSuccess","provider.setRxPageSize.msgSuccess"); //=Rx Script Page Size saved
          request.setAttribute("method","saveRxPageSize");
-         System.out.println("Finish in saveRxPageSize");
          return actionmapping.findForward("genRxPageSize");
     }
 
@@ -376,7 +373,6 @@ public class ProviderPropertyAction extends DispatchAction {
                  request.setAttribute("providermsgProvider","provider.setDefaultDocumentQueue.msgProfileView"); //=Default Document Queue
                  request.setAttribute("providermsgSuccess","provider.setDefaultDocumentQueue.msgNotSaved"); //=Default Document Queue has NOT been saved
                  request.setAttribute("method","saveDefaultDocQueue");
-                 System.out.println("Finish in saveDefaultDocQueue");
                  return actionmapping.findForward("genDefaultDocQueue");
         }
         UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.DOC_DEFAULT_QUEUE);
@@ -385,7 +381,6 @@ public class ProviderPropertyAction extends DispatchAction {
             prop.setName(UserProperty.DOC_DEFAULT_QUEUE);
             prop.setProviderNo(provider);
         }
-        System.out.println("defaultQ="+defaultQ);
         if(mode.equals("new")){
             //save and get most recent id
             QueueData.addNewQueue(defaultQ);
@@ -403,7 +398,6 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("providermsgProvider","provider.setDefaultDocumentQueue.msgProfileView"); //=Default Document Queue
          request.setAttribute("providermsgSuccess","provider.setDefaultDocumentQueue.msgSuccess"); //=Default Document Queue saved
          request.setAttribute("method","saveDefaultDocQueue");
-         System.out.println("Finish in saveDefaultDocQueue");
          return actionmapping.findForward("genDefaultDocQueue");
     }
     //public ActionForward viewDefaultDocQueue(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
@@ -459,9 +453,7 @@ public class ProviderPropertyAction extends DispatchAction {
          String [] va={" show_current "," show_all "," active "," inactive "," all "," longterm_acute "," longterm_acute_inactive_external "};
 
          for(int i=0;i<propertyArray.length;i++){
-             System.out.println(propValue +"--"+va[i]);
              if(propValue.contains(va[i]))  {
-                 System.out.println("contains");
                  propertyArray[i]=va[i].trim();
              }//element of array has to match exactly with viewChoices values
          }
@@ -511,7 +503,6 @@ public class ProviderPropertyAction extends DispatchAction {
                 rxProfileView+=" "+va[i]+" ";
             }
         }
-        System.out.println("rxProfileView="+rxProfileView);
         prop.setValue(rxProfileView);
         this.userPropertyDAO.saveProp(prop);
 
@@ -535,7 +526,6 @@ public class ProviderPropertyAction extends DispatchAction {
                                ActionForm actionform,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-         System.out.println(" in viewProfileView");
          DynaActionForm frm = (DynaActionForm)actionform;
          String provider = (String) request.getSession().getAttribute("user");
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_USE_RX3);
@@ -565,20 +555,15 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("method","saveUseRx3");
 
          frm.set("rxUseRx3Property", prop);
-         System.out.println("Finish in viewProfileView");
          return actionmapping.findForward("genRxUseRx3");
      }
 
    public ActionForward saveUseRx3(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
-        System.out.println(" in saveUseRx3");
         String provider=(String) request.getSession().getAttribute("user");
 
         DynaActionForm frm=(DynaActionForm)actionform;
         UserProperty UUseRx3=(UserProperty)frm.get("rxUseRx3Property");
         //UserProperty UUseRx3=(UserProperty)request.getAttribute("rxUseRx3Property");
-        if(UUseRx3!=null)
-            System.out.println("ischecked by user? "+UUseRx3.isChecked());
-        else System.out.println("UUseRx3 is null ");
 
         boolean checked=false;
         if(UUseRx3!=null)
@@ -592,7 +577,6 @@ public class ProviderPropertyAction extends DispatchAction {
         String useRx3="no";
         if(checked)
             useRx3="yes";
-        System.out.println("useRx3="+useRx3);
         prop.setValue(useRx3);
         this.userPropertyDAO.saveProp(prop);
 
@@ -608,7 +592,6 @@ public class ProviderPropertyAction extends DispatchAction {
          else
             request.setAttribute("providermsgSuccess","provider.setRxUseRx3.msgSuccess_unselected"); //=Rx3 is unselected
          request.setAttribute("method","saveUseRx3");
-         System.out.println("Finish in saveUseRx3");
          return actionmapping.findForward("genRxUseRx3");
     }
 
@@ -620,7 +603,6 @@ public class ProviderPropertyAction extends DispatchAction {
 
          DynaActionForm frm = (DynaActionForm)actionform;
          String provider = (String) request.getSession().getAttribute("user");
-         System.out.println("provider # "+provider);
          UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.RX_DEFAULT_QUANTITY);
 
 
@@ -670,7 +652,6 @@ public class ProviderPropertyAction extends DispatchAction {
          request.setAttribute("providerbtnSubmit","provider.setRxDefaultQuantity.btnSubmit"); //=Save
          request.setAttribute("providermsgSuccess","provider.setRxDefaultQuantity.msgSuccess"); //=Rx Default Quantity saved
          request.setAttribute("method","saveDefaultQuantity");
-         System.out.println("Finish in saveDefaultQuantity");
          return actionmapping.findForward("genRxDefaultQuantity");
 
     }

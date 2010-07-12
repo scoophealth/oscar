@@ -256,7 +256,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
                             //ds.add(getRuleBaseElement("" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type"), recoHash));
                             ds.add(new Recommendation(reco,"" + h.get("measurement_type")+ruleCount,"" + h.get("measurement_type")));
                        }
-                       System.out.println(""+ h.get("measurement_type")+ " adding ds  "+ds);
+                       MiscUtils.getLogger().debug(""+ h.get("measurement_type")+ " adding ds  "+ds);
                        //d.addDSElement(""+ h.get("measurement_type"),ds);
                        item.setRecommendations(ds);
                     }
@@ -495,7 +495,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             txt = txt.replaceAll("\\$NUMMONTHS", NUMMONTHS);
             log.debug("TEXT "+txt);
             consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+txt+"\");";
-            //consequence ="System.out.println(\"HAPPY TO BE WORKING\");";
+            //consequence ="MiscUtils.getLogger().debug(\"HAPPY TO BE WORKING\");";
             
         }
         

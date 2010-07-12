@@ -104,7 +104,7 @@ public class BillingFormData {
             + "ctl_diagcode c WHERE d.diagnostic_code=c.diagnostic_code and "
             + "d.region='" + billRegion +"' and c.servicetype='" + serviceType + "'";
 
-            System.out.println("getDiagnosticList "+sql);
+            MiscUtils.getLogger().debug("getDiagnosticList "+sql);
             rs = db.GetSQL(sql);
 
             while(rs.next()) {
@@ -143,7 +143,7 @@ public class BillingFormData {
             sql = "SELECT billinglocation,billinglocation_desc FROM billinglocation "
             + " WHERE region='" + billRegion +"'";
 
-            System.out.println(" getLocationList "+sql);
+            MiscUtils.getLogger().debug(" getLocationList "+sql);
             rs = db.GetSQL(sql);
 
             while(rs.next()) {
@@ -181,7 +181,7 @@ public class BillingFormData {
 
             sql = "SELECT visittype,visit_desc FROM billingvisit "
             + " WHERE region='" + billRegion +"'";
-            System.out.println("getVisitType"+sql);
+            MiscUtils.getLogger().debug("getVisitType"+sql);
 
             rs = db.GetSQL(sql);
 
@@ -220,7 +220,7 @@ public class BillingFormData {
 
             sql = "SELECT p.last_name, p.first_name, p.provider_no FROM provider p "
             + " WHERE p.ohip_no <>''";
-            System.out.println("getProviderList "+sql);
+            MiscUtils.getLogger().debug("getProviderList "+sql);
 
             rs = db.GetSQL(sql);
 
@@ -262,7 +262,7 @@ public class BillingFormData {
             sql = "select servicetype_name, servicetype from ctl_billingservice "
             + "group by servicetype, servicetype_name";
 
-            System.out.println("getFormList "+sql);
+            MiscUtils.getLogger().debug("getFormList "+sql);
             rs = db.GetSQL(sql);
 
             while(rs.next()) {
@@ -451,7 +451,7 @@ public class BillingFormData {
 
 
             rs = db.GetSQL(sql);
-            System.out.println("getProviderName "+sql);
+            MiscUtils.getLogger().debug("getProviderName "+sql);
             while(rs.next()) {
 
                 provider_n = rs.getString("last_name")+", " + rs.getString("first_name");
@@ -483,7 +483,7 @@ public class BillingFormData {
 
 
             rs = db.GetSQL(sql);
-            System.out.println("getPracNo "+sql);
+            MiscUtils.getLogger().debug("getPracNo "+sql);
 
             while(rs.next()) {
 
@@ -514,7 +514,7 @@ public class BillingFormData {
 
             sql = "SELECT billing_no from provider where provider_no='" + provider_no + "'";
 
-            System.out.println("getGroupNo "+sql);
+            MiscUtils.getLogger().debug("getGroupNo "+sql);
             rs = db.GetSQL(sql);
 
             while(rs.next()) {
@@ -544,7 +544,7 @@ public class BillingFormData {
             sql = "SELECT description from diagnosticcode where diagnostic_code='" + dx + "' and region='" + reg + "'";
 
             rs = db.GetSQL(sql);
-            System.out.println("getDiagDesc "+sql);
+            MiscUtils.getLogger().debug("getDiagDesc "+sql);
             while(rs.next()) {
                 dxdesc = rs.getString("description");
             }

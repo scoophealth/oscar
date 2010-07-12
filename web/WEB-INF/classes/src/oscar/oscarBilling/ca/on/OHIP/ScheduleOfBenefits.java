@@ -196,7 +196,7 @@ public class ScheduleOfBenefits {
          bd.setScale(2);
          System.out.println (feeCode+" "+effectiveDate+" "+terminactionDate+" "+gpFees+" "+assistantCompFee+" "+specFee+" "+anaesthetistFee+" "+nonAnaesthetistFee);
          System.out.println (feeCode+" "+effectiveDate+" "+terminactionDate+" "+getJBD(gpFees)+" "+getJBD(assistantCompFee)+" "+getJBD(specFee)+" "+getJBD(anaesthetistFee)+" "+getJBD(nonAnaesthetistFee));
-         System.out.println(dgpFees+" "+(dgpFees/10000)+" "+bd.toString());
+         MiscUtils.getLogger().debug(dgpFees+" "+(dgpFees/10000)+" "+bd.toString());
          
       }
       return h;

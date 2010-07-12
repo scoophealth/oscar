@@ -26,6 +26,7 @@ package oscar.oscarLab.ca.all.upload.handlers;
 
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 
 public class IHAHandler extends DefaultHandler implements MessageHandler {
@@ -33,7 +34,7 @@ public class IHAHandler extends DefaultHandler implements MessageHandler {
     
     @Override
     String getHl7Type(){
-        System.out.println(this.getClass().getName()+" getting called");
+        MiscUtils.getLogger().debug(this.getClass().getName()+" getting called");
         return "IHA";
     }
     

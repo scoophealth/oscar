@@ -109,19 +109,19 @@ public class Send2Indivo {
         }
         catch(ActionNotPerformedException e ) {
             errorMsg = e.getMessage();
-            System.out.println("INDIVO Error Authenticating: " + errorMsg);
+            MiscUtils.getLogger().debug("INDIVO Error Authenticating: " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
-            System.out.println("INDIVO Authenticating Network Error: " + errorMsg);
+            MiscUtils.getLogger().debug("INDIVO Authenticating Network Error: " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch( Exception e ) {
             errorMsg = e.getMessage();
-            System.out.println("An exception occurred while authenticating " + errorMsg);
+            MiscUtils.getLogger().debug("An exception occurred while authenticating " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
@@ -136,7 +136,7 @@ public class Send2Indivo {
             File file = new File(fpath);
             long length = file.length();
             fdata = new byte[(int)length];
-            System.out.println("Size of file is " + length);
+            MiscUtils.getLogger().debug("Size of file is " + length);
 
             //now we read file into array buffer
             FileInputStream fis = new FileInputStream(file);
@@ -146,15 +146,15 @@ public class Send2Indivo {
         }
         catch( NullPointerException ex ) {
             errorMsg = ex.getMessage();
-            System.out.println(errorMsg);
+            MiscUtils.getLogger().debug(errorMsg);
         }
         catch( FileNotFoundException ex ) {
             errorMsg = ex.getMessage();
-            System.out.println("File " + fpath + " does not exist: " + errorMsg);
+            MiscUtils.getLogger().debug("File " + fpath + " does not exist: " + errorMsg);
         }
         catch( IOException ex ) {
             errorMsg = ex.getMessage();
-            System.out.println("File IO Error " + errorMsg);
+            MiscUtils.getLogger().debug("File IO Error " + errorMsg);
         }
 
         return fdata;
@@ -202,19 +202,19 @@ public class Send2Indivo {
         }
         catch(javax.xml.bind.JAXBException e ) {
             errorMsg = e.getMessage();
-            System.out.println("JAXB Error " + errorMsg);
+            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(ActionNotPerformedException e) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Network Error " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         } 
@@ -272,19 +272,19 @@ public class Send2Indivo {
         }
         catch(javax.xml.bind.JAXBException e ) {
             errorMsg = e.getMessage();
-            System.out.println("JAXB Error " + errorMsg);
+            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(ActionNotPerformedException e) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Network Error " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         } 
@@ -327,19 +327,19 @@ public class Send2Indivo {
         }
         catch(javax.xml.bind.JAXBException e ) {
             errorMsg = e.getMessage();
-            System.out.println("JAXB Error " + errorMsg);
+            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(ActionNotPerformedException e) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Unaccepted File " + file + " " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Unaccepted File " + file + " " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Network Error " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }        
@@ -384,19 +384,19 @@ public class Send2Indivo {
         }        
         catch(javax.xml.bind.JAXBException e ) {
             errorMsg = e.getMessage();
-            System.out.println("JAXB Error " + errorMsg);
+            MiscUtils.getLogger().debug("JAXB Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(ActionNotPerformedException e) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Unaccepted File " + file + " " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Unaccepted File " + file + " " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
-            System.out.println("Indivo Network Error " + errorMsg);
+            MiscUtils.getLogger().debug("Indivo Network Error " + errorMsg);
             MiscUtils.getLogger().error("Error", e);
             return false;
         }        

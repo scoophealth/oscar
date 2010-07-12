@@ -84,7 +84,7 @@ public class BillingViewBean {
             sql = sql + "b.clarification_code, b.anatomical_area, b.after_hour, b.new_program, b.billing_code, b.bill_amount, b.payment_mode, b.service_date, b.service_to_day, b.submission_code, b.extended_submission_code, b.dx_code1, b.dx_code2, b.dx_code3, ";
             sql = sql + "b.dx_expansion, b.service_location, b.referral_flag1, b.referral_no1, b.referral_flag2, b.referral_no2, b.time_call, b.service_start_time, b.service_end_time, b.birth_date, b.office_number, b.correspondence_code, b.claim_comment ";
             sql = sql + "from billingmaster b, billing bi where bi.billing_no=b.billing_no and b.billing_no='" + billing_no+"'";
-            System.out.println(sql);
+            MiscUtils.getLogger().debug(sql);
             rs = db.GetSQL(sql);
             
             while(rs.next()){

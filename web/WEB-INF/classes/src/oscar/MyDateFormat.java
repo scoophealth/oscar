@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.util.MiscUtils;
 
 import com.quatro.common.KeyConstants;
 
@@ -209,7 +210,7 @@ public class MyDateFormat {
         }
             catch (Exception e)
             {
-                System.out.println("Invalid Date - the input date is in wrong format or out of range");
+                MiscUtils.getLogger().debug("Invalid Date - the input date is in wrong format or out of range");
                 return null;
             }
 	}
@@ -249,7 +250,7 @@ public class MyDateFormat {
         }
             catch (Exception e)
             {
-                System.out.println("Invalid Date - the input date is in wrong format or out of range");
+                MiscUtils.getLogger().debug("Invalid Date - the input date is in wrong format or out of range");
                 return null;
             }
 	}
@@ -359,7 +360,7 @@ public class MyDateFormat {
         }
         catch (Exception e)
         {
-            System.out.println("Invalid Date - the input date is in wrong format or out of range");
+            MiscUtils.getLogger().debug("Invalid Date - the input date is in wrong format or out of range");
             return null;
         }
     }
@@ -403,7 +404,7 @@ public class MyDateFormat {
         }
         catch (Exception e)
         {
-            System.out.println("Invalid Date - the input date is in wrong format or out of range");
+            MiscUtils.getLogger().debug("Invalid Date - the input date is in wrong format or out of range");
             return null;
         }
     }

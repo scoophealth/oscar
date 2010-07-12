@@ -99,7 +99,7 @@ public class MsgDisplayMessagesAction extends Action {
                 }//for
             }
             else {
-                System.out.println("Unexpected action in MsgDisplayMessagesBean.java");
+                MiscUtils.getLogger().debug("Unexpected action in MsgDisplayMessagesBean.java");
             }
 
     return (mapping.findForward(findForward));

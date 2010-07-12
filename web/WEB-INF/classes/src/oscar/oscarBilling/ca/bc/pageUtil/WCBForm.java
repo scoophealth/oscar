@@ -148,7 +148,7 @@ public final class WCBForm
   wcb.setW_rehab( w_rehab);//="N"
   wcb.setW_rehabtype( w_rehabtype);
   
-  System.out.println("ESTMATE DATE ="+w_estimatedate+"--"+UtilDateUtilities.StringToDate(ddate(w_estimatedate)));
+  MiscUtils.getLogger().debug("ESTMATE DATE ="+w_estimatedate+"--"+UtilDateUtilities.StringToDate(ddate(w_estimatedate)));
   wcb.setW_estimatedate( UtilDateUtilities.StringToDate(ddate(w_estimatedate)));
   wcb.setW_tofollow(w_tofollow);//="N"
   wcb.setW_payeeno( w_payeeno);
@@ -364,7 +364,7 @@ public final class WCBForm
 
   public String getW_fname() {
     try{
-       System.out.println("this.toString()=" + this.toString());
+       MiscUtils.getLogger().debug("this.toString()=" + this.toString());
     }catch(Exception e){
         MiscUtils.getLogger().error("Error", e);
     }

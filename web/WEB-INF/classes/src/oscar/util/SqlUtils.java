@@ -272,7 +272,7 @@ public class SqlUtils {
 					else {
 						for (Enumeration keys = methodNameMap.keys(); keys.hasMoreElements();) {
 							Integer key = (Integer) keys.nextElement();
-							System.out.println(method[key.intValue()].getName() + " value  " + value.getClass().getName());
+							MiscUtils.getLogger().debug(method[key.intValue()].getName() + " value  " + value.getClass().getName());
 							method[key.intValue()].invoke(obj, new Object[] { value });
 						}
 					}
@@ -435,7 +435,7 @@ public class SqlUtils {
 						record.setProperty(columnName, cellValue);
 					}
 					else {
-						System.out.println("Empty key for value: " + cellValue);
+						MiscUtils.getLogger().debug("Empty key for value: " + cellValue);
 					}
 				}
 				records.add(record);

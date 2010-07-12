@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.oscarehr.util.MiscUtils;
+
 /**
  *
  * @author rjonasz
@@ -76,7 +78,7 @@ public class NavBarDisplayDAO {
 		NavBarDisplayDAO.Item item = dao.Item();
 		long num = rand.nextLong();
 		if( num < 0 ) num *= -1;
-		System.out.println("Storing " + num);
+		MiscUtils.getLogger().debug("Storing " + num);
 		item.setTitle("" + num);
 		d = new Date(num);
 		item.setDate(d);
@@ -85,15 +87,15 @@ public class NavBarDisplayDAO {
 
 	dao.sortItems(NavBarDisplayDAO.ALPHASORT);
 
-	System.out.println("Alphabetically Sorted:");
+	MiscUtils.getLogger().debug("Alphabetically Sorted:");
 	for( int idx = 0; idx < 10; ++idx)
-		System.out.println(idx + ": " + dao.getItem(idx).getTitle());
+		MiscUtils.getLogger().debug(idx + ": " + dao.getItem(idx).getTitle());
 
 	dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
 
-	System.out.println("Chronologically Sorted:");
+	MiscUtils.getLogger().debug("Chronologically Sorted:");
 	for( int idx = 0; idx < 10; ++idx)
-		System.out.println(idx + ": " + dao.getItem(idx).getDate().toString());
+		MiscUtils.getLogger().debug(idx + ": " + dao.getItem(idx).getDate().toString());
 	 
     }
     

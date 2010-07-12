@@ -80,7 +80,7 @@ public class TeleplanLogDAO {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
-            System.out.println("LOG LIST SIZE"+list.size());
+            MiscUtils.getLogger().debug("LOG LIST SIZE"+list.size());
             for (int i = 0; i < list.size(); i++){
                 TeleplanLog tl = (TeleplanLog) list.get(i);
                 executeUpdate(pstmt,tl);

@@ -27,6 +27,8 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.oscarehr.util.MiscUtils;
+
 public class EctMeasurementsDataBean{
 
        int id = 0;
@@ -195,7 +197,7 @@ public class EctMeasurementsDataBean{
     
     private int getNumMonths(Date dStart, Date dEnd) {
         int i = 0;
-        System.out.println("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
+        MiscUtils.getLogger().debug("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dStart);
         while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {

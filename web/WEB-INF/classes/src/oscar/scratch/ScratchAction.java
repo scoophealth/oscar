@@ -39,6 +39,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 /**
  *
@@ -60,7 +61,7 @@ public class ScratchAction extends Action {
         String windowId = (String) request.getParameter("windowId");
         String returnId = "";
         String returnText = scratchPad;
-        System.out.println("pro "+providerNo+" id "+id+" dirty "+dirty+" scatchPad "+scratchPad);
+        MiscUtils.getLogger().debug("pro "+providerNo+" id "+id+" dirty "+dirty+" scatchPad "+scratchPad);
         ScratchData scratch = new ScratchData();
         Hashtable h = scratch.getLatest(providerNo);
         
@@ -75,9 +76,9 @@ public class ScratchAction extends Action {
         //Get current Id in scratch table
            int databaseId = Integer.parseInt( (String) h.get("id"));
            returnId = ""+databaseId;
-           System.out.println( "database Id = "+databaseId+" request id "+id);
+           MiscUtils.getLogger().debug( "database Id = "+databaseId+" request id "+id);
            if (databaseId > Integer.parseInt(id)){           //check to see if the id in database is higher than in the request
-              System.out.println(" DAtabase greater than id");
+              MiscUtils.getLogger().debug(" DAtabase greater than id");
               if (dirty.equals("1")){//Is dirty field set?
                  //BIG PROBS,return warning that there is was concurrent editing, would you like to update to the latest.
               }else{//No Dirty flag?  return latest Text
@@ -85,7 +86,7 @@ public class ScratchAction extends Action {
               }
            }else{
                if (dirty.equals("1")){               //if its the same, is the dirty field set
-                  System.out.println("INSERTING NEW TEXT");
+                  MiscUtils.getLogger().debug("INSERTING NEW TEXT");
                   returnId = scratch.insert(providerNo,scratchPad);   //save new record and return new id.
                   returnText = scratchPad;
                }

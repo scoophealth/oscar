@@ -38,6 +38,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.dms.EDocUtil;
@@ -54,7 +55,7 @@ public class CombinePDFAction extends Action {
         String[] files = request.getParameterValues("docNo");
         ArrayList alist = new ArrayList();
         if (files != null){
-            System.out.println("size = "+files.length);
+            MiscUtils.getLogger().debug("size = "+files.length);
             EDocUtil docData = new EDocUtil();
             for (int i =0 ; i < files.length ; i++){
                String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");

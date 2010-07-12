@@ -146,7 +146,7 @@ public class RxDrugRef {
 
      public Hashtable getDrug2(String pKey, Boolean boolVal)throws Exception{
          Vector params = new Vector();
-         System.out.println("Adding to params for get_drug_2 :"+pKey+" - "+boolVal);
+         MiscUtils.getLogger().debug("Adding to params for get_drug_2 :"+pKey+" - "+boolVal);
          params.addElement(pKey);
          params.addElement(boolVal);
          Vector vec = (Vector) callWebserviceLite("get_drug_2",params);
@@ -355,7 +355,7 @@ public class RxDrugRef {
      }
      
      private Object callWebservice(String procedureName,Vector params) {
-        System.out.println("#CALLDRUGREF-"+procedureName);
+        MiscUtils.getLogger().debug("#CALLDRUGREF-"+procedureName);
          Object object = null;
          try{
             XmlRpcClient server = new XmlRpcClient(server_url);
@@ -768,7 +768,7 @@ public class RxDrugRef {
             Enumeration e = ((Hashtable) obj).keys();
             while (e.hasMoreElements()){
                String s = (String) e.nextElement();
-               System.out.println(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
+               MiscUtils.getLogger().debug(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
             }
          }
          

@@ -60,7 +60,6 @@ public class GetProviderRoles {
 	    		Set roles = getRoles(provider.getProviderNo());
 	    		
 	    		if(roles.size() > 1) {
-	    			System.out.println(provider.getFormattedName());
 	    			continue;
 	    		}
 	    		int x=0;
@@ -73,18 +72,7 @@ public class GetProviderRoles {
 	    			buf.append(roleName);
 	    			x++;
 	    		}
-	    		buf.append("\n");
-	    		
-	    		/*
-	    		if(buf.toString().indexOf(',') != -1) {
-	    			System.out.print(provider.getFormattedName() + "," + buf.toString());
-		    		
-	    		}
-	    		
-	    		if(buf.toString().equals("")) {
-	    			System.out.print(provider.getFormattedName());
-	    		}
-	    		*/
+	    		buf.append("\n");	    		
 	    	}
 	    }
 	    

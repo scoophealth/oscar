@@ -55,7 +55,7 @@ public class RxAllergyWarningWorker extends Thread {
     }
 
     public void run() {
-        System.out.println("STARTING THREAD - RxAllergyWarningWorker ");
+        MiscUtils.getLogger().debug("STARTING THREAD - RxAllergyWarningWorker ");
 
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
@@ -72,7 +72,7 @@ public class RxAllergyWarningWorker extends Thread {
                     sessionBean.removeFromWorkingAllergyWarnings(atcCode);
                 }
                 else {
-                    System.out.println("What to do will allergies atc codes " + atcCode);
+                    MiscUtils.getLogger().debug("What to do will allergies atc codes " + atcCode);
                 }
             }
         }
@@ -84,7 +84,7 @@ public class RxAllergyWarningWorker extends Thread {
             DbConnectionFilter.releaseAllThreadDbResources();
         }
         long end = System.currentTimeMillis() - start;
-        System.out.println("THREAD ENDING -RxAllergyWarningWorker " + end);
+        MiscUtils.getLogger().debug("THREAD ENDING -RxAllergyWarningWorker " + end);
     }
 
 }

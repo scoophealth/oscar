@@ -45,8 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -70,12 +69,14 @@ import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 import org.springframework.web.context.WebApplicationContext;
-import oscar.dms.EDocUtil;
+
 import oscar.OscarProperties;
+import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
@@ -90,7 +91,7 @@ import com.lowagie.text.DocumentException;
  */
 public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
-    private static Log log = LogFactory.getLog(CaseManagementEntryAction.class);
+    private static Logger logger = MiscUtils.getLogger();
 
     private CaseManagementNoteDAO caseManagementNoteDao=(CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
     private CaseManagementIssueDAO caseManagementIssueDao=(CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
@@ -101,7 +102,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     }
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.debug("Edit Starts");
+        logger.debug("Edit Starts");
         long start = System.currentTimeMillis();
         long beginning = start;
         long current = 0;
@@ -115,12 +116,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         request.setAttribute("change_flag", "false");
         request.setAttribute("from", "casemgmt");
 
-        log.debug("Get demo and provider no");
+        logger.debug("Get demo and provider no");
         String demono = getDemographicNo(request);
         Integer demographicNo=Integer.parseInt(demono);
         String providerNo = getProviderNo(request);
         current = System.currentTimeMillis();
-        log.debug("Get demo and provider no " + String.valueOf(current-start));
+        logger.debug("Get demo and provider no " + String.valueOf(current-start));
         start = current;
         
         String programIdString = (String) request.getSession().getAttribute("case_program_id");
@@ -131,7 +132,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         catch (Exception e)
         {
-        	log.warn("Error parsing programId:"+programIdString, e);
+        	logger.warn("Error parsing programId:"+programIdString, e);
         }
         
         request.setAttribute("demoName", getDemoName(demono));
@@ -194,9 +195,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         /* remove the remembered echart string */
         request.getSession().setAttribute("lastSavedNoteString", null);
 
-        log.debug("Get Issues and filter them");        
+        logger.debug("Get Issues and filter them");        
         current = System.currentTimeMillis();
-        log.debug("Get Issues and filter them " + String.valueOf(current-start));
+        logger.debug("Get Issues and filter them " + String.valueOf(current-start));
         start = current;
 
         cform.setDemoNo(demono);
@@ -206,15 +207,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String forceNote = request.getParameter("forceNote");
         if (forceNote == null) forceNote = "false";
 
-        log.debug("NoteId " + nId);
+        logger.debug("NoteId " + nId);
 
         String maxTmpSave = oscar.OscarProperties.getInstance().getProperty("maxTmpSave","");
-        log.debug("maxTmpSave " + maxTmpSave);
+        logger.debug("maxTmpSave " + maxTmpSave);
         // set date 2 weeks in past so we retrieve more recent saved notes
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, -14);
         Date twoWeeksAgo = cal.getTime();
-        log.debug("Get tmp note");
+        logger.debug("Get tmp note");
         CaseManagementTmpSave tmpsavenote;
         if( maxTmpSave.equalsIgnoreCase("off") ) {
             tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programIdString);
@@ -223,14 +224,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programIdString, twoWeeksAgo);
         }
         current = System.currentTimeMillis();
-        log.debug("Get tmp note " + String.valueOf(current-start));
+        logger.debug("Get tmp note " + String.valueOf(current-start));
         start = current;
         
-        log.debug("Get Note for editing");
+        logger.debug("Get Note for editing");
         
         // create a new note
         if (request.getParameter("note_edit") != null && request.getParameter("note_edit").equals("new")) {
-            log.debug("NEW NOTE GENERATED");
+            logger.debug("NEW NOTE GENERATED");
             request.getSession().setAttribute("newNote", "true");
             request.getSession().setAttribute("issueStatusChanged", "false");
             request.setAttribute("newNoteIdx", request.getParameter("newNoteIdx"));
@@ -249,12 +250,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         // get the last temp note?
         else if (tmpsavenote != null && !forceNote.equals("true")) {
-            log.debug("tempsavenote is NOT NULL");
+            logger.debug("tempsavenote is NOT NULL");
             if (tmpsavenote.getNote_id() > 0) {
                 request.getSession().setAttribute("newNote", "false");
                 request.setAttribute("noteId", String.valueOf(tmpsavenote.getNote_id()));
                 note = caseManagementMgr.getNote(String.valueOf(tmpsavenote.getNote_id()));
-                log.debug("Restoring " + String.valueOf(note.getId()));
+                logger.debug("Restoring " + String.valueOf(note.getId()));
             }
             else {
                 request.getSession().setAttribute("newNote", "true");
@@ -272,7 +273,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         // get an existing non-temp note?
         else if (nId != null && Integer.parseInt(nId) > 0) {
-            log.debug("Using nId " + nId + " to fetch note");
+            logger.debug("Using nId " + nId + " to fetch note");
             request.getSession().setAttribute("newNote", "false");
             note = caseManagementMgr.getNote(nId);
 
@@ -303,20 +304,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
         }
         current = System.currentTimeMillis();
-        log.debug("Get note to edit " + String.valueOf(current-start));
+        logger.debug("Get note to edit " + String.valueOf(current-start));
         start = current;
                         
         /*
          * do the restore if(restore != null && restore.booleanValue() == true) { String tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demono,programId); if(tmpsavenote != null) { note.setNote(tmpsavenote); }
          *  }
          */
-        log.debug("Set Encounter Type: " + note.getEncounter_type());
-        log.debug("Fetched Note " + String.valueOf(note.getId()));
+        logger.debug("Set Encounter Type: " + note.getEncounter_type());
+        logger.debug("Fetched Note " + String.valueOf(note.getId()));
         
-        log.debug("Populate Note with editors");
+        logger.debug("Populate Note with editors");
         this.caseManagementMgr.getEditors(note);
         current = System.currentTimeMillis();
-        log.debug("Populate Note with editors " + String.valueOf(current-start));
+        logger.debug("Populate Note with editors " + String.valueOf(current-start));
         start = current;
         
         // put the new/retrieved not in the form object for rendering on page
@@ -388,13 +389,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String chain = request.getParameter("chain");
 
         current = System.currentTimeMillis();
-        log.debug("The End of Edit " + String.valueOf(current - beginning));
+        logger.debug("The End of Edit " + String.valueOf(current - beginning));
         start = current;
         
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.EDIT, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(),demono, note.getAuditString());
         
         String frmName = "caseManagementEntryForm" + demono;        
-        log.debug("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
+        logger.debug("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
         request.getSession().setAttribute(frmName, cform);        
         
         ActionForward fwd, finalFwd = null;
@@ -449,14 +450,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             this.caseManagementMgr.deleteTmpSave(providerNo, demoNo, programId);
         }
         catch (Throwable e) {
-            log.warn(e);
+            logger.warn(e);
         }
     }
     
      public ActionForward issueNoteSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {            
             String strNote = request.getParameter("value");
             //strNote = strNote.trim();
-            log.debug("Saving: " + strNote);
+            logger.debug("Saving: " + strNote);
             strNote = org.apache.commons.lang.StringUtils.trimToNull(strNote);
             if( strNote == null || strNote.equals("") )
                 return null;                        
@@ -468,7 +469,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String demo = getDemographicNo(request);
                         
             String noteId = request.getParameter("noteId");                                 
-            log.debug("SAVING NOTE " + noteId + " STRING: " + strNote);
+            logger.debug("SAVING NOTE " + noteId + " STRING: " + strNote);
             String issueChange = request.getParameter("issueChange");
             String archived = request.getParameter("archived");
             
@@ -502,11 +503,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             else {
                 note.setArchived(true);
-                log.debug("Setting archived to true");
+                logger.debug("Setting archived to true");
                 logAction = LogConst.ARCHIVE;                
             }
             
-            log.debug("Note archived " + note.isArchived());
+            logger.debug("Note archived " + note.isArchived());
             String programId = (String)request.getSession().getAttribute("case_program_id");			
             note.setProgram_no(programId);
                         
@@ -521,7 +522,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             try {
                 role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(),note.getProgram_no())).getRole().getId());
             }catch(Throwable e) {
-                log.error(e);
+                logger.error(e);
                 role = "0";
             }
             
@@ -530,7 +531,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             try {
                 team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
             }catch(Throwable e) {
-                log.error(e);
+                logger.error(e);
                 team = "0";
             }
             note.setReporter_program_team(team);
@@ -755,7 +756,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             cpp = copyNote2cpp(cpp,note);
             String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
             addNewNoteLink(note.getId());
-            log.debug("Saved note " + savedStr);
+            logger.debug("Saved note " + savedStr);
             caseManagementMgr.saveCPP(cpp, providerNo);
             /* remember the str written into echart */
             request.getSession().setAttribute("lastSavedNoteString", savedStr);
@@ -816,7 +817,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
     private long noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
-        System.out.println("in noteSave");
     	WebApplicationContext ctx = getSpringContext();
     	ProgramManager programManager = (ProgramManager) ctx.getBean("programManager");
         AdmissionManager admissionManager = (AdmissionManager) ctx.getBean("admissionManager");
@@ -913,7 +913,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
         }
         catch (Throwable e) {
-            log.error(e);
+            logger.error(e);
             team = "0";
         }
         note.setReporter_program_team(team);
@@ -1089,7 +1089,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
         }
         catch (Throwable e) {
-            log.warn(e);
+            logger.warn(e);
         }
 
         String logAction;
@@ -1330,8 +1330,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if( noteTxt == null || noteTxt.equals("") )
             return null;
         
-        log.debug("Saving Note" + request.getParameter("nId"));
-        log.debug("Text -- " + noteTxt);
+        logger.debug("Saving Note" + request.getParameter("nId"));
+        logger.debug("Text -- " + noteTxt);
         String demo = getDemographicNo(request);
         String providerNo = getProviderNo(request);
         Provider provider = getProvider(request);
@@ -1399,7 +1399,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             role = String.valueOf((programManager.getProgramProvider(note.getProviderNo(), note.getProgram_no())).getRole().getId());
         }
         catch (Throwable e) {
-            log.error(e);
+            logger.error(e);
             role = "0";
         }
         
@@ -1410,7 +1410,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
         }
         catch (Throwable e) {
-            log.error(e);
+            logger.error(e);
             team = "0";
         }
         
@@ -1477,7 +1477,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
         }
         catch (Throwable e) {            
-            log.warn(e);
+            logger.warn(e);
         }
         
         request.getSession().setAttribute(sessionName, sessionFrm);
@@ -1522,7 +1522,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     //add new note link if note is document or rx note
     private void addNewNoteLink(Long noteId){
-        System.out.println("in addnewnotelink, noteId="+noteId);
         CaseManagementNote cmn=caseManagementMgr.getNote(noteId.toString());
         List<CaseManagementNote> cmnList=caseManagementMgr.getNotesByUUID(cmn.getUuid());
         Long firstNoteId;
@@ -1559,8 +1558,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
     }
     public ActionForward saveAndExit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("==========In saveAndExit==========");
-        log.debug("saveandexit");
+        logger.debug("saveandexit");
         String providerNo = getProviderNo(request);
         String demoNo = getDemographicNo(request);
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
@@ -1573,7 +1571,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("note.saved"));
         saveMessages(request, messages);
         
-System.out.println("before notesave in saveandexit");
         long noteId = noteSave(cform, request);        
         if( noteId == -1 ) {
             return mapping.findForward("windowClose");
@@ -1636,7 +1633,7 @@ System.out.println("before notesave in saveandexit");
             }
             
             String url = "/billing.do?billRegion=" + region + "&billForm=" + defaultView + "&hotclick=&appointment_no=" + appointmentNo + "&demographic_name=" + java.net.URLEncoder.encode(name, "utf-8")  + "&amp;status=t&demographic_no=" + demoNo + "&providerview=" + providerview + "&user_no=" + providerNo + "&apptProvider_no=" + apptProvider + "&appointment_date=" + date + "&start_time=" + start_time + "&bNewForm=1" + dxCodes.toString();
-            log.debug("BILLING URL " + url);
+            logger.debug("BILLING URL " + url);
             ActionForward forward = new ActionForward();
             forward.setPath(url);
             return forward;
@@ -1651,7 +1648,7 @@ System.out.println("before notesave in saveandexit");
             if (chain != null && !chain.equals("")) {   
                 request.setAttribute("proceedURL",chain);
             }
-            log.debug("sending to surveillance");
+            logger.debug("sending to surveillance");
             return  mapping.findForward("surveillance");  
         }
         
@@ -1661,7 +1658,6 @@ System.out.println("before notesave in saveandexit");
         	return fwd;
         }
 
-         System.out.println("==========END In saveAndExit==========");
         return mapping.findForward("windowClose");
     }
 
@@ -1676,11 +1672,11 @@ System.out.println("before notesave in saveandexit");
         String demo = cform.getDemographicNo();
         
         try {            
-            log.debug("CANCEL P:" + providerNo + " D:" + demo + " PROG:" + programNo);
+            logger.debug("CANCEL P:" + providerNo + " D:" + demo + " PROG:" + programNo);
             this.caseManagementMgr.deleteTmpSave(providerNo, demo, programNo);
         }
         catch (Throwable e) {
-            log.warn(e);
+            logger.warn(e);
         }
         
         return mapping.findForward("windowClose");
@@ -1692,7 +1688,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward addNewIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.debug("addNewIssue");
+        logger.debug("addNewIssue");
 
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
@@ -1774,7 +1770,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward issueSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        log.debug("issueSearch");
+        logger.debug("issueSearch");
         String programId = (String) request.getSession().getAttribute("case_program_id");
 
         request.setAttribute("change_flag", "true");
@@ -1815,7 +1811,7 @@ System.out.println("before notesave in saveandexit");
         	issueList[i] = new CheckIssueBoxBean();
             issueList[i].setIssue(issue);
         }
-        log.debug("Community issue reconciliation complete");
+        logger.debug("Community issue reconciliation complete");
         String sessionFrmName = "caseManagementEntryForm" + demono;
         CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);        
         sessionFrm.setNewIssueCheckList(issueList);
@@ -1872,7 +1868,7 @@ System.out.println("before notesave in saveandexit");
         if (changeDiagnosis != null && changeDiagnosis.equalsIgnoreCase("true")) {
             return submitChangeDiagnosis(mapping, form, request, response);
         }
-        log.debug("issueAdd");
+        logger.debug("issueAdd");
         request.setAttribute("change_flag", "true");
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
         request.setAttribute("from", request.getParameter("from"));
@@ -1922,7 +1918,7 @@ System.out.println("before notesave in saveandexit");
         try {
         	InputStream is = getClass().getResourceAsStream("/caisi_issues_dx.properties");   
         	dxProps.load(is);
-        }catch(IOException e) {log.warn("Unable to load Dx properties file");}
+        }catch(IOException e) {logger.warn("Unable to load Dx properties file");}
         
         if( issueList != null ) {
         	CaseManagementViewAction caseManagementViewAction=new CaseManagementViewAction();
@@ -1944,7 +1940,7 @@ System.out.println("before notesave in saveandexit");
                     if(dxProps != null && dxProps.get(issueList[i].getIssue().getCode()) != null) {
                             String codingSystem = dxProps.getProperty("coding_system");
                             if(caseIssueList[oldList.length+k].getIssue().isCertain()){ 
-	                            log.info("adding to Dx");
+	                            logger.info("adding to Dx");
     	                        this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem,false);
         	                    caseIssueList[oldList.length + k].getIssue().setMajor(true);
         	                }
@@ -1968,7 +1964,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward changeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.debug("changeDiagnosis");
+        logger.debug("changeDiagnosis");
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -1988,7 +1984,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward submitChangeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        log.debug("submitChangeDiagnosis");
+        logger.debug("submitChangeDiagnosis");
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
         request.setAttribute("change_flag", "true");
@@ -2049,7 +2045,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward ajaxChangeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        log.debug("ajaxChangeDiagnosis");
+        logger.debug("ajaxChangeDiagnosis");
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
         // get issue we're changing
@@ -2087,7 +2083,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward issueDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.debug("issueDelete");
+        logger.debug("issueDelete");
         if (request.getSession().getAttribute("userrole") == null) {
             response.sendError(response.SC_FORBIDDEN);
             return null;
@@ -2117,7 +2113,7 @@ System.out.println("before notesave in saveandexit");
         CaseManagementIssue iss = null;
 
         if (ind.intValue() >= oldList.length) {
-            log.error("issueDelete index error");
+            logger.error("issueDelete index error");
             return mapping.findForward("view");
         }
         for (int i = 0; i < oldList.length; i++) {
@@ -2158,7 +2154,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward issueChange(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.debug("issueChange");
+        logger.debug("issueChange");
         if (request.getSession().getAttribute("userrole") == null) {
             response.sendError(response.SC_FORBIDDEN);
             return null;
@@ -2266,7 +2262,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.debug("history");
+        logger.debug("history");
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -2289,7 +2285,7 @@ System.out.println("before notesave in saveandexit");
     }
 
     public ActionForward autosave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        log.debug("autosave");
+        logger.debug("autosave");
 
         String demographicNo = getDemographicNo(request);
         String programId = request.getParameter("programId");
@@ -2305,7 +2301,7 @@ System.out.println("before notesave in saveandexit");
             caseManagementMgr.tmpSave(providerNo, demographicNo, programId, noteId, note);
         }
         catch (Throwable e) {
-            log.warn("AutoSave Error: " + e);
+            logger.warn("AutoSave Error: " + e);
         }
 
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;        

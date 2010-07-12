@@ -189,7 +189,7 @@ public class DmsInboxManageAction extends DispatchAction {
             String queueId=(String)ht.get("id");
             queueDocs.put(queueId, EDocs);
         }
-        System.out.println("queueDocs="+queueDocs);
+        MiscUtils.getLogger().debug("queueDocs="+queueDocs);
         for(int i=0;i<privatedocs.size();i++){
             EDoc eDoc=privatedocs.get(i);
             List queueList=new ArrayList();
@@ -203,12 +203,12 @@ public class DmsInboxManageAction extends DispatchAction {
             for(QueueDocumentLink qdl:queueDocLinkList){
                 Integer qidInt=qdl.getQueueId();
                 String qidStr=qidInt.toString();
-                System.out.println("qid in link="+qidStr);
+                MiscUtils.getLogger().debug("qid in link="+qidStr);
                 if(queueDocs.containsKey(qidStr)){
                     List<EDoc> EDocs=new ArrayList();
                     EDocs=(List<EDoc>)queueDocs.get(qidStr);
                     EDocs.add(eDoc);
-                    System.out.println("add edoc id to queue id="+eDoc.getDocId());
+                    MiscUtils.getLogger().debug("add edoc id to queue id="+eDoc.getDocId());
                     queueDocs.put(qidStr, EDocs);
                 }
             }       
@@ -222,7 +222,7 @@ public class DmsInboxManageAction extends DispatchAction {
                 eDocs=(List<EDoc>)queueDocs.get(queueId);
                 if(eDocs==null || eDocs.size()==0){
                     queueDocs.remove(queueId);
-                    System.out.println("removed queueId="+queueId);
+                    MiscUtils.getLogger().debug("removed queueId="+queueId);
                 }
             }
 
@@ -546,7 +546,7 @@ public class DmsInboxManageAction extends DispatchAction {
     public ActionForward addQueueProviderLink(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String providerS=request.getParameter("providers");
         String queueS=request.getParameter("queues");
-        System.out.println(providerS+" ; "+queueS);
+        MiscUtils.getLogger().debug(providerS+" ; "+queueS);
         String [] providerAr=providerS.split("\\+");
         String [] queueAr=queueS.split("\\+");
         for(String sprovider:providerAr){

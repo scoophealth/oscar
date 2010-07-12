@@ -225,7 +225,7 @@ public final class RxRePrescribeAction extends DispatchAction {
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-            System.out.println("================in saveReRxDrugIdToStash  of RxRePrescribeAction.java=================");
+            MiscUtils.getLogger().debug("================in saveReRxDrugIdToStash  of RxRePrescribeAction.java=================");
             oscar.oscarRx.pageUtil.RxSessionBean bean =
                 (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         if (bean == null) {
@@ -249,13 +249,13 @@ try{
 
         request.setAttribute("BoxNoFillFirstLoad", "true");
         String qText=rx.getQuantity();
-        System.out.println("qText in represcribe2="+qText);
+        MiscUtils.getLogger().debug("qText in represcribe2="+qText);
         if(qText!=null && RxUtil.isStringToNumber(qText)){}
         else{
             rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
             rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
         }
-        System.out.println("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
+        MiscUtils.getLogger().debug("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
         //trim Special
        String spec=RxUtil.trimSpecial(rx);
        rx.setSpecial(spec);
@@ -281,7 +281,7 @@ try{
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-            System.out.println("================end saveReRxDrugIdToStash of RxRePrescribeAction.java=================");
+            MiscUtils.getLogger().debug("================end saveReRxDrugIdToStash of RxRePrescribeAction.java=================");
             return null;
     }
 
@@ -290,7 +290,7 @@ try{
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        System.out.println("================in represcribe2 of RxRePrescribeAction.java=================");
+        MiscUtils.getLogger().debug("================in represcribe2 of RxRePrescribeAction.java=================");
         oscar.oscarRx.pageUtil.RxSessionBean beanRX =
                 (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         if (beanRX == null) {
@@ -317,13 +317,13 @@ try{
 
         request.setAttribute("BoxNoFillFirstLoad", "true");
         String qText=rx.getQuantity();
-        System.out.println("qText in represcribe2="+qText);
+        MiscUtils.getLogger().debug("qText in represcribe2="+qText);
         if(qText!=null && RxUtil.isStringToNumber(qText)){}
         else{
             rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
             rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
         }
-        System.out.println("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
+        MiscUtils.getLogger().debug("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
         //trim Special
        String spec=RxUtil.trimSpecial(rx);
        rx.setSpecial(spec);
@@ -411,13 +411,13 @@ try{
             //give rx a random id.
             rx.setRandomId(rand);
             String qText=rx.getQuantity();
-            System.out.println("qText in represcribe2="+qText);
+            MiscUtils.getLogger().debug("qText in represcribe2="+qText);
             if(qText!=null && RxUtil.isStringToNumber(qText)){}
             else{
                 rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
                 rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
             }
-            System.out.println("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
+            MiscUtils.getLogger().debug("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
             String spec=RxUtil.trimSpecial(rx);
             rx.setSpecial(spec);
 
@@ -439,7 +439,7 @@ try{
     }
 public ActionForward represcribeMultiple(ActionMapping mapping,
             ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        System.out.println("================in represcribeMultiple of RxRePrescribeAction.java=================");
+        MiscUtils.getLogger().debug("================in represcribeMultiple of RxRePrescribeAction.java=================");
         oscar.oscarRx.pageUtil.RxSessionBean bean =
                 (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
         if (bean == null) {
@@ -448,7 +448,7 @@ public ActionForward represcribeMultiple(ActionMapping mapping,
         }
         List<String> reRxDrugList=new ArrayList();
         reRxDrugList=bean.getReRxDrugIdList();
-        System.out.println(reRxDrugList);
+        MiscUtils.getLogger().debug(reRxDrugList);
         List<RxPrescriptionData.Prescription> listReRxDrug = new ArrayList();
         for(String drugId:reRxDrugList){
             Long rand = Math.round(Math.random() * 1000000);
@@ -457,13 +457,13 @@ public ActionForward represcribeMultiple(ActionMapping mapping,
             RxPrescriptionData.Prescription rx =rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo(), oldRx);
             rx.setRandomId(rand);
             String qText=rx.getQuantity();
-            System.out.println("qText in represcribe2="+qText);
+            MiscUtils.getLogger().debug("qText in represcribe2="+qText);
             if(qText!=null && RxUtil.isStringToNumber(qText)){}
             else{
                 rx.setQuantity(RxUtil.getQuantityFromQuantityText(qText));
                 rx.setUnitName(RxUtil.getUnitNameFromQuantityText(qText));
             }
-            System.out.println("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
+            MiscUtils.getLogger().debug("quantity, unitName represcribe2="+rx.getQuantity()+"; "+rx.getUnitName());
             String spec=RxUtil.trimSpecial(rx);
             rx.setSpecial(spec);
             if(RxUtil.isRxUniqueInStash(bean,rx)){
@@ -473,18 +473,18 @@ public ActionForward represcribeMultiple(ActionMapping mapping,
             bean.setStashIndex(rxStashIndex);
             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
         }
-        System.out.println(listReRxDrug);
+        MiscUtils.getLogger().debug(listReRxDrug);
         request.setAttribute("listRxDrugs", listReRxDrug);
-        System.out.println("================END represcribeMultiple of RxRePrescribeAction.java=================");
+        MiscUtils.getLogger().debug("================END represcribeMultiple of RxRePrescribeAction.java=================");
         return (mapping.findForward("represcribe"));
     }
 
     public void p(String s) {
-        System.out.println(s);
+        MiscUtils.getLogger().debug(s);
     }
 
     public void p(String s, String s1) {
-        System.out.println(s + "=" + s1);
+        MiscUtils.getLogger().debug(s + "=" + s1);
     }
 
 }

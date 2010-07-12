@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -123,7 +124,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
             serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
         }
         catch(ParseException ex ) {
-            System.out.println("EctDisplayDocsAction: Error creating date " + ex.getMessage());
+            MiscUtils.getLogger().debug("EctDisplayDocsAction: Error creating date " + ex.getMessage());
             serviceDateStr = "Error";
             date = null;
         }

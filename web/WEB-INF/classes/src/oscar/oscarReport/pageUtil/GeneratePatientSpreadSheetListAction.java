@@ -58,7 +58,7 @@ public class GeneratePatientSpreadSheetListAction  extends Action {
        
     String[] demos = request.getParameterValues("demo");
        
-    System.out.println("Generating Spread Sheet file ..");
+    MiscUtils.getLogger().debug("Generating Spread Sheet file ..");
     response.setContentType("application/octet-stream");
     response.setHeader("Content-Disposition", "attachment; filename=\"patientlist_spreadsheet-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".xls\"");
                 

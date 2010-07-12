@@ -28,6 +28,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.model.Provider;
 import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
@@ -54,7 +56,7 @@ public class ProviderDAO extends DAO {
 
         try {
             ResultSet rs = db.GetSQL(sql);
-            System.out.println("sql " + sql);
+            MiscUtils.getLogger().debug("sql " + sql);
             
             Provider provider = new Provider();
             provider.setProviderNo("0");

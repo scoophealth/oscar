@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 
@@ -65,7 +67,7 @@ public class EctImmImmunizationData
         throws SQLException
     {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        System.out.println(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
+        MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
         String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURRENT_DATE, 0)")));
         db.RunSQL(sql);
 	//select the specific database function:
@@ -92,7 +94,7 @@ public class EctImmImmunizationData
         for(rs = db.GetSQL(sql); rs.next(); vRet.add(s))
         {
             s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(db.getString(rs,"provider_no"))))).append("/").append(db.getString(rs,"namer"))));
-            System.out.println(s);
+            MiscUtils.getLogger().debug(s);
         }
 
         rs.close();

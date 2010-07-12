@@ -48,7 +48,7 @@ public class RptMeasurementsData {
             String sql = "SELECT DISTINCT demographicNo FROM measurements WHERE dateObserved >= '" + startDateA + "' AND dateObserved <= '" + endDateA + "'";
             ResultSet rs;
             rs = db.GetSQL(sql);
-            System.out.println("SQL Statement: " + sql);
+            MiscUtils.getLogger().debug("SQL Statement: " + sql);
             rs.last();
             nbPatient = rs.getRow();
 
@@ -75,7 +75,7 @@ public class RptMeasurementsData {
         
         try{
             String sql = "SELECT DISTINCT demographicNo  FROM measurements WHERE dateObserved >= '" + startDate + "' AND dateObserved <= '" + endDate + "'";
-            System.out.println("SQL Statement: " + sql);
+            MiscUtils.getLogger().debug("SQL Statement: " + sql);
             ResultSet rs;
             
             for(rs=db.GetSQL(sql); rs.next();){            

@@ -346,7 +346,6 @@ public class ProgramQueue implements Serializable {
     }
 
     public void setHeadClientId(Long headClientId) {
-        System.out.println("Set HEAD CLIENT ID getting called "+headClientId);
         this.headClientId = headClientId;
     }
     

@@ -61,7 +61,7 @@ public class LoginViewTypeHlp extends Properties{
 			load(is);
 			is.close(); 
 		} catch(Exception e) {
-			System.out.println("*** No ViewType File ***");
+			MiscUtils.getLogger().debug("*** No ViewType File ***");
 			MiscUtils.getLogger().error("Error", e);
 		}
 	}

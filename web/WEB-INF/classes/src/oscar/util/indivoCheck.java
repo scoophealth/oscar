@@ -83,7 +83,7 @@ public class indivoCheck extends TagSupport {
             MiscUtils.getLogger().error("Error", e);
         }
         catch(NullPointerException e) {
-            System.out.println("INVALID provider or demographic no");
+            MiscUtils.getLogger().debug("INVALID provider or demographic no");
             MiscUtils.getLogger().error("Error", e);
         }
         

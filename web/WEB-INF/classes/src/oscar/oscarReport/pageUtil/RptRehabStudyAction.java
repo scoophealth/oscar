@@ -63,12 +63,12 @@ public class RptRehabStudyAction extends Action {
             
             sql = "select max(formEdited) as formEdited, demographic_no from " + formName + " where formEdited > '" + startDate +
                   "' and formEdited < '" + endDate + "' group by demographic_no";
-            System.out.println("sql:" + sql);
+            MiscUtils.getLogger().debug("sql:" + sql);
             rs = db.GetSQL(sql);
             while(rs.next()){
                 String sqlDemo =   "SELECT * FROM " + formName + " where demographic_no='" + rs.getString("demographic_no")
                                  + "' AND formEdited='" + rs.getString("formEdited") + "'";
-                System.out.println("sqlDemo:" + sqlDemo);
+                MiscUtils.getLogger().debug("sqlDemo:" + sqlDemo);
                 ResultSet rsDemo = db.GetSQL(sqlDemo);
                 //if(rsDemo.next())                    
                     results = results + getStructure(rsDemo);
@@ -117,11 +117,11 @@ public class RptRehabStudyAction extends Action {
 	int columns = rsmd.getColumnCount();
 	//String rowColor="rowColor1";
 	String[] columnNames = new String[columns];
-	System.out.println("number of columns: " + Integer.toString(columns));
+	MiscUtils.getLogger().debug("number of columns: " + Integer.toString(columns));
 	while (rs.next()) {                
 		sb.append("<tr>");
 		for(int j=0; j<columns; j++) {
-                        System.out.println("columns " + Integer.toString(j));
+                        MiscUtils.getLogger().debug("columns " + Integer.toString(j));
 			sb.append("<td>");                        
 			sb.append(rs.getString(j+1));
 			sb.append("</td>");

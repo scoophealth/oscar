@@ -58,7 +58,7 @@ public class RptByExampleQueryBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo='" + providerNo + "'ORDER BY name";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             
             for(rs = db.GetSQL(sql); rs.next(); )
@@ -91,7 +91,7 @@ public class RptByExampleQueryBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p WHERE r.providerNo=p.provider_No ORDER BY date DESC";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
@@ -115,7 +115,7 @@ public class RptByExampleQueryBeanHandler {
             String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p "
                          + "WHERE r.providerNo=p.provider_No AND date>= '" + startDate + "' AND date <='" + endDate
                          + "' ORDER BY date DESC";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {

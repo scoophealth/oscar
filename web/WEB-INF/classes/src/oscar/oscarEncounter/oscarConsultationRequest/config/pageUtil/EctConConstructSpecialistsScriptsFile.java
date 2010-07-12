@@ -68,17 +68,17 @@ public class EctConConstructSpecialistsScriptsFile
                 for(rs = db.GetSQL(sql); rs.next(); serviceDesc.add(db.getString(rs,"serviceDesc")))
                     serviceId.add(db.getString(rs,"serviceId"));
 
-                System.out.println(String.valueOf(String.valueOf((new StringBuffer("there are ")).append(serviceId.size()).append(" services"))));
+                MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer("there are ")).append(serviceId.size()).append(" services"))));
                 for(int i = 0; i < serviceId.size(); i++)
                 {
                     String servId = (String)serviceId.elementAt(i);
                     String servDesc = (String)serviceDesc.elementAt(i);
                     fileWriter.write(String.valueOf(String.valueOf((new StringBuffer("K(")).append(servId).append(",\"").append(servDesc).append("\");\n"))));
                     sql = String.valueOf(String.valueOf((new StringBuffer("select ser.specId, pro.fName, pro.lName, pro.proLetters, pro.address , pro.phone, pro.fax  from serviceSpecialists ser, professionalSpecialists pro where pro.specId = ser.specId and ser.serviceId = '")).append(servId).append("' order by pro.lName")));
-                    for(rs = db.GetSQL(sql); rs.next(); System.out.println("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))
+                    for(rs = db.GetSQL(sql); rs.next(); MiscUtils.getLogger().debug("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))
                     {
                         String name = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(db.getString(rs,"lName"))))).append(", ").append(db.getString(rs,"fName")).append(" ").append(db.getString(rs,"proLetters"))));
-                        System.out.println("name : ".concat(String.valueOf(String.valueOf(name))));
+                        MiscUtils.getLogger().debug("name : ".concat(String.valueOf(String.valueOf(name))));
                         String specId = db.getString(rs,"specId");
                         String phone = db.getString(rs,"phone");
                         String address = db.getString(rs,"address");
@@ -101,7 +101,7 @@ public class EctConConstructSpecialistsScriptsFile
         }
         catch(IOException io)
         {
-            System.out.println(io.getMessage());
+            MiscUtils.getLogger().debug(io.getMessage());
         }
         return retval;
     }
@@ -125,18 +125,18 @@ public class EctConConstructSpecialistsScriptsFile
             for(rs = db.GetSQL(sql); rs.next(); serviceDesc.add(db.getString(rs,"serviceDesc")))
                 serviceId.add(db.getString(rs,"serviceId"));
 
-            System.out.println(String.valueOf(String.valueOf((new StringBuffer("there are ")).append(serviceId.size()).append(" services"))));
+            MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer("there are ")).append(serviceId.size()).append(" services"))));
             for(int i = 0; i < serviceId.size(); i++)
             {
                 String servId = (String)serviceId.elementAt(i);
                 String servDesc = (String)serviceDesc.elementAt(i);
                 stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer("K(")).append(servId).append(",\"").append(servDesc).append("\");\n"))));
                 sql = String.valueOf(String.valueOf((new StringBuffer("select ser.specId, pro.fName, pro.lName, pro.proLetters, pro.address , pro.phone, pro.fax  from serviceSpecialists ser, professionalSpecialists pro where pro.specId = ser.specId and ser.serviceId = '")).append(servId).append("' order by pro.lName")));
-                for(rs = db.GetSQL(sql); rs.next(); System.out.println("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))
+                for(rs = db.GetSQL(sql); rs.next(); MiscUtils.getLogger().debug("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))
                 {
                     String name = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(db.getString(rs,"lName"))))).append(", ").append(db.getString(rs,"fName")).append(" ").append(db.getString(rs,"proLetters"))));
                     name = this.escapeString(name);
-                    System.out.println("name : ".concat(String.valueOf(String.valueOf(name))));
+                    MiscUtils.getLogger().debug("name : ".concat(String.valueOf(String.valueOf(name))));
                     String specId = db.getString(rs,"specId");
                     String phone = db.getString(rs,"phone");
                     String address = db.getString(rs,"address");                 

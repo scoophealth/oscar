@@ -78,7 +78,7 @@ public class EctSaveEncounterAction
         latestID = getLatestID(demographicNo);
       }
       catch (SQLException sqlexception) {
-        System.out.println(sqlexception.getMessage());
+        MiscUtils.getLogger().debug(sqlexception.getMessage());
         return true;
       }
       
@@ -254,7 +254,7 @@ public class EctSaveEncounterAction
             }
           }
           catch (SQLException sqlexception) {
-            System.out.println(sqlexception.getMessage());
+            MiscUtils.getLogger().debug(sqlexception.getMessage());
           }
       }  //end of the synchronization block
     }

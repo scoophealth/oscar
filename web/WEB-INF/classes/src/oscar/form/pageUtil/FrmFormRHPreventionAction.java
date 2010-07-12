@@ -43,6 +43,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.form.FrmRecord;
 import oscar.form.FrmRecordFactory;
@@ -98,7 +99,7 @@ import oscar.util.UtilDateUtilities;
 public class FrmFormRHPreventionAction extends Action{
     
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){    
-        System.out.println("FrmFormRHPrevention Action");
+        MiscUtils.getLogger().debug("FrmFormRHPrevention Action");
         
         // <action path="/form/AddRHWorkFlow" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormAddRHWorkFlowAction">
         String demographicNo = request.getParameter("demographic_no");
@@ -110,7 +111,7 @@ public class FrmFormRHPreventionAction extends Action{
         String workflowId = request.getParameter("workflowId");
         String state = request.getParameter("state");
         
-        System.out.println("FrmFormRHPreventionAction demographic "+demographicNo);
+        MiscUtils.getLogger().debug("FrmFormRHPreventionAction demographic "+demographicNo);
         ActionForward af = mapping.findForward("success");
         
         int workId = -1;
@@ -121,18 +122,18 @@ public class FrmFormRHPreventionAction extends Action{
         ArrayList currentWorkFlows = flow.getActiveWorkFlowList(demographicNo);
 
         String dateToParse = request.getParameter("edd");
-        System.out.println("New workflow for "+demographicNo+" EDD "+dateToParse);
+        MiscUtils.getLogger().debug("New workflow for "+demographicNo+" EDD "+dateToParse);
         Date endDate = UtilDateUtilities.StringToDate(dateToParse);   
 
         //Currently open work flows ?
         if(currentWorkFlows != null && currentWorkFlows.size() > 0){
-            System.out.println("size of current workflows "+currentWorkFlows.size());
+            MiscUtils.getLogger().debug("size of current workflows "+currentWorkFlows.size());
             request.setAttribute("currentWorkFlow",currentWorkFlows.get(0));
              Hashtable h = (Hashtable) currentWorkFlows.get(0);
              String currentId = (String) h.get("ID");
              if (workflowId != null ){
             //LOG CHANGE NOW
-                System.out.println("Changing workflow for  "+demographicNo+ " to "+state);
+                MiscUtils.getLogger().debug("Changing workflow for  "+demographicNo+ " to "+state);
                 
                 WorkFlowState wfs = new WorkFlowState();
                 

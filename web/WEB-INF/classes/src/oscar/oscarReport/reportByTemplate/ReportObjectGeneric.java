@@ -29,6 +29,8 @@ package oscar.oscarReport.reportByTemplate;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.util.StringUtils;
 
 /*
@@ -136,7 +138,7 @@ public class ReportObjectGeneric implements ReportObject {
                 
             }
         }
-        System.out.println("<REPORT BY TEMPLATE> SQL: " + sql);
+        MiscUtils.getLogger().debug("<REPORT BY TEMPLATE> SQL: " + sql);
         return sql;
     }
     

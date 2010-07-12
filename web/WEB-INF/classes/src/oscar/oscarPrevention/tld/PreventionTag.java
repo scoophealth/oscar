@@ -100,8 +100,7 @@ public class PreventionTag extends TagSupport {
        try{
           JspWriter out = super.pageContext.getOut();         
           out.print("</span>");
-       }catch(Exception p) {
-            p.printStackTrace(System.out);
+       }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
        }
        return EVAL_PAGE;
     }

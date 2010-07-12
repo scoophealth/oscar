@@ -63,7 +63,7 @@ public class EChartDAO {
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(qry);
-      System.out.println("qry=" + qry);
+      MiscUtils.getLogger().debug("qry=" + qry);
     }
     catch (SQLException e) {
       MiscUtils.getLogger().error("Error", e);

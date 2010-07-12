@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.AppointmentMainBean;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
@@ -128,7 +129,7 @@ public class TeleplanCorrectionActionWCB
 
         String newURL = mapping.findForward(where).getPath();
         newURL = newURL + "?billing_no=" + data.getId();
-        System.out.println(newURL);
+        MiscUtils.getLogger().debug(newURL);
 
         ActionForward actionForward = new ActionForward();
         actionForward.setPath(newURL);

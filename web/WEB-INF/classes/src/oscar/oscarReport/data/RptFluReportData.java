@@ -26,6 +26,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 public class RptFluReportData {
 	public class DemoFluDataStruct {
@@ -55,7 +57,7 @@ public class RptFluReportData {
 					s = resultset.getString("billing_date");
 				resultset.close();
 			} catch (SQLException sqlexception) {
-				System.out.println(sqlexception.getMessage());
+				MiscUtils.getLogger().debug(sqlexception.getMessage());
 			}
 			return s;
 		}
@@ -77,7 +79,7 @@ public class RptFluReportData {
 					s = resultset.getString("billing_date");
 				resultset.close();
 			} catch (SQLException sqlexception) {
-				System.out.println(sqlexception.getMessage());
+				MiscUtils.getLogger().debug(sqlexception.getMessage());
 			}
 			return s;
 		}
@@ -111,8 +113,8 @@ public class RptFluReportData {
 			}
 			resultset.close();
 		} catch (SQLException sqlexception) {
-			System.out.println("Problems");
-			System.out.println(sqlexception.getMessage());
+			MiscUtils.getLogger().debug("Problems");
+			MiscUtils.getLogger().debug(sqlexception.getMessage());
 		}
 		return arraylist;
 	}
@@ -142,8 +144,8 @@ public class RptFluReportData {
 			}
 			resultset.close();
 		} catch (SQLException sqlexception) {
-			System.out.println("Problems");
-			System.out.println(sqlexception.getMessage());
+			MiscUtils.getLogger().debug("Problems");
+			MiscUtils.getLogger().debug(sqlexception.getMessage());
 		}
 	}
 	public ArrayList demoList;

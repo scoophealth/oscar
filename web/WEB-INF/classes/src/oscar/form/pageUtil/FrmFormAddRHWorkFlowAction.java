@@ -38,6 +38,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
 import oscar.oscarWorkflow.WorkFlowState;
@@ -50,7 +51,7 @@ import oscar.util.UtilDateUtilities;
 public class FrmFormAddRHWorkFlowAction extends Action{
     
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){    
-        System.out.println("FrmFormRHPrevention Action");
+        MiscUtils.getLogger().debug("FrmFormRHPrevention Action");
         
         String providerNo = (String) request.getSession().getAttribute("user");
         String demographicNo = request.getParameter("demographic_no");
@@ -63,11 +64,11 @@ public class FrmFormAddRHWorkFlowAction extends Action{
         
         if (workflowId != null ){
             //LOG CHANGE NOW
-            System.out.println("Changing workflow for  "+demographicNo+ " to "+state);
+            MiscUtils.getLogger().debug("Changing workflow for  "+demographicNo+ " to "+state);
             wfs.updateWorkFlowState( workflowId, state );
             
         }else{
-            System.out.println("New workflow for "+demographicNo+" EDD "+dateToParse);
+            MiscUtils.getLogger().debug("New workflow for "+demographicNo+" EDD "+dateToParse);
             Date endDate = UtilDateUtilities.StringToDate(dateToParse);        
             wfs.addToWorkFlow(WorkFlowState.RHWORKFLOW,providerNo,demographicNo,endDate,WorkFlowState.INIT_STATE);
         }

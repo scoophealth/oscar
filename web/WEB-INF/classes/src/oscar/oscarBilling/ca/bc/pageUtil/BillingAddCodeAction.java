@@ -35,6 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
 
@@ -88,21 +89,21 @@ public final class BillingAddCodeAction
     if (whereTo == null || whereTo.equals("")) {
       if (added) {
         retval = mapping.findForward("success");
-        System.out.println("success");
+        MiscUtils.getLogger().debug("success");
       }
       else {
         retval = mapping.findForward("normalCodeError");
-        System.out.println("nCE");
+        MiscUtils.getLogger().debug("nCE");
       }
     }
     else {
       if (added) {
         retval = mapping.findForward("private");
-        System.out.println("pri");
+        MiscUtils.getLogger().debug("pri");
       }
       else {
         retval = mapping.findForward("privateCodeError");
-        System.out.println("privCodErr");
+        MiscUtils.getLogger().debug("privCodErr");
       }
     }
 

@@ -124,7 +124,7 @@ public class EFormUtil {
 
 	public static ArrayList listImages() {
 		String imagePath = OscarProperties.getInstance().getProperty("eform_image");
-		System.out.println("Img Path: " + imagePath);
+		MiscUtils.getLogger().debug("Img Path: " + imagePath);
 		File dir = new File(imagePath);
 		String[] files = dir.list();
 		ArrayList fileList;
@@ -306,7 +306,7 @@ public class EFormUtil {
 				for (int i=0; i<names.size(); i++) {
 					try {
 						values.add(oscar.Misc.getString(rs,(String) names.get(i)));
-						System.out.println("VALUE ====" + rs.getObject((String) names.get(i)) + "|");
+						MiscUtils.getLogger().debug("VALUE ====" + rs.getObject((String) names.get(i)) + "|");
 					} catch (Exception sqe) {
 						values.add("<(" + names.get(i) + ")NotFound>");
 						MiscUtils.getLogger().error("Error", sqe);
@@ -371,7 +371,7 @@ public class EFormUtil {
 			for (int i=0; i<names.size(); i++) {
 				sql = "INSERT INTO eform_values(fdid, fid, demographic_no, var_name, var_value) VALUES " +
 						"(" + fdid + ", " + fid + ", " + demographic_no + ", '" + names.get(i) + "', '" + UtilMisc.charEscape((String) values.get(i), '\'') + "')";
-				System.out.println("SQL ====" + sql);
+				MiscUtils.getLogger().debug("SQL ====" + sql);
 				db.RunSQL(sql);
 			}
 		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
@@ -610,7 +610,7 @@ public class EFormUtil {
 			if (paramNames.contains(field)) {
 				sb = sb.replace(fieldBegin, fieldEnd+1, (String)paramValues.get(paramNames.indexOf(field)));
 			} else {
-				System.out.println("EForm Template Error! Cannot find template field $t{"+field+"} in eform");
+				MiscUtils.getLogger().debug("EForm Template Error! Cannot find template field $t{"+field+"} in eform");
 				sb = sb.delete(fieldBegin, fieldBegin+2);
 			}
 		}

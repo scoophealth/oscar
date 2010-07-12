@@ -194,7 +194,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     String ffwd = "fail";
     String tmpDir = oscarp.getProperty("TMP_DIR");
     if (!Util.checkDir(tmpDir)) {
-        System.out.println("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+        MiscUtils.getLogger().debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
     } else {
 	XmlOptions options = new XmlOptions();
 	options.put( XmlOptions.SAVE_PRETTY_PRINT );
@@ -1640,7 +1640,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	//zip all export files
 	String zipName = "export-"+setName.replace(" ","")+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
 	if (!Util.zipFiles(exportFiles, zipName, tmpDir)) {
-            System.out.println("Error! Failed to zip export files");
+            MiscUtils.getLogger().debug("Error! Failed to zip export files");
 	}
 
         if (pgpReady.equals("Yes")) {
@@ -1655,7 +1655,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 session.setAttribute("pgp_ready", "No");
             }
         } else {
-            System.out.println("Warning: PGP Encryption NOT available - unencrypted file exported!");
+            MiscUtils.getLogger().debug("Warning: PGP Encryption NOT available - unencrypted file exported!");
             Util.downloadFile(zipName, tmpDir, response);
             ffwd = "success";
         }

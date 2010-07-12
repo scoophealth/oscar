@@ -91,10 +91,8 @@ class WebServiceClient {
         URLEndpoint endpoint = new URLEndpoint(url);
 
         SOAPMessage request = createRequest(bodyElement, contentLocation);
-        request.writeTo(System.out);
 
         SOAPMessage response = con.call(request, endpoint);
-        response.writeTo(System.out);
 
         con.close();
         return parseResponse(response);

@@ -156,7 +156,7 @@ public class RptDemographicQuerySaver {
                   +" values "
                   +" ('"+sqSelects+"','"+sqAge+"','"+sqStartYear+"','"+sqEndYear+"','"+s.q(sqFirstName)+"','"+s.q(sqLastName)+"',"
                   +"  '"+sqRosterStatus+"', '"+s.q(sqSex)+"', '"+sqProviderNo+"' , '"+sqPatientStatus+"','"+sqQueryName+"','1')";;
-                  System.out.println("sql statement : "+sql);
+                  MiscUtils.getLogger().debug("sql statement : "+sql);
                   db.RunSQL(sql);
        }catch (java.sql.SQLException e){ MiscUtils.getLogger().error("Error", e); }
 

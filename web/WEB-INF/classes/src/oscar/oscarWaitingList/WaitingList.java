@@ -67,7 +67,7 @@ public class WaitingList{
     			   rs.close(); 
     		   }
     	   }catch(Exception ex2){
-    		   System.out.println("WaitingList.checkWaitingListTable():" + ex2.getMessage()); 
+    		   MiscUtils.getLogger().debug("WaitingList.checkWaitingListTable():" + ex2.getMessage()); 
     	   }
        }
     }

@@ -65,7 +65,7 @@ public class HSFODAO {
                 "(SiteCode,Patient_Id,FName,LName,BirthDate,Sex,PostalCode,Height,Height_unit,Ethnic_White,Ethnic_Black,Ethnic_EIndian,Ethnic_Pakistani,Ethnic_SriLankan,Ethnic_Bangladeshi,Ethnic_Chinese,Ethnic_Japanese,Ethnic_Korean,Ethnic_Hispanic,Ethnic_FirstNation,Ethnic_Other,Ethnic_Refused,Ethnic_Unknown,PharmacyName,PharmacyLocation,Sel_TimeAgoDx,EmrHCPId,ConsentDate)" +
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " ;
         
-        System.out.println(sqlstatement);
+        MiscUtils.getLogger().debug(sqlstatement);
         DBHandler db = null;
 		
         try {
@@ -104,10 +104,10 @@ public class HSFODAO {
             st.executeUpdate();
             st.clearParameters();
         }catch (SQLException se) {
-            System.out.println("SQL Error while inserting into the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while inserting into the database : "+ se.toString());
             MiscUtils.getLogger().error("Error", se);
         }catch (Exception ne) {
-            System.out.println("Other Error while inserting into the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
             MiscUtils.getLogger().error("Error", ne);
         }finally {			
 			if (st != null)
@@ -150,7 +150,7 @@ public class HSFODAO {
                 ",EmrHCPId = ? " + //27'" +  patientData.getEmrHCPId() +
                 ",ConsentDate = ? " + //28'" + new java.sql.Date(patientData.getConsentDate().getTime()) +
                 " WHERE Patient_Id= ? ";  //29'" + patientData.getPatient_Id() +"'";
-        System.out.println(sqlstatement);
+        MiscUtils.getLogger().debug(sqlstatement);
         DBHandler db =null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -170,7 +170,7 @@ public class HSFODAO {
             st.setBoolean(10,patientData.isEthnic_White());
             st.setBoolean(11,patientData.isEthnic_Black());
             st.setBoolean(12,patientData.isEthnic_EIndian());
-            System.out.println("RIGHT BEFIRE UPDATE "+patientData.isEthnic_Pakistani() );
+            MiscUtils.getLogger().debug("RIGHT BEFIRE UPDATE "+patientData.isEthnic_Pakistani() );
             st.setBoolean(13,patientData.isEthnic_Pakistani() );
             st.setBoolean(14,patientData.isEthnic_SriLankan());
             st.setBoolean(15,patientData.isEthnic_Bangladeshi() );
@@ -193,9 +193,9 @@ public class HSFODAO {
             st.executeUpdate();
             st.clearParameters();
         }catch (SQLException se) {
-            System.out.println("SQL Error while inserting into the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
-            System.out.println("Other Error while inserting into the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
         }finally {
 			
 			if (st != null)
@@ -212,7 +212,7 @@ public class HSFODAO {
 		 
             PreparedStatement st = null;
 	    String sqlstatement ="UPDATE form_hsfo_visit SET locked=true where ID=" + ID;
-	    System.out.println(sqlstatement);
+	    MiscUtils.getLogger().debug(sqlstatement);
 	    DBHandler db=null;
 	    try {
                 db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -220,9 +220,9 @@ public class HSFODAO {
 	        st = connect.prepareStatement(sqlstatement);
 	        st.executeUpdate();
             }catch (SQLException se) {
-				System.out.println("SQL Error while inserting into the database : "+ se.toString());
+				MiscUtils.getLogger().debug("SQL Error while inserting into the database : "+ se.toString());
 	    }catch (Exception ne) {
-			 System.out.println("Other Error while inserting into the database : "+ ne.toString());
+			 MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
        	    }
 	    	finally {
 			
@@ -241,7 +241,7 @@ public class HSFODAO {
         PreparedStatement st = null;
         String sqlstatement ="select distinct VisitDate_Id  from form_hsfo_visit where demographic_no = ? " ;
         int i = 0;
-        System.out.println(sqlstatement);
+        MiscUtils.getLogger().debug(sqlstatement);
         DBHandler db =null;
         ResultSet rs=null;
         try {
@@ -254,9 +254,9 @@ public class HSFODAO {
                 i++;
             }
         }catch (SQLException se) {
-                            System.out.println("SQL Error while inserting into the database : "+ se.toString());
+                            MiscUtils.getLogger().debug("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
-                     System.out.println("Other Error while inserting into the database : "+ ne.toString());
+                     MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
         }
         finally {
         	if (rs != null)
@@ -290,7 +290,7 @@ public class HSFODAO {
             boolean hasLockedVisit = false; 
             PreparedStatement st = null;
 	    String sqlstatement ="select * from form_hsfo_visit where locked=true and demographic_no = ?";
-	    System.out.println(sqlstatement);
+	    MiscUtils.getLogger().debug(sqlstatement);
 	    DBHandler db=null;
 	    ResultSet rs =null;
 	    try {
@@ -303,9 +303,9 @@ public class HSFODAO {
                     hasLockedVisit = true;
                 }
             }catch (SQLException se) {
-				System.out.println("SQL Error while inserting into the database : "+ se.toString());
+				MiscUtils.getLogger().debug("SQL Error while inserting into the database : "+ se.toString());
 	    }catch (Exception ne) {
-			 System.out.println("Other Error while inserting into the database : "+ ne.toString());
+			 MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
        	    }
 	    	finally {
 	    	if (rs != null)
@@ -375,7 +375,7 @@ public class HSFODAO {
                 "?,?,?,?,?,?,?,?,?,?," +
                 "?,?,?,?)";
                 
-        System.out.println(sqlstatement);
+        MiscUtils.getLogger().debug(sqlstatement);
         DBHandler db =null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -489,10 +489,10 @@ public class HSFODAO {
             //st.close();
         }catch (SQLException se) {
             MiscUtils.getLogger().error("Error", se);
-            System.out.println("SQL Error while inserting into the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
             MiscUtils.getLogger().error("Error", ne);
-            System.out.println("Other Error while inserting into the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while inserting into the database : "+ ne.toString());
         }
         finally {
 			
@@ -593,7 +593,7 @@ public class HSFODAO {
         
         
         String query = "SELECT * FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
-        System.out.println("query: " + query);
+        MiscUtils.getLogger().debug("query: " + query);
         DBHandler db =null;
         Statement sql =null;
         ResultSet result =null;
@@ -602,7 +602,7 @@ public class HSFODAO {
             Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
-            System.out.println("here " + query);
+            MiscUtils.getLogger().debug("here " + query);
             // retrieve results and store into registrationData object
             while(result.next() ) {
                 
@@ -635,16 +635,16 @@ public class HSFODAO {
                 patientData.setEmrHCPId(result.getString("EmrHCPId"));
                 patientData.setConsentDate(result.getDate("ConsentDate"));
                 
-                System.out.println("ID:" + result.getString("Patient_Id") + " Name:" + result.getString("FName"));
-                System.out.println(patientData.getPatient_Id() + patientData.getFName() + patientData.getLName());
+                MiscUtils.getLogger().debug("ID:" + result.getString("Patient_Id") + " Name:" + result.getString("FName"));
+                MiscUtils.getLogger().debug(patientData.getPatient_Id() + patientData.getFName() + patientData.getLName());
                 
             }
             //result.close();
             //sql.close();
         }catch (SQLException se) {
-            System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
-            System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
         }finally {
         	if (result != null)
     			try {
@@ -668,7 +668,7 @@ public class HSFODAO {
         boolean isFirstRecord = true;
         
         String query = "SELECT FName FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
-        System.out.println("query: " + query);
+        MiscUtils.getLogger().debug("query: " + query);
         DBHandler db =null;
         Statement sql =null;
         ResultSet result =null;
@@ -677,18 +677,18 @@ public class HSFODAO {
            Connection connect = DBHandler.getConnection();
            sql = connect.createStatement();
            result = sql.executeQuery(query);
-           System.out.println("here " + query);
+           MiscUtils.getLogger().debug("here " + query);
            // retrieve results and store into registrationData object
-           System.out.println("first");
+           MiscUtils.getLogger().debug("first");
            if(result.next() ) {
               isFirstRecord = false;
            }
 //           result.close();
 //           sql.close();
         }catch (SQLException se) {
-            System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
-            System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
         }finally {
         	if (result != null)
     			try {
@@ -714,7 +714,7 @@ public class HSFODAO {
                 visitData.setVisitDate_Id(result.getDate("VisitDate_Id"));
                 visitData.setDrugcoverage(result.getString("Drugcoverage"));
                 visitData.setSBP(result.getInt("SBP"));
-                System.out.println("Retrieved sbp " + visitData.getSBP());
+                MiscUtils.getLogger().debug("Retrieved sbp " + visitData.getSBP());
                 visitData.setSBP_goal(result.getInt("SBP_goal"));
                 visitData.setDBP(result.getInt("DBP"));
                 visitData.setDBP_goal(result.getInt("DBP_goal"));
@@ -827,9 +827,9 @@ public class HSFODAO {
 //            query.close();
 //            
         }catch (SQLException se) {
-            System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
-            System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
         }finally {
         	if (rs != null)
     			try {
@@ -859,7 +859,7 @@ public class HSFODAO {
 		 //String query = "SELECT MAX(FormEdited) as Max FROM form_hsfo_Visit WHERE VisitDate_Id='" + visitdate + "' and demographic_no = '"+demographic_no+"' ";
 		 String query = "SELECT ID FROM form_hsfo_Visit WHERE VisitDate_Id='" + visitdate + "' and demographic_no = '"+demographic_no+"' ";
 		 
-                 System.out.println("query1: " + query);
+                 MiscUtils.getLogger().debug("query1: " + query);
 		 String timestamp="";
 		 try {
 		 try {
@@ -867,16 +867,16 @@ public class HSFODAO {
 		 // retrieve results and store into registrationData object
 		 while(result.next() ) {
 				timestamp =(result.getString("ID"));
-				System.out.println("Max timestamp:" + result.getString("Max"));
+				MiscUtils.getLogger().debug("Max timestamp:" + result.getString("Max"));
 		 }
 		 }catch (SQLException se) {
-				System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+				MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
 		 }catch (Exception ne) {
-			 System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+			 MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
 		 }
 		 
 		 String query2 = "SELECT DISTINCT * FROM form_hsfo_Visit WHERE ID='" + timestamp +"'";
-		 System.out.println("query2: " + query2);
+		 MiscUtils.getLogger().debug("query2: " + query2);
 		 try {
 		 ResultSet result = sql.executeQuery(query2);
 		 // retrieve results and store into registrationData object
@@ -977,9 +977,9 @@ public class HSFODAO {
 				visitData.setLocked(result.getBoolean("Locked"));  	
 		 }
 		 }catch (SQLException se) {
-				System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+				MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
 		 }catch (Exception ne) {
-			 System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+			 MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
 		 }
 		 }finally {
 	        	
@@ -1008,13 +1008,13 @@ public class HSFODAO {
             sql = connect.prepareStatement(query);
             sql.setDate(1,new java.sql.Date(visitdate.getTime()));
             sql.setString(2,demographicNo);
-            System.out.println("query: " + query);
+            MiscUtils.getLogger().debug("query: " + query);
              
             ResultSet result = sql.executeQuery();
             if(result.next() ) {
                 isRecordExists = true;
             }
-            System.out.println("ID retrieved: " + ID); 
+            MiscUtils.getLogger().debug("ID retrieved: " + ID); 
 //            sql.close();
          }catch(Exception e ){
                 
@@ -1039,7 +1039,7 @@ public class HSFODAO {
                  Connection connect = DBHandler.getConnection();
 		 Statement sql = connect.createStatement();
 		 String query = "SELECT DISTINCT * FROM form_hsfo_visit WHERE  ID = " + ID;;
-		 System.out.println("query: " + query);
+		 MiscUtils.getLogger().debug("query: " + query);
 		 try {
 		 ResultSet result = sql.executeQuery(query);
 		 // retrieve results and store into registrationData object
@@ -1141,9 +1141,9 @@ public class HSFODAO {
 	    	
 		 }
 		 }catch (SQLException se) {
-				System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+				MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
 		 }catch (Exception ne) {
-			 System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+			 MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
 		 }finally {
 	        	
 	    		if (sql != null)
@@ -1169,7 +1169,7 @@ public class HSFODAO {
             Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
-            System.out.println("here " + query);
+            MiscUtils.getLogger().debug("here " + query);
             // retrieve results and store into registrationData object
             while(result.next() ) {
             	reList.add(result.getString(1));
@@ -1177,9 +1177,9 @@ public class HSFODAO {
 //            result.close();
 //            sql.close();
         }catch (SQLException se) {
-            System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
-            System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
         }finally {
         	if (result != null)
     			try {
@@ -1211,7 +1211,7 @@ public class HSFODAO {
             Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
-            System.out.println("here " + query);
+            MiscUtils.getLogger().debug("here " + query);
             // retrieve results and store into registrationData object
             
             while(result.next() ) {
@@ -1370,9 +1370,9 @@ public class HSFODAO {
 //            result.close();
 //            sql.close();
         }catch (SQLException se) {
-            System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+            MiscUtils.getLogger().debug("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
-            System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+            MiscUtils.getLogger().debug("Other Error while retreiving to the database : "+ ne.toString());
         }finally {
         	if (result != null)
     			try {

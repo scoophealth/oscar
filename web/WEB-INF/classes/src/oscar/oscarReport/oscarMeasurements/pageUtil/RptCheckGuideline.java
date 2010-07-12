@@ -49,7 +49,7 @@ public class RptCheckGuideline{
         
         try{
             String sql = "SELECT DISTINCT demographicNo  FROM eChart WHERE timestamp >= '" + startDate + "' AND timestamp <= '" + endDate + "'";
-            System.out.println("SQL Statement: " + sql);
+            MiscUtils.getLogger().debug("SQL Statement: " + sql);
             ResultSet rs;
             
             for(rs=db.GetSQL(sql); rs.next();){            
@@ -84,7 +84,7 @@ public class RptCheckGuideline{
             rs = db.GetSQL(sql);
             rs.next();
             if(rs.getString("isNumeric")!=null){
-                System.out.println("isNumeric: " + rs.getInt("isNumeric"));
+                MiscUtils.getLogger().debug("isNumeric: " + rs.getInt("isNumeric"));
                 return rs.getInt("isNumeric");
             }
             else{
@@ -107,13 +107,13 @@ public class RptCheckGuideline{
      ******************************************************************************************/	
     public boolean isNumericValueMetGuideline(double dataEntry, String guideline, String aboveBelow){
         
-        System.out.println("this is a numeric value");
+        MiscUtils.getLogger().debug("this is a numeric value");
         boolean passAllTests = false;
         
         if(aboveBelow.compareTo(">")==0){                                        
             if(dataEntry>=Double.parseDouble(guideline)){
                 passAllTests=true;
-                System.out.println("Pass double test");
+                MiscUtils.getLogger().debug("Pass double test");
             }
             else{
                 passAllTests=false;
@@ -122,7 +122,7 @@ public class RptCheckGuideline{
         else if(aboveBelow.compareTo("<")==0){
             if(dataEntry<=Double.parseDouble(guideline)){
                 passAllTests=true;
-                System.out.println("Pass double test");
+                MiscUtils.getLogger().debug("Pass double test");
             }
             else{
                 passAllTests=false;
@@ -138,7 +138,7 @@ public class RptCheckGuideline{
      ******************************************************************************************/       
     public boolean isBloodPressureMetGuideline(String dataEntry, String guideline, String aboveBelow){
          
-        System.out.println("this is blood pressure");
+        MiscUtils.getLogger().debug("this is blood pressure");
         
         int slashIndex = guideline.indexOf("/");
         int dataSlashIndex = dataEntry.indexOf("/");
@@ -155,26 +155,26 @@ public class RptCheckGuideline{
             int iDataSystolic = Integer.parseInt(systolicData);
             int iDataDiastolic = Integer.parseInt(diastolicData); 
 
-            System.out.println("guideline Systolic: " + iGuidelineSystolic + " dataSystolic: " + iDataSystolic);
-            System.out.println("guideline Diastolic: " + iGuidelineDiastolic + " dataDiastolic: " + iDataDiastolic);
+            MiscUtils.getLogger().debug("guideline Systolic: " + iGuidelineSystolic + " dataSystolic: " + iDataSystolic);
+            MiscUtils.getLogger().debug("guideline Diastolic: " + iGuidelineDiastolic + " dataDiastolic: " + iDataDiastolic);
             if(aboveBelow.compareTo("<")==0){
                 if(iDataSystolic<=iGuidelineSystolic && iDataDiastolic<=iGuidelineDiastolic){
                     passAllTests=true;
-                    System.out.println("pass this BP test");
+                    MiscUtils.getLogger().debug("pass this BP test");
                 }
                 else{
                     passAllTests=false;
-                    System.out.println("fail this BP test");
+                    MiscUtils.getLogger().debug("fail this BP test");
                 }
             }
             else if(aboveBelow.compareTo(">")==0){
                 if(iDataSystolic>=iGuidelineSystolic && iDataDiastolic>=iGuidelineDiastolic){
                     passAllTests=true;
-                    System.out.println("pass this BP test");
+                    MiscUtils.getLogger().debug("pass this BP test");
                 }
                 else{
                     passAllTests=false;
-                    System.out.println("fail this BP test");
+                    MiscUtils.getLogger().debug("fail this BP test");
                 }
             } 
         }
@@ -189,17 +189,17 @@ public class RptCheckGuideline{
     public boolean isYesNoMetGuideline(String dataEntry, String guideline){
         boolean passAllTests = false;
         
-        System.out.println("this is yes/no question");
+        MiscUtils.getLogger().debug("this is yes/no question");
         if(guideline.compareTo("YES")==0 || guideline.compareTo("yes")==0 
                || guideline.compareTo("Y")==0 || guideline.compareTo("Yes")==0){                                        
             if(dataEntry.compareTo("YES")==0 || dataEntry.compareTo("yes")==0 
                || dataEntry.compareTo("Y")==0 || dataEntry.compareTo("Yes")==0){
                    passAllTests=true;
-                   System.out.println("Pass yesno test");
+                   MiscUtils.getLogger().debug("Pass yesno test");
             }
             else{
                 passAllTests=false;
-                System.out.println("fail yesno test");
+                MiscUtils.getLogger().debug("fail yesno test");
             }
         }
         else if(guideline.compareTo("NO")==0 || guideline.compareTo("No")==0 
@@ -207,11 +207,11 @@ public class RptCheckGuideline{
             if(dataEntry.compareTo("NO")==0 || dataEntry.compareTo("No")==0 
                || dataEntry.compareTo("N")==0 || dataEntry.compareTo("no")==0){
                    passAllTests=true;
-                   System.out.println("Pass yesno test");
+                   MiscUtils.getLogger().debug("Pass yesno test");
             }
             else{
                 passAllTests=false;
-                 System.out.println("fail yesno test");
+                 MiscUtils.getLogger().debug("fail yesno test");
             }
         }
         return passAllTests;

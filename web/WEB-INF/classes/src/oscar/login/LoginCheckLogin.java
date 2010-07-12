@@ -19,6 +19,8 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 public class LoginCheckLogin {
     boolean bWAN = true;
 
@@ -123,7 +125,7 @@ public class LoginCheckLogin {
                 linfo.updateLoginInfoBean(now, 1);
             }
             llist.put(ip, linfo);
-            System.out.println(ip + "  status: " + ((LoginInfoBean) llist.get(ip)).getStatus() + " times: "
+            MiscUtils.getLogger().debug(ip + "  status: " + ((LoginInfoBean) llist.get(ip)).getStatus() + " times: "
                     + linfo.getTimes() + " time: ");
         }
     }
@@ -140,7 +142,7 @@ public class LoginCheckLogin {
                 linfo.updateLoginInfoBean(now, 1);
             }
             llist.put(userName, linfo);
-            System.out.println(userName + "  status: " + ((LoginInfoBean) llist.get(userName)).getStatus() + " times: "
+            MiscUtils.getLogger().debug(userName + "  status: " + ((LoginInfoBean) llist.get(userName)).getStatus() + " times: "
                     + linfo.getTimes() + " time: ");
         }
     }
@@ -163,9 +165,9 @@ public class LoginCheckLogin {
             pvar.load(fis);
             fis.close();
         } catch (Exception e) {
-            System.out.println("*** No Property File ***");
-            System.out.println("Property file not found at:");
-            System.out.println(propFileName);
+            MiscUtils.getLogger().debug("*** No Property File ***");
+            MiscUtils.getLogger().debug("Property file not found at:");
+            MiscUtils.getLogger().debug(propFileName);
             // MiscUtils.getLogger().error("Error", e);
             propFileFound = false;
         }

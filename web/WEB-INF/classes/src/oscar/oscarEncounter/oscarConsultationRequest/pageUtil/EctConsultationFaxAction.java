@@ -63,7 +63,7 @@ public class EctConsultationFaxAction extends Action {
       String curUser_no = (String) request.getSession().getAttribute("user");
       
       if(curUser_no == null){
-         System.out.println("EJECTING");
+         MiscUtils.getLogger().debug("EJECTING");
          return mapping.findForward("eject");
       }
       
@@ -72,7 +72,7 @@ public class EctConsultationFaxAction extends Action {
       FaxClientLog faxClientLog = new FaxClientLog(curUser_no);
       
       EctConsultationFaxForm frm = (EctConsultationFaxForm)form;
-      System.out.println("Provider = "+curUser_no+" has requested to send a fax");
+      MiscUtils.getLogger().debug("Provider = "+curUser_no+" has requested to send a fax");
       String requestId          = frm.getRequestId();
       String sendingProvider    = curUser_no;
       String locationId         = getLocationId();
@@ -198,19 +198,19 @@ public class EctConsultationFaxAction extends Action {
          
          try{
             if (reply){
-               System.out.println("Job Id "+OSFc.getJobId());
+               MiscUtils.getLogger().debug("Job Id "+OSFc.getJobId());
                request.setAttribute("jobId",OSFc.getJobId());
-               System.out.println("Request Id "+OSFc.getRequestId());
+               MiscUtils.getLogger().debug("Request Id "+OSFc.getRequestId());
                request.setAttribute("requestId",OSFc.getRequestId());
                faxClientLog.setFaxRequestId(OSFc.getJobId(),OSFc.getRequestId());
             }else{
-               System.out.println("Error Message "+OSFc.getErrorMessage());
+               MiscUtils.getLogger().debug("Error Message "+OSFc.getErrorMessage());
                request.setAttribute("oscarFaxError",OSFc.getErrorMessage());
                faxClientLog.setResult(OSFc.getErrorMessage());
             }
          }catch(Exception e4){
             e4.printStackTrace();
-            System.out.println("Fax Service has Returned a Fatal Error ");
+            MiscUtils.getLogger().debug("Fax Service has Returned a Fatal Error ");
             request.setAttribute("oscarFaxError","Fax Service Is currently not available, please contact your Oscar Fax Administrator");
             faxClientLog.setResult("FAX SERVICE RETURNED NULL");
          }
@@ -224,7 +224,7 @@ public class EctConsultationFaxAction extends Action {
       } catch(Throwable e) {
          MiscUtils.getLogger().error("Error", e);
       }
-      System.out.println("Client Has Finished Running");
+      MiscUtils.getLogger().debug("Client Has Finished Running");
       
       
       

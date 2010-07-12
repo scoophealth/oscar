@@ -48,6 +48,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.eform.EFormExportZip;
@@ -58,7 +59,7 @@ public class ManageEFormAction extends DispatchAction {
     public ActionForward exportEForm(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         String fid = request.getParameter("fid");
-        System.out.println("fid: " + fid);
+        MiscUtils.getLogger().debug("fid: " + fid);
         response.setContentType("application/zip");  //octet-stream
         EForm eForm = new EForm(fid, "1");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + eForm.getFormName().replaceAll("\\s", fid) + ".zip\"");
@@ -101,7 +102,7 @@ public class ManageEFormAction extends DispatchAction {
         String password = request.getParameter("password");
 
         String fid = request.getParameter("fid");
-        System.out.println("fid: " + fid);
+        MiscUtils.getLogger().debug("fid: " + fid);
         EForm eForm = new EForm(fid, "1");
         //===================
         HttpClient client = new HttpClient();
@@ -120,17 +121,17 @@ public class ManageEFormAction extends DispatchAction {
 
         byte[] responseBody = method.getResponseBody();
 
-        System.out.println(new String(responseBody));
+        MiscUtils.getLogger().debug(new String(responseBody));
 
 
 
-        System.out.println("--------------------------------------------------------------------------------------");
+        MiscUtils.getLogger().debug("--------------------------------------------------------------------------------------");
          MultipartPostMethod eformPost = new MultipartPostMethod("http://mydrugref.org/e_forms/");
 
         String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         File docDir = new File(documentDir);
         String exportFilename = "eformExport"+System.currentTimeMillis()+""+(Math.random()*100);
-        System.out.println("Exported file name "+exportFilename);
+        MiscUtils.getLogger().debug("Exported file name "+exportFilename);
         File exportFile = new File(documentDir,exportFilename);
 
         FileOutputStream fos = new FileOutputStream(exportFile);
@@ -150,8 +151,8 @@ public class ManageEFormAction extends DispatchAction {
 
         byte[] responseBody2 = eformPost.getResponseBody();
 
-        System.out.println("ST " + statusCode2);
-        System.out.println(new String(responseBody2));
+        MiscUtils.getLogger().debug("ST " + statusCode2);
+        MiscUtils.getLogger().debug(new String(responseBody2));
         //TODO:Need to handle errors
 
         

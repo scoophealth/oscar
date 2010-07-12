@@ -268,7 +268,7 @@ public class MSPReconcile {
           map.put(s, exp);
         }
         catch (NumberFormatException intEx) {
-          System.out.println("Had trouble Parsing int from " +
+          MiscUtils.getLogger().debug("Had trouble Parsing int from " +
                              rs.getString("t_officeno"));
         }
       }
@@ -306,7 +306,7 @@ public class MSPReconcile {
         }
         catch (NumberFormatException intEx) {
           intEx.printStackTrace();
-          System.out.println("Had trouble Parsing int from " +
+          MiscUtils.getLogger().debug("Had trouble Parsing int from " +
                              rs.getString("t_officeno"));
         }
       }
@@ -317,7 +317,7 @@ public class MSPReconcile {
     }
     String hasC12Records = "hasC12Records" + String.valueOf(p.isEmpty());
     debugC12Records += hasC12Records;
-    System.out.println("debugC12Records=" + debugC12Records);
+    MiscUtils.getLogger().debug("debugC12Records=" + debugC12Records);
     return p;
   }
 
@@ -401,19 +401,19 @@ public class MSPReconcile {
             }
             catch (NumberFormatException intEx) {
               intEx.printStackTrace();
-              System.out.println("Had trouble Parsing int from " +
+              MiscUtils.getLogger().debug("Had trouble Parsing int from " +
                                  rs.getString("t_mspctlno"));
             }
           }
           rs.close();
         }
         catch (Exception e) {
-          System.out.println("Through an error in getCurrentErrorMessages:" +
+          MiscUtils.getLogger().debug("Through an error in getCurrentErrorMessages:" +
                              e.getMessage());
           MiscUtils.getLogger().error("Error", e);
         }
       }
-      System.out.println("errorsProps=" + errorsProps.isEmpty());
+      MiscUtils.getLogger().debug("errorsProps=" + errorsProps.isEmpty());
       return errorsProps;
     }
   }
@@ -566,7 +566,7 @@ public class MSPReconcile {
         + demoQuery
         + billingType
         + " order by b.billing_date desc";
-    System.out.println("SQL "+p);
+    MiscUtils.getLogger().debug("SQL "+p);
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
@@ -1060,7 +1060,7 @@ public class MSPReconcile {
       rs.close();
     }
     catch (Exception e) {
-      System.out.println("name: " + name + " value: " + value);
+      MiscUtils.getLogger().debug("name: " + name + " value: " + value);
       MiscUtils.getLogger().error("Error", e);
     }
     return p;
@@ -1404,13 +1404,13 @@ public class MSPReconcile {
     }
     else {
       updated = false;
-      System.out.println("billing No " + billingNo +
+      MiscUtils.getLogger().debug("billing No " + billingNo +
                          " is settled, will not be updated");
     }
     if (updated) {
       try {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        System.out.println("Updating billing no " + billingNo + " to " +
+        MiscUtils.getLogger().debug("Updating billing no " + billingNo + " to " +
                            newStat);
         db.RunSQL("update billingmaster set billingstatus = '" + newStat +
                   "' where billingmaster_no = '" + billingNo + "'");
@@ -1496,7 +1496,7 @@ public class MSPReconcile {
     billSearch.justBillingMaster = new ArrayList();
     DBHandler db = null;
     ResultSet rs = null;
-    System.out.println("p=" + p);
+    MiscUtils.getLogger().debug("p=" + p);
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
 
@@ -1879,7 +1879,7 @@ public class MSPReconcile {
           b.adjustmentCodeDesc = getAdjustmentCodeDesc(b.adjustmentCode) + "(" +
               b.adjustmentCode + ")";
           if (b.adjustmentCodeDesc.equals("")) {
-            System.out.println("no description for b.adjustmentCode:" +
+            MiscUtils.getLogger().debug("no description for b.adjustmentCode:" +
                                b.adjustmentCode);
           }
         }
@@ -1964,7 +1964,7 @@ public class MSPReconcile {
         " and bh.payment_type_id != " + this.PAYTYPE_IA + " " +
         criteriaQry +
         " and bm.billingstatus != '" + this.DELETED + "'";
-    System.out.println(p);
+    MiscUtils.getLogger().debug(p);
     billSearch.list = new ArrayList();
     DBHandler db = null;
     ResultSet rs = null;
@@ -2209,7 +2209,7 @@ public class MSPReconcile {
    * @return ResultSet
    */
   public ResultSet getMSPRemittanceQuery(String payeeNo, String s21Id) {
-    System.out.println(new java.util.Date() +
+    MiscUtils.getLogger().debug(new java.util.Date() +
                        ":MSPReconcile.getMSPRemittanceQuery(payeeNo, s21Id)");
     String qry = "SELECT billing_code,provider.first_name,provider.last_name,t_practitionerno,t_s00type,billingmaster.service_date as 't_servicedate',t_payment," +
         "t_datacenter,billing.demographic_name,billing.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_dataseq " +
@@ -2353,7 +2353,7 @@ public class MSPReconcile {
   }
 
   public oscar.entities.S21 getS21Record(String s21id) {
-    System.out.println(new java.util.Date() +
+    MiscUtils.getLogger().debug(new java.util.Date() +
                        ":MSPReconcile.getS21Record(s21id)");
     String qry = "select t_payment,t_payeeno,t_payeename,t_amtbilled,t_amtpaid,t_cheque from teleplanS21 where status <> 'D' and s21_id = " +
         s21id + " order by t_payment desc";

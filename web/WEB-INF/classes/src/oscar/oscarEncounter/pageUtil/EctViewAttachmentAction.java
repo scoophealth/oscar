@@ -61,7 +61,7 @@ public final class EctViewAttachmentAction extends Action {
     String sentBy     = null;
 
 
-    System.out.println("mess id = "+mesId);
+    MiscUtils.getLogger().debug("mess id = "+mesId);
 
     try{
        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -81,7 +81,7 @@ public final class EctViewAttachmentAction extends Action {
           sentBy     = db.getString(rs,"sentBy");
        }
        rs.close();
-    }catch(SQLException e){System.out.println("CrAsH"); MiscUtils.getLogger().error("Error", e);}
+    }catch(SQLException e){MiscUtils.getLogger().debug("CrAsH"); MiscUtils.getLogger().error("Error", e);}
 
     request.setAttribute("remoteName",remoteName);
     request.setAttribute("themessage",themessage);

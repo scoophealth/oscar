@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
@@ -77,7 +78,7 @@ public final class RxAddFavoriteAction extends DispatchAction {
         ActionForward fwd = mapping.findForward("success");
         String s = fwd.getPath() + frm.getReturnParams();
         request.setAttribute("BoxNoFillFirstLoad", "true");
-        System.out.println("fill box no");
+        MiscUtils.getLogger().debug("fill box no");
         
         fwd = new ActionForward(s, true);
         
@@ -113,7 +114,7 @@ public final class RxAddFavoriteAction extends DispatchAction {
        
         /*
         request.setAttribute("BoxNoFillFirstLoad", "true");
-        System.out.println("fill box no");
+        MiscUtils.getLogger().debug("fill box no");
         */
         RxUtil.printStashContent(bean);
 

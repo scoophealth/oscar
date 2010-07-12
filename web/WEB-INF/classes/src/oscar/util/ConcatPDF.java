@@ -31,7 +31,7 @@ package oscar.util;
 
 
 /*
- * $Id: ConcatPDF.java,v 1.3 2010-07-09 21:56:39 tedleung Exp $
+ * $Id: ConcatPDF.java,v 1.4 2010-07-12 20:04:12 tedleung Exp $
  * $Name:  $
  *
  * This code is free software. It may only be copied or modified
@@ -94,7 +94,7 @@ public class ConcatPDF {
             String outFile = "/Users/jay/test.pdf";
             Document document = null;
             PdfCopy  writer = null;
-            System.out.println("Size of list = "+alist.size());
+            MiscUtils.getLogger().debug("Size of list = "+alist.size());
             while (f < alist.size()) {
                 // we create a reader for a certain document
                 String name = (String) alist.get(f);
@@ -110,7 +110,7 @@ public class ConcatPDF {
                     master.addAll(bookmarks);
                 }
                 pageOffset += n;
-                System.out.println("There are " + n + " pages in " + name);
+                MiscUtils.getLogger().debug("There are " + n + " pages in " + name);
 
                 if (f == 0) {
                     // step 1: creation of a document-object
@@ -126,7 +126,7 @@ public class ConcatPDF {
                     ++i;
                     page = writer.getImportedPage(reader, i);
                     writer.addPage(page);
-                    System.out.println("Processed page " + i);
+                    MiscUtils.getLogger().debug("Processed page " + i);
                 }
                 PRAcroForm form = reader.getAcroForm();
                 if (form != null)

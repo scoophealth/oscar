@@ -139,7 +139,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 		String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
 		tmpDir = Util.fixDirName(tmpDir);
 		if (!Util.checkDir(tmpDir)) {
-			System.out.println("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+			MiscUtils.getLogger().debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
 		}
 
 		ImportDemographicDataForm frm = (ImportDemographicDataForm) form;
@@ -269,7 +269,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 		String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		docDir = Util.fixDirName(docDir);
 		if (!Util.checkDir(docDir)) {
-			System.out.println("Error! Cannot write to DOCUMENT_DIR - Check oscar.properties or dir permissions.");
+			MiscUtils.getLogger().debug("Error! Cannot write to DOCUMENT_DIR - Check oscar.properties or dir permissions.");
 		}
 
 		File xmlF = new File(xmlFile);

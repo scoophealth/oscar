@@ -272,8 +272,6 @@ public class DateUtils {
 
     boolean leapyear;
 
-    System.out.println("Entered Date: " + year + "-" + month + "-" + day);
-
     switch (month) {
 
       // the months with 31 days without december
@@ -394,8 +392,6 @@ public class DateUtils {
 
     String nextDay = year + "-" + month + "-" + day;
 
-    System.out.println("next day: " + nextDay);
-
     return nextDay;
 
   }
@@ -405,8 +401,6 @@ public class DateUtils {
    
 
     int modValue = 28;
-
-    System.out.println("Entered Date: " + year + "-" + month + "-" + day);
 
     while (numDays > 0) {
 
@@ -557,11 +551,9 @@ public class DateUtils {
 
       numDays = numDays - curNumDays;
 
-      System.out.println("curNumDays: " + curNumDays + " ; numDays: " + numDays);
     }
 
     String nextDay = year + "-" + month + "-" + day;
-    System.out.println("next few day: " + nextDay);
     return nextDay;
 
   }

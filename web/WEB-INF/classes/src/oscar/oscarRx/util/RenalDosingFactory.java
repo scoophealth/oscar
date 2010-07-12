@@ -61,7 +61,7 @@ public class RenalDosingFactory {
     
     
     static private void loadDosingInformation(){
-        System.out.println("current dosing size "+currentDosingInformation.size());
+        MiscUtils.getLogger().debug("current dosing size "+currentDosingInformation.size());
         if(!loaded){
             String dosing = "oscar/oscarRx/RenalDosing.xml";
             RenalDosingFactory rdf  = new RenalDosingFactory();
@@ -99,12 +99,12 @@ public class RenalDosingFactory {
                         ArrayList recDoses = new ArrayList();
                         for (int d = 0; d < doses.size(); d++){
                             Element dose = (Element) doses.get(d);
-                            System.out.println(dose.getName());
+                            MiscUtils.getLogger().debug(dose.getName());
                             Hashtable h = new Hashtable();
                             String clcrrange = dose.getAttributeValue("clcrrange");
                             String recommendation = dose.getText();
                             
-                            System.out.println("clcrrange "+clcrrange+" recommendation "+recommendation);
+                            MiscUtils.getLogger().debug("clcrrange "+clcrrange+" recommendation "+recommendation);
                             
                             if(recommendation == null){recommendation = "";}
                             if (clcrrange == null){ clcrrange = ""; }
@@ -122,7 +122,7 @@ public class RenalDosingFactory {
                             sb.append(info.getText());
                         }
                         rec.setMoreinfo(sb.toString());
-                        System.out.println(rec.toString());
+                        MiscUtils.getLogger().debug(rec.toString());
                         currentDosingInformation.put(rec.getAtccode(),rec);
                         
                    }

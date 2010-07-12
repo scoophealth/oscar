@@ -63,7 +63,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     private static Log log2 = LogFactory.getLog(RxMyDrugrefInfoAction.class);
     //return interactions about current pending prescriptions
     public ActionForward findInteractingDrugList (ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
-        System.out.println("in findInteractingDrugList");
+        MiscUtils.getLogger().debug("in findInteractingDrugList");
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
          if (bean == null) {
                 response.sendRedirect("error.html");
@@ -89,19 +89,19 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     }
 
     public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
-        System.out.println("in view RxMyDrugrefInfoAction");
+        MiscUtils.getLogger().debug("in view RxMyDrugrefInfoAction");
         try{
 
         long start = System.currentTimeMillis();
         String target=(String)request.getParameter("target");
-        if(target==null) System.out.println("target is null");
-        else if(target.equals("interactionsRx")) System.out.println("target is interactionsRx");
+        if(target==null) MiscUtils.getLogger().debug("target is null");
+        else if(target.equals("interactionsRx")) MiscUtils.getLogger().debug("target is interactionsRx");
         String provider = (String) request.getSession().getAttribute("user");
 
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
         UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
         UserDSMessagePrefsDAO  dsmessageDAO =  (UserDSMessagePrefsDAO) ctx.getBean("UserDSMessagePrefsDAO");
-        System.out.println("hideResources is before "+request.getSession().getAttribute("hideResources"));
+        MiscUtils.getLogger().debug("hideResources is before "+request.getSession().getAttribute("hideResources"));
         Hashtable dsPrefs=new Hashtable();
         if (request.getSession().getAttribute("hideResources") == null){
 
@@ -140,14 +140,14 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
             }
         }
         Collections.sort(all, new MyDrugrefComparator());
-        System.out.println(all);
+        MiscUtils.getLogger().debug(all);
         //loop through all to add interaction to each warning
         try{
             for(int i=0;i<all.size();i++){
                 Hashtable ht=(Hashtable)all.get(i);
-                System.out.println("**ht="+ht);
+                MiscUtils.getLogger().debug("**ht="+ht);
                 String effect=(String)ht.get("effect");
-                System.out.println("**effect="+effect);
+                MiscUtils.getLogger().debug("**effect="+effect);
                 String interactStr="";
                if(effect!=null){
                     if(effect.equals("a"))
@@ -167,7 +167,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
                     interactStr=ht.get("name")+" "+effect+" "+ht.get("drug2");
                }
                 ht.put("interactStr", interactStr);
-                System.out.println("ineractStr="+interactStr);
+                MiscUtils.getLogger().debug("ineractStr="+interactStr);
             }
         }catch(NullPointerException npe){
             MiscUtils.getLogger().error("Error", npe);
@@ -186,7 +186,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
                 //idWarningVec.add(idWarning);
             }
         }
-        System.out.println("currentIdWarnings is  "+currentIdWarnings);
+        MiscUtils.getLogger().debug("currentIdWarnings is  "+currentIdWarnings);
         //set session attribute hiddenResources if it was null
         if(dsPrefs!=null && dsPrefs.size()>0){
             Hashtable hiddenR=new Hashtable();
@@ -311,7 +311,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         }
         Hashtable h = (Hashtable) request.getSession().getAttribute("hideResources");
         h.remove("mydrugref"+resId);
-        System.out.println("provider,UserDSMessagePrefs.MYDRUGREF , postId, updatedatId :"+provider+"--"+UserDSMessagePrefs.MYDRUGREF +"--"+ resId+"--"+ updatedatId);
+        MiscUtils.getLogger().debug("provider,UserDSMessagePrefs.MYDRUGREF , postId, updatedatId :"+provider+"--"+UserDSMessagePrefs.MYDRUGREF +"--"+ resId+"--"+ updatedatId);
         setShowDSMessage(dsmessageDAO, provider, resId, updatedatId);
         request.getSession().setAttribute("hideResources", h);       
 

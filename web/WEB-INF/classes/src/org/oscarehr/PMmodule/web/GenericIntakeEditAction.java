@@ -115,7 +115,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 
 		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
-		System.out.println("Javascript Location=" + jsLocation);
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
@@ -193,7 +192,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 		
 		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
-		System.out.println("Javascript Location=" + jsLocation);
 
 		Demographic client = new Demographic();
 		
@@ -278,7 +276,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 		
 		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
-		System.out.println("Javascript Location=" + jsLocation);
+		
 		
 
 		setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
@@ -334,7 +332,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 
 		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
-		System.out.println("Javascript Location=" + jsLocation);
+		
 		
 		
 		setBeanProperties(formBean, intake, getClient(clientId), providerNo, false, false, false, null, null, null, facilityId,null,jsLocation);
@@ -486,7 +484,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 
 		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
-		System.out.println("Javascript Location=" + jsLocation);
+		
 		
 		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
 				intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedCommunityProgramId(client.getDemographicNo()),

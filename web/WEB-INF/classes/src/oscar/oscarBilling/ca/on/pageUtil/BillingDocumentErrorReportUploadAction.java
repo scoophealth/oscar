@@ -108,7 +108,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			if (!place.endsWith("/"))
 				place = new StringBuffer(place).insert(place.length(), "/").toString();
 			retVal = place + file.getFileName();
-			System.out.println(retVal);
+			MiscUtils.getLogger().debug(retVal);
 			// write the file to the file specified
 			OutputStream bos = new FileOutputStream(retVal);
 			int bytesRead = 0;
@@ -144,7 +144,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
-			System.out.println("Sql Statement: " + sql);
+			MiscUtils.getLogger().debug("Sql Statement: " + sql);
 			db.RunSQL(sql);
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -169,7 +169,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			if (!filepath.endsWith("/"))
 				filepath = new StringBuffer(filepath).insert(filepath.length(), "/").toString();
 			FileInputStream file = new FileInputStream(filepath + fileName);
-			System.out.println("file path: " + filepath + fileName);
+			MiscUtils.getLogger().debug("file path: " + filepath + fileName);
 			// Assign associated report Name
 			ArrayList messages = new ArrayList();
 			String ReportName = "";
@@ -202,7 +202,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 			request.setAttribute("ReportName", ReportName);
 		} catch (FileNotFoundException fnfe) {
 
-			System.out.println("File not found");
+			MiscUtils.getLogger().debug("File not found");
 			MiscUtils.getLogger().error("Error", fnfe);
 			return isGot = false;
 
@@ -333,7 +333,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 							db.RunSQL(sqlVer);
 							String sqlAlert = "SELECT * FROM demographiccust where demographic_no ='"
 									+ rsDemo.getString("demographic_no") + "'";
-							System.out.println("Select Demo sql: " + sqlAlert);
+							MiscUtils.getLogger().debug("Select Demo sql: " + sqlAlert);
 							ResultSet rsAlert = db.GetSQL(sqlAlert);
 							if (rsAlert.next() && rs.next()) {
 								String newAlert = rsAlert.getString("cust3") + "\n" + "Invalid old version code: "                                                                                
@@ -341,7 +341,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 										+ rs.getString("reason") + "\nResponse Code: " + responseCode;
 								String newAlertSql = "UPDATE demographiccust SET cust3 = '" + newAlert
 										+ "' where demographic_no='" + rsDemo.getString("demographic_no") + "'";
-								System.out.println("Update alert msg: " + newAlertSql);
+								MiscUtils.getLogger().debug("Update alert msg: " + newAlertSql);
 								db.RunSQL(newAlertSql);
 							}
 							rsAlert.close();

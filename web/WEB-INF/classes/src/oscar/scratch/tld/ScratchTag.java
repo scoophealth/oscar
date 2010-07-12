@@ -28,6 +28,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class ScratchTag extends TagSupport {
@@ -45,21 +46,7 @@ public class ScratchTag extends TagSupport {
     }
 
     public int doStartTag() throws JspException    {
-/*
-    	try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = new String("SELECT scratch_text FROM scratch_pad WHERE provider_no = '" + providerNo + "' order by id desc limit 1");
-            ResultSet rs = db.GetSQL(sql);
-	    while (rs.next()) {
-		if (rs.getString(1).trim().length()>0) scratchFilled = true;
-		else scratchFilled = false;
-	    }
 
-            rs.close();
-        }      catch(SQLException e)        {
-           MiscUtils.getLogger().error("Error", e);
-        }
-*/
     	if(providerNo!=null){
        	    com.quatro.service.ScratchPadManager spm = (com.quatro.service.ScratchPadManager) WebApplicationContextUtils.getWebApplicationContext(
  	       		pageContext.getServletContext()).getBean("scratchPadManager");
@@ -72,8 +59,7 @@ public class ScratchTag extends TagSupport {
                 out.print("../images/notepad.gif");
             else
                 out.print("../images/notepad_blank.gif");
-        } catch(Exception p) {
-            p.printStackTrace(System.out);
+        } catch(Exception p) {MiscUtils.getLogger().error("Error",p);
         }
         return(EVAL_BODY_INCLUDE);
     }

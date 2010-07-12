@@ -150,7 +150,7 @@ public class MeasurementFlowSheet {
     }
     
     public FlowSheetItem getFlowSheetItem(String measurement) {
-        System.out.println("GETTING "+measurement+ " ITEMS IN THE LIST "+itemList.size());
+        MiscUtils.getLogger().debug("GETTING "+measurement+ " ITEMS IN THE LIST "+itemList.size());
         FlowSheetItem item = (FlowSheetItem) itemList.get(measurement);
         
         return item;

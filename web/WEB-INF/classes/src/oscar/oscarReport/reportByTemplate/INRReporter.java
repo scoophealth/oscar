@@ -116,7 +116,7 @@ public class INRReporter implements Reporter {
             }
             else {
                 while( curHeader++ < numHeaders ) {
-                    System.out.println("Adding " + curHeader + " header");
+                    MiscUtils.getLogger().debug("Adding " + curHeader + " header");
                     body.append("<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
                     csvBody.append(", , ,");
                 }

@@ -145,7 +145,7 @@ public class RxSessionBean {
                 break;
         }
         }
-        System.out.println("in getIndexFromRx="+ret);
+        MiscUtils.getLogger().debug("in getIndexFromRx="+ret);
         return ret;
     }
     public RxPrescriptionData.Prescription[] getStash() {
@@ -309,7 +309,7 @@ public class RxSessionBean {
              allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
 
           }else{
-             System.out.println("NEW ATC CODE for allergy");
+             MiscUtils.getLogger().debug("NEW ATC CODE for allergy");
              try{
                 RxDrugData drugData = new RxDrugData();
                 oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
@@ -350,7 +350,7 @@ public class RxSessionBean {
           RxInteractionData rxInteract =  RxInteractionData.getInstance();
           Vector atcCodes = rxData.getCurrentATCCodesByPatient(this.getDemographicNo());
 
-          System.out.println("atccode "+atcCodes);
+          MiscUtils.getLogger().debug("atccode "+atcCodes);
           RxPrescriptionData.Prescription rx;
           for(int i=0;i<this.getStashSize(); i++) {
              rx = this.getStashItem(i);
@@ -358,13 +358,13 @@ public class RxSessionBean {
                 atcCodes.add(rx.getAtcCode());
              }
           }
-          System.out.println("atccode 2"+atcCodes);
+          MiscUtils.getLogger().debug("atccode 2"+atcCodes);
           if (atcCodes != null && atcCodes.size() > 1){
              try{
                 interactions = rxInteract.getInteractions(atcCodes);
-                System.out.println("interactions "+interactions.length);
+                MiscUtils.getLogger().debug("interactions "+interactions.length);
                  for(int i =0 ; i < interactions.length;i++){
-                    System.out.println(interactions[i].affectingatc+" "+interactions[i].effect+" "+interactions[i].affectedatc);
+                    MiscUtils.getLogger().debug(interactions[i].affectingatc+" "+interactions[i].effect+" "+interactions[i].affectedatc);
                  }
                  Arrays.sort(interactions);
               }catch(Exception e){
@@ -377,7 +377,7 @@ public class RxSessionBean {
        long end = System.currentTimeMillis() - start;
 
 
-       System.out.println("took "+end+ "milliseconds vs "+end2);
+       MiscUtils.getLogger().debug("took "+end+ "milliseconds vs "+end2);
        return interactions;
     }
 }

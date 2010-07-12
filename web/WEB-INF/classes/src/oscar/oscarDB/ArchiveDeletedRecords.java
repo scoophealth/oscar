@@ -105,7 +105,7 @@ public class ArchiveDeletedRecords {
                                " '"+StringEscapeUtils.escapeSql(resultSet)+"', " +                               
                                "  now()" +
                                ")";            
-            System.out.println(insertSql);
+            MiscUtils.getLogger().debug(insertSql);
             db.RunSQL(insertSql);
         }
         catch(SQLException e) {

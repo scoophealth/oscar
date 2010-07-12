@@ -100,7 +100,7 @@ public class BillingViewBean {
       sql = sql + "b.dx_expansion, b.service_location, b.referral_flag1, b.referral_no1, b.referral_flag2, b.referral_no2, b.time_call, b.service_start_time, b.service_end_time, b.birth_date, b.office_number, b.correspondence_code, b.claim_comment,b.paymentMethod ";
       sql = sql + "from billingmaster b, billing bi where bi.billing_no=b.billing_no and b.billing_no='" +
           billing_no + "'";
-      System.out.println(sql);
+      MiscUtils.getLogger().debug(sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {

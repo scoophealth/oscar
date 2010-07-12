@@ -77,8 +77,8 @@ public class dbExtract implements Serializable {
             stmt2 = con.createStatement();
         }
         catch (SQLException e) {
-            System.out.println("Cannot get connection ");
-            System.out.println("Exception is: " + e);
+            MiscUtils.getLogger().debug("Cannot get connection ");
+            MiscUtils.getLogger().debug("Exception is: " + e);
         }
 
     }
@@ -92,8 +92,8 @@ public class dbExtract implements Serializable {
             return resultSet;
         }
         catch (SQLException e) {
-            System.out.println("Cannot get connection ");
-            System.out.println("Exception is: " + e);
+            MiscUtils.getLogger().debug("Cannot get connection ");
+            MiscUtils.getLogger().debug("Exception is: " + e);
             return resultSet;
         }
     }
@@ -107,8 +107,8 @@ public class dbExtract implements Serializable {
             return resultSet2;
         }
         catch (SQLException e) {
-            System.out.println("Cannot get connection ");
-            System.out.println("Exception is: " + e);
+            MiscUtils.getLogger().debug("Cannot get connection ");
+            MiscUtils.getLogger().debug("Exception is: " + e);
             return resultSet2;
         }
     }
@@ -122,8 +122,8 @@ public class dbExtract implements Serializable {
             return resultSet3;
         }
         catch (SQLException e) {
-            System.out.println("Cannot get connection ");
-            System.out.println("Exception is: " + e);
+            MiscUtils.getLogger().debug("Cannot get connection ");
+            MiscUtils.getLogger().debug("Exception is: " + e);
             return resultSet3;
         }
     }
@@ -140,8 +140,8 @@ public class dbExtract implements Serializable {
             return numUpdate;
         }
         catch (SQLException e) {
-            System.out.println("Cannot get connection ");
-            System.out.println("Exception is: " + e);
+            MiscUtils.getLogger().debug("Cannot get connection ");
+            MiscUtils.getLogger().debug("Exception is: " + e);
             return numUpdate;
         }
     }

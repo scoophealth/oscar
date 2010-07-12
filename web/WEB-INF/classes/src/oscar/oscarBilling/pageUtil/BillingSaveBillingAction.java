@@ -75,8 +75,8 @@ public class BillingSaveBillingAction
     String dataCenterId = OscarProperties.getInstance().getProperty(
         "dataCenterId");
 
-    System.out.println("appointment_no: " + bean.getApptNo());
-    System.out.println("BillStatus:" + billStatus);
+    MiscUtils.getLogger().debug("appointment_no: " + bean.getApptNo());
+    MiscUtils.getLogger().debug("BillStatus:" + billStatus);
     String sql = "update appointment set status='" + billStatus +
         "' where appointment_no='" + bean.getApptNo() + "'";
 
@@ -238,7 +238,7 @@ public class BillingSaveBillingAction
           catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
           }
-          System.out.println(sql);
+          MiscUtils.getLogger().debug(sql);
         }
         else {
 
@@ -307,7 +307,7 @@ public class BillingSaveBillingAction
           catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
           }
-          System.out.println(sql);
+          MiscUtils.getLogger().debug(sql);
         }
       }
     }
@@ -317,7 +317,7 @@ public class BillingSaveBillingAction
 
   public String convertDate8Char(String s) {
     String sdate = "00000000", syear = "", smonth = "", sday = "";
-    System.out.println("s=" + s);
+    MiscUtils.getLogger().debug("s=" + s);
     if (s != null) {
 
       if (s.indexOf("-") != -1) {
@@ -334,14 +334,14 @@ public class BillingSaveBillingAction
           sday = "0" + sday;
         }
 
-        System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
+        MiscUtils.getLogger().debug("Year" + syear + " Month" + smonth + " Day" + sday);
         sdate = syear + smonth + sday;
 
       }
       else {
         sdate = s;
       }
-      System.out.println("sdate:" + sdate);
+      MiscUtils.getLogger().debug("sdate:" + sdate);
     }
     else {
       sdate = "00000000";

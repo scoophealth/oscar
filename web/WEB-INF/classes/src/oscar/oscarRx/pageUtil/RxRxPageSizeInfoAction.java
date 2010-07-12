@@ -45,10 +45,10 @@ public final class RxRxPageSizeInfoAction extends DispatchAction {
 
     private static Log log2 = LogFactory.getLog(RxMyDrugrefInfoAction.class);
   /*  private void p(String s){
-        System.out.println(s);
+        MiscUtils.getLogger().debug(s);
     }
     private void p(String s1,String s2){
-        System.out.println(s1+"="+s2);
+        MiscUtils.getLogger().debug(s1+"="+s2);
     }*/
     public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
        // p("===========view in RxRxPageSizeInfoAction.java=====================");

@@ -27,11 +27,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import oscar.oscarDB.DBHandler;
-import oscar.util.UtilDateUtilities;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
+
+import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class FrmData {
     private static final Log _log = LogFactory.getLog(FrmData.class);
@@ -175,19 +176,19 @@ public class FrmData {
                 //First check to see if there are records for 2005
                 
                 ret = getShortcutFormValue(demoNo, "AR2005");
-                System.out.println("ret[0] is: " + ret[0]);                
+                MiscUtils.getLogger().debug("ret[0] is: " + ret[0]);                
                 String[] foo = ret[0].split(".jsp");
                 ret[0] = foo[0] + "pg1.jsp" + foo[1];
-                System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+                MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
                 String[] first_pick =  (String[]) ret.clone();
                 
                 //Check if AR has any forms
                 if (ret[1].equals("0")){ 
                     ret = getShortcutFormValue(demoNo, "AR");
-                    System.out.println("ret[0] is: " + ret[0]);                
+                    MiscUtils.getLogger().debug("ret[0] is: " + ret[0]);                
                     foo = ret[0].split(".jsp");
                     ret[0] = foo[0] + "pg1.jsp" + foo[1];
-                    System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+                    MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
                     
                     if(ret[1].equals("0") && !xmlForm[1].equals("0")) { // Nothing found in AR but there are records in the old xml form
                         ret = xmlForm;
@@ -200,13 +201,13 @@ public class FrmData {
                 ret = getShortcutFormValue(demoNo, "AR");
                 String[] foo = ret[0].split(".jsp");
                 ret[0] = foo[0] + "pg2.jsp" + foo[1];
-                System.out.println("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
+                MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
                 String[] first_pick =  (String[]) ret.clone();
                 if (ret[1].equals("0")){
                    ret = getShortcutFormValue(demoNo, "AR");
                    foo = ret[0].split(".jsp");
                    ret[0] = foo[0] + "pg2.jsp" + foo[1];
-                   System.out.println("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
+                   MiscUtils.getLogger().debug("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
                    if(ret[1].equals("0") && !xmlForm[1].equals("0")) { // Nothing found in AR but there are records in the old xml form
                         ret = xmlForm;
                    }else if (ret[1].equals("0")){  // Nothing in either old form Go with new one

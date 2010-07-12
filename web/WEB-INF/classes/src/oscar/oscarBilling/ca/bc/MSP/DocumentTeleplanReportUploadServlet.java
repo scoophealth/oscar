@@ -64,7 +64,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         String filename = "test.txt", fileoldname="", foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="", doctype="", docxml="";
         String home_dir="", doc_forward="";
         String userHomePath = System.getProperty("user.home", "user.dir");
-        System.out.println(userHomePath);
+        MiscUtils.getLogger().debug(userHomePath);
         
         Properties ap = OscarProperties.getInstance();
         

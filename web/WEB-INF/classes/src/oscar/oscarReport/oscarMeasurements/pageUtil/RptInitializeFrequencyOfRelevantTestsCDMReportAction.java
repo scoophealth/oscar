@@ -75,7 +75,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 if(patientSeenCheckbox!=null){
                     nbPatient = mData.getNbPatientSeen(db, startDateA, endDateA);  
                     String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
-                    System.out.println(msg);
+                    MiscUtils.getLogger().debug(msg);
                     reportMsg.add(msg);
                     reportMsg.add("");
                 }
@@ -115,22 +115,22 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
      private ArrayList addHeading(ArrayList headings, HttpServletRequest request){
          MessageResources mr = getResources(request);
          /*String hd = mr.getMessage("oscarReport.CDMReport.msgStartDate");
-         System.out.println(hd);
+         MiscUtils.getLogger().debug(hd);
          headings.add(hd);
          hd = mr.getMessage("oscarReport.CDMReport.msgEndDate");
-         System.out.println(hd);
+         MiscUtils.getLogger().debug(hd);
          headings.add(hd);
          hd = mr.getMessage("oscarReport.CDMReport.msgTest");
-         System.out.println(hd);
+         MiscUtils.getLogger().debug(hd);
          headings.add(hd);
          hd = mr.getMessage("oscarReport.CDMReport.msgMeasuringInstruction");
-         System.out.println(hd);
+         MiscUtils.getLogger().debug(hd);
          headings.add(hd);*/
          String hd = mr.getMessage("oscarReport.CDMReport.msgFrequency");
-         System.out.println(hd);
+         MiscUtils.getLogger().debug(hd);
          headings.add(hd);
          hd = mr.getMessage("oscarReport.CDMReport.msgPercentage");
-         System.out.println(hd);
+         MiscUtils.getLogger().debug(hd);
          headings.add(hd);         
          return headings;
      }
@@ -258,7 +258,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                                 " (" + Double.toString(exactPercentage) + "%)",
                                                 Integer.toString(exact)};
                             String msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsExact", param0);                              
-                            System.out.println(msg);
+                            MiscUtils.getLogger().debug(msg);
                             percentageMsg.add(msg);
                             String[] param1 = {   startDate, 
                                                 endDate,
@@ -268,7 +268,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                                 " (" + Double.toString(morePercentage) + "%)",
                                                 Integer.toString(more)};
                             msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsMoreThan", param1); 
-                            System.out.println(msg);
+                            MiscUtils.getLogger().debug(msg);
                             percentageMsg.add(msg); 
                             String[] param2 = {   startDate, 
                                                 endDate,
@@ -278,7 +278,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                                                 " (" + Double.toString(lessPercentage) + "%)",
                                                 Integer.toString(less)};
                             msg = mr.getMessage("oscarReport.CDMReport.msgFrequencyOfRelevantTestsLessThan", param2); 
-                            System.out.println(msg);
+                            MiscUtils.getLogger().debug(msg);
                             percentageMsg.add(msg); 
                             percentageMsg.add("");
                         }
@@ -291,7 +291,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
             }
         }
         else{
-            System.out.println("guideline checkbox is null");
+            MiscUtils.getLogger().debug("guideline checkbox is null");
         }
         return percentageMsg;
     }

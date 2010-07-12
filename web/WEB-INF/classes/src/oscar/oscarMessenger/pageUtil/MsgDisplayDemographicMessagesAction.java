@@ -16,6 +16,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarMessenger.util.MsgDemoMap;
 
@@ -34,7 +35,7 @@ public class MsgDisplayDemographicMessagesAction extends Action {
 
             // Extract attributes we will need
         
-            System.out.println("this is displayDemographicMessages.Action");
+            MiscUtils.getLogger().debug("this is displayDemographicMessages.Action");
             
             // Setup variables            
             oscar.oscarMessenger.pageUtil.MsgSessionBean bean = null;

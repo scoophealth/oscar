@@ -69,7 +69,6 @@ public class MigrateStaffAssignments {
     	if(num >0) {
     		return true;
     	}
-    	System.out.println("program doesn't exist: " + programId);
 		return false;
     }
 
@@ -82,7 +81,6 @@ public class MigrateStaffAssignments {
     	if(num >0) {
     		return true;
     	}
-    	System.out.println("provider doesn't exist: " + providerNo);
 		return false;
     }
     

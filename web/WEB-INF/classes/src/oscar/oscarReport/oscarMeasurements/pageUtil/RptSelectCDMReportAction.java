@@ -36,6 +36,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 
 public final class RptSelectCDMReportAction extends Action {
@@ -51,7 +52,7 @@ public final class RptSelectCDMReportAction extends Action {
         String CDMgroup = (String) frm.getValue("CDMgroup");
         String forward = frm.getForward();
         
-        System.out.println("The selected group is" + CDMgroup);
+        MiscUtils.getLogger().debug("The selected group is" + CDMgroup);
         RptMeasurementTypesBeanHandler hd = new RptMeasurementTypesBeanHandler(CDMgroup);
         Vector mInstrcVector = hd.getMeasuringInstrcBeanVector();
         
@@ -61,7 +62,7 @@ public final class RptSelectCDMReportAction extends Action {
             session.setAttribute(mInstrcName, mInstrcs);
             
         }
-        System.out.println("the value of forward is :" + forward);
+        MiscUtils.getLogger().debug("the value of forward is :" + forward);
         GregorianCalendar now=new GregorianCalendar(); 
         int curYear = now.get(Calendar.YEAR);
         int curMonth = (now.get(Calendar.MONTH)+1);

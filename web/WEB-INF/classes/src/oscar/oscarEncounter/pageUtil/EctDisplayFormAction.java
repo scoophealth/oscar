@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.data.EctFormData;
 import oscar.util.DateUtils;
@@ -103,7 +104,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
                         date = (Date)formatter.parse(dateStr);                        
                     }
                     catch(ParseException ex ) {
-                        System.out.println("EctDisplayFormAction: Error creating date " + ex.getMessage());                        
+                        MiscUtils.getLogger().debug("EctDisplayFormAction: Error creating date " + ex.getMessage());                        
                         //date = new Date(System.currentTimeMillis());
                         date = null;
                     }
@@ -163,7 +164,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
         Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
     }
     catch(SQLException e ) {
-        System.out.println("EctDisplayFormAction SQL ERROR: " + e.getMessage());                    
+        MiscUtils.getLogger().debug("EctDisplayFormAction SQL ERROR: " + e.getMessage());                    
         return false;
     }
 

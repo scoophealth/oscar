@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.model.BillingService;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
@@ -69,7 +70,7 @@ public final class BillingEditCodeAction extends DispatchAction {
         map.put("termDate",termDate);
         JSONObject jsonObject =   JSONObject.fromObject( itemCode );  //(JSONObject) JSONSerializer.toJSON(itemCode);//
         jsonObject = jsonObject.accumulate("id", id);
-        System.out.println(jsonObject.toString());
+        MiscUtils.getLogger().debug(jsonObject.toString());
         response.getOutputStream().write(jsonObject.toString().getBytes());
         return null;
     }
@@ -107,9 +108,9 @@ public final class BillingEditCodeAction extends DispatchAction {
         String whereTo =frm.getWhereTo();
         String submitButton = frm.getSubmitButton();
 
-        System.out.println(submitButton);
+        MiscUtils.getLogger().debug(submitButton);
         if (submitButton.equals("Edit")){
-           System.out.println("here with codeid "+codeId);
+           MiscUtils.getLogger().debug("here with codeid "+codeId);
           BillingCodeData bcd = new BillingCodeData();
           bcd.editBillingCode(code,desc, value,codeId);
         }

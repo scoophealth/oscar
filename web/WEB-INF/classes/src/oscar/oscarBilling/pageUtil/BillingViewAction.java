@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 public final class BillingViewAction extends Action {
     
@@ -66,12 +67,12 @@ public final class BillingViewAction extends Action {
             oscar.oscarBilling.pageUtil.BillingBillingManager bmanager;
             bmanager = new BillingBillingManager();
             ArrayList billItem = bmanager.getBillView(request.getParameter("billing_no"));
-            System.out.println("Calling getGrandTotal");
+            MiscUtils.getLogger().debug("Calling getGrandTotal");
             bean.setBillItem(billItem);
             bean.setGrandtotal(bmanager.getGrandTotal(billItem));
-            System.out.println("GrandTotal" +bmanager.getGrandTotal(billItem));
+            MiscUtils.getLogger().debug("GrandTotal" +bmanager.getGrandTotal(billItem));
             oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-            System.out.println("Calling Demo");
+            MiscUtils.getLogger().debug("Calling Demo");
             
             oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
             bean.setPatientLastName(demo.getLastName());
@@ -84,7 +85,7 @@ public final class BillingViewAction extends Action {
             bean.setPatientPHN(demo.getHIN());
             bean.setPatientHCType(demo.getHCType());
             bean.setPatientAge(demo.getAge());
-            System.out.println("End Demo Call");
+            MiscUtils.getLogger().debug("End Demo Call");
             
             //if(request.getParameter("demographic_no")!=null & request.getParameter("appointment_no")!=null)
             //{

@@ -148,7 +148,7 @@ public class ThirdApptTimeReporter implements Reporter{
                         
                         if( code.equals(schedSymbols[schedIdx]) ) {                        
                             codeMatch = true;
-                            System.out.println("codeMatched " + codeMatch);
+                            MiscUtils.getLogger().debug("codeMatched " + codeMatch);
                             if( iHours > latestApptHour || (iHours == latestApptHour && iMins > latestApptMin)) {
                                 unbooked += duration;
 

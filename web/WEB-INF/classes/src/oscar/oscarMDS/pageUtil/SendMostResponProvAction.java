@@ -6,17 +6,19 @@
 package oscar.oscarMDS.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
 import oscar.oscarLab.ca.on.CommonLabResultData;
 /**
  *

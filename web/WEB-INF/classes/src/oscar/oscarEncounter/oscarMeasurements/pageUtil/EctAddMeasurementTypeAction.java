@@ -78,7 +78,7 @@ public class EctAddMeasurementTypeAction extends Action {
                 +"(type, typeDescription, typeDisplayName, measuringInstruction, validation)"
                 +" VALUES ('"+str.q(typeUp)+"','"+str.q(typeDesc)+"','"+str.q(typeDisplayName)+"','"+str.q(measuringInstrc)+"','"
                 + str.q(validation)+"')";
-            System.out.println(" sql statement "+sql);
+            MiscUtils.getLogger().debug(" sql statement "+sql);
             db.RunSQL(sql);
                 
         }

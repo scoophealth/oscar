@@ -119,7 +119,6 @@ public class RoomBed implements Serializable {
 
 	public void setRoomName(String roomName) {
 		// immutable
-		System.out.println("RoomBed.setRoomName()");
 	}
 
 	public String getBedName() {
@@ -128,7 +127,6 @@ public class RoomBed implements Serializable {
 
 	public void setBedName(String bedName) {
 		// immutable
-		System.out.println("RoomBed.setBedName()");
 	}
 
 	public String getProgramName() {
@@ -137,7 +135,6 @@ public class RoomBed implements Serializable {
 
 	public void setProgramName(String programName) {
 		// immutable
-		System.out.println("RoomBed.setProgramName()");
 	}
 
 	// property adapted for view

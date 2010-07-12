@@ -104,8 +104,6 @@ public class DSGuidelineDrools extends DSGuideline {
         
         RuleBaseCreator ruleBaseCreator = new RuleBaseCreator();
         try {
-            XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            xmlOutputter.output(rules, System.out);
             _ruleBase = ruleBaseCreator.getRuleBase(this.getTitle(), rules);
         } catch (Exception e) {
             throw new DecisionSupportException("Could not create a rule base for guideline '" + this.getTitle() + "'", e);
@@ -165,7 +163,7 @@ public class DSGuidelineDrools extends DSGuideline {
 
     public Element getDroolsConsequences(List<DSConsequence> consequences) throws DecisionSupportException {
         Element javaElement = new Element("consequence", javaNamespace);
-        String consequencesStr = "System.out.println(\"FINISHED\"); a.setPassedGuideline(true);";
+        String consequencesStr = "a.setPassedGuideline(true);";
         for (DSConsequence consequence: consequences) {
             if (consequence.getConsequenceType() == DSConsequence.ConsequenceType.java) {
                 consequencesStr = consequencesStr + "\n" + consequence.getText();
@@ -176,16 +174,3 @@ public class DSGuidelineDrools extends DSGuideline {
     }
 
 }
-
-/* exmaple:
- *     <rule name="A1C">
-        <parameter identifier="m">
-            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
-        </parameter>
-        <java:condition>m.getDataAsDouble() &gt;= 7</java:condition>
-        <java:consequence>
-              System.out.println("A1C RULES IS GETTING RUN");
-              m.setIndicationColor("HIGH");
-        </java:consequence>
-    </rule>
- * */

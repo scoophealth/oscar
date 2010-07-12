@@ -94,7 +94,7 @@ public class ProviderColourUpdater {
         db.RunSQL(sql);
        
        }catch( SQLException ex ) {
-           System.out.println("Error adding provider colour: " + ex.getMessage());
+           MiscUtils.getLogger().debug("Error adding provider colour: " + ex.getMessage());
            ret = false;
        }
        

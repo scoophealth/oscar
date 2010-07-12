@@ -34,6 +34,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.collections.KeyValue;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarMDS.data.ProviderData;
@@ -153,7 +154,7 @@ public class ReportEvaluator {
            Hashtable repVals = denominator.getReplaceableValues();
            for (int i = 0; i < repKeys.length;i++){
                //provider_no:999998  if key is provider_no look up provider name
-               System.out.println("repKeys "+repKeys[i]);
+               MiscUtils.getLogger().debug("repKeys "+repKeys[i]);
                if (repKeys[i] != null && repKeys[i].equals("provider_no")){
                   name.append("Provider: "+getProviderStringName(""+repVals.get(repKeys[i])));        
                }else{

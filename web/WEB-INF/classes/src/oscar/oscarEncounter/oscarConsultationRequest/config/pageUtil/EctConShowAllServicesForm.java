@@ -25,13 +25,14 @@
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
 import org.apache.struts.action.ActionForm;
+import org.oscarehr.util.MiscUtils;
 
 public final class EctConShowAllServicesForm extends ActionForm
 {
 
     public String getServiceId()
     {
-        System.out.println("getter showall.Service");
+        MiscUtils.getLogger().debug("getter showall.Service");
         if(service == null)
             service = new String();
         return service;
@@ -39,7 +40,7 @@ public final class EctConShowAllServicesForm extends ActionForm
 
     public void setServiceId(String str)
     {
-        System.out.println("setter showall.Service");
+        MiscUtils.getLogger().debug("setter showall.Service");
         service = str;
     }
 

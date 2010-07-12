@@ -95,7 +95,7 @@ public final class BillingAction extends Action {
         bean = new oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean();
         fillBean(request, bean);
         if(request.getAttribute("serviceDate") != null){
-            System.out.println("service Date set to the appointment Date"+(String) request.getAttribute("serviceDate"));
+            MiscUtils.getLogger().debug("service Date set to the appointment Date"+(String) request.getAttribute("serviceDate"));
            bean.setApptDate((String) request.getAttribute("serviceDate"));
         }
 
@@ -187,11 +187,11 @@ public final class BillingAction extends Action {
       }
     }
     if (codeLastBilled > 365) {
-        System.out.println("adding code last billed "+code);
+        MiscUtils.getLogger().debug("adding code last billed "+code);
       errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.error.codeLastBilled",new String[] {String.valueOf(codeLastBilled), code}));
     }
     else if (codeLastBilled == -1) {
-        System.out.println("adding code never billed "+code);
+        MiscUtils.getLogger().debug("adding code never billed "+code);
       errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.error.codeNeverBilled",new String[] {code}));
     }
   }

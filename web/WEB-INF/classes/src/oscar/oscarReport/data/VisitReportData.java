@@ -68,11 +68,11 @@ public class VisitReportData {
        try{
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
-             System.out.println(sql);
+             MiscUtils.getLogger().debug(sql);
              if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
                 sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
              }
-             System.out.println(sql);
+             MiscUtils.getLogger().debug(sql);
              ResultSet rs = db.GetSQL(sql);
              while (rs.next()){
                 retval = db.getString(rs,"visit");
@@ -83,7 +83,7 @@ public class VisitReportData {
              rs.close();
           }
           catch(SQLException e){
-             System.out.println("There has been an error while retrieving a visit count");
+             MiscUtils.getLogger().debug("There has been an error while retrieving a visit count");
              MiscUtils.getLogger().error("Error", e);
           }
 
@@ -104,11 +104,11 @@ public class VisitReportData {
 	       try{
 	             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	             String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
-                     System.out.println(sql);
+                     MiscUtils.getLogger().debug(sql);
                      if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
                         sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
                      }
-                     System.out.println(sql);
+                     MiscUtils.getLogger().debug(sql);
                      ResultSet rs = db.GetSQL(sql);
 	             while (rs.next()){
 	                retval = db.getString(rs,"visit");
@@ -119,7 +119,7 @@ public class VisitReportData {
 	             rs.close();
 	          }
 	          catch(SQLException e){
-	             System.out.println("There has been an error while retrieving a visit count");
+	             MiscUtils.getLogger().debug("There has been an error while retrieving a visit count");
 	             MiscUtils.getLogger().error("Error", e);
 	          }
 

@@ -87,7 +87,7 @@ public class MsgViewMessageByPositionAction extends Action {
                              "and m.messageid = map.messageID  order by "+ displayMsgBean.getOrderBy(orderBy) + " limit " + messagePosition +", 1";
         
                 
-                System.out.println("this ="+sql);
+                MiscUtils.getLogger().debug("this ="+sql);
                 rs = db.GetSQL(sql);
                 if (rs.next()) {                                                                   
                     actionforward.addParameter("messageID", db.getString(rs,"messageid"));

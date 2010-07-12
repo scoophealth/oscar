@@ -60,7 +60,7 @@ public class RptByExamplesFavoriteAction extends Action {
                         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                            
                         
                         String sql = "SELECT * from reportByExamplesFavorite WHERE query LIKE '" + StringEscapeUtils.escapeSql(frm.getNewQuery()) + "'";
-                        System.out.println("HERE "+sql);
+                        MiscUtils.getLogger().debug("HERE "+sql);
                         ResultSet rs = db.GetSQL(sql);
                         if(rs.next())
                             frm.setFavoriteName(rs.getString("name"));
@@ -78,7 +78,7 @@ public class RptByExamplesFavoriteAction extends Action {
             }
         }
         else{
-            System.out.println("STEP:1 "+frm.getQuery());
+            MiscUtils.getLogger().debug("STEP:1 "+frm.getQuery());
             String favoriteName = frm.getFavoriteName();
             String query = frm.getQuery();   
             //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
@@ -86,7 +86,7 @@ public class RptByExamplesFavoriteAction extends Action {
            
             StringEscapeUtils strEscUtils = new StringEscapeUtils();                                
             String queryWithEscapeChar = strEscUtils.escapeSql(query   );///queryWithEscapeChar);
-            System.out.println("escapeSql: " + queryWithEscapeChar);
+            MiscUtils.getLogger().debug("escapeSql: " + queryWithEscapeChar);
             write2Database(providerNo, favoriteName, queryWithEscapeChar);            
         }
         RptByExampleQueryBeanHandler hd = new RptByExampleQueryBeanHandler(providerNo);  
@@ -102,7 +102,7 @@ public class RptByExamplesFavoriteAction extends Action {
                 //StringEscapeUtils strEscUtils = new StringEscapeUtils();
                                 
                 //query = strEscUtils.escapeSql(query);
-                System.out.println("Fav "+favoriteName+" query "+query);
+                MiscUtils.getLogger().debug("Fav "+favoriteName+" query "+query);
                 
                 
                 String sql = "SELECT * from reportByExamplesFavorite WHERE provider_no = '"+providerNo+"' and name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";

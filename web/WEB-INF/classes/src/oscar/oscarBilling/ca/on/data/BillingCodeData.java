@@ -62,7 +62,7 @@ public class BillingCodeData {
    }
    
    public Hashtable fillCodeDataHashtable(ResultSet rs) throws SQLException{
-       System.out.println("fillCode " + c(rs.getString("service_code")) + " " + c(rs.getString("value")));
+       MiscUtils.getLogger().debug("fillCode " + c(rs.getString("service_code")) + " " + c(rs.getString("value")));
       Hashtable h = new Hashtable();
        h.put("service_compositecode", c(rs.getString("service_compositecode")));
        h.put("service_code", c(rs.getString("service_code")));
@@ -91,7 +91,7 @@ public class BillingCodeData {
              count++;
              h = fillCodeDataHashtable(rs);
          }
-         System.out.println(count+" for "+str);
+         MiscUtils.getLogger().debug(count+" for "+str);
          if (h != null){               
             h.put("count",""+count);
          }
@@ -129,7 +129,7 @@ public class BillingCodeData {
          ResultSet rs = db.GetSQL(sql);
          while (rs.next()){
             String service_code = rs.getString("service_code");
-            System.out.println(service_code.charAt(service_code.length()-1));
+            MiscUtils.getLogger().debug(service_code.charAt(service_code.length()-1));
          }
          rs.close();
       } catch (SQLException e) {
@@ -166,9 +166,9 @@ public class BillingCodeData {
          String str = "update billingservice set "+                      
                       "value =                   '"+StringEscapeUtils.escapeSql(val)  +"' "+
                       "where billingservice_no = '"+StringEscapeUtils.escapeSql(codeId)+"'";
-         System.out.println(str);
+         MiscUtils.getLogger().debug(str);
          db.RunSQL(str);
-         System.out.println("NOW updated");
+         MiscUtils.getLogger().debug("NOW updated");
       }catch(Exception e1){
          e1.printStackTrace();
       }
@@ -185,9 +185,9 @@ public class BillingCodeData {
          String str = "update billingservice set "+                      
                       "value =                   '"+StringEscapeUtils.escapeSql(val)  +"' "+
                       "where service_code = '"+StringEscapeUtils.escapeSql(codeId)+"' and billingservice_date = '" + date + "'";
-         System.out.println(str);
+         MiscUtils.getLogger().debug(str);
          db.RunSQL(str);
-         System.out.println("NOW updated");
+         MiscUtils.getLogger().debug("NOW updated");
       }catch(Exception e1){
          e1.printStackTrace();
       }
@@ -210,9 +210,9 @@ public class BillingCodeData {
                       "'ON'," +
                       "'00'," + 
                       "'" + StringEscapeUtils.escapeSql(termDate) + "')";
-         System.out.println(str);
+         MiscUtils.getLogger().debug(str);
          db.RunSQL(str);
-         System.out.println("NOW updated");
+         MiscUtils.getLogger().debug("NOW updated");
       }catch(Exception e1){
          e1.printStackTrace();
       }

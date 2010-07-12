@@ -69,8 +69,7 @@ public class LabTag extends TagSupport {
                 out.print("<span class='tabalert'>  ");
             else
                 out.print("<span>  ");
-        } catch(Exception p) {
-            p.printStackTrace(System.out);
+        } catch(Exception p) {MiscUtils.getLogger().error("Error",p);
         }        
         return(EVAL_BODY_INCLUDE);
     }
@@ -94,8 +93,7 @@ public class LabTag extends TagSupport {
               out.print("<sup>"+numNewLabs+"</sup></span>");
           else
               out.print("</span>");
-       }catch(Exception p) {
-            p.printStackTrace(System.out);
+       }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
        }
        return EVAL_PAGE;
     }

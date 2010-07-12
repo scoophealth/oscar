@@ -32,6 +32,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -120,6 +122,6 @@ public class FrmGraphicAR {
 
     public static void main(String[] arg) {
         FrmGraphicAR test = new FrmGraphicAR();
-        System.out.println(test.getWeekByEDB("2002-12-10", "2002-7-24") + " : " + test.getWeekFormat() + test.getStartDate("2002-12-10") + UtilDateUtilities.StringToDate("2002-7-24"));
+        MiscUtils.getLogger().debug(test.getWeekByEDB("2002-12-10", "2002-7-24") + " : " + test.getWeekFormat() + test.getStartDate("2002-12-10") + UtilDateUtilities.StringToDate("2002-7-24"));
     }
 }

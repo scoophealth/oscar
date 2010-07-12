@@ -263,7 +263,7 @@ CREATE TABLE reportTemplates (
                     db.RunSQL(sql);
                 } catch (SQLException sqe) {
                     MiscUtils.getLogger().error("Error", sqe);
-                    System.out.println("Report Error Caught: assumed duplicate report id");
+                    MiscUtils.getLogger().debug("Report Error Caught: assumed duplicate report id");
                     return "Database Error: check for duplicate report id on the '" + templateTitle + "' report";
                 }
             }
@@ -340,7 +340,7 @@ CREATE TABLE reportTemplates (
                     db.RunSQL(sql);
                 } catch (SQLException sqe) {
                     MiscUtils.getLogger().error("Error", sqe);
-                    System.out.println("Report Template Writing Error Caught");
+                    MiscUtils.getLogger().debug("Report Template Writing Error Caught");
                     return "Database Error: Could not write to database";
                 }
             }

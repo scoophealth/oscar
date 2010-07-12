@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -205,7 +206,7 @@ public class DesAntenatalPlannerChecklistHandler_99_12 extends DefaultHandler {
 	}
 
 	public void skippedEntity(String name) throws SAXException {
-		System.out.println("Skipping entity " + name);
+		MiscUtils.getLogger().debug("Skipping entity " + name);
 	}
 
 	public String getResults() {

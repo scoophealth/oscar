@@ -12,6 +12,7 @@ package oscar.oscarLab.ca.all.parsers;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
 
@@ -530,7 +531,7 @@ public String getAccessionNum(){
         String docNum;
         try{
             if ((docNum = terser.get("/.Z01-1-1")) != null){
-                System.out.println("Adding doc Num"+Misc.forwardZero(docNum, 6));
+                MiscUtils.getLogger().debug("Adding doc Num"+Misc.forwardZero(docNum, 6));
                 nums.add(Misc.forwardZero(docNum, 6));
             }
             

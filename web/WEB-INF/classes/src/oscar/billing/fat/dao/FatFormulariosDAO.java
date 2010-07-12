@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.fat.model.FatFormularioProcedimento;
 import oscar.billing.fat.model.FatFormularios;
 import oscar.oscarDB.DBHandler;
@@ -62,20 +64,20 @@ public class FatFormulariosDAO extends DAO {
     public List list() throws SQLException {
         ArrayList list = new ArrayList();
         String sql = "select co_formulario, ds_formulario from fat_formularios where st_ativo = 'S'";
-		System.out.println("sql = " + sql);
+		MiscUtils.getLogger().debug("sql = " + sql);
 
         DBHandler db = getDb();
 
         try {
         ResultSet rs = db.GetSQL(sql);
-        System.out.println("executou sql");
+        MiscUtils.getLogger().debug("executou sql");
 
         while (rs.next()) {
             FatFormularios form = new FatFormularios();
             form.setCoFormulario(rs.getInt(1));
             form.setDsFormulario(db.getString(rs,2));
             list.add(form);
-			System.out.println("adicionou reg");
+			MiscUtils.getLogger().debug("adicionou reg");
         }
         } finally {
         }

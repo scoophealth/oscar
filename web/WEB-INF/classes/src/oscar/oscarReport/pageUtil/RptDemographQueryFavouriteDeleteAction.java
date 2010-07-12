@@ -35,6 +35,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarReport.data.RptSearchData;
 
@@ -53,7 +54,7 @@ public class RptDemographQueryFavouriteDeleteAction extends Action {
             RptSearchData searchData = new RptSearchData();
             for (int i=0; i < queriesToDelete.length; i++){
                searchData.deleteQueryFavourite(queriesToDelete[i]);
-               System.out.println("to Delete "+queriesToDelete[i]);    
+               MiscUtils.getLogger().debug("to Delete "+queriesToDelete[i]);    
             }
         }
         

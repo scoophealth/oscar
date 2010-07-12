@@ -22,6 +22,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.xmlbeans.XmlCalendar;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
 
@@ -89,7 +90,7 @@ public class Util {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        System.out.println("Error! Cannot write to directory [" + dirName + "]");
+        MiscUtils.getLogger().debug("Error! Cannot write to directory [" + dirName + "]");
         return false;
     }
 
@@ -106,7 +107,7 @@ public class Util {
 
     static public boolean cleanFile(File file) {
 	if (!file.delete()) {
-            System.out.println("Error! Cannot delete file ["+file.getPath()+"]");
+            MiscUtils.getLogger().debug("Error! Cannot delete file ["+file.getPath()+"]");
             return false;
         }
         return true;
@@ -279,11 +280,11 @@ public class Util {
     static public boolean zipFiles(File[] files, String zipFileName, String dirName) throws Exception {
         try {
             if (files == null) {
-                System.out.println("Error! No source file for zipping");
+                MiscUtils.getLogger().debug("Error! No source file for zipping");
                 return false;
             }
             if (!filled(zipFileName)) {
-                System.out.println("Error! Zip filename not given");
+                MiscUtils.getLogger().debug("Error! Zip filename not given");
                 return false;
             }
             if (!checkDir(dirName)) {

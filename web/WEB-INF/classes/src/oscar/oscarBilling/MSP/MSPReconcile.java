@@ -74,7 +74,7 @@ public class MSPReconcile{
                       String s = Integer.toString(i);
                       p.put(s,def);
                     }catch(NumberFormatException intEx){
-                        System.out.println("Had trouble Parsing int from "+rs.getString("t_officeno"));
+                        MiscUtils.getLogger().debug("Had trouble Parsing int from "+rs.getString("t_officeno"));
                     }
             }            
             rs.close();
@@ -108,7 +108,7 @@ public class MSPReconcile{
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
-        if ( i > 1 ){  System.out.println(" billingNo "+billingNo +" had " + i + "rows in the table"); }
+        if ( i > 1 ){  MiscUtils.getLogger().debug(" billingNo "+billingNo +" had " + i + "rows in the table"); }
         return s;
     }
      
@@ -160,7 +160,7 @@ public class MSPReconcile{
                             String s = Integer.toString(i);
                             errorsProps.put(s,def);
                          }catch(NumberFormatException intEx){
-                            System.out.println("Had trouble Parsing int from "+rs.getString("t_mspctlno"));
+                            MiscUtils.getLogger().debug("Had trouble Parsing int from "+rs.getString("t_mspctlno"));
                          }
                       }            
                       rs.close();                   }catch(Exception e){
@@ -417,7 +417,7 @@ public class MSPReconcile{
             }
             rs.close();
         }catch(Exception e){
-            System.out.println("name: "+name+" value: "+value);
+            MiscUtils.getLogger().debug("name: "+name+" value: "+value);
             MiscUtils.getLogger().error("Error", e);
         }        
         return p;
@@ -468,12 +468,12 @@ public class MSPReconcile{
             }
         }else{
          updated = false; 
-         System.out.println("billing No "+billingNo+" is settled, will not be updated");
+         MiscUtils.getLogger().debug("billing No "+billingNo+" is settled, will not be updated");
         }            
         if (updated){
             try {              
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                System.out.println("Updating billing no "+billingNo+" to "+newStat);
+                MiscUtils.getLogger().debug("Updating billing no "+billingNo+" to "+newStat);
                 db.RunSQL("update billingmaster set billingstatus = '"+newStat+"' where billingmaster_no = '"+billingNo+"'");
             }catch(Exception e){
                 MiscUtils.getLogger().error("Error", e);

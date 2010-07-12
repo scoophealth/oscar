@@ -62,25 +62,5 @@ public class UCRConfigurationManager {
 	public UCRConfiguration getConfig() throws Exception {
 		return getConfig("");
 	}
-	public static void main(String args[]) throws Exception {
-		File f = new File(args[0]);
-		UCRConfiguration config = (UCRConfiguration)digester.parse(f);
-		for(DataSource ds:config.getDataSources()) {
-			System.out.println("data-source type=" + ds.getType());
-			for(Form form:ds.getForms()) {
-				System.out.println("\tform name=" + form.getName());
-				for(Item item:form.getItems()) {
-					System.out.println("\t\titem name=" + item.getName());
-					System.out.println("\t\titem type=" + item.getValueType());
-
-
-
-					System.out.println();
-				}
-				System.out.println();
-			}
-			System.out.println();
-		}
-	}
 	
 }

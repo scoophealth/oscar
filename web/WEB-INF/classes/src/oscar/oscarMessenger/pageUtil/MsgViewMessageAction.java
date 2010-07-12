@@ -59,7 +59,7 @@ public class MsgViewMessageAction extends Action {
         if(bean!=null)
             providerNo = bean.getProviderNo();
         else
-            System.out.println("MsgSessionBean is null");
+            MiscUtils.getLogger().debug("MsgSessionBean is null");
         
         String messageNo = request.getParameter("messageID");  
         String messagePosition = request.getParameter("messagePosition");
@@ -127,7 +127,7 @@ public class MsgViewMessageAction extends Action {
                      request.setAttribute("orderBy", orderBy);
                  }
                                   
-                 System.out.println("viewMessagePosition: " + messagePosition + "IsLastMsg: " + request.getAttribute("viewMessageIsLastMsg"));
+                 MiscUtils.getLogger().debug("viewMessagePosition: " + messagePosition + "IsLastMsg: " + request.getAttribute("viewMessageIsLastMsg"));
               }
               else{
                  i=0; // somethin wrong no message there

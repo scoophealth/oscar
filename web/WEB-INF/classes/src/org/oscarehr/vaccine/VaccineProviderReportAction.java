@@ -94,7 +94,6 @@ public class VaccineProviderReportAction extends BaseAction {
 		for (Entry<String, String> entry : quickIntake.getAnswerKeyValues().entrySet()) {
 		   String key = entry.getKey();
 		   String value = entry.getValue();
-		   System.out.println(key + "=" + value);
 		}
 
 		return mapping.findForward("report");

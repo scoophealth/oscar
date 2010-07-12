@@ -119,8 +119,8 @@ public class ClinicalReportManager {
             sqlN.setId((String) numerHash.get("id"));
             sqlN.setSQL((String) numerHash.get("sql"));
             sqlN.parseOutputFields((String) numerHash.get("outputfields"));
-            System.out.println("output fields "+(String) numerHash.get("outputfields"));
-            System.out.println("create new sqlNumerator object");
+            MiscUtils.getLogger().debug("output fields "+(String) numerHash.get("outputfields"));
+            MiscUtils.getLogger().debug("create new sqlNumerator object");
             return sqlN;
        }
        if (type != null && type.equals("DROOLS")){
@@ -128,7 +128,7 @@ public class ClinicalReportManager {
             droolsN.setNumeratorName((String) numerHash.get("numeratorName"));
             droolsN.setId((String) numerHash.get("id"));
             droolsN.setFile((String) numerHash.get("file"));
-            System.out.println("create new DroolsNumerator object");
+            MiscUtils.getLogger().debug("create new DroolsNumerator object");
             return droolsN;
        }
        if (type != null && type.equals("DROOLS2")){
@@ -136,7 +136,7 @@ public class ClinicalReportManager {
             droolsN.setNumeratorName((String) numerHash.get("numeratorName"));
             droolsN.setId((String) numerHash.get("id"));
             droolsN.parseReplaceValues((String) numerHash.get("replaceKeys"));
-            System.out.println("create new DroolsNumerator2 object");
+            MiscUtils.getLogger().debug("create new DroolsNumerator2 object");
             return droolsN;
        }
        return null;

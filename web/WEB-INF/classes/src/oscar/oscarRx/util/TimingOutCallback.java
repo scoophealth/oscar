@@ -23,6 +23,7 @@ import java.net.URL;
 import org.apache.xmlrpc.AsyncCallback;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
+import org.oscarehr.util.MiscUtils;
 
 
 /**
@@ -37,9 +38,9 @@ import org.apache.xmlrpc.XmlRpcRequest;
  *   try {
  *       return callback.waitForResponse();
  *   } catch (TimeoutException e) {
- *       System.out.println("No response from server.");
+ *       MiscUtils.getLogger().debug("No response from server.");
  *   } catch (Exception e) {
- *       System.out.println("Server returned an error message.");
+ *       MiscUtils.getLogger().debug("Server returned an error message.");
  *   }
  * </pre>
  */
@@ -100,7 +101,7 @@ public class TimingOutCallback implements AsyncCallback {
 
     public synchronized void handleResult(Object arg0, URL arg1, String arg2) {
         responseSeen = true;
-        System.out.println("arg2"+arg2);
+        MiscUtils.getLogger().debug("arg2"+arg2);
         result = arg0;
          this.notify();
         //throw new UnsupportedOperationException("Not supported yet.");

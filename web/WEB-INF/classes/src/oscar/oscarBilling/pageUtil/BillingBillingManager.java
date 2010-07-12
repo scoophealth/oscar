@@ -97,7 +97,7 @@ public class BillingBillingManager {
             sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
             sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment ";
             sql = sql + "from billingmaster where billing_no='" + billing_no+"'";
-            System.out.println(sql);
+            MiscUtils.getLogger().debug(sql);
             rs = db.GetSQL(sql);
             
             while(rs.next()){
@@ -233,7 +233,7 @@ public class BillingBillingManager {
         for (int i=0; i< ar.size(); i++){
             BillingItem bi = (BillingItem) ar.get(i);
             grandtotal += bi.getLineTotal();
-            System.out.println("total:" + grandtotal);
+            MiscUtils.getLogger().debug("total:" + grandtotal);
         }
         BigDecimal bdFee = new BigDecimal(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
         return bdFee.toString();
@@ -307,7 +307,7 @@ public class BillingBillingManager {
                 
                 sql = "SELECT b.service_code, b.description , b.value, b.percentage "
                 + "FROM billingservice b WHERE b.service_code='" + service_code + "'";
-                System.out.println(sql);
+                MiscUtils.getLogger().debug(sql);
                 rs = db.GetSQL(sql);
                 
                 while(rs.next()){

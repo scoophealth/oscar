@@ -119,7 +119,7 @@ public class FileUploadCheck {
          if(!hasFileBeenUploaded(md5sum)){           
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('"+provider+"','"+StringEscapeUtils.escapeSql(name)+"','"+md5sum+"',now())";
-            System.out.println(sql);
+            MiscUtils.getLogger().debug(sql);
             db.RunSQL(sql);
             ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
             if(rs.next()){
@@ -132,7 +132,7 @@ public class FileUploadCheck {
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);
       }
-      System.out.println("returning "+fileUploaded);
+      MiscUtils.getLogger().debug("returning "+fileUploaded);
       return fileUploaded;
    }
   

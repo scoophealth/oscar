@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.Misc;
 import oscar.OscarProperties;
@@ -180,7 +181,7 @@ public class WCBTeleplanSubmission {
        for (int i =0; i < s.length(); i++){
            char c = s.charAt(i);
            int j = (int) c;
-           System.out.println(j+" : "+c);
+           MiscUtils.getLogger().debug(j+" : "+c);
            if(j < 32 || j > 126){
               c = '?';
            }

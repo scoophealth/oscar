@@ -54,7 +54,7 @@ public class RptMeasurementTypesBeanHandler {
             for(rs = db.GetSQL(sql); rs.next();){
                 String typeDisplayName  = rs.getString("typeDisplayName");
                 String sqlMT = "SELECT DISTINCT * FROM measurementType WHERE typeDisplayName = '" + typeDisplayName + "'ORDER BY typeDescription";
-                System.out.println("SQL: " + sqlMT);
+                MiscUtils.getLogger().debug("SQL: " + sqlMT);
                 ResultSet rsMT = db.GetSQL(sqlMT);
                 if (rsMT.next()){
                     RptMeasurementTypesBean measurementTypes = new RptMeasurementTypesBean(rsMT.getInt("id"), rsMT.getString("type"), 
@@ -62,7 +62,7 @@ public class RptMeasurementTypesBeanHandler {
                                                                                        rsMT.getString("typeDescription"), 
                                                                                        rsMT.getString("measuringInstruction"), 
                                                                                        rsMT.getString("validation"));
-                System.out.println(rsMT.getString("type"));
+                MiscUtils.getLogger().debug(rsMT.getString("type"));
                 measurementTypeVector.add(measurementTypes);
 
                 RptMeasuringInstructionBeanHandler hd = new RptMeasuringInstructionBeanHandler(typeDisplayName);

@@ -11,6 +11,7 @@ package oscar.oscarPrevention.pageUtil;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +29,6 @@ import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
-import java.io.OutputStream;
-import java.util.Map;
 /**
  *
  * @author rjonasz

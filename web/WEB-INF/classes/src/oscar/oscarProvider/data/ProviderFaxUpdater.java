@@ -102,7 +102,7 @@ public class ProviderFaxUpdater {
         db.RunSQL(sql);
        
        }catch( SQLException ex ) {
-           System.out.println("Error adding fax number: " + ex.getMessage());
+           MiscUtils.getLogger().debug("Error adding fax number: " + ex.getMessage());
            ret = false;
        }
        

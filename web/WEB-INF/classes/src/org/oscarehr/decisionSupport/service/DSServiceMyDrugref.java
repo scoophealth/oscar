@@ -74,7 +74,6 @@ public class DSServiceMyDrugref extends DSService {
             List<DSGuidelineProviderMapping> uuidsMapped = dsGuidelineDAO.getMappingsByProvider(providerNo);
             for (Hashtable newMapping: providerGuidelines) {
                 String newUuid = (String) newMapping.get("uuid");
-                System.out.println("newUuid: " + newUuid);
                 DSGuidelineProviderMapping newUuidObj = new DSGuidelineProviderMapping(newUuid, providerNo);
                 if (uuidsMapped.contains(newUuidObj)) {
                     uuidsMapped.remove(newUuidObj);

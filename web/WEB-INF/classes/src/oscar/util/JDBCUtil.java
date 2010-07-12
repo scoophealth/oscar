@@ -41,6 +41,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.xerces.parsers.DOMParser;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -94,12 +95,12 @@ public class JDBCUtil
             StreamResult result = new StreamResult(os);
             
             transformer.transform(source, result); 
-            System.out.println("Next is to call zip function!");
+            MiscUtils.getLogger().debug("Next is to call zip function!");
             zip z = new zip();
             z.write2Zip("xml");
         }
         catch(Exception e){            
-            System.out.println(e.getMessage() + "cannot saveAsXML");
+            MiscUtils.getLogger().debug(e.getMessage() + "cannot saveAsXML");
             File newXML = new File(fileName);
             newXML.delete();
         }     
@@ -127,13 +128,13 @@ public class JDBCUtil
             //check if the data existed in the database already...
             String sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
                          + demographicNo + "' AND formEdited='" + timeStamp + "'";
-            System.out.println(sql);
+            MiscUtils.getLogger().debug(sql);
             ResultSet rs = db.GetSQL(sql);
             if(!rs.first()){
                 rs.close();
                 sql = "SELECT * FROM " + formName + " WHERE demographic_no='"
                         + demographicNo + "' AND ID='0'";
-                System.out.println("sql: " + sql);
+                MiscUtils.getLogger().debug("sql: " + sql);
                 rs = db.GetSQL(sql, true);  
                 rs.moveToInsertRow();        
                 //To validate or not
@@ -147,7 +148,7 @@ public class JDBCUtil
         }   
         catch(Exception e)
         {
-            System.out.println("Errors " + e);
+            MiscUtils.getLogger().debug("Errors " + e);
             
         }
 

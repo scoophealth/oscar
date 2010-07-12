@@ -64,7 +64,7 @@ public class MsgMessageData {
             }
         }
         catch (java.sql.SQLException e){ 
-            System.out.println("Message data not found");
+            MiscUtils.getLogger().debug("Message data not found");
         }
     }
     public String getCurrentLocationId(){

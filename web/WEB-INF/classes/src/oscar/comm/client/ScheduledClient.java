@@ -26,21 +26,21 @@ package oscar.comm.client;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.MiscUtils;
 
 public class ScheduledClient {
 	Properties param = new Properties();
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Running oscarCommClient...");
+        MiscUtils.getLogger().debug("Running oscarCommClient...");
 
         if(args.length != 1) {
-			System.out.println("Usage: oscarCommClient pathOfPropertiesFile");
+			MiscUtils.getLogger().debug("Usage: oscarCommClient pathOfPropertiesFile");
 
 
 
         }  else  {
-            System.out.println("    propertiesFile:  " + args[0]);
+            MiscUtils.getLogger().debug("    propertiesFile:  " + args[0]);
 
 			ScheduledClient aStudy = new ScheduledClient();
 			//initial

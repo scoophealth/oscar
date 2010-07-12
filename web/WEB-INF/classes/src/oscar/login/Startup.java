@@ -51,7 +51,7 @@ public class Startup implements ServletContextListener {
 	public Startup() {}
 
 	public void contextInitialized(ServletContextEvent sc) {
-		System.out.println("contextInit");
+		MiscUtils.getLogger().debug("contextInit");
 		
 		String contextPath = "";
 		String propFileName = "";
@@ -143,9 +143,9 @@ public class Startup implements ServletContextListener {
                         p.setProperty("OSCAR_START_TIME",""+System.currentTimeMillis());
                        
 		} catch (Exception e) {
-			System.out.println("*** No Property File ***");
-			System.out.println("Property file not found at:");
-			System.out.println(propFileName);
+			MiscUtils.getLogger().debug("*** No Property File ***");
+			MiscUtils.getLogger().debug("Property file not found at:");
+			MiscUtils.getLogger().debug(propFileName);
 		}
 
                 // CHECK FOR DEFAULT PROPERTIES
@@ -161,7 +161,7 @@ public class Startup implements ServletContextListener {
                     checkAndSetProperty(baseDocumentDir, contextPath, "form_record_path", "/form/records/");
                 }
                 
-		System.out.println("LAST LINE IN contextInitialized");      
+		MiscUtils.getLogger().debug("LAST LINE IN contextInitialized");      
 	}
 
         // Checks for default property with name propName. If the property does not exist,

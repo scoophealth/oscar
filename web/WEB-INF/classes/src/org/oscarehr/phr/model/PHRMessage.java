@@ -342,7 +342,6 @@ public class PHRMessage  extends PHRDocument implements Serializable{
     
     public String getSenderDemographicNo(){   
         Hashtable h = findOscarId(PHRDocument.TYPE_DEMOGRAPHIC,this.getSenderPhr());
-        System.out.println("TRYIGN TO FIND OSCAR ID for  "+this.getSenderPhr()+"  ====  "+h.get("oscarId"));    
         return (String) h.get("oscarId");
     }
     
@@ -377,7 +376,6 @@ public class PHRMessage  extends PHRDocument implements Serializable{
     
     
     private int indivoRoleToOscarType(String role) {
-        System.out.println("role: " +role);
         if (role.equalsIgnoreCase("provider") || role.equalsIgnoreCase("administrator"))
             return PHRDocument.TYPE_PROVIDER;
         else if (role.equalsIgnoreCase("patient"))

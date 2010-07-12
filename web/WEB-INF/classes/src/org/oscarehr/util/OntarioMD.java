@@ -81,9 +81,6 @@ public class OntarioMD {
         // Execute request
         try{
                 int result = httpclient.executeMethod(post);
-                if (result != 200){
-                    System.out.println("result "+result);
-                }
                 h = parseReturn(post.getResponseBodyAsStream());
         }catch(Exception e ){
             MiscUtils.getLogger().error("Error", e);
@@ -102,15 +99,11 @@ public class OntarioMD {
             SAXBuilder parser = new SAXBuilder();
             Document doc = parser.build(is);
             Element root = doc.getRootElement();
-            System.out.println(root.getName());
              h  = new Hashtable();
             String jsessionID =g(root.getDescendants(new ElementFilter("jsessionID")));
             String ptLoginToken =g(root.getDescendants(new ElementFilter("ptLoginToken")));
             String returnCode =g(root.getDescendants(new ElementFilter("returnCode")));
-            
-            System.out.println(" returnCode :"+  returnCode+ "ptLoginToken :"+ptLoginToken + "jsessionID :"+jsessionID);
-             
-            
+                        
             h.put("returnCode",returnCode);
             h.put("ptLoginToken",ptLoginToken);
             h.put("jsessionID",jsessionID);

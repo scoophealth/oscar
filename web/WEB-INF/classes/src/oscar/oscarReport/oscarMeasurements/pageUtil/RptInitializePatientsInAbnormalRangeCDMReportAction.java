@@ -67,7 +67,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);  
                 if(!validate(frm, request)){
-                    System.out.println("the form is invalid");
+                    MiscUtils.getLogger().debug("the form is invalid");
                     return (new ActionForward(mapping.getInput()));
                 }
                 
@@ -75,7 +75,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 if(patientSeenCheckbox!=null){
                     int nbPatient = mData.getNbPatientSeen(db, startDateA, endDateA);  
                     String msg = mr.getMessage("oscarReport.CDMReport.msgPatientSeen", Integer.toString(nbPatient), startDateA, endDateA); 
-                    System.out.println(msg);
+                    MiscUtils.getLogger().debug(msg);
                     reportMsg.add(msg);
                     reportMsg.add("");
                 }
@@ -228,11 +228,11 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
         
         if (abnormalCheckbox!=null){
             try{
-                System.out.println("the length of abnormal range checkbox is "  + abnormalCheckbox.length);
+                MiscUtils.getLogger().debug("the length of abnormal range checkbox is "  + abnormalCheckbox.length);
 
                 for(int i=0; i<abnormalCheckbox.length; i++){
                     int ctr = Integer.parseInt(abnormalCheckbox[i]);
-                    System.out.println("the value of abnormal range Checkbox is: " + abnormalCheckbox[i]);
+                    MiscUtils.getLogger().debug("the value of abnormal range Checkbox is: " + abnormalCheckbox[i]);
                     String startDate = startDateC[ctr];
                     String endDate = endDateC[ctr];                    
                     String upper = upperBound[ctr];
@@ -256,12 +256,12 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                             sql = "SELECT demographicNo, max(dateEntered) FROM measurements WHERE dateObserved >='" + startDate + "' AND dateObserved <='" + endDate
                                  + "' AND type='"+ measurementType + "'AND measuringInstruction='"+ mInstrc 
                                  + "' group by demographicNo";
-                            System.out.println("SQL statement is" + sql);
+                            MiscUtils.getLogger().debug("SQL statement is" + sql);
                             rs = db.GetSQL(sql);                            
                             double nbGeneral = 0;   
                             
                             if (measurementType.compareTo("BP")==0){                                
-                                System.out.println("SQL statement is " + sql);
+                                MiscUtils.getLogger().debug("SQL statement is " + sql);
                                 rs = db.GetSQL(sql);
                                 while(rs.next()){
                                     sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
@@ -277,7 +277,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                     nbGeneral++;
                                 }                                
                                 if(nbGeneral!=0){
-                                    System.out.println("the total number of patients seen: " + nbGeneral + " nb of them pass the test: " + nbMetGL);
+                                    MiscUtils.getLogger().debug("the total number of patients seen: " + nbGeneral + " nb of them pass the test: " + nbMetGL);
                                     metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
                                 }                                
                                 String[] param = {  startDate, 
@@ -288,7 +288,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                                     upper,
                                                     "("+nbMetGL+"/"+ nbGeneral+")"+Double.toString(metGLPercentage)};
                                 String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param);                                 
-                                System.out.println(msg);
+                                MiscUtils.getLogger().debug(msg);
                                 metGLPercentageMsg.add(msg); 
                             }
                             else if (checkGuideline.getValidation(db, measurementType)==1)
@@ -315,7 +315,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                                     upper,
                                                     "("+nbMetGL+"/"+ nbGeneral+")"+Double.toString(metGLPercentage)};
                                 String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
-                                System.out.println(msg);
+                                MiscUtils.getLogger().debug(msg);
                                 metGLPercentageMsg.add(msg); 
                             }
                             else{
@@ -341,7 +341,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                                     upper,
                                                     "("+nbMetGL+"/"+ nbGeneral+")"+Double.toString(metGLPercentage)};
                                 String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsIs", param); 
-                                System.out.println(msg);
+                                MiscUtils.getLogger().debug(msg);
                                 metGLPercentageMsg.add(msg); 
                             }
                                                                                                                 
@@ -358,12 +358,12 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
 
                     sql = "SELECT demographicNo, max(dateEntered) FROM measurements WHERE dateObserved >='" + startDate + "' AND dateObserved <='" + endDate
                      + "' AND type='"+ measurementType + "' group by demographicNo";
-                    System.out.println("SQL statement is" + sql);
+                    MiscUtils.getLogger().debug("SQL statement is" + sql);
                     rs = db.GetSQL(sql);                            
                     double nbGeneral = 0;   
 
                     if (measurementType.compareTo("BP")==0){                                
-                        System.out.println("SQL statement is " + sql);
+                        MiscUtils.getLogger().debug("SQL statement is " + sql);
                         rs = db.GetSQL(sql);
                         while(rs.next()){
                             sql =   "SELECT dataField FROM measurements WHERE dateEntered = '" + rs.getString("max(dateEntered)") + 
@@ -379,7 +379,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                             nbGeneral++;
                         }                                
                         if(nbGeneral!=0){
-                            System.out.println("the total number of patients seen: " + nbGeneral + " nb of them pass the test: " + nbMetGL);
+                            MiscUtils.getLogger().debug("the total number of patients seen: " + nbGeneral + " nb of them pass the test: " + nbMetGL);
                             metGLPercentage = Math.round(nbMetGL/nbGeneral* 100);
                         }                                
                         String[] param = {  startDate, 
@@ -390,7 +390,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                             upper,
                                             "("+nbMetGL+"/"+ nbGeneral+")"+Double.toString(metGLPercentage)};
                         String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param);                                 
-                        System.out.println(msg);
+                        MiscUtils.getLogger().debug(msg);
                         metGLPercentageMsg.add(msg); 
                     }
                     else if (checkGuideline.getValidation(db, measurementType)==1)
@@ -417,7 +417,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                             upper,
                                             "("+nbMetGL+"/"+ nbGeneral+")"+Double.toString(metGLPercentage)};
                         String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsInAbnormalRange", param); 
-                        System.out.println(msg);
+                        MiscUtils.getLogger().debug(msg);
                         metGLPercentageMsg.add(msg); 
                     }
                     else{
@@ -443,7 +443,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                                             upper,
                                             "("+nbMetGL+"/"+ nbGeneral+")"+Double.toString(metGLPercentage)};
                         String msg = mr.getMessage("oscarReport.CDMReport.msgNbOfPatientsIs", param); 
-                        System.out.println(msg);
+                        MiscUtils.getLogger().debug(msg);
                         metGLPercentageMsg.add(msg); 
                     }
 
@@ -457,7 +457,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
             }
         }
         else{
-            System.out.println("guideline checkbox is null");
+            MiscUtils.getLogger().debug("guideline checkbox is null");
         }
         return metGLPercentageMsg;
     }

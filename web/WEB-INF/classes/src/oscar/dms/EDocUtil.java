@@ -126,7 +126,7 @@ public class EDocUtil extends SqlUtilBaseS {
 
     public static void addCaseMgmtNoteLink(CaseManagementNoteLink cmnl) {
 		caseManagementNoteLinkDao.save(cmnl);
-        System.out.println("ADD CASEMGMT NOTE LINK : Id=" + cmnl.getId());
+        MiscUtils.getLogger().debug("ADD CASEMGMT NOTE LINK : Id=" + cmnl.getId());
     }
 
     public static String addDocumentSQL(EDoc newDocument) {
@@ -158,25 +158,25 @@ public class EDocUtil extends SqlUtilBaseS {
          * org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml()) + "', '" + org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName()) + "', '" + newDocument.getCreatorId() + "', '" + newDocument.getDateTimeStamp() +
          * "', '" + newDocument.getStatus() + "', '" + newDocument.getContentType() + "', '" + newDocument.getDocPublic() + "', '" + newDocument.getObservationDate() + "')";
          *
-         * String document_no = runSQLinsert(documentSql); System.out.println("addDoc: " + documentSql);
+         * String document_no = runSQLinsert(documentSql); MiscUtils.getLogger().debug("addDoc: " + documentSql);
          */
         runPreparedSql(preparedSQL, param);
         String document_no = getLastDocumentNo();
         String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "')";
-        System.out.println("in addDocumentSQL ,add ctl_document: " + ctlDocumentSql);
+        MiscUtils.getLogger().debug("in addDocumentSQL ,add ctl_document: " + ctlDocumentSql);
         runSQL(ctlDocumentSql);
         return document_no;
     }
 
     public static void detachDocConsult(String docNo, String consultId) {
         String sql = "UPDATE consultdocs SET deleted = 'Y' WHERE requestId = " + consultId + " AND document_no = " + docNo + " AND doctype = 'D'";
-        System.out.println("detachDoc: " + sql);
+        MiscUtils.getLogger().debug("detachDoc: " + sql);
         runSQL(sql);
     }
 
     public static void attachDocConsult(String providerNo, String docNo, String consultId) {
         String sql = "INSERT INTO consultdocs (requestId,document_no,doctype,attach_date, provider_no) VALUES(" + consultId + "," + docNo + ",'D', now(), '" + providerNo + "')";
-        System.out.println("attachDoc: " + sql);
+        MiscUtils.getLogger().debug("attachDoc: " + sql);
         runSQL(sql);
     }
 
@@ -387,7 +387,7 @@ public class EDocUtil extends SqlUtilBaseS {
        try{
             java.sql.Date  sDate =  new java.sql.Date(startDate.getTime());
             java.sql.Date eDate  = new java.sql.Date(endDate.getTime());
-            System.out.println("Creator "+creator+" start "+sDate + " end "+eDate);
+            MiscUtils.getLogger().debug("Creator "+creator+" start "+sDate + " end "+eDate);
 
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             PreparedStatement ps =  DBHandler.getConnection().prepareStatement(sql);
@@ -397,7 +397,7 @@ public class EDocUtil extends SqlUtilBaseS {
             ps.setDate(4,new java.sql.Date(endDate.getTime()));
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-               System.out.println("DOCFILENAME "+rs.getString("docfilename"));
+               MiscUtils.getLogger().debug("DOCFILENAME "+rs.getString("docfilename"));
                 EDoc currentdoc = new EDoc();
                 currentdoc.setModule(rsGetString(rs, "module"));
                 currentdoc.setModuleId(rsGetString(rs, "module_id"));

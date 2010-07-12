@@ -28,6 +28,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -36,7 +38,7 @@ public class EctAnnualRecord
     public Properties getAnnualRecord(int demographicNo, int existingID)
             throws SQLException
     {
-	System.out.println("GetAnnualRecord");
+	MiscUtils.getLogger().debug("GetAnnualRecord");
         Properties props = new Properties();
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -67,14 +69,14 @@ public class EctAnnualRecord
         }
         else
         {
-	System.out.println("Im exsiting");
+	MiscUtils.getLogger().debug("Im exsiting");
             sql = "SELECT * FROM formAnnual WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
 
             rs = db.GetSQL(sql);
 
             if(rs.next())
             {
-		System.out.println("getting metaData");
+		MiscUtils.getLogger().debug("getting metaData");
                 ResultSetMetaData md = rs.getMetaData();
 
                 for(int i=1; i<=md.getColumnCount(); i++)
@@ -82,7 +84,7 @@ public class EctAnnualRecord
                     String name = md.getColumnName(i);
 
                     String value;
-			System.out.println(" name = "+name+" type = "+md.getColumnTypeName(i)+" scale = "+md.getScale(i));
+			MiscUtils.getLogger().debug(" name = "+name+" type = "+md.getColumnTypeName(i)+" scale = "+md.getScale(i));
                     if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))
 //                            && md.getScale(i)==1)
                     {
@@ -90,12 +92,12 @@ public class EctAnnualRecord
                         if(rs.getInt(i)==1)
                         {
                             value = "checked='checked'";
-		            System.out.println("checking "+name);
+		            MiscUtils.getLogger().debug("checking "+name);
                         }
                         else
                         {
                             value = "";
-		            System.out.println("not checking "+name);
+		            MiscUtils.getLogger().debug("not checking "+name);
                         }
                     }
                     else
@@ -148,7 +150,7 @@ public class EctAnnualRecord
             else
             {
                 String value = props.getProperty(name, null);
-                System.out.println("name = "+name+" type ="+md.getColumnTypeName(i)+" scale = "+md.getScale(i)+" pres "+md.getPrecision(i));
+                MiscUtils.getLogger().debug("name = "+name+" type ="+md.getColumnTypeName(i)+" scale = "+md.getScale(i)+" pres "+md.getPrecision(i));
                 if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))
 //                        && md.getScale(i)==1)
                 {

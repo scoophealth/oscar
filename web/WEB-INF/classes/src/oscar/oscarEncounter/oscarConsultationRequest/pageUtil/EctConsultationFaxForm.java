@@ -24,6 +24,7 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import org.apache.struts.action.ActionForm;
+import org.oscarehr.util.MiscUtils;
 
 public final class EctConsultationFaxForm extends ActionForm {
 
@@ -36,7 +37,7 @@ public final class EctConsultationFaxForm extends ActionForm {
 
     public void setRecipient(String str)
     {
-        System.out.println("recipient has been set");
+        MiscUtils.getLogger().debug("recipient has been set");
         recipient = str;
     }
 
@@ -49,7 +50,7 @@ public final class EctConsultationFaxForm extends ActionForm {
 
     public void setFrom(String str)
     {
-        System.out.println("from has been set");
+        MiscUtils.getLogger().debug("from has been set");
         from = str;
     }
 
@@ -62,7 +63,7 @@ public final class EctConsultationFaxForm extends ActionForm {
 
     public void setRecipientsFaxNumber(String str)
     {
-        System.out.println("recipientsFaxNumber setter");
+        MiscUtils.getLogger().debug("recipientsFaxNumber setter");
         recipientsFaxNumber = str;
     }
 
@@ -75,7 +76,7 @@ public final class EctConsultationFaxForm extends ActionForm {
 
     public void setSendersPhone(String str)
     {
-        System.out.println(" setter");
+        MiscUtils.getLogger().debug(" setter");
         sendersPhone = str;
     }
 
@@ -88,7 +89,7 @@ public final class EctConsultationFaxForm extends ActionForm {
 
     public void setSendersFax(String str)
     {
-        System.out.println("sendersFax setter");
+        MiscUtils.getLogger().debug("sendersFax setter");
         sendersFax = str;
     }
 
@@ -101,7 +102,7 @@ public final class EctConsultationFaxForm extends ActionForm {
 
     public void setComments(String str)
     {
-        System.out.println("appointmentDay setter");
+        MiscUtils.getLogger().debug("appointmentDay setter");
         comments = str;
     }
 
@@ -114,7 +115,7 @@ public final class EctConsultationFaxForm extends ActionForm {
 
     public void setRequestId(String str)
     {
-        System.out.println("requestId setter");
+        MiscUtils.getLogger().debug("requestId setter");
         requestId = str;
     }
     String recipient;

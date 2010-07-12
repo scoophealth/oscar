@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.EFormUtil;
 import oscar.eform.data.EForm;
@@ -49,7 +50,7 @@ public class AddEFormAction extends Action {
     
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                 HttpServletRequest request, HttpServletResponse response) {
-         System.out.println("==================SAVING ==============");
+         MiscUtils.getLogger().debug("==================SAVING ==============");
          
          Enumeration paramNamesE = request.getParameterNames();
          //for each name="fieldname" value="myval"

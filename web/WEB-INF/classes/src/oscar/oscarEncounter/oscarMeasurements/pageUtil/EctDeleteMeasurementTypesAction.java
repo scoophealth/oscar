@@ -62,7 +62,7 @@ public class EctDeleteMeasurementTypesAction extends Action {
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
-                    System.out.println(deleteCheckbox[i]);
+                    MiscUtils.getLogger().debug(deleteCheckbox[i]);
                     String sql = "SELECT * FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'"; 
                     ResultSet rs;
                     rs = db.GetSQL(sql);
@@ -72,10 +72,10 @@ public class EctDeleteMeasurementTypesAction extends Action {
                               db.getString(rs,"measuringInstruction")+ "','" + db.getString(rs,"validation") + "','" + dateDeleted +"')";
                         db.RunSQL(sql);
                         sql = "DELETE  FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'";                                        
-                        System.out.println(" sql statement "+sql);
+                        MiscUtils.getLogger().debug(" sql statement "+sql);
                         db.RunSQL(sql);
                         sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + db.getString(rs,"typeDisplayName") + "'";
-                        System.out.println("sql Statement " + sql);
+                        MiscUtils.getLogger().debug("sql Statement " + sql);
                         db.RunSQL(sql);
                     }
                 }

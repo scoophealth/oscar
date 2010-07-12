@@ -239,7 +239,7 @@ public class WriteNewMeasurements {
                 +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
                 +" VALUES ('"+inputType+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
                 + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
-                System.out.println("SQL measure ====" + sql);
+                MiscUtils.getLogger().debug("SQL measure ====" + sql);
                 db.RunSQL(sql);
             }
         }
@@ -260,7 +260,7 @@ public class WriteNewMeasurements {
             +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
             +" VALUES ('"+inputType+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
             + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
-            System.out.println("SQL measure ====" + sql);
+            MiscUtils.getLogger().debug("SQL measure ====" + sql);
             db.RunSQL(sql);
         }
         catch(SQLException e) { MiscUtils.getLogger().error("Error", e); }

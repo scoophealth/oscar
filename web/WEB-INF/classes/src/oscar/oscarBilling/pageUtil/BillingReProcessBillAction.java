@@ -38,6 +38,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -219,17 +220,17 @@ public class BillingReProcessBillAction extends Action {
                         + "oin_postalcode = '"+oinPostalcode+"'  "
                         +" where billingmaster_no  = '"+billingmasterNo+"'";
             
-            System.out.println("\n"+sql+"\n");
+            MiscUtils.getLogger().debug("\n"+sql+"\n");
             try {                                                
                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                db.RunSQL(sql);
                if (secondSQL != null){
-                    System.out.println(secondSQL);
+                    MiscUtils.getLogger().debug(secondSQL);
                     db.RunSQL(secondSQL);
                }
-               System.out.println("sql "+sql);
+               MiscUtils.getLogger().debug("sql "+sql);
             } catch (SQLException e3) {
-               System.out.println(e3.getMessage());
+               MiscUtils.getLogger().debug(e3.getMessage());
             }
          
         request.setAttribute("billing_no", billingmasterNo);
@@ -238,7 +239,7 @@ public class BillingReProcessBillAction extends Action {
     
     public String convertDate8Char(String s){
         String sdate = "00000000", syear="", smonth="", sday="";
-        System.out.println("s=" + s);
+        MiscUtils.getLogger().debug("s=" + s);
         if (s != null){
             
             if (s.indexOf("-") != -1){
@@ -256,13 +257,13 @@ public class BillingReProcessBillAction extends Action {
                 }
                 
                 
-                System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
+                MiscUtils.getLogger().debug("Year" + syear + " Month" + smonth + " Day" + sday);
                 sdate = syear + smonth + sday;
                 
             }else{
                 sdate = s;
             }
-            System.out.println("sdate:" + sdate);
+            MiscUtils.getLogger().debug("sdate:" + sdate);
         }else{
             sdate="00000000";
             

@@ -88,8 +88,7 @@ public class HelpTag extends TagSupport {
 
             JspWriter out = super.pageContext.getOut();
             out.print("<a "+getStyleOut()+" "+getClassStringOut()+" target=\"_blank\" href=\""+getURL()+"\">"+message);
-        } catch (Exception p) {
-            p.printStackTrace(System.out);
+        } catch (Exception p) {MiscUtils.getLogger().error("Error",p);
         }
         return (EVAL_BODY_INCLUDE);
     }
@@ -98,8 +97,7 @@ public class HelpTag extends TagSupport {
         try {
             JspWriter out = super.pageContext.getOut();
             out.print("</a>");
-        } catch (Exception p) {
-            p.printStackTrace(System.out);
+        } catch (Exception p) {MiscUtils.getLogger().error("Error",p);
         }
         return EVAL_PAGE;
     }

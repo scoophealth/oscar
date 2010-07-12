@@ -37,7 +37,7 @@ public class PathNetController {
     */
    public static void main(String[] args) {                  
       
-      System.out.println("Running PathNet Client...");
+      MiscUtils.getLogger().debug("Running PathNet Client...");
       if(args.length != 1) {
          logger.info("Usage: PathNet Client pathOfPropertiesFile");	 
          System.exit(1);

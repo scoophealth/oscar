@@ -196,7 +196,7 @@ public class TeleplanSubmission {
            DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
            dbhandler.RunSQL(query);
         }catch (SQLException sqlexception) {
-           System.out.println(sqlexception.getMessage());
+           MiscUtils.getLogger().debug(sqlexception.getMessage());
         }
     }
     

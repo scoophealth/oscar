@@ -31,10 +31,9 @@ package oscar.oscarReport.ClinicalReports.PageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +43,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarReport.ClinicalReports.ClinicalReportManager;
 import oscar.oscarReport.ClinicalReports.Denominator;
@@ -61,7 +61,7 @@ public class RunClinicalReportAction extends Action {
         String numeratorId = request.getParameter("numerator");
         String denominatorId = request.getParameter("denominator");
          
-        System.out.println("numerator "+numeratorId+" denominator "+denominatorId);    
+        MiscUtils.getLogger().debug("numerator "+numeratorId+" denominator "+denominatorId);    
         ClinicalReportManager reports = ClinicalReportManager.getInstance();
     
         Denominator d = reports.getDenominatorById(denominatorId);        
@@ -85,7 +85,7 @@ public class RunClinicalReportAction extends Action {
                     }
                 }
             }
-            System.out.println("setting replaceable values with a size of "+h.size());
+            MiscUtils.getLogger().debug("setting replaceable values with a size of "+h.size());
             d.setReplaceableValues(h);
         }
         
@@ -95,14 +95,14 @@ public class RunClinicalReportAction extends Action {
         
        
         Numerator   n = reports.getNumeratorById(numeratorId);
-        System.out.println("n"+n+" "+n.hasReplaceableValues());
+        MiscUtils.getLogger().debug("n"+n+" "+n.hasReplaceableValues());
         if (n.hasReplaceableValues()){
             String[] denomReplaceKeys = n.getReplaceableKeys();
             Hashtable h = new Hashtable();
             String keyValue;
             if ( denomReplaceKeys != null){
                 for (int i = 0; i < denomReplaceKeys.length; i++){
-                    System.out.println("The sought after key would be "+request.getParameterValues("numerator_"+denomReplaceKeys[i]) );
+                    MiscUtils.getLogger().debug("The sought after key would be "+request.getParameterValues("numerator_"+denomReplaceKeys[i]) );
                     String[] keyValues = request.getParameterValues("numerator_"+denomReplaceKeys[i]);
                     if (keyValues == null) {
                         keyValue = "";                        
@@ -118,7 +118,7 @@ public class RunClinicalReportAction extends Action {
                     }
                 }
             }
-            System.out.println("setting replaceable values with a size of "+h.size());
+            MiscUtils.getLogger().debug("setting replaceable values with a size of "+h.size());
             n.setReplaceableValues(h);
         }
         
@@ -151,7 +151,7 @@ public class RunClinicalReportAction extends Action {
         
         int num = re.getNumeratorCount();
         int denom = re.getDenominatorCount();
-        System.out.println("num "+num+" denom "+denom);
+        MiscUtils.getLogger().debug("num "+num+" denom "+denom);
         float percentage = re.getPercentage();
         
         

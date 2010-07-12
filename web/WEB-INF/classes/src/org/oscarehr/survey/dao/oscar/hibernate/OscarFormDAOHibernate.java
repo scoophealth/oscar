@@ -256,11 +256,6 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 
 				formMap.put(d.getKey(),d);
 			}
-			/*
-			for(String key:keyMap.keySet()) {
-				System.out.println("header=" + key);
-			}
-			*/
 						
 			
 			//we need to add the client data

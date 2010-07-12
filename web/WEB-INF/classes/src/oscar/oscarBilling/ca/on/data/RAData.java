@@ -130,7 +130,7 @@ public class RAData {
                 amount = amount.trim();
                 valueToAdd = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);
             } catch (Exception badValueException) {
-                System.out.println(" Error calculating value for " + h.get("billing_no"));
+                MiscUtils.getLogger().debug(" Error calculating value for " + h.get("billing_no"));
                 badValueException.printStackTrace();
             }
             total = total.add(valueToAdd);
@@ -151,7 +151,7 @@ public class RAData {
                 amount = amount.trim();
                 valueToAdd = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);
             } catch (Exception badValueException) {
-                System.out.println(" Error calculating value for " + h.get("billing_no"));
+                MiscUtils.getLogger().debug(" Error calculating value for " + h.get("billing_no"));
                 badValueException.printStackTrace();
             }
             total = total.add(valueToAdd);

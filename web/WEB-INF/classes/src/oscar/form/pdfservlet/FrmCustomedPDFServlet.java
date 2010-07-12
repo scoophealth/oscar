@@ -384,9 +384,9 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String fax=lst.get(4);
         fax=fax.replace("Fax: ", "");
         String clinicName=lst.get(0)+"\n"+lst.get(1)+"\n"+lst.get(2);
-            System.out.println(tel);
-            System.out.println(fax);
-            System.out.println(clinicName);
+            MiscUtils.getLogger().debug(tel);
+            MiscUtils.getLogger().debug(fax);
+            MiscUtils.getLogger().debug(clinicName);
             hm.put("clinicName", clinicName);
             hm.put("clinicTel", tel);
             hm.put("clinicFax", fax);
@@ -396,15 +396,15 @@ public class FrmCustomedPDFServlet extends HttpServlet {
     }
     protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx)
             throws DocumentException, java.io.IOException {
-        System.out.println("***in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
+        MiscUtils.getLogger().debug("***in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
         // added by vic, hsfo
         Enumeration em = req.getParameterNames();
         while (em.hasMoreElements()) {
-            System.out.println("para=" + em.nextElement());
+            MiscUtils.getLogger().debug("para=" + em.nextElement());
         }
         em=req.getAttributeNames();
         while(em.hasMoreElements())
-            System.out.println("attr: "+em.nextElement());
+            MiscUtils.getLogger().debug("attr: "+em.nextElement());
 
         /*   p("test",req.getLocalAddr());
         p("test",req.getLocalName());
@@ -439,7 +439,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
             numPrint=req.getParameter("numPrints");
         }
 
-        System.out.println("method in generatePDFDocumentBytes "+method);
+        MiscUtils.getLogger().debug("method in generatePDFDocumentBytes "+method);
 String clinicName;
 String clinicTel;
 String clinicFax;
@@ -471,14 +471,14 @@ String clinicFax;
         if (rx == null) {
             rx = "";
         }
-        System.out.println("1");
+        MiscUtils.getLogger().debug("1");
         Enumeration eee=req.getParameterNames();
         while(eee.hasMoreElements())
-            System.out.println(eee.nextElement());
+            MiscUtils.getLogger().debug(eee.nextElement());
         Enumeration fff=req.getAttributeNames();
         p("-------------");
         while(fff.hasMoreElements())
-            System.out.println(fff.nextElement());
+            MiscUtils.getLogger().debug(fff.nextElement());
 
         String additNotes = req.getParameter("additNotes");
         String[] rxA = rx.split(newline);
@@ -636,14 +636,14 @@ String clinicFax;
                 writer.close();
             }
         }
-        System.out.println("***END in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
+        MiscUtils.getLogger().debug("***END in generatePDFDocumentBytes2 FrmCustomedPDFServlet.java***");
         return baosPDF;
     }
         public void p(String s) {
-       System.out.println(s);
+       MiscUtils.getLogger().debug(s);
     }
 
     public void p(String s, String s2) {
-        System.out.println(s + "=" + s2);
+        MiscUtils.getLogger().debug(s + "=" + s2);
     }
 }

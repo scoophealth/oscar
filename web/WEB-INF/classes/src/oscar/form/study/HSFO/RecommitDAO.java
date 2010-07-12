@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicData.Demographic;
@@ -49,9 +51,9 @@ public class RecommitDAO {
 				
 				
 	     }catch (SQLException se) {
-	            System.out.println("SQL Error while getting the latest record from the hsfo_xml_recommit table : "+ se.toString());
+	            MiscUtils.getLogger().debug("SQL Error while getting the latest record from the hsfo_xml_recommit table : "+ se.toString());
 	        }catch (Exception ne) {
-	            System.out.println("Other Error while getting the latest record from the hsfo_xml_recommit table : "+ ne.toString());
+	            MiscUtils.getLogger().debug("Other Error while getting the latest record from the hsfo_xml_recommit table : "+ ne.toString());
 	        }finally {
 	        	if (rs != null)
 	    			try {
@@ -88,9 +90,9 @@ public class RecommitDAO {
 	         st.setString(7, rd.getId().toString());
 	         st.executeUpdate();
 	     }catch (SQLException se) {
-	         System.out.println("SQL Error while update the latest record to the hsfo_xml_recommit table : "+ se.toString());
+	         MiscUtils.getLogger().debug("SQL Error while update the latest record to the hsfo_xml_recommit table : "+ se.toString());
 	     }catch (Exception ne) {
-	         System.out.println("Other Error while update the latest record to the hsfo_xml_recommit table : "+ ne.toString());
+	         MiscUtils.getLogger().debug("Other Error while update the latest record to the hsfo_xml_recommit table : "+ ne.toString());
 	     }finally {
 	        	
 	    	 if (st != null)
@@ -122,9 +124,9 @@ public class RecommitDAO {
 	         
 	         st.executeUpdate();
 	     }catch (SQLException se) {
-	         System.out.println("SQL Error while insert a new record to the hsfo_xml_recommit table : "+ se.toString());
+	         MiscUtils.getLogger().debug("SQL Error while insert a new record to the hsfo_xml_recommit table : "+ se.toString());
 	     }catch (Exception ne) {
-	         System.out.println("Other Error while insert a new record to the hsfo_xml_recommit table : "+ ne.toString());
+	         MiscUtils.getLogger().debug("Other Error while insert a new record to the hsfo_xml_recommit table : "+ ne.toString());
 	     }finally {
 	        	
 	    	 if (st != null)

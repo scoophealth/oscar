@@ -81,7 +81,6 @@ public class DrugDao extends AbstractDao<Drug> {
             sqlCommand="select x from Drug x where x.demographicId=?1 and x.customName=?2 order by x.rxDate desc, x.id desc";
         else
             sqlCommand="select x from Drug x where x.demographicId=?1 and x.brandName=?2 order by x.rxDate desc, x.id desc";
-        System.out.println("sqlCommand="+sqlCommand);
         // set parameters
         Query query = entityManager.createQuery(sqlCommand);
         query.setParameter(1, demographicId);

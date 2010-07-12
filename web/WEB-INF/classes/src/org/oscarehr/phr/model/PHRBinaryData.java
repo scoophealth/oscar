@@ -83,9 +83,6 @@ public class PHRBinaryData extends PHRDocument {
         bdt.setData(data);
         
         AuthorType author = doc.getDocumentHeader().getAuthor();
-        System.out.println("Name: " + author.getName());
-        System.out.println("indivoid: " + author.getIndivoId());
-        System.out.println("role: " + author.getRole());
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(author.getName(), author.getIndivoId(), author.getRole().getValue(), bdt);
         return indivoDoc;
     }

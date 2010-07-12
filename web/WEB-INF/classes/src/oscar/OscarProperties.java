@@ -84,15 +84,15 @@ public class OscarProperties extends Properties {
 	/*
 	 * private OscarProperties() {
 	 * 
-	 * InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties"); try { load(is); } catch (Exception e) { System.out.println("Error, file oscar_mcmaster.properties not found.");
-	 * System.out.println("This file must be placed at WEB-INF/classes."); }
+	 * InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties"); try { load(is); } catch (Exception e) { MiscUtils.getLogger().debug("Error, file oscar_mcmaster.properties not found.");
+	 * MiscUtils.getLogger().debug("This file must be placed at WEB-INF/classes."); }
 	 * 
-	 * try{ is.close(); } catch (IOException e) { System.out.println("IO error."); MiscUtils.getLogger().error("Error", e); } } //OscarProperties - end
+	 * try{ is.close(); } catch (IOException e) { MiscUtils.getLogger().debug("IO error."); MiscUtils.getLogger().error("Error", e); } } //OscarProperties - end
 	 */
 
 	/* Do not use this constructor. Use getInstance instead */
 	private OscarProperties() {
-		System.out.println("OSCAR PROPS CONSTRUCTOR");
+		MiscUtils.getLogger().debug("OSCAR PROPS CONSTRUCTOR");
 	}
 
         

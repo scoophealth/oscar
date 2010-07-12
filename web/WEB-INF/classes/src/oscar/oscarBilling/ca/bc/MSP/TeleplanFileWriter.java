@@ -222,7 +222,7 @@ public class TeleplanFileWriter {
         
             //setMasDAO(new BillingmasterDAO());
            //log.debug
-            System.out.println("creating WCB teleplan record for claim "+billing_no);
+            MiscUtils.getLogger().debug("creating WCB teleplan record for claim "+billing_no);
            List billMasterList = billingmasterDAO.getBillingMasterByBillingNo(billing_no);
            Billingmaster bm = (Billingmaster) billMasterList.get(0);
            
@@ -232,7 +232,7 @@ public class TeleplanFileWriter {
             
            WCB wcbForm = billingmasterDAO.getWCBForm(""+bm.getWcbId());
                
-           System.out.println("BM "+bm+" WCB "+wcbForm + " for "+billing_no);
+           MiscUtils.getLogger().debug("BM "+bm+" WCB "+wcbForm + " for "+billing_no);
            
            WCBTeleplanSubmission wcbSub = new WCBTeleplanSubmission();
            wcbSub.setDemographicDao(demographicDAO);
@@ -247,7 +247,7 @@ public class TeleplanFileWriter {
            claims.addToTotal(bm.getBillingAmountBigDecimal());        
            
            
-           System.out.println("FORM NEEDED ?"+wcbSub.isFormNeeded(bm ));
+           MiscUtils.getLogger().debug("FORM NEEDED ?"+wcbSub.isFormNeeded(bm ));
            if(wcbSub.isFormNeeded(bm)){
                
                 String logNo = getNextSequenceNumber();
@@ -315,7 +315,7 @@ public class TeleplanFileWriter {
            List billMasterList = masDAO.getBillingMasterByBillingNo(billing_no);
            Billingmaster bm = (Billingmaster) billMasterList.get(0);
            
-           System.out.println("FORM NEEDED ?"+sb.isFormNeeded());
+           MiscUtils.getLogger().debug("FORM NEEDED ?"+sb.isFormNeeded());
            if(sb.isFormNeeded()){
                
                 String logNo = getNextSequenceNumber();

@@ -95,7 +95,7 @@ public class EctFindMeasurementTypeUtil {
                                                                                         db.getString(rs,("measuringInstruction"), 
                                                                                         db.getString(rs,("validation")); 
                 measurementTypeVector.add(measurementTypes);                                                       
-                System.out.println("getMeasurementType() type: " + db.getString(rs,("typeId"));
+                MiscUtils.getLogger().debug("getMeasurementType() type: " + db.getString(rs,("typeId"));
             }
             
             rs.close();            

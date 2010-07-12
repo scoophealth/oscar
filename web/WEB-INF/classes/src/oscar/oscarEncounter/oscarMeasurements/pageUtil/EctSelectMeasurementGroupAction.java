@@ -54,7 +54,7 @@ public class EctSelectMeasurementGroupAction extends Action {
         String groupName = frm.getSelectedGroupName();
         String forward = frm.getForward();
         
-        System.out.println("The forward message is: " + forward);
+        MiscUtils.getLogger().debug("The forward message is: " + forward);
         
         HttpSession session = request.getSession();
         session.setAttribute( "groupName", groupName);
@@ -90,7 +90,7 @@ public class EctSelectMeasurementGroupAction extends Action {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "DELETE FROM measurementGroupStyle WHERE groupName='" + inputGroupName + "'";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             db.RunSQL(sql);            
             sql = "DELETE FROM measurementGroup WHERE name='" + inputGroupName + "'";
             db.RunSQL(sql);

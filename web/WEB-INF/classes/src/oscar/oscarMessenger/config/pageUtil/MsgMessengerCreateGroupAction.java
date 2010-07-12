@@ -67,7 +67,7 @@ public class MsgMessengerCreateGroupAction extends Action {
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
                  addMake.updateAddressBook();
 
-               }catch (java.sql.SQLException e){ System.out.println("Update of address book didn't happen when updating groups");MiscUtils.getLogger().error("Error", e); }
+               }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Update of address book didn't happen when updating groups");MiscUtils.getLogger().error("Error", e); }
            }else if (type.equals("2")){
                 try{
                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -78,7 +78,7 @@ public class MsgMessengerCreateGroupAction extends Action {
                  MsgAddressBookMaker addMake = new MsgAddressBookMaker(db);
                  addMake.updateAddressBook();
 
-               }catch (java.sql.SQLException e){ System.out.println("Update of address book didn't happen when deleting group");MiscUtils.getLogger().error("Error", e); }
+               }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Update of address book didn't happen when deleting group");MiscUtils.getLogger().error("Error", e); }
            }
         }
       request.setAttribute("groupNo",parentID);

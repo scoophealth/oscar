@@ -65,7 +65,7 @@ public class RptLabReportData {
                  arrayList.add(a);
               }
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
+        }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Problems");   MiscUtils.getLogger().error("Error", e);  }
     return arrayList;
     }
 
@@ -95,7 +95,7 @@ public class RptLabReportData {
               }
 
               rs.close();
-        }catch (java.sql.SQLException e){ System.out.println("Problems");   MiscUtils.getLogger().error("Error", e);  }
+        }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Problems");   MiscUtils.getLogger().error("Error", e);  }
 
     }
 
@@ -125,7 +125,7 @@ public class DemoLabDataStruct{
              consultList.add(con);
           }
           rs.close();
-       }catch (java.sql.SQLException e2) { System.out.println(e2.getMessage()); }
+       }catch (java.sql.SQLException e2) { MiscUtils.getLogger().debug(e2.getMessage()); }
       return consultList;
     }
     public ArrayList getLabReplys(){
@@ -147,7 +147,7 @@ public class DemoLabDataStruct{
              conReplyList.add(conLetter);
           }         
           rs.close(); 
-       }catch (java.sql.SQLException e3) { System.out.println(e3.getMessage()); }
+       }catch (java.sql.SQLException e3) { MiscUtils.getLogger().debug(e3.getMessage()); }
     return conReplyList;
     }
 
@@ -158,13 +158,13 @@ public class DemoLabDataStruct{
           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
           ResultSet rs;
           String sql = "select p.lab_no, l.collection_date, lab_status, accession_num , lab_type from patientLabRouting p , labPatientPhysicianInfo l where p.lab_type = 'CML' and p.lab_no = l.id and p.demographic_no = '"+demographic+"' ";
-          System.out.println(sql);
+          MiscUtils.getLogger().debug(sql);
           rs = db.GetSQL(sql);
           
           list = new ArrayList();         
           while( rs.next()){
              java.util.Date lab = getDateFromCML(db.getString(rs,"collection_date"));
-             System.out.println(lab+" "+startDate+" "+lab.after(startDate));
+             MiscUtils.getLogger().debug(lab+" "+startDate+" "+lab.after(startDate));
              if (startDate != null && lab != null && lab.after(startDate) ){
                 Hashtable h = new Hashtable();              
                 h.put("collectionDate",getCommonDate(lab));
@@ -176,12 +176,12 @@ public class DemoLabDataStruct{
           rs.close();
           
           sql = "select p.lab_no, m.dateTime, lab_type from patientLabRouting p , mdsMSH m where p.lab_type = 'MDS' and p.lab_no = m.segmentID and p.demographic_no = '"+demographic+"' ";
-          System.out.println(sql);
+          MiscUtils.getLogger().debug(sql);
           rs = db.GetSQL(sql);
                     
           while( rs.next()){
              java.util.Date lab = getDateFromMDS(db.getString(rs,"dateTime"));
-             System.out.println(lab+" "+startDate+" "+lab.after(startDate));
+             MiscUtils.getLogger().debug(lab+" "+startDate+" "+lab.after(startDate));
              if (startDate != null && lab != null && lab.after(startDate) ){
                Hashtable h = new Hashtable(); 
                h.put("collectionDate",getCommonDate(lab));
@@ -191,7 +191,7 @@ public class DemoLabDataStruct{
              }
           }                  
           rs.close(); 
-       }catch (java.sql.SQLException e3) { System.out.println(e3.getMessage()); e3.printStackTrace(); }
+       }catch (java.sql.SQLException e3) { MiscUtils.getLogger().debug(e3.getMessage()); e3.printStackTrace(); }
        return list;
     }
     
@@ -234,7 +234,7 @@ public class DemoLabDataStruct{
               retval = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
            }
            rs.close();
-       }catch ( java.sql.SQLException e4) { System.out.println(e4.getMessage()); }
+       }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
        return retval;
     }
 

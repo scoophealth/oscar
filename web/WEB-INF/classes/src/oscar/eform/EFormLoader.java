@@ -48,7 +48,7 @@ public class EFormLoader {
         if (_instance == null) {
             _instance = new EFormLoader();
             parseXML();
-            System.out.println("NumElements ====" + eFormAPs.size());
+            MiscUtils.getLogger().debug("NumElements ====" + eFormAPs.size());
         }
         return _instance;
     }

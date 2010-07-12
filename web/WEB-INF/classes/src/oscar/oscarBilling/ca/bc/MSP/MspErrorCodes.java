@@ -62,7 +62,7 @@ public class MspErrorCodes extends Properties{
          load(is);
       } catch (Exception e) {
          MiscUtils.getLogger().error("Error", e);
-         System.out.println("Error loading MSP Error codes file :"+oscar.OscarProperties.getInstance().getProperty("msp_error_codes"));
+         MiscUtils.getLogger().debug("Error loading MSP Error codes file :"+oscar.OscarProperties.getInstance().getProperty("msp_error_codes"));
       }
    }
 

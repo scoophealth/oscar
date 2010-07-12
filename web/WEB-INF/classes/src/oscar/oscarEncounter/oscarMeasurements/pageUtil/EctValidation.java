@@ -73,12 +73,12 @@ public class EctValidation{
         boolean validation = true; 
         org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
         
-        System.out.println("matchRegExp function is called.");
+        MiscUtils.getLogger().debug("matchRegExp function is called.");
         
         if (!gValidator.isBlankOrNull(regExp) && !gValidator.isBlankOrNull(inputValue)){
-            System.out.println("both the regExp and inputValue is not blank nor null.");
+            MiscUtils.getLogger().debug("both the regExp and inputValue is not blank nor null.");
             if(!inputValue.matches(regExp)){
-                System.out.println("Regexp not matched");                                            
+                MiscUtils.getLogger().debug("Regexp not matched");                                            
                 validation=false;
                 
             }
@@ -175,14 +175,14 @@ public class EctValidation{
          boolean validation = true;    
          
          if(matchRegExp(regExp, inputValue)){
-            System.out.println("/");
+            MiscUtils.getLogger().debug("/");
             int slashIndex = inputValue.indexOf("/");
-            System.out.println(slashIndex);
+            MiscUtils.getLogger().debug(slashIndex);
             if (slashIndex >= 0){
                 String systolic = inputValue.substring(0, slashIndex);
                 String diastolic = inputValue.substring(slashIndex+1);
-                System.out.println("The systolic value is " + systolic);
-                System.out.println("The diastolic value is " + diastolic);
+                MiscUtils.getLogger().debug("The systolic value is " + systolic);
+                MiscUtils.getLogger().debug("The diastolic value is " + diastolic);
                 int iSystolic = Integer.parseInt(systolic);
                 int iDiastolic = Integer.parseInt(diastolic);
                 if( iDiastolic > iSystolic){                    
@@ -207,7 +207,7 @@ public class EctValidation{
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             rs = db.GetSQL(sql);
             if(rs.next()){
@@ -256,7 +256,7 @@ public class EctValidation{
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             rs = db.GetSQL(sql);
             if(rs.next()){

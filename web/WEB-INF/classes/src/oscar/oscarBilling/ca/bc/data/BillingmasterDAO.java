@@ -39,6 +39,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -147,7 +148,7 @@ public class BillingmasterDAO {
         if (formID == null){
             return null;
         }
-        System.out.println("\nFORM ID "+formID);
+        MiscUtils.getLogger().debug("\nFORM ID "+formID);
         return entityManager.find(WCB.class,Integer.parseInt(formID));
     }
     
@@ -162,7 +163,7 @@ public class BillingmasterDAO {
            DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
            dbhandler.RunSQL(query);
         }catch (SQLException sqlexception) {
-           System.out.println(sqlexception.getMessage());
+           MiscUtils.getLogger().debug(sqlexception.getMessage());
         }
     }
     

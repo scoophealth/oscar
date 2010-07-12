@@ -32,6 +32,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
@@ -60,8 +61,7 @@ public class TicklerTag extends TagSupport {
                 out.print("<span class='tabalert'>  ");
             else
                 out.print("<span>  ");
-        } catch(Exception p) {
-            p.printStackTrace(System.out);
+        } catch(Exception p) {MiscUtils.getLogger().error("Error",p);
         }
         return(EVAL_BODY_INCLUDE);
     }
@@ -83,8 +83,7 @@ public class TicklerTag extends TagSupport {
               out.print("<sup>"+numNewLabs+"</sup></span>");
           else
               out.print("</span>");
-       }catch(Exception p) {
-            p.printStackTrace(System.out);
+       }catch(Exception p) {MiscUtils.getLogger().error("Error",p);
        }
        return EVAL_PAGE;
     }

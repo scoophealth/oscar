@@ -89,6 +89,6 @@ public class IssueAdmin extends BaseObject {
 				this.update_date = formatter.parse(update_date_s);
 			else
 				this.update_date = new Date();
-	    }catch(Exception e){ System.out.println("Invalid issue update date"); MiscUtils.getLogger().error("Error", e);}
+	    }catch(Exception e){ MiscUtils.getLogger().error("Invalid issue update date", e);}
 	}
 }

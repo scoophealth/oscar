@@ -95,7 +95,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
         
         }
         catch( SQLException e ) {
-            System.out.println("ERROR FETCHING ALLERGIES");
+            MiscUtils.getLogger().debug("ERROR FETCHING ALLERGIES");
             MiscUtils.getLogger().error("Error", e);
             return false;
         }

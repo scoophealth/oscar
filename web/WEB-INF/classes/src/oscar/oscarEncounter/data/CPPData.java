@@ -144,7 +144,7 @@ public class CPPData {
    public HashMap getCPPData(String demoNo){
       HashMap hm = new HashMap();
       String sql= "select * from cpp  where demographic_no = '"+demoNo+"' order by id desc limit 1";
-      System.out.println(sql);
+      MiscUtils.getLogger().debug(sql);
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs =  db.GetSQL(sql);

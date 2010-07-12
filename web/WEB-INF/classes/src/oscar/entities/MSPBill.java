@@ -531,7 +531,7 @@ public class MSPBill {
         }
       }
       else{
-        System.out.println("null sum=" + this.hashCode());
+        MiscUtils.getLogger().debug("null sum=" + this.hashCode());
       }
     }catch(Exception e){
       MiscUtils.getLogger().error("Error", e);

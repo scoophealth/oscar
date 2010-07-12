@@ -73,7 +73,7 @@ public class LabUploadAction extends Action {
        }
        String key = request.getParameter("key");
        String keyToMatch =  OscarProperties.getInstance().getProperty("CML_UPLOAD_KEY");
-       System.out.println("key="+key);
+       MiscUtils.getLogger().debug("key="+key);
        String outcome = "";
        
        //Checks to verify key is matched and file should be saved locally.
@@ -81,7 +81,7 @@ public class LabUploadAction extends Action {
            
           try{  
               
-             System.out.println("Lab Upload content type = "+importFile.getContentType());
+             MiscUtils.getLogger().debug("Lab Upload content type = "+importFile.getContentType());
              InputStream is = importFile.getInputStream();
              filename = importFile.getFileName();
 
@@ -104,7 +104,7 @@ public class LabUploadAction extends Action {
                    addFileEx.printStackTrace();
                    outcome = "databaseNotStarted";
                 }    
-                System.out.println("Was file uploaded successfully ?"+fileUploadedSuccessfully);
+                MiscUtils.getLogger().debug("Was file uploaded successfully ?"+fileUploadedSuccessfully);
                 fis.close();     
                 if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
                     BufferedReader in = new BufferedReader(new FileReader(localFileName));                                       
@@ -116,7 +116,7 @@ public class LabUploadAction extends Action {
                 }
              }else{
                 outcome="accessDenied";  //file could not save    
-                System.out.println("Could not save file :"+filename+" to disk");
+                MiscUtils.getLogger().debug("Could not save file :"+filename+" to disk");
              }
              
           }catch(Exception e){ 
@@ -128,7 +128,7 @@ public class LabUploadAction extends Action {
           outcome = "accessDenied";
        }
        request.setAttribute("outcome", outcome);
-       System.out.println("forwarding outcome "+outcome);
+       MiscUtils.getLogger().debug("forwarding outcome "+outcome);
        return mapping.findForward("success");
     }
    
@@ -156,7 +156,7 @@ public class LabUploadAction extends Action {
          if(!place.endsWith("/"))
             place = new StringBuffer(place).insert(place.length(),"/").toString();
          retVal = place+"LabUpload."+filename+"."+(new Date()).getTime();
-         System.out.println(retVal);
+         MiscUtils.getLogger().debug(retVal);
             
          //write the  file to the file specified
          OutputStream bos = new FileOutputStream(retVal);
@@ -170,7 +170,7 @@ public class LabUploadAction extends Action {
          stream.close();
       }catch (FileNotFoundException fnfe) {
 
-         System.out.println("File not found");
+         MiscUtils.getLogger().debug("File not found");
          MiscUtils.getLogger().error("Error", fnfe);            
          return retVal;
 

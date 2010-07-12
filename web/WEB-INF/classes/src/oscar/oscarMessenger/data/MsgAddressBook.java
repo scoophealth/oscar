@@ -230,11 +230,11 @@ public class MsgAddressBook {
             }
 
          }else{
-               System.out.println("Im here");
+               MiscUtils.getLogger().debug("Im here");
                int binSearch = java.util.Arrays.binarySearch(thePros,element.getAttribute("id")) ;
-               System.out.println("the binsearch returned "+binSearch+" there are "+locationVector.size()+" in the locationVector ");
+               MiscUtils.getLogger().debug("the binsearch returned "+binSearch+" there are "+locationVector.size()+" in the locationVector ");
                if ( ( binSearch > 0 ) && ( ( (String) locationVector.elementAt(binSearch) ).equals( (String) remoteLocationId.elementAt(remoId)  ) )){
-               System.out.println("i found it at = "+locationVector.elementAt(binSearch));
+               MiscUtils.getLogger().debug("i found it at = "+locationVector.elementAt(binSearch));
                   out.print("<input type=\"checkbox\" name=provider value="+element.getAttribute("id")+"@"+((String)remoteLocationId.elementAt(remoId))+" checked > "+element.getAttribute("desc")+"\n");
                }else{
                   out.print("<input type=\"checkbox\" name=provider value="+element.getAttribute("id")+"@"+((String)remoteLocationId.elementAt(remoId))+"  ><font color=#ff5900>"+element.getAttribute("desc")+"</font>\n");

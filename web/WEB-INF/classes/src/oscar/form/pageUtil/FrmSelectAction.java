@@ -54,7 +54,7 @@ public class FrmSelectAction extends Action {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                                                        
                 
                 if (frm.getForward().compareTo("add")==0) {
-                    System.out.println("the add button is pressed");
+                    MiscUtils.getLogger().debug("the add button is pressed");
                     String[] selectedAddTypes = frm.getSelectedAddTypes();                    
                     if(selectedAddTypes != null){
                         for(int i=0; i<selectedAddTypes.length; i++){
@@ -63,19 +63,19 @@ public class FrmSelectAction extends Action {
                             rs.last();
                             int newOrder = rs.getRow() + 1;                            
                             sql = "UPDATE encounterForm SET hidden ='" + newOrder + "' WHERE form_name='" + selectedAddTypes[i] + "'";
-                            System.out.println(" sql statement "+sql);
+                            MiscUtils.getLogger().debug(" sql statement "+sql);
                             db.RunSQL(sql);                                
                         }
                     }
                 }
                 else if (frm.getForward().compareTo("delete")==0){
-                    System.out.println("the delete button is pressed");
+                    MiscUtils.getLogger().debug("the delete button is pressed");
                     String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();  
                     if(selectedDeleteTypes != null){
                         for(int i=0; i<selectedDeleteTypes.length; i++){
-                            System.out.println(selectedDeleteTypes[i]);
+                            MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
                             String sql = "UPDATE encounterForm SET hidden ='0' WHERE form_name='" + selectedDeleteTypes[i] + "'";
-                            System.out.println(" sql statement "+sql);
+                            MiscUtils.getLogger().debug(" sql statement "+sql);
                             db.RunSQL(sql);                                
                         }
                         String sql = "SELECT hidden FROM encounterForm WHERE hidden <> '0' ORDER BY hidden";
@@ -92,7 +92,7 @@ public class FrmSelectAction extends Action {
                     //need to update the order number under the hidden column!!!!!
                 }
                 else if (frm.getForward().compareTo("up")==0){
-                    System.out.println("The Move UP button is pressed!");
+                    MiscUtils.getLogger().debug("The Move UP button is pressed!");
                     String[] selectedMoveUpTypes = frm.getSelectedDeleteTypes();
                     if(selectedMoveUpTypes != null){
                         for(int i=0; i<selectedMoveUpTypes.length; i++){
@@ -126,7 +126,7 @@ public class FrmSelectAction extends Action {
                 }
                 
                 else if (frm.getForward().compareTo("down")==0){
-                    System.out.println("The Move DOWN button is pressed!");
+                    MiscUtils.getLogger().debug("The Move DOWN button is pressed!");
                     String[] selectedMoveDownTypes = frm.getSelectedDeleteTypes();
                     if(selectedMoveDownTypes != null){
                         for(int i=selectedMoveDownTypes.length-1; i>=0; i--){
@@ -143,7 +143,7 @@ public class FrmSelectAction extends Action {
                                 rs.close();
                                 
                                 if (form_order<nbRows && form_order>0){
-                                    System.out.println("form_order: " + form_order);                                    
+                                    MiscUtils.getLogger().debug("form_order: " + form_order);                                    
                                     sql = "Select form_name from encounterForm where hidden ='"+ lowerOrder + "'";
                                     rs = db.GetSQL(sql);
                                     if(rs.next()){

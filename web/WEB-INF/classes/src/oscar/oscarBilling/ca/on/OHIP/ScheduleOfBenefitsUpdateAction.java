@@ -41,6 +41,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarBilling.ca.on.data.BillingCodeData;
 
@@ -55,10 +56,10 @@ public class ScheduleOfBenefitsUpdateAction extends Action {
       if ( changes != null ){
          BillingCodeData bc = new BillingCodeData();
          ArrayList list = new ArrayList();
-         System.out.println("changes #"+changes.length);
+         MiscUtils.getLogger().debug("changes #"+changes.length);
          
          for ( int i = 0 ; i < changes.length; i++){
-            System.out.println(changes[i]);            
+            MiscUtils.getLogger().debug(changes[i]);            
             String[] change = changes[i].split("\\|");
             if (change != null && change.length == 5){
                //change[0] // billing code
@@ -104,7 +105,7 @@ public class ScheduleOfBenefitsUpdateAction extends Action {
                //}
                request.setAttribute("changes",list);
             }else{
-               System.out.println("test was null");
+               MiscUtils.getLogger().debug("test was null");
             }
          
          }

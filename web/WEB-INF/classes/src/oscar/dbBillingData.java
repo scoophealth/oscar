@@ -29,6 +29,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBPreparedHandler;
 
 public class dbBillingData {
@@ -56,7 +58,7 @@ public class dbBillingData {
   }
   public String[] ejbLoad() {
     getService_code();
-    System.out.println("Service Code from db=" + db_service_code);
+    MiscUtils.getLogger().debug("Service Code from db=" + db_service_code);
     if(db_service_code==null) return null; // the user is not in security table
 
     if(service_code.equals(db_service_code)) { // login successfully

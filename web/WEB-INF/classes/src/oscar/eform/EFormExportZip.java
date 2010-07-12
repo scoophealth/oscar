@@ -29,6 +29,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.actions.DisplayImageAction;
 import oscar.eform.data.EForm;
@@ -91,11 +92,11 @@ public class EFormExportZip {
             int start = 0;
             while (matcher.find(start)) {
                 String match = matcher.group();
-                System.out.println(match);
+                MiscUtils.getLogger().debug(match);
                 start = matcher.end();
                 int length = "${oscar_image_path}".length();
                 String imageFileName = match.substring(length, match.length()-1);
-                System.out.println("Image Name: " + imageFileName);
+                MiscUtils.getLogger().debug("Image Name: " + imageFileName);
                 File imageFile = DisplayImageAction.getImageFile(imageFileName);
                 try {
                     FileInputStream fis = new FileInputStream(imageFile);  //should error out if image not found, in this case, skip the image

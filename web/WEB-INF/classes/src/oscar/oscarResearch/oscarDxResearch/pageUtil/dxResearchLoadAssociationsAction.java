@@ -28,6 +28,7 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DxDao;
 import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.dx.dao.DxResearchDAO;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarResearch.oscarDxResearch.bean.dxAssociationBean;
@@ -160,13 +161,13 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     	
     	//get all certain issues
     	List<CaseManagementIssue> certainIssues = cmiDao.getAllCertainIssues();
-    	System.out.println("certain issues found=" + certainIssues.size());
+    	MiscUtils.getLogger().debug("certain issues found=" + certainIssues.size());
     	for(CaseManagementIssue issue:certainIssues) {
     		Issue iss = issueDao.getIssue(issue.getIssue().getId());
-    		System.out.println("checking " + iss.getType() + "," +iss.getCode());
+    		MiscUtils.getLogger().debug("checking " + iss.getType() + "," +iss.getCode());
     		DxAssociation assoc = dxDao.findAssociation(iss.getType(), iss.getCode());
     		if(assoc != null) {
-    			System.out.println("match");
+    			MiscUtils.getLogger().debug("match");
     			//we now have a certain issue which matches an association.
     			cmMgr.saveToDx(issue.getDemographic_no(), assoc.getDxCode(), assoc.getDxCodeType(), true);
     			recordsAdded++;

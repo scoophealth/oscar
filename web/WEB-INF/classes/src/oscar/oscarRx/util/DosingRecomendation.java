@@ -102,7 +102,7 @@ public class DosingRecomendation {
         try{
             String toParse  = (String) doseVal.get("clcrrange");
 
-            System.out.println("TO PARSE: "+toParse);
+            MiscUtils.getLogger().debug("TO PARSE: "+toParse);
             if (toParse == null){
                return false;    
             }

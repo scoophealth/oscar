@@ -44,6 +44,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -189,7 +190,7 @@ public class BillingCreateBillingAction extends Action {
     }
 
     if (request.getParameter("WCBid") != null){
-            System.out.println("WCB id is not null "+request.getParameter("WCBid"));
+            MiscUtils.getLogger().debug("WCB id is not null "+request.getParameter("WCBid"));
             List<String> errs = null;
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
@@ -199,9 +200,9 @@ public class BillingCreateBillingAction extends Action {
             BillingItem item = (BillingItem) iter.next();
             String sc = item.getServiceCode();
             boolean formNeeded = WCBCodes.getInstance().isFormNeeded(sc);
-            System.out.println("code:"+sc+" form needed "+formNeeded);
+            MiscUtils.getLogger().debug("code:"+sc+" form needed "+formNeeded);
             if (formNeeded){
-                System.out.println("Setting form needed 1");
+                MiscUtils.getLogger().debug("Setting form needed 1");
                 errs = wcbForm.verifyEverythingOnForm();
                 if(errs != null && errs.size() > 0){
                     request.setAttribute("WCBcode",sc);
@@ -213,7 +214,7 @@ public class BillingCreateBillingAction extends Action {
             }
         }
         if(errs != null && errs.size() > 0){
-            System.out.println("Setting form needed 2");
+            MiscUtils.getLogger().debug("Setting form needed 2");
             request.setAttribute("WCBFormNeeds",errs);
             return mapping.getInputForward();
         }

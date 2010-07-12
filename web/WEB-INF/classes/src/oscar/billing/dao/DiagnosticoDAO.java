@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.model.Diagnostico;
 import oscar.oscarDB.DBHandler;
 import oscar.util.DAO;
@@ -45,7 +47,7 @@ public class DiagnosticoDAO extends DAO {
             "from cad_diagnostico diag, cad_cid cid " +
             "where diag.co_cid = cid.co_cid and " + "diag.appointment_no = " +
             id;
-		System.out.println(sql);
+		MiscUtils.getLogger().debug(sql);
         DBHandler db = getDb();
 
         try {

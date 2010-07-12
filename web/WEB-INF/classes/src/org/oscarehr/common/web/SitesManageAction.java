@@ -22,7 +22,6 @@ public class SitesManageAction extends DispatchAction {
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("ClinicManageAction-unspec");
         return view(mapping, form, request, response);
     }
 

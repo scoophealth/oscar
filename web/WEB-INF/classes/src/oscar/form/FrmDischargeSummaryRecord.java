@@ -99,7 +99,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
         			//UtilMisc.charEscape(issue_description,'\'');
         			//String sql_insert = "insert into clientReport values('"+program_name+"','"+demographic_no+"','"+last_name+"','"+first_name+"','"+dob+"','"+issue_code+"','"+issue_desription+"','"+casemgmt_issue_resolved+"','"+casemgmt_issue_type+"','"+fusion47_yn+"','"+rotary12_yn+"')";
         			String sql_insert = "insert into clientReport values('"+UtilMisc.charEscape(program_name,'\'')+"','"+UtilMisc.charEscape(demographic_no,'\'')+"','"+UtilMisc.charEscape(last_name,'\'')+"','"+UtilMisc.charEscape(first_name,'\'')+"','"+dob+"','"+UtilMisc.charEscape(issue_code,'\'')+"','"+UtilMisc.charEscape(issue_description,'\'')+"','"+casemgmt_issue_resolved+"','"+casemgmt_issue_type+"','"+fusion47_yn+"','"+rotary12_yn+"')";
-        			System.out.println(sql_insert);
+        			MiscUtils.getLogger().debug(sql_insert);
         			db.RunSQL(sql_insert);
         			
         		}

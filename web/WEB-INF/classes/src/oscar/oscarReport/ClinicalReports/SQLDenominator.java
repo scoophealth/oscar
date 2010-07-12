@@ -70,17 +70,17 @@ public class SQLDenominator implements Denominator{
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             if (replaceableValues != null){
-                System.out.println("has replaceablevalues"+replaceableValues.size());
-                System.out.println("before replace \n"+sql);
+                MiscUtils.getLogger().debug("has replaceablevalues"+replaceableValues.size());
+                MiscUtils.getLogger().debug("before replace \n"+sql);
                 exeSql = replaceAll(sql, replaceableValues);
             }else{              
-                System.out.println("doesn't have replaceablevalues");
+                MiscUtils.getLogger().debug("doesn't have replaceablevalues");
                 exeSql = sql;
-                System.out.println("sql "+sql);
+                MiscUtils.getLogger().debug("sql "+sql);
             }
             
             ResultSet rs = db.GetSQL(exeSql);
-            System.out.println("SQL Statement: " + exeSql);
+            MiscUtils.getLogger().debug("SQL Statement: " + exeSql);
             while(rs.next()){
                String toAdd = db.getString(rs,resultString);
                list.add(toAdd);
@@ -114,7 +114,7 @@ public class SQLDenominator implements Denominator{
            String replaceValue = (String) replacers.get(processString);
            System.out.println ("key :"+processString+" value :"+replaceValue);
            str = str.replaceAll("\\$\\{"+processString+"\\}", replaceValue);
-           System.out.println(str);
+           MiscUtils.getLogger().debug(str);
            
         }
         return str;
@@ -127,7 +127,7 @@ public class SQLDenominator implements Denominator{
     public void parseReplaceValues(String str){
         if (str != null){
             try{
-                System.out.println("parsing string "+str);
+                MiscUtils.getLogger().debug("parsing string "+str);
                 if (str.indexOf(",") != -1){
                 replaceKeys = str.split(",");
                 }else{

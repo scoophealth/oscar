@@ -112,7 +112,7 @@ public final class RxDeleteRxAction extends DispatchAction {
     public ActionForward Delete2(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException, ServletException {
 
-        System.out.println("===========================Delete2 RxDeleteRxAction========================");
+        MiscUtils.getLogger().debug("===========================Delete2 RxDeleteRxAction========================");
 
         // Setup variables
         RxSessionBean bean = (RxSessionBean)request.getSession().getAttribute("RxSessionBean");
@@ -132,13 +132,13 @@ public final class RxDeleteRxAction extends DispatchAction {
         catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
         }
-              System.out.println("===========================END Delete2 RxDeleteRxAction========================");
+              MiscUtils.getLogger().debug("===========================END Delete2 RxDeleteRxAction========================");
          return null;
     }
     public ActionForward DeleteRxOnCloseRxBox(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
     throws IOException, ServletException {
     
-        System.out.println("===========================DeleteRxOnCloseRxBox RxDeleteRxAction========================");
+        MiscUtils.getLogger().debug("===========================DeleteRxOnCloseRxBox RxDeleteRxAction========================");
         String randomId=request.getParameter("randomId");
 
 
@@ -151,7 +151,7 @@ public final class RxDeleteRxAction extends DispatchAction {
        if(randomId!=null){
             HashMap rd=bean.getRandomIdDrugIdPair();
             Integer drugId=(Integer)rd.get(Long.parseLong(randomId));
-            System.out.println("111drugId="+drugId+"--randomId="+randomId);
+            MiscUtils.getLogger().debug("111drugId="+drugId+"--randomId="+randomId);
             if(drugId!=null){
                 String ip = request.getRemoteAddr();
                 try{
@@ -167,10 +167,10 @@ public final class RxDeleteRxAction extends DispatchAction {
             HashMap hm = new HashMap();
             hm.put("drugId", drugId);
             JSONObject jsonObject = JSONObject.fromObject(hm);
-            System.out.println("jsonObject="+ jsonObject.toString());
+            MiscUtils.getLogger().debug("jsonObject="+ jsonObject.toString());
             response.getOutputStream().write(jsonObject.toString().getBytes());
        }
-        System.out.println("===========================END DeleteRxOnCloseRxBox RxDeleteRxAction========================");
+        MiscUtils.getLogger().debug("===========================END DeleteRxOnCloseRxBox RxDeleteRxAction========================");
          return null;
     }
 public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)
@@ -236,20 +236,20 @@ public ActionForward clearStash(ActionMapping mapping,ActionForm form,HttpServle
       /*  Enumeration em=request.getParameterNames();
         while(em.hasMoreElements()){
             String s=em.nextElement().toString();
-            System.out.println("request.parameterName="+s);
-            System.out.println("value="+request.getParameter(s));
+            MiscUtils.getLogger().debug("request.parameterName="+s);
+            MiscUtils.getLogger().debug("value="+request.getParameter(s));
         }
         em=request.getAttributeNames();
         while(em.hasMoreElements()){
             String s=em.nextElement().toString();
-            System.out.println("request.attributeName="+s);
-            System.out.println("value="+request.getAttribute(s));
+            MiscUtils.getLogger().debug("request.attributeName="+s);
+            MiscUtils.getLogger().debug("value="+request.getAttribute(s));
         }
         em=request.getSession().getAttributeNames();
         while(em.hasMoreElements()){
             String s=em.nextElement().toString();
-            System.out.println("request.attributeName in session="+s);
-            System.out.println("value="+request.getSession().getAttribute(s));
+            MiscUtils.getLogger().debug("request.attributeName in session="+s);
+            MiscUtils.getLogger().debug("value="+request.getSession().getAttribute(s));
         }*/
         try{
         createDiscontinueNote(request);

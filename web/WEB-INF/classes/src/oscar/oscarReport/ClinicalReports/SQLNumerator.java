@@ -93,7 +93,7 @@ public class SQLNumerator implements Numerator {
         try{
             db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
-            System.out.println("SQL Statement: " + sql);
+            MiscUtils.getLogger().debug("SQL Statement: " + sql);
             while(rs.next()){
                int count = rs.getInt(identifier);
                if (count > 0){
@@ -101,7 +101,7 @@ public class SQLNumerator implements Numerator {
                    evalTrue = true;
                }
             }
-            System.out.println("demo "+demographicNo+" eval: "+evalTrue);
+            MiscUtils.getLogger().debug("demo "+demographicNo+" eval: "+evalTrue);
             rs.close();
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
@@ -121,7 +121,7 @@ public class SQLNumerator implements Numerator {
         try{
             db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
-            System.out.println("SQL Statement: " + sql);
+            MiscUtils.getLogger().debug("SQL Statement: " + sql);
             if(rs.next()){
                 evalTrue = true;
                 if (outputfields != null){
@@ -134,7 +134,7 @@ public class SQLNumerator implements Numerator {
                 //for 
                 
             }
-            System.out.println("demo "+demographicNo+" eval: "+evalTrue);
+            MiscUtils.getLogger().debug("demo "+demographicNo+" eval: "+evalTrue);
             rs.close();
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
@@ -169,7 +169,7 @@ public class SQLNumerator implements Numerator {
     public void parseReplaceValues(String str){
         if (str != null){
             try{
-                System.out.println("parsing string "+str);
+                MiscUtils.getLogger().debug("parsing string "+str);
                 if (str.indexOf(",") != -1){
                 replaceKeys = str.split(",");
                 }else{

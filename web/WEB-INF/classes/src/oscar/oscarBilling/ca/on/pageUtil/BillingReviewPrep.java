@@ -24,6 +24,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarBilling.ca.on.data.BillingReviewCodeItem;
 import oscar.oscarBilling.ca.on.data.BillingReviewPercItem;
@@ -92,7 +93,7 @@ public class BillingReviewPrep {
 
 			bigFee = bigFee.setScale(2, BigDecimal.ROUND_HALF_UP);
 			// bigFee = bigFee.round(new MathContext(2));
-			System.out.println("big end: " + bigFee.toString());
+			MiscUtils.getLogger().debug("big end: " + bigFee.toString());
 
 			codeItem = new BillingReviewCodeItem();
 			codeItem.setCodeName((String) vecCode.get(i));

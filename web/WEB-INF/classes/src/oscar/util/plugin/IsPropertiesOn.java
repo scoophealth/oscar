@@ -1,8 +1,5 @@
 package oscar.util.plugin;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
-
 import oscar.OscarProperties;
 
 public class IsPropertiesOn {

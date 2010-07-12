@@ -58,10 +58,10 @@ public class SendDocToPhrAction extends Action {
         String[] files = request.getParameterValues("docNo");
         String curUser = request.getParameter("curUser");
         String error = null;
-        System.out.println("SendDoctoPHRactionCalled!!!");
+        MiscUtils.getLogger().debug("SendDoctoPHRactionCalled!!!");
         if( files != null && curUser != null ) {
             
-            System.out.println("Preparing to send " + files.length + " files");
+            MiscUtils.getLogger().debug("Preparing to send " + files.length + " files");
             EDocUtil docData = new EDocUtil();                        
             
             DemographicData.Demographic demo = new DemographicData().getDemographic(request.getParameter("demoId"));

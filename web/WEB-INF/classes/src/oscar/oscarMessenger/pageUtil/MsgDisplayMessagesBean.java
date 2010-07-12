@@ -311,7 +311,7 @@ public class MsgDisplayMessagesBean {
         }
         orderBy += desc + ", m.messageid desc";
      }   
-     System.out.println("order "+order+" orderby "+orderBy);
+     MiscUtils.getLogger().debug("order "+order+" orderby "+orderBy);
      return orderBy; 
   }
   
@@ -343,7 +343,7 @@ public class MsgDisplayMessagesBean {
         + " left outer join msgDemoMap map on map.messageID = m.messageid "
         +" where ml.provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by " + getOrderBy(orderby));
-        System.out.println(sql);
+        MiscUtils.getLogger().debug(sql);
         rs = db.GetSQL(sql);
         int idx = 0;
         while (rs.next()) {
@@ -408,7 +408,7 @@ public java.util.Vector estDemographicInbox(){
               "and m.messageid = map.messageID " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby);
         
         
-        System.out.println("this "+sql);
+        MiscUtils.getLogger().debug("this "+sql);
         rs = db.GetSQL(sql);
 
         while (rs.next()) {

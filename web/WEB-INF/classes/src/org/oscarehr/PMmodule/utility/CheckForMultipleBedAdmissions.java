@@ -65,20 +65,12 @@ public class CheckForMultipleBedAdmissions {
  		for(Iterator iter2=currentAdmissions.iterator();iter2.hasNext();) {
 			Admission admission = (Admission)iter2.next();
 			if(admission.getProgramName() == null) {
-				System.out.println("Error: can't find program " + admission.getProgramId());
 				return;
 			}
 			if(admission.getProgramType().equals("Bed")) {
 				numBedPrograms++;
 			}
 		}
-		if(numBedPrograms == 0) {
-			System.out.println(client.getDemographicNo() + " is not in a bed program");
-		}
-		if(numBedPrograms > 1) {
-			System.out.println(client.getDemographicNo() + " is in " + numBedPrograms + " bed programs");        		
-		}
-		
     }
     public static void main(String args[]) throws Exception {
     	CheckForMultipleBedAdmissions prog = new CheckForMultipleBedAdmissions();

@@ -17,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -98,8 +100,8 @@ public class FrmLabReqRecord extends FrmRecord {
                     
             		String sp, specialty;
             		specialty = db.getString(rs,"comments");
-            		System.out.println("specialty: "+specialty);
-            		System.out.println("specialty index : "+ specialty.indexOf("<xml_p_specialty_code>"));
+            		MiscUtils.getLogger().debug("specialty: "+specialty);
+            		MiscUtils.getLogger().debug("specialty index : "+ specialty.indexOf("<xml_p_specialty_code>"));
             		if(specialty.equals("")|| specialty == null  || specialty.indexOf("<xml_p_specialty_code>") < 0){
             			sp = "00";
             		}else{

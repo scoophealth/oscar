@@ -29,12 +29,14 @@ package oscar.oscarWaitingList.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class WLWaitingListUtil {
     //Modified this method in Feb 2007 to ensure that all records cannot be deleted except hidden.    
     static public synchronized void  removeFromWaitingList(String waitingListID, String demographicNo) {
-        System.out.println("WLWaitingListUtil.removeFromWaitingList(): removing waiting list: " + waitingListID + " for patient " + demographicNo);
+        MiscUtils.getLogger().debug("WLWaitingListUtil.removeFromWaitingList(): removing waiting list: " + waitingListID + " for patient " + demographicNo);
         DBHandler db = null;
         try{
             db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -48,11 +50,11 @@ public class WLWaitingListUtil {
             rePositionWaitingList(db, waitingListID);
             
         }catch(SQLException e) {
-            System.out.println("WLWaitingListUtil.removeFromWaitingList():" + e.getMessage());         
+            MiscUtils.getLogger().debug("WLWaitingListUtil.removeFromWaitingList():" + e.getMessage());         
 	    }finally{
 	    	try{
 	    	}catch(Exception ex2){
-	        	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
+	        	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
 	    	}
 	    }
         
@@ -63,7 +65,7 @@ public class WLWaitingListUtil {
             
         DBHandler db = null;
         ResultSet rs = null;
-        System.out.println("WLWaitingListUtil.add2WaitingList(): insert into waitingList: " + waitingListID + " for patient " + demographicNo);
+        MiscUtils.getLogger().debug("WLWaitingListUtil.add2WaitingList(): insert into waitingList: " + waitingListID + " for patient " + demographicNo);
         if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
             try{
                 waitingListNote = org.apache.commons.lang.StringEscapeUtils.escapeSql(waitingListNote);
@@ -76,7 +78,7 @@ public class WLWaitingListUtil {
                 if(rs.next()){
                 	nxPos = Integer.toString(rs.getInt("position") + 1);
                 }
-                System.out.println("WLWaitingListUtil.add2WaitingList(): position = " + nxPos);
+                MiscUtils.getLogger().debug("WLWaitingListUtil.add2WaitingList(): position = " + nxPos);
                 
                 if(onListSince == null  ||  onListSince.length() <= 0){
 	                sql = " insert into waitingList " + 
@@ -89,7 +91,7 @@ public class WLWaitingListUtil {
 		          	  " values("+ waitingListID + "," + demographicNo + ",'" + 
 		          	  waitingListNote + "'," + nxPos + ",'" + onListSince + "', 'N')";
                 }
-                System.out.println("WLWaitingListUtil.add2WaitingList(): insert sql = " + sql);
+                MiscUtils.getLogger().debug("WLWaitingListUtil.add2WaitingList(): insert sql = " + sql);
 
                 db.RunSQL(sql);
 
@@ -98,12 +100,12 @@ public class WLWaitingListUtil {
                 
             }
             catch(SQLException e) {
-                System.out.println("WLWaitingListUtil.add2WaitingList():" + e.getMessage());         
+                MiscUtils.getLogger().debug("WLWaitingListUtil.add2WaitingList():" + e.getMessage());         
 	        }finally{
 	        	try{
 		            rs.close();
 	        	}catch(Exception ex2){
-	            	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
+	            	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
 	        	}
 	        }
         }
@@ -117,7 +119,7 @@ public class WLWaitingListUtil {
 	static public synchronized void updateWaitingListRecord(String waitingListID, String waitingListNote, 
 			String demographicNo, String onListSince) {
 	    
-	    System.out.println("WLWaitingListUtil.updateWaitingListRecord(): waitingListID: " + waitingListID + " for patient " + demographicNo);
+	    MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord(): waitingListID: " + waitingListID + " for patient " + demographicNo);
 	    DBHandler db = null;
 	    ResultSet rs = null;
 	    if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
@@ -130,12 +132,12 @@ public class WLWaitingListUtil {
 				             " and   listID = " + waitingListID + 
 					         " AND is_history = 'N' ";
 		        if(db == null){
-		        	System.out.println("WLWaitingListUtil.updateWaitingListRecord(): dbHandler == null");    
+		        	MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord(): dbHandler == null");    
 		        	return;
 		        }
 	            rs = db.GetSQL(sql); 
 	            if(rs == null){
-		        	System.out.println("WLWaitingListUtil.updateWaitingListRecord(): result set == null");    
+		        	MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord(): result set == null");    
 		        	return;
 	            }
 	            while(rs.next()){
@@ -151,14 +153,14 @@ public class WLWaitingListUtil {
 		                     " and   listID = " + waitingListID;
 	
 	            db.RunSQL(sql);
-	            System.out.println("WLWaitingListUtil.updateWaitingListRecord(): update sql = " + sql);
+	            MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord(): update sql = " + sql);
 	            
                 sql = " insert into waitingList " + 
 		          	  " (listID, demographic_no, note, position, onListSince, is_history) " +	
 		          	  " values("+ waitingListID + "," + demographicNo + ",'" + 
 		          	  waitingListNote + "'," + pos + ", '" + onListSince + "', 'N')";
 	
-		        System.out.println("WLWaitingListUtil.updateWaitingListRecord(): insert sql = " + sql);
+		        MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord(): insert sql = " + sql);
 		        db.RunSQL(sql);
 		        
 		        //update the waiting list positions
@@ -167,12 +169,12 @@ public class WLWaitingListUtil {
 	        }
 	
 	        catch(SQLException e) {
-	            System.out.println("WLWaitingListUtil.updateWaitingListRecord():" + e.getMessage());         
+	            MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord():" + e.getMessage());         
 	        }finally{
 	        	try{
 		            rs.close();
 	        	}catch(Exception ex2){
-	            	System.out.println("WLWaitingListUtil.updateWaitingListRecord(1):" + ex2.getMessage()); 
+	            	MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingListRecord(1):" + ex2.getMessage()); 
 	        	}
 	        }
 	    }
@@ -187,7 +189,7 @@ public class WLWaitingListUtil {
 	static public synchronized void updateWaitingList(String id, String waitingListID, String waitingListNote, 
 			String demographicNo, String onListSince) {
 	    
-	    System.out.println("WLWaitingListUtil.updateWaitingList(): waitingListID: " + waitingListID + " for patient " + demographicNo);
+	    MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingList(): waitingListID: " + waitingListID + " for patient " + demographicNo);
 	    DBHandler db = null;
 	    ResultSet rs = null;
 	    if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
@@ -195,7 +197,7 @@ public class WLWaitingListUtil {
 		        db = new DBHandler(DBHandler.OSCAR_DATA);
 		        String sql = "";
 		        if(db == null){
-		        	System.out.println("WLWaitingListUtil.updateWaitingList(): dbHandler == null");    
+		        	MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingList(): dbHandler == null");    
 		        	return;
 		        }
 		        
@@ -207,7 +209,7 @@ public class WLWaitingListUtil {
 		                  " note = '" + waitingListNote + "', " + 
 		                  " onListSince = '" + onListSince + "' " +
 		                  " where id=" + id;
-		            System.out.println("WLWaitingListUtil.updateWaitingList(): update sql = " + sql);
+		            MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingList(): update sql = " + sql);
 
 			        db.RunSQL(sql);
 		        	
@@ -215,12 +217,12 @@ public class WLWaitingListUtil {
 	        }
 	
 	        catch(SQLException e) {
-	            System.out.println("WLWaitingListUtil.updateWaitingList():" + e.getMessage());         
+	            MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingList():" + e.getMessage());         
 	        }finally{
 	        	try{
 		            rs.close();
 	        	}catch(Exception ex2){
-	            	System.out.println("WLWaitingListUtil.updateWaitingList(1):" + ex2.getMessage()); 
+	            	MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingList(1):" + ex2.getMessage()); 
 	        	}
 	        }
 	    }
@@ -242,20 +244,20 @@ public class WLWaitingListUtil {
                 		" WHERE listID=" + waitingListID + 
                         " AND demographic_no=" + db.getString(rs,"demographic_no") + 
                         " AND is_history = 'N' ";
-                System.out.println("WLWaitingListUtil.rePositionWaitingList(2): " + sql);
+                MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(2): " + sql);
                 db.RunSQL(sql);
                 i++;
             }   
             
         }catch(SQLException sqlex){
-        	System.out.println("WLWaitingListUtil.rePositionWaitingList(2):" + sqlex.getMessage()); 
+        	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(2):" + sqlex.getMessage()); 
         }catch(Exception ex){
-        	System.out.println("WLWaitingListUtil.rePositionWaitingList(2):" + ex.getMessage()); 
+        	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(2):" + ex.getMessage()); 
         }finally{
         	try{
 	            rs.close(); 
         	}catch(Exception ex2){
-            	System.out.println("WLWaitingListUtil.rePositionWaitingList():" + ex2.getMessage()); 
+            	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList():" + ex2.getMessage()); 
         	}
         }
 	}
@@ -278,19 +280,19 @@ public class WLWaitingListUtil {
                 		" WHERE listID=" + waitingListID + 
                         " AND demographic_no=" + db.getString(rs,"demographic_no") + 
                         " AND is_history = 'N' ";
-                System.out.println("WLWaitingListUtil.rePositionWaitingList(1): " + sql);
+                MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(1): " + sql);
                 db.RunSQL(sql);
                 i++;
             }   
         }catch(SQLException sqlex){
-        	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + sqlex.getMessage()); 
+        	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(1):" + sqlex.getMessage()); 
         }catch(Exception ex){
-        	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex.getMessage()); 
+        	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(1):" + ex.getMessage()); 
         }finally{
         	try{
 	            rs.close();
         	}catch(Exception ex2){
-            	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
+            	MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
         	}
         }
 	}

@@ -10,6 +10,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -74,7 +75,7 @@ public final class WCBAction extends Action {
   BillingmasterDAO billingmasterDAO = null;
   
   public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,HttpServletResponse response)throws Exception, ServletException {
-      System.out.println("In WCBAction Jackson");
+      MiscUtils.getLogger().debug("In WCBAction Jackson");
       
        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
      billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
@@ -140,7 +141,7 @@ public final class WCBAction extends Action {
 
     
     
-    System.out.println("WOULD BE A GOOD TIME TO SAVE---  i still get called WCB ACTION");  
+    MiscUtils.getLogger().debug("WOULD BE A GOOD TIME TO SAVE---  i still get called WCB ACTION");  
       
 //    DBHandler db = null;
 //    try {

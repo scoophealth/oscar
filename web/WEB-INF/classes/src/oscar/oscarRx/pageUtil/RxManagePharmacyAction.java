@@ -44,6 +44,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarRx.data.RxPharmacyData;
 import oscar.oscarRx.data.RxPharmacyData.Pharmacy;
@@ -82,7 +83,7 @@ public final class RxManagePharmacyAction extends DispatchAction {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
         String pharmacyId=request.getParameter("pharmacyId");
-        System.out.println("pharmacyId="+pharmacyId);
+        MiscUtils.getLogger().debug("pharmacyId="+pharmacyId);
         if(pharmacyId==null) return null;
         RxPharmacyData pharmacyData = new RxPharmacyData();
         Pharmacy pharmacy=pharmacyData.getPharmacy(pharmacyId);
@@ -98,7 +99,7 @@ public final class RxManagePharmacyAction extends DispatchAction {
             hm.put("postalCode", pharmacy.postalCode);
             hm.put("province", pharmacy.province);
             hm.put("notes", pharmacy.notes);
-            System.out.println("in getPharmacyInfo,hm="+hm);
+            MiscUtils.getLogger().debug("in getPharmacyInfo,hm="+hm);
             JSONObject jsonObject = JSONObject.fromObject(hm);
             response.getOutputStream().write(jsonObject.toString().getBytes());
        }

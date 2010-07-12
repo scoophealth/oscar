@@ -45,7 +45,7 @@ public class zip
         write2Zip(fileformat);
     }
     public void write2Zip(String fileformat){
-        System.out.println("writing to Zip");
+        MiscUtils.getLogger().debug("writing to Zip");
         try {
             BufferedInputStream origin = null;
             int BUFFER = 1024;
@@ -59,7 +59,7 @@ public class zip
             String files[] = f.list();
 
             for (int i=0; i<files.length; i++) {
-                System.out.println("Adding: "+files[i]);
+                MiscUtils.getLogger().debug("Adding: "+files[i]);
                 if(files[i].endsWith("."+fileformat)){
                     FileInputStream fi = new FileInputStream(form_record_path+files[i]);
                     origin = new BufferedInputStream(fi, BUFFER);

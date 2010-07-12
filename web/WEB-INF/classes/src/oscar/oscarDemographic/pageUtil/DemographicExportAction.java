@@ -43,6 +43,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
@@ -255,7 +256,7 @@ public class DemographicExportAction extends Action {
          for (int j=0; j<params.length; j++){
             System.out.print(" "+params[j].getName());
          }
-         System.out.println(")");
+         MiscUtils.getLogger().debug(")");
       }
       
    }

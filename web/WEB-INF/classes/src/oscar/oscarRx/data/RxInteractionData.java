@@ -52,7 +52,7 @@ public class RxInteractionData {
    
    public void preloadInteraction(Vector atccodes){
       //launch thread that searches database for them
-      System.out.println("PRELOADING"+atccodes.hashCode());
+      MiscUtils.getLogger().debug("PRELOADING"+atccodes.hashCode());
       if (!htable.containsKey(new Integer(atccodes.hashCode())) ){
          RxInteractionWorker worker = new RxInteractionWorker(rxInteractionData,atccodes);
          worker.start();
@@ -73,22 +73,22 @@ public class RxInteractionData {
    
    public RxDrugData.Interaction[] getInteractions(Vector atccodes){
       RxDrugData.Interaction[] interact = null;
-      System.out.println("h table size "+htable.size()+"RxInteractionData.getInteraction atc code val  "+atccodes.hashCode());
+      MiscUtils.getLogger().debug("h table size "+htable.size()+"RxInteractionData.getInteraction atc code val  "+atccodes.hashCode());
       Integer i = new Integer(atccodes.hashCode());
       if (htable.containsKey(i) ){
-         System.out.println("Already been searched!");
+         MiscUtils.getLogger().debug("Already been searched!");
          interact = (RxDrugData.Interaction[]) htable.get(i);
       }else if(working.contains(i) ){
-         System.out.println("Already been searched but not finished !");
+         MiscUtils.getLogger().debug("Already been searched but not finished !");
          RxInteractionWorker worker = (RxInteractionWorker) working.get(i);
          if (worker != null){
              try {
                 worker.join();
-                System.out.println("Already been searched now finished!");
+                MiscUtils.getLogger().debug("Already been searched now finished!");
                 // Finished
              } catch (InterruptedException e) {
                 // Thread was interrupted
-                System.out.println("Already been searched PROBLEM!");
+                MiscUtils.getLogger().debug("Already been searched PROBLEM!");
                 MiscUtils.getLogger().error("Error", e);
              }
             
@@ -97,7 +97,7 @@ public class RxInteractionData {
          interact = (RxDrugData.Interaction[]) htable.get(i);
       
       }else{
-         System.out.println("NEW ATC CODES");
+         MiscUtils.getLogger().debug("NEW ATC CODES");
          try{        
             RxDrugData drugData = new RxDrugData();
             interact = drugData.getInteractions(atccodes);

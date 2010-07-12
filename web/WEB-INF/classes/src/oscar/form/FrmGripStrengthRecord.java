@@ -28,6 +28,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -78,7 +80,7 @@ public class FrmGripStrengthRecord extends FrmRecord {
 
                         if(rs.next())
                         {
-                            System.out.println("getting metaData");
+                            MiscUtils.getLogger().debug("getting metaData");
                             ResultSetMetaData md = rs.getMetaData();
 
                             for(int i=1; i<=md.getColumnCount(); i++)
@@ -86,19 +88,19 @@ public class FrmGripStrengthRecord extends FrmRecord {
                                 String name = md.getColumnName(i);
 
                                 String value;
-                                    System.out.println(" name = "+name+" type = "+md.getColumnTypeName(i)+" scale = "+md.getScale(i));
+                                    MiscUtils.getLogger().debug(" name = "+name+" type = "+md.getColumnTypeName(i)+" scale = "+md.getScale(i));
                                 if(md.getColumnTypeName(i).equalsIgnoreCase("TINY"))           
                                 {
 
                                     if(rs.getInt(i)==1)
                                     {
                                         value = "checked='checked'";
-                                        System.out.println("checking "+name);
+                                        MiscUtils.getLogger().debug("checking "+name);
                                     }
                                     else
                                     {
                                         value = "";
-                                        System.out.println("not checking "+name);
+                                        MiscUtils.getLogger().debug("not checking "+name);
                                     }
                                 }
                                 else

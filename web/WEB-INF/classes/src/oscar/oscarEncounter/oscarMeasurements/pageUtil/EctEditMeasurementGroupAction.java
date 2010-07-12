@@ -59,25 +59,25 @@ public class EctEditMeasurementGroupAction extends Action {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                                                        
                 
                 if (frm.getForward().compareTo("add")==0) {
-                    System.out.println("the add button is pressed");
+                    MiscUtils.getLogger().debug("the add button is pressed");
                     String[] selectedAddTypes = frm.getSelectedAddTypes();  
                     if(selectedAddTypes != null){
                         for(int i=0; i<selectedAddTypes.length; i++){
-                            System.out.println(selectedAddTypes[i]);
+                            MiscUtils.getLogger().debug(selectedAddTypes[i]);
                             String sql = "INSERT INTO measurementGroup (name, typeDisplayName) VALUES('" + groupName + "','" + selectedAddTypes[i] +"')";
-                            System.out.println(" sql statement "+sql);
+                            MiscUtils.getLogger().debug(" sql statement "+sql);
                             db.RunSQL(sql);                                
                         }
                     }
                 }
                 else if (frm.getForward().compareTo("delete")==0){
-                    System.out.println("the delete button is pressed");
+                    MiscUtils.getLogger().debug("the delete button is pressed");
                     String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();  
                     if(selectedDeleteTypes != null){
                         for(int i=0; i<selectedDeleteTypes.length; i++){
-                            System.out.println(selectedDeleteTypes[i]);
+                            MiscUtils.getLogger().debug(selectedDeleteTypes[i]);
                             String sql = "DELETE  FROM `measurementGroup` WHERE name='"+ groupName +"' AND typeDisplayName='" + selectedDeleteTypes[i] + "'";                                        
-                            System.out.println(" sql statement "+sql);
+                            MiscUtils.getLogger().debug(" sql statement "+sql);
                             db.RunSQL(sql);                                
                         }
                     }

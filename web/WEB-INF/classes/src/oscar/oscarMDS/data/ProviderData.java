@@ -26,6 +26,8 @@ package oscar.oscarMDS.data;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class ProviderData {
@@ -56,7 +58,7 @@ public class ProviderData {
                     return subStrings[1];
                 }
             } catch (Exception e) {
-                System.out.println("Error in ProviderData: "+e.toString());
+                MiscUtils.getLogger().debug("Error in ProviderData: "+e.toString());
                 return name.replace('^', ' ');
             }
         } else {
@@ -81,7 +83,7 @@ public class ProviderData {
             }
             return result;
         }catch(Exception e){
-            System.out.println("exception in ProviderData:"+e);
+            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
         }        
     }
@@ -103,7 +105,7 @@ public class ProviderData {
             }
             return result;
         }catch(Exception e){
-            System.out.println("exception in ProviderData:"+e);
+            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
         }        
     }
@@ -121,7 +123,7 @@ public class ProviderData {
                 return "";
             }
         }catch(Exception e){
-            System.out.println("exception in ProviderData:"+e);
+            MiscUtils.getLogger().debug("exception in ProviderData:"+e);
             return null;
         }        
     }

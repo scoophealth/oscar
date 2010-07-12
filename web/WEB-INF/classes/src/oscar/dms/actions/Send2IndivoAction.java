@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -58,13 +59,13 @@ public class Send2IndivoAction extends Action{
         
         if( files != null && curUser != null ) {
             
-            System.out.println("Preparing to send " + files.length + " files");
+            MiscUtils.getLogger().debug("Preparing to send " + files.length + " files");
             String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
             EDocUtil docData = new EDocUtil();                        
             
             DemographicData.Demographic demo = new DemographicData().getDemographic(request.getParameter("demoId"));
             String indivoPatientId = demo.getPin();
-            System.out.println("INDIVO RECIPIENT " + indivoPatientId);
+            MiscUtils.getLogger().debug("INDIVO RECIPIENT " + indivoPatientId);
             
             EctProviderData.Provider prov = new EctProviderData().getProvider(curUser);
             String fullname = prov.getFirstName() + " " + prov.getSurname();
@@ -72,7 +73,7 @@ public class Send2IndivoAction extends Action{
             
             Send2Indivo indivo = new Send2Indivo(prov.getIndivoId(),prov.getIndivoPasswd(), fullname, role);
             String indivoServer = OscarProperties.getInstance().getProperty("INDIVO_SERVER");           
-            System.out.println("SETTING INDIVO SERVER " + indivoServer);
+            MiscUtils.getLogger().debug("SETTING INDIVO SERVER " + indivoServer);
             indivo.setServer(indivoServer);
             if( !indivo.authenticate() ) {
                 errors.add("", new ActionMessage("indivo.authenticateError", indivo.getErrorMsg()));
@@ -99,7 +100,7 @@ public class Send2IndivoAction extends Action{
                         this.saveErrors(request, errors);
                         return mapping.findForward("error");
                     }
-                    System.out.println("Saving indivo Doc Idx " + indivo.getIndivoDocIdx());
+                    MiscUtils.getLogger().debug("Saving indivo Doc Idx " + indivo.getIndivoDocIdx());
                     doc.setIndivoIdx(indivo.getIndivoDocIdx());
                 }
                 

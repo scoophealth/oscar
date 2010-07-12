@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class FrmARBloodWorkTest {
@@ -103,7 +105,7 @@ public class FrmARBloodWorkTest {
     		bwTestListSize++;
     	}
             	
-    	System.out.println("FrmARBloodWorkTest.getFormARBloodWorkTestListSize(): ar1BloodWorkTestCount = " + bwTestListSize);	            	
+    	MiscUtils.getLogger().debug("FrmARBloodWorkTest.getFormARBloodWorkTestListSize(): ar1BloodWorkTestCount = " + bwTestListSize);	            	
 
         return bwTestListSize;
     }

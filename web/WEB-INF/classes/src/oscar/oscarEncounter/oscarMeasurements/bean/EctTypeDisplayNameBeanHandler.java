@@ -51,7 +51,7 @@ public class EctTypeDisplayNameBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "SELECT DISTINCT typeDisplayName FROM measurementType";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
             {
@@ -76,10 +76,10 @@ public class EctTypeDisplayNameBeanHandler {
             String sql = null;
             if (excludeGroupName){
                 sql = "SELECT DISTINCT typeDisplayName FROM measurementType";  
-                System.out.println("Sql Statement: " + sql);
+                MiscUtils.getLogger().debug("Sql Statement: " + sql);
                 ResultSet rs;
                 String sqlGr = "SELECT DISTINCT typeDisplayName FROM measurementGroup WHERE name='" +groupName+ "'";  
-                System.out.println("Sql Statement: " + sqlGr);
+                MiscUtils.getLogger().debug("Sql Statement: " + sqlGr);
                 ResultSet rsGr;
                 
                 for(rs = db.GetSQL(sql); rs.next(); )
@@ -103,7 +103,7 @@ public class EctTypeDisplayNameBeanHandler {
             }
             else{
                 sql = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName +"'";
-                System.out.println("Sql Statement: " + sql);
+                MiscUtils.getLogger().debug("Sql Statement: " + sql);
                 ResultSet rs;
                 for(rs = db.GetSQL(sql); rs.next(); )
                 {

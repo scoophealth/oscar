@@ -138,7 +138,7 @@ public class ManageLetters {
             for (int i = 0 ; i < jrp.length; i++){
                 if(!jrp[i].isSystemDefined()){
                     list.add(jrp[i].getName());
-                    System.out.println("JRP "+i+" :"+jrp[i].getName());
+                    MiscUtils.getLogger().debug("JRP "+i+" :"+jrp[i].getName());
                 }
             }
                     

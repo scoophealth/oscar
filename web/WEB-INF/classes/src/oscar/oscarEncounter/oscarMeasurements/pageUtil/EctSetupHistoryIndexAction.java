@@ -41,6 +41,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -80,7 +81,7 @@ public final class EctSetupHistoryIndexAction extends Action {
                     session.setAttribute( "measurementsData", hd );
                 }
                 else{
-                    System.out.println("cannot get the EctSessionBean");
+                    MiscUtils.getLogger().debug("cannot get the EctSessionBean");
                 }
                 return (mapping.findForward("continue"));
             }
@@ -101,7 +102,7 @@ public final class EctSetupHistoryIndexAction extends Action {
 			session.setAttribute("measurementsData", hd);
 
 		} else {
-			System.out.println("cannot get the EctSessionBean");
+			MiscUtils.getLogger().debug("cannot get the EctSessionBean");
 		}
 		return (mapping.findForward("newcontinue"));
 	}

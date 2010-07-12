@@ -62,7 +62,6 @@ public class QueueDocumentLinkDao extends HibernateDaoSupport {
     }
 
     public void addToQueueDocumentLink(Integer qId,Integer dId){
-        System.out.println("Add to QueueDocumentLink");
         try{
             if(!hasQueueBeenLinkedWithDocument(dId,qId)){
                QueueDocumentLink qdl = new QueueDocumentLink();

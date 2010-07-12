@@ -82,7 +82,7 @@ public class WcbHelper {
       String sql = "select * from wcb where demographic_no = '"+demographic_no+"'";
       ResultSet rs = db.GetSQL(sql);
       while(rs.next()){
-         System.out.println("wcbno "+rs.getString("w_wcbno"));
+         MiscUtils.getLogger().debug("wcbno "+rs.getString("w_wcbno"));
          WCBClaim wcb = new WCBClaim(rs.getString("w_wcbno"));
          WCBEmployer wcbEmp = new WCBEmployer();
             wcbEmp.w_empname   = rs.getString("w_empname");

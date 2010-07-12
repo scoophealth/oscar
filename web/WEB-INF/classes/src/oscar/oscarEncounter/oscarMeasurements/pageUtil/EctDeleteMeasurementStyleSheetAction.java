@@ -58,9 +58,9 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){
-                    System.out.println(deleteCheckbox[i]);
+                    MiscUtils.getLogger().debug(deleteCheckbox[i]);
                     String sql = "SELECT * FROM measurementGroupStyle WHERE cssID='"+ deleteCheckbox[i] +"'";
-                    System.out.println("SQL: " + sql);
+                    MiscUtils.getLogger().debug("SQL: " + sql);
                     ResultSet rs;
                     rs = db.GetSQL(sql);
                     if(rs.next()){
@@ -76,7 +76,7 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
                     }
                     else{
                         sql = "DELETE  FROM measurementCSSLocation WHERE cssID='"+ deleteCheckbox[i] +"'";                                        
-                        System.out.println(" sql statement "+sql);
+                        MiscUtils.getLogger().debug(" sql statement "+sql);
                         db.RunSQL(sql);                        
                     }
                 }

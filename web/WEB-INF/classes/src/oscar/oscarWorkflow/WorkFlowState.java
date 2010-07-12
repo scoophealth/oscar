@@ -89,10 +89,10 @@ public class WorkFlowState {
             pstmt.close();
             
             ResultSet rs = lastInsert.executeQuery();
-            System.out.println("CALLED LAST _INSERT");
+            MiscUtils.getLogger().debug("CALLED LAST _INSERT");
             if(rs.next()){
                 id = rs.getInt(0);
-                System.out.println("WAS DATA"+id);
+                MiscUtils.getLogger().debug("WAS DATA"+id);
             }
             
         }catch(Exception e){
@@ -206,7 +206,7 @@ public class WorkFlowState {
 
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             String s = "select * from workflow where workflow_type = ? and demographic_no = ? and current_state != 'C'" ;
-            System.out.println("workflow type "+workflowType+" demo "+demographicNo);
+            MiscUtils.getLogger().debug("workflow type "+workflowType+" demo "+demographicNo);
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,workflowType);
             pstmt.setString(2,demographicNo);   

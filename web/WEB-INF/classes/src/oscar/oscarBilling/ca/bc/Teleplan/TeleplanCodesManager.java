@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 
 /**
  *
@@ -64,7 +66,7 @@ REM076 **                                                             **
        BufferedReader buff = new BufferedReader(new FileReader(f));
 
        String line = null;
-       System.out.println("start while" );
+       MiscUtils.getLogger().debug("start while" );
 
        LinkedList list = new LinkedList();
        while ((line = buff.readLine()) != null) {
@@ -98,7 +100,7 @@ REM076 **                                                             **
               
            }
        }
-       System.out.println("end while");
+       MiscUtils.getLogger().debug("end while");
        return list;
     }
     

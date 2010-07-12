@@ -76,7 +76,7 @@ public class DroolsNumerator implements Numerator{
     public boolean evaluate(String demographicNo) {
         boolean evalTrue = false;
         try{
-            System.out.println("going to load "+file);
+            MiscUtils.getLogger().debug("going to load "+file);
             RuleBase ruleBase = loadMeasurementRuleBase(file);
             
 //            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
@@ -85,19 +85,19 @@ public class DroolsNumerator implements Numerator{
 
             MeasurementDSHelper dshelper = new MeasurementDSHelper(demographicNo);
             
-            System.out.println("new working mem");
+            MiscUtils.getLogger().debug("new working mem");
             WorkingMemory workingMemory = ruleBase.newWorkingMemory();
             
-            System.out.println("assertObject");
+            MiscUtils.getLogger().debug("assertObject");
             
             workingMemory.assertObject(dshelper);
             
           
-            System.out.println("fireAllRules");
+            MiscUtils.getLogger().debug("fireAllRules");
             workingMemory.fireAllRules();
             evalTrue = dshelper.isInRange();
           
-            System.out.println("right before catch");
+            MiscUtils.getLogger().debug("right before catch");
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
         }
@@ -123,7 +123,7 @@ public class DroolsNumerator implements Numerator{
             //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
             File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
                if(file.isFile() || file.canRead()) {
-                   System.out.println("Loading from file "+file.getName());
+                   MiscUtils.getLogger().debug("Loading from file "+file.getName());
                    FileInputStream fis = new FileInputStream(file);
                    measurementRuleBase = RuleBaseLoader.loadFromInputStream(fis);
                    fileFound = true;
@@ -132,7 +132,7 @@ public class DroolsNumerator implements Numerator{
 
             if (!fileFound){                  
              URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/"+string );  //TODO: change this so it is configurable;
-             System.out.println("loading from URL "+url.getFile());            
+             MiscUtils.getLogger().debug("loading from URL "+url.getFile());            
              measurementRuleBase = RuleBaseLoader.loadFromUrl( url );
             }
         }catch(Exception e){
@@ -173,7 +173,7 @@ public class DroolsNumerator implements Numerator{
     public void parseReplaceValues(String str){
         if (str != null){
             try{
-                System.out.println("parsing string "+str);
+                MiscUtils.getLogger().debug("parsing string "+str);
                 if (str.indexOf(",") != -1){
                 replaceKeys = str.split(",");
                 }else{

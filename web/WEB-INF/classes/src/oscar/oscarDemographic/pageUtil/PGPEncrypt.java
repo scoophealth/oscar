@@ -30,6 +30,8 @@ package oscar.oscarDemographic.pageUtil;
 import java.io.File;
 import java.io.IOException;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.OscarProperties;
 
 /**
@@ -45,18 +47,18 @@ public class PGPEncrypt {
     public PGPEncrypt() {
 	OscarProperties op = OscarProperties.getInstance();
 	this.bin = Util.noNull(op.getProperty("PGP_BIN"));
-	if (Util.empty(this.bin)) System.out.println("Warning: PGP binary executable (PGP_BIN) not set!");
+	if (Util.empty(this.bin)) MiscUtils.getLogger().debug("Warning: PGP binary executable (PGP_BIN) not set!");
 	this.cmd = Util.noNull(op.getProperty("PGP_CMD"));
-	if (Util.empty(this.cmd)) System.out.println("Warning: PGP encryption command (PGP_CMD) not set!");
+	if (Util.empty(this.cmd)) MiscUtils.getLogger().debug("Warning: PGP encryption command (PGP_CMD) not set!");
 	this.key = Util.noNull(op.getProperty("PGP_KEY"));
-	if (Util.empty(this.key)) System.out.println("Warning: PGP encryption key (PGP_KEY) not set!");
+	if (Util.empty(this.key)) MiscUtils.getLogger().debug("Warning: PGP encryption key (PGP_KEY) not set!");
 	this.env = Util.noNull(op.getProperty("PGP_ENV"));
-	if (Util.empty(this.env)) System.out.println("Warning: PGP environment variable (PGP_ENV) not set!");
+	if (Util.empty(this.env)) MiscUtils.getLogger().debug("Warning: PGP environment variable (PGP_ENV) not set!");
     }
 
     public boolean check(String dirName) throws Exception {
         if (!Util.checkDir(dirName)) {
-            System.out.println("Error! Cannot write to directory ["+dirName+"]");
+            MiscUtils.getLogger().debug("Error! Cannot write to directory ["+dirName+"]");
             return false;
         }
         Runtime rt = Runtime.getRuntime();
@@ -86,11 +88,11 @@ public class PGPEncrypt {
 
     boolean encrypt(String srcFile, String workDir) throws Exception {
         if (!Util.checkDir(workDir)) {
-            System.out.println("Error! Cannot write to directory ["+workDir+"]");
+            MiscUtils.getLogger().debug("Error! Cannot write to directory ["+workDir+"]");
             return false;
         }
         if (Util.empty(srcFile)) {
-            System.out.println("Error! Source file not given; nothing to encrypt!");
+            MiscUtils.getLogger().debug("Error! Source file not given; nothing to encrypt!");
             return false;
         }
 	Runtime rt = Runtime.getRuntime();

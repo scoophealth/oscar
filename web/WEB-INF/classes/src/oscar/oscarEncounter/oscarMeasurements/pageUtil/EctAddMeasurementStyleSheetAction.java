@@ -118,7 +118,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
         }
         catch (FileNotFoundException fnfe) {
             
-            System.out.println("File not found");
+            MiscUtils.getLogger().debug("File not found");
             MiscUtils.getLogger().error("Error", fnfe);            
             return isAdded=false;
             
@@ -144,7 +144,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
          try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             db.RunSQL(sql);
         }
         catch(SQLException e) {

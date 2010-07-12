@@ -45,8 +45,8 @@ public class EctConDisplayServiceAction extends Action {
       EctConDisplayServiceForm displayServiceForm = (EctConDisplayServiceForm)form;
       String serviceId = displayServiceForm.getServiceId();
       String specialists[] = displayServiceForm.getSpecialists();
-      System.out.println("service id ".concat(String.valueOf(String.valueOf(serviceId))));
-      System.out.println("num specs".concat(String.valueOf(String.valueOf(specialists.length))));
+      MiscUtils.getLogger().debug("service id ".concat(String.valueOf(String.valueOf(serviceId))));
+      MiscUtils.getLogger().debug("num specs".concat(String.valueOf(String.valueOf(specialists.length))));
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          String sql = String.valueOf(String.valueOf((new StringBuffer("delete from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));

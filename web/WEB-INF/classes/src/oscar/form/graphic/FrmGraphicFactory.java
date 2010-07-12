@@ -24,6 +24,8 @@
 
 package oscar.form.graphic;
 
+import org.oscarehr.util.MiscUtils;
+
 
 /**
  *
@@ -37,11 +39,11 @@ public class FrmGraphicFactory {
             Class classDefinition = Class.forName( name );         
             pdfGraph = (FrmPdfGraphic) classDefinition.newInstance(); 
         } catch (InstantiationException e) {
-            System.out.println(e);
+            MiscUtils.getLogger().debug(e);
         } catch (IllegalAccessException e) {
-            System.out.println(e);
+            MiscUtils.getLogger().debug(e);
         } catch (ClassNotFoundException e) {
-            System.out.println(e);
+            MiscUtils.getLogger().debug(e);
         }
         
         return pdfGraph;

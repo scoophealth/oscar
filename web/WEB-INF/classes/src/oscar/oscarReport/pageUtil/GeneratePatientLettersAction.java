@@ -52,6 +52,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -119,7 +120,7 @@ public class GeneratePatientLettersAction extends Action {
            HashMap parameters = new HashMap();
               if ( reportParams != null ){
                    for (int p = 0; p < reportParams.length; p++){
-                       System.out.println("demo = "+demos[i]);
+                       MiscUtils.getLogger().debug("demo = "+demos[i]);
                        parameters.put(reportParams[p],apExe.execute(reportParams[p],demos[i]));
                    }
               }
@@ -160,14 +161,14 @@ public class GeneratePatientLettersAction extends Action {
         
         //LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_JASPERREPORTLETER, demographic$, request.getRemoteAddr());
         manageLetters.logLetterCreated( providerNo, id,demos);
-        System.out.println("Add Follow Up "+request.getParameter("addFollowUp"));
+        MiscUtils.getLogger().debug("Add Follow Up "+request.getParameter("addFollowUp"));
         if (request.getParameter("addFollowUp") != null && request.getParameter("addFollowUp").equals("ON")){
         //MARK IN MEASUREMENTS????
-            System.out.println("IN MARK MEASUREMENTS");
+            MiscUtils.getLogger().debug("IN MARK MEASUREMENTS");
             String followUpType =  request.getParameter("followupType");//"FLUF";
             String followUpValue = request.getParameter("followupValue"); //"L1";
             String comment = request.getParameter("message");
-            System.out.println("Follow up type "+followUpType+" follow up value "+followUpValue);
+            MiscUtils.getLogger().debug("Follow up type "+followUpType+" follow up value "+followUpValue);
             if ( followUpType != null && followUpValue != null){
                 FollowupManagement fup = new FollowupManagement();
                 fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,UtilDateUtilities.now(),comment);

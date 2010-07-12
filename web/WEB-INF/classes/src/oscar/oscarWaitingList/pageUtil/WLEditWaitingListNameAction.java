@@ -34,8 +34,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.LazyValidatorForm;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarWaitingList.bean.WLWaitingListNameBeanHandler;
 import oscar.oscarWaitingList.util.WLWaitingListNameUtil;
@@ -51,7 +51,7 @@ public final class WLEditWaitingListNameAction extends Action {
         throws Exception {
         
     	
-        System.out.println("WLEditWaitingListNameAction/execute(): just entering.");
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): just entering.");
         HttpSession session = request.getSession();
     	LazyValidatorForm wlnForm = (LazyValidatorForm)form;
     	
@@ -68,10 +68,10 @@ public final class WLEditWaitingListNameAction extends Action {
         request.setAttribute("message", "");
         setMessage("");
         
-        System.out.println("WLEditWaitingListNameAction/execute(): edit = "+ edit);
-        System.out.println("WLEditWaitingListNameAction/execute(): actionChosen = "+ actionChosen);
-        System.out.println("WLEditWaitingListNameAction/execute(): selectedWL = "+ selectedWL);
-        System.out.println("WLEditWaitingListNameAction/execute(): selectedWL2 = "+ selectedWL2);
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): edit = "+ edit);
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): actionChosen = "+ actionChosen);
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): selectedWL = "+ selectedWL);
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): selectedWL2 = "+ selectedWL2);
 
         if(edit != null  &&  !edit.equals("")){
         	
@@ -124,7 +124,7 @@ public final class WLEditWaitingListNameAction extends Action {
 	        			}
 	        		}else if(actionChosen.equalsIgnoreCase("remove")){
 	        			if(selectedWL2 != null  &&  selectedWL2.length() > 0){
-	        				System.out.println("WLEditWaitingListNameAction/execute(): selectedWL2 = "+ selectedWL2);
+	        				MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): selectedWL2 = "+ selectedWL2);
 	        				try{
 		        				WLWaitingListNameUtil.removeFromWaitingListName(selectedWL2, groupNo);
 	        					successCode = 3;
@@ -147,7 +147,7 @@ public final class WLEditWaitingListNameAction extends Action {
 	        	}
 
 	        }catch(Exception ex){
-	            System.out.println("WLEditWaitingListNameAction/execute(): Exception: "+ ex);
+	            MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): Exception: "+ ex);
 	            setMessage("oscar.waitinglistname.error");
 				//msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("oscar.waitinglistname.error"));
 	        	return (mapping.findForward("failure"));
@@ -169,9 +169,9 @@ public final class WLEditWaitingListNameAction extends Action {
         	
         }
 
-        System.out.println("WLEditWaitingListNameAction/execute(): groupNo = "+ groupNo);
-        System.out.println("WLEditWaitingListNameAction/execute(): providerNo = "+ providerNo);
-        System.out.println("WLEditWaitingListNameAction/execute(): wlNewName = "+ wlNewName);
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): groupNo = "+ groupNo);
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): providerNo = "+ providerNo);
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): wlNewName = "+ wlNewName);
 
 
         WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler(groupNo, providerNo);
@@ -182,7 +182,7 @@ public final class WLEditWaitingListNameAction extends Action {
         
         session.setAttribute("today", today);
         
-        System.out.println("WLEditWaitingListNameAction/execute(): getMessage() = "+ getMessage());
+        MiscUtils.getLogger().debug("WLEditWaitingListNameAction/execute(): getMessage() = "+ getMessage());
         request.setAttribute("message", getMessage());
         //saveMessages(request, msgs); //<-- since only one message is needed each time, this function is not needed
         

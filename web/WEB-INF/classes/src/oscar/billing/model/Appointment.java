@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.cad.model.CadCid;
 import oscar.billing.cad.model.CadProcedimentos;
 import oscar.billing.fat.model.FatFormularioProcedimento;
@@ -361,7 +363,7 @@ public class Appointment {
     public void removeProcedimentos(long id) {
         for (int i = 0; i < procedimentoRealizado.size(); i++) {
             ProcedimentoRealizado pr = (ProcedimentoRealizado) procedimentoRealizado.get(i);
-            System.out.println("pr " +
+            MiscUtils.getLogger().debug("pr " +
                 pr.getCadProcedimentos().getCoProcedimento());
 
             if (pr.getCadProcedimentos().getCoProcedimento() == id) {

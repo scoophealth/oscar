@@ -95,7 +95,7 @@ public class RxPatientData {
             db.getString(rs,"address"), db.getString(rs,"city"),
             db.getString(rs,"postal"),            
             db.getString(rs,"phone"), db.getString(rs,"hin"));            
-            System.out.println(db.getString(rs,"first_name"));
+            MiscUtils.getLogger().debug(db.getString(rs,"first_name"));
          }         
          rs.close();         
       }

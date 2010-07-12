@@ -38,6 +38,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -580,7 +581,7 @@ public class CommonLabTestValues {
                                     String collDate = handler.getTimeStamp(i, j);
                                     h.put("lab_no",lab_no);
                                     h.put("collDate",collDate);
-                                    System.out.println("COLLDATE "+collDate);
+                                    MiscUtils.getLogger().debug("COLLDATE "+collDate);
                                     if (collDate.length() == 10){
                                        h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd"));
                                     }else{

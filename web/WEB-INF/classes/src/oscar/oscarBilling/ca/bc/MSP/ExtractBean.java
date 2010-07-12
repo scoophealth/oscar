@@ -119,7 +119,7 @@ public class ExtractBean extends Object implements Serializable {
                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
 
-               System.out.println("1st billing query "+query);
+               MiscUtils.getLogger().debug("1st billing query "+query);
                ResultSet rs = db.GetSQL(query);
 
 
@@ -132,19 +132,19 @@ public class ExtractBean extends Object implements Serializable {
                      String billType =  rs.getString("billingtype");
                      invCount = 0;
 
-                     System.out.println("Bill Type  : "+billType+" pt :"+patientCount);
+                     MiscUtils.getLogger().debug("Bill Type  : "+billType+" pt :"+patientCount);
                         if (billType.equals("MSP")  || billType.equals("ICBC") ) {
-                           System.out.println("Going to process a "+billType+" type bill invoice #"+invNo );
+                           MiscUtils.getLogger().debug("Going to process a "+billType+" type bill invoice #"+invNo );
 
                            ResultSet rs2 = db.GetSQL("select * from billingmaster where billing_no='"+ invNo +"' and billingstatus='O'");
                               while (rs2.next()) {
                                  recordCount ++;
 
                                  logNo = getSequence();
-                                 System.out.println("processing "+invNo);
+                                 MiscUtils.getLogger().debug("processing "+invNo);
 
                                  String dataLine = getClaimDetailRecord(rs2,logNo);
-                                 if (dataLine.length() != 424 ){ System.out.println("dataLine2 "+logNo+" Len"+dataLine.length()); }
+                                 if (dataLine.length() != 424 ){ MiscUtils.getLogger().debug("dataLine2 "+logNo+" Len"+dataLine.length()); }
 
                                  value += "\n"+dataLine+"\r";
                                  logValue = dataLine;

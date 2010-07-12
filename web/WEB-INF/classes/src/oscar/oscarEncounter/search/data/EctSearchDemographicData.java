@@ -141,7 +141,7 @@ public class EctSearchDemographicData
         if(items > 0)
         {
             searchString.append(" order by last_name, first_name ");
-            System.out.println(searchString.toString());
+            MiscUtils.getLogger().debug(searchString.toString());
             return searchString.toString();
         } else
         {

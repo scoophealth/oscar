@@ -188,10 +188,10 @@ public class ImportDemographicDataAction extends Action {
         }        
         request.setAttribute("warnings",warnings);
         
-        System.out.println("warnings size "+warnings.size());
+        MiscUtils.getLogger().debug("warnings size "+warnings.size());
         for( int i = 0; i < warnings.size(); i++ ){
            String str = (String) warnings.get(i);
-           System.out.println(str);
+           MiscUtils.getLogger().debug(str);
         }
         
         

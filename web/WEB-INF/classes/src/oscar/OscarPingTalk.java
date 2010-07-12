@@ -44,6 +44,7 @@ import org.chip.ping.xml.cddm.CddmType;
 import org.chip.ping.xml.cddm.DataType;
 import org.chip.ping.xml.talk.AddCddmResultType;
 import org.chip.ping.xml.talk.AuthenticateResultType;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 
 /*
@@ -63,7 +64,7 @@ public class OscarPingTalk {
     public OscarPingTalk() {
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             public boolean verify(String urlHostName, SSLSession session) {
-                System.out.println("Warning: URL: " + urlHostName + ", session host "
+                MiscUtils.getLogger().debug("Warning: URL: " + urlHostName + ", session host "
                         + session.getPeerHost());
                 return true;
             }
@@ -95,7 +96,7 @@ public class OscarPingTalk {
         BodyType bodyType = cddmType.getCddmBody();
         List dataList = bodyType.getData();
         dataList.add(dataType);
-        System.out.println(actorTicket + " " + pingId + " " + cddmType);
+        MiscUtils.getLogger().debug(actorTicket + " " + pingId + " " + cddmType);
         AddCddmResultType adrt = client.addCddm(actorTicket, pingId, cddmType);
         return true;
     }

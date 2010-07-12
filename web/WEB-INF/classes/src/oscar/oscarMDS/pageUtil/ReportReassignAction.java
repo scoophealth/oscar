@@ -25,7 +25,6 @@ package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +35,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 

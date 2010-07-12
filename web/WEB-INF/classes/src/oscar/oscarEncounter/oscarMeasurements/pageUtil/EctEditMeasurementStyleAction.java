@@ -55,7 +55,7 @@ public class EctEditMeasurementStyleAction extends Action {
         
         changeCSS(groupName, styleSheet);
         
-        System.out.println("The selected style sheet is: " + styleSheet);                        
+        MiscUtils.getLogger().debug("The selected style sheet is: " + styleSheet);                        
         HttpSession session = request.getSession();
         session.setAttribute( "groupName", groupName);
         
@@ -73,7 +73,7 @@ public class EctEditMeasurementStyleAction extends Action {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "UPDATE measurementGroupStyle SET cssID ='" + styleSheet + "' WHERE groupName='" + inputGroupName + "'";
-            System.out.println("Sql Statement: " + sql);
+            MiscUtils.getLogger().debug("Sql Statement: " + sql);
             db.RunSQL(sql);
         }
         catch(SQLException e) {

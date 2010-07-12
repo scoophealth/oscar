@@ -51,7 +51,7 @@ public class ProviderBillCenter {
                 retval = true;
             rs.close();
         } catch(SQLException e) {
-            System.out.println("There has been an error while checking if a provider had a bill center");
+            MiscUtils.getLogger().debug("There has been an error while checking if a provider had a bill center");
             MiscUtils.getLogger().error("Error", e);
         }
         
@@ -68,7 +68,7 @@ public class ProviderBillCenter {
                 retval = true;
             rs.close();
         } catch(SQLException e) {
-            System.out.println("There has been an error while checking if a provider had a bill center");
+            MiscUtils.getLogger().debug("There has been an error while checking if a provider had a bill center");
             MiscUtils.getLogger().error("Error", e);
         }
 
@@ -82,7 +82,7 @@ public class ProviderBillCenter {
             String sql = "insert into  providerbillcenter (provider_no,billcenter_code) values ('"+provider_no+"' ,'"+billCenterCode+"') ";
             db.RunSQL(sql);
         } catch(SQLException e){
-            System.out.println("There has been an error while adding a provider's bill center");
+            MiscUtils.getLogger().debug("There has been an error while adding a provider's bill center");
             MiscUtils.getLogger().error("Error", e);
         }
     }
@@ -97,7 +97,7 @@ public class ProviderBillCenter {
                 billCenterCode = db.getString(rs,"billcenter_code");
             rs.close();
         } catch(SQLException e){
-            System.out.println("There has been an error while retrieving a provider's bill center");
+            MiscUtils.getLogger().debug("There has been an error while retrieving a provider's bill center");
             MiscUtils.getLogger().error("Error", e);
         }
         
@@ -113,7 +113,7 @@ public class ProviderBillCenter {
                 String sql = "update providerbillcenter set billcenter_code = '" + billCenterCode + "' where provider_no = '" + provider_no + "' ";
                 db.RunSQL(sql);
             } catch (SQLException e) {
-                System.out.println("There has been an error while updating a provider's bill center");
+                MiscUtils.getLogger().debug("There has been an error while updating a provider's bill center");
                 MiscUtils.getLogger().error("Error", e);
             }
         }    
@@ -130,7 +130,7 @@ public class ProviderBillCenter {
                 allBillCenter.setProperty(db.getString(rs,"billcenter_code"),db.getString(rs,"billcenter_desc")) ;
             rs.close();
         } catch(SQLException e){
-            System.out.println("There has been an error while retrieving info from table billcenter");
+            MiscUtils.getLogger().debug("There has been an error while retrieving info from table billcenter");
             MiscUtils.getLogger().error("Error", e);
         }
         

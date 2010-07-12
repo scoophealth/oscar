@@ -38,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.DocumentBean;
 
 public class DocumentTeleplanReportUploadServlet extends HttpServlet{
@@ -59,7 +61,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         String filename = "test.txt", foldername="", fileheader="", forwardTo="";
         
         String userHomePath = System.getProperty("user.home", "user.dir");
-        System.out.println(userHomePath);
+        MiscUtils.getLogger().debug(userHomePath);
         
         File pFile = new File(userHomePath, backupfilepath+".properties");
         

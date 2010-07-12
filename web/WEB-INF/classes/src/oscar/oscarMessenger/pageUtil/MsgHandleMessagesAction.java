@@ -151,7 +151,7 @@ public  class MsgHandleMessagesAction extends Action {
               if(replyAll.compareToIgnoreCase("reply All") == 0){  // add every one that got the message
                  rs = db.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = '"+messageNo+"'");
                  while (rs.next()){
-                     System.out.println("LOOK4ME pro no "+db.getString(rs,"provider_no")+" remo Loco "+db.getString(rs,"remoteLocation"));
+                     MiscUtils.getLogger().debug("LOOK4ME pro no "+db.getString(rs,"provider_no")+" remo Loco "+db.getString(rs,"remoteLocation"));
                      vector.add(db.getString(rs,"provider_no"));
                      replyMessageData.add(db.getString(rs,"provider_no"),db.getString(rs,"remoteLocation"));
                  }

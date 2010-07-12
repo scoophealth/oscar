@@ -81,7 +81,7 @@ public class BillingData {
 				+ startDateQuery
 				+ endDateQuery
 				+ demoQuery;
-		System.out.println("bill status query " + p);
+		MiscUtils.getLogger().debug("bill status query " + p);
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs = db.GetSQL(p);
