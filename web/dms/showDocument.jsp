@@ -117,7 +117,7 @@
                     
                                         YAHOO.example.BasicRemote = function() {
                                           if($("autocompletedemo<%=docId%>") && $("autocomplete_choices<%=docId%>")){
-                                                 oscarLog('in basic remote');
+                                                 //oscarLog('in basic remote');
                                                 //var oDS = new YAHOO.util.XHRDataSource("http://localhost:8080/drugref2/test4.jsp");
                                                 var url = "../demographic/SearchDemographic.do";
                                                 var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
@@ -130,8 +130,8 @@
                                                 // Enable caching
                                                 oDS.maxCacheEntries = 0;
                                                 //oDS.connXhrMode ="cancelStaleRequests";
-                                                oscarLog("autocompletedemo<%=docId%>");
-                                                oscarLog("autocomplete_choices<%=docId%>");
+                                                //oscarLog("autocompletedemo<%=docId%>");
+                                                //oscarLog("autocomplete_choices<%=docId%>");
                                                 
                                                 //var elinput=window.frames[0].document.getElementById("autocompletedemo<%=docId%>");
                                                 //var elcontainer=window.frames[0].document.getElementById("autocomplete_choices<%=docId%>");
@@ -139,24 +139,24 @@
                                                 // Instantiate the AutoComplete
                                                 //var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=docId%>", "autocomplete_choices<%=docId%>", oDS);
                                                 var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=docId%>","autocomplete_choices<%=docId%>",oDS);
-                                                oscarLog('oAc='+oAC);
-                                                oscarLog('oDs='+oDS);
-                                                oscarLog('resultFormatter2='+resultFormatter2);
+                                                //oscarLog('oAc='+oAC);
+                                                //oscarLog('oDs='+oDS);
+                                                //oscarLog('resultFormatter2='+resultFormatter2);
                                                 oAC.queryMatchSubset = true;
                                                 oAC.minQueryLength = 3;
                                                 oAC.maxResultsDisplayed = 25;
                                                 oAC.formatResult = resultFormatter2;
                                                 //oAC.typeAhead = true;
                                                 oAC.queryMatchContains = true;
-                                                oscarLog(oAC);
-                                                oscarLog(oAC.itemSelectEvent);
+                                                //oscarLog(oAC);
+                                                //oscarLog(oAC.itemSelectEvent);
                                                 oAC.itemSelectEvent.subscribe(function(type, args) {
-                                                    oscarLog(args);
-                                                    oscarLog(args[0].getInputEl().id);
+                                                    //oscarLog(args);
+                                                    //oscarLog(args[0].getInputEl().id);
                                                     var str = args[0].getInputEl().id.replace("autocompletedemo","demofind");
-                                                   oscarLog(str);
+                                                   //oscarLog(str);
                                                    $(str).value = args[2][2];//li.id;
-                                                   oscarLog("str value="+$(str).value);
+                                                   //oscarLog("str value="+$(str).value);
                                                    //oscarLog(args[2][1]+"--"+args[2][0]);
                                                    args[0].getInputEl().value = args[2][0] + "("+args[2][1]+")";
                                                    //oscarLog("--"+args[0].getInputEl().value);
@@ -190,14 +190,14 @@
                                             <script type="text/javascript">
 
                                                 popupStart=function(vheight,vwidth,varpage,windowname) {
-                                                    oscarLog("in popupStart ");
+                                                    //oscarLog("in popupStart ");
                                                     if(!windowname)
                                                         windowname="helpwindow";
                                                     var page = varpage;
                                                     var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-                                                    oscarLog(varpage);
-                                                    oscarLog(windowname);
-                                                    oscarLog(windowprops);
+                                                    //oscarLog(varpage);
+                                                    //oscarLog(windowname);
+                                                    //oscarLog(windowprops);
                                                     var popup=window.open(varpage, windowname, windowprops);
                                                 }
                                                 updateDocument=function(eleId){
@@ -224,10 +224,10 @@
                                                         // Enable caching
                                                         oDS.maxCacheEntries = 0;
                                                         //oDS.connXhrMode ="cancelStaleRequests";
-                                                        oscarLog("autocompleteprov<%=docId%>");
-                                                        oscarLog("autocomplete_choicesprov<%=docId%>");
-                                                        oscarLog($("autocompleteprov<%=docId%>"));
-                                                        oscarLog($("autocomplete_choicesprov<%=docId%>"));
+                                                        //oscarLog("autocompleteprov<%=docId%>");
+                                                        //oscarLog("autocomplete_choicesprov<%=docId%>");
+                                                        //oscarLog($("autocompleteprov<%=docId%>"));
+                                                        //oscarLog($("autocomplete_choicesprov<%=docId%>"));
                                                         // Instantiate the AutoComplete
                                                         var oAC = new YAHOO.widget.AutoComplete("autocompleteprov<%=docId%>", "autocomplete_choicesprov<%=docId%>", oDS);
                                                         oAC.queryMatchSubset = true;
@@ -236,30 +236,30 @@
                                                         oAC.formatResult = resultFormatter3;
                                                         //oAC.typeAhead = true;
                                                         oAC.queryMatchContains = true;
-                                                        oscarLog(oAC);
-                                                        oscarLog(oAC.itemSelectEvent);
+                                                        //oscarLog(oAC);
+                                                        //oscarLog(oAC.itemSelectEvent);
                                                         oAC.itemSelectEvent.subscribe(function(type, args) {
-                                                            oscarLog(args);
+                                                            //oscarLog(args);
                                                            var myAC = args[0];
                                                            var str = myAC.getInputEl().id.replace("autocompleteprov","provfind");
-                                                           oscarLog(str);
-                                                           oscarLog(args[2]);
+                                                           //oscarLog(str);
+                                                           //oscarLog(args[2]);
                                                            var oData=args[2];
                                                            $(str).value = args[2][0];//li.id;
-                                                           oscarLog("str value="+$(str).value);
-                                                           oscarLog(args[2][1]+"--"+args[2][0]);
+                                                           //oscarLog("str value="+$(str).value);
+                                                           //oscarLog(args[2][1]+"--"+args[2][0]);
                                                            myAC.getInputEl().value = args[2][2] + ","+args[2][1];
-                                                           oscarLog("--"+args[0].getInputEl().value);
+                                                           //oscarLog("--"+args[0].getInputEl().value);
                                                            //selectedDemos.push(args[0].getInputEl().value);
 
                                                            //enable Save button whenever a selection is made
                                                             var bdoc = document.createElement('a');
                                                             bdoc.setAttribute("onclick", "removeProv(this);");
                                                             bdoc.appendChild(document.createTextNode(" -remove- "));
-                                                            oscarLog("--");
+                                                            //oscarLog("--");
                                                             var adoc = document.createElement('div');
                                                             adoc.appendChild(document.createTextNode(oData[2] + " " +oData[1]));
-                                                            oscarLog("--==");
+                                                            //oscarLog("--==");
                                                             var idoc = document.createElement('input');
                                                             idoc.setAttribute("type", "hidden");
                                                             idoc.setAttribute("name","flagproviders");
