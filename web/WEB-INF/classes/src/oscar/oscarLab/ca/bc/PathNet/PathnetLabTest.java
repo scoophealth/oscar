@@ -239,7 +239,7 @@ public class PathnetLabTest {
             return ss[1];
     }
     
-    /////////
+  
     public ArrayList getResultsOld(String pid){
         ArrayList list = new ArrayList();
         try{
@@ -248,8 +248,7 @@ public class PathnetLabTest {
             ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
             
             logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
-            boolean other = true;
-            String section = "";
+           
             while(rs.next()){
                 GroupResults gr = new GroupResults();
                 gr.groupName = db.getString(rs,"diagnostic_service_sect_id")+ " " +db.getString(rs,"universal_service_id").substring(db.getString(rs,"universal_service_id").indexOf("^"));
@@ -280,7 +279,6 @@ public class PathnetLabTest {
         }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
         return list;
     }
-    /////////
     
     public ArrayList getResults(String pid){
         ArrayList list = new ArrayList();
@@ -289,8 +287,7 @@ public class PathnetLabTest {
             //ResultSet rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
             ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
             logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
-            boolean other = true;
-            String section = "";
+     
             GroupResults gr = null;
             while(rs.next()){
                 String gName = db.getString(rs,"diagnostic_service_sect_id");
@@ -330,7 +327,6 @@ public class PathnetLabTest {
         return list;
     }
     
-    /////////
     
     
     public class LabResult{
@@ -365,7 +361,7 @@ public class PathnetLabTest {
         
         public String notes = null;
         
-        ///
+        
         public String getReferenceRange(){
             String retval ="";
             if (minimum != null && maximum != null){

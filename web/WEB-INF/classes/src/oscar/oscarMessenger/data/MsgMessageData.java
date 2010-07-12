@@ -88,10 +88,10 @@ public class MsgMessageData {
        * @return turns a String Array
        */
    public String[] getDups4(String[] strarray){
-		int count;
+		
 		java.util.Vector vector = new java.util.Vector();
 		String temp = new String();
-		String temp2 = new String();
+		
 
 		java.util.Arrays.sort(strarray);
 		temp ="";
@@ -224,7 +224,7 @@ public class MsgMessageData {
        try{
 
           DBPreparedHandler db = new DBPreparedHandler();
-          java.sql.ResultSet rs;
+          //java.sql.ResultSet rs;
 
           int msgid = db.queryExecuteInsertReturnId("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto,sentbyNo)"
                         +" values (now(),now(),'"
@@ -269,7 +269,7 @@ public class MsgMessageData {
       String messageid=null;
       try{
          DBPreparedHandler db = new DBPreparedHandler();
-         java.sql.ResultSet rs;
+         //java.sql.ResultSet rs;
 
             if (attach != null){
                 attach = str.q(attach);
