@@ -68,20 +68,18 @@ public class BillingRAPrep {
 		// new BigDecimal(0)
 		// Paid Clinic Pay Hospital Pay OB Error
 		for (int j = 0; j < ret.size(); j++) {
-			Properties prop = (Properties) ret.get(j);
-			String proName = prop.getProperty("proName");
-			String servicecode = prop.getProperty("servicecode");
+			Properties prop = (Properties) ret.get(j);	
 			String servicedate = prop.getProperty("servicedate");
 			servicedate = servicedate.length() == 8 ? (servicedate.substring(0, 4) + "-" + servicedate.substring(4, 6)
 					+ "-" + servicedate.substring(6)) : servicedate;
 			prop.setProperty("servicedate", servicedate);
-			String serviceno = prop.getProperty("serviceno");
+			
 			String explain = prop.getProperty("explain");
 			String amountsubmit = prop.getProperty("amountsubmit");
 			String amountpay = prop.getProperty("amountpay");
 			String location = prop.getProperty("location");
 			String localServiceDate = prop.getProperty("localServiceDate");
-			String demo_name = prop.getProperty("demo_name");
+			
 			String demo_hin = prop.getProperty("demo_hin");
 			String account = prop.getProperty("account");
 			String clinicPay = "";
