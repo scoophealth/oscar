@@ -336,23 +336,6 @@ public class FrmToXMLUtil{
       return i;
    }
    
-   public static void getMembers(Object obj){
-     Class cls = obj.getClass();
-     //Method[] methods = cls.getDeclaredMethods();
-     Method[] methods = cls.getMethods();
-          for (int i=0; i < methods.length; i++){
-                //if(methods[i].getName().startsWith("get")){
-           Class[] params = methods[i].getParameterTypes();
-                   System.out.print(methods[i].getName());
-           System.out.print("(");
-           for (int j=0; j < params.length; j++){
-              System.out.print(" "+params[j].getName());
-           }
-           MiscUtils.getLogger().debug(")");
-        //}
-     }     
-  }
-   
    private static String translate(String input, String xmlName){
         if(xmlName.startsWith("B")){
             if(input.equalsIgnoreCase("yes")){

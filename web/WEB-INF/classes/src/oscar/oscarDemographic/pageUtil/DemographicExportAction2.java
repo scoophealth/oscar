@@ -1303,22 +1303,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     public DemographicExportAction2() {
     }
    
-    public void getMembers(Object obj){
-	Class cls = obj.getClass();
-	Method[] methods = cls.getMethods();
-	for (int i=0; i < methods.length; i++){
-	    Class ret = methods[i].getReturnType();
-	    Class[] params = methods[i].getParameterTypes();
-	    System.out.print(ret.getName()+" ");
-	    System.out.print(methods[i].getName());
-	    System.out.print("(");
-	    for (int j=0; j<params.length; j++){
-		System.out.print(" "+params[j].getName());
-	    }
-	    MiscUtils.getLogger().debug(")");
-	}
-    }
-    
     public String currentMem(){        
 	long total = Runtime.getRuntime().totalMemory();
 	long free  = Runtime.getRuntime().freeMemory();
