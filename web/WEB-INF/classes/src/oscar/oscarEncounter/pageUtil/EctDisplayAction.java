@@ -99,8 +99,7 @@ public class EctDisplayAction extends Action {
         if( params != null ) {
             //Check to see if this call is for us
             if( params.indexOf(cmd) > -1 ) {
-
-                Locale locale = getLocale(request);
+                
                 MessageResources messages = getResources(request);
 
                 NavBarDisplayDAO Dao = (NavBarDisplayDAO)request.getAttribute("DAO");
