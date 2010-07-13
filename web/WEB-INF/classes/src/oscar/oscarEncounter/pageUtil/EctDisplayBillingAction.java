@@ -86,8 +86,7 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                         nItems++;
                         BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
                         BillingItemData itObj = (BillingItemData) aL.get(i+1);
-                        String strBillType = obj.getPay_program();
-
+                        
                         NavBarDisplayDAO.Item item = Dao.Item();
 
                         String dbFormat = "yyyy-MM-dd";
@@ -148,7 +147,6 @@ public class EctDisplayBillingAction extends EctDisplayAction {
                         
                         MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
                         
-                        String strBillType = b.getBillingtype();
                         
                         if (b != null && !b.reason.equals("D")){
                             NavBarDisplayDAO.Item item = Dao.Item();

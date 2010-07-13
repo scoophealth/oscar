@@ -68,7 +68,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
         Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action 
         
         //grab all of the diseases associated with patient and add a list item for each
-        String dbFormat = "yyyy-MM-dd";
+        
         String serviceDateStr;
         Date date; 
         oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
