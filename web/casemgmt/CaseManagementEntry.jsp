@@ -425,8 +425,8 @@ if (pId==null) pId="";
 		}
 		else
 		{
-			%>
-				<input id="showResolved" type="button" value="Show Resolved Issues" onclick="document.location=document.location.href+'&amp;showResolved=true'" />
+			%>	
+			<input id="showResolved" type="button" value="Show Resolved Issues" onclick="document.location='CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=<%=request.getParameter("demographicNo")%>&providerNo=<%=request.getParameter("providerNo")%>&showResolved=true'" />
 			<%
 		}
 	%>

@@ -123,8 +123,7 @@ function addIssue(form)
 </table>
 
 <br>
-<nested:submit styleId="submit_add_issue" value="add checked issue" onclick="return addIssue(this.form);"/>
-
+<input type="button" value="add checked issue" name="submit_add_issue" onclick="this.form.method.value='issueAdd'; this.disabled = true; this.className='processing' ;this.form.submit();"/>
 </nested:equal>
 
 <logic:equal name="from" value="casemgmt" scope="request">
