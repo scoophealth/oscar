@@ -182,7 +182,7 @@ public class OBChecklistHandler_99_12 extends DefaultHandler {
 	}
 
 	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-		String s = new String(ch, start, length);
+		new String(ch, start, length);
 
 	}
 

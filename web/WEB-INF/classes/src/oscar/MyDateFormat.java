@@ -138,7 +138,7 @@ public class MyDateFormat {
 	//from 8:20pm to 20:20:00, 9:9am to 09:09:00, 8:20 to 08:20:00
 	public static String getTimeXX_XX_XX(String aXX_XXampm) {
 		String temp="\\N"; //mySQL = null
-		int hour=0, min=0;
+		int hour=0;
 		
 		aXX_XXampm=aXX_XXampm.trim().toLowerCase();
 		int i1=aXX_XXampm.indexOf(58); //":" ascii is 58
@@ -418,7 +418,7 @@ public class MyDateFormat {
 	//from  20:20:00to 08:20pm,  09:09:00 to 09:09am, or 20:20 to 08:20pm
 	public static String getTimeXX_XXampm(String aXX_XX_XX) {
 		String temp=null; //mySQL = null
-		int hour=0, min=0;
+		int hour=0;
 		
 		aXX_XX_XX=aXX_XX_XX.trim().toLowerCase();
 		int i1=aXX_XX_XX.indexOf(58); //":" ascii is 58
