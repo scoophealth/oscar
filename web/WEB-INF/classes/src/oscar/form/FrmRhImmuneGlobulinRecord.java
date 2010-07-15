@@ -74,7 +74,7 @@ public class FrmRhImmuneGlobulinRecord extends FrmRecord {
                                                 
                                 Hashtable measurementHash = EctMeasurementsDataBeanHandler.getLast(""+demographicNo, "BLDT");
     
-                                String bloodType = null;// (String) measurementHash.get("value");
+                               
                                 if (measurementHash != null && measurementHash.get("value") != null){
                                     props.setProperty("motherABO",(String) measurementHash.get("value")); 
                                 }
