@@ -117,7 +117,7 @@ response.addCookie(admCookie);
                     %><bean:message key="<%=key%>"/>        
                 </td>
                 <td  class="topbar" align="center" >
-                    <span style="float: right; color:#FFFFFF; font-size: xx-small;">build date: <%= BuildInfo.getBuildDate() %></span>     
+                    <span style="float: right; color:#FFFFFF; font-size: xx-small;text-align: right;">build date: <%= BuildInfo.getBuildDate() %> <br/> build tag: <%=BuildInfo.getBuildTag()%> </span>
                     <%=props.getProperty("logintitle", "")%>
                     <% if (props.getProperty("logintitle", "").equals("")) { %>
                     <bean:message key="loginApplication.alert"/>
