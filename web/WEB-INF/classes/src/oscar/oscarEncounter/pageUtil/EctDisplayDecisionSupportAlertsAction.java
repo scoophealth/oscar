@@ -64,7 +64,7 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
         List<DSGuideline> dsGuidelines = dsService.getDsGuidelinesByProvider(bean.providerNo);
 
         String key;
-        int hash;
+        
         String BGCOLOUR = request.getParameter("hC");
         /*
         for( int i = 0; i < dsConsequences.size(); ++i ) {
@@ -92,7 +92,7 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
                     index++;
                     NavBarDisplayDAO.Item item = Dao.Item();
                     winName = (String)dsConsequence.getConsequenceType().toString() + bean.demographicNo;
-                    hash = Math.abs(winName.hashCode());
+                    
                     url = "popupPage(500,950,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/decisionSupport/guidelineAction.do?method=detail&guidelineId=" + dsGuideline.getId() + "&provider_no=" + bean.providerNo + "&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";
                     //Date date = (Date)curform.get("formDateAsDate");
                     //String formattedDate = DateUtils.getDate(date,dateFormat,request.getLocale());

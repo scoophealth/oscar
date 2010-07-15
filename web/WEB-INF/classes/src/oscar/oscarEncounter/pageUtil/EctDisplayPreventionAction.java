@@ -89,8 +89,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         Hashtable warningTable = p.getWarningMsgs();    
         
          
-        
-        String serviceDateStr;
+       
         String highliteColour = "FF0000";
         String inelligibleColour = "FF6600";
         String pendingColour = "FF00FF";
@@ -114,15 +113,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
 
                     date = (Date)hdata.get("prevention_date_asDate");
                     item.setDate(date);
-                    if( date == null ) {
-                        serviceDateStr = "";
-                        //item.setDate(defaultDate);
-                    }
-                    else {    
-                        serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
-                        //item.setDate(date);
-                    }
-
+                    
                     if( hdata.get("refused").equals("2") ) {
                         item.setColour(inelligibleColour);
                     }
@@ -131,8 +122,6 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                     }
                 }
                 else {
-                    serviceDateStr = "";
-                    //item.setDate(defaultDate);
                     item.setDate(null);
                 }                                                                
                 
