@@ -33,8 +33,7 @@ public class ExceptionCatcher extends ExceptionHandler{
             ActionMapping mapping, ActionForm formInstance,
             HttpServletRequest request, 
             HttpServletResponse response) throws ServletException{
-		String xx="";
-		
+			
     	try {
     		String URL=request.getRequestURI();
     		Map map = request.getParameterMap();
@@ -79,7 +78,7 @@ public class ExceptionCatcher extends ExceptionHandler{
     		}
    		    log.error("End of Exceptions Trace" + cr + cr + cr);
     		
-    	}catch (Exception e) {xx =e.getStackTrace().toString();}
+    	}catch (Exception e) {e.getStackTrace().toString();}
     
     	return (super.execute(ex, ae, mapping, formInstance, request, response));
     }
