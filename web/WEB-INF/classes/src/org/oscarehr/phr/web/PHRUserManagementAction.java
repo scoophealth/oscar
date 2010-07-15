@@ -124,7 +124,7 @@ public class PHRUserManagementAction extends DispatchAction {
             phrService.sendUserRegistration(ht, (String) request.getSession().getAttribute("user"));
             //if all is well, add the "pin" in the demographic screen
             String demographicNo = request.getParameter("demographicNo");
-            DemographicData.Demographic demographic = new DemographicData().getDemographic(demographicNo);
+            
             DemographicData dd = new DemographicData();
             dd.setDemographicPin(demographicNo, request.getParameter("username"));
         } catch (Exception e) {
