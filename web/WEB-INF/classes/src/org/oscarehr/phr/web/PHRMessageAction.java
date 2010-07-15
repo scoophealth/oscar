@@ -168,7 +168,7 @@ public class PHRMessageAction extends DispatchAction {
         log.debug("AUTH "+auth);
         String indivoId   = auth.getUserId();
         String ticket     = auth.getToken();*/
-        String providerNo = (String) request.getSession().getAttribute("user");
+        
         String id = request.getParameter("id");
         String source = request.getParameter("source");
         if (source == null) source = "";
@@ -212,7 +212,7 @@ public class PHRMessageAction extends DispatchAction {
         log.debug("AUTH "+auth);
         String indivoId   = auth.getUserId();
         String ticket     = auth.getToken();*/
-        String providerNo = (String) request.getSession().getAttribute("user");
+        
         String id = request.getParameter("id");
         
         log.debug(id);
