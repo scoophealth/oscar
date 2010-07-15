@@ -59,7 +59,7 @@ public class PHRViewPatientRecord extends DispatchAction {
             }
             DemographicData demographicData = new DemographicData();
             String patientMyOscarId = demographicData.getDemographic(demographicNo).getIndivoId();
-            ActionRedirect ar = new ActionRedirect();
+           
             request.setAttribute("userid", auth.getUserId());
             request.setAttribute("ticket", auth.getToken());
             request.setAttribute("viewpatient", patientMyOscarId);
