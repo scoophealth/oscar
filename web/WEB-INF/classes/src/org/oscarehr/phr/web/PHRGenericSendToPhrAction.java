@@ -93,7 +93,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
         String labId = request.getParameter("labId");
         String subject = request.getParameter("subject");
         String message = request.getParameter("message");
-        String errorMessage = null;
+        
         DemographicData demographicData = new DemographicData();
         String recipientPhrId = demographicData.getDemographic(demographicNo).getIndivoId();
         int recipientType = PHRDocument.TYPE_DEMOGRAPHIC;
@@ -110,7 +110,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
         EDocFactory.Status status = EDocFactory.Status.SENT;
         Date observationDate = new Date();
         String reviewerId = null;
-        String reviewDateTime = null;
+       
         EDocFactory.Module docModule = EDocFactory.Module.demographic;
         String docModuleId = demographicNo;
 
@@ -163,7 +163,7 @@ public class PHRGenericSendToPhrAction extends DispatchAction {
             ProviderData senderProviderData = new ProviderData(providerNo);
 
             EDoc eDoc = EDocUtil.getDoc(documentNo);
-            PHRBinaryData phrBinaryData = new PHRBinaryData();
+            
             String actionIndex = phrService.sendAddBinaryData(senderProviderData, demographicNo, recipientType, recipientPhrId, eDoc) + "";
 
             ArrayList<String> eDocAttachmentActionId = new ArrayList();
