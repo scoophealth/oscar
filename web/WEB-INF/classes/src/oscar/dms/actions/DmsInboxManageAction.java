@@ -397,6 +397,7 @@ public class DmsInboxManageAction extends DispatchAction {
     /* find all data for the index.jsp page*/
   Hashtable patientDocs=new Hashtable();
     Hashtable patientIdNames=new Hashtable();
+    String patientIdNamesStr="";
     Hashtable docStatus=new Hashtable();
     Hashtable docType=new Hashtable();
     Hashtable<String,List<String>> ab_NormalDoc=new Hashtable();
@@ -436,6 +437,7 @@ public class DmsInboxManageAction extends DispatchAction {
             segIDs.add(data.getSegmentID());
             patientDocs.put(labPatientId, segIDs);
             patientIdNames.put(labPatientId, data.patientName);
+            patientIdNamesStr+=';'+labPatientId+'='+data.patientName;
         }
         docStatus.put(data.getSegmentID(), data.getAcknowledgedStatus());
         docType.put(data.getSegmentID(), data.labType);
@@ -514,7 +516,9 @@ public class DmsInboxManageAction extends DispatchAction {
     request.setAttribute("normals", normals);
     request.setAttribute("abnormals", abnormals);
     request.setAttribute("totalNumDocs",totalNumDocs );
-
+    request.setAttribute("patientIdNamesStr",patientIdNamesStr);
+    //System.out.println("labs.size="+labdocs.size());
+    //System.out.println("forward to dms_index");
 
         return mapping.findForward("dms_index");
     }
