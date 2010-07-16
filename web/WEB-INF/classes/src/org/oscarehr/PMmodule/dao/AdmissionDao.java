@@ -581,6 +581,15 @@ public class AdmissionDao extends HibernateDaoSupport {
 		return rs;
     }
     
+    
+    public boolean wasInProgram(Integer programId, Integer clientId) {
+    	if(getAdmission(programId, clientId)!=null)
+    		return true;
+    	else
+    		return false;
+    
+    }
+    
     /*
      * get demographics according to their program, admit time, discharge time, ordered by lastname and first name
      */

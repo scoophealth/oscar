@@ -281,6 +281,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				String id2 = Integer.toString(admission.getTeamId());
 				if (id1.equals(id2)) teamName = team.getName();
 			}
+		} else {
+			// If the client was never in the program. CME page should not be opened.
+			if(!admissionMgr.wasInProgram(Integer.valueOf(programId),Integer.valueOf(demoNo)))
+				return mapping.findForward("clientNeverInTheProgramError");			
 		}
 		request.setAttribute("teamName", teamName);
 

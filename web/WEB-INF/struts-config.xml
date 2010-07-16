@@ -1892,6 +1892,7 @@
             <forward name="page.casemgmt.view" path="page.casemgmt.view" />
             <forward name="page.newcasemgmt.view" path="page.newcasemgmt.view" />
             <forward name="domain-error" path="/casemgmt/domain-error.jsp" />
+            <forward name="clientNeverInTheProgramError" path="/casemgmt/clientNeverInTheProgramError.jsp" />
             <forward name="unlockForm" path="/casemgmt/unlockNoteForm.jsp" />
             <forward name="unlockSuccess" path="/casemgmt/unlockNoteSuccess.jsp" />
             <forward name="unlockError" path="/casemgmt/unlockNoteError.jsp" />
