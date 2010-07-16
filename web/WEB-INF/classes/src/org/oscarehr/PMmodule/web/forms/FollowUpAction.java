@@ -136,10 +136,10 @@ public class FollowUpAction extends DispatchAction {
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm inputForm = (DynaActionForm)form;
 		FormFollowUp theForm = (FormFollowUp)inputForm.get("intake");
-		boolean update = false;
+		
 		
 		if(theForm.getId() != null && theForm.getId().longValue()>0) {
-			update = true;
+			
 		}
 		
 		theForm.setProviderNo(Long.valueOf(this.getProviderNo(request)));

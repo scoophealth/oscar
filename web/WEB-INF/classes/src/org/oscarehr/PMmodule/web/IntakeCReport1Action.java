@@ -1859,7 +1859,7 @@ public class IntakeCReport1Action extends BaseAction {
             Demographic demographic = new Demographic();
             Object[] cohort = (Object[]) rsList.get(idx);
             int row = 0;
-            boolean preAdmission = false;
+            
 
             // formintakec = (Formintakec) cohort[0];
             demographic = (Demographic) cohort[1];
@@ -1880,7 +1880,7 @@ public class IntakeCReport1Action extends BaseAction {
             if (CHECKBOX_ON.equals(formintakec.getCboxPreAdmission())) {
                 row++;
                 dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
-                preAdmission = true;
+                
             }
             else {
                 dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
