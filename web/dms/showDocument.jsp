@@ -43,6 +43,7 @@
                 numOfPageStr=(new Integer(numOfPage)).toString();
             String url = request.getContextPath()+"/dms/ManageDocument.do?method=view&doc_no=" + docId;
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
+
 %>
        
 
@@ -55,7 +56,7 @@
 
 
                     <td align="left" valign="top">
-                        <fieldset><legend>Patient:<%=demoName%> </legend>
+                        <fieldset><legend><bean:message key="inboxmanager.document.PatientMsg"/><span id="assignedPId_<%=docId%>"><%=demoName%></span> </legend>
                             <table border="0">
                                 <tr>
                                     <td><bean:message key="inboxmanager.document.DocumentUploaded"/></td>
@@ -92,15 +93,14 @@
                                         <td><input id="docDesc_<%=docId%>"  type="text" name="documentDescription" value="<%=curdoc.getDescription()%>" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Observation Date:</td>
+                                        <td><bean:message key="inboxmanager.document.ObservationDateMsg" /></td>
                                         <td>
                                             <input   id="observationDate<%=docId%>" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
                                             <a id="obsdate<%=docId%>" onmouseover="renderCalendar(this.id,'observationDate<%=docId%>' );" href="javascript:void(0);" ><img title="Calendar" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar"border="0" /></a>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Demographic:
-                                        </td>
+                                        <td><bean:message key="inboxmanager.document.DemographicMsg" /></td>
                                         <td><%if(!demographicID.equals("-1")){%>
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
                                             <%=demoName%><%}else{%>
@@ -129,19 +129,7 @@
                                                 };
                                                 // Enable caching
                                                 oDS.maxCacheEntries = 0;
-                                                //oDS.connXhrMode ="cancelStaleRequests";
-                                                //oscarLog("autocompletedemo<%=docId%>");
-                                                //oscarLog("autocomplete_choices<%=docId%>");
-                                                
-                                                //var elinput=window.frames[0].document.getElementById("autocompletedemo<%=docId%>");
-                                                //var elcontainer=window.frames[0].document.getElementById("autocomplete_choices<%=docId%>");
-                                                //oscarLog('elinput='+elinput+';elcontainer='+elcontainer);
-                                                // Instantiate the AutoComplete
-                                                //var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=docId%>", "autocomplete_choices<%=docId%>", oDS);
                                                 var oAC = new YAHOO.widget.AutoComplete("autocompletedemo<%=docId%>","autocomplete_choices<%=docId%>",oDS);
-                                                //oscarLog('oAc='+oAC);
-                                                //oscarLog('oDs='+oDS);
-                                                //oscarLog('resultFormatter2='+resultFormatter2);
                                                 oAC.queryMatchSubset = true;
                                                 oAC.minQueryLength = 3;
                                                 oAC.maxResultsDisplayed = 25;
@@ -156,10 +144,7 @@
                                                     var str = args[0].getInputEl().id.replace("autocompletedemo","demofind");
                                                    //oscarLog(str);
                                                    $(str).value = args[2][2];//li.id;
-                                                   //oscarLog("str value="+$(str).value);
-                                                   //oscarLog(args[2][1]+"--"+args[2][0]);
                                                    args[0].getInputEl().value = args[2][0] + "("+args[2][1]+")";
-                                                   //oscarLog("--"+args[0].getInputEl().value);
                                                    selectedDemos.push(args[0].getInputEl().value);
                                                    //enable Save button whenever a selection is made
                                                    $('save<%=docId%>').enable();
@@ -175,13 +160,13 @@
                                             }();
                                          
                                             </script>
-                                                   <input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" >Send to MRP
-                                                   <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" >Failed to send MRP</a>
+                                                   <input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" ><bean:message key="inboxmanager.document.SendToMRPMsg" />
+                                                   <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" ><bean:message key="inboxmanager.document.SendToMRPFailedMsg" /></a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td valign="top">Flag Provider: </td>
+                                        <td valign="top"><bean:message key="inboxmanager.document.FlagProviderMsg" /> </td>
                                         <td>
                                             <input type="hidden" name="provi" id="provfind<%=docId%>" />
                                             <input type="text" id="autocompleteprov<%=docId%>" name="demographicKeyword"/>
@@ -189,28 +174,7 @@
 
                                             <script type="text/javascript">
 
-                                                popupStart=function(vheight,vwidth,varpage,windowname) {
-                                                    //oscarLog("in popupStart ");
-                                                    if(!windowname)
-                                                        windowname="helpwindow";
-                                                    var page = varpage;
-                                                    var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-                                                    //oscarLog(varpage);
-                                                    //oscarLog(windowname);
-                                                    //oscarLog(windowprops);
-                                                    var popup=window.open(varpage, windowname, windowprops);
-                                                }
-                                                updateDocument=function(eleId){
 
-                                                    var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
-                                                    new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                                                            //location.reload(true);
-                                                            var ar=eleId.split("_");
-                                                            var num=ar[1];
-                                                            $("saveSucessMsg_"+num).show();
-                                                    }});
-                                                    return false;
-                                                }
                                         
                                                 YAHOO.example.BasicRemote = function() {
                                                         var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
@@ -223,12 +187,6 @@
                                                         };
                                                         // Enable caching
                                                         oDS.maxCacheEntries = 0;
-                                                        //oDS.connXhrMode ="cancelStaleRequests";
-                                                        //oscarLog("autocompleteprov<%=docId%>");
-                                                        //oscarLog("autocomplete_choicesprov<%=docId%>");
-                                                        //oscarLog($("autocompleteprov<%=docId%>"));
-                                                        //oscarLog($("autocomplete_choicesprov<%=docId%>"));
-                                                        // Instantiate the AutoComplete
                                                         var oAC = new YAHOO.widget.AutoComplete("autocompleteprov<%=docId%>", "autocomplete_choicesprov<%=docId%>", oDS);
                                                         oAC.queryMatchSubset = true;
                                                         oAC.minQueryLength = 3;
@@ -288,20 +246,7 @@
                                                         };
                                                     }();
 
-                                                    updateStatus=function(formid){
-                                                        var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
-                                                        var data=$(formid).serialize(true);
 
-                                                        new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                                                                var num=formid.split("_");
-                                                             if(num[1]){
-                                                                 Effect.BlindUp('labdoc_'+num[1]);
-                                                                 updateDocLabData(num[1]);
-
-                                                            }
-                                                    }});
-
-                                                    }
                                             </script>
                                             <div id="providerList<%=docId%>"></div>
                                         </td>
@@ -315,13 +260,13 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;color:blue;">Successfully saved.</a><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /> <%}%>
+                                        <td colspan="2" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;color:blue;"><bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a><%if(!demographicID.equals("-1")){%><input type="submit" name="save" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" id="save<%=docId%>" disabled value="Save" /> <%}%>
 
                                     </tr>
 
                                     <tr>
                                         <td colspan="2">
-                                            Linked Providers
+                                            <bean:message key="inboxmanager.document.LinkedProvidersMsg"/>
                                             <%
             Properties p = (Properties) session.getAttribute("providerBean");
             List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", docId);
@@ -384,10 +329,13 @@
                                                 </table>
                                             </fieldset>
                                             <%}
+
 %>
 
                         <fieldset>
-                            <legend><span class="FieldData"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>
+                          <%--  <input id="test1Regex_<%=docId%>" type="text"/><input id="test2Regex_<%=docId%>" type="text"/>
+                            <a href="javascript:void(0);" onclick="testShowDoc();">click</a>--%>
+                            <legend><span class="FieldData"><i><bean:message key="inboxmanager.document.NextAppointmentMsg"/> <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>
                             <form name="reassignForm_<%=docId%>" >
                                 <input type="hidden" name="flaggedLabs" value="<%= docId%>" />
                                 <input type="hidden" name="selectedProviders" value="" />
