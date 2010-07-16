@@ -29,11 +29,13 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.AdtA09Handler;
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.ChainnedMessageAdapter;
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.OruR01Handler;
 import oscar.oscarLab.ca.all.parsers.OscarToOscarHl7V2.RefI12Handler;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.AbstractMessage;
+import ca.uhn.hl7v2.model.v26.message.ADT_A09;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.message.REF_I12;
 import ca.uhn.hl7v2.model.v26.segment.MSH;
@@ -51,6 +53,8 @@ public final class OscarToOscarHl7V2Handler implements MessageHandler {
 		
 		if (message instanceof REF_I12) chainnedMessageAdapter=new RefI12Handler((REF_I12) message);
 		else if (message instanceof ORU_R01) chainnedMessageAdapter=new OruR01Handler((ORU_R01) message);
+		else if (message instanceof ADT_A09) chainnedMessageAdapter=new AdtA09Handler((ADT_A09) message);
+		else logger.error("Recevied unsupported message type : "+message.getClass().getSimpleName());
 	}
 
 	public String audit() {
