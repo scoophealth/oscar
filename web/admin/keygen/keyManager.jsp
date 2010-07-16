@@ -15,6 +15,20 @@
 <br />
 <hr />
 <br />
+<div class="oscarBlueForeground">Example eData / Lab Upload url</div>
+<%
+	String requestUrl=request.getRequestURL().toString();
+	String servletPath=request.getServletPath();
+	String uploadUrl=requestUrl.substring(0, requestUrl.length()-servletPath.length());
+	uploadUrl=uploadUrl+"/lab/newLabUpload.do";
+%>
+<div style="border:solid grey 1px;word-wrap:break-word;font-size:12px; width:95%"><%=uploadUrl%></div>
+<div style="font-size:12px">
+(You may need to change the server name / port to the externally accessible name / port of your server.)
+</div>
+<br />
+<hr />
+<br />
 <div class="oscarBlueForeground">Oscar Public Key</div>
 <div style="border:solid grey 1px;word-wrap:break-word;font-size:12px; width:95%"><%=KeyManagerUIBean.getPublicOscarKeyEscaped()%></div>
 <br />
