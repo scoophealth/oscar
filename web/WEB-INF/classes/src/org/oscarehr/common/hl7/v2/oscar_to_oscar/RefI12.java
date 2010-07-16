@@ -37,6 +37,11 @@ public final class RefI12 {
 		ALLERGIES
 	}
 	
+	private RefI12()
+	{
+		// not meant to be instantiated
+	}
+	
 	public static REF_I12 makeRefI12(String facilityName, ConsultationRequest consultationRequest, StreetAddressDataHolder referringOfficeStreetAddress) throws HL7Exception, UnsupportedEncodingException
 	{
 		REF_I12 referralMsg=new REF_I12();

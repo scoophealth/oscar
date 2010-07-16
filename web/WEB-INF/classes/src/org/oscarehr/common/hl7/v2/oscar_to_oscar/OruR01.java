@@ -50,6 +50,11 @@ public final class OruR01 {
 		public byte[] binaryData;
 	}
 
+	private OruR01()
+	{
+		// not meant to be instantiated
+	}
+	
 	/**
 	 * This method is essentially used to make an ORU_R01 containing pretty much any random data.
 	 * @throws UnsupportedEncodingException 
