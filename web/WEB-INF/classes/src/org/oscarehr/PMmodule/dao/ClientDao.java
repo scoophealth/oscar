@@ -246,7 +246,7 @@ public class ClientDao extends HibernateDaoSupport {
 		String lastName = "";
 		String firstNameL = "";
 		String lastNameL = "";
-		String bedProgramIdCond = "";
+		
 		
 		
 		String active = "";
@@ -339,10 +339,8 @@ public class ClientDao extends HibernateDaoSupport {
 			criteria.add(Expression.eq("Ver", bean.getHealthCardVersion()));
 		}
 		
-		if(bean.getBedProgramId() != null && bean.getBedProgramId().length() > 0) {
-			bedProgramIdCond = " program_id = " + bean.getBedProgramId();
-		}
 		
+
 // -------- start splice from 1.31 for 2270307
 		DetachedCriteria subq = DetachedCriteria.forClass(Admission.class)
 	    .setProjection(Property.forName("ClientId") );
