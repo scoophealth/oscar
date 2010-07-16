@@ -166,10 +166,33 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         if (ret != null && !ret.equals("")) {
             //response.getOutputStream().print(ret);
         }
-
+        HashMap hm=new HashMap();
+        hm.put("patientId", demog);
+        JSONObject jsonObject = JSONObject.fromObject(hm);
+        try{
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+        }
+        catch(IOException e){
+            MiscUtils.getLogger().error("Error", e);
+        }
 
         return null;
 
+    }
+    public ActionForward getDemoNameAjax(ActionMapping mapping, ActionForm form,
+                HttpServletRequest request, HttpServletResponse response) {
+        String dn=request.getParameter("demo_no");
+        HashMap hm=new HashMap();
+        hm.put("demoName",getDemoName(dn));
+        JSONObject jsonObject = JSONObject.fromObject(hm);
+        try{
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+        }
+        catch(IOException e){
+            MiscUtils.getLogger().error("Error", e);
+        }
+
+        return null;
     }
 
     public ActionForward documentUpdate(ActionMapping mapping, ActionForm form,
@@ -238,9 +261,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         String providerNo=request.getParameter("providerNo");
         String searchProviderNo=request.getParameter("searchProviderNo");
         String ackStatus=request.getParameter("status");
-        DemographicData demoD=new DemographicData();
-        DemographicData.Demographic demo = demoD.getDemographic(demog);
-        String demoName=demo.getLastName()+", "+demo.getFirstName();
+        String demoName=getDemoName(demog);
         request.setAttribute("demoName", demoName);
         request.setAttribute("segmentID", documentId);
         request.setAttribute("providerNo", providerNo);
@@ -250,7 +271,12 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         return mapping.findForward("displaySingleDoc");
         
     }
-
+    private String getDemoName(String demog){
+        DemographicData demoD=new DemographicData();
+        DemographicData.Demographic demo = demoD.getDemographic(demog);
+        String demoName=demo.getLastName()+", "+demo.getFirstName();
+        return demoName;
+    }
     private void saveDocNote(final HttpServletRequest request,String docDesc,String demog,String documentId){
 
                     Date now=EDocUtil.getDmsDateTimeAsDate();
