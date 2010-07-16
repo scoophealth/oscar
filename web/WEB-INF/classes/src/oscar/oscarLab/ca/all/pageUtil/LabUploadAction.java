@@ -97,13 +97,11 @@ public class LabUploadAction extends Action {
 
 
         }catch(Exception e){
-            logger.debug("Exception: "+e);
             MiscUtils.getLogger().error("Error", e);
             outcome = "exception";
         }
         request.setAttribute("outcome", outcome);
         request.setAttribute("audit", audit);
-        logger.info("forwarding outcome "+outcome);
         return mapping.findForward("success");
     }
 

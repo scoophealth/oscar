@@ -3,6 +3,7 @@ package oscar.oscarLab.ca.all.pageUtil;
 import java.io.IOException;
 import java.util.GregorianCalendar;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,9 +56,11 @@ public class OruR01UploadAction extends Action {
 	        
 	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);
 	        
-	        SendingUtils.send(hl7Message, professionalSpecialist);
+	        int statusCode=SendingUtils.send(hl7Message, professionalSpecialist);
 	        
-	        WebUtils.addInfoMessage(request.getSession(), "Data successfully send.");
+	        if (HttpServletResponse.SC_OK==statusCode) WebUtils.addInfoMessage(request.getSession(), "Data successfully send.");
+	        else throw(new ServletException("Error sending data. response code="+statusCode));
+	        
         } catch (Exception e) {
 	        logger.error("Unexpected error.", e);
 	        WebUtils.addErrorMessage(request.getSession(), "An error occurred while sending this data, please try again or send this manually.");
