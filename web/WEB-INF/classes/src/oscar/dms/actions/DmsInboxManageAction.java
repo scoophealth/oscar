@@ -517,8 +517,6 @@ public class DmsInboxManageAction extends DispatchAction {
     request.setAttribute("abnormals", abnormals);
     request.setAttribute("totalNumDocs",totalNumDocs );
     request.setAttribute("patientIdNamesStr",patientIdNamesStr);
-    //System.out.println("labs.size="+labdocs.size());
-    //System.out.println("forward to dms_index");
 
         return mapping.findForward("dms_index");
     }
