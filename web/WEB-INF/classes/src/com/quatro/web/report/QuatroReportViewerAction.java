@@ -400,7 +400,7 @@ public class QuatroReportViewerAction extends Action {
       try{
          jspPath = getServlet().getServletContext().getResource("/").getPath();
       }catch(Exception ex){
-    	  ;
+    	logger.error("Error", ex);
       }
 //      jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
       String path=jspPath  + "PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
@@ -413,14 +413,14 @@ public class QuatroReportViewerAction extends Action {
       try{
 	     reportManager.DownloadRptFile(path, _rptOption.getRptFileNo());
       }catch(Exception ex){
-       	  ;
+       	 logger.error("Error", ex);
       }
       
       try{
           reportDocument1.open(path,0);
           if (!Utility.IsEmpty(criteriaString))  reportDocument1.setRecordSelectionFormula(criteriaString);
       }catch(ReportSDKException ex){
-	      ReportSDKException ss=ex;
+              logger.error("Error", ex);
       }
       
       IReportSource reportSource = (IReportSource)reportDocument1.getReportSource();
@@ -656,7 +656,7 @@ public class QuatroReportViewerAction extends Action {
         try{
            jspPath = getServlet().getServletContext().getResource("/").getPath();
         }catch(Exception ex){
-      	  ;
+      	logger.error("Error", ex);
         }
 //        jspPath= OscarProperties.getInstance().getProperty("RPT_PATH");      
         String path=jspPath  + "PMmodule/reports/RptFiles/" + _rptOption.getRptFileName();
@@ -669,14 +669,14 @@ public class QuatroReportViewerAction extends Action {
         try{
 	        reportManager.DownloadRptFile(path, _rptOption.getRptFileNo());
         }catch(Exception ex){
-     	  ;
+     	logger.error("Error", ex);
         }
         
         try{
              reportDocument1.open(path,0);
              if (!Utility.IsEmpty(criteriaString)) reportDocument1.setRecordSelectionFormula(criteriaString);
         }catch(ReportSDKException ex){
-	        ReportSDKException ss=ex;
+	        logger.error("Error", ex);
         }
         
         IReportSource reportSource = (IReportSource)reportDocument1.getReportSource();
