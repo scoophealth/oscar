@@ -317,7 +317,14 @@ function showHideBillPref() {
 					<%=bill.get("servicetype_name")%></option>
 <%
 		}
-	} 
+	} else {
+		resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
+		for (Map bill : resultList) {	
+%>
+		<option value="<%=bill.get("servicetype")%>"><%=bill.get("servicetype_name")%></option>
+<%
+		}
+	}
 %>
 	  </select>	    
 	  </div>
