@@ -44,7 +44,7 @@ public class MigrateStaffAssignments {
     	Statement stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
     	stmt.execute("SELECT * FROM provider_role_program");
     	ResultSet rs = stmt.getResultSet();
-    	int count = 0;
+    	
     	while(rs.next()) {
     		long providerNo = rs.getInt("provider_no");
     		long programId = rs.getInt("program_id");
@@ -54,7 +54,7 @@ public class MigrateStaffAssignments {
     			this.addProgramProvider(programId,providerNo,group_id);
     		}
     
-    		count++;
+    		
     	}
     	rs.close();
 
