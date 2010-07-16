@@ -83,17 +83,77 @@ public class DisplayImageAction extends DownloadAction{
         //gets content type from image extension
         String contentType = new MimetypesFileTypeMap().getContentType(file);
         /**
-         * for png files (this if-statement will force every file extension with "application/octet-stream" to png)
-         * This was a temporary fix.You need to look at mimetypes file to
+         * For encoding file types not included in the mimetypes file
+         * You need to look at mimetypes file to check if the file type you are using is included
          *
          */
-        //check if the file type you are using is included
-        if(contentType.equalsIgnoreCase("application/octet-stream")){
-            contentType = "image/png";
-            MiscUtils.getLogger().debug("----hard-coded-file type:<error-check the mimetype file to see if the filetype of file: "+file.getName()+" is in there> ...");
-        }
+         try{
+                if(extension(file.getName()).equalsIgnoreCase("png")){ // for PNG
+                    contentType = "image/png";
+                }else if(extension(file.getName()).equalsIgnoreCase("jpeg")||
+                        extension(file.getName()).equalsIgnoreCase("jpe")||
+                        extension(file.getName()).equalsIgnoreCase("jpg")){ //for JPEG,JPG,JPE
+                    contentType = "image/jpeg";
+                }else if(extension(file.getName()).equalsIgnoreCase("bmp")){ // for BMP
+                    contentType = "image/bmp";
+                }else if(extension(file.getName()).equalsIgnoreCase("cod")){ // for COD
+                    contentType = "image/cis-cod";
+                }else if(extension(file.getName()).equalsIgnoreCase("ief")){ // for IEF
+                    contentType = "image/ief";
+                }else if(extension(file.getName()).equalsIgnoreCase("jfif")){ // for JFIF
+                    contentType = "image/pipeg";
+                }else if(extension(file.getName()).equalsIgnoreCase("svg")){ // for SVG
+                    contentType = "image/svg+xml";
+                }else if(extension(file.getName()).equalsIgnoreCase("tiff")||
+                         extension(file.getName()).equalsIgnoreCase("tif")){ // for TIFF or TIF
+                    contentType = "image/tiff";
+                }else if(extension(file.getName()).equalsIgnoreCase("pbm")){ // for PBM
+                    contentType = "image/x-portable-bitmap";
+                }else if(extension(file.getName()).equalsIgnoreCase("pnm")){ // for PNM
+                    contentType = "image/x-portable-anymap";
+                }else if(extension(file.getName()).equalsIgnoreCase("pgm")){ // for PGM
+                    contentType = "image/x-portable-greymap";
+                }else if(extension(file.getName()).equalsIgnoreCase("ppm")){ // for PPM
+                    contentType = "image/x-portable-pixmap";
+                }else if(extension(file.getName()).equalsIgnoreCase("xbm")){ // for XBM
+                    contentType = "image/x-xbitmap";
+                }else if(extension(file.getName()).equalsIgnoreCase("xpm")){ // for XPM
+                    contentType = "image/x-xpixmap";
+                }else if(extension(file.getName()).equalsIgnoreCase("xwd")){ // for XWD
+                    contentType = "image/x-xwindowdump";
+                }else if(extension(file.getName()).equalsIgnoreCase("rgb")){ // for RGB
+                    contentType = "image/x-rgb";
+                }else if(extension(file.getName()).equalsIgnoreCase("ico")){ // for ICO
+                    contentType = "image/x-icon";
+                }else if(extension(file.getName()).equalsIgnoreCase("cmx")){ // for CMX
+                    contentType = "image/x-cmx";
+                }else if(extension(file.getName()).equalsIgnoreCase("ras")){ // for RAS
+                    contentType = "image/x-cmu-raster";
+                }else if(extension(file.getName()).equalsIgnoreCase("gif")){ // for GIF
+                    contentType = "image/gif";
+                }else{
+                    throw new Exception("please check the file type or update mimetypes.default file to include the "+"."+extension(file.getName()));
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+                throw new Exception("Could not open file "+file.getName()+" wrong file extension, ",e);
+            }
+        
+
         return new FileStreamInfo(contentType, file);
     }
+
+   /**
+     *
+     * @String <filename e.g example.jpeg>
+     * This method used to get file extension from a given filename
+     * @return String <file extension>
+     *
+     */
+      public String extension(String f) {
+       int dot = f.lastIndexOf(".");
+       return f.substring(dot + 1);
+      }
 
     public static File getImageFile(String imageFileName) throws Exception {
         String home_dir = OscarProperties.getInstance().getProperty("eform_image");
