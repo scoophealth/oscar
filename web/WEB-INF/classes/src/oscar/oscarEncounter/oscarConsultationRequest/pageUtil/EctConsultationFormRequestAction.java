@@ -262,7 +262,7 @@ public class EctConsultationFormRequestAction extends Action {
 		return forward;
 	}
 
-	private void doHl7Send(Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception {
+	private void doHl7Send(Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception, ServletException {
 		
 	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
 	    ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
@@ -319,7 +319,8 @@ public class EctConsultationFormRequestAction extends Action {
 
 	            
 	            ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);        
-	            SendingUtils.send(hl7Message, professionalSpecialist);
+	            int statusCode=SendingUtils.send(hl7Message, professionalSpecialist);
+	            if (HttpServletResponse.SC_OK!=statusCode) throw(new ServletException("Error, received status code:"+statusCode));
             } catch (DocumentException e) {
 	            logger.error("Unexpected error.", e);
             }	    	
