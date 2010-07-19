@@ -66,10 +66,10 @@ public class HSFODAO {
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " ;
         
         MiscUtils.getLogger().debug(sqlstatement);
-        DBHandler db = null;
+        
 		
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             
@@ -114,6 +114,7 @@ public class HSFODAO {
 				try {
 					st.close();
 				} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 			}
 		}
     }
@@ -151,9 +152,9 @@ public class HSFODAO {
                 ",ConsentDate = ? " + //28'" + new java.sql.Date(patientData.getConsentDate().getTime()) +
                 " WHERE Patient_Id= ? ";  //29'" + patientData.getPatient_Id() +"'";
         MiscUtils.getLogger().debug(sqlstatement);
-        DBHandler db =null;
+        
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+           
             Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             
@@ -202,6 +203,7 @@ public class HSFODAO {
 				try {
 					st.close();
 				} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 			}
 		}
         
@@ -213,9 +215,9 @@ public class HSFODAO {
             PreparedStatement st = null;
 	    String sqlstatement ="UPDATE form_hsfo_visit SET locked=true where ID=" + ID;
 	    MiscUtils.getLogger().debug(sqlstatement);
-	    DBHandler db=null;
+	   
 	    try {
-                db = new DBHandler(DBHandler.OSCAR_DATA);
+                
                 Connection connect = DBHandler.getConnection();
 	        st = connect.prepareStatement(sqlstatement);
 	        st.executeUpdate();
@@ -231,6 +233,7 @@ public class HSFODAO {
 	    				st.clearParameters();
 	    				st.close();
 	    			} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 		}
 	    //st.close();
@@ -242,10 +245,10 @@ public class HSFODAO {
         String sqlstatement ="select distinct VisitDate_Id  from form_hsfo_visit where demographic_no = ? " ;
         int i = 0;
         MiscUtils.getLogger().debug(sqlstatement);
-        DBHandler db =null;
+       
         ResultSet rs=null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             st.setString(1,demographic_no);
@@ -264,12 +267,14 @@ public class HSFODAO {
     				
     				rs.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
     		if (st != null)
     			try {
     				st.clearParameters();
     				st.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
         }
         
@@ -291,10 +296,10 @@ public class HSFODAO {
             PreparedStatement st = null;
 	    String sqlstatement ="select * from form_hsfo_visit where locked=true and demographic_no = ?";
 	    MiscUtils.getLogger().debug(sqlstatement);
-	    DBHandler db=null;
+	    
 	    ResultSet rs =null;
 	    try {
-                db = new DBHandler(DBHandler.OSCAR_DATA);
+                
                 Connection connect = DBHandler.getConnection();
 	        st = connect.prepareStatement(sqlstatement);
                 st.setString(1,demographic_no);
@@ -313,12 +318,14 @@ public class HSFODAO {
 	    				
 	    				rs.close();
 	    			} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
     		if (st != null)
     			try {
     				
     				st.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
     		
         }
@@ -376,9 +383,9 @@ public class HSFODAO {
                 "?,?,?,?)";
                 
         MiscUtils.getLogger().debug(sqlstatement);
-        DBHandler db =null;
+        
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection connect = DBHandler.getConnection();
             st = connect.prepareStatement(sqlstatement);
             //////
@@ -501,6 +508,7 @@ public class HSFODAO {
     				
     				st.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
         }
         return id;
@@ -517,10 +525,10 @@ public class HSFODAO {
 	public void updatePatientDx(String patientId, int hsfoRxDx) {
 		String sql = "UPDATE hsfo_patient SET RxDx=?  WHERE Patient_Id=?";
 
-		DBHandler db = null;
+		
 		PreparedStatement ps = null;
 		try {
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			
 			Connection connect = DBHandler.getConnection();
 			ps = connect.prepareStatement(sql);
 			ps.setInt(1, hsfoRxDx);
@@ -536,6 +544,7 @@ public class HSFODAO {
 				try {
 					ps.close();
 				} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 		}
 	
@@ -555,11 +564,11 @@ public class HSFODAO {
 		
 		String sql = "SELECT RxDx FROM hsfo_patient WHERE Patient_Id=?";
 
-		DBHandler db = null;
+		
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			
 			Connection connect = DBHandler.getConnection();
 			ps = connect.prepareStatement(sql);
 			ps.setString(1, patientId);
@@ -579,11 +588,13 @@ public class HSFODAO {
 				try {
 					rs.close();
 				} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 			if (ps != null)
 				try {
 					ps.close();
 				} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 		}
 
@@ -594,11 +605,11 @@ public class HSFODAO {
         
         String query = "SELECT * FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
         MiscUtils.getLogger().debug("query: " + query);
-        DBHandler db =null;
+       
         Statement sql =null;
         ResultSet result =null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
@@ -651,12 +662,14 @@ public class HSFODAO {
     				
     				result.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
     				
     				sql.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
         }
         return patientData;
@@ -669,11 +682,11 @@ public class HSFODAO {
         
         String query = "SELECT FName FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
         MiscUtils.getLogger().debug("query: " + query);
-        DBHandler db =null;
+       
         Statement sql =null;
         ResultSet result =null;
         try {
-           db = new DBHandler(DBHandler.OSCAR_DATA);
+           
            Connection connect = DBHandler.getConnection();
            sql = connect.createStatement();
            result = sql.executeQuery(query);
@@ -695,12 +708,14 @@ public class HSFODAO {
     				
     				result.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
     				
     				sql.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
         }
         return isFirstRecord;
@@ -806,13 +821,13 @@ public class HSFODAO {
     }
     public List retrieveVisitRecord(String ID) throws SQLException {
         
-        PatientList StorageList = new PatientList();
+        
         List patientList = new LinkedList();
-        DBHandler db =null;
+        
         PreparedStatement query =null;
         ResultSet rs =null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection connect = DBHandler.getConnection();
             
             query = connect.prepareStatement("SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id = ? group by VisitDate_Id)");
@@ -836,12 +851,14 @@ public class HSFODAO {
     				
     				rs.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
     		if (query != null)
     			try {
     				
     				query.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
         }
         
@@ -853,7 +870,7 @@ public class HSFODAO {
     
     public VisitData retrieveLatestRecord(Date visitdate,String demographic_no) throws SQLException {
 		 VisitData visitData = new VisitData();
-                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                 
                  Connection connect = DBHandler.getConnection();
 		 Statement sql = connect.createStatement();
 		 //String query = "SELECT MAX(FormEdited) as Max FROM form_hsfo_Visit WHERE VisitDate_Id='" + visitdate + "' and demographic_no = '"+demographic_no+"' ";
@@ -988,6 +1005,7 @@ public class HSFODAO {
 	    				
 	    				sql.close();
 	    			} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 	        }
 		
@@ -999,10 +1017,10 @@ public class HSFODAO {
      public boolean isRecordExists(Date visitdate,String demographicNo) {
          boolean isRecordExists = false;
          PreparedStatement sql =null;
-         DBHandler db = null;
+         
          try{
             int ID=0;
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection connect = DBHandler.getConnection();
             String query = "SELECT ID FROM form_hsfo_visit WHERE VisitDate_Id= ? and demographic_no = ?";
             sql = connect.prepareStatement(query);
@@ -1017,7 +1035,7 @@ public class HSFODAO {
             MiscUtils.getLogger().debug("ID retrieved: " + ID); 
 //            sql.close();
          }catch(Exception e ){
-                
+                MiscUtils.getLogger().error("Error", e);
          }finally {
 	        	
 	    		if (sql != null)
@@ -1025,6 +1043,7 @@ public class HSFODAO {
 	    				
 	    				sql.close();
 	    			} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 	        }
         return isRecordExists;
@@ -1035,7 +1054,7 @@ public class HSFODAO {
      
      public VisitData retrieveSelectedRecord(int ID) throws SQLException {
 		 VisitData visitData = new VisitData();
-                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                 
                  Connection connect = DBHandler.getConnection();
 		 Statement sql = connect.createStatement();
 		 String query = "SELECT DISTINCT * FROM form_hsfo_visit WHERE  ID = " + ID;;
@@ -1151,6 +1170,7 @@ public class HSFODAO {
 	    				
 	    				sql.close();
 	    			} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 	        }
 	     return visitData;
@@ -1161,11 +1181,11 @@ public class HSFODAO {
     public List getAllPatientId(){
     	List reList=new ArrayList();
     	String query = "SELECT Distinct Patient_Id FROM hsfo_patient";
-    	DBHandler db =null;
+    	
     	Statement sql=null;
     	ResultSet result =null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+           
             Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
@@ -1186,12 +1206,14 @@ public class HSFODAO {
     				
     				result.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
     				
     				sql.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
         }
     	return reList;
@@ -1201,13 +1223,13 @@ public class HSFODAO {
         
         
         String query = "SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id='" + ID + "' group by VisitDate_Id)";
-        DBHandler db =null;
+        
     	Statement sql=null;
     	ResultSet result =null;
         
         List patientList = new LinkedList();
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             Connection connect = DBHandler.getConnection();
             sql = connect.createStatement();
             result = sql.executeQuery(query);
@@ -1379,12 +1401,14 @@ public class HSFODAO {
     				
     				result.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
     		if (sql != null)
     			try {
     				
     				sql.close();
     			} catch (SQLException e) {
+                            MiscUtils.getLogger().error("Error", e);
 			}
         }
         
