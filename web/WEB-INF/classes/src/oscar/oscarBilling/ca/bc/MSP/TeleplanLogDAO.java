@@ -59,7 +59,7 @@ public class TeleplanLogDAO {
     
     public void save(TeleplanLog tl){
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
             executeUpdate(pstmt,tl);
             pstmt.close();
@@ -78,7 +78,7 @@ public class TeleplanLogDAO {
     
     public void save(List list){
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
             MiscUtils.getLogger().debug("LOG LIST SIZE"+list.size());
             for (int i = 0; i < list.size(); i++){

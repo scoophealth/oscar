@@ -48,8 +48,8 @@ import oscar.OscarProperties;
 public class DocumentTeleplanReportUploadServlet extends HttpServlet{
     final static int BUFFER = 2048;
     public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException  {
-        int c;
-        int count;
+        
+        
         byte data[] = new byte[BUFFER];
         byte data1[] = new byte[BUFFER/2];
         byte data2[] = new byte[BUFFER/2];
@@ -59,7 +59,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         HttpSession session = request.getSession(true);
         String backupfilepath = ((String) session.getAttribute("homepath"))!=null?((String) session.getAttribute("homepath")):"null" ;
         
-        count=request.getContentType().indexOf('=');
+        
         
         String foldername="", fileheader="", forwardTo="";
         
