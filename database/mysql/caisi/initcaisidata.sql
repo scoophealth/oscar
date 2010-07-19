@@ -21,6 +21,7 @@ insert into caisi_role (name,userDefined,oscar_name,update_date) values('Case Ma
 insert into caisi_role (name,userDefined,oscar_name,update_date) values('Housing Worker', 1,'',now());
 insert into caisi_role (name,userDefined,oscar_name,update_date) values('Support Worker', 1,'',now());
 insert into caisi_role (name,userDefined,oscar_name,update_date) values('Client Service Worker', 1,'',now());
+insert into caisi_role (name,userDefined,oscar_name,update_date) values('Recreation Therapist', 1,'',now());
 
 -- access types
 INSERT INTO `access_type` VALUES (1,'write doctor issues','access'),(2,'read doctor issues','access'),(3,'read doctor notes','access'),(4,'read doctor ticklers','access'),
@@ -99,6 +100,12 @@ insert into access_type (name, type) values("read ticklers assigned to a Client 
 insert into access_type (name, type) values("write Client Service Worker issues","access");
 insert into access_type (name, type) values("read Client Service Worker issues","access");
 insert into access_type (name, type) values("read Client Service Worker notes","access");
+
+insert into access_type (name, type) values("read ticklers assigned to a Recreation Therapist","access");
+insert into access_type (name, type) values("write Recreation Therapist issues","access");
+insert into access_type (name, type) values("read Recreation Therapist issues","access");
+insert into access_type (name, type) values("read Recreation Therapist notes","access");
+
 
 -- access types for quatro shelter
 insert into access_type (name, type) values("Sex restriction override on referral","access");
@@ -1069,6 +1076,53 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='print bed rosters and reports'));
 
 
+
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read ticklers assigned to a Recreation Therapist'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Recreation Therapist issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='write Recreation Therapist issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Recreation Therapist notes'));
+
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read ticklers assigned to a Case Manager'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Case Manager issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='write Case Manager issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Case Manager notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read ticklers assigned to a Housing Worker'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Housing Worker issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='write Housing Worker issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Housing Worker notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read ticklers assigned to a Medical Secretary'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Medical Secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='write Medical Secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Medical Secretary notes'));
+
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read ticklers assigned to a Clinical Assistant'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Clinical Assistant issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='write Clinical Assistant issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read Clinical Assistant notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read ticklers assigned to a secretary'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='write secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read secretary notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='Write Ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='oscarcomm'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='medical form'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='measurements'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='eform'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='master file'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='read ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='Perform program registration intake'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='perform registration intake'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='perform admissions'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='perform discharges'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='perform bed assignments'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='Recreation Therapist'),(select access_id from access_type where name='print bed rosters and reports'));
 
 
 
