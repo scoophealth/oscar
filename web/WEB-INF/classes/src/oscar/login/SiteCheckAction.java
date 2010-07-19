@@ -111,8 +111,8 @@ public final class SiteCheckAction extends BaseAction {
             String where = "shelterSelection";
             // String userName, password, pin, propName;
             String userName = ssv.getUserName();
-            String password = String.valueOf(ssv.getPassword());
-            String pin = ssv.getPin();
+            
+            
             if (userName.equals("")) {
                 return "error:Login failed, please try again";
             }
@@ -125,7 +125,7 @@ public final class SiteCheckAction extends BaseAction {
 
             Security user = null;
             String message = "";
-            ApplicationContext appContext = getAppContext();
+            
             try {
         //        user = cl.auth(userName, password, pin, ip, appContext);
     	        String expired_days = "";
