@@ -195,7 +195,7 @@ public final class LoginAction extends DispatchAction {
                 UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
                 UserProperty drugrefProperty = propDAO.getProp(UserProperty.MYDRUGREF_ID);
                 if (drugrefProperty != null) {
-                    String drugrefId = drugrefProperty.getValue();
+                   
                     DSService service =  (DSService) ctx.getBean("dsService");
                     service.fetchGuidelinesFromServiceInBackground(providerNo);
                 }

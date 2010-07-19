@@ -85,11 +85,11 @@ public class LoginCheckLogin {
         if (ip.startsWith(pvar.getProperty("login_local_ip")))
             bWAN = false;
 
-        GregorianCalendar now = new GregorianCalendar();
+         new GregorianCalendar();
         while (llist == null) {
             llist = LoginList.getLoginListInstance();
         }
-        String sTemp = null;
+        
 
         // check if it is blocked
         if (llist.get(userName) != null && ((LoginInfoBean) llist.get(userName)).getStatus() == 0)
