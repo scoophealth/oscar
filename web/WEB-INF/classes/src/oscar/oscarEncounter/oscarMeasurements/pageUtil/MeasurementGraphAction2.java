@@ -98,7 +98,7 @@ public class MeasurementGraphAction2 extends Action {
         if (userrole == null) {
             response.sendRedirect("../logout.jsp");
         }
-        String roleName$ = (String) userrole + "," + (String) request.getSession().getAttribute("user");
+        
 
         String demographicNo = request.getParameter("demographic_no");
         String typeIdName = request.getParameter("type");
@@ -264,7 +264,7 @@ public class MeasurementGraphAction2 extends Action {
         plot.setDataset(1, dataset);
         
         plot.getDomainAxis().setAutoRange(true);
-        Range rang = plot.getDataRange(plot.getRangeAxis());
+        
 
         log.debug("LEN " + plot.getDomainAxis().getLowerBound() + " ddd " + plot.getDomainAxis().getUpperMargin() + " eee " + plot.getDomainAxis().getLowerMargin());
             //plot.getDomainAxis().setUpperMargin(plot.getDomainAxis().getUpperMargin()*6);
@@ -341,7 +341,7 @@ public class MeasurementGraphAction2 extends Action {
             XYPlot plot = chart.getXYPlot();
 
             plot.getDomainAxis().setAutoRange(true);
-            Range rang = plot.getDataRange(plot.getRangeAxis());
+            
 
 
             log.debug("LEN " + plot.getDomainAxis().getLowerBound() + " ddd " + plot.getDomainAxis().getUpperMargin() + " eee " + plot.getDomainAxis().getLowerMargin());
@@ -462,7 +462,7 @@ public class MeasurementGraphAction2 extends Action {
             
             XYPlot plot = chart.getXYPlot();
             plot.getDomainAxis().setAutoRange(true);
-            Range rang = plot.getDataRange(plot.getRangeAxis());
+           
 
             log.debug("LEN " + plot.getDomainAxis().getLowerBound() + " ddd " + plot.getDomainAxis().getUpperMargin() + " eee " + plot.getDomainAxis().getLowerMargin());
             plot.getDomainAxis().setUpperMargin(plot.getDomainAxis().getUpperMargin()*6);
@@ -551,7 +551,7 @@ public class MeasurementGraphAction2 extends Action {
             
             XYPlot plot = chart.getXYPlot();
             plot.getDomainAxis().setAutoRange(true);
-            Range rang = plot.getDataRange(plot.getRangeAxis());
+           
 
             log.debug("LEN " + plot.getDomainAxis().getLowerBound() + " ddd " + plot.getDomainAxis().getUpperMargin() + " eee " + plot.getDomainAxis().getLowerMargin());
             plot.getDomainAxis().setUpperMargin(plot.getDomainAxis().getUpperMargin()*6);
@@ -603,7 +603,7 @@ public class MeasurementGraphAction2 extends Action {
             MiscUtils.getLogger().debug(" lab type >"+labType+"< >"+labType.equals("loinc")+"<"+testName+" "+identifier);
             if (labType.equals("loinc")){
               try{  
-              DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
+              
               Connection conn = DBHandler.getConnection();
               list = comVal.findValuesByLoinc2(demographicNo, identifier, conn );
               MiscUtils.getLogger().debug("List ->"+list.size());
@@ -657,7 +657,7 @@ public class MeasurementGraphAction2 extends Action {
             
             XYPlot plot = chart.getXYPlot();
             plot.getDomainAxis().setAutoRange(true);
-            Range rang = plot.getDataRange(plot.getRangeAxis());
+            
 
             log.debug("LEN " + plot.getDomainAxis().getLowerBound() + " ddd " + plot.getDomainAxis().getUpperMargin() + " eee " + plot.getDomainAxis().getLowerMargin());
             plot.getDomainAxis().setUpperMargin(plot.getDomainAxis().getUpperMargin()*6);
@@ -783,7 +783,7 @@ public class MeasurementGraphAction2 extends Action {
             
             XYPlot plot = chart.getXYPlot();
             plot.getDomainAxis().setAutoRange(true);
-            Range rang = plot.getDataRange(plot.getRangeAxis());
+           
 
             log.debug("LEN " + plot.getDomainAxis().getLowerBound() + " ddd " + plot.getDomainAxis().getUpperMargin() + " eee " + plot.getDomainAxis().getLowerMargin());
             plot.getDomainAxis().setUpperMargin(plot.getDomainAxis().getUpperMargin()*6);
