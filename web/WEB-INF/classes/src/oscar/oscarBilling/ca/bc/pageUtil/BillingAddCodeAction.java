@@ -48,7 +48,7 @@ public final class BillingAddCodeAction
                                HttpServletResponse response) throws IOException,
       ServletException {
 
-    Locale locale = getLocale(request);
+    
 
     if (request.getSession().getAttribute("user") == null) {
       return (mapping.findForward("Logout"));
@@ -56,7 +56,7 @@ public final class BillingAddCodeAction
 
     BillingAddCodeForm frm = (BillingAddCodeForm) form;
 
-    String codeId = frm.getCodeId();
+    
     String code = frm.getCode();
     String pCode = code;
     String desc = frm.getDesc();

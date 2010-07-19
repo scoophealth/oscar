@@ -246,7 +246,7 @@ public class BillingAssociationPersistence {
       rs = db.GetSQL(qry);
 
       while (rs.next()) {
-        String code = rs.getString(2);
+        
         String dxcode = rs.getString(3);
         assoc.addDXCode(dxcode);
         assoc.setServiceCode(svcCode);

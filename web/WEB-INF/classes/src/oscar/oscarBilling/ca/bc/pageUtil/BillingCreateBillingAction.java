@@ -224,7 +224,7 @@ public class BillingCreateBillingAction extends Action {
     //However we don't necessarily want it to force the user to enter a bill
     validateCodeLastBilled(request, errors, demo.getDemographicNo());
 
-    String fromBilling = request.getParameter("fromBilling");
+    
 
     //if fromBilling is true set forward to WCB Form
 ////    if ("true".equals(fromBilling)) {

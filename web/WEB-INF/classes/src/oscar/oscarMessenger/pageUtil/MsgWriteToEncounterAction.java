@@ -53,7 +53,7 @@ public class MsgWriteToEncounterAction extends Action {
             String dateString = curYear+"-"+curMonth+"-"+curDay;
             String provider = (String) request.getSession().getAttribute("user");
 
-            String msgId = request.getParameter("msgId");
+            
 
             //../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=
             ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));

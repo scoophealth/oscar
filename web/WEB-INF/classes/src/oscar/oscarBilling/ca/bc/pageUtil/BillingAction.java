@@ -75,7 +75,7 @@ public final class BillingAction extends Action {
         //If newWCBClaim == 1, this action was invoked from the WCB form
         //Therefore, we need to set the appropriate parameters to set up the subsequent bill
         if ("1".equals(newWCBClaim)) {
-          WCBForm wcbForm = (WCBForm) request.getSession().getAttribute("WCBForm");
+          
           frm.setXml_billtype("WCB");
           
           List l = (List) request.getAttribute("billingcodes");
