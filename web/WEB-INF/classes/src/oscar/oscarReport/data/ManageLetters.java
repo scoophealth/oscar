@@ -68,10 +68,10 @@ public class ManageLetters {
     //method to save a new report
     public void saveReport(String providerNo,String reportName,String fileName, byte[] in){
         
-        DBHandler dbhandler = null;
+       
         try {
 
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            
             String s = "insert into report_letters (provider_no,report_name, file_name,report_file,date_time,archive) values (?,?,?,?,now(),'0')" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
@@ -105,11 +105,11 @@ public class ManageLetters {
     
     //method getReport for id
     public JasperReport getReport(String id){
-        DBHandler dbhandler = null;
+        
         JasperReport  jasperReport = null;
         try {
 
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            
             String s = "select report_file from report_letters where id  = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
@@ -149,11 +149,11 @@ public class ManageLetters {
     
     //method to write file to stream
     public void writeLetterToStream(String id,OutputStream out){
-        DBHandler dbhandler = null;
+        
         
         try {
 
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            
             String s = "select report_file from report_letters where id  = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
@@ -188,11 +188,11 @@ public class ManageLetters {
     
     //method to list active reports
     public ArrayList getActiveReportList(){
-        DBHandler dbhandler = null;
+        
         ArrayList list = new ArrayList();
         try {
 
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where archive = '0' order by date_time,report_name" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             ResultSet rs = pstmt.executeQuery();
@@ -209,11 +209,11 @@ public class ManageLetters {
     }   
     
     public Hashtable getReportData(String id){
-        DBHandler dbhandler = null;
+        
         Hashtable h = null;
         try {
 
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+           
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where ID = ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
@@ -253,10 +253,10 @@ public class ManageLetters {
          */
     public void logLetterCreated(String providerNo,String reportId,String[] demos){
         
-         DBHandler dbhandler = null;
+         
         try {
 
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            
             String s = "insert into log_letters (provider_no,report_id, log, date_time) values (?,?,?,now())" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
