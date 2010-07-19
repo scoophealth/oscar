@@ -96,8 +96,7 @@ public class EctValidation{
         if ((dMax!=0) || (dMin!=0)){
             if(gValidator.isDouble(inputValue)){
                 double dValue = Double.parseDouble(inputValue);
-                String min = Double.toString(dMin);
-                String max = Double.toString(dMax);
+                
                 if (!gValidator.isInRange(dValue, dMin, dMax)){                                       
                     validation=false;
                 }

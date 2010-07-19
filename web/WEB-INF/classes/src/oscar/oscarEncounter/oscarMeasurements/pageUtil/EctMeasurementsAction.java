@@ -109,8 +109,6 @@ public class EctMeasurementsAction extends Action {
 
         MsgStringQuote str = new MsgStringQuote();
 
-        List messages = new LinkedList();
-
         Properties p = (Properties) session.getAttribute("providerBean");
         String by = "";
         if (p != null ){
@@ -134,7 +132,7 @@ public class EctMeasurementsAction extends Action {
                 String inputValueName, inputTypeName, inputTypeDisplayName, mInstrcName, commentsName;
                 String dateName,validationName, inputValue, inputType, inputTypeDisplay, mInstrc;
                 String comments, dateObserved, validation;
-                String msg = null;
+                
                 String regExp = null;
                 double dMax = 0;
                 double dMin = 0;
@@ -158,7 +156,7 @@ public class EctMeasurementsAction extends Action {
                     comments = (String) frm.getValue(commentsName);
                     dateObserved = (String) frm.getValue(dateName);
 
-                    msg = null;
+                 
                     regExp = null;
                     dMax = 0;
                     dMin = 0;
