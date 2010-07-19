@@ -60,11 +60,13 @@ public class RecommitDAO {
 	    				
 	    				rs.close();
 	    			} catch (SQLException e) {
+                                    MiscUtils.getLogger().error("Error", e);
 				}
 				if (st != null)
 					try {
 						st.close();
 					} catch (SQLException e) {
+                                            MiscUtils.getLogger().error("Error", e);
 					}
 			}
 	        return reSchedule;
@@ -75,10 +77,10 @@ public class RecommitDAO {
 	     String sqlstatement ="update hsfo_recommit_schedule set id=?, status=?, "+
 	     		"memo=?, schedule_time=?,user_no=?,check_flag=? where id=?";
 	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	     DBHandler db =null;
+	     
 	     
 	     try {
-	    	 db = new DBHandler(DBHandler.OSCAR_DATA);
+	    	
 	         Connection connect = DBHandler.getConnection();
 	         st = connect.prepareStatement(sqlstatement);
 	         st.setString(1,rd.getId().toString());
@@ -99,6 +101,7 @@ public class RecommitDAO {
 				try {
 						st.close();
 					} catch (SQLException e) {
+                                            MiscUtils.getLogger().error("Error", e);
 					}
 			}
 	     
@@ -109,10 +112,10 @@ public class RecommitDAO {
 	     String sqlstatement ="insert into hsfo_recommit_schedule set status=?, "+
 	     		"memo=?, schedule_time=?,user_no=?,check_flag=?";
 	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	     DBHandler db =null;
+	     
 	     
 	     try {
-	    	 db = new DBHandler(DBHandler.OSCAR_DATA);
+	    	
 	         Connection connect = DBHandler.getConnection();
 	         st = connect.prepareStatement(sqlstatement);
 	         
@@ -133,6 +136,7 @@ public class RecommitDAO {
 				try {
 						st.close();
 					} catch (SQLException e) {
+                                            MiscUtils.getLogger().error("Error", e);
 					}
 			}
 	     
