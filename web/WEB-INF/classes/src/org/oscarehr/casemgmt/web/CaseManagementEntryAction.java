@@ -2055,7 +2055,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String substitution = request.getParameter("newIssueId");
         String sessionFrmName = "caseManagementEntryForm" + getDemographicNo(request);        
         CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean) request.getSession().getAttribute(sessionFrmName);
-        CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+        
         CheckBoxBean[] curIssues = sessionFrm.getIssueCheckList();
 
         if (substitution != null) {
