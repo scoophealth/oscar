@@ -60,9 +60,9 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         String backupfilepath = ((String) session.getAttribute("homepath"))!=null?((String) session.getAttribute("homepath")):"null" ;
         
         count=request.getContentType().indexOf('=');
-        String temp = request.getContentType().substring(count+1);
-        String filename = "test.txt", fileoldname="", foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="", doctype="", docxml="";
-        String home_dir="", doc_forward="";
+        
+        String foldername="", fileheader="", forwardTo="";
+        
         String userHomePath = System.getProperty("user.home", "user.dir");
         MiscUtils.getLogger().debug(userHomePath);
         
@@ -74,7 +74,7 @@ public class DocumentTeleplanReportUploadServlet extends HttpServlet{
         //
          if (forwardTo == null || forwardTo.length() < 1) return;
 
-        boolean isMultipart = FileUpload.isMultipartContent(request);
+        
         //		 Create a new file upload handler
         DiskFileUpload upload = new DiskFileUpload();
 
