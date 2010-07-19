@@ -59,9 +59,9 @@ public class RptByExampleAction extends Action {
         Collection favorites = hd.getFavoriteCollection(providerNo);       
         request.setAttribute("favorites", favorites);        
                 
-        String bgcolor = "#ddddff";
+        
         String sql = frm.getSql();
-        String pros = "";
+        
         
         if (sql!= null){            
             write2Database(sql, providerNo);
@@ -85,7 +85,7 @@ public class RptByExampleAction extends Action {
         if (query!=null && query.compareTo("")!=0){
             try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
+                
                 StringEscapeUtils strEscUtils = new StringEscapeUtils();
                 
                 //query = exampleData.replaceSQLString (";","",query);
