@@ -318,7 +318,7 @@ public final class RxWriteScriptAction extends DispatchAction {
     public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         p("=============Start newCustomNote RxWriteScriptAction.java===============");
-        Locale locale = getLocale(request);
+      
         MessageResources messages = getResources(request);
         //set default quantity;
         //setDefaultQuantity(request);
@@ -330,7 +330,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         try {
             RxPrescriptionData rxData = new RxPrescriptionData();
-            RxDrugData drugData = new RxDrugData();
+            
             // create Prescription
             RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
             String ra = request.getParameter("randomId");
@@ -405,7 +405,7 @@ public final class RxWriteScriptAction extends DispatchAction {
     }
     public ActionForward newCustomDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         p("=============Start newCustomDrug RxWriteScriptAction.java===============");
-        Locale locale = getLocale(request);
+        
         MessageResources messages = getResources(request);
         //set default quantity;
         setDefaultQuantity(request);
@@ -418,7 +418,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
         try {
             RxPrescriptionData rxData = new RxPrescriptionData();
-            RxDrugData drugData = new RxDrugData();
+            
             // create Prescription
             RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
             String ra = request.getParameter("randomId");
@@ -1070,7 +1070,7 @@ public final class RxWriteScriptAction extends DispatchAction {
     public void saveDrug(final HttpServletRequest request)
             throws IOException, ServletException, Exception {
         oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-        RxDrugData drugData = new RxDrugData();
+        
         RxPrescriptionData.Prescription rx = null;
         RxPrescriptionData prescription = new RxPrescriptionData();
         String scriptId = prescription.saveScript(bean);

@@ -48,7 +48,7 @@ public class PrintBarcodeAction extends OscarAction {
         ServletOutputStream sos = null;
         InputStream ins = null;
         try {
-            ServletContext context = getServlet().getServletContext();
+            
             ins = getClass().getResourceAsStream("/oscar/oscarDemographic/barcode.jrxml");
 //            ins = context.getResourceAsStream("/label.xml");
 //            ins = new FileInputStream(System.getProperty("user.home") + "/label.xml");
