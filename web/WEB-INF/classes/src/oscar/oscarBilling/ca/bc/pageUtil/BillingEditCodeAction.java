@@ -93,7 +93,7 @@ public final class BillingEditCodeAction extends DispatchAction {
     HttpServletResponse response)
     throws IOException, ServletException {
 
-        Locale locale = getLocale(request);
+        
 
         if(request.getSession().getAttribute("user") == null  ){
             return (mapping.findForward("Logout"));

@@ -716,7 +716,7 @@ public final class BillingCreateBillingForm extends ActionForm {
   public ActionErrors validate(ActionMapping mapping,
                                HttpServletRequest request) {
     ActionErrors errors = new ActionErrors();
-    oscar.util.StringUtils ut = new oscar.util.StringUtils();
+    
 
    this.refertype1 = this.xml_refer1.equals("")?"":this.refertype1;
    this.refertype2 = this.xml_refer2.equals("")?"":this.refertype2;
