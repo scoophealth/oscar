@@ -61,7 +61,7 @@ public class MsgReDisplayMessagesAction extends Action {
             for (int i =0 ; i < messageNo.length ; i++){
               try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                java.sql.ResultSet rs;
+                
                 String sql = new String("update messagelisttbl set status = \'read\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
                 db.RunSQL(sql);
               }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

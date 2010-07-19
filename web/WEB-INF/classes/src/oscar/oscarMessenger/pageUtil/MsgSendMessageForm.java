@@ -98,8 +98,7 @@ public final class MsgSendMessageForm extends ActionForm {
 
  //             errors.add("message32",new ActionError("error.message.missing"));
               //errors.add("message32",new ActionError("index.heading"));
-              String str = "supperdooper";
-              ActionMessage actionError = new ActionMessage("index.heading");
+             
 
               errors.add("message", new ActionMessage("index.heading"));
 

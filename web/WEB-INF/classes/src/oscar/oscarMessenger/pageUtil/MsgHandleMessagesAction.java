@@ -48,14 +48,14 @@ public  class MsgHandleMessagesAction extends Action {
 				 HttpServletResponse response)
 	throws IOException, ServletException {
         // Extract attributes we will need
-        Locale locale = getLocale(request);
-        MessageResources messages = getResources(request);
+        
+        
         MsgSessionBean bean = (MsgSessionBean)request.getSession().getAttribute("msgSessionBean");
         String providerNo = bean.getProviderNo();
         MsgHandleMessagesForm frm = (MsgHandleMessagesForm) form;
         String messageNo = frm.getMessageNo();
         String demographicNo = frm.getDemographic_no();
-        String sentbyNo ;
+        
         String sentByLocation;
         String reply = frm.getReply();
         String replyAll = frm.getReplyAll();
@@ -112,7 +112,7 @@ public  class MsgHandleMessagesAction extends Action {
         if (delete.compareToIgnoreCase("Delete") == 0){
           try{    //sents this message status to del
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-             java.sql.ResultSet rs;
+             
              String sql = "update messagelisttbl set status = 'del' where provider_no = '"+providerNo+"' and message = '"+messageNo+"'";
              db.RunSQL(sql);
 
@@ -173,7 +173,7 @@ public  class MsgHandleMessagesAction extends Action {
         }
         else if (forward.equals("Forward")){
            String[] replyval = new String[] {};
-           java.util.Vector vector = new java.util.Vector();
+           
            StringBuffer subject = new StringBuffer("Fwd:");
            String themessage = new String();
            StringBuffer theSendMessage = new StringBuffer();

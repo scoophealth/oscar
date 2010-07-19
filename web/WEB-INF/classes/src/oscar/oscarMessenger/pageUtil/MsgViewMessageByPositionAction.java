@@ -70,7 +70,7 @@ public class MsgViewMessageByPositionAction extends Action {
         String orderBy = request.getParameter("orderBy")==null?"date":request.getParameter("orderBy");        
         String messagePosition = request.getParameter("messagePosition");           
         String demographic_no = request.getParameter("demographic_no");   
-        String from = request.getParameter("from")==null?"oscarMessenger":request.getParameter("from");
+        
         MsgDisplayMessagesBean displayMsgBean = new MsgDisplayMessagesBean();
         ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
         
