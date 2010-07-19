@@ -67,7 +67,7 @@ public class SimulateTeleplanFileAction extends Action{
             HttpServletResponse response) throws Exception{
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
 
-        String providerNo = request.getParameter("user");
+        
         String provider = request.getParameter("provider");
         String providerBillingNo = request.getParameter("provider");
         if(provider != null && provider.equals("all")){

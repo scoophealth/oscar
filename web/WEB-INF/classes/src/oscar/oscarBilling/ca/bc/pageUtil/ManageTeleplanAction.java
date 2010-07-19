@@ -440,7 +440,7 @@ public class ManageTeleplanAction extends DispatchAction {
     public ActionForward changePass(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
-           String oldpass  = (String) request.getParameter("oldpass");
+           
            String newpass  = (String) request.getParameter("newpass");
            String confpass = (String) request.getParameter("confpass");
            
@@ -453,7 +453,7 @@ public class ManageTeleplanAction extends DispatchAction {
            
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
-           TeleplanService tService = new TeleplanService();
+           
            
            TeleplanAPI tAPI = new TeleplanAPI();
            try{
@@ -528,14 +528,14 @@ public class ManageTeleplanAction extends DispatchAction {
                BufferedReader buff = new BufferedReader(new FileReader(file));
                StringBuffer sb = new StringBuffer();
                String line = null;
-               boolean eligible = true;
+               
                while ((line = buff.readLine()) != null) {
 
                   if (line != null && line.startsWith("ELIG_ON_DOS:")){
                       String el = line.substring(12).trim();
                       if(el.equalsIgnoreCase("no")){
                         request.setAttribute("Result","Failure");
-                        eligible = false;
+                        
                         line = "<span style=\"color:red; font-weight:bold;\">"+line+"</span>";
                       }
                   }
