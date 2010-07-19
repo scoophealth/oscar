@@ -37,7 +37,7 @@ public class PatientListByAppt extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
+        
         String drNo = request.getParameter("provider_no");
         String datefrom = request.getParameter("date_from");
         String dateto = request.getParameter("date_to");

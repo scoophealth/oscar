@@ -71,7 +71,7 @@ public class RptDemographicQuerySaver {
         String lastName         = frm.getLastName();
         String sex              = frm.getSex();
         String queryName        = frm.getQueryName();
-        String query            = frm.getQuery();
+       
 
         if (firstName != null ){
             firstName = firstName.trim();

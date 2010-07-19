@@ -118,8 +118,8 @@ public class ObecData {
 		String obecFilename = "";
 
 		try {
-			int fileCount = 0;
-			String home_dir;
+			
+			
 			String oscar_home = pp.getProperty("DOCUMENT_DIR");
 			Calendar calendar = new GregorianCalendar();
 			String randomDate = String.valueOf(calendar.get(Calendar.SECOND)) + String.valueOf(calendar.get(Calendar.MILLISECOND));

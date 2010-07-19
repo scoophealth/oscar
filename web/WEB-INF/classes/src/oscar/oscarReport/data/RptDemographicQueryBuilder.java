@@ -79,7 +79,7 @@ public class RptDemographicQueryBuilder {
         String firstName        = frm.getFirstName();
         String lastName         = frm.getLastName();
         String sex              = frm.getSex();
-        String queryName        = frm.getQueryName();
+       
         
 
         String orderBy          = frm.getOrderBy();
