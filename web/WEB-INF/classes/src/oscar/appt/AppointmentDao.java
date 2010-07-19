@@ -22,6 +22,7 @@
 
 package oscar.appt;
 
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.model.OscarAppointment;
@@ -34,6 +35,15 @@ public class AppointmentDao extends HibernateDaoSupport {
 
         @SuppressWarnings("unchecked")
         List<OscarAppointment> rs = getHibernateTemplate().find(queryStr);
+
+        return rs;
+    }
+
+    public List<OscarAppointment> findByDateRange(Date startTime, Date endTime) {
+        String queryStr = "FROM OscarAppointment a WHERE a.appointment_date >= ? and a.appointment_date < ?";
+
+        @SuppressWarnings("unchecked")
+        List<OscarAppointment> rs = getHibernateTemplate().find(queryStr, new Object[]{startTime, endTime});
 
         return rs;
     }

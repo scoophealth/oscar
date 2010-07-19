@@ -31,6 +31,9 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarLab.ca.all.upload.MessageUploader;
+import oscar.oscarLab.ca.all.upload.handlers.OscarToOscarHl7V2.AdtA09Handler;
+import ca.uhn.hl7v2.model.AbstractMessage;
+import ca.uhn.hl7v2.model.v26.message.ADT_A09;
 
 public class OscarToOscarHl7V2Handler implements MessageHandler {
 	private Logger logger = MiscUtils.getLogger();
@@ -42,7 +45,15 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 	        String dataString=new String(dataBytes, MiscUtils.ENCODING);
 	        logger.debug("Incoming HL7 Message : \n"+dataString);
 	        
-			MessageUploader.routeReport(serviceName, OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
+			AbstractMessage message=OscarToOscarUtils.pipeParserParse(dataString);
+			if (message instanceof ADT_A09) 
+			{
+				AdtA09Handler.handle((ADT_A09) message);
+			}
+			else
+			{
+				MessageUploader.routeReport(serviceName, OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
+			}
 		} catch (Exception e) {
 	        logger.error("Unexpected error.", e);
 	        MessageUploader.clean(fileId);
