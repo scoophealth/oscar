@@ -88,10 +88,10 @@ public class ManageLetters {
     
     //method to archive an existing report
     public void archiveReport(String id){
-        DBHandler dbhandler = null;
+        
         try {
 
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            
             String s = "update report_letters set archive = '1' where id =  ?" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
             pstmt.setString(1,id);
