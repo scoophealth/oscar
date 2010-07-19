@@ -56,7 +56,7 @@ public class PrintDemoAddressLabelAction extends OscarAction {
 
         if (ins == null) {
                 try {
-                        ServletContext context = getServlet().getServletContext();
+                        
                         ins = getClass().getResourceAsStream("/oscar/oscarDemographic/Addresslabel.xml");
                         logger.debug("loading from : /oscar/oscarDemographic/Addresslabel.xml " + ins);
                 }
