@@ -94,8 +94,8 @@ public class RptDownloadCSVServlet extends HttpServlet {
     }
     
     private String formReport(HttpServletRequest request) throws ServletException {
-        String VALUE = "value_";
-        String DATE_FORMAT = "dateFormat_";
+       
+        
         String SAVE_AS = "default";
         String reportId = request.getParameter("id") != null ? request.getParameter("id") : "0";
         // get form name
@@ -109,7 +109,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
             RptReportConfigData formConfig = new RptReportConfigData();
             Vector[] vecField = formConfig.getAllFieldNameValue(SAVE_AS, reportId);
             Vector vecFieldCaption = vecField[1];
-            Vector vecFieldName = vecField[0];
+           
 
             Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
 
@@ -209,8 +209,8 @@ public class RptDownloadCSVServlet extends HttpServlet {
         String sDemoSelect = "";
         String sSpecSelect = "";
         String sARSelect = "";
-        boolean bARSelectGA = false;
-        boolean bARSelectPrimiparous = false;
+        
+        
         String CHECK_BOX = "filter_";
         String VALUE = "value_";
         String DATE_FORMAT = "dateFormat_";
@@ -230,8 +230,8 @@ public class RptDownloadCSVServlet extends HttpServlet {
             }
             if(propARSelect.containsKey(name)) { 
                 bARSelect = true; 
-                if(name.equals("ga")) bARSelectGA = true;
-                if(name.equals("b_primiparous")) bARSelectPrimiparous = true;
+               
+                
                 
                 if(!name.equals("ga") && !name.equals("b_primiparous"))
                     sARSelect += (sARSelect.length()<1?"":",") + ARTYPE+"."+name; 
@@ -431,8 +431,8 @@ public class RptDownloadCSVServlet extends HttpServlet {
         }
 
 //         table: demographic and formBCAR
-        Vector vecARCaption = new Vector();
-        Properties propARValue = new Properties();
+        
+        
         if( (bDemoSelect && bARSelect && !bSpecSelect && !bSpecFilter) || (!bSpecSelect && bARFilter && !bSpecFilter) ) {
             String sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
             String subQuery = "select max(ID) from "+ARTYPE+", demographic where demographic.demographic_no="+ARTYPE+".demographic_no ";
