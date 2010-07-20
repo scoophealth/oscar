@@ -189,7 +189,7 @@ public class DxresearchReportAction extends DispatchAction {
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        DynaBean lazyForm = (DynaBean) form;
+        
 
         //String quickListName = (String)lazyForm.get("quicklistname");
         //List codeSearch = dxresearchdao.getQuickListItems(quickListName);;
