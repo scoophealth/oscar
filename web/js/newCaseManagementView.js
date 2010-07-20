@@ -556,7 +556,7 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
 
     //Set note position order
     var elementNum = containerDiv + "num";
-    var numNotes = $F(elementNum);
+    var numNotes = $F(elementNum);   
     var positionElement = containerDiv + noteId;
     var position;
     if( noteId == "" ) {
@@ -2593,10 +2593,10 @@ function autoCompleteShowMenuCPP(element, update) {
         var msnote;
         var pos;
 
-        for( idx = 0; idx < numNotes; ++idx ) {
+        for( idx = 0; idx <= numNotes; ++idx ) {
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
-
+            if(noteId==0) continue;
             if( $("obs"+noteId) != null )
                 noteDate = $("obs"+noteId).innerHTML;
             else if( $("observationDate") != null )
@@ -2754,10 +2754,9 @@ function autoCompleteShowMenuCPP(element, update) {
         for( idx = 1; idx <= numNotes; ++idx ) {
             notesDiv = $("nc" + idx).down('div');
             noteId = notesDiv.id.substr(1);  //get note id
-
-            //if print img present, add note to print queue if not already there
+          //if print img present, add note to print queue if not already there
             if( $("print"+noteId) != null ) {
-                pos = noteIsQeued(noteId);
+                pos = noteIsQeued(noteId);  
                 if( pos == -1 )
                     addPrintQueue(noteId);
             }
