@@ -61,14 +61,14 @@ public class CheckForMultipleBedAdmissions {
     }
 
     private void doReport(Demographic client, List currentAdmissions) {
-    	int numBedPrograms = 0;
+    	
  		for(Iterator iter2=currentAdmissions.iterator();iter2.hasNext();) {
 			Admission admission = (Admission)iter2.next();
 			if(admission.getProgramName() == null) {
 				return;
 			}
 			if(admission.getProgramType().equals("Bed")) {
-				numBedPrograms++;
+				
 			}
 		}
     }
