@@ -207,19 +207,19 @@ public final class DataTypeUtils {
 		Provider provider = new Provider();
 
 		XPN xpn = prd.getProviderName(0);
-		provider.setLastName(xpn.getFamilyName().getSurname().getValue());
-		provider.setFirstName(xpn.getGivenName().getValue());
-		provider.setTitle(xpn.getPrefixEgDR().getValue());
+		provider.setLastName(StringUtils.trimToNull(xpn.getFamilyName().getSurname().getValue()));
+		provider.setFirstName(StringUtils.trimToNull(xpn.getGivenName().getValue()));
+		provider.setTitle(StringUtils.trimToNull(xpn.getPrefixEgDR().getValue()));
 
 		XAD xad = prd.getProviderAddress(0);
-		provider.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
+		provider.setAddress(StringUtils.trimToNull(xad.getStreetAddress().getStreetOrMailingAddress().getValue()));
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
-		provider.setWorkPhone(xtn.getUnformattedTelephoneNumber().getValue());
-		provider.setEmail(xtn.getCommunicationAddress().getValue());
+		provider.setWorkPhone(StringUtils.trimToNull(xtn.getUnformattedTelephoneNumber().getValue()));
+		provider.setEmail(StringUtils.trimToNull(xtn.getCommunicationAddress().getValue()));
 
 		PLN pln = prd.getProviderIdentifiers(0);
-		provider.setProviderNo(pln.getIDNumber().getValue());
+		provider.setProviderNo(StringUtils.trimToNull(pln.getIDNumber().getValue()));
 
 		return (provider);
 	}
@@ -260,16 +260,16 @@ public final class DataTypeUtils {
 		ProfessionalSpecialist professionalSpecialist = new ProfessionalSpecialist();
 
 		XPN xpn = prd.getProviderName(0);
-		professionalSpecialist.setLastName(xpn.getFamilyName().getSurname().getValue());
-		professionalSpecialist.setFirstName(xpn.getGivenName().getValue());
-		professionalSpecialist.setProfessionalLetters(xpn.getPrefixEgDR().getValue());
+		professionalSpecialist.setLastName(StringUtils.trimToNull(xpn.getFamilyName().getSurname().getValue()));
+		professionalSpecialist.setFirstName(StringUtils.trimToNull(xpn.getGivenName().getValue()));
+		professionalSpecialist.setProfessionalLetters(StringUtils.trimToNull(xpn.getPrefixEgDR().getValue()));
 
 		XAD xad = prd.getProviderAddress(0);
-		professionalSpecialist.setStreetAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
+		professionalSpecialist.setStreetAddress(StringUtils.trimToNull(xad.getStreetAddress().getStreetOrMailingAddress().getValue()));
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
-		professionalSpecialist.setPhoneNumber(xtn.getUnformattedTelephoneNumber().getValue());
-		professionalSpecialist.setEmailAddress(xtn.getCommunicationAddress().getValue());
+		professionalSpecialist.setPhoneNumber(StringUtils.trimToNull(xtn.getUnformattedTelephoneNumber().getValue()));
+		professionalSpecialist.setEmailAddress(StringUtils.trimToNull(xtn.getCommunicationAddress().getValue()));
 
 		return (professionalSpecialist);
 	}
@@ -526,17 +526,17 @@ public final class DataTypeUtils {
 		Provider provider = new Provider();
 
 		XCN xcn = rol.getRolePerson(0);
-		provider.setProviderNo(xcn.getIDNumber().getValue());
-		provider.setLastName(xcn.getFamilyName().getSurname().getValue());
-		provider.setFirstName(xcn.getGivenName().getValue());
-		provider.setTitle(xcn.getPrefixEgDR().getValue());
+		provider.setProviderNo(StringUtils.trimToNull(xcn.getIDNumber().getValue()));
+		provider.setLastName(StringUtils.trimToNull(xcn.getFamilyName().getSurname().getValue()));
+		provider.setFirstName(StringUtils.trimToNull(xcn.getGivenName().getValue()));
+		provider.setTitle(StringUtils.trimToNull(xcn.getPrefixEgDR().getValue()));
 
 		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
-		provider.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
+		provider.setAddress(StringUtils.trimToNull(xad.getStreetAddress().getStreetOrMailingAddress().getValue()));
 
 		XTN xtn = rol.getPhone(0);
-		provider.setPhone(xtn.getUnformattedTelephoneNumber().getValue());
-		provider.setEmail(xtn.getCommunicationAddress().getValue());
+		provider.setPhone(StringUtils.trimToNull(xtn.getUnformattedTelephoneNumber().getValue()));
+		provider.setEmail(StringUtils.trimToNull(xtn.getCommunicationAddress().getValue()));
 
 		return (provider);
 	}
