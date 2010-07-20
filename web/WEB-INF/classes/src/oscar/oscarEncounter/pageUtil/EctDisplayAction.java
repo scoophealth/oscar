@@ -48,7 +48,7 @@ public class EctDisplayAction extends Action {
     protected static final int CROP_LEN_TITLE = 45;
     protected static final int MAX_LEN_KEY = 12;
     protected static final int CROP_LEN_KEY = 9;
-    
+
     public EctDisplayAction() {
         super();
         if( Actions == null ) {
@@ -68,14 +68,14 @@ public class EctDisplayAction extends Action {
             Actions.put("Rx", "/oscarEncounter/displayRx.do");
             Actions.put("success", "/oscarEncounter/LeftNavBarDisplay.jsp");
             Actions.put("error", "/oscarEncounter/LeftNavBarError.jsp");
-        }                
+        }
     }
-    
+
     public ActionForward execute(ActionMapping mapping,
 				 ActionForm form,
 				 HttpServletRequest request,
 				 HttpServletResponse response) throws IOException, ServletException {
-        
+
         EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");
         String forward = "error";
         String cmd = getCmd();
@@ -84,12 +84,12 @@ public class EctDisplayAction extends Action {
             navName += "+" + cmd;
         else
             navName = cmd;
-        
+
         request.setAttribute("navbarName", navName);
-        
+
         if( bean == null )
             return new ActionForward((String)Actions.get(forward));
-                
+
         //Can we handle request?
         //Check attrib first so we know if we are in a chain call before a direct request
         String params = (String)request.getAttribute("cmd");
@@ -99,23 +99,23 @@ public class EctDisplayAction extends Action {
         if( params != null ) {
             //Check to see if this call is for us
             if( params.indexOf(cmd) > -1 ) {
-                
+
                 MessageResources messages = getResources(request);
 
                 NavBarDisplayDAO Dao = (NavBarDisplayDAO)request.getAttribute("DAO");
                 if( Dao == null )
-                    Dao = new NavBarDisplayDAO(); 
-                
+                    Dao = new NavBarDisplayDAO();
+
                 String headingColour = request.getParameter("hC");
                 if (headingColour != null){
                    Dao.setHeadingColour(headingColour);
                 }
-                
+
                 if( getInfo(bean,request, Dao,messages) ) {
                     request.setAttribute("DAO",Dao);
 
-                    String regex = "\\b" + cmd + "\\b";                                                
-                    String remainingCmds = params.replaceAll(regex,"").trim();                        
+                    String regex = "\\b" + cmd + "\\b";
+                    String remainingCmds = params.replaceAll(regex,"").trim();
 
                     //Are there more commmands to forward to or do we print what we have?
                     if( remainingCmds.length() > 0 ) {
@@ -125,28 +125,28 @@ public class EctDisplayAction extends Action {
                             forward = remainingCmds.substring(0,pos);
                         else
                             forward = remainingCmds;
-                        
+
                         if( Actions.get(forward) == null )
                             forward = "error";
                     }
                     else
-                        forward = "success";    
+                        forward = "success";
 
                 }
             }
         }
-                
+
         return new ActionForward((String)Actions.get(forward));
     }
-    
+
     //must be implemented by subclasses to populate dao object
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
         return true;
     }
-    
+
     //must be implemented by subclasses to retrieve module name
     public String getCmd() {
         return new String("");
     }
-    
+
 }
