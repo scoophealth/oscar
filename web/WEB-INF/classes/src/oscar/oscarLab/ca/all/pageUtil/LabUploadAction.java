@@ -12,6 +12,7 @@ package oscar.oscarLab.ca.all.pageUtil;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -45,192 +46,201 @@ import oscar.oscarLab.ca.all.upload.HandlerClassFactory;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 import oscar.oscarLab.ca.all.util.Utilities;
 
-
 public class LabUploadAction extends Action {
-    protected static Logger logger = Logger.getLogger(LabUploadAction.class);
+	protected static Logger logger = Logger.getLogger(LabUploadAction.class);
 
-    @Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
-        LabUploadForm frm = (LabUploadForm) form;
-        FormFile importFile = frm.getImportFile();
+	@Override
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		LabUploadForm frm = (LabUploadForm) form;
+		FormFile importFile = frm.getImportFile();
 
-        String signature = request.getParameter("signature");
-        String key = request.getParameter("key");
-        String service = request.getParameter("service");
-        String outcome = "";
-        String audit = "";
+		String signature = request.getParameter("signature");
+		String key = request.getParameter("key");
+		String service = request.getParameter("service");
+		String outcome = "";
+		String audit = "";
+		Integer httpCode = 200;
 
-        @SuppressWarnings("unchecked")
-        ArrayList clientInfo = getClientInfo(service);
-        PublicKey clientKey = (PublicKey) clientInfo.get(0);
-        String type = (String) clientInfo.get(1);
+		@SuppressWarnings("unchecked")
+		ArrayList clientInfo = getClientInfo(service);
+		PublicKey clientKey = (PublicKey) clientInfo.get(0);
+		String type = (String) clientInfo.get(1);
 
-        try{
+		try {
 
-            InputStream is = decryptMessage(importFile.getInputStream(), key, clientKey);
-            String fileName = importFile.getFileName();
-            String filePath = Utilities.saveFile(is, fileName);
-            importFile.getInputStream().close();
-            File file = new File(filePath);
+			InputStream is = decryptMessage(importFile.getInputStream(), key, clientKey);
+			String fileName = importFile.getFileName();
+			String filePath = Utilities.saveFile(is, fileName);
+			importFile.getInputStream().close();
+			File file = new File(filePath);
 
-            if (validateSignature(clientKey, signature, file)){
-                logger.debug("Validated Successfully");
-                MessageHandler msgHandler = HandlerClassFactory.getHandler(type);
+			if (validateSignature(clientKey, signature, file)) {
+				logger.debug("Validated Successfully");
+				MessageHandler msgHandler = HandlerClassFactory.getHandler(type);
 
-                is = new FileInputStream(file);
-                FileUploadCheck fileC = new FileUploadCheck();
-                int check = fileC.addFile(file.getName(),is,"0");
-                if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
-                    if((audit = msgHandler.parse(service, filePath,check)) != null)
-                        outcome = "uploaded";
-                    else
-                        outcome = "upload failed";
-                }else{
-                    outcome = "uploaded previously";
-                }
-                is.close();
-            }else{
-                logger.info("failed to validate");
-                outcome = "validation failed";
+				is = new FileInputStream(file);
+				FileUploadCheck fileC = new FileUploadCheck();
+				int check = fileC.addFile(file.getName(), is, "0");
+				if (check != FileUploadCheck.UNSUCCESSFUL_SAVE) {
+					if ((audit = msgHandler.parse(service, filePath, check)) != null) {
+						outcome = "uploaded";
+						httpCode = HttpServletResponse.SC_OK;
+					} else {
+						outcome = "upload failed";
+						httpCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+					}
+				} else {
+					outcome = "uploaded previously";
+					httpCode = HttpServletResponse.SC_CONFLICT;
+				}
+				is.close();
+			} else {
+				logger.info("failed to validate");
+				outcome = "validation failed";
+				httpCode = HttpServletResponse.SC_NOT_ACCEPTABLE;
+			}
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+			outcome = "exception";
+			httpCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		}
+		request.setAttribute("outcome", outcome);
+		request.setAttribute("audit", audit);
+
+		if (request.getParameter("use_http_response_code") != null) {
+			try {
+	            response.sendError(httpCode, outcome);
+            } catch (IOException e) {
+	            logger.error("Error", e);
             }
+			return (null);
+		} else return mapping.findForward("success");
+	}
 
+	public LabUploadAction() {
+	}
 
+	/*
+	 * Decrypt the encrypted message and return the original version of the message as an InputStream
+	 */
+	public static InputStream decryptMessage(InputStream is, String skey, PublicKey pkey) {
 
-        }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
-            outcome = "exception";
-        }
-        request.setAttribute("outcome", outcome);
-        request.setAttribute("audit", audit);
-        return mapping.findForward("success");
-    }
+		Base64 base64 = new Base64();
 
+		// Decrypt the secret key and the message
+		try {
 
-    public LabUploadAction() {
-    }
+			// retrieve the servers private key
+			PrivateKey key = getServerPrivate();
 
-    /*
-     * Decrypt the encrypted message and return the original version of the message as an InputStream
-     */
-    public static InputStream decryptMessage(InputStream is, String skey, PublicKey pkey){
+			// Decrypt the secret key using the servers private key
+			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipher.init(Cipher.DECRYPT_MODE, key);
+			byte[] newSecretKey = cipher.doFinal(base64.decode(skey.getBytes(MiscUtils.ENCODING)));
 
-        Base64 base64 = new Base64();
+			// Decrypt the message using the secret key
+			SecretKeySpec skeySpec = new SecretKeySpec(newSecretKey, "AES");
+			Cipher msgCipher = Cipher.getInstance("AES");
+			msgCipher.init(Cipher.DECRYPT_MODE, skeySpec);
 
-        // Decrypt the secret key and the message
-        try{
+			is = new CipherInputStream(is, msgCipher);
 
-            // retrieve the servers private key
-            PrivateKey key = getServerPrivate();
+			// Return the decrypted message
+			return (new BufferedInputStream(is));
 
-            // Decrypt the secret key using the servers private key
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] newSecretKey = cipher.doFinal(base64.decode(skey.getBytes(MiscUtils.ENCODING)));
+		} catch (Exception e) {
+			logger.error("Could not decrypt the message", e);
+			return (null);
+		}
+	}
 
-            // Decrypt the message using the secret key
-            SecretKeySpec skeySpec = new SecretKeySpec(newSecretKey, "AES");
-            Cipher msgCipher = Cipher.getInstance("AES");
-            msgCipher.init(Cipher.DECRYPT_MODE, skeySpec);
+	/*
+	 * Check that the signature 'sigString' matches the message InputStream 'msgIS' thus verifying that the message has not been altered.
+	 */
+	public static boolean validateSignature(PublicKey key, String sigString, File input) {
+		Base64 base64 = new Base64();
+		byte[] buf = new byte[1024];
 
-            is = new CipherInputStream(is, msgCipher);
+		try {
 
-            // Return the decrypted message
-            return(new BufferedInputStream(is));
+			InputStream msgIs = new FileInputStream(input);
+			Signature sig = Signature.getInstance("MD5WithRSA");
+			sig.initVerify(key);
 
-        }catch(Exception e){
-            logger.error("Could not decrypt the message", e);
-            return(null);
-        }
-    }
+			// Read in the message bytes and update the signature
+			int numRead = 0;
+			while ((numRead = msgIs.read(buf)) >= 0) {
+				sig.update(buf, 0, numRead);
+			}
+			msgIs.close();
 
-    /*
-     *  Check that the signature 'sigString' matches the message InputStream 'msgIS' thus
-     *  verifying that the message has not been altered.
-     */
-    public static boolean validateSignature(PublicKey key, String sigString, File input){
-        Base64 base64 = new Base64();
-        byte[] buf = new byte[1024];
+			return (sig.verify(base64.decode(sigString.getBytes(MiscUtils.ENCODING))));
 
-        try{
+		} catch (Exception e) {
+			logger.debug("Could not validate signature: " + e);
+			MiscUtils.getLogger().error("Error", e);
+			return (false);
+		}
+	}
 
-            InputStream msgIs = new FileInputStream(input);
-            Signature sig = Signature.getInstance("MD5WithRSA");
-            sig.initVerify(key);
+	/*
+	 * Retrieve the clients public key from the database
+	 */
+	public static ArrayList<Object> getClientInfo(String service) {
 
-            // Read in the message bytes and update the signature
-            int numRead = 0;
-            while ((numRead = msgIs.read(buf)) >= 0) {
-                sig.update(buf, 0, numRead);
-            }
-            msgIs.close();
+		PublicKey Key = null;
+		Base64 base64 = new Base64();
+		String keyString = "";
+		String type = "";
+		byte[] publicKey;
+		ArrayList<Object> info = new ArrayList<Object>();
 
-            return(sig.verify(base64.decode(sigString.getBytes(MiscUtils.ENCODING))));
+		try {
+			PublicKeyDao publicKeyDao = (PublicKeyDao) SpringUtils.getBean("publicKeyDao");
+			org.oscarehr.common.model.PublicKey publicKeyObject = publicKeyDao.find(service);
 
-        }catch(Exception e){
-            logger.debug("Could not validate signature: "+e);
-            MiscUtils.getLogger().error("Error", e);
-            return(false);
-        }
-    }
+			if (publicKeyObject != null) {
+				keyString = publicKeyObject.getBase64EncodedPublicKey();
+				type = publicKeyObject.getType();
+			}
 
-   /*
-    *  Retrieve the clients public key from the database
-    */
-    public static ArrayList<Object> getClientInfo(String service){
+			publicKey = base64.decode(keyString.getBytes(MiscUtils.ENCODING));
+			;
+			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			Key = keyFactory.generatePublic(pubKeySpec);
 
-        PublicKey Key = null;
-        Base64 base64 = new Base64();
-        String keyString = "";
-        String type = "";
-        byte[] publicKey;
-        ArrayList<Object> info = new ArrayList<Object>();
+			info.add(Key);
+			info.add(type);
 
-        try{
-        	PublicKeyDao publicKeyDao=(PublicKeyDao)SpringUtils.getBean("publicKeyDao");
-            org.oscarehr.common.model.PublicKey publicKeyObject=publicKeyDao.find(service);
+		} catch (Exception e) {
+			logger.error("Could not retrieve private key: ", e);
+		}
+		return (info);
+	}
 
-            if (publicKeyObject!=null)
-            {
-                keyString = publicKeyObject.getBase64EncodedPublicKey();
-                type = publicKeyObject.getType();            	
-            }
-            
-            publicKey = base64.decode(keyString.getBytes(MiscUtils.ENCODING));;
-            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKey);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            Key = keyFactory.generatePublic(pubKeySpec);
+	/*
+	 * Retrieve the servers private key from the database
+	 */
+	private static PrivateKey getServerPrivate() {
 
-            info.add(Key);
-            info.add(type);
+		PrivateKey Key = null;
+		Base64 base64 = new Base64();
+		byte[] privateKey;
 
-        }catch(Exception e){
-            logger.error("Could not retrieve private key: ", e);
-        }
-        return(info);
-    }
+		try {
+			OscarKeyDao oscarKeyDao = (OscarKeyDao) SpringUtils.getBean("oscarKeyDao");
+			OscarKey oscarKey = oscarKeyDao.find("oscar");
+			logger.info("oscar key: " + oscarKey);
 
-    /*
-     *  Retrieve the servers private key from the database
-     */
-    private static PrivateKey getServerPrivate(){
-
-        PrivateKey Key = null;
-        Base64 base64 = new Base64();
-        byte[] privateKey;
-
-        try{
-        	OscarKeyDao oscarKeyDao=(OscarKeyDao)SpringUtils.getBean("oscarKeyDao");
-        	OscarKey oscarKey=oscarKeyDao.find("oscar");
-            logger.info("oscar key: "+oscarKey);
-
-            privateKey = base64.decode(oscarKey.getPrivateKey().getBytes(MiscUtils.ENCODING));
-            PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privateKey);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            Key = keyFactory.generatePrivate(privKeySpec);
-        }catch(Exception e){
-            logger.error("Could not retrieve private key: ", e);
-        }
-        return(Key);
-    }
+			privateKey = base64.decode(oscarKey.getPrivateKey().getBytes(MiscUtils.ENCODING));
+			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privateKey);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			Key = keyFactory.generatePrivate(privKeySpec);
+		} catch (Exception e) {
+			logger.error("Could not retrieve private key: ", e);
+		}
+		return (Key);
+	}
 
 }

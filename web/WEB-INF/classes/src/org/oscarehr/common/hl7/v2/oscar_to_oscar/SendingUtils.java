@@ -75,6 +75,7 @@ public final class SendingUtils {
 		multipartEntity.addPart("key", new StringBody(DataTypeUtils.encodeToBase64String(encryptedSecretKey)));
 		multipartEntity.addPart("signature", new StringBody(DataTypeUtils.encodeToBase64String(signature)));
 		multipartEntity.addPart("service", new StringBody(serviceName));
+		multipartEntity.addPart("use_http_response_code", new StringBody("true"));
 
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setEntity(multipartEntity);

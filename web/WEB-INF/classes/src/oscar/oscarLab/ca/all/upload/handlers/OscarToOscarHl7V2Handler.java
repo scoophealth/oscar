@@ -54,12 +54,12 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 			{
 				MessageUploader.routeReport(serviceName, OscarToOscarUtils.UPLOAD_MESSAGE_TYPE, dataString, fileId);
 			}
+			
+			return("success");
 		} catch (Exception e) {
 	        logger.error("Unexpected error.", e);
 	        MessageUploader.clean(fileId);
 	        throw(new RuntimeException(e));
         }
-        
-	    return null;
     }
 }
