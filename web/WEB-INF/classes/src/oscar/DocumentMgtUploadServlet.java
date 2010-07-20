@@ -52,22 +52,19 @@ public class DocumentMgtUploadServlet extends HttpServlet{
 
   public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException  {
 	  
-    int count;
-    byte data[] = new byte[BUFFER];
-    byte data1[] = new byte[BUFFER/2];
-    byte data2[] = new byte[BUFFER/2];
-    byte enddata[] = new byte[2];
+   
+   
 
 
-    HttpSession session = request.getSession(true);
+    
    
     formatter = new SimpleDateFormat("yyyyMMddHmmss");
     today = new java.util.Date();
     output = formatter.format(today);
 
-    count=request.getContentType().indexOf('=');
+   
     
-    String foldername="", fileheader="", forwardTo="", function="", function_id="", filedesc="", creator="";
+    String foldername="", fileheader="", forwardTo="";
    
 
     // Get properties from oscar_mcmaster.properties
@@ -112,10 +109,7 @@ public class DocumentMgtUploadServlet extends HttpServlet{
             MiscUtils.getLogger().error("Error", e);
         }
     
-     function = request.getParameter("function");
-     function_id = request.getParameter("functionid");
-     filedesc = request.getParameter("filedesc");
-     creator = request.getParameter("creator");
+   
 /*
     ServletInputStream sis = request.getInputStream();
     BufferedOutputStream dest = null;
