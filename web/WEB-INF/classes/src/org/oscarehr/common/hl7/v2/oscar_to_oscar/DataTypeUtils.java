@@ -366,21 +366,21 @@ public final class DataTypeUtils {
 		Demographic demographic = new Demographic();
 
 		XAD xad = pid.getPatientAddress(0);
-		demographic.setAddress(xad.getStreetAddress().getStreetOrMailingAddress().getValue());
-		demographic.setCity(xad.getCity().getValue());
-		demographic.setProvince(xad.getStateOrProvince().getValue());
-		demographic.setPostal(xad.getZipOrPostalCode().getValue());
+		demographic.setAddress(StringUtils.trimToNull(xad.getStreetAddress().getStreetOrMailingAddress().getValue()));
+		demographic.setCity(StringUtils.trimToNull(xad.getCity().getValue()));
+		demographic.setProvince(StringUtils.trimToNull(xad.getStateOrProvince().getValue()));
+		demographic.setPostal(StringUtils.trimToNull(xad.getZipOrPostalCode().getValue()));
 
 		GregorianCalendar birthDate = DataTypeUtils.getCalendarFromDTM(pid.getDateTimeOfBirth());
 		demographic.setBirthDay(birthDate);
 
 		CX cx = pid.getPatientIdentifierList(0);
 		// health card string, excluding version code
-		demographic.setHin(cx.getIDNumber().getValue());
+		demographic.setHin(StringUtils.trimToNull(cx.getIDNumber().getValue()));
 		// blank for everyone but ontario use version code
-		demographic.setVer(cx.getIdentifierCheckDigit().getValue());
+		demographic.setVer(StringUtils.trimToNull(cx.getIdentifierCheckDigit().getValue()));
 		// province
-		demographic.setHcType(cx.getAssigningJurisdiction().getIdentifier().getValue());
+		demographic.setHcType(StringUtils.trimToNull(cx.getAssigningJurisdiction().getIdentifier().getValue()));
 		// valid
 		GregorianCalendar tempCalendar = DataTypeUtils.getCalendarFromDT(cx.getEffectiveDate());
 		if (tempCalendar != null) demographic.setEffDate(tempCalendar.getTime());
@@ -389,11 +389,11 @@ public final class DataTypeUtils {
 		if (tempCalendar != null) demographic.setHcRenewDate(tempCalendar.getTime());
 
 		XPN xpn = pid.getPatientName(0);
-		demographic.setLastName(xpn.getFamilyName().getSurname().getValue());
-		demographic.setFirstName(xpn.getGivenName().getValue());
+		demographic.setLastName(StringUtils.trimToNull(xpn.getFamilyName().getSurname().getValue()));
+		demographic.setFirstName(StringUtils.trimToNull(xpn.getGivenName().getValue()));
 
 		XTN phone = pid.getPhoneNumberHome(0);
-		demographic.setPhone(phone.getUnformattedTelephoneNumber().getValue());
+		demographic.setPhone(StringUtils.trimToNull(phone.getUnformattedTelephoneNumber().getValue()));
 
 		Gender gender = getOscarGenderFromHl7Gender(pid.getAdministrativeSex().getValue());
 		if (gender != null) demographic.setSex(gender.name());
