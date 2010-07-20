@@ -1098,8 +1098,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	public ActionForward listNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("List Notes start");
-		long beginning = System.currentTimeMillis();
-		long start = beginning;
+		
+		
 		
 		String providerNo = getProviderNo(request);
 		String demoNo = getDemographicNo(request);
