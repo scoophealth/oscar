@@ -12,12 +12,14 @@ Oscar encryption encapsulation protocol
 	- key
 	- signature
 	- service
+	- use_http_response_code=true
 	
 - service : is a simple String denoting whom is connected to your system (in the event multiple oscar systems send data to you).
 - importFile : is AES encrypted data, It is encrypted with what we will refer to as the "sendersSecretKey"
 	- sendersSecretKey : is a 128 bit AES key that is dynamically generated with each send by the client.
 - key : is a base64 encoded copy of the sendersSecretKey that's has been encrypted using the receiversOscarKey with "RSA/ECB/PKCS1Padding"
 - signature : is a base64 encoded copy of a digital signature of the importFile contents, created with "MD5WithRSA" using the services publicKey
+- use_http_response_code : is a parameter which makes it so http:200 means everything is okay, other numbers mean different errors. Note that the existance of this parameter means true even if the value=false.
 
 Have a look at the oscar_to_oscar_example_post.bin file. Note that the file is not all text, one of the multi-part-parts is binary data. 
 
