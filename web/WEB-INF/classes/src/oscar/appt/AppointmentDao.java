@@ -40,10 +40,12 @@ public class AppointmentDao extends HibernateDaoSupport {
     }
 
     public List<OscarAppointment> findByDateRange(Date startTime, Date endTime) {
-        String queryStr = "FROM OscarAppointment a WHERE a.appointment_date >= ? and a.appointment_date < ?";
+		java.sql.Date startSqlDate=new java.sql.Date(startTime.getTime());
+		java.sql.Date endSqlDate=new java.sql.Date(endTime.getTime());
+    	String queryStr = "FROM OscarAppointment a WHERE a.appointment_date >= '"+startSqlDate + "' and a.appointment_date < '"+endSqlDate+'\'';
 
-        @SuppressWarnings("unchecked")
-        List<OscarAppointment> rs = getHibernateTemplate().find(queryStr, new Object[]{startTime, endTime});
+		@SuppressWarnings("unchecked")
+        List<OscarAppointment> rs = getHibernateTemplate().find(queryStr);
 
         return rs;
     }
