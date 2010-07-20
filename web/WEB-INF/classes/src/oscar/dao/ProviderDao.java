@@ -1,8 +1,12 @@
 package oscar.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
@@ -113,5 +117,21 @@ public class ProviderDao extends OscarSuperDao {
 	@Override
 	protected Map<String, RowMapper> getRowMappers() {
 		return rowMappers;
+	}
+	
+	public static void updateAppointmentStatus(Integer appointmentId, String newStatus) throws SQLException
+	{
+		Connection c=DbConnectionFilter.getThreadLocalDbConnection();
+		try
+		{
+			PreparedStatement ps=c.prepareStatement("update appointment set status=? where appointment_no=?");
+			ps.setString(1, newStatus);
+			ps.setInt(2, appointmentId);
+			ps.executeUpdate();
+		}
+		finally
+		{
+			DbConnectionFilter.releaseThreadLocalDbConnection();
+		}
 	}
 }
