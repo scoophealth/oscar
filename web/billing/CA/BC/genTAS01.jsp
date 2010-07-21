@@ -31,7 +31,8 @@
  * Ontario, Canada 
  */
 -->
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="billing.css">
@@ -218,7 +219,7 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
         String moneyStr = "0.00";
         try{             
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
-        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+        }catch (Exception moneyException) { MiscUtils.getLogger().error("Error", moneyException); }
     return moneyStr;
     }
 %>

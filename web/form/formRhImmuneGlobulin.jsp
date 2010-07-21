@@ -120,7 +120,8 @@
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
@@ -592,7 +593,7 @@ sample drawn?</label></fieldset>
                     h.put("completion_date",  new  java.sql.Date( UtilDateUtilities.StringToDate(ddate , "yyyy-MM-dd").getTime() )  );
                         
                 }catch(Exception eo){
-                   eo.printStackTrace();
+                	MiscUtils.getLogger().error("Error", eo);
                 }
              }
 

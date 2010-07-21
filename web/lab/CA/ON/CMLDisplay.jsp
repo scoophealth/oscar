@@ -72,7 +72,8 @@ String AbnFlag = "";
  * Ontario, Canada 
  */
 -->
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
@@ -246,7 +247,7 @@ function linkreq(rptId, reqId) {
 											key="oscarMDS.segmentDisplay.formAge" />: </strong><%=lab.getAge()%> <%
                                                                 try{
                                                                     lab.getAge();
-                                                                    }catch(Exception e){ e.printStackTrace(); }
+                                                                    }catch(Exception e){ MiscUtils.getLogger().error("Error", e); }
                                                                 
                                                                 %>
 										</div>

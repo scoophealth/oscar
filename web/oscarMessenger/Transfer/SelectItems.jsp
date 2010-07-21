@@ -65,7 +65,8 @@ bean.setProviderNo(prov);
 
 
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
@@ -204,7 +205,7 @@ bean.setProviderNo(prov);
 
         xmlDoc = gen.getDocument(demographicNo);
     }catch (Exception ex){
-        ex.printStackTrace();
+    	MiscUtils.getLogger().error("Error", ex);
         response.sendRedirect("error.html");
     }
 

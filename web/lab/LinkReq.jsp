@@ -38,7 +38,7 @@
 		formCreated.add(UtilDateUtilities.DateToString(rs.getDate("formCreated"),"yyyy-MM-dd"));
 	    }
 	} catch (SQLException ex) {
-		ex.printStackTrace();
+		MiscUtils.getLogger().error("Error", ex);
 	}
     } else { //Linked
 	try {
@@ -55,13 +55,14 @@
 		LabRequestReportLink.update(id,"formLabReq07",Long.valueOf(linkReqId),req_date);
 	    }
 	} catch (SQLException ex) {
-		ex.printStackTrace();
+		MiscUtils.getLogger().error("Error", ex);
 	}
 	response.sendRedirect("../close.html");
     }
 %>
 
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Link to Lab Requisition</title>

@@ -23,23 +23,21 @@
 -->
 
 <%@ page language="java" isErrorPage="true"%>
-<head>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Doh!</title>
 </head>
 An Error has occurred in this application.
+Please check your log files for further information.
 <%
 	if (exception != null) {
 %>
 <pre>
 <%
-		exception.printStackTrace(new java.io.PrintWriter(out));
+MiscUtils.getLogger().error("Error", exception);
 %>
 </pre>
-<%
-	} else {
-%>
-Please check your log files for further information.
 <%
 	}
 %>

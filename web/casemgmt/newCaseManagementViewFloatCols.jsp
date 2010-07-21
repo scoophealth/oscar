@@ -36,7 +36,8 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.model.Role"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+
+<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
@@ -1992,7 +1993,7 @@ function autoCompleteShowMenu(element, update){
                 
             }
             catch (ParseException ex) {
-                ex.printStackTrace();
+            	MiscUtils.getLogger().error("Error", ex);
             }
         }
         

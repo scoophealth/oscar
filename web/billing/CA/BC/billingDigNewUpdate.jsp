@@ -38,7 +38,8 @@
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Summary</title>
@@ -136,7 +137,7 @@ function CodeAttach(File0, File1, File2) {
   	 rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updatedigcode");
             apptMainBean.closePstmtConn();
          }catch(Exception e){
-            e.printStackTrace();
+        	 MiscUtils.getLogger().error("Error", e);
          }
  
 

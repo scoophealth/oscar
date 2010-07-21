@@ -64,7 +64,8 @@ String visitType = oscarVariables.getProperty("visit_type", "");
  * Ontario, Canada
  */
 -->
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
@@ -562,7 +563,7 @@ try{
 		admissionDate = demoData.getDemographicDateJoined(demo_no);
 	}
 }catch(Exception inPatientEx){
-	inPatientEx.printStackTrace();
+	MiscUtils.getLogger().error("Error", inPatientEx);
 	admissionDate = "";
 }
 %> <input type="text" name="xml_vdate" value="<%=admissionDate%>">

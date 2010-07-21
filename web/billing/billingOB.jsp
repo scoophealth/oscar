@@ -52,7 +52,8 @@
  * Ontario, Canada 
  */
 -->
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
@@ -546,7 +547,7 @@ function showHideLayers() { //v3.0
 
  		}
  	} catch (Exception inPatientEx) {
- 		inPatientEx.printStackTrace();
+ 		MiscUtils.getLogger().error("Error", inPatientEx);
  		admissionDate = "";
  	}
  %> <input type="text" name="xml_vdate"

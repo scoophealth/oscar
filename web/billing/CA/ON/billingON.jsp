@@ -369,7 +369,8 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
-<%@page import="org.apache.commons.lang.StringUtils"%><html>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=ISO-8859-1" />
@@ -1128,7 +1129,7 @@ function changeSite(sel) {
 		admDate = demoData.getDemographicDateJoined(demo_no);
 	     }
           }catch(Exception inPatientEx){
-	     inPatientEx.printStackTrace();
+        	  MiscUtils.getLogger().error("Error", inPatientEx);
 	     admDate = "";
           }
             

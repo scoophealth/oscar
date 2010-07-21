@@ -51,7 +51,8 @@
 <%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
 <%@page import="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO"%>
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+
+<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 
@@ -1043,7 +1044,7 @@
 			}
 			catch (ParseException ex)
 			{
-				ex.printStackTrace();
+				MiscUtils.getLogger().error("Error", ex);
 			}
 		}
 

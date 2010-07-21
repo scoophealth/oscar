@@ -123,7 +123,7 @@ try{
         nameMap.remove(nameMapKeys[nameMapKeys.length-1]);
     
 }catch(Exception e){
-    e.printStackTrace();
+	MiscUtils.getLogger().error("Error", e);
 }%>
 
 
@@ -131,7 +131,8 @@ try{
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>

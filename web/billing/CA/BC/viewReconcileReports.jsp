@@ -49,7 +49,8 @@
 %>
 
 
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 
 <html:base/>
@@ -168,7 +169,7 @@
         try{
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
         }catch (Exception moneyException) {
-            moneyException.printStackTrace();
+        	MiscUtils.getLogger().error("Error", moneyException);
             moneyStr = str;
         }
     return moneyStr;

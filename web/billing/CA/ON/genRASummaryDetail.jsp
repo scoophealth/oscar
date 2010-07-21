@@ -37,7 +37,8 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 	scope="page" />
 <%@ include file="dbBilling.jsp"%>
 
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="billing.css">
@@ -655,7 +656,7 @@ boolean wasBilledLocal(String account,String provider,String billing_date, Strin
         
        rs.close();
    }catch(Exception wasbilled){
-       wasbilled.printStackTrace();
+	   MiscUtils.getLogger().error("Error", wasbilled);
    }
    return wasbilledlocal;
 }

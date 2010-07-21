@@ -27,12 +27,13 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page isErrorPage="true"%><!-- only true can access exception object -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <body>
 <h1><bean:message key="error.description" /></h1>
 <hr>
 <h2><bean:message key="error.msgException" />:<br>
 <font color=red> <%= exception.toString() %><br>
-<% exception.printStackTrace(); %> </font></h2>
+<% MiscUtils.getLogger().error("Error", exception); %> </font></h2>
 </body>
 </html:html>

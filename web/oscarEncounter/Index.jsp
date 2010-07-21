@@ -161,7 +161,8 @@ if (request.getParameter("casetoEncounter")==null)
 
 
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.Index.title" /> - <oscar:nameage
@@ -1536,7 +1537,7 @@ function removeSaveFeedback()  {
                                   encounterText +="\n\n"+bean.oscarMsg;
                                }
 
-                            }catch(Exception eee){eee.printStackTrace();}
+                            }catch(Exception eee){MiscUtils.getLogger().error("Error", eee);}
                             %>
 					<tr>
 						<td colspan="2" valign="top" style="text-align: left"><textarea
