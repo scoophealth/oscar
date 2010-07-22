@@ -969,8 +969,7 @@ public class DemographicData {
 		try {
 			db = new DBHandler(DBHandler.OSCAR_DATA);
 			db.RunSQL(sql);
-		} catch (SQLException ex) {
-			ex.printStackTrace();
+		} catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 		}
 	}
 

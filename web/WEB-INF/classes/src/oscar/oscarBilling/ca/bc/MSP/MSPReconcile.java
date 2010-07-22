@@ -305,7 +305,7 @@ public class MSPReconcile {
           p.put(s, def);
         }
         catch (NumberFormatException intEx) {
-          intEx.printStackTrace();
+        	MiscUtils.getLogger().error("Error", intEx);	
           MiscUtils.getLogger().debug("Had trouble Parsing int from " +
                              rs.getString("t_officeno"));
         }
@@ -400,7 +400,7 @@ public class MSPReconcile {
               errorsProps.put(s, def);
             }
             catch (NumberFormatException intEx) {
-              intEx.printStackTrace();
+            	MiscUtils.getLogger().error("Error", intEx);
               MiscUtils.getLogger().debug("Had trouble Parsing int from " +
                                  rs.getString("t_mspctlno"));
             }
@@ -717,8 +717,7 @@ public class MSPReconcile {
         Double dbl = new Double(paid);
         this.amountPaid = dbl.doubleValue();
       }
-      catch (Exception ex) {
-        ex.printStackTrace();
+      catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
       }
     }
 
@@ -740,8 +739,7 @@ public class MSPReconcile {
         Double dbl = new Double(this.amount);
         ret = dbl.doubleValue();
       }
-      catch (Exception ex) {
-        ex.printStackTrace();
+      catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
       }
       return ret;
 
@@ -1126,8 +1124,7 @@ public class MSPReconcile {
           rs.close();
         }
       }
-      catch (SQLException ex) {
-        ex.printStackTrace();
+      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
       }
     }
   }
@@ -1321,8 +1318,7 @@ public class MSPReconcile {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(updateBillingSQL);
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
   }
 
@@ -1635,8 +1631,7 @@ public class MSPReconcile {
           rs.close();
         }
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return billSearch;
@@ -1685,15 +1680,13 @@ public class MSPReconcile {
         }
         log.debug("totalPaidFromS00 "+totalPaidFromS00);
       }
-      catch (SQLException ex) {
-        ex.printStackTrace();
+      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
       }
       finally {
         try {
           rs.close();
         }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
+        catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
         }
       }
     }
@@ -1722,15 +1715,13 @@ public class MSPReconcile {
         code = rs.getString(1);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return code;
@@ -1755,15 +1746,13 @@ public class MSPReconcile {
         desc = rs.getString(1);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
 
@@ -1911,8 +1900,7 @@ public class MSPReconcile {
       try {
         rs.close();
       }
-      catch (SQLException ex) {
-        ex.printStackTrace();
+      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
       }
 
     }
@@ -2008,8 +1996,7 @@ public class MSPReconcile {
       try {
         rs.close();
       }
-      catch (SQLException ex) {
-        ex.printStackTrace();
+      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
       }
 
     }
@@ -2227,8 +2214,7 @@ public class MSPReconcile {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       rs = db.GetSQL(qry);
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return rs;
   }
@@ -2266,15 +2252,13 @@ public class MSPReconcile {
         prov.setLastName(rs.getString("last_name"));
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
 
@@ -2305,15 +2289,13 @@ public class MSPReconcile {
         list.add(prov);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
 
@@ -2338,15 +2320,13 @@ public class MSPReconcile {
         description = rs.getString(1);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return description;
@@ -2373,15 +2353,13 @@ public class MSPReconcile {
         s21.setCheque(this.convCurValue(rs.getString(6)));
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
 
@@ -2451,15 +2429,13 @@ public class MSPReconcile {
         return isPrivateBillItemOutstanding(billingmaster_no, amount);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return ret;

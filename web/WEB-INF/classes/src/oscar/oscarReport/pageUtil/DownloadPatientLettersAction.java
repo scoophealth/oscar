@@ -40,6 +40,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarReport.data.ManageLetters;
 
@@ -69,8 +70,7 @@ public class DownloadPatientLettersAction extends Action {
             response.addHeader("Content-Disposition", "attachment;filename=" + filename);
             response.addHeader("Content-Disposition", "attachment;filename=report.txt" );   
             manageLetters.writeLetterToStream(fileId,response.getOutputStream());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
         }
         
         if (log.isTraceEnabled()) { log.trace("End of DownloadPatientLettersAction Action");}

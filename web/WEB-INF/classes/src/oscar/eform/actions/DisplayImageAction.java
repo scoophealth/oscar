@@ -134,8 +134,7 @@ public class DisplayImageAction extends DownloadAction{
                 }else{
                     throw new Exception("please check the file type or update mimetypes.default file to include the "+"."+extension(file.getName()));
                 }
-            }catch(Exception e){
-                e.printStackTrace();
+            }catch(Exception e){MiscUtils.getLogger().error("Error", e);
                 throw new Exception("Could not open file "+file.getName()+" wrong file extension, ",e);
             }
         

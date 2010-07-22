@@ -56,16 +56,14 @@ public class PrintDemoLabelAction extends OscarAction {
                 ins = getClass().getResourceAsStream("/oscar/oscarDemographic/label.xml");
                 logger.debug("loading from : /oscar/oscarDemographic/label.xml " + ins);
             }
-            catch (Exception ex1) {
-                ex1.printStackTrace();
+            catch (Exception ex1) {MiscUtils.getLogger().error("Error", ex1);
             }
         }
 
         try {
             sos = response.getOutputStream();
         }
-        catch (IOException ex) {
-            ex.printStackTrace();
+        catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
 
         response.setHeader("Content-disposition", getHeader(response).toString());

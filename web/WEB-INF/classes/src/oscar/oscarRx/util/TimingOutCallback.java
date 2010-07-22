@@ -109,7 +109,7 @@ public class TimingOutCallback implements AsyncCallback {
 
     public synchronized void handleError(Exception arg0, URL arg1, String arg2) {
         responseSeen = true;
-        arg0.printStackTrace();
+        MiscUtils.getLogger().error("Error", arg0);
         error = arg0;
         this.notify();
         //throw new UnsupportedOperationException("Not supported yet.");

@@ -101,7 +101,7 @@ public class LabUploadAction extends Action {
                         outcome = "uploadedPreviously";
                     }
                 }catch(Exception addFileEx){
-                   addFileEx.printStackTrace();
+                	MiscUtils.getLogger().error("Error", addFileEx);
                    outcome = "databaseNotStarted";
                 }    
                 MiscUtils.getLogger().debug("Was file uploaded successfully ?"+fileUploadedSuccessfully);

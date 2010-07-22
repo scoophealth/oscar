@@ -80,8 +80,7 @@ public class PGPEncrypt {
                 }
                 Util.cleanFile("null.tmp", dirName);
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
         return rtrn;
     }
@@ -109,8 +108,7 @@ public class PGPEncrypt {
             int ecode = proc.waitFor();
             if (ecode==0) return true;
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
         return false;
     }

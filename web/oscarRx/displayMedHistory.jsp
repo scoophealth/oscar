@@ -33,7 +33,8 @@
 <%@page import="oscar.oscarRx.data.*" %>
 <%@page import="oscar.oscarRx.util.*" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<html>
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html>
 <head>
     <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/dragiframe.js"/>"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
@@ -96,7 +97,7 @@ try{
             }
     }
 
-}catch(Exception e){e.printStackTrace();}
+}catch(Exception e){ MiscUtils.getLogger().error("Error", e);}
 %>
     </table>
 </body>

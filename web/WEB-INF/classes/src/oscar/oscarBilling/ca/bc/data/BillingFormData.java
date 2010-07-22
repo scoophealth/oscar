@@ -61,15 +61,13 @@ public class BillingFormData {
         types.add(tp);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
 
@@ -90,15 +88,13 @@ public class BillingFormData {
         providerNo = rs.getString("provider_no");
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
 

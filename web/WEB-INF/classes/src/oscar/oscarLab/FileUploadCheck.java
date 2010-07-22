@@ -127,7 +127,7 @@ public class FileUploadCheck {
             }       
          }
       }catch(SQLException conE){
-         conE.printStackTrace();            
+    	  MiscUtils.getLogger().error("Error", conE);
          throw new Exception("Database Is not Running");
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);

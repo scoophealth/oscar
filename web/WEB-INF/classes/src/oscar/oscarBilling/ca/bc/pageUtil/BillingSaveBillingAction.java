@@ -276,7 +276,7 @@ public class BillingSaveBillingAction extends Action {
 //                    try {
 //                    } catch (SQLException ex) {
 //                        log.error(ex.getMessage(), ex);
-//                        ex.printStackTrace();
+//MiscUtils.getLogger().error("Error", ex);
 //                    }
 //                }
 //            }
@@ -409,15 +409,13 @@ public class BillingSaveBillingAction extends Action {
                 amnt = rs.getString("value");
             }
         } catch (SQLException ex) {
-            log.error(ex.getMessage(), ex);
-            ex.printStackTrace();
+            log.error(ex.getMessage(), ex);MiscUtils.getLogger().error("Error", ex);
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException ex2) {
-                    log.error(ex2.getMessage(), ex2);
-                    ex2.printStackTrace();
+                    log.error(ex2.getMessage(), ex2);MiscUtils.getLogger().error("Error", ex2);
                 }
             }
         }

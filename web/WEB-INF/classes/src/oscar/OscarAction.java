@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBPreparedHandler;
 
@@ -112,8 +113,7 @@ public class OscarAction
     try {
       outputStream = response.getOutputStream();
     }
-    catch (IOException ex) {
-      ex.printStackTrace();
+    catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return outputStream;
   }

@@ -195,8 +195,7 @@ public class BillingViewBean {
         res.append(new BillingNote().getNote(this.getBillingMasterNo()));
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
 
     return res.toString();
@@ -630,15 +629,13 @@ public class BillingViewBean {
         types.add(tp);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
 

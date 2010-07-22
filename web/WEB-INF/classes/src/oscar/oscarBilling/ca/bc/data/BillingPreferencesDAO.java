@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
@@ -79,16 +81,14 @@ public class BillingPreferencesDAO {
         db.RunSQL(insertSQL);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       if (rs != null) {
         try {
           rs.close();
         }
-        catch (SQLException ex2) {
-          ex2.printStackTrace();
+        catch (SQLException ex2) {MiscUtils.getLogger().error("Error", ex2);
         }
       }
     }

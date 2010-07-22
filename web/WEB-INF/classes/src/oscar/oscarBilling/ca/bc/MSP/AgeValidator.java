@@ -1,6 +1,5 @@
 package oscar.oscarBilling.ca.bc.MSP;
 
-import java.util.Vector;
 
 public class AgeValidator
     extends ServiceCodeValidator {

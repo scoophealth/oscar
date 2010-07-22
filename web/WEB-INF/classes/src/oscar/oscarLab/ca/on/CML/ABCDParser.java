@@ -169,7 +169,7 @@ public class ABCDParser {
             rs.close();
             pstmt.close();
          }catch (SQLException sqlE){
-            sqlE.printStackTrace();
+        	 MiscUtils.getLogger().error("Error", sqlE);
          }
          
          try{ 
@@ -183,7 +183,7 @@ public class ABCDParser {
             pstmt.close();                                                                                                                                      
          }catch (SQLException sqlE){
             MiscUtils.getLogger().debug("NO MATCHING PATIENT FOR LAB id ="+labId);
-            sqlE.printStackTrace();
+            MiscUtils.getLogger().error("Error", sqlE);
          }                                                    
     }    
    /////
@@ -209,7 +209,7 @@ public class ABCDParser {
          }   
          pstmt.close();
       }catch (SQLException sqlE){
-         sqlE.printStackTrace();
+    	  MiscUtils.getLogger().error("Error", sqlE);
       }
       logger.info("provider hash table :"+htable);
       return htable;

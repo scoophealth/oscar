@@ -131,7 +131,7 @@ public class RAData {
                 valueToAdd = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);
             } catch (Exception badValueException) {
                 MiscUtils.getLogger().debug(" Error calculating value for " + h.get("billing_no"));
-                badValueException.printStackTrace();
+                MiscUtils.getLogger().error("Error", badValueException);
             }
             total = total.add(valueToAdd);
         }
@@ -152,7 +152,7 @@ public class RAData {
                 valueToAdd = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);
             } catch (Exception badValueException) {
                 MiscUtils.getLogger().debug(" Error calculating value for " + h.get("billing_no"));
-                badValueException.printStackTrace();
+                MiscUtils.getLogger().error("Error", badValueException);
             }
             total = total.add(valueToAdd);
         }

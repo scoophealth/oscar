@@ -273,8 +273,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             //  p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
             bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
         }
 
         //  p("=============END saveCustomName  RxWriteScriptAction.java===============");
@@ -366,8 +365,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             try {
                 today = dateFormat.format(calendar.getTime());
                 //      p("today's date", today);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
             Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
             rx.setRxDate(tod);
@@ -375,8 +373,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 
             request.setAttribute("listRxDrugs", listRxDrugs);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
         }
         p("=============END newCustomNote RxWriteScriptAction.java===============");
         return (mapping.findForward("newRx"));
@@ -453,8 +450,7 @@ public final class RxWriteScriptAction extends DispatchAction {
             try {
                 today = dateFormat.format(calendar.getTime());
                 //      p("today's date", today);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
             Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
             rx.setRxDate(tod);
@@ -462,8 +458,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 
             request.setAttribute("listRxDrugs", listRxDrugs);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
         }
         //p("=============END newCustomDrug RxWriteScriptAction.java===============");
         return (mapping.findForward("newRx"));
@@ -593,16 +588,14 @@ public final class RxWriteScriptAction extends DispatchAction {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 today = dateFormat.format(calendar.getTime());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
             Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
             rx.setRxDate(tod);
             rx.setWrittenDate(tod);
             rx.setDiscontinuedLatest(RxUtil.checkDiscontinuedBefore(rx));//check and set if rx was discontinued before.
             request.setAttribute("listRxDrugs", listRxDrugs);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
         }
         p("=============END createNewRx RxWriteScriptAction.java===============");
         return (mapping.findForward("newRx"));
@@ -652,8 +645,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 JSONObject jsonObject = JSONObject.fromObject(hm);
                 p("jsonObject", jsonObject.toString());
                 response.getOutputStream().write(jsonObject.toString().getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
             return null;
         } else if (action != null && action.equals("updateQty")) {
@@ -734,8 +726,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 hm.put("unitName", rx.getUnitName());
                 JSONObject jsonObject = JSONObject.fromObject(hm);
                 response.getOutputStream().write(jsonObject.toString().getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
             //      p("===================END updateQty RxWriteScriptAction.java======================");
             return null;
@@ -1014,8 +1005,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                             bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(stashIndex));
                             bean.setStashItem(stashIndex, rx);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
                 continue;
             }
         }
@@ -1083,8 +1073,7 @@ public final class RxWriteScriptAction extends DispatchAction {
                 bean.addRandomIdDrugIdPair(rx.getRandomId(), rx.getDrugId());
                 auditStr.append(rx.getAuditString());
                 auditStr.append("\n");
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
             // Save annotation
             HttpSession se = request.getSession();

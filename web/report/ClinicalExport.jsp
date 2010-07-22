@@ -1,4 +1,5 @@
-<%@page import="org.apache.poi.hssf.usermodel.HSSFRow,org.apache.poi.hssf.usermodel.HSSFSheet,org.apache.poi.hssf.usermodel.HSSFWorkbook,com.Ostermiller.util.CSVParser"%><%
+
+<%@page import="org.oscarehr.util.MiscUtils"%><%@page import="org.apache.poi.hssf.usermodel.HSSFRow,org.apache.poi.hssf.usermodel.HSSFSheet,org.apache.poi.hssf.usermodel.HSSFWorkbook,com.Ostermiller.util.CSVParser"%><%
 
     String csv = (String) session.getAttribute("clinicalReportCSV");
     String action = request.getParameter("getCSV");
@@ -8,7 +9,7 @@
             try {
                 response.getWriter().write(csv);
             } catch (Exception ioe) {
-                ioe.printStackTrace();
+            	MiscUtils.getLogger().error("Error", ioe);
             }
         }
         action = request.getParameter("getXLS");
@@ -32,7 +33,7 @@
             try {    
                 wb.write(response.getOutputStream());
             } catch(Exception e) {
-                e.printStackTrace();   
+            	MiscUtils.getLogger().error("Error", e);
             }
             
         }

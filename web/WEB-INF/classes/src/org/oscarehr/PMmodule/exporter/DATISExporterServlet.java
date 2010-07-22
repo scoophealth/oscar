@@ -113,12 +113,10 @@ public class DATISExporterServlet extends HttpServlet {
 			}
 			
 		} catch(Throwable t) {
-			log.error(t);
-			t.printStackTrace();
+			log.error("Error", t);
 			try {
 				response.getWriter().print("An Error Occured during DATIS Export operation. Please check server log for details.");
 			} catch (IOException e) {
-				log.error(e);
 				MiscUtils.getLogger().error("Error", e);
 			}
 		} finally {
@@ -126,7 +124,6 @@ public class DATISExporterServlet extends HttpServlet {
 				try {
 					fis.close();
 				} catch (IOException e) {
-					log.error(e);
 					MiscUtils.getLogger().error("Error", e);
 				}
 			}
@@ -134,7 +131,6 @@ public class DATISExporterServlet extends HttpServlet {
 				try {
 					removeFiles(dir);
 				} catch (IOException e) {
-					log.error(e);
 					MiscUtils.getLogger().error("Error", e);
 				}
 			}

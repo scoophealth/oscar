@@ -169,7 +169,7 @@
                         //console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
                     }
                 }catch(e){
-                    //e.printStackTrace();
+                    
                 }
           
                 //console.log("going out");
@@ -199,7 +199,7 @@
                         //console.log(i+" "+document.getElementById(fields_to_turn_on[i]).style.display);
                     }
                 }catch(e){
-                    //e.printStackTrace();
+                    
                 }
           
                 //console.log("going out");

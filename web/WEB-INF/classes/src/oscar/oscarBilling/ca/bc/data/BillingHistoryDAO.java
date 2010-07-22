@@ -29,6 +29,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.entities.BillHistory;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 import oscar.oscarDB.DBHandler;
@@ -86,15 +88,13 @@ public class BillingHistoryDAO {
         list.add(bh);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return list;
@@ -134,8 +134,7 @@ public class BillingHistoryDAO {
         throw new RuntimeException("Bill History: " + history.getBillingMasterNo() + " Payment type is '0'");
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
   }
 
@@ -204,8 +203,7 @@ public class BillingHistoryDAO {
         this.createBillingHistoryArchive(billMasterNo);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
   }
 

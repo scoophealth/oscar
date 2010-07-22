@@ -36,6 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -99,8 +100,7 @@ public final class EctImmSaveConfigAction extends Action {
             imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
          }
 
-      } catch(Exception ex)  {
-         ex.printStackTrace();
+      } catch(Exception ex)  {MiscUtils.getLogger().error("Error", ex);
          throw new ServletException("Exception occurred in SaveConfigAction", ex);
       }
       return mapping.findForward("success");

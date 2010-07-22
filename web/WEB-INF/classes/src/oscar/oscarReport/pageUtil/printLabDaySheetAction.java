@@ -65,16 +65,14 @@ public class printLabDaySheetAction extends OscarAction{
                         ins = getClass().getResourceAsStream("/oscar/oscarReport/pageUtil/"+xmlStyleFile);
                         logger.debug("loading from : /oscar/oscarReport/pageUtil/labDaySheet.xml " + ins);
                 }
-                catch (Exception ex1) {
-                        ex1.printStackTrace();
+                catch (Exception ex1) {MiscUtils.getLogger().error("Error", ex1);
                 }
         }
 
         try {
             sos = response.getOutputStream();
         }
-        catch (IOException ex) {
-            ex.printStackTrace();
+        catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
 
         response.setHeader("Content-disposition", getHeader(response).toString());

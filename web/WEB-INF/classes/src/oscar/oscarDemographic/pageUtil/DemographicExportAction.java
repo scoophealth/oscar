@@ -205,7 +205,7 @@ public class DemographicExportAction extends Action {
          
          
       outp.output(doc, response.getOutputStream());
-      }catch(Exception e2){e2.printStackTrace();}
+      }catch(Exception e2){MiscUtils.getLogger().error("Error", e2);}
 
       return null;
       //return mapping.findForward("success");

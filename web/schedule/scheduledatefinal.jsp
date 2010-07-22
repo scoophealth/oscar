@@ -71,7 +71,8 @@
   String hour = "";
 
 %>
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="schedule.scheduledatefinal.title" /></title>
@@ -169,7 +170,7 @@ function upCaseCtrl(ctrl) {
   try {
     scheduleMainBean.closePstmtConn();
  }catch(SQLException e) {
-     e.printStackTrace();
+	 MiscUtils.getLogger().error("Error", e);
  }
 %>
 

@@ -67,8 +67,7 @@ public class CombinePDFAction extends Action {
                 response.setHeader("Content-Disposition", "attachment; filename=\"combinedPDF-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf\"");
                 try {
                     ConcatPDF.concat(alist,response.getOutputStream());            
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
                 }            
                 return null;
             }

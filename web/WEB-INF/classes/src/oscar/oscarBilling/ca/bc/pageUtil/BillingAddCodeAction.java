@@ -25,7 +25,6 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

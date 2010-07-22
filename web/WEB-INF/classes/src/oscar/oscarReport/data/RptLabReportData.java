@@ -191,7 +191,7 @@ public class DemoLabDataStruct{
              }
           }                  
           rs.close(); 
-       }catch (java.sql.SQLException e3) { MiscUtils.getLogger().debug(e3.getMessage()); e3.printStackTrace(); }
+       }catch (java.sql.SQLException e3) { MiscUtils.getLogger().debug(e3.getMessage()); MiscUtils.getLogger().error("Error", e3); }
        return list;
     }
     

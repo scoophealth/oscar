@@ -285,7 +285,7 @@ public class EctRourkeRecord {
                         }
                 }
         rs.close();
-        }catch(Exception exc){exc.printStackTrace();}
+        }catch(Exception exc){MiscUtils.getLogger().error("Error", exc);}
         return retval;
     }
 ///////////////////////////////////

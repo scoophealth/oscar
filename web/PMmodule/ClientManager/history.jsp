@@ -33,7 +33,8 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
-<%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%><script type="text/javascript">
+<%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%>
+<%@page import="org.oscarehr.util.MiscUtils"%><script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
         url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_admission&admissionId="/>';
         window.open(url + admissionId, 'admission', 'width=600,height=600');
@@ -164,6 +165,6 @@
 	}
 	catch (Exception e)
 	{
-		e.printStackTrace();
+		MiscUtils.getLogger().error("Error", e);
 	}
 %>

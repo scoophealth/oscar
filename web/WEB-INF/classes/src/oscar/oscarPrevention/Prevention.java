@@ -180,8 +180,7 @@ public class Prevention {
          }
       } catch (ParseException e) {
          MiscUtils.getLogger().error("Error", e); 
-      } catch (Exception ex){
-         ex.printStackTrace();
+      } catch (Exception ex){MiscUtils.getLogger().error("Error", ex);
       }
       return withinRange;
    }

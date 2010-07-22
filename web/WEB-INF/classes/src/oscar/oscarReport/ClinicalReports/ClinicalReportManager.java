@@ -170,8 +170,7 @@ public class ClinicalReportManager {
                     try {
                         is = new FileInputStream(userConfigFilePath);
                         userConfigLoaded = true;                    
-                    } catch( FileNotFoundException ex ) {
-                        ex.printStackTrace();
+                    } catch( FileNotFoundException ex ) {MiscUtils.getLogger().error("Error", ex);
                         is = null;
                     }
                 }                                

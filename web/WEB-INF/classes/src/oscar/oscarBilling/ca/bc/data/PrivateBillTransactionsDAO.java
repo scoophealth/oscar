@@ -26,6 +26,8 @@ package oscar.oscarBilling.ca.bc.data;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
@@ -64,8 +66,7 @@ public class PrivateBillTransactionsDAO {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(qry);
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
   }
 

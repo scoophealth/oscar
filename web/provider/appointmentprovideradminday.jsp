@@ -218,7 +218,7 @@ try {
 java.util.ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
 formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), prop.getString("date.EEEyyyyMMdd"),request.getLocale());
 } catch (Exception e) {
-e.printStackTrace();
+	MiscUtils.getLogger().error("Error", e);
 formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");
 }
 String strYear=""+year;
@@ -1123,7 +1123,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
            java.util.ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
            formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), prop.getString("date.EEEyyyyMMdd"),request.getLocale());
         } catch (Exception e) {
-           e.printStackTrace();
+           MiscUtils.getLogger().error("Error", e);
            formatDate = UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");
         }
         strYear=""+year;

@@ -28,6 +28,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -111,7 +113,7 @@ public class FrmRourke2006Record extends FrmRecord {
 			}
 		}
 	rs.close();
-	}catch(Exception exc){exc.printStackTrace();}	
+	}catch(Exception exc){MiscUtils.getLogger().error("Error", exc);}	
 	return retval;
     }
 ///////////////////////////////////

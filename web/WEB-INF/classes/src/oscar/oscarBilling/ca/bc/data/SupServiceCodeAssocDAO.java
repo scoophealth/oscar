@@ -151,8 +151,7 @@ public class SupServiceCodeAssocDAO {
           rs.close();
         }
       }
-      catch (SQLException ex) {
-        ex.printStackTrace();
+      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
       }
     }
   }

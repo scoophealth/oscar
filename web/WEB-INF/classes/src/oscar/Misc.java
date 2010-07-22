@@ -328,7 +328,7 @@ public static String insertDecimalPoint(String input){
    String moneyStr = "0.00";
         try{             
             moneyStr = new java.math.BigDecimal(input).movePointLeft(2).toString();
-        }catch (Exception moneyException) { moneyException.printStackTrace(); }
+        }catch (Exception moneyException) { MiscUtils.getLogger().error("Error", moneyException); }
     return moneyStr;
 }
 
@@ -447,7 +447,7 @@ public static String space(int i) {
         String moneyStr = "0.00";
         try{             
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
-        }catch (Exception moneyException) { }//moneyException.printStackTrace(); }
+        }catch (Exception moneyException) { }
     return moneyStr;
     }
     ///

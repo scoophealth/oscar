@@ -47,6 +47,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarReport.data.ManageLetters;
 
@@ -90,12 +91,9 @@ public class ManagePatientLettersAction extends Action {
         
             ManageLetters manageLetters = new ManageLetters();
             manageLetters.saveReport( (String) request.getSession().getAttribute("user"), reportName,fFile.getFileName(), fileData);
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JRException ex) {
-            ex.printStackTrace();
+        } catch (FileNotFoundException ex) {MiscUtils.getLogger().error("Error", ex);
+        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
+        } catch (JRException ex) {MiscUtils.getLogger().error("Error", ex);
         }
 
         if (log.isTraceEnabled()) { log.trace("End of ManagePatientLetters Action");}

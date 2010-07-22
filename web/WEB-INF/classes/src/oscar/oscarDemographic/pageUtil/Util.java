@@ -87,8 +87,7 @@ public class Util {
             } else {
                 return false;
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
         MiscUtils.getLogger().debug("Error! Cannot write to directory [" + dirName + "]");
         return false;
@@ -149,8 +148,7 @@ public class Util {
             }
             in.close();
             out.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
     }
 
@@ -315,8 +313,7 @@ public class Util {
             zout.close();
             return true;
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
         return false;
     }

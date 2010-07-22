@@ -171,16 +171,14 @@ public class FrmFormRHPreventionAction extends Action{
                 newID = rec.saveFormRecord(props);
                 LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, request.getParameter("form_class"), "" + newID, ip);
             }catch(Exception factEx){
-                factEx.printStackTrace();
-
+            	MiscUtils.getLogger().error("Error", factEx);
             }
 
             request.setAttribute("demographic_no",demographicNo); 
             where = af.getPath();
             try {
                 where = rec.createActionURL(where, "save", demographicNo, "" + newID);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            } catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
             }
         
             af = new ActionForward(where);

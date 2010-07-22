@@ -276,10 +276,8 @@ import cds.RiskFactorsDocument.RiskFactors;
 		OmdCdsDocument.OmdCds omdCds=null;
 	try {
 		omdCds = OmdCdsDocument.Factory.parse(xmlF).getOmdCds();
-	} catch (IOException ex) {
-		ex.printStackTrace();
-	} catch (XmlException ex) {
-		ex.printStackTrace();
+	} catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
+	} catch (XmlException ex) {MiscUtils.getLogger().error("Error", ex);
 	}
 		PatientRecord patientRec = omdCds.getPatientRecord();
 
@@ -1392,8 +1390,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 						FileWriter f = new FileWriter(docDir + auditInfoSummary);
 						f.write(sAudInfo);
 						f.close();
-					} catch (IOException ex) {
-						ex.printStackTrace();
+					} catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 					}
 					}
 					contentType = audInf[i].getFileExtensionAndVersion();
@@ -1403,8 +1400,7 @@ import cds.RiskFactorsDocument.RiskFactors;
 						FileOutputStream f = new FileOutputStream(docDir + auditInfoFile);
 						f.write(audInf[i].getContent().getMedia());
 						f.close();
-					} catch (Exception ex) {
-						ex.printStackTrace();
+					} catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
 					}
 					}
 				}

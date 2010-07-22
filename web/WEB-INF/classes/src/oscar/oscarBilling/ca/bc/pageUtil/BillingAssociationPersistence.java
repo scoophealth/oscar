@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -86,8 +88,7 @@ public class BillingAssociationPersistence {
       ret = db.RunSQL(qry);
 
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return ret;
   }
@@ -106,8 +107,7 @@ public class BillingAssociationPersistence {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       ret = db.RunSQL(qry);
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 
     }
     return ret;
@@ -145,16 +145,14 @@ public class BillingAssociationPersistence {
         curSvcCode = svcCode;
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return list;
@@ -213,16 +211,14 @@ public class BillingAssociationPersistence {
         ret = true;
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 
     }
     finally {
         try {
           rs.close();
         }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
+        catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
         }
       }
 
@@ -252,15 +248,13 @@ public class BillingAssociationPersistence {
         assoc.setServiceCode(svcCode);
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
         try {
           rs.close();
         }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
+        catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
         }
       }
 

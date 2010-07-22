@@ -151,8 +151,7 @@ public class BillingCodeData {
                       "value       = '"+StringEscapeUtils.escapeSql(val)  +"' "+
                       "where billingservice_no = '"+StringEscapeUtils.escapeSql(codeId)+"'";
          db.RunSQL(str);
-      }catch(Exception e1){
-         e1.printStackTrace();
+      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
       }
       return retval;
    }
@@ -169,8 +168,7 @@ public class BillingCodeData {
          MiscUtils.getLogger().debug(str);
          db.RunSQL(str);
          MiscUtils.getLogger().debug("NOW updated");
-      }catch(Exception e1){
-         e1.printStackTrace();
+      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
       }
       return retval;
    }
@@ -188,8 +186,7 @@ public class BillingCodeData {
          MiscUtils.getLogger().debug(str);
          db.RunSQL(str);
          MiscUtils.getLogger().debug("NOW updated");
-      }catch(Exception e1){
-         e1.printStackTrace();
+      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
       }
       return retval;
    }
@@ -213,8 +210,7 @@ public class BillingCodeData {
          MiscUtils.getLogger().debug(str);
          db.RunSQL(str);
          MiscUtils.getLogger().debug("NOW updated");
-      }catch(Exception e1){
-         e1.printStackTrace();
+      }catch(Exception e1){MiscUtils.getLogger().error("Error", e1);
       }
       return retval;
    }

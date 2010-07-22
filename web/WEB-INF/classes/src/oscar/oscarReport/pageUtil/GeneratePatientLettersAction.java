@@ -153,7 +153,7 @@ public class GeneratePatientLettersAction extends Action {
                 fullPatientlist.add(savePath);
 
             }catch(Exception  jpException){
-               jpException.printStackTrace();
+            	MiscUtils.getLogger().error("Error", jpException);
             }
            
         }
@@ -183,8 +183,7 @@ public class GeneratePatientLettersAction extends Action {
         
         try {
             sos = response.getOutputStream();
-        }catch (IOException ex) {
-            ex.printStackTrace();
+        }catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
 
  

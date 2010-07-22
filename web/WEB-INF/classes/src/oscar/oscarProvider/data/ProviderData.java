@@ -764,8 +764,7 @@ public class ProviderData {
                 providerNo = db.getString(rs, 1);
             }
             rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
         }
         return providerNo;
    }
@@ -827,8 +826,7 @@ public class ProviderData {
             }
             write_rec.close();
             rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
         }
         return key;
     }

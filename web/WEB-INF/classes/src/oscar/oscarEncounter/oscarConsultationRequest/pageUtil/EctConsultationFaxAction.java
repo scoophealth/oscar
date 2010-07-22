@@ -209,7 +209,7 @@ public class EctConsultationFaxAction extends Action {
                faxClientLog.setResult(OSFc.getErrorMessage());
             }
          }catch(Exception e4){
-            e4.printStackTrace();
+        	 MiscUtils.getLogger().error("Error", e4);
             MiscUtils.getLogger().debug("Fax Service has Returned a Fatal Error ");
             request.setAttribute("oscarFaxError","Fax Service Is currently not available, please contact your Oscar Fax Administrator");
             faxClientLog.setResult("FAX SERVICE RETURNED NULL");

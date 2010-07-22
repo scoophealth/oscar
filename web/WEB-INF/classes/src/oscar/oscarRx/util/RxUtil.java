@@ -1122,8 +1122,7 @@ public class RxUtil {
                 p("atccode", rxTemp.getAtcCode());
                 p("regional identifier", rxTemp.getRegionalIdentifier());
                 p("---");
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
         }
         p("***done***");
@@ -1160,8 +1159,7 @@ public class RxUtil {
             rx.setSpecial(trimSpecial(rx));
 
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {MiscUtils.getLogger().error("Error", e);
         }
     }
 
@@ -1179,8 +1177,7 @@ public class RxUtil {
                 hm.put("special_instruction", rs.getString("special_instruction"));
                 retList.add(hm);
             }
-       }catch(Exception e){
-            e.printStackTrace();
+       }catch(Exception e){MiscUtils.getLogger().error("Error", e);
        }
         MiscUtils.getLogger().debug("in drugsTableQuery,retList="+retList);
         return retList;
@@ -1247,7 +1244,7 @@ public class RxUtil {
                 h.put("instruction", removeQuantityMitteRepeat(ins));
                 h.put("special_instruction", specIns);
                 retList.add(h);
-            }}catch(Exception e){e.printStackTrace();}
+            }}catch(Exception e){MiscUtils.getLogger().error("Error", e);}
             retList=commonUniqueMedHistory(retList);
         }else;
 
@@ -1282,7 +1279,7 @@ public class RxUtil {
                     }else;
                 }
             }
-           }catch(Exception e){e.printStackTrace();}
+           }catch(Exception e){MiscUtils.getLogger().error("Error", e);}
             MiscUtils.getLogger().debug("in commonUniqueMedHistory retList="+retList);
             return retList;
        }else
@@ -1508,8 +1505,7 @@ public class RxUtil {
                         p("1unique turning false");
                     unique = false;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
             }
         }
         }else{
@@ -1526,8 +1522,7 @@ public class RxUtil {
                         p("2unique turning false");
                         unique = false;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception e) {MiscUtils.getLogger().error("Error", e);
                 }
             }
         }
@@ -1601,8 +1596,7 @@ public class RxUtil {
                     }
                     MiscUtils.getLogger().debug("3after all.addAll(v): "+allInteractions);
                 }catch(Exception e){
-                    log2.debug("3command :"+command+" "+e.getMessage());
-                    e.printStackTrace();
+                    log2.debug("3command :"+command+" "+e.getMessage());MiscUtils.getLogger().error("Error", e);
                 }
             }
         String retStr="";

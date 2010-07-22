@@ -117,7 +117,7 @@ public class ReportEvaluator {
         try{
            percentage = ( (float) getNumeratorCount() / (float) getDenominatorCount() ) * 100;
         }catch(java.lang.ArithmeticException arithEx){
-            arithEx.printStackTrace();
+        	MiscUtils.getLogger().error("Error", arithEx);
             //request.setAttribute("divisionByZero",denominatorId);
             percentage = 0;
         }

@@ -155,14 +155,14 @@ public final class WCBAction extends Action {
 //
 //    }
 //    catch (SQLException ex) {
-//      ex.printStackTrace();
+//MiscUtils.getLogger().error("Error", ex);
 //    }
 //    finally{
 //      if(db!=null){
 //        try {
 //        }
 //        catch (SQLException ex1) {
-//          ex1.printStackTrace();
+//MiscUtils.getLogger().error("Error", ex1);
 //        }
 //      }
 //    }

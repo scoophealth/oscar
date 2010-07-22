@@ -38,6 +38,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarReport.data.ManageLetters;
 
@@ -60,8 +61,7 @@ public class DeletePatientLettersAction extends Action {
         try {
             ManageLetters manageLetters = new ManageLetters();
             manageLetters.archiveReport(fileId);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
         }
         
         if (log.isTraceEnabled()) { log.trace("End of DeletePatientLettersAction Action");}

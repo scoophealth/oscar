@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.cad.model.CadProcedimentos;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandlerAdvanced;
@@ -87,7 +89,7 @@ public class CadProcedimentoDAO extends DAO {
                 beans.add(bean);
             }
         } catch (Exception err) {
-            err.printStackTrace();
+        	MiscUtils.getLogger().error("Error", err);
             throw new SQLException(err.getMessage());
         }
 
@@ -115,7 +117,7 @@ public class CadProcedimentoDAO extends DAO {
                 }
             }
         } catch (Exception err) {
-            err.printStackTrace();
+        	MiscUtils.getLogger().error("Error", err);
             throw new SQLException(err.getMessage());
         }
 
@@ -137,7 +139,7 @@ public class CadProcedimentoDAO extends DAO {
                 bean.setDsProcedimento(db.getString(rs,"ds_procedimento"));
             }
         } catch (Exception err) {
-            err.printStackTrace();
+        	MiscUtils.getLogger().error("Error", err);
             throw new SQLException(err.getMessage());
         }
 

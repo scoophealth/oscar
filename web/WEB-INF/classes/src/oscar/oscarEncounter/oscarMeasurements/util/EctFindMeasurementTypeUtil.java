@@ -70,7 +70,7 @@ public class EctFindMeasurementTypeUtil {
             digester.clear();
         } 
         catch (Exception exc) {
-            exc.printStackTrace();
+        	MiscUtils.getLogger().error("Error", exc);
         }
         return ret;
     }

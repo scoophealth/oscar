@@ -216,7 +216,6 @@ public   class SurveillanceMaster {
             if (input == null){
                log.error("OSCAR SURVEILLANCE ERROR:  could not find file :"+filename,eio);
             }
-            //eio.printStackTrace(); 
             surveyList = new ArrayList();
             surveyTable = new Hashtable();
          }

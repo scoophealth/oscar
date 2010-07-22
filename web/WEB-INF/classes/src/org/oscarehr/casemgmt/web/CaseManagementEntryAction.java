@@ -2543,7 +2543,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
             }
             catch (ParseException ex) {
-                ex.printStackTrace();
+            	MiscUtils.getLogger().error("Error", ex);
             }
         }
 

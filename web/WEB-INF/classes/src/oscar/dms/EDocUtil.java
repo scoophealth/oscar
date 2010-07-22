@@ -723,12 +723,9 @@ public static String getLastDocumentDesc() {
             fis.read(fdata);
             fis.close();
 
-        }        catch (NullPointerException ex) {
-            ex.printStackTrace();
-        }        catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }        catch (IOException ex) {
-            ex.printStackTrace();
+        }        catch (NullPointerException ex) {MiscUtils.getLogger().error("Error", ex);
+        }        catch (FileNotFoundException ex) {MiscUtils.getLogger().error("Error", ex);
+        }        catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
         }
 
         return fdata;
@@ -806,8 +803,7 @@ public static String getLastDocumentDesc() {
 					doc.setFileName(rs.getString("docfilename"));
 					doc.setStatus(rs.getString("status").charAt(0));
 				}
-			} catch (SQLException ex) {
-				ex.printStackTrace();
+			} catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 			}
 		}
 		return doc;

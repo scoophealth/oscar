@@ -169,8 +169,7 @@ public class MeasurementHL7UploaderAction extends DispatchActionSupport {
 			try {
 				response.getWriter().println("Invalid HL7 ORU_R01 format/request: " + e.getMessage());
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				// TODO Auto-generated catch blockMiscUtils.getLogger().error("Error", e1);
 			} finally {
 				return null;
 			}

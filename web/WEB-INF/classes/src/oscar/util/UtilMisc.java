@@ -35,6 +35,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import org.apache.commons.codec.binary.Base64;
+import org.oscarehr.util.MiscUtils;
 
 public class UtilMisc {
   public static String htmlEscape(String s) {
@@ -303,8 +304,7 @@ public class UtilMisc {
     try {
       ret = Double.parseDouble(value);
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
+    catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       return ret;
@@ -409,8 +409,7 @@ public class UtilMisc {
     try {
       ret = Integer.parseInt(value);
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
+    catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       return ret;

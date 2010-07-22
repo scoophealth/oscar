@@ -1,4 +1,5 @@
-<%--
+
+<%@page import="org.oscarehr.util.MiscUtils"%><%--
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
@@ -31,7 +32,7 @@ try{
                  vec = drugData.getInactiveDate(din);
     
     }catch(Exception e){
-        e.printStackTrace();
+    	MiscUtils.getLogger().error("Error", e);
     }
 
                 

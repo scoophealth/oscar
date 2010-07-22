@@ -894,8 +894,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 		try {
 			omdCdsDoc.save(files[i]);
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 			throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
 		}
 	    }
@@ -1069,8 +1068,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	ZipOutputStream zout = null;	
 	try {		
 		zout = new ZipOutputStream(new FileOutputStream(exports[0].getParent()+"/"+zipFileName));
-	} catch (IOException ex) {
-		ex.printStackTrace();
+	} catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 		throw new Exception("Error: Cannot create ZIP file");
 	}
 
@@ -1081,15 +1079,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    FileInputStream fin = null;
 	    try {
 		    fin = new FileInputStream(filePath);
-	    } catch (FileNotFoundException ex) {
-		    ex.printStackTrace();
+	    } catch (FileNotFoundException ex) {MiscUtils.getLogger().error("Error", ex);
 		    throw new Exception("Error: While zipping, Export File not found - " + fileName);
 	    }
 	    try {
 		    // Add ZIP entry to output stream
 		    zout.putNextEntry(new ZipEntry(fileName));
-	    } catch (IOException ex) {
-		    ex.printStackTrace();
+	    } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 		    throw new Exception("Error: Cannot add file to ZIP - " + fileName);
 	    }
 
@@ -1097,29 +1093,25 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    int len;
 	    try {
 		    while ((len = fin.read(buf)) > 0) zout.write(buf, 0, len);
-	    } catch (IOException ex) {
-		    ex.printStackTrace();
+	    } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 		    throw new Exception("Error: Cannot write data to ZIP - " + fileName);
 	    }
 	    try {
 		    // Complete the entry
 		    zout.closeEntry();
-	    } catch (IOException ex) {
-		    ex.printStackTrace();
+	    } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 		    throw new Exception("Error: Cannot complete ZIP entry - " + fileName);
 	    }
 	    try {
 		    fin.close();
-	    } catch (IOException ex) {
-		    ex.printStackTrace();
+	    } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 		    throw new Exception("Error: Cannot close input file - " + fileName);
 	    }
 	}
 	try {
 		// Complete the ZIP file
 		zout.close();
-	} catch (IOException ex) {
-		ex.printStackTrace();
+	} catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
 		throw new Exception("Error: Cannot close ZIP file");
 	}
 	return true;

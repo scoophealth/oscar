@@ -179,8 +179,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             }
             try {
                     omdCdsDiabetesDoc.save(files[i], options);
-            } catch (IOException ex) {
-                    ex.printStackTrace();
+            } catch (IOException ex) {MiscUtils.getLogger().error("Error", ex);
                     throw new Exception("Cannot write .xml file(s) to export directory.\nPlease check directory permissions.");
             }
 	}

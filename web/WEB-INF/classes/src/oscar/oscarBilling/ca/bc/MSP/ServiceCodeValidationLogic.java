@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarBilling.ca.bc.data.BillingFormData.BillingService;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData.Demographic;
@@ -119,8 +121,7 @@ public class ServiceCodeValidationLogic {
       }
       rs.close();
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return v;
   }
@@ -147,8 +148,7 @@ public class ServiceCodeValidationLogic {
       }
       rs.close();
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return v;
   }
@@ -182,8 +182,7 @@ public class ServiceCodeValidationLogic {
       }
       rs.close();
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return ret;
   }
@@ -217,8 +216,7 @@ public class ServiceCodeValidationLogic {
       }
       rs.close();
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return ret;
   }
@@ -250,8 +248,7 @@ public class ServiceCodeValidationLogic {
       }
       rs.close();
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return ret;
   }
@@ -312,8 +309,7 @@ public class ServiceCodeValidationLogic {
         }
       }
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
+    catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       return ret;
@@ -364,8 +360,7 @@ public class ServiceCodeValidationLogic {
          }
        }
      }
-     catch (Exception ex) {
-       ex.printStackTrace();
+     catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
      }
      finally {
        HashMap availableUnits = new HashMap();
@@ -412,15 +407,13 @@ public class ServiceCodeValidationLogic {
         ret = "";
       }
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return ret;

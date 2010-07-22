@@ -302,8 +302,7 @@ public class SqlUtils {
 					rs.close();
 				}
 			}
-			catch (SQLException ex) {
-				ex.printStackTrace();
+			catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 			}
 		}
 		return rec;
@@ -380,8 +379,7 @@ public class SqlUtils {
 				try {
 					rs.close();
 				}
-				catch (SQLException ex1) {
-					ex1.printStackTrace();
+				catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
 				}
 			}
 			if (records != null) {
@@ -450,8 +448,7 @@ public class SqlUtils {
 				try {
 					rs.close();
 				}
-				catch (SQLException ex1) {
-					ex1.printStackTrace();
+				catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
 				}
 			}
 

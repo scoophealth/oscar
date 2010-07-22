@@ -32,6 +32,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class TicklerCreator {
@@ -57,8 +59,7 @@ public class TicklerCreator {
         db = new DBHandler(DBHandler.OSCAR_DATA);
         db.RunSQL(sql);
       }
-      catch (SQLException ex) {
-        ex.printStackTrace();
+      catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
       }
     }
   }
@@ -82,15 +83,13 @@ public class TicklerCreator {
       rs = db.GetSQL(sql);
       return rs.next();
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     finally {
       try {
         rs.close();
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex1) {MiscUtils.getLogger().error("Error", ex1);
       }
     }
     return false;
@@ -107,8 +106,7 @@ public class TicklerCreator {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(sql);
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
   }
 
@@ -135,8 +133,7 @@ public class TicklerCreator {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(qry);
     }
-    catch (SQLException ex) {
-      ex.printStackTrace();
+    catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
     }
   }
 }

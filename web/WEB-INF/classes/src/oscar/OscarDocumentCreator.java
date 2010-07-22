@@ -18,6 +18,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
+
+import org.oscarehr.util.MiscUtils;
 public class OscarDocumentCreator {
   public static final String PDF = "pdf";
   public static final String CSV = "csv";
@@ -67,8 +69,7 @@ public class OscarDocumentCreator {
       }
 
     }
-    catch (JRException ex) {
-      ex.printStackTrace();
+    catch (JRException ex) {MiscUtils.getLogger().error("Error", ex);
     }
   }
 
@@ -83,8 +84,7 @@ public class OscarDocumentCreator {
       jasperReport = JasperCompileManager.compileReport(
           xmlDesign);
     }
-    catch (JRException ex) {
-      ex.printStackTrace();
+    catch (JRException ex) {MiscUtils.getLogger().error("Error", ex);
     }
     return jasperReport;
   }

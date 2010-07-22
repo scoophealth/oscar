@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.billing.cad.model.CadCid;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandlerAdvanced;
@@ -91,8 +93,7 @@ public class CidDAO extends DAO {
 				bean.setDsCid(db.getString(rs,"ds_cid"));
 				beans.add(bean);
 			}
-		} catch (Exception err) {
-			err.printStackTrace();
+		} catch (Exception err) {MiscUtils.getLogger().error("Error", err);
 			throw new SQLException(err.getMessage());
 		}
 

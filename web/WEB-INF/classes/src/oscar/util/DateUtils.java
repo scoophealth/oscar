@@ -56,6 +56,7 @@ import java.util.Locale;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 public final class DateUtils {
 
@@ -512,8 +513,7 @@ public final class DateUtils {
 				Date tempDate = fmt.parse(oldDateString);
 				sdate = new SimpleDateFormat("yyyyMMdd").format(tempDate);
 			}
-		} catch (ParseException ex) {
-			ex.printStackTrace();
+		} catch (ParseException ex) {MiscUtils.getLogger().error("Error", ex);
 		} finally {
 			return sdate;
 		}

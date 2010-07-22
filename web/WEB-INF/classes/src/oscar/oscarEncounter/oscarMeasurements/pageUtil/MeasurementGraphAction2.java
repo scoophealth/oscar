@@ -245,7 +245,7 @@ public class MeasurementGraphAction2 extends Action {
                         dataItems.add(new OHLCDataItem(mdb.getDateObservedAsDate(), open, high, low, close, volume));                   
                     }
                 }catch(Exception et){
-                    et.printStackTrace();
+                	MiscUtils.getLogger().error("Error", et);
                 }
                 
             }
@@ -609,7 +609,7 @@ public class MeasurementGraphAction2 extends Action {
               MiscUtils.getLogger().debug("List ->"+list.size());
               conn.close();
               }catch(Exception ed){
-                  ed.printStackTrace();
+            	  MiscUtils.getLogger().error("Error", ed);
               }
             }else{
                list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
@@ -771,7 +771,7 @@ public class MeasurementGraphAction2 extends Action {
                         dataItems.add(new OHLCDataItem(mdb.getDateObservedAsDate(), open, high, low, close, volume));                   
                     }
                 }catch(Exception et){
-                    et.printStackTrace();
+                	MiscUtils.getLogger().error("Error", et);
                 }
             }
             dataset.addSeries(newSeries);
