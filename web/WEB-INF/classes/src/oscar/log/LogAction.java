@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.OscarLogDao;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.util.DeamonThreadFactory;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -34,7 +35,7 @@ import oscar.oscarDB.DBPreparedHandler;
 public class LogAction {
 	private static Logger logger = MiscUtils.getLogger();
 	private static OscarLogDao oscarLogDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
-	private static ExecutorService executorService = Executors.newFixedThreadPool(16);
+	private static ExecutorService executorService = Executors.newFixedThreadPool(16, new DeamonThreadFactory());
 
 	/**
 	 * This method will add a log entry asynchronously in a separate thread.
