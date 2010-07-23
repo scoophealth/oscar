@@ -23,17 +23,16 @@
 
 package oscar.dms.actions;
 
+import com.lowagie.text.pdf.PdfReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Hashtable;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -59,11 +58,8 @@ import oscar.log.LogConst;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.util.UtilDateUtilities;
 
-import com.lowagie.text.pdf.PdfReader;
-
 public class AddEditDocumentAction extends DispatchAction {
-
-    public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public ActionForward html5MultiUpload(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         Hashtable errors = new Hashtable();
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
@@ -99,6 +95,7 @@ public class AddEditDocumentAction extends DispatchAction {
         }
         //add to queuelinkdocument
             String queueId=request.getParameter("queue");
+
 
         if ( queueId !=null &&!queueId.equals("-1")){
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
