@@ -1,0 +1,80 @@
+/* for background image in the noswfupload div
+div.noswfupload input {
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+*/
+/** No SWF Object Multiple File Upload
+ * @version         1.1.1
+ * @compatibility   Chrome 1, FireFox 3+, Internet Explorer 5+, Opera 8+, Safari 3+
+ * @author          Andrea Giammarchi
+ * @blog            webreflection.blogspot.com
+ * @license         Mit Style License
+*/
+div.noswfupload {
+    position: relative;
+    display: inline-block;
+    width: 240px;
+    padding: 2px;
+    background: #F2F7FF;
+}
+div.noswfupload,
+div.noswfupload a {
+    text-decoration: none;
+    cursor: default;
+    color: #000;
+}
+div.noswfupload,
+div.noswfupload a,
+div.noswfupload input {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
+    font-size: 8pt;
+}
+div.noswfupload input {
+    width: 240px !important;
+    width: 236px;
+    border: 0;
+}
+div.noswfupload .total,
+div.noswfupload .current {
+    display: block;
+    float: left;
+    font-size: 1px;
+    line-height: 1px;
+    margin-top: 2px;
+    margin-right: 2px;
+    width: 8px;
+    height: 100px;
+    background: #999;
+}
+div.noswfupload ul {
+    display: block;
+    float: left;
+    padding: 0;
+    margin: 2px 0;
+    width: 220px !important;
+    width: 216px;
+    height: 100px;
+    background: #F2F7FF;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+div.noswfupload li {
+    display: block;
+    padding: 1px 0 1px 18px;
+    margin: 0;
+    height: 16px;
+    white-space: nowrap;
+}
+div.noswfupload .info {
+    display: block;
+    clear: left;
+    background: #F2F7FF;
+}
+div.noswfupload .hidden {
+    visibility: hidden;
+    position: absolute;
+    left: -10000px;
+    top: -10000px;
+}
