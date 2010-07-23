@@ -26,7 +26,6 @@
         <bean name="/dms/inboxManage" class="oscar.dms.actions.DmsInboxManageAction">
                 <property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
                 <property name="queueDocumentLinkDAO" ref="queueDocumentLinkDAO" />
-                <property name="queueProviderLinkDAO" ref="queueProviderLinkDAO" />
                 <property name="secObjectNameDao" ref="secObjectNameDao" />
 	</bean>
 
