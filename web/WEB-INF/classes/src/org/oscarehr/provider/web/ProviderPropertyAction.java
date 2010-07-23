@@ -28,10 +28,9 @@ package org.oscarehr.provider.web;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-
+import java.util.Hashtable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,14 +40,14 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
+import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.dms.data.QueueData;
-import oscar.eform.EFormUtil;
+import org.oscarehr.util.SpringUtils;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
+import oscar.eform.EFormUtil;
 
 /**
  *
@@ -383,8 +382,9 @@ public class ProviderPropertyAction extends DispatchAction {
         }
         if(mode.equals("new")){
             //save and get most recent id
-            QueueData.addNewQueue(defaultQ);
-            String lastId=QueueData.getLastId();
+            QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
+            queueDao.addNewQueue(defaultQ);
+            String lastId=queueDao.getLastId();
             prop.setValue(lastId);
             this.userPropertyDAO.saveProp(prop);
         }else{
@@ -408,11 +408,12 @@ public class ProviderPropertyAction extends DispatchAction {
         String provider=(String)request.getSession().getAttribute("user");
         UserProperty prop=this.userPropertyDAO.getProp(provider, UserProperty.DOC_DEFAULT_QUEUE);
         UserProperty propNew=new UserProperty();
-        
+        String propValue="";
         if(prop==null){
             prop=new UserProperty();
         }
-        List<Hashtable> queues= QueueData.getQueues();
+        QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
+        List<Hashtable> queues= queueDao.getQueues();
         Collection viewChoices=new ArrayList();
         viewChoices.add(new LabelValueBean("None","-1"));
         for(Hashtable ht:queues){
