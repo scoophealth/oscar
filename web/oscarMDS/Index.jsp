@@ -206,10 +206,9 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                                 <a href="javascript:popupStart(300,400,'../oscarEncounter/Help.jsp')" style="color: #FFFFFF;"><bean:message key="global.help"/></a>
                                 | <a href="javascript:popupStart(300,400,'../oscarEncounter/About.jsp')" style="color: #FFFFFF;" ><bean:message key="global.about"/></a>
                                 | <a href="javascript:popupStart(800,1000,'../lab/CA/ALL/testUploader.jsp')" style="color: #FFFFFF; "><bean:message key="admin.admin.hl7LabUpload"/></a>
-                                | <a href="javascript:popupStart(600,500,'../dms/addDocuments2.jsp')" style="color: #FFFFFF; "><bean:message key="inboxmanager.document.uploadDoc"/></a>
+                                | <a href="javascript:popupStart(600,500,'../dms/html5AddDocuments.jsp')" style="color: #FFFFFF; "><bean:message key="inboxmanager.document.uploadDoc"/></a>
                                 | <a href="javascript:void(0);" onclick="changeView();" style="color: #FFFFFF;"><bean:message key="inboxmanager.document.changeView"/></a>
                                 
-                                <!--input type="text" value="" onchange="updateDocLabData(this.value);"/-->
                             </td>
                         </tr>
                     </table>
