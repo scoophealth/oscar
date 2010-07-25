@@ -91,7 +91,8 @@ public final class AdtA09Handler {
 		// the expectation is that the demographic should have at least
 		// lastname, firstname, health number, health province, (gender/birthday are not ubiquitously available)
 		// there's a chance we may need to relax the birthday requirement to only need birth year/month as some or all BC cards may have no birthdays on them.
-
+		// because of name truncation, we will match only first and last initials of the names.
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Checking demographic : " + ReflectionToStringBuilder.toString(demographic));
 			logger.debug("Against appointmentDemographic : " + ReflectionToStringBuilder.toString(appointmentDemographic));
@@ -102,12 +103,14 @@ public final class AdtA09Handler {
 			return (false);
 		}
 
-		if (!demographic.getLastName().equalsIgnoreCase(appointmentDemographic.getLastName())) {
+		char firstLetter=demographic.getLastName().toLowerCase().charAt(0);
+		if (firstLetter!=appointmentDemographic.getLastName().toLowerCase().charAt(0)) {
 			logger.debug("fail : last name");
 			return (false);
 		}
 
-		if (!demographic.getFirstName().equalsIgnoreCase(appointmentDemographic.getFirstName())) {
+		firstLetter=demographic.getFirstName().toLowerCase().charAt(0);
+		if (firstLetter!=appointmentDemographic.getFirstName().toLowerCase().charAt(0)) {
 			logger.debug("fail : first name");
 			return (false);
 		}
