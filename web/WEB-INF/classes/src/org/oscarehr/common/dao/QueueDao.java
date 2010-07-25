@@ -52,7 +52,6 @@ public class QueueDao extends AbstractDao<Queue>{
         String q="select q from Queue q where q.id="+id;
         Query query=entityManager.createQuery(q);
         Queue result=(Queue)query.getSingleResult();
-        System.out.println(result);
         if(result!=null){
             return result.getName();
         }else{
