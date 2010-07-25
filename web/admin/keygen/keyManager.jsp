@@ -29,7 +29,7 @@
 <br />
 <hr />
 <br />
-<div class="oscarBlueForeground">Oscar Public Key</div>
+<div class="oscarBlueForeground">Oscar Public Key (Base64 encoded)</div>
 <div style="border:solid grey 1px;word-wrap:break-word;font-size:12px; width:95%"><%=KeyManagerUIBean.getPublicOscarKeyEscaped()%></div>
 <br />
 <hr />
@@ -93,7 +93,7 @@
 		</td>
 	</tr>
 	<tr style="border:solid grey 1px">
-		<td class="oscarBlueHeader">Private Key</td>
+		<td class="oscarBlueHeader">Private Service Key (Base64 encoded)</td>
 		<td id="privateKey"></td>
 	</tr>
 	<tr style="border:solid grey 1px">
