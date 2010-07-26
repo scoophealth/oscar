@@ -13,6 +13,7 @@ import org.oscarehr.common.model.OscarAppointment;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.appt.AppointmentDao;
 import oscar.appt.status.model.AppointmentStatus;
 import oscar.dao.ProviderDao;
@@ -27,6 +28,8 @@ public final class AdtA09Handler {
 	private static final String PATIENT_CLASS = "P";
 	private static AppointmentDao appointmentDao = (AppointmentDao) SpringUtils.getBean("appointmentDao");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private static int checkInLateAllowance=Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName()+".CHECK_IN_LATE_ALLOWANCE"));
+	private static int checkInEarlyAllowance=Integer.parseInt(OscarProperties.getInstance().getProperty(AdtA09Handler.class.getSimpleName()+".CHECK_IN_EARLY_ALLOWANCE"));	
 
 	public static void handle(ADT_A09 message) throws HL7Exception, SQLException {
 		// algorithm
@@ -44,17 +47,21 @@ public final class AdtA09Handler {
 
 		// look for the patient four hours ago and four hours from now
 		GregorianCalendar startTime = new GregorianCalendar();
-		startTime.add(GregorianCalendar.HOUR_OF_DAY, -4);
+		startTime.add(GregorianCalendar.HOUR_OF_DAY, -checkInLateAllowance);
 		GregorianCalendar endTime = new GregorianCalendar();
 		// add 24 because it's atthe start of the day and it's exclusive of that day
-		endTime.add(GregorianCalendar.HOUR_OF_DAY, 24+4);
+		endTime.add(GregorianCalendar.HOUR_OF_DAY, 24+checkInEarlyAllowance);
 
-		// so this only sorts out the day ranges i.e. we could have just done a select from today but this way we brdige 
+		// so this only sorts out the day ranges i.e. we could have just done a select from today but this way we bridge 
 		// people checking in at 11:50pm for an appointment at 1:00am.
 		List<OscarAppointment> appointments = appointmentDao.findByDateRange(startTime.getTime(), endTime.getTime());
 		logger.debug("Qualifying appointments found : "+appointments.size());
 		
-		// look through all appointments for matching demographic
+		switchMatchingAppointment(demographic, appointments);
+	}
+
+	private static void switchMatchingAppointment(Demographic demographic, List<OscarAppointment> appointments) throws SQLException {
+	    // look through all appointments for matching demographic
 		// set the here flag on matching
 		// of not match throw exception.
 
@@ -68,7 +75,7 @@ public final class AdtA09Handler {
 		}
 
 		throw (new IllegalStateException("Some one checking in who has no appointment."));
-	}
+    }
 
 	/**
 	 * Check to make sure the PV1 is a check in as expected.
@@ -83,7 +90,6 @@ public final class AdtA09Handler {
 
 	private static boolean demographicMatches(OscarAppointment appointment, Demographic demographic) {
 		Demographic appointmentDemographic = demographicDao.getDemographicById(appointment.getDemographic_no());
-
 		return (demographicMatches(appointmentDemographic, demographic));
 	}
 
