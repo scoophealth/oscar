@@ -124,10 +124,9 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                            var docStatus=initDocStatus('<%=docStatus%>');//{357=A, 38=N, 317=A, 316=A, 33=N, 30=N, 28=N}
                            var normals=initNormals('<%=normals%>');//[357, 317, 316, 38, 33, 30, 28]
                            var abnormals=initAbnormals('<%=abnormals%>');//[123,567]
-                           oscarLog('patientDocs='+patientDocs);
                            var patientIds=initPatientIds('<%=patientIdStr%>');
                            var types=['DOC','HL7'];
-                          /* console.log(typeDocLab);
+                           /*console.log(typeDocLab);
                            console.log(docType);
                            console.log(patientDocs);
                            console.log(patientIdNames);
