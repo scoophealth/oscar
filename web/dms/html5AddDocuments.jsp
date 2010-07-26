@@ -76,6 +76,7 @@
             position: absolute;
             top: 180px;
             left: 0;
+            cursor:pointer;
         }
         </style>
         <script type="text/javascript" src="../share/javascript/noswfupload.js"></script>
