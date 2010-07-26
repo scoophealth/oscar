@@ -1413,16 +1413,21 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                 }
 
                                              function updateStatus(formid){
+                                                 var num=formid.split("_");
+                                                    if($('demofind'+num[1]).value=='-1'){
+                                                        alert("Please file the document that doesn't belong to a patient.");
+                                                    }
+                                                    else{
                                                         var url=contextpath+"/oscarMDS/UpdateStatus.do";
                                                         var data=$(formid).serialize(true);
 
                                                         new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                                                                var num=formid.split("_");
+                                                                
                                                              if(num[1]){
                                                                  Effect.BlindUp('labdoc_'+num[1]);
                                                                  updateDocLabData(num[1]);
 
                                                             }
-                                                    }});
-
+                                                        }});
                                                     }
+                                             }                                             
