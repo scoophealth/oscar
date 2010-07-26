@@ -779,7 +779,7 @@
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/oscarMDS/SegmentDisplay.jsp" />
         </action>
-        <action input="/Index.jsp" path="/oscarMDS/FileLabs" scope="request" type="oscar.oscarLab.pageUtil.FileLabsAction">
+        <action input="/Index.jsp" path="/oscarMDS/FileLabs" scope="request" parameter="method" type="oscar.oscarLab.pageUtil.FileLabsAction">
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/dms/inboxManage.do?method=prepareForIndexPage" />
         </action>
