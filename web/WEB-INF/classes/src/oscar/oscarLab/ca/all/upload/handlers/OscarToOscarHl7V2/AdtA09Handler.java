@@ -68,7 +68,12 @@ public final class AdtA09Handler {
 		for (OscarAppointment appointment : appointments) {
 			logger.debug("checking appointment : "+appointment.getAppointment_no());
 			
-			if (demographicMatches(appointment, demographic)) {
+			if ("H".equals(appointment.getStatus())) continue;
+			else if ("N".equals(appointment.getStatus())) continue;
+			else if ("C".equals(appointment.getStatus())) continue;
+			else if ("B".equals(appointment.getStatus())) continue;
+			
+			if (demographicMatches(appointment, demographic)) {				
 				switchAppointmentStatus(appointment);
 				return;
 			}
