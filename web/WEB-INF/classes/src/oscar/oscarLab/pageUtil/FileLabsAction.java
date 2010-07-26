@@ -30,20 +30,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.util.MiscUtils;
+import org.apache.struts.actions.DispatchAction;
 
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
-public class FileLabsAction extends Action {
+public class FileLabsAction extends DispatchAction {
    
    public FileLabsAction() {
    }
    
-   public ActionForward execute(ActionMapping mapping,
+   public ActionForward unspecified(ActionMapping mapping,
    ActionForm form,
    HttpServletRequest request,
    HttpServletResponse response)
@@ -86,4 +85,22 @@ public class FileLabsAction extends Action {
          //MiscUtils.getLogger().info(newURL);
       return (new ActionForward(newURL));
    }
+
+   public ActionForward fileLabAjax(ActionMapping mapping,
+   ActionForm form,
+   HttpServletRequest request,
+   HttpServletResponse response)
+   throws ServletException, IOException {
+
+      String providerNo = (String) request.getSession().getAttribute("user");
+      String flaggedLab=request.getParameter("flaggedLabId").trim();
+      String labType=request.getParameter("labType").trim();
+
+      ArrayList listFlaggedLabs = new ArrayList();
+      String[] la =  new String[] {flaggedLab,labType};
+      listFlaggedLabs.add(la);
+      CommonLabResultData.fileLabs(listFlaggedLabs, providerNo);
+
+      return null;
+}
 }
