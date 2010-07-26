@@ -23,7 +23,6 @@
         <%
             QueueDao queueDao = (QueueDao) SpringUtils.getBean("queueDao");
             List<Hashtable> queues=queueDao.getQueues();
-            System.out.println("queues.size="+queues.size());
             ArrayList providers = ProviderData.getProviderList();
             String queueIdStr = (String) request.getSession().getAttribute("preferredQueue");
             int queueId = 1;
