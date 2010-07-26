@@ -102,8 +102,10 @@
                                     <tr>
                                         <td><bean:message key="inboxmanager.document.DemographicMsg" /></td>
                                         <td><%if(!demographicID.equals("-1")){%>
+                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="true"/>
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
                                             <%=demoName%><%}else{%>
+                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="false"/>
                                             <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />
                                             <input type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>')" name="demographicKeyword" />
                                             <div id="autocomplete_choices<%=docId%>"class="autocomplete"></div>
@@ -160,6 +162,7 @@
                                             }();
                                          
                                             </script>
+                                                   <input id="saved_<%=docId%>" type="hidden" name="saved" value="false"/>
                                                    <input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" ><bean:message key="inboxmanager.document.SendToMRPMsg" />
                                                    <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" ><bean:message key="inboxmanager.document.SendToMRPFailedMsg" /></a>
                                         </td>
@@ -365,6 +368,7 @@
                                                     <td>
                                                         <input type="submit" id="ackBtn_<%=docId%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
                                                         <input type="button" id="fwdBtn_<%=docId%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProviderAltView.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
+                                                        <input type="button" id="fileBtn_<%=docId%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnFile"/>" onclick="fileDoc('<%=docId%>');">
                                                         <input type="button" id="closeBtn_<%=docId%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                                         <input type="button" id="printBtn_<%=docId%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>

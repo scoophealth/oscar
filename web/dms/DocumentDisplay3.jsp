@@ -106,7 +106,7 @@
                                 </tr>
                             </table>                             
 
-                                    <form id="forms_<%=docId%>" action="ManageDocument.do" onsubmit="refreshParent();" >
+                            <form id="forms_<%=docId%>" action="ManageDocument.do" onsubmit="submitDocInfo('<%=docId%>');" >
                                 <input type="hidden" name="method" value="documentUpdate" />
                                 <input type="hidden" name="documentId" value="<%=docId%>" />
                                 <input type="hidden" name="providerNo" value="<%=providerNo%>" />
@@ -140,8 +140,10 @@
                                         <td>Demographic:
                                         </td>
                                         <td><%if(!demographicID.equals("-1")){%>
+                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="true"/>
                                             <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
                                             <%=demoName%><%}else{%>
+                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="false"/>
                                             <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />
                                             <input tabindex="<%=tabindex++%>" type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>')" name="demographicKeyword" />
                                             <div id="autocomplete_choices<%=docId%>"class="autocomplete"></div>
@@ -353,17 +355,53 @@ function sendMRP(ele){
                                                         window.opener.location.reload();
                                                     }
                                                     updateStatus=function(formid){
-                                                        var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
-                                                        var data=$(formid).serialize(true);
+                                                    var num=formid.split("_");
+                                                        var doclabid=num[1];
+                                                        if(doclabid){
+                                                            var demoId=$('demofind'+doclabid).value;
+                                                            var saved=$('saved'+doclabid).value;
+                                                            if(demoId=='-1'|| saved=='false' ||saved==false){
+                                                                alert('Document is not assigned to a patient,please file it');
+                                                            }else{
+                                                                var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
+                                                            var data=$(formid).serialize(true);
 
-                                                        new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                                                                var num=formid.split("_");
-                                                                //Effect.BlindUp('labdoc_'+num[1]);
-                                                                window.close();
+                                                            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                                                                     window.close();
+                                                                }});
+                                                           }
+                                                        }
+                                                   }
 
-                                                    }});
-
+                                        fileDoc=function(docId){
+                                           if(docId){
+                                                docId=docId.replace(/\s/,'');
+                                             if(docId.length>0){
+                                                    var demoId=$('demofind'+docId).value;
+                                                    var saved=$('saved'+docId).value;
+                                                    var isFile=true;
+                                                     if(demoId=='-1' || saved=='false' ||saved==false){
+                                                        isFile=confirm('Document is not assigned and saved to any patient, do you still want to file it?');
+                                                                }
+                                                     if(isFile) {
+                                                             var type='DOC';
+                                                             if(type){
+                                                                var url='../oscarMDS/FileLabs.do';
+                                                                var data='method=fileLabAjax&flaggedLabId='+docId+'&labType='+type;
+                                                                new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                                                                        refreshParent();
+                                                                        window.close();
+                                                            }});
                                                     }
+                                                    }
+                                              }
+                                           }
+                                       }
+                                        submitDocInfo=function(doclabid){
+                                                $('saved'+doclabid).value="true";
+                                                refreshParent();
+                                        }
+
                                             </script>
                                             <div id="providerList<%=docId%>"></div>
                                         </td>
@@ -451,11 +489,11 @@ function sendMRP(ele){
                         <fieldset>
                             <legend><span class="FieldData"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span></legend>
                             <form name="reassignForm" method="post" action="Forward.do">
-                                <input type="hidden" name="flaggedLabs" value="<%= docId%>" />
+                                <input type="hidden" name="flaggedLabs" value="<%=docId%>" />
                                 <input type="hidden" name="selectedProviders" value="" />
                                 <input type="hidden" name="labType" value="DOC" />
-                                <input type="hidden" name="labType<%= docId%>DOC" value="imNotNull" />
-                                <input type="hidden" name="providerNo" value="<%= providerNo%>" />
+                                <input type="hidden" name="labType<%=docId%>DOC" value="imNotNull" />
+                                <input type="hidden" name="providerNo" value="<%=providerNo%>" />
                             </form>
                                 <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');refreshParent();" method="post" action="javascript:void(0);">
 
@@ -478,6 +516,7 @@ function sendMRP(ele){
                                                     <td>
                                                         <input type="submit"  tabindex="<%=tabindex++%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
                                                         <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProvider.jsp?doc_no=<%=documentNo%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>', 'providerselect')">
+                                                        <input type="button"  tabindex="<%=tabindex++%>" class="smallButton" value="<bean:message key="oscarMDS.index.btnFile"/>" onclick="fileDoc('<%=documentNo%>');" >
                                                         <input type="button"  tabindex="<%=tabindex++%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                                         <input type="button"  tabindex="<%=tabindex++%>" value=" <bean:message key="global.btnPrint"/> " onClick="popup(700,960,'<%=url2%>','file download')">
                                                         <% if (demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")) {%>
