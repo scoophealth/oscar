@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
+import org.oscarehr.util.MiscUtils;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
 public class FileLabsAction extends DispatchAction {
