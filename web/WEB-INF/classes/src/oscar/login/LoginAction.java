@@ -130,7 +130,7 @@ public final class LoginAction extends DispatchAction {
                 session = request.getSession(); // Create a new session for this user
             }
 
-            _logger.info("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
+            _logger.debug("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
             LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "", ip);
 
             // initial db setting
