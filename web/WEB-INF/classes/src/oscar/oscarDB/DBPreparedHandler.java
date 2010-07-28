@@ -36,7 +36,7 @@ import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.OscarProperties;
 
-public class DBPreparedHandler {
+public final class DBPreparedHandler {
 
     DBHandler db = null;
     ResultSet rs = null;
