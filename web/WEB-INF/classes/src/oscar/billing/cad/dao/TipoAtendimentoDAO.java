@@ -27,7 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import oscar.billing.cad.model.CadTiposAtendimento;
 import oscar.oscarDB.DBHandler;
@@ -40,10 +39,6 @@ import oscar.util.DAO;
  * @author tomita - 13 nov 2003
  */
 public class TipoAtendimentoDAO extends DAO {
-    public TipoAtendimentoDAO(Properties pvar) throws SQLException {
-        super(pvar);
-    }
-
 
 	/**
 	 * List types

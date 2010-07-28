@@ -38,10 +38,6 @@ import oscar.util.DateUtils;
 
 
 public class ProcedimentoRealizadoDAO extends DAO {
-    public ProcedimentoRealizadoDAO(Properties pvar) throws SQLException {
-        super(pvar);
-    }
-
 
 	/**
 	 * Lists all done procedures within a given appointment.

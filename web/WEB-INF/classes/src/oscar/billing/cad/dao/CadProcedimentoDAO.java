@@ -52,9 +52,6 @@ import oscar.util.StringUtils;
  * @author  lilian
  */
 public class CadProcedimentoDAO extends DAO {
-    public CadProcedimentoDAO(Properties pvar) throws SQLException {
-        super(pvar);
-    }
 
     public List list(String codigo, String desc) throws SQLException {
         List beans = null;

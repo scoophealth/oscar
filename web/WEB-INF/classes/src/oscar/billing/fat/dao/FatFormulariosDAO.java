@@ -27,7 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.oscarehr.util.MiscUtils;
 
@@ -38,9 +37,6 @@ import oscar.util.DAO;
 
 
 public class FatFormulariosDAO extends DAO {
-    public FatFormulariosDAO(Properties pvar) throws SQLException {
-        super(pvar);
-    }
 
 	public FatFormularios retrieve(String id) throws SQLException {
 		FatFormularios form = new FatFormularios();

@@ -93,7 +93,7 @@ public class ProcedimentoAction extends OscarAction {
         ProcedimentoForm form = (ProcedimentoForm)actionForm;
 
         try {
-            CadProcedimentoDAO procDAO = new CadProcedimentoDAO(getPropertiesDb(request));
+            CadProcedimentoDAO procDAO = new CadProcedimentoDAO();
 
             if (request.getParameter("coProc") != null) {
                 form.setCodigoProc(request.getParameter("coProc"));

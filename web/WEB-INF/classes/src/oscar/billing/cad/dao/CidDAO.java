@@ -40,9 +40,6 @@ import oscar.util.DAO;
 
 
 public class CidDAO extends DAO {
-    public CidDAO(Properties pvar) throws SQLException {
-        super(pvar);
-    }
 
     public CadCid retrieve(String id) throws SQLException {
         CadCid cid = new CadCid();

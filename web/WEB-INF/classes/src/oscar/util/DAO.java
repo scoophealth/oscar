@@ -37,9 +37,6 @@ import oscar.oscarDB.DBPreparedHandler;
 
 public class DAO {
 
-    public DAO(Properties pvar) throws SQLException {
-    }
-
     protected void close(ResultSet rs) {
         if (rs != null) {
             try {

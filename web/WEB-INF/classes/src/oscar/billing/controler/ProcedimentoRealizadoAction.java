@@ -129,12 +129,11 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             form.clear();
             logger.debug(" [ProcedimentoRealizadoAction] Limpou form");
 
-            FatFormulariosDAO formDAO = new FatFormulariosDAO(getPropertiesDb(request));
-            AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(request));
-            ProcedimentoRealizadoDAO prDAO = new ProcedimentoRealizadoDAO(
-            	getPropertiesDb(request));
-            DiagnosticoDAO diagDAO = new DiagnosticoDAO(getPropertiesDb(request));
-            TipoAtendimentoDAO tpAtendDAO = new TipoAtendimentoDAO(getPropertiesDb(request));
+            FatFormulariosDAO formDAO = new FatFormulariosDAO();
+            AppointmentDAO appDAO = new AppointmentDAO();
+            ProcedimentoRealizadoDAO prDAO = new ProcedimentoRealizadoDAO();
+            DiagnosticoDAO diagDAO = new DiagnosticoDAO();
+            TipoAtendimentoDAO tpAtendDAO = new TipoAtendimentoDAO();
 
             //Obter appointment
             form.setAppointment(appDAO.retrieve(appId));
@@ -180,8 +179,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
         try {
-            FatFormulariosDAO formDAO = new FatFormulariosDAO(getPropertiesDb(
-                        request));
+            FatFormulariosDAO formDAO = new FatFormulariosDAO();
 
             //selecionar procedimentos do formulario XXX
             Vector v = new Vector(formDAO.listProcedimentoByForm(String.valueOf(
@@ -208,8 +206,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
         try {
-            FatFormulariosDAO formDAO = new FatFormulariosDAO(getPropertiesDb(
-                        request));
+            FatFormulariosDAO formDAO = new FatFormulariosDAO();
 
             //inserir procedimentos selecionados nos realizados
             form.getAppointment().addProcedimentos(formDAO.listProcedimentoByProc(
@@ -255,8 +252,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 		ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
 		try {
-			CidDAO diagDAO = new CidDAO(getPropertiesDb(
-						request));
+			CidDAO diagDAO = new CidDAO();
 						
 			//inserir diagnostico
 			CadCid diag = diagDAO.retrieve(form.getCoCid().trim());
@@ -305,9 +301,8 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
         try {
-			AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(request));
-			ProcedimentoRealizadoDAO procRDAO = 
-				new ProcedimentoRealizadoDAO(getPropertiesDb(request));
+			AppointmentDAO appDAO = new AppointmentDAO();
+			ProcedimentoRealizadoDAO procRDAO = new ProcedimentoRealizadoDAO();
 			
             // gravar procedimentos realizados e diagnosticos - save
             appDAO.billing(form.getAppointment());
@@ -334,8 +329,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 		ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
 		try {
-			CadProcedimentoDAO procDAO = new CadProcedimentoDAO(getPropertiesDb(
-						request));
+			CadProcedimentoDAO procDAO = new CadProcedimentoDAO();
 						
 			//inserir procedimento
 			CadProcedimentos proc = procDAO.retrieve(String.valueOf(form.getCadProcedimentos().getCoProcedimento()));

@@ -105,8 +105,7 @@ public class ConsultaFaturamentoMedicoAction extends OscarAction {
         ConsultaFaturamentoMedicoForm form = (ConsultaFaturamentoMedicoForm) actionForm;
 
         try {
-            AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(
-                        request));
+            AppointmentDAO appDAO = new AppointmentDAO();
 
             //selecionar procedimentos do formulario XXX
             form.setConsultas(appDAO.listFatDoctor(form.getTipoPesquisa(), form.getMedico()));

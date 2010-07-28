@@ -37,7 +37,6 @@ import oscar.util.DAO;
 
 public class ProviderDAO extends DAO {
     public ProviderDAO(Properties pvar) throws SQLException {
-        super(pvar);
     }
 
     public ArrayList list(int type) throws SQLException {

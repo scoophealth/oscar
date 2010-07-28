@@ -96,8 +96,7 @@ public class AtividadeSaudeAction extends OscarAction {
         AtividadeSaudeForm form = (AtividadeSaudeForm) actionForm;
 
         try {
-			CadAtividadeSaudeDAO ativDAO = new CadAtividadeSaudeDAO(getPropertiesDb(
-			request));
+			CadAtividadeSaudeDAO ativDAO = new CadAtividadeSaudeDAO();
 
             if (request.getParameter("coAtiv") != null) {
                 form.setCodigo(request.getParameter("coAtiv"));

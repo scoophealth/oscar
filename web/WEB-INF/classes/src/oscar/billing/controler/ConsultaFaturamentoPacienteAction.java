@@ -80,8 +80,7 @@ public class ConsultaFaturamentoPacienteAction extends OscarAction {
             Demographic demographic = new Demographic();
             demographic.setDemographicNo(Long.parseLong(id));
 
-            AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(
-                        request));
+            AppointmentDAO appDAO = new AppointmentDAO();
 
             //Obter lista de faturamentos
             request.setAttribute("BILLING", appDAO.listFatPatiente(demographic));

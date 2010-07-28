@@ -96,8 +96,7 @@ public class CidAction extends OscarAction {
         CidForm form = (CidForm) actionForm;
 
         try {
-			CidDAO cidDAO = new CidDAO(getPropertiesDb(
-			request));
+			CidDAO cidDAO = new CidDAO();
 
             if (request.getParameter("coCid") != null) {
                 form.setCodigo(request.getParameter("coCid"));

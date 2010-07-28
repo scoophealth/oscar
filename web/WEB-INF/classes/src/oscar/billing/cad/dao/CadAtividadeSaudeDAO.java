@@ -44,9 +44,6 @@ import oscar.util.DAO;
  * @author  lilian
  */
 public class CadAtividadeSaudeDAO extends DAO {
-    public CadAtividadeSaudeDAO(Properties pvar) throws SQLException {
-        super(pvar);
-    }
 
     public List list(String codigo, String desc) throws SQLException {
         List beans = null;
@@ -70,20 +67,17 @@ public class CadAtividadeSaudeDAO extends DAO {
 
         DBHandler db = getDb();
 
-        try {
-            ResultSet rs = db.GetSQL(sql);
+        ResultSet rs = db.GetSQL(sql);
 
-            if (rs != null) {
-                beans = new ArrayList();
+        if (rs != null) {
+            beans = new ArrayList();
 
-                while (rs.next()) {
-                    CadAtividadesSaude bean = new CadAtividadesSaude();
-                    bean.setCoAtividade(rs.getLong("co_atividade"));
-                    bean.setDsAtividade(db.getString(rs,"ds_atividade"));
-                    beans.add(bean);
-                }
+            while (rs.next()) {
+                CadAtividadesSaude bean = new CadAtividadesSaude();
+                bean.setCoAtividade(rs.getLong("co_atividade"));
+                bean.setDsAtividade(db.getString(rs,"ds_atividade"));
+                beans.add(bean);
             }
-        } finally {
         }
 
         return beans;
