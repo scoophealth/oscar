@@ -106,7 +106,7 @@
                                 </tr>
                             </table>                             
 
-                            <form id="forms_<%=docId%>" action="ManageDocument.do" onsubmit="submitDocInfo('<%=docId%>');" >
+                            <form id="forms_<%=docId%>" onsubmit="return updateDocument(this.id);" >
                                 <input type="hidden" name="method" value="documentUpdate" />
                                 <input type="hidden" name="documentId" value="<%=docId%>" />
                                 <input type="hidden" name="providerNo" value="<%=providerNo%>" />
@@ -149,7 +149,154 @@
                                             <div id="autocomplete_choices<%=docId%>"class="autocomplete"></div>
                                             <%}%>
 
-         <script type="text/javascript">
+                                            <input id="mrp_<%=docId%>" tabindex="<%=tabindex++%>" onclick="sendMRP(this)" type="checkbox" name="demoLink" >Send to MRP
+                                            <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" >Failed to send MRP</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="top">Flag Provider: </td>
+                                        <td>
+                                            <input type="hidden" name="provi" id="provfind<%=docId%>" />
+                                            <input tabindex="<%=tabindex++%>" type="text" id="autocompleteprov<%=docId%>" name="demographicKeyword"/>
+                                            <div id="autocomplete_choicesprov<%=docId%>" class="autocomplete"></div>
+
+                                            <script type="text/javascript">
+
+                                                popupStart=function(vheight,vwidth,varpage,windowname) {
+                                                    oscarLog("in popupStart ");
+                                                    if(!windowname)
+                                                        windowname="helpwindow";
+                                                    var page = varpage;
+                                                    var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+                                                    oscarLog(varpage);
+                                                    oscarLog(windowname);
+                                                    oscarLog(windowprops);
+                                                    var popup=window.open(varpage, windowname, windowprops);
+                                                }
+                                                YAHOO.example.BasicRemote = function() {
+                                                        var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
+                                                        var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
+                                                        oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
+                                                        // Define the schema of the delimited resultsTEST, PATIENT(1985-06-15)
+                                                        oDS.responseSchema = {
+                                                            resultsList : "results",
+                                                            fields : ["providerNo","firstName","lastName"]
+                                                        };
+                                                        // Enable caching
+                                                        oDS.maxCacheEntries = 0;
+                                                        //oDS.connXhrMode ="cancelStaleRequests";
+                                                        //oscarLog("autocompleteprov<%=docId%>");
+                                                        //oscarLog("autocomplete_choicesprov<%=docId%>");
+                                                        //oscarLog($("autocompleteprov<%=docId%>"));
+                                                        //oscarLog($("autocomplete_choicesprov<%=docId%>"));
+                                                        // Instantiate the AutoComplete
+                                                        var oAC = new YAHOO.widget.AutoComplete("autocompleteprov<%=docId%>", "autocomplete_choicesprov<%=docId%>", oDS);
+                                                        oAC.queryMatchSubset = true;
+                                                        oAC.minQueryLength = 3;
+                                                        oAC.maxResultsDisplayed = 25;
+                                                        oAC.formatResult = resultFormatter3;
+                                                        //oAC.typeAhead = true;
+                                                        oAC.queryMatchContains = true;
+                                                        oscarLog(oAC);
+                                                        oscarLog(oAC.itemSelectEvent);
+                                                        oAC.itemSelectEvent.subscribe(function(type, args) {
+                                                            oscarLog(args);
+                                                           var myAC = args[0];
+                                                           var str = myAC.getInputEl().id.replace("autocompleteprov","provfind");
+                                                           oscarLog(str);
+                                                           oscarLog(args[2]);
+                                                           var oData=args[2];
+                                                           $(str).value = args[2][0];//li.id;
+                                                           oscarLog("str value="+$(str).value);
+                                                           oscarLog(args[2][1]+"--"+args[2][0]);
+                                                           myAC.getInputEl().value = args[2][2] + ","+args[2][1];
+                                                           oscarLog("--"+args[0].getInputEl().value);
+                                                           //selectedDemos.push(args[0].getInputEl().value);
+
+                                                           //enable Save button whenever a selection is made
+                                                            var bdoc = document.createElement('a');
+                                                            bdoc.setAttribute("id", "removeProv<%=docId%>");
+                                                            bdoc.setAttribute("onclick", "removeProv(this);");
+                                                            bdoc.appendChild(document.createTextNode(" -remove- "));
+                                                            oscarLog("--");
+                                                            var adoc = document.createElement('div');
+                                                            adoc.appendChild(document.createTextNode(oData[2] + " " +oData[1]));
+                                                            oscarLog("--==");
+                                                            var idoc = document.createElement('input');
+                                                            idoc.setAttribute("type", "hidden");
+                                                            idoc.setAttribute("name","flagproviders");
+                                                            idoc.setAttribute("value",oData[0]);
+                                                            //console.log(oData[0]);
+                                                            //console.log(myAC);
+                                                         //   console.log(elLI);
+                                                         //   console.log(oData);
+                                                         //   console.log(aArgs);
+                                                         //   console.log(sType);
+                                                            adoc.appendChild(idoc);
+
+                                                            adoc.appendChild(bdoc);
+                                                            var providerList = $('providerList<%=docId%>');
+                                                        //    console.log('Now HERE'+providerList);
+                                                            providerList.appendChild(adoc);
+
+                                                            myAC.getInputEl().value = '';//;oData.fname + " " + oData.lname ;
+
+                                                        });
+
+
+                                                        return {
+                                                            oDS: oDS,
+                                                            oAC: oAC
+                                                        };
+                                                    }();
+                                                    refreshParent=function(){
+                                                        window.opener.location.reload();
+                                                    }
+                                                    updateStatus=function(formid){
+                                                    var num=formid.split("_");
+                                                        var doclabid=num[1];
+                                                        if(doclabid){
+                                                            var demoId=$('demofind'+doclabid).value;
+                                                            var saved=$('saved'+doclabid).value;
+                                                            if(demoId=='-1'|| saved=='false' ||saved==false){
+                                                                alert('Document is not assigned to a patient,please file it');
+                                                            }else{
+                                                                var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
+                                                            var data=$(formid).serialize(true);
+
+                                                            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                                                                            refreshParent();
+                                                                     window.close();
+                                                                }});
+                                                           }
+                                                        }
+                                                   }
+
+                                        fileDoc=function(docId){
+                                           if(docId){
+                                                docId=docId.replace(/\s/,'');
+                                             if(docId.length>0){
+                                                    var demoId=$('demofind'+docId).value;
+                                                    var saved=$('saved'+docId).value;
+                                                    var isFile=true;
+                                                     if(demoId=='-1' || saved=='false' ||saved==false){
+                                                        isFile=confirm('Document is not assigned and saved to any patient, do you still want to file it?');
+                                                                }
+                                                     if(isFile) {
+                                                             var type='DOC';
+                                                             if(type){
+                                                                var url='../oscarMDS/FileLabs.do';
+                                                                var data='method=fileLabAjax&flaggedLabId='+docId+'&labType='+type;
+                                                                new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                                                                        refreshParent();
+                                                                        window.close();
+                                                            }});
+                                                    }
+                                                    }
+                                              }
+                                           }
+                                       }
 function sendMRP(ele){
                                                 var doclabid=ele.id;
                                                 doclabid=doclabid.split('_')[1];
@@ -238,170 +385,24 @@ function sendMRP(ele){
                                             }
                                             }();
 
-                                            </script>
-                                            <input id="mrp_<%=docId%>" tabindex="<%=tabindex++%>" onclick="sendMRP(this)" type="checkbox" name="demoLink" >Send to MRP
-                                            <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" >Failed to send MRP</a>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td valign="top">Flag Provider: </td>
-                                        <td>
-                                            <input type="hidden" name="provi" id="provfind<%=docId%>" />
-                                            <input tabindex="<%=tabindex++%>" type="text" id="autocompleteprov<%=docId%>" name="demographicKeyword"/>
-                                            <div id="autocomplete_choicesprov<%=docId%>" class="autocomplete"></div>
-
-                                            <script type="text/javascript">
-
-                                                popupStart=function(vheight,vwidth,varpage,windowname) {
-                                                    oscarLog("in popupStart ");
-                                                    if(!windowname)
-                                                        windowname="helpwindow";
-                                                    var page = varpage;
-                                                    var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-                                                    oscarLog(varpage);
-                                                    oscarLog(windowname);
-                                                    oscarLog(windowprops);
-                                                    var popup=window.open(varpage, windowname, windowprops);
-                                                }
-                                         /*       updateDocument=function(eleId){
-
+                        updateDocument=function(eleId){//save doc info
                                                     var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
                                                     new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                                                            //location.reload(true);
-                                                            var ar=eleId.split("_");
-                                                            var num=ar[1];
-                                                            $("saveSucessMsg_"+num).show();
+                                                                var ar=eleId.split("_");
+                                                                var num=ar[1];
+                                                                num=num.replace(/\s/g,'');
+                                                           if($("saveSucessMsg_"+num))     $("saveSucessMsg_"+num).show();
+                                                           if($('saved'+num))      $('saved'+num).value='true';
+                                                           if($('autocompletedemo'+num))
+                                                               $('autocompletedemo'+num).disabled=true;
+                                                           if($('removeProv'+num))
+                                                                    $('removeProv'+num).remove();
+
+                                                refreshParent();
+
                                                     }});
                                                     return false;
-                                                }
-                                             */
-                                                YAHOO.example.BasicRemote = function() {
-                                                        var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
-                                                        var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
-                                                        oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
-                                                        // Define the schema of the delimited resultsTEST, PATIENT(1985-06-15)
-                                                        oDS.responseSchema = {
-                                                            resultsList : "results",
-                                                            fields : ["providerNo","firstName","lastName"]
-                                                        };
-                                                        // Enable caching
-                                                        oDS.maxCacheEntries = 0;
-                                                        //oDS.connXhrMode ="cancelStaleRequests";
-                                                        //oscarLog("autocompleteprov<%=docId%>");
-                                                        //oscarLog("autocomplete_choicesprov<%=docId%>");
-                                                        //oscarLog($("autocompleteprov<%=docId%>"));
-                                                        //oscarLog($("autocomplete_choicesprov<%=docId%>"));
-                                                        // Instantiate the AutoComplete
-                                                        var oAC = new YAHOO.widget.AutoComplete("autocompleteprov<%=docId%>", "autocomplete_choicesprov<%=docId%>", oDS);
-                                                        oAC.queryMatchSubset = true;
-                                                        oAC.minQueryLength = 3;
-                                                        oAC.maxResultsDisplayed = 25;
-                                                        oAC.formatResult = resultFormatter3;
-                                                        //oAC.typeAhead = true;
-                                                        oAC.queryMatchContains = true;
-                                                        oscarLog(oAC);
-                                                        oscarLog(oAC.itemSelectEvent);
-                                                        oAC.itemSelectEvent.subscribe(function(type, args) {
-                                                            oscarLog(args);
-                                                           var myAC = args[0];
-                                                           var str = myAC.getInputEl().id.replace("autocompleteprov","provfind");
-                                                           oscarLog(str);
-                                                           oscarLog(args[2]);
-                                                           var oData=args[2];
-                                                           $(str).value = args[2][0];//li.id;
-                                                           oscarLog("str value="+$(str).value);
-                                                           oscarLog(args[2][1]+"--"+args[2][0]);
-                                                           myAC.getInputEl().value = args[2][2] + ","+args[2][1];
-                                                           oscarLog("--"+args[0].getInputEl().value);
-                                                           //selectedDemos.push(args[0].getInputEl().value);
-
-                                                           //enable Save button whenever a selection is made
-                                                            var bdoc = document.createElement('a');
-                                                            bdoc.setAttribute("onclick", "removeProv(this);");
-                                                            bdoc.appendChild(document.createTextNode(" -remove- "));
-                                                            oscarLog("--");
-                                                            var adoc = document.createElement('div');
-                                                            adoc.appendChild(document.createTextNode(oData[2] + " " +oData[1]));
-                                                            oscarLog("--==");
-                                                            var idoc = document.createElement('input');
-                                                            idoc.setAttribute("type", "hidden");
-                                                            idoc.setAttribute("name","flagproviders");
-                                                            idoc.setAttribute("value",oData[0]);
-                                                            //console.log(oData[0]);
-                                                            //console.log(myAC);
-                                                         //   console.log(elLI);
-                                                         //   console.log(oData);
-                                                         //   console.log(aArgs);
-                                                         //   console.log(sType);
-                                                            adoc.appendChild(idoc);
-
-                                                            adoc.appendChild(bdoc);
-                                                            var providerList = $('providerList<%=docId%>');
-                                                        //    console.log('Now HERE'+providerList);
-                                                            providerList.appendChild(adoc);
-
-                                                            myAC.getInputEl().value = '';//;oData.fname + " " + oData.lname ;
-
-                                                        });
-
-
-                                                        return {
-                                                            oDS: oDS,
-                                                            oAC: oAC
-                                                        };
-                                                    }();
-                                                    refreshParent=function(){
-                                                        window.opener.location.reload();
-                                                    }
-                                                    updateStatus=function(formid){
-                                                    var num=formid.split("_");
-                                                        var doclabid=num[1];
-                                                        if(doclabid){
-                                                            var demoId=$('demofind'+doclabid).value;
-                                                            var saved=$('saved'+doclabid).value;
-                                                            if(demoId=='-1'|| saved=='false' ||saved==false){
-                                                                alert('Document is not assigned to a patient,please file it');
-                                                            }else{
-                                                                var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
-                                                            var data=$(formid).serialize(true);
-
-                                                            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                                                                     window.close();
-                                                                }});
-                                                           }
-                                                        }
-                                                   }
-
-                                        fileDoc=function(docId){
-                                           if(docId){
-                                                docId=docId.replace(/\s/,'');
-                                             if(docId.length>0){
-                                                    var demoId=$('demofind'+docId).value;
-                                                    var saved=$('saved'+docId).value;
-                                                    var isFile=true;
-                                                     if(demoId=='-1' || saved=='false' ||saved==false){
-                                                        isFile=confirm('Document is not assigned and saved to any patient, do you still want to file it?');
-                                                                }
-                                                     if(isFile) {
-                                                             var type='DOC';
-                                                             if(type){
-                                                                var url='../oscarMDS/FileLabs.do';
-                                                                var data='method=fileLabAjax&flaggedLabId='+docId+'&labType='+type;
-                                                                new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
-                                                                        refreshParent();
-                                                                        window.close();
-                                                            }});
-                                                    }
-                                                    }
-                                              }
-                                           }
-                                       }
-                                        submitDocInfo=function(doclabid){
-                                                $('saved'+doclabid).value="true";
-                                                refreshParent();
                                         }
-
                                             </script>
                                             <div id="providerList<%=docId%>"></div>
                                         </td>
@@ -415,7 +416,7 @@ function sendMRP(ele){
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" align="right"><%if(!demographicID.equals("-1")){%><input type="submit" name="save" tabindex="<%=tabindex++%>" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" tabindex="<%=tabindex++%>" id="save<%=docId%>" disabled value="Save" /> <%}%></td>
+                                        <td colspan="2" align="right"><a id="saveSucessMsg_<%=docId%>" style="display:none;color:blue;"><bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a><%if(!demographicID.equals("-1")){%><input type="submit" name="save" tabindex="<%=tabindex++%>" id="save<%=docId%>" value="Save" /><%} else{%><input type="submit" name="save" tabindex="<%=tabindex++%>" id="save<%=docId%>" disabled value="Save" /> <%}%></td>
                                     </tr>
 
                                     <tr>
@@ -495,7 +496,7 @@ function sendMRP(ele){
                                 <input type="hidden" name="labType<%=docId%>DOC" value="imNotNull" />
                                 <input type="hidden" name="providerNo" value="<%=providerNo%>" />
                             </form>
-                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');refreshParent();" method="post" action="javascript:void(0);">
+                                <form name="acknowledgeForm_<%=docId%>" id="acknowledgeForm_<%=docId%>" onsubmit="updateStatus('acknowledgeForm_<%=docId%>');" method="post" action="javascript:void(0);">
 
                                 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
