@@ -45,72 +45,6 @@
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
 
 %>
-       
-
-        <div id="labdoc_<%=docId%>">
-            <table class="docTable">
-                <tr>
-
-
-                    <td colspan="8"><a href="<%=url2%>"><img src="<%=url%>" /></a></td>
-
-
-                    <td align="left" valign="top">
-                        <fieldset><legend><bean:message key="inboxmanager.document.PatientMsg"/><span id="assignedPId_<%=docId%>"><%=demoName%></span> </legend>
-                            <table border="0">
-                                <tr>
-                                    <td><bean:message key="inboxmanager.document.DocumentUploaded"/></td>
-                                    <td><%=curdoc.getDateTimeStamp()%></td>
-                                </tr>
-                                <tr>
-                                    <td><bean:message key="inboxmanager.document.ContentType"/></td>
-                                    <td><%=contentType%></td>
-                                </tr>
-                                <tr>
-                                    <td><bean:message key="inboxmanager.document.NumberOfPages"/></td>
-                                    <td><%=numOfPageStr%></td>
-                                </tr>
-                            </table>
-
-                            <form id="forms_<%=docId%>" onsubmit="return updateDocument('forms_<%=docId%>');">
-                                <input type="hidden" name="method" value="documentUpdateAjax" />
-                                <input type="hidden" name="documentId" value="<%=docId%>" />
-                                <table border="0">
-                                    <tr>
-                                        <td><bean:message key="dms.documentReport.msgDocType" />:</td>
-                                        <td>
-                                            <select name ="docType" id="docType_<%=docId%>">
-                                                <option value=""><bean:message key="dms.addDocument.formSelect" /></option>
-                                                <%for (int j = 0; j < doctypes.size(); j++) {
-                String doctype = (String) doctypes.get(j);%>
-                                                <option value="<%= doctype%>" <%=(curdoc.getType().equals(doctype)) ? " selected" : ""%>><%= doctype%></option>
-                                                <%}%>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><bean:message key="dms.documentReport.msgDocDesc" />:</td>
-                                        <td><input id="docDesc_<%=docId%>"  type="text" name="documentDescription" value="<%=curdoc.getDescription()%>" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><bean:message key="inboxmanager.document.ObservationDateMsg" /></td>
-                                        <td>
-                                            <input   id="observationDate<%=docId%>" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
-                                            <a id="obsdate<%=docId%>" onmouseover="renderCalendar(this.id,'observationDate<%=docId%>' );" href="javascript:void(0);" ><img title="Calendar" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar"border="0" /></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><bean:message key="inboxmanager.document.DemographicMsg" /></td>
-                                        <td><%if(!demographicID.equals("-1")){%>
-                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="true"/>
-                                            <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
-                                            <%=demoName%><%}else{%>
-                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="false"/>
-                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />
-                                            <input type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>')" name="demographicKeyword" />
-                                            <div id="autocomplete_choices<%=docId%>"class="autocomplete"></div>
-                                            <%}%>
-
          <script type="text/javascript">
 
         renderCalendar=function(id,inputFieldId){
@@ -161,24 +95,9 @@
                                             }
                                             }();
                                          
-                                            </script>
-                                                   <input id="saved_<%=docId%>" type="hidden" name="saved" value="false"/>
-                                                   <input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" ><bean:message key="inboxmanager.document.SendToMRPMsg" />
-                                                   <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" ><bean:message key="inboxmanager.document.SendToMRPFailedMsg" /></a>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td valign="top"><bean:message key="inboxmanager.document.FlagProviderMsg" /> </td>
-                                        <td>
-                                            <input type="hidden" name="provi" id="provfind<%=docId%>" />
-                                            <input type="text" id="autocompleteprov<%=docId%>" name="demographicKeyword"/>
-                                            <div id="autocomplete_choicesprov<%=docId%>" class="autocomplete"></div>
-
-                                            <script type="text/javascript">
 
 
-                                        
+
                                                 YAHOO.example.BasicRemote = function() {
                                                         var url = "<%= request.getContextPath() %>/provider/SearchProvider.do";
                                                         var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
@@ -251,6 +170,86 @@
 
 
                                             </script>
+
+        <div id="labdoc_<%=docId%>">
+            <table class="docTable">
+                <tr>
+
+
+                    <td colspan="8"><a href="<%=url2%>"><img src="<%=url%>" /></a></td>
+
+
+                    <td align="left" valign="top">
+                        <fieldset><legend><bean:message key="inboxmanager.document.PatientMsg"/><span id="assignedPId_<%=docId%>"><%=demoName%></span> </legend>
+                            <table border="0">
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.DocumentUploaded"/></td>
+                                    <td><%=curdoc.getDateTimeStamp()%></td>
+                                </tr>
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.ContentType"/></td>
+                                    <td><%=contentType%></td>
+                                </tr>
+                                <tr>
+                                    <td><bean:message key="inboxmanager.document.NumberOfPages"/></td>
+                                    <td><%=numOfPageStr%></td>
+                                </tr>
+                            </table>
+
+                            <form id="forms_<%=docId%>" onsubmit="return updateDocument('forms_<%=docId%>');">
+                                <input type="hidden" name="method" value="documentUpdateAjax" />
+                                <input type="hidden" name="documentId" value="<%=docId%>" />
+                                <table border="0">
+                                    <tr>
+                                        <td><bean:message key="dms.documentReport.msgDocType" />:</td>
+                                        <td>
+                                            <select name ="docType" id="docType_<%=docId%>">
+                                                <option value=""><bean:message key="dms.addDocument.formSelect" /></option>
+                                                <%for (int j = 0; j < doctypes.size(); j++) {
+                String doctype = (String) doctypes.get(j);%>
+                                                <option value="<%= doctype%>" <%=(curdoc.getType().equals(doctype)) ? " selected" : ""%>><%= doctype%></option>
+                                                <%}%>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><bean:message key="dms.documentReport.msgDocDesc" />:</td>
+                                        <td><input id="docDesc_<%=docId%>"  type="text" name="documentDescription" value="<%=curdoc.getDescription()%>" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><bean:message key="inboxmanager.document.ObservationDateMsg" /></td>
+                                        <td>
+                                            <input   id="observationDate<%=docId%>" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>">
+                                            <a id="obsdate<%=docId%>" onmouseover="renderCalendar(this.id,'observationDate<%=docId%>' );" href="javascript:void(0);" ><img title="Calendar" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar"border="0" /></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><bean:message key="inboxmanager.document.DemographicMsg" /></td>
+                                        <td><%if(!demographicID.equals("-1")){%>
+                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="true"/>
+                                            <input type="hidden" value="<%=demographicID%>" name="demog" id="demofind<%=docId%>" />
+                                            <%=demoName%><%}else{%>
+                                            <input id="saved<%=docId%>" type="hidden" name="saved" value="false"/>
+                                            <input type="hidden" name="demog" value="<%=demographicID%>" id="demofind<%=docId%>" />
+                                            <input type="text" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>')" name="demographicKeyword" />
+                                            <div id="autocomplete_choices<%=docId%>"class="autocomplete"></div>
+                                            <%}%>
+
+
+                                                   <input id="saved_<%=docId%>" type="hidden" name="saved" value="false"/>
+                                                   <input id="mrp_<%=docId%>" type="checkbox" onclick="sendMRP(this)"  name="demoLink" ><bean:message key="inboxmanager.document.SendToMRPMsg" />
+                                                   <a id="mrp_fail_<%=docId%>" style="color:red;font-style: italic;display: none;" ><bean:message key="inboxmanager.document.SendToMRPFailedMsg" /></a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="top"><bean:message key="inboxmanager.document.FlagProviderMsg" /> </td>
+                                        <td>
+                                            <input type="hidden" name="provi" id="provfind<%=docId%>" />
+                                            <input type="text" id="autocompleteprov<%=docId%>" name="demographicKeyword"/>
+                                            <div id="autocomplete_choicesprov<%=docId%>" class="autocomplete"></div>
+
+
                                             <div id="providerList<%=docId%>"></div>
                                         </td>
                                     </tr>
