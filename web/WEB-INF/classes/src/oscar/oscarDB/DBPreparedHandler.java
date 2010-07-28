@@ -43,9 +43,6 @@ public class DBPreparedHandler {
     Statement stmt = null;
     PreparedStatement preparedStmt = null;
 
-    public DBPreparedHandler() {
-    }
-    
     public static Connection getConnection() throws SQLException {
         return DbConnectionFilter.getThreadLocalDbConnection();
     }

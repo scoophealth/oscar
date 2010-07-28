@@ -7,43 +7,40 @@ package oscar.login;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
+import oscar.util.SqlUtils;
 
 /**
  * @author yilee18
  */
 public class DBHelp {
-    private static final Logger _logger = Logger.getLogger(DBHelp.class);
+    private static final Logger logger = MiscUtils.getLogger();
 
     public static boolean updateDBRecord(String sql) throws SQLException {
-        boolean ret = false;
-        DBHandler db = null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
-            ret = db.RunSQL(sql);
-            ret = true;
-        } catch (SQLException e) {
-            ret = false;
-            MiscUtils.getLogger().error("Error", e);
-        } finally {
+        	SqlUtils.update(sql);
+            return(true);
+        } catch (PersistenceException e) {
+            logger.error("Error", e);
+            return(false);
         }
-        return ret;
     }
 
 
     public static int updateDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
         int ret = 0;
-        DBPreparedHandler db = null;
         try {
-            db = new DBPreparedHandler();
+        	DBPreparedHandler db = new DBPreparedHandler();
             ret = db.queryExecuteUpdate(sql, params);
         } catch (SQLException e) {
-        } finally {
+        	logger.error("Error", e);
         }
         return ret;
     }
@@ -81,10 +78,10 @@ public class DBHelp {
             db = new DBHandler(DBHandler.OSCAR_DATA);
             ret = db.RunSQL(sql);
             ret = true;
-            _logger.info("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
+            logger.info("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } catch (SQLException e) {
             ret = false;
-            _logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")",e);
+            logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")",e);
         } finally {
         }
         return ret;
@@ -96,9 +93,9 @@ public class DBHelp {
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
             ret = db.GetSQL(sql);
-            _logger.info("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
+            logger.info("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } catch (SQLException e) {
-            _logger.error("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
+            logger.error("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } finally {
         }
         return ret;
