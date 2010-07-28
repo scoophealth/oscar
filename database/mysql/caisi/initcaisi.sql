@@ -2656,7 +2656,7 @@ create table OcanStaffForm
         dateOfBirth varchar(100),
 	assessmentStatus varchar(40),
 	index(assessmentStatus),
-	startDate date NOT NULL,
+	startDate date,
 	completionDate date,
 	gender varchar(10) not null,
 	providerName varchar(100),
