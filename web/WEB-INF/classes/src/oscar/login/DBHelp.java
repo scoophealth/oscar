@@ -20,7 +20,7 @@ import oscar.oscarDB.DBPreparedHandlerParam;
 public class DBHelp {
     private static final Logger _logger = Logger.getLogger(DBHelp.class);
 
-    public synchronized boolean updateDBRecord(String sql) throws SQLException {
+    public static boolean updateDBRecord(String sql) throws SQLException {
         boolean ret = false;
         DBHandler db = null;
         try {
@@ -35,22 +35,20 @@ public class DBHelp {
         return ret;
     }
 
-//    public synchronized boolean updateDBRecord(String sql, DBPreparedHandlerParam[] param) throws SQLException {
-    public synchronized int updateDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
+
+    public static int updateDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
         int ret = 0;
         DBPreparedHandler db = null;
         try {
             db = new DBPreparedHandler();
             ret = db.queryExecuteUpdate(sql, params);
-//            _logger.info("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } catch (SQLException e) {
-//            _logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } finally {
         }
         return ret;
     }
     	
-    public synchronized ResultSet searchDBRecord(String sql) throws SQLException {
+    public static ResultSet searchDBRecord(String sql) throws SQLException {
         ResultSet ret = null;
         DBHandler db = null;
         try {
@@ -63,7 +61,7 @@ public class DBHelp {
         return ret;
     }
 
-    public synchronized ResultSet searchDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
+    public static ResultSet searchDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
         ResultSet ret = null;
         DBPreparedHandler db = null;
         try {
@@ -76,7 +74,7 @@ public class DBHelp {
         return ret;
     }
     
-    public synchronized boolean updateDBRecord(String sql, String userId) throws SQLException {
+    public static boolean updateDBRecord(String sql, String userId) throws SQLException {
         boolean ret = false;
         DBHandler db = null;
         try {
@@ -92,7 +90,7 @@ public class DBHelp {
         return ret;
     }
 
-    public synchronized ResultSet searchDBRecord(String sql, String userId) throws SQLException {
+    public static ResultSet searchDBRecord(String sql, String userId) throws SQLException {
         ResultSet ret = null;
         DBHandler db = null;
         try {
@@ -105,10 +103,12 @@ public class DBHelp {
         }
         return ret;
     }
+    
     public static String getString(ResultSet rs,String columnName) throws SQLException
     {
     	return oscar.Misc.getString(rs, columnName);
     }
+    
     public static String getString(ResultSet rs,int columnIndex) throws SQLException
     {
     	return oscar.Misc.getString(rs, columnIndex);
