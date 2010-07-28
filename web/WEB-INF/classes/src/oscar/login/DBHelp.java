@@ -30,6 +30,10 @@ public class DBHelp {
         }
     }
 
+    public static boolean updateDBRecord(String sql, String userId) throws SQLException {
+    	return(updateDBRecord(sql));
+    }
+
 
     public static int updateDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
         int ret = 0;
@@ -41,6 +45,7 @@ public class DBHelp {
         }
         return ret;
     }
+
     	
     public static ResultSet searchDBRecord(String sql) throws SQLException {
         ResultSet ret = null;
@@ -65,19 +70,6 @@ public class DBHelp {
         return ret;
     }
     
-    public static boolean updateDBRecord(String sql, String userId) throws SQLException {
-        boolean ret = false;
-        try {
-        	DBHandler db = new DBHandler();
-            db.RunSQL(sql);
-            ret = true;
-        } catch (SQLException e) {
-            ret = false;
-            logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")",e);
-        }
-        return ret;
-    }
-
     public static ResultSet searchDBRecord(String sql, String userId) throws SQLException {
         ResultSet ret = null;
         try {
