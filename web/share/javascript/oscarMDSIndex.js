@@ -72,7 +72,7 @@ function initPatientIds(s){
                            function initHashtableWithList(s){//for typeDocLab,patientDocs
                                 s=s.replace('{','');
                                 s=s.replace('}','');
-                                //console.log(s);
+                                if(s.length>0){
                                 var sar=s.split('],');
                                 var r=new Object();
                                 for(var i=0;i<sar.length;i++){
@@ -90,6 +90,10 @@ function initPatientIds(s){
                                     r[key]=valar;
                                 }
                                 return r;
+                                }else{
+                                    return new Object();
+                           }
+
                            }
 
                            function initHashtableWithString(s){//for docStatus,docType
@@ -166,41 +170,60 @@ function initPatientIds(s){
                              }
                          }
                          function removePatientId(pid){
+                             if(pid){
                              var i=patientIds.indexOf(pid);
+                             //console.log('i='+i+'patientIds='+patientIds);
                              if(i!=-1){
                                  patientIds.splice(i,1);
                              }
-                         }
+                             //console.log(patientIds);
+                         }}
                          function removeEmptyPairFromPatientDocs(){
+                             var notUsedPid=new Array();
                              for(var i=0;i<patientIds.length;i++){
                                  var pid=patientIds[i];
                                  var e=patientDocs[pid];
+                                 
                                  if(!e){
-                                     removePatientId(pid);//remove pid if it doesn't relate to any doclab
+                                     notUsedPid.push(pid);
                                  }
                                  else if(e==null || e.length==0){
                                      delete patientDocs[pid];
                                  }
                              }
+                             //console.log(notUsedPid);
+                             for(var i=0;i<notUsedPid.length;i++){
+                                 removePatientId(notUsedPid[i]);//remove pid if it doesn't relate to any doclab
+                             }
                          }
                          function removeIdFromPatientDocs(doclabid){
-//console.log('in removeidfrompatientdocs');
+//console.log('in removeidfrompatientdocs'+doclabid);
+//console.log(patientIds);
+//console.log(patientDocs);
                                 for(var i=0;i<patientIds.length;i++){
                                     var pid=patientIds[i];
                                     var a=patientDocs[pid];
-                                    if(a.length>0){
+                                    //console.log('a');
+                                    //console.log(a);
+                                    if(a&&a.length>0){
                                         var f=a.indexOf(doclabid);
+                                        //console.log('before splice');
+                                        //console.log(patientDocs);
                                         if(f!=-1){
                                             a.splice(f, 1);
                                             patientDocs[pid]=a;
                                         }
-
+                                        //console.log('after splice');
+                                        //console.log(patientDocs);
                                     }
                                     else{
                                         delete patientDocs[pid];
+                                        //console.log('after delete');
+                                        //console.log(patientDocs);
                                     }
                                 }
-                              //console.log('after remove');console.log(patientDocs);
+                              //console.log('after remove');
+                              //console.log(patientDocs);
                          }
                          function addIdToPatient(did,pid){
                              var a=patientDocs[pid];
@@ -249,13 +272,17 @@ function initPatientIds(s){
 
 function hideTopBtn(){
     $('topFRBtn').hide();
+    if($('topFBtn') && $('topFileBtn')){
     $('topFBtn').hide();
     $('topFileBtn').hide();
 }
+}
 function showTopBtn(){
     $('topFRBtn').show();
+    if($('topFBtn') && $('topFileBtn')){
     $('topFBtn').show();
     $('topFileBtn').show();
+}
 }
   function changeView(){
                                 if($('summaryView').getStyle('display')=='none'){
@@ -477,14 +504,16 @@ function wrapUp() {
                                $('currentPageNum').innerHTML=page;
                                if(page==1)
                                {
-                                   $('msgPrevious').hide();
+                                  if($('msgPrevious')) $('msgPrevious').hide();
                                }else if(page>1){
-                                   $('msgPrevious').show();
+                                  if($('msgPrevious')) $('msgPrevious').show();
                                }
-                               if(isLastPage)
-                                   $('msgNext').hide();
-                               else
-                                   $('msgNext').show();
+                               if(isLastPage){
+                                    if($('msgNext'))    $('msgNext').hide();
+                               }
+                               else{
+                                    if($('msgNext'))    $('msgNext').show();
+                               }
                            }
                            function showTypePageNumber(page,type){
                                var eles;
@@ -1006,20 +1035,29 @@ function wrapUp() {
                             }
 
                             function getPatientIdFromDocLabId(docLabId){
-                                //console.log('in getpatientidfromdoclabid');
+                                //console.log('in getpatientidfromdoclabid='+docLabId);
                                 //console.log(patientIds);
                                 //console.log(patientDocs);
+                                var notUsedPid=new Array();
                                 for(var i=0;i<patientIds.length;i++){
 
                                     var pid=patientIds[i];
                                     var e=patientDocs[pid];
+                                    //console.log('e'+e);
                                     if(!e){
-                                        removePatientId(pid);
+                                        //console.log('if');
+                                        notUsedPid.push(pid);
                                     }else{
+                                        //console.log('in else='+docLabId);
                                         if(e.indexOf(docLabId)>-1){
                                             return pid;
                                         }
                                     }
+                                }
+                                //console.log(notUsedPid);
+                                for(var i=0;i<notUsedPid.length;i++){
+
+                                    removePatientId(notUsedPid[i]);
                                 }
                             }
                             function getLabDocFromPatientId(patientId){//return array of doc ids and lab ids from patient id.
@@ -1087,34 +1125,39 @@ function checkSelected() {
 }
 
 function updateDocLabData(doclabid){//remove doclabid from global variables
-//console.log('in updatedoclabdata');
+//console.log('in updatedoclabdata='+doclabid);
   if(doclabid){
       //console.log('aa');
        //trim doclabid
       doclabid=doclabid.replace(/\s/g,'');
-        updateSideNav(doclabid);//console.log('aa_aa11');
+        updateSideNav(doclabid);
+        //console.log('aa_aa11');
         hideRowUsingId(doclabid);
 //console.log('aa_aa');
     //change typeDocLab
     removeIdFromTypeDocLab(doclabid);
 //console.log('bb');
     //change docType
-    removeIdFromDocType(doclabid);//console.log('cc');
+    removeIdFromDocType(doclabid);
+    //console.log('cc');
     //change patientDocs
-    removeIdFromPatientDocs(doclabid);//console.log('dd');
+    removeIdFromPatientDocs(doclabid);
+    //console.log('dd');
 
     //change patientIdNames and patientIdStr
-    removeEmptyPairFromPatientDocs();//console.log('ee');
+    removeEmptyPairFromPatientDocs();
+    //console.log('ee');
 
     //change docStatus
-    removeIdFromDocStatus(doclabid);//console.log('ff');
+    removeIdFromDocStatus(doclabid);
+    //console.log('ff');
 
     //remove from normals
     removeNormal(doclabid);
     //remove from abnormals
     removeAbnormal(doclabid);
-    /*
-console.log(typeDocLab);
+    
+/*console.log(typeDocLab);
                            console.log(docType);
                            console.log(patientDocs);
                            console.log(patientIdNames);
@@ -1384,7 +1427,7 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                     //oscarLog(windowprops);
                                                     var popup=window.open(varpage, windowname, windowprops);
                                                 }
-                                               function updateDocument(eleId){
+                                               function updateDocument(eleId){//save doc info
                                                     var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
                                                     new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                                                             var json=transport.responseText.evalJSON();
@@ -1397,6 +1440,7 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                                 var num=ar[1];
                                                                 num=num.replace(/\s/g,'');
                                                                 $("saveSucessMsg_"+num).show();
+                                                                $('saved'+num).value='true';
 
                                                                 var success= updateGlobalDataAndSideNav(num,patientId);
                                                                 if(success){
@@ -1404,7 +1448,8 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                                     if(success){
                                                                         //disable demo input
                                                                         $('autocompletedemo'+num).disabled=true;
-                                                                        //console.log('updated by save');console.log(patientDocs);
+                                                                        //console.log('updated by save');
+                                                                        //console.log(patientDocs);
                                                                     }
                                                                 }
                                                             }
@@ -1412,22 +1457,50 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                     return false;
                                                 }
 
-                                             function updateStatus(formid){
+                                             function updateStatus(formid){//acknowledge
                                                  var num=formid.split("_");
-                                                    if($('demofind'+num[1]).value=='-1'){
-                                                        alert("Please file the document that doesn't belong to a patient.");
-                                                    }
-                                                    else{
+                                                        var doclabid=num[1];
+                                                        if(doclabid){
+                                                            var demoId=$('demofind'+doclabid).value;
+                                                            var saved=$('saved'+doclabid).value;
+                                                            if(demoId=='-1'|| saved=='false'){
+                                                                alert('Document is not assigned and saved to a patient,please file it');
+                                                            }else{
                                                         var url=contextpath+"/oscarMDS/UpdateStatus.do";
                                                         var data=$(formid).serialize(true);
 
                                                         new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                                                                 
-                                                             if(num[1]){
-                                                                 Effect.BlindUp('labdoc_'+num[1]);
-                                                                 updateDocLabData(num[1]);
+                                                                         if(doclabid){
+                                                                             Effect.BlindUp('labdoc_'+doclabid);
+                                                                             updateDocLabData(doclabid);
 
                                                             }
                                                         }});
                                                     }
                                              }                                             
+                                                }
+
+                                       function fileDoc(docId){
+                                           if(docId){
+                                                docId=docId.replace(/\s/,'');
+                                                if(docId.length>0){
+                                                     var demoId=$('demofind'+docId).value;
+                                                     var isFile=true;
+                                                    if(demoId=='-1'){
+                                                        isFile=confirm('Document is not assigned to any patient, do you still want to file it?');
+                                                    }
+                                                    if(isFile) {
+                                                             var type='DOC';
+                                                             if(type){
+                                                                 var url='../oscarMDS/FileLabs.do';
+                                                                var data='method=fileLabAjax&flaggedLabId='+docId+'&labType='+type;
+                                                                new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                                                                        Effect.Fade('labdoc_'+docId);
+                                                                        updateDocLabData(docId);
+                                                                }});
+                                                        }
+                                                    }
+                                               }
+                                            }
+                                       }
