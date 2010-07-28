@@ -23,6 +23,7 @@
  */
 package oscar.billing.cad.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,11 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.billing.cad.model.CadCid;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarDB.DBPreparedHandlerAdvanced;
 import oscar.util.DAO;
 
 
@@ -80,17 +81,22 @@ public class CidDAO extends DAO {
 
 		sql = sql + " order by ds_cid";
 
-		DBPreparedHandlerAdvanced db = new DBPreparedHandlerAdvanced();
-		PreparedStatement pstmCid = db.getPrepareStatement(sql);
+		Connection c=DbConnectionFilter.getThreadLocalDbConnection();
+		PreparedStatement pstmCid = c.prepareStatement(sql);
 
 		try {
-			ResultSet rs = db.executeQuery(pstmCid);
+			ResultSet rs = pstmCid.executeQuery();
 			beans = new ArrayList();
 
 			while (rs.next()) {
 				CadCid bean = new CadCid();
-				bean.setCoCid(db.getString(rs,"co_cid"));
-				bean.setDsCid(db.getString(rs,"ds_cid"));
+				String temp=rs.getString("co_cid");
+				if (temp==null) temp="";
+				bean.setCoCid(temp);
+				
+				temp=rs.getString("ds_cid");
+				if (temp==null) temp="";
+				bean.setDsCid(temp);
 				beans.add(bean);
 			}
 		} catch (Exception err) {MiscUtils.getLogger().error("Error", err);

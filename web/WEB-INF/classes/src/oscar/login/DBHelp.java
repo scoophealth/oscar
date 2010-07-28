@@ -17,9 +17,6 @@ import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 import oscar.util.SqlUtils;
 
-/**
- * @author yilee18
- */
 public class DBHelp {
     private static final Logger logger = MiscUtils.getLogger();
 
@@ -47,56 +44,48 @@ public class DBHelp {
     	
     public static ResultSet searchDBRecord(String sql) throws SQLException {
         ResultSet ret = null;
-        DBHandler db = null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ret = db.GetSQL(sql);
         } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        } finally {
+            logger.error("Error", e);
         }
+        
         return ret;
     }
 
     public static ResultSet searchDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
         ResultSet ret = null;
-        DBPreparedHandler db = null;
         try {
-            db = new DBPreparedHandler();
+        	DBPreparedHandler db = new DBPreparedHandler();
             ret = db.queryResults_paged(sql, params, 0);
         } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        } finally {
+            logger.error("Error", e);
         }
         return ret;
     }
     
     public static boolean updateDBRecord(String sql, String userId) throws SQLException {
         boolean ret = false;
-        DBHandler db = null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
-            ret = db.RunSQL(sql);
+        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db.RunSQL(sql);
             ret = true;
-            logger.info("updateDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } catch (SQLException e) {
             ret = false;
             logger.error("updateDBRecord(sql = " + sql + ", userId = " + userId + ")",e);
-        } finally {
         }
         return ret;
     }
 
     public static ResultSet searchDBRecord(String sql, String userId) throws SQLException {
         ResultSet ret = null;
-        DBHandler db = null;
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ret = db.GetSQL(sql);
             logger.info("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } catch (SQLException e) {
             logger.error("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
-        } finally {
         }
         return ret;
     }

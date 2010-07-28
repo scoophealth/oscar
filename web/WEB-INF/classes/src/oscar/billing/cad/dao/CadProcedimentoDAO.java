@@ -28,6 +28,7 @@
  */
 package oscar.billing.cad.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,11 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.billing.cad.model.CadProcedimentos;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarDB.DBPreparedHandlerAdvanced;
 import oscar.util.DAO;
 import oscar.util.FieldTypes;
 import oscar.util.SqlUtils;
@@ -70,8 +71,8 @@ public class CadProcedimentoDAO extends DAO {
 
         sql = sql + " order by ds_procedimento";
 
-        DBPreparedHandlerAdvanced db = new DBPreparedHandlerAdvanced();
-        PreparedStatement pstmProc = db.getPrepareStatement(sql);
+        Connection c=DbConnectionFilter.getThreadLocalDbConnection();
+        PreparedStatement pstmProc = c.prepareStatement(sql);
 
         try {
             SqlUtils.fillPreparedStatement(pstmProc, 1,
@@ -79,13 +80,15 @@ public class CadProcedimentoDAO extends DAO {
             SqlUtils.fillPreparedStatement(pstmProc, 2, CadProcedimentos.ATIVO,
                 FieldTypes.CHAR);
 
-            ResultSet rs = db.executeQuery(pstmProc);
+            ResultSet rs = pstmProc.executeQuery();
             beans = new ArrayList();
 
             while (rs.next()) {
                 CadProcedimentos bean = new CadProcedimentos();
                 bean.setCoProcedimento(rs.getLong("co_procedimento"));
-                bean.setDsProcedimento(db.getString(rs,"ds_procedimento"));
+                String temp=rs.getString("ds_procedimento");
+                if (temp==null) temp="";
+                bean.setDsProcedimento(temp);
                 beans.add(bean);
             }
         } catch (Exception err) {
