@@ -336,7 +336,7 @@ public class EDocUtil extends SqlUtilBaseS {
         }
 
         sql = sql + " ORDER BY " + sort;
-        log.info("sql list: " + sql);
+
         ResultSet rs = getSQL(sql);
         ArrayList<EDoc> resultDocs = new ArrayList<EDoc>();
         try {
