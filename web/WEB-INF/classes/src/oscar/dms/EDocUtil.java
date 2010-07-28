@@ -389,7 +389,7 @@ public class EDocUtil extends SqlUtilBaseS {
             java.sql.Date eDate  = new java.sql.Date(endDate.getTime());
             MiscUtils.getLogger().debug("Creator "+creator+" start "+sDate + " end "+eDate);
 
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             PreparedStatement ps =  DBHandler.getConnection().prepareStatement(sql);
             ps.setString(1,creator);
 	    ps.setString(2,responsible);
@@ -540,7 +540,7 @@ public class EDocUtil extends SqlUtilBaseS {
     public String getDocumentName(String id) {
         String filename = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select docfilename from document where document_no = '" + id + "'";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -563,7 +563,7 @@ public class EDocUtil extends SqlUtilBaseS {
         try {
             String sql = "select status from ctl_document where document_no=" + documentNo;
             String status = "";
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 status = rs.getString("status");
@@ -623,7 +623,7 @@ public class EDocUtil extends SqlUtilBaseS {
         String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
         int key = 0;
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         Connection conn = DBHandler.getConnection();
         PreparedStatement add_record = conn.prepareStatement(add_record_string1);
 
@@ -663,7 +663,7 @@ public class EDocUtil extends SqlUtilBaseS {
     public static String getLastDocumentNo() {
         String documentNo = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select max(document_no) from document";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -678,7 +678,7 @@ public class EDocUtil extends SqlUtilBaseS {
 public static String getLastDocumentDesc() {
         String docDesc=null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String docNumber=EDocUtil.getLastDocumentNo();
 
             String sql = "select docdesc from document where document_no="+docNumber;
@@ -697,7 +697,7 @@ public static String getLastDocumentDesc() {
     public static String getLastNoteId() {
         String noteId = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select max(note_id) from casemgmt_note";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -736,7 +736,7 @@ public static String getLastDocumentDesc() {
     public static boolean getDocReviewFlag(String docId){
     	boolean flag=false;
     	try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select reviewed_flag from doc_manager where id="+docId;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -755,7 +755,7 @@ public static String getLastDocumentDesc() {
     public static boolean getDocUrgentFlag(String docId){
     	boolean flag=false;
     	try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select urgent from doc_manager where id="+docId;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {

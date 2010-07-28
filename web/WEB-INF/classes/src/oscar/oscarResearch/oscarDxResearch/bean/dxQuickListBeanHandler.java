@@ -69,7 +69,7 @@ public class dxQuickListBeanHandler {
             String quickListName;
            
            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String lastUsed = "";
             String sql;
             
@@ -113,7 +113,7 @@ public class dxQuickListBeanHandler {
             
             ResultSet rs;
             
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
            
             String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName"; 
 

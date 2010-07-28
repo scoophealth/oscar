@@ -44,7 +44,7 @@ public class ImportExportMeasurements {
     public static List getMeasurements(String demoNo) throws SQLException {
 	List measList = new ArrayList();
 	if (filled(demoNo)) {
-	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    DBHandler db = new DBHandler();
 	    String sql = "SELECT * FROM measurements WHERE demographicNo=" + demoNo;
 	    ResultSet rs = db.GetSQL(sql);
 
@@ -82,7 +82,7 @@ public class ImportExportMeasurements {
     
     public static Long saveMeasurements(String type, String demoNo, String providerNo, String dataField, Date dateObserved) throws SQLException {
 	String sql = "SELECT measuringInstruction FROM measurementType WHERE type='"+type+"' LIMIT 1";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	ResultSet rs = db.GetSQL(sql);
 	String mi = rs.next() ? rs.getString("measuringInstruction") : "";
 	return saveMeasurements(type, demoNo, providerNo, dataField, mi, dateObserved);
@@ -93,7 +93,7 @@ public class ImportExportMeasurements {
 	if (dateObserved==null) dateObserved = new Date();
 	String sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered)" +
 				      " VALUES (?, ?, ?, ?, ?, ?, ?)";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, demoNo);
@@ -112,7 +112,7 @@ public class ImportExportMeasurements {
     }
     
     public static void saveMeasurements(Measurements meas) throws SQLException {
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
         String sql=null, mi=meas.getMeasuringInstruction();
         if (!filled(mi)) {
             sql = "SELECT measuringInstruction FROM measurementType WHERE type='"+meas.getType()+"' LIMIT 1";
@@ -142,7 +142,7 @@ public class ImportExportMeasurements {
     
     public static void saveMeasurementsExt(MeasurementsExt mExt) throws SQLException {
         String sql = "INSERT INTO measurementsExt (measurement_id,keyval,val) VALUES (?,?,?)";
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setLong(1, mExt.getMeasurementId());
@@ -158,7 +158,7 @@ public class ImportExportMeasurements {
     public static List getMeasurementsExt(Long measurementId) throws SQLException {
 	List extsList = new ArrayList();
 	if (measurementId!=null) {
-	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    DBHandler db = new DBHandler();
 	    String sql = "SELECT * FROM measurementsExt WHERE measurement_id=" + measurementId;
 	    ResultSet rs = db.GetSQL(sql);
 
@@ -178,7 +178,7 @@ public class ImportExportMeasurements {
     public static MeasurementsExt getMeasurementsExtByKeyval(Long measurementId, String keyval) throws SQLException {
 	MeasurementsExt measurementsExt = null;
 	if (measurementId!=null) {
-	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    DBHandler db = new DBHandler();
 	    String sql = "SELECT * FROM measurementsExt WHERE measurement_id=" + measurementId + " AND keyval='" + keyval + "'";
 	    ResultSet rs = db.GetSQL(sql);
 

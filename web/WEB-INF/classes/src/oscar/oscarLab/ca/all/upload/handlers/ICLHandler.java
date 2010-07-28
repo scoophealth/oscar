@@ -55,7 +55,7 @@ public class ICLHandler implements MessageHandler  {
     private void updateLabStatus(int n) throws SQLException {
         Hl7textResultsData data = new Hl7textResultsData();
         String sql = "SELECT lab_no, result_status FROM hl7TextInfo ORDER BY lab_no DESC";
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         
         ResultSet rs = db.GetSQL(sql);
         while(rs.next() && n > 0){

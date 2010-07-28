@@ -147,7 +147,7 @@ public class PathnetLabTest {
     public String getDemographicNumByLabId(String id){
         String ret = null;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String select_demoNo = "select demographic_no from patientLabRouting where lab_type = 'BCP' and lab_no = '"+id+"'";
             ResultSet rs  = db.GetSQL(select_demoNo);
             if(rs.next()){
@@ -169,7 +169,7 @@ public class PathnetLabTest {
         multiLabId = data.getMatchingLabs(labid);
         demographicNo = getDemographicNumByLabId(labid);
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String select_pid_information = "SELECT pid_id, patient_name, external_id, date_of_birth, patient_address, sex, home_number,sending_facility  FROM hl7_pid, hl7_msh WHERE hl7_pid.message_id = '"+labid+"' and hl7_msh.message_id = hl7_pid.message_id";
             ResultSet rs = db.GetSQL(select_pid_information);
             if(rs.next()){
@@ -243,7 +243,7 @@ public class PathnetLabTest {
     public ArrayList getResultsOld(String pid){
         ArrayList list = new ArrayList();
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             //ResultSet rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
             ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
             
@@ -283,7 +283,7 @@ public class PathnetLabTest {
     public ArrayList getResults(String pid){
         ArrayList list = new ArrayList();
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             //ResultSet rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
             ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
             logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");

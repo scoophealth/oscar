@@ -43,7 +43,7 @@ public class EctRourkeRecord {
             throws SQLException    {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 
@@ -109,7 +109,7 @@ public class EctRourkeRecord {
         String demographic_no = props.getProperty("demographic_no");
         String page = "p"+props.getProperty("c_lastVisited")+"_";
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sqlDB = "SELECT * FROM formRourke WHERE demographic_no=" + demographic_no + " AND ID=" + formId;
         ResultSet rsDB = db.GetSQL(sqlDB);
         rsDB.next();
@@ -198,7 +198,7 @@ public class EctRourkeRecord {
     public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 
@@ -276,7 +276,7 @@ public class EctRourkeRecord {
         ResultSet rs;
         String str = "M";
         try{
-                db = new DBHandler(DBHandler.OSCAR_DATA);
+                db = new DBHandler();
                 rs = db.GetSQL("select sex from demographic where demographic_no = "+demo);
                 if(rs.next()){
                         str = db.getString(rs,"sex");

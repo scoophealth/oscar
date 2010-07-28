@@ -53,7 +53,7 @@ public class EctMeasurementTypesBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             String sql = "SELECT * FROM measurementType ORDER BY type";              
             ResultSet rs;        
@@ -86,7 +86,7 @@ public class EctMeasurementTypesBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sqlMGr = "SELECT typeDisplayName FROM measurementGroup WHERE name='" + groupName + "'ORDER BY typeDisplayName";            
             ResultSet rsMGr;
  

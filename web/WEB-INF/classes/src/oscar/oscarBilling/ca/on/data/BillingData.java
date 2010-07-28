@@ -83,7 +83,7 @@ public class BillingData {
 				+ demoQuery;
 		MiscUtils.getLogger().debug("bill status query " + p);
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs = db.GetSQL(p);
 			while (rs.next()) {
 				Hashtable h = new Hashtable();

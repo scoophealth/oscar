@@ -57,7 +57,7 @@ public class ReportManager {
         String sql = "SELECT templateid, templatetitle, templatedescription FROM reportTemplates WHERE active=1";
         ArrayList reports = new ArrayList();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                 ReportObjectGeneric curReport = new ReportObjectGeneric(rs.getString("templateid"), rs.getString("templatetitle"), rs.getString("templatedescription"));
@@ -76,7 +76,7 @@ public class ReportManager {
         String sql = "SELECT * FROM reportTemplates WHERE templateId='" + templateid + "'";
         ReportObjectGeneric curReport = new ReportObjectGeneric();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
@@ -93,7 +93,7 @@ public class ReportManager {
     public ReportObject getReportTemplate(String templateid) {
         String sql = "SELECT * FROM reportTemplates WHERE templateId='" + templateid + "'";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
@@ -119,7 +119,7 @@ public class ReportManager {
                         ArrayList choices = new ArrayList();
                         String paramquery = param.getChildText("param-query"); //if retrieving choices from the DB
                         if (paramquery != null) {
-                            DBHandler db2 = new DBHandler(DBHandler.OSCAR_DATA);
+                            DBHandler db2 = new DBHandler();
                             ResultSet rschoices = db2.GetSQL(paramquery);
                             while (rschoices.next()) {
                                 String choiceid = rschoices.getString(1);
@@ -170,7 +170,7 @@ public class ReportManager {
     public String getSQL(String templateId) {
         String sql = "SELECT templatesql FROM reportTemplates WHERE templateid='" + templateId + "'";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 return rs.getString("templatesql");
@@ -185,7 +185,7 @@ public class ReportManager {
         String sql = "SELECT templatexml FROM reportTemplates WHERE templateid='" + templateid + "'";
         String xml = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) xml = rs.getString("templatexml");
             if (xml == null) xml = "";
@@ -200,7 +200,7 @@ public class ReportManager {
         String sqlinsert = "INSERT INTO reportTemplates VALUES ('globalxml', 'Global XML file', '', '', '" +
                 StringEscapeUtils.escapeSql(UtilXML.unescapeXML(xmltext)) + "', 0)";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sqldelete);
             db.RunSQL(sqlinsert);
         } catch (SQLException sqe) {
@@ -259,7 +259,7 @@ CREATE TABLE reportTemplates (
                         "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + reportXML + "', " + activeint + ")";
 
                 try {
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    DBHandler db = new DBHandler();
                     db.RunSQL(sql);
                 } catch (SQLException sqe) {
                     MiscUtils.getLogger().error("Error", sqe);
@@ -336,7 +336,7 @@ CREATE TABLE reportTemplates (
                         "templatesql='" + querysql + "', templatexml='" + templateXMLstr + "', active=" + activeint + ", type= '" + type + "' WHERE templateid='" + templateId + "'";                        
 
                 try {
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    DBHandler db = new DBHandler();
                     db.RunSQL(sql);
                 } catch (SQLException sqe) {
                     MiscUtils.getLogger().error("Error", sqe);
@@ -354,7 +354,7 @@ CREATE TABLE reportTemplates (
     public String deleteTemplate(String templateid) {
         String sql = "DELETE FROM reportTemplates WHERE templateid='" + templateid + "'";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sql);
         } catch (SQLException sqe) {
             MiscUtils.getLogger().error("Error", sqe);

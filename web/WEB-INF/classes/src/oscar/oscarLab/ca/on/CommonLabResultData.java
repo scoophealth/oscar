@@ -197,7 +197,7 @@ public class CommonLabResultData {
 
         String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='"+labId+"' and providerLabRouting.lab_type = '"+labType+"'";
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             logger.info(sql);
             while(rs.next()){
@@ -223,7 +223,7 @@ public class CommonLabResultData {
     public static String searchPatient(String labNo,String labType) {
         String retval = "0";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"' and lab_type = '"+labType+"'";
             ResultSet rs = db.GetSQL(sql);
@@ -242,7 +242,7 @@ public class CommonLabResultData {
         boolean result = false;
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             // update pateintLabRouting for labs with the same accession number
             CommonLabResultData data = new CommonLabResultData();
@@ -276,7 +276,7 @@ public class CommonLabResultData {
         boolean result;
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             String[] providersArray = selectedProviders.split(",");
            
@@ -375,7 +375,7 @@ public class CommonLabResultData {
     public String getDemographicNo(String labId,String labType){
         String demoNo = null;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = '"+labType+"'");
             if (rs.next()){
                 String d = db.getString(rs,"demographic_no");
@@ -394,7 +394,7 @@ public class CommonLabResultData {
     public boolean isDocLinkedWithPatient(String labId,String labType){
         boolean ret=false;
         try{
-            DBHandler db=new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db=new DBHandler();
             String sql="select module_id from ctl_document where document_no="+labId+" and module='demographic'";
             ResultSet rs=db.GetSQL(sql);
             if(rs.next()){
@@ -412,7 +412,7 @@ public class CommonLabResultData {
     public boolean isLabLinkedWithPatient(String labId,String labType){
         boolean ret = false;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = '"+labType+"' ";
 
             ResultSet rs = db.GetSQL(sql);
@@ -433,7 +433,7 @@ public class CommonLabResultData {
     public int getAckCount(String labId, String labType){
         int ret = 0;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select count(*) from providerLabRouting where lab_no = '"+labId+"' and lab_type  = '"+labType+"' and status='A'";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){

@@ -46,7 +46,7 @@ public class EctValidationsBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT name,id FROM validations ORDER BY name";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )
@@ -100,7 +100,7 @@ public class EctValidationsBeanHandler {
             isDate = "='" + validation.getIsDate() + "'";
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql ="SELECT * FROM validations WHERE regularExp" + regularExp
                         + " AND minValue" + minValue 
                         + " AND maxValue" + maxValue
@@ -129,7 +129,7 @@ public class EctValidationsBeanHandler {
         int validationId = -1;
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String regularExp = null;
             String minValue = null;
             String maxValue = null;
@@ -188,7 +188,7 @@ public class EctValidationsBeanHandler {
     public EctValidationsBean getValidation(String val){   
         EctValidationsBean validation = new EctValidationsBean();
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
 
             String sql ="SELECT * FROM  validations WHERE name = '"+StringEscapeUtils.escapeSql(val)+"'";             
             ResultSet rs = db.GetSQL(sql);

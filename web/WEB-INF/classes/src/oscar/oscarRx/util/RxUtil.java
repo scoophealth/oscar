@@ -1166,7 +1166,7 @@ public class RxUtil {
    private static List<HashMap<String,String>> drugsTableQuery(String parameter,String value){
         List<HashMap<String,String>> retList=new ArrayList();
        try{
-            DBHandler db=new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db=new DBHandler();
             ResultSet rs;
             String sql="select special ,special_instruction from drugs where "+parameter+" = '"+value+"' order by drugid desc" ;
             MiscUtils.getLogger().debug("in drugsTableQuery,sql="+sql);
@@ -1333,7 +1333,7 @@ public class RxUtil {
     public static void setSpecialQuantityRepeat(RxPrescriptionData.Prescription rx) {
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             if (rx.getRegionalIdentifier() != null && rx.getRegionalIdentifier().length() > 1) {
                 p("if1");
@@ -1419,7 +1419,7 @@ public class RxUtil {
         String sql = "SELECT max(drugid) FROM drugs WHERE archived=0 AND archived_reason='' AND BN='" + StringEscapeUtils.escapeSql(rx.getBrandName()) + "' AND GN='" + StringEscapeUtils.escapeSql(rx.getGenericName()) + "' AND demographic_no=" + rx.getDemographicNo();
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -1448,7 +1448,7 @@ public class RxUtil {
         boolean discontinuedLatest = false;
         String sql = "SELECT * FROM drugs WHERE archived=1 AND archived_reason<>'' AND ATC='" + rx.getAtcCode() + "' AND regional_identifier='" + rx.getRegionalIdentifier() + "' AND demographic_no=" + rx.getDemographicNo() + " order by drugid desc";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             rs = db.GetSQL(sql);
             if (rs.next()) {//get the first result which has the largest drugid and hence the most recent result.
@@ -1540,7 +1540,7 @@ public class RxUtil {
         String sql ="SELECT distinct special_instruction from drugs where special_instruction!='NULL'";
         List<String> resultSpecInst=new ArrayList<String>();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             rs = db.GetSQL(sql);
             while(rs.next()){

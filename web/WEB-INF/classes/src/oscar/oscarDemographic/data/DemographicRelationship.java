@@ -77,7 +77,7 @@ public class DemographicRelationship {
        }
        
        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "insert into relationships (facility_id,demographic_no,relation_demographic_no,relation,sub_decision_maker,emergency_contact,notes,creator,creation_date) values "
             + "("+facilityId+",'"+demographic+"','"+linkingDemographic+"','"+StringEscapeUtils.escapeSql(relationship)+"','"+sdmStr+"','"+eContact+"','"+StringEscapeUtils.escapeSql(notes)+"','"+providerNo+"',now())";
@@ -90,7 +90,7 @@ public class DemographicRelationship {
    
    public void deleteDemographicRelationship(String id){
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "update relationships  set deleted = '1' where  id = '"+id+"'";
          db.RunSQL(sql);
       } catch (SQLException e) {
@@ -102,7 +102,7 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationships(String demographic){
       ArrayList list = new ArrayList();
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs;
          String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1'";
          rs = db.GetSQL(sql);
@@ -126,7 +126,7 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationshipsByID(String id){
       ArrayList list = new ArrayList();
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs;
          String sql = "select * from relationships where id = '"+id+"' and deleted != '1'";
          rs = db.GetSQL(sql);
@@ -150,7 +150,7 @@ public class DemographicRelationship {
    public String getSDM(String demographic){
       String sdm = null;
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs;
          String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1' and sub_decision_maker = '1'";
          rs = db.GetSQL(sql);
@@ -168,7 +168,7 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationshipsWithNamePhone(String demographic_no){                 
       ArrayList list = new ArrayList();
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs;
          String sql = "select * from relationships where demographic_no = '"+demographic_no+"' and deleted != '1'";
          rs = db.GetSQL(sql);
@@ -198,7 +198,7 @@ public class DemographicRelationship {
    public ArrayList getDemographicRelationshipsWithNamePhone(String demographic_no, Integer facilityId){                 
 	      ArrayList list = new ArrayList();
 	      try {
-	         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	         DBHandler db = new DBHandler();
 	         ResultSet rs;
 	         String sql = "select * from relationships where demographic_no = '"+demographic_no+"' and deleted != '1'" +
 	                      " and facility_id=" + facilityId.toString();

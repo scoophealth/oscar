@@ -127,7 +127,7 @@ public class Survey {
        boolean isdemographicSelected = true;
        int num = 0;
        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;            
             String sql = "SELECT count(demographic_no) as demoCount FROM demographic WHERE demographic_no = '" + demographicNo +"' and "+queryString;            
             if ( queryString != null && queryString.trim().startsWith("FROM") ){
@@ -192,7 +192,7 @@ public class Survey {
    
    private void getRecordsForPeriod(String demographic_no){
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
          "select * from surveyData where demographic_no = '"+demographic_no+"' and (to_days(now()) - to_days(survey_date) < "+period+") ";
          
@@ -211,7 +211,7 @@ public class Survey {
    private String getSurveyStatusForPeriod(String demographic_no){
       String sStatus = null;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
          "select * from surveyData where surveyId = '"+surveyId+"' and demographic_no = '"+demographic_no+"' and (to_days(now()) - to_days(survey_date) < "+period+") ";
          
@@ -236,7 +236,7 @@ public class Survey {
       //This will beused to set patient to been seen in this period.
       String insertId = "";
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = 
          "insert into surveyData ( surveyId, demographic_no,provider_no,status,answer,survey_date) values "
             +"("
@@ -270,7 +270,7 @@ public class Survey {
    private String getSurveyIdForDemographic(String demographic_no){
       String surveyDataId = null;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = //"select * from surveyData where to_days(survey_date) < to_days('"+endDate+"'))
          "select * from surveyData where surveyId = '"+surveyId+"' and demographic_no = '"+demographic_no+"' and (to_days(now()) - to_days(survey_date) < "+period+") ";
          
@@ -300,7 +300,7 @@ public class Survey {
       Answer a = getAnswerByString(answer);
       log.debug("Answer a :"+a.answerString +" answer "+answer);
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "update surveyData set "
                      +" status = '"+a.answerStatus+"',"
                      +" answer = '"+a.answerValue+"'"
@@ -527,7 +527,7 @@ public class Survey {
    public ArrayList getStatusCount(String surveyId){
       ArrayList list = new ArrayList();
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "select status , count(status) as countstatus from surveyData where surveyId = '"+surveyId+"' group by status";
          ResultSet rs = db.GetSQL(sql);  
          
@@ -544,7 +544,7 @@ public class Survey {
    public ArrayList getAnswerCount(String surveyId){
       ArrayList list = new ArrayList();
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "select answer , count(answer) as countanswer from surveyData where surveyId = '"+surveyId+"' and status = 'A'  group by answer;";
          
          ResultSet rs = db.GetSQL(sql);  

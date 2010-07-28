@@ -48,7 +48,7 @@ public class EctConDisplayServiceAction extends Action {
       MiscUtils.getLogger().debug("service id ".concat(String.valueOf(String.valueOf(serviceId))));
       MiscUtils.getLogger().debug("num specs".concat(String.valueOf(String.valueOf(specialists.length))));
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = String.valueOf(String.valueOf((new StringBuffer("delete from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
          db.RunSQL(sql);
          for(int i = 0; i < specialists.length; i++) {

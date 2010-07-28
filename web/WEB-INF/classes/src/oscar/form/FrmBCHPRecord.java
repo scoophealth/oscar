@@ -39,7 +39,7 @@ public class FrmBCHPRecord extends FrmRecord {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT demographic_no, last_name, first_name, phone, phone2, hin,provider_no FROM demographic WHERE demographic_no = "
                     + demographicNo;
             String providerNo = null;

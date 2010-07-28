@@ -37,7 +37,7 @@ public class RxProviderData {
 
         try {
             //Get Provider from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "SELECT * FROM provider WHERE provider_no = '" + providerNo + "'";
             rs = db.GetSQL(sql);

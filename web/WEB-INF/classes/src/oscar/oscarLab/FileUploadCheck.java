@@ -67,7 +67,7 @@ public class FileUploadCheck {
    public boolean hasFileBeenUploaded(String md5sum){
       boolean hasFileBeenUploaded = false;
       try{         
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "select * from fileUploadCheck where md5sum = '"+md5sum+"' ";
          ResultSet rs = db.GetSQL(sql);
          if(rs.next()){
@@ -92,7 +92,7 @@ public class FileUploadCheck {
    public Hashtable getFileInfo(String md5sum){
       Hashtable fileInfo = new Hashtable();
       try{         
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "select * from fileUploadCheck where md5sum = '"+md5sum+"' ";
          ResultSet rs = db.GetSQL(sql);
          if(rs.next()){
@@ -117,7 +117,7 @@ public class FileUploadCheck {
       try{
          String md5sum = getMd5Sum(is);
          if(!hasFileBeenUploaded(md5sum)){           
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('"+provider+"','"+StringEscapeUtils.escapeSql(name)+"','"+md5sum+"',now())";
             MiscUtils.getLogger().debug(sql);
             db.RunSQL(sql);

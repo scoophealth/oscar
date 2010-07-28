@@ -48,7 +48,7 @@ public class EctConAddServiceAction extends Action
         String service = addServiceForm.getService();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = String.valueOf(String.valueOf((new StringBuffer("insert into consultationServices (serviceDesc,active) values ('")).append(service).append("','1')")));
             db.RunSQL(sql);
         }

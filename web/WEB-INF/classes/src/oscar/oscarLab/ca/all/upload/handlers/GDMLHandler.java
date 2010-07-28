@@ -52,7 +52,7 @@ public class GDMLHandler implements MessageHandler {
 	// recheck the abnormal status of the last 'n' labs
 	private void updateLabStatus(int n) throws SQLException {
 		String sql = "SELECT lab_no, result_status FROM hl7TextInfo ORDER BY lab_no DESC";
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 
 		ResultSet rs = db.GetSQL(sql);
 		while (rs.next() && n > 0) {

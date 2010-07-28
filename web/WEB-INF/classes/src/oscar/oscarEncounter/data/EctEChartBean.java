@@ -37,7 +37,7 @@ public class EctEChartBean {
 	public void setEChartBean(String demoNo) {
 		demographicNo = demoNo;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql = "select * from eChart where demographicNo=" + demoNo
 					+ " ORDER BY eChartId DESC";
 //         			+ " ORDER BY eChartId DESC limit 1";

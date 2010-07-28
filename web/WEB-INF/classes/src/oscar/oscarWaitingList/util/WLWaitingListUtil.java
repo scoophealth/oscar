@@ -39,7 +39,7 @@ public class WLWaitingListUtil {
         MiscUtils.getLogger().debug("WLWaitingListUtil.removeFromWaitingList(): removing waiting list: " + waitingListID + " for patient " + demographicNo);
         DBHandler db = null;
         try{
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
             String sql;
 	        sql = " update  waitingList set is_history = 'Y' " + 
 		          " where demographic_no = " + demographicNo + 
@@ -70,7 +70,7 @@ public class WLWaitingListUtil {
             try{
                 waitingListNote = org.apache.commons.lang.StringEscapeUtils.escapeSql(waitingListNote);
 
-                db = new DBHandler(DBHandler.OSCAR_DATA);
+                db = new DBHandler();
                 String sql = " select max(position) as position from waitingList where listID=" + waitingListID + 
                 			 "  AND is_history = 'N' ";
                 rs = db.GetSQL(sql);
@@ -124,7 +124,7 @@ public class WLWaitingListUtil {
 	    ResultSet rs = null;
 	    if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
 		    try{
-		        db = new DBHandler(DBHandler.OSCAR_DATA);
+		        db = new DBHandler();
 	             
 	            int pos = 1;
 	            String sql = " SELECT * FROM waitingList " + 
@@ -194,7 +194,7 @@ public class WLWaitingListUtil {
 	    ResultSet rs = null;
 	    if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
 		    try{
-		        db = new DBHandler(DBHandler.OSCAR_DATA);
+		        db = new DBHandler();
 		        String sql = "";
 		        if(db == null){
 		        	MiscUtils.getLogger().debug("WLWaitingListUtil.updateWaitingList(): dbHandler == null");    
@@ -269,7 +269,7 @@ public class WLWaitingListUtil {
         ResultSet rs = null;
         DBHandler db = null;
         try{
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
         	
             sql = " SELECT * FROM waitingList WHERE listID=" + waitingListID + " AND is_history='N' ORDER BY onListSince";
             rs = db.GetSQL(sql);

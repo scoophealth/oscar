@@ -60,7 +60,7 @@ public class MDSSegmentData {
         String labID = "";
         int mdsOBXNum = 0;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             
             // Get the header info

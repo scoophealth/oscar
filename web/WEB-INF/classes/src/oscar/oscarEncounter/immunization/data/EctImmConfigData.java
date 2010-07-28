@@ -42,7 +42,7 @@ public class EctImmConfigData {
 
 	public String getImmunizationConfig()
 		throws SAXException, ParserConfigurationException, SQLException {
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 		String sql =
 			"SELECT setName, setXmlDoc FROM config_Immunization WHERE archived=0 AND setName IS NOT NULL AND setName <> '' ORDER BY setName";
 		ResultSet rs = db.GetSQL(sql);
@@ -62,7 +62,7 @@ public class EctImmConfigData {
 	public Vector getImmunizationConfigName()
 		throws SAXException, ParserConfigurationException, SQLException {
 		Vector ret = new Vector();
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 		String sql =
 			"SELECT setName FROM config_Immunization WHERE archived=0 AND setName IS NOT NULL AND setName <> '' ORDER BY setName";
 		ResultSet rs = db.GetSQL(sql);
@@ -77,7 +77,7 @@ public class EctImmConfigData {
 	public Vector getImmunizationConfigId()
 	throws SAXException, ParserConfigurationException, SQLException {
 		Vector ret = new Vector();
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 		String sql =
 			"SELECT setId FROM config_Immunization WHERE archived=0 AND setName IS NOT NULL AND setName <> '' ORDER BY setName";
 		ResultSet rs = db.GetSQL(sql);

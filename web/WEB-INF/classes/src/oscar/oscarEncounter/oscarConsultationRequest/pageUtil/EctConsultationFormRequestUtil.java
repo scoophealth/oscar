@@ -41,7 +41,7 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from demographic where demographic_no = " + demoNo;
             ResultSet rs = db.GetSQL(sql);
 
@@ -77,7 +77,7 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         teamVec = new Vector();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select distinct team from provider where status = '1' and team != '' order by team";
             ResultSet rs = db.GetSQL(sql);
 
@@ -100,7 +100,7 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         teamVec = new Vector();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select distinct team from provider order by team ";
             ResultSet rs = db.GetSQL(sql);
 
@@ -123,7 +123,7 @@ public class EctConsultationFormRequestUtil {
         boolean verdict = true;
         getSpecailistsName(id);
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from consultationRequests where requestId  = " +id;
 
             ResultSet rs = db.GetSQL(sql);
@@ -182,7 +182,7 @@ public class EctConsultationFormRequestUtil {
     public String getSpecailistsName(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from professionalSpecialists where specId  = " +id;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -218,7 +218,7 @@ public class EctConsultationFormRequestUtil {
         MiscUtils.getLogger().debug("in Get SPECAILISTS EMAIL \n\n" + id);
         String retval = new String();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select email from professionalSpecialists where specId  = '" + id + "'";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -239,7 +239,7 @@ public class EctConsultationFormRequestUtil {
     public String getProviderTeam(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select team from provider where provider_no  = " + id;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -255,7 +255,7 @@ public class EctConsultationFormRequestUtil {
     public String getProviderName(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from provider where provider_no  = " + id;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -271,7 +271,7 @@ public class EctConsultationFormRequestUtil {
     public String getFamilyDoctor() {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select p.last_name, p.first_name from provider p, demographic d where d.provider_no  = p.provider_no and  d.demographic_no = " +demoNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -287,7 +287,7 @@ public class EctConsultationFormRequestUtil {
     public String getServiceName(String id) {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from consultationServices where serviceId  = " +id;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -303,7 +303,7 @@ public class EctConsultationFormRequestUtil {
     public String getClinicName() {
         String retval = new String();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select clinic_name from clinic";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {

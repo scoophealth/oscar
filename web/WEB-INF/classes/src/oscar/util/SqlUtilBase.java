@@ -20,7 +20,7 @@ public class SqlUtilBase {
            //------------------private
    protected void runSQL(String sql) {
        try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            db.RunSQL(sql);
        } catch (SQLException sqe) {
            MiscUtils.getLogger().error("Error", sqe);
@@ -29,7 +29,7 @@ public class SqlUtilBase {
    
    protected String runSQLinsert(String sql) {
        try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            db.RunSQL(sql);
            sql = "SELECT LAST_INSERT_ID()";
            ResultSet rs = db.GetSQL(sql);
@@ -44,7 +44,7 @@ public class SqlUtilBase {
    protected ResultSet getSQL(String sql) {
        ResultSet rs = null;
        try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            rs = db.GetSQL(sql);
        } catch (SQLException sqe) {
            MiscUtils.getLogger().error("Error", sqe);

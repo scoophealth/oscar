@@ -37,7 +37,7 @@ public class LabResultImport {
    
     public static void SaveLabDesc(String description, String ppId) throws SQLException {
 	String sql = "INSERT INTO labTestResults (description,  labPatientPhysicianInfo_id, line_type) VALUES (? , ? , 'D')";
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         Connection conn = db.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1,description);
@@ -51,7 +51,7 @@ public class LabResultImport {
 	String id = "";
 	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, service_date, lab_status)" +
 						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'N')";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, labReportInfo_id);
@@ -78,7 +78,7 @@ public class LabResultImport {
 	String print_date = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
 	String print_time = UtilDateUtilities.DateToString(new Date(),"HH:mm:ss");
 	String sql = "INSERT INTO labReportInformation (location_id, print_date, print_time) VALUES (?,?,?)";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, location_id);
@@ -97,7 +97,7 @@ public class LabResultImport {
 	String id = "";
 	String sql = "INSERT INTO labTestResults (title, test_name, abn, minimum, maximum, result, units, description, location_id, labPatientPhysicianInfo_id, line_type, last)" +
 					" VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?)";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, title);
@@ -124,7 +124,7 @@ public class LabResultImport {
     public static Long savePatientLabRouting(String demo_no, String lab_no) throws SQLException {
 	Long id = null;
 	String sql = "INSERT INTO patientLabRouting (demographic_no, lab_no, lab_type) values (?, ?, 'CML')";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, demo_no);
@@ -142,7 +142,7 @@ public class LabResultImport {
 	Long id = null;
 	if (timestamp==null || ("").equals(timestamp)) timestamp=null;
 	String sql = "INSERT INTO providerLabRouting (provider_no, lab_no, status, comment, timestamp, lab_type) values (?,?,?,?,?,'CML')";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, provider_no);

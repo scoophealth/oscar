@@ -61,7 +61,7 @@ public class ProviderMyOscarIdData {
        DBHandler db;
        
        try {
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
        
         sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
         rs = db.GetSQL(sql);
@@ -94,7 +94,7 @@ public class ProviderMyOscarIdData {
         else
            sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + id + "', '" + provider + "')";
         
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
         db.RunSQL(sql);
        
        }catch( SQLException ex ) {
@@ -110,7 +110,7 @@ public class ProviderMyOscarIdData {
        String sql;
        ResultSet rs;       
               
-       db = new DBHandler(DBHandler.OSCAR_DATA);
+       db = new DBHandler();
        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
        
        rs = db.GetSQL(sql);
@@ -127,7 +127,7 @@ public class ProviderMyOscarIdData {
       DBHandler db;
       
       try {
-          db = new DBHandler(DBHandler.OSCAR_DATA);
+          db = new DBHandler();
           
           sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarId+ "'";
           MiscUtils.getLogger().debug(sql);
@@ -148,7 +148,7 @@ public class ProviderMyOscarIdData {
       ArrayList providerList = new ArrayList();
       oscar.oscarProvider.data.ProviderData.getProviderName("sdf");
       try {
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBHandler db = new DBHandler();
 
           sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "'";
           ResultSet rs = db.GetSQL(sql);

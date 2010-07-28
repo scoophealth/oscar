@@ -493,7 +493,7 @@ public class CaseManagementNote extends BaseObject {
     protected static ResultSet getSQL(String sql) {
         ResultSet rs = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             rs = db.GetSQL(sql);
         } catch (SQLException sqe) {
             MiscUtils.getLogger().error("Error", sqe);

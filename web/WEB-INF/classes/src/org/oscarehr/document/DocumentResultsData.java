@@ -52,7 +52,7 @@ public class DocumentResultsData {
         ArrayList labResults = new ArrayList();
         ArrayList attachedLabs = new ArrayList();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             ResultSet rs = db.GetSQL(attachQuery);
             while(rs.next()) {
@@ -95,7 +95,7 @@ public class DocumentResultsData {
             providerNo=providerNo.trim();
             String sql="select * from providerLabRouting plr where plr.lab_type='DOC' and plr.lab_no="+dn+" and plr.provider_no='"+providerNo+"'";
             try{
-                DBHandler db=new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db=new DBHandler();
                 ResultSet rs = db.GetSQL(sql);
                 logger.info(sql);
                 if(rs.first()){
@@ -123,7 +123,7 @@ public class DocumentResultsData {
         ArrayList labResults =  new ArrayList();
         String sql = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             if ( demographicNo == null) {
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
                 // for the provider number if unable to find correct provider
@@ -167,7 +167,7 @@ public class DocumentResultsData {
                 
                 
                 //BAD!!!! CODING APROACHING
-                DBHandler dbh = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler dbh = new DBHandler();
                 String sqlcd = "select * from ctl_document cd, demographic d where cd.module = 'demographic' and cd.module_id != '-1' and cd.module_id = d.demographic_no and cd.document_no = '"+lbData.segmentID+"'";
                 ResultSet rscd= dbh.GetSQL(sqlcd);
                 lbData.isMatchedToPatient = false;

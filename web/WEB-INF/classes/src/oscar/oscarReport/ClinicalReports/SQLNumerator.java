@@ -91,7 +91,7 @@ public class SQLNumerator implements Numerator {
         boolean evalTrue = false;
         DBHandler db = null;
         try{
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
             ResultSet rs = db.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
             MiscUtils.getLogger().debug("SQL Statement: " + sql);
             while(rs.next()){
@@ -119,7 +119,7 @@ public class SQLNumerator implements Numerator {
         DBHandler db = null;
         outputValues = null;
         try{
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
             ResultSet rs = db.GetSQL(sql.replaceAll("\\$\\{"+processString+"\\}", demographicNo));   
             MiscUtils.getLogger().debug("SQL Statement: " + sql);
             if(rs.next()){

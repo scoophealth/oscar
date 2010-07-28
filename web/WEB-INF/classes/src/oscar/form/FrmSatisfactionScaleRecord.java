@@ -80,7 +80,7 @@ public class FrmSatisfactionScaleRecord extends FrmRecord {
 		throws SQLException {
 		Properties props = new Properties();
                 
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql;
 

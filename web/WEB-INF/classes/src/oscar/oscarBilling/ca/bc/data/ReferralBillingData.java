@@ -95,7 +95,7 @@ public class ReferralBillingData {
    private Hashtable runSQL(String sql){
       Hashtable h = new Hashtable();
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(sql);         
          if(rs.next()){
             fillHash(rs,h);
@@ -110,7 +110,7 @@ public class ReferralBillingData {
    private ArrayList runSQLMulti(String sql){
       ArrayList l = new ArrayList();
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(sql);         
          while(rs.next()){
             l.add(fillHash(rs));
@@ -158,7 +158,7 @@ public class ReferralBillingData {
    public String getReferralDocName(String billingNum){
       String retval= "";
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(" select * from billingreferral where referral_no = '"+billingNum+"' ");         
          if(rs.next()){
             retval = rs.getString("last_name")+", "+rs.getString("first_name");            
@@ -174,7 +174,7 @@ public class ReferralBillingData {
    public int getNumberOfRecordsUsingBillingNumber(String billingNum){
       int ret = 0;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(" select count(*) as coun from billingreferral where referral_no = '"+billingNum+"' ");         
          if(rs.next()){
             ret = rs.getInt("coun");
@@ -191,7 +191,7 @@ public class ReferralBillingData {
    public void insertIntoBillingReferral(String referral_no,String last_name,String first_name, String specialty,String  address1,String address2,
    String city,String province,String postal,String phone,String fax){
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "insert into billingreferral  (referral_no,last_name,first_name,specialty,address1,address2,city,province,postal,phone,fax) values "
          + "('"+StringEscapeUtils.escapeSql(referral_no)+"',"  
          + " '"+StringEscapeUtils.escapeSql(last_name)+"', "  
@@ -223,7 +223,7 @@ public class ReferralBillingData {
    public void updateBillingReferral(String billingreferral_no, String referral_no,String last_name,String first_name, String specialty,String  address1,String address2,
    String city,String province,String postal,String phone,String fax){
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "update billingreferral set "
          + "referral_no = '"+StringEscapeUtils.escapeSql(referral_no)+"',"  
          + "last_name = '"+StringEscapeUtils.escapeSql(last_name)+"', "  

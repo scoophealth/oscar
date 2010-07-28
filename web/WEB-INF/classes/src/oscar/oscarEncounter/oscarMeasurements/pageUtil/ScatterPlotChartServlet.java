@@ -223,7 +223,7 @@ public class ScatterPlotChartServlet extends HttpServlet
             
             try{
                 if(isNumeric(type, mInstrc)){
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    DBHandler db = new DBHandler();
                     String sql = "SELECT DISTINCT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
                                  + "' ORDER BY dateObserved";
                     MiscUtils.getLogger().debug("SQL Statement: " + sql);
@@ -251,7 +251,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     rs.close();
                 }
                 else if (type.compareTo("BP")==0){
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    DBHandler db = new DBHandler();
                     String sql = "SELECT dateObserved FROM measurements WHERE demographicNo = '" + demo + "' AND type='"+ type + "' AND measuringInstruction='" + mInstrc 
                                  + "' GROUP BY dateObserved ORDER BY dateObserved";
                     MiscUtils.getLogger().debug("SQL Statement: " + sql);
@@ -312,7 +312,7 @@ public class ScatterPlotChartServlet extends HttpServlet
             boolean isNumeric = false;
             
             try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 String sql = "SELECT * FROM measurementType WHERE type='"+ type + "' AND measuringInstruction='" + mInstrc + "'";
                 MiscUtils.getLogger().debug("SQL Statement: " + sql);
                 ResultSet rs;

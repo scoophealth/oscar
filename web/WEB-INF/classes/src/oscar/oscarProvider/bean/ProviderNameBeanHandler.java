@@ -51,7 +51,7 @@ public class ProviderNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT DISTINCT provider_no, provider_type from provider ORDER BY last_name";
 
             ResultSet rs;
@@ -86,7 +86,7 @@ public class ProviderNameBeanHandler {
     
     public void setThisGroupProviderVector(String groupNo){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select provider_no, last_name, first_name from mygroup where mygroup_no='" + groupNo + "' order by first_name";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )

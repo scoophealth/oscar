@@ -92,7 +92,7 @@ public class MsgDisplayMessagesAction extends Action {
                 providerNo= bean.getProviderNo();
                 for (int i =0 ; i < messageNo.length ; i++){
                   try{
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    DBHandler db = new DBHandler();
                     String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
                     db.RunSQL(sql);
                   }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

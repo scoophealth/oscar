@@ -37,7 +37,7 @@ public class FrmRourke2006Record extends FrmRecord {
     public Properties getFormRecord(int demographicNo, int existingID)
             throws SQLException    {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String updated = "false";
         if(existingID <= 0) {			
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
@@ -104,7 +104,7 @@ public class FrmRourke2006Record extends FrmRecord {
 	ResultSet rs;
 	String str = "M";
 	try{
-		db = new DBHandler(DBHandler.OSCAR_DATA);
+		db = new DBHandler();
 		rs = db.GetSQL("select sex from demographic where demographic_no = "+demo);
 		if(rs.next()){
 			str = db.getString(rs,"sex");	
@@ -121,7 +121,7 @@ public class FrmRourke2006Record extends FrmRecord {
     public Properties getGraph(int demographicNo, int existingID)  throws SQLException {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 

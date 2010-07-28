@@ -101,7 +101,7 @@ public class GDMLHandler implements MessageHandler {
         
         try{
             
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B,  a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m1, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no = m1.lab_id AND m1.message='"+(new String(base64.encode(hl7Body.getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING))+"' ORDER BY a.obr_date, a.lab_no";
             ResultSet rs = db.GetSQL(sql);
             

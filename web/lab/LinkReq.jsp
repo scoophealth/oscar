@@ -29,7 +29,7 @@
 	    reqDateLink = LabRequestReportLink.getRequestDate(reqId);
 	    
 	    sql = "SELECT ID, formCreated, patientName FROM formLabReq07";
-	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    DBHandler db = new DBHandler();
 	    ResultSet rs = db.GetSQL(sql);
 
 	    while (rs.next()) {
@@ -43,7 +43,7 @@
     } else { //Linked
 	try {
 	    sql = "SELECT formCreated FROM formLabReq07 WHERE ID="+linkReqId;
-	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    DBHandler db = new DBHandler();
 	    ResultSet rs = db.GetSQL(sql);
 	    String req_date = "";
 	    if (rs.next()) req_date = UtilDateUtilities.DateToString(rs.getDate("formCreated"),"yyyy-MM-dd");

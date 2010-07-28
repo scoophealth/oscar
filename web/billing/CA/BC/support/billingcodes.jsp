@@ -63,7 +63,7 @@ function posttoText(index){
 	</tr>
 	<%
 	boolean color = false;
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
 	java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description  FROM billingservice ORDER BY TRIM(description)");
 	while (rs.next())
 	{

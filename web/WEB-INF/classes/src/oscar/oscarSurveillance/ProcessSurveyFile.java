@@ -53,7 +53,7 @@ public class ProcessSurveyFile{
    private int maxProcessed(String surveyId){
       int maxprocessed = 0 ;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "select max(processed) as maxprocessed from surveyData  where surveyId = '"+surveyId+"'  ";         
          ResultSet rs = db.GetSQL(sql);
          
@@ -69,7 +69,7 @@ public class ProcessSurveyFile{
    
    private void setProcessed(String surveyDataId, int processedId){
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "update surveyData set processed = '"+processedId+"' where surveyDataId = '"+surveyDataId+"'  ";         
          db.RunSQL(sql);         
       }catch(Exception e){
@@ -102,7 +102,7 @@ public class ProcessSurveyFile{
       String sStatus = null;
       int numRecordsToProcess = 0;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String processCount = "select count(surveyDataId) as recordsForProcessing from surveyData  where surveyId = '"+surveyId+"' and processed is null and status = 'A'";
          
          ResultSet rs = db.GetSQL(processCount);

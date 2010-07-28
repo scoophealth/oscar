@@ -111,7 +111,7 @@ public class ServiceCodeValidationLogic {
     DBHandler db = null;
     ResultSet rs;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       String sexQry = "select gender " +
           "from ctl_billingservice_sex_rules " +
           "where service_code = '" + serviceCode + "'";
@@ -137,7 +137,7 @@ public class ServiceCodeValidationLogic {
     ResultSet rs = null;
     AgeValidator v = new AgeValidator(serviceCode, d.getAgeInYears());
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       String ageQry = "select minAge,maxAge " +
           "from ctl_billingservice_age_rules " +
           "where service_code = '" + serviceCode + "'";
@@ -164,7 +164,7 @@ public class ServiceCodeValidationLogic {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       String qry =
           "select TO_DAYS(CURDATE()) - TO_DAYS(CAST(service_date as DATE)) " +
           "from billingmaster " +
@@ -198,7 +198,7 @@ public class ServiceCodeValidationLogic {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       String qry =
           "select TO_DAYS(CURDATE()) - TO_DAYS(CAST(service_date as DATE)) " +
           "from billingmaster " +
@@ -233,7 +233,7 @@ public class ServiceCodeValidationLogic {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       String qry = "SELECT COUNT(*) " +
           "FROM billingmaster " +
           "WHERE demographic_no = '" + demoNo + "'" +
@@ -392,7 +392,7 @@ public class ServiceCodeValidationLogic {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       String qry =
           "select service_date " +
           "from billingmaster " +

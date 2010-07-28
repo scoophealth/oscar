@@ -84,7 +84,7 @@ public class RptByExampleAction extends Action {
     public void write2Database(String query, String providerNo){
         if (query!=null && query.compareTo("")!=0){
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 
                 StringEscapeUtils strEscUtils = new StringEscapeUtils();
                 

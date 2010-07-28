@@ -39,7 +39,7 @@ public class EctFormData {
     public Form[] getForms() throws java.sql.SQLException {
         ArrayList forms = new ArrayList();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         // Quick hack to display BC forms before other forms... probably should make this a little less BC-specific at some time in the future...
         String sql = "select * from encounterForm where form_name like 'BC%' order by form_name";
         ResultSet rs = db.GetSQL(sql);
@@ -102,7 +102,7 @@ public class EctFormData {
     	
         ArrayList forms = new ArrayList();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         
         try{
         if ( !table.equals("form") ) {
@@ -170,7 +170,7 @@ public class EctFormData {
     public String getResource() throws java.sql.SQLException {
         String ret = "";
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT value FROM property WHERE name='resource'";
         ResultSet rs = db.GetSQL(sql);
 
@@ -185,7 +185,7 @@ public class EctFormData {
     public String getFormNameByFormTable(String value){
         String formName = "";
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT form_name from encounterForm where form_value='" + value + "'";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next())

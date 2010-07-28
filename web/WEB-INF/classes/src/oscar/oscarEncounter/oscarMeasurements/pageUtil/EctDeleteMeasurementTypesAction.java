@@ -58,7 +58,7 @@ public class EctDeleteMeasurementTypesAction extends Action {
         String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                 
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                                                                    
+            DBHandler db = new DBHandler();                                                                                    
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){

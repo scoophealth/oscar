@@ -77,7 +77,7 @@ function PopupLab(pid)
 			Patients</option>
 
 			<%
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
 	java.sql.ResultSet rs = db.GetSQL(select_providers_with_reports);
 	while(rs.next()){
 		out.println("<option value='" + db.getString(rs,"provider_no") + "'" + (db.getString(rs,"provider_no").equals(provider_no)? "selected" : "") + ">" + db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name") + "</option>");

@@ -95,7 +95,7 @@ public  class MsgRemoteMessageData extends Thread{
             XMLstring = new StringBuffer("<?xml version=\"1.0\" ?>\n <message>\n ");
 
             try{
-               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+               DBHandler db = new DBHandler();
                java.sql.ResultSet rs_message, rs_whotoo;
                String sql_message = new String("Select * from messagetbl where messageid = '"+messageID+"'");
                String sql_whotoo = new String("Select * from messagelisttbl where message = '"+messageID+"'");

@@ -41,7 +41,7 @@ public class EctConShowAllServicesUtil
         serviceDescVec = new Vector();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from consultationServices where active = '1' order by serviceDesc";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()) {

@@ -124,7 +124,7 @@ public class ProviderData {
    public List getProviderListWithInsuranceNo(String insurerNo){
         ArrayList list = new ArrayList();
         try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql = "select * from provider where provider_type='doctor' and ohip_no like '"+insurerNo+"' and ohip_no != '' order by last_name";
 
@@ -145,7 +145,7 @@ public class ProviderData {
    
    public void getProvider(String providerNo){
           try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql = "SELECT * FROM provider WHERE provider_no = '" + providerNo +"'";
 
@@ -549,7 +549,7 @@ public class ProviderData {
    //TODO: Add a cache of providers
    public static ArrayList getProviderList (boolean inactive) {
         try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ArrayList result = new ArrayList();
             String active = " and status = '1' ";
             if (inactive){
@@ -590,7 +590,7 @@ public class ProviderData {
        if(lastname!=null && firstname!=null)
            sql+="last_name like '"+lastname+ "%' AND first_name like '"+firstname+"%' ";
        try{
-           DBHandler db=new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db=new DBHandler();
            ResultSet rs=db.GetSQL(sql);
            while(rs.next()){
                Hashtable provider=new Hashtable();
@@ -609,7 +609,7 @@ public class ProviderData {
    }
    public static ArrayList getProviderListOfAllTypes (boolean inactive) {
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ArrayList result = new ArrayList();
             String active = " status = '1' ";
             if (inactive){
@@ -644,7 +644,7 @@ public class ProviderData {
               
     public static String getProviderName(String providerNo) {
            try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
                                     
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
@@ -674,7 +674,7 @@ public class ProviderData {
     public String getDefaultBillingView(String providerNo){
         String defaultView = null;
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select default_servicetype from preference where provider_no='" + providerNo + "'";
             ResultSet rs = db.GetSQL(sql);   
                if (rs.next() && db.getString(rs,"default_servicetype")!=null) {
@@ -758,7 +758,7 @@ public class ProviderData {
             return null;
         }
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 providerNo = db.getString(rs, 1);

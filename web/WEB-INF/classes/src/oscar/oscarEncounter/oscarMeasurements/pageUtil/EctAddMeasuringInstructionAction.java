@@ -63,7 +63,7 @@ public class EctAddMeasuringInstructionAction extends Action {
         List messages = new LinkedList();
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             String typeDisplayName = frm.getTypeDisplayName();
             String measuringInstrc = frm.getMeasuringInstrc();

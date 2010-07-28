@@ -68,7 +68,7 @@ public class UnusedMinutesReporter implements Reporter{
         booked = unbooked = 0;
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             rs = db.GetSQL(scheduleSQL);
             int duration;
             String timecodes, code;

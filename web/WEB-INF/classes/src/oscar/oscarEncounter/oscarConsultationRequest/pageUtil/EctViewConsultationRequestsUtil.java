@@ -124,7 +124,7 @@ public class EctViewConsultationRequestsUtil {
       }                        
                      
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs= db.GetSQL(sql.toString());
          while(rs.next()) {
             demographicNo.add(db.getString(rs,"demographic_no"));
@@ -159,7 +159,7 @@ public class EctViewConsultationRequestsUtil {
       apptDate = new Vector();
       boolean verdict = true;      
       try {         
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
+         DBHandler db = new DBHandler();         
          String sql = " select cr.status, cr.referalDate, cr.requestId, cr.patientWillBook, cr.urgency, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and demographicNo ='"+demoNo+"' order by cr.referalDate ";         
          ResultSet rs;         
          for(rs = db.GetSQL(sql); rs.next(); date.add(db.getString(rs,"referalDate"))){            

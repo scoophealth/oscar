@@ -50,7 +50,7 @@ public class TeleplanUserPassDAO {
     
     private void setUsername(String username){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "insert into property (name,value) values ('teleplan_username','"+username+"') " ;
             db.RunSQL(query);           
         }catch(Exception e){
@@ -60,7 +60,7 @@ public class TeleplanUserPassDAO {
     
     private void setPassword(String password){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "insert into property (name,value) values ('teleplan_password','"+password+"') " ;
             db.RunSQL(query);           
         }catch(Exception e){
@@ -71,7 +71,7 @@ public class TeleplanUserPassDAO {
     
     private void updateUsername(String username){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "update property set value = '"+username+"' where name = 'teleplan_username' " ;
             db.RunSQL(query);            
         }catch(Exception e){
@@ -81,7 +81,7 @@ public class TeleplanUserPassDAO {
     
     private void updatePassword(String password){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "update property set value = '"+password+"' where name = 'teleplan_password' " ;
             db.RunSQL(query);            
         }catch(Exception e){
@@ -96,7 +96,7 @@ public class TeleplanUserPassDAO {
     private boolean hasUsername(){
         boolean hasSequence = false;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "select value from property where name = 'teleplan_username' " ;
             ResultSet rs = db.GetSQL(query); 
             if(rs.next()){
@@ -112,7 +112,7 @@ public class TeleplanUserPassDAO {
     private boolean hasPassword(){
         boolean hasSequence = false;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "select value from property where name = 'teleplan_password' " ;
             ResultSet rs = db.GetSQL(query); 
             if(rs.next()){
@@ -148,7 +148,7 @@ public class TeleplanUserPassDAO {
     public String[] getUsernamePassword(){
         String[] str = new String[2];
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "select value from property where name = 'teleplan_username' " ;
             ResultSet rs = db.GetSQL(query); 
             if(rs.next()){

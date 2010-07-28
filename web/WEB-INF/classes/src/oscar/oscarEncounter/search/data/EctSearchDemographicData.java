@@ -159,7 +159,7 @@ public class EctSearchDemographicData
             vector = new Vector();
             try
             {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 EctDemographicData demographicData;
                 for(rs = db.GetSQL(sql); rs.next(); vector.add(demographicData))

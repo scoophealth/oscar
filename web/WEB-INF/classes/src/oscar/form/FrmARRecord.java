@@ -26,7 +26,7 @@ public class FrmARRecord extends FrmRecord {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, sex, CONCAT(address, ', ', city, ', ', province, ' ', postal) AS address, phone, phone2, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
@@ -85,7 +85,7 @@ public class FrmARRecord extends FrmRecord {
         if ("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("PHR", ""))) {
 
             String demographic_no = demoNo;
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select email from demographic where demographic_no=" + demographic_no;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {

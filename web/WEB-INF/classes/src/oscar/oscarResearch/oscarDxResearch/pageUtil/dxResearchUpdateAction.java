@@ -53,7 +53,7 @@ public class dxResearchUpdateAction extends Action {
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql = "";
             if (status.equals("C")){
                 sql = "update dxresearch set update_date='"+nowDate + "', status='C' where dxresearch_no='"+did+"'";

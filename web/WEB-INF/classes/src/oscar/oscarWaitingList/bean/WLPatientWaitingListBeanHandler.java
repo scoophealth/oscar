@@ -48,7 +48,7 @@ public class WLPatientWaitingListBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs; 
             String sql = "SELECT wn.ID, wn.name, w.position, w.note, w.onListSince FROM waitingListName wn, waitingList w WHERE wn.ID = w.ListID AND demographic_no ='"+ demographicNo + "'" + "and w.is_history<>'Y'";
             for(rs = db.GetSQL(sql); rs.next(); )

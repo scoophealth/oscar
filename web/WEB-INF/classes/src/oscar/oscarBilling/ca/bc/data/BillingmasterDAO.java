@@ -160,7 +160,7 @@ public class BillingmasterDAO {
     public void markListAsBilled(List list){                    //TODO: Should be set form CONST var
         String query = "update billingmaster set billingstatus = 'B' where billingmaster_no in ("+ StringUtils.getCSV(list) +")"; 
         try {             
-           DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler dbhandler = new DBHandler();
            dbhandler.RunSQL(query);
         }catch (SQLException sqlexception) {
            MiscUtils.getLogger().debug(sqlexception.getMessage());

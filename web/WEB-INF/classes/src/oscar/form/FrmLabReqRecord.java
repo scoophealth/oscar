@@ -27,7 +27,7 @@ public class FrmLabReqRecord extends FrmRecord {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String demoProvider = "000000";
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS patientName, "
                     + "sex, address, city, province, postal, hin, ver, "
@@ -83,7 +83,7 @@ public class FrmLabReqRecord extends FrmRecord {
 
     public Properties getFormCustRecord(Properties props, int provNo) throws SQLException {
         String demoProvider = props.getProperty("demoProvider", "");
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs = null;
         String sql = null;
 

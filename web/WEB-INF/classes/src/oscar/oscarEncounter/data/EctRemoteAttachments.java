@@ -50,7 +50,7 @@ public class EctRemoteAttachments
         dates = new ArrayList();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql ="Select * from remoteAttachments where demographic_no = '"+demoNo+"' order by date";
             MiscUtils.getLogger().debug("sql message "+sql);
@@ -76,7 +76,7 @@ public class EctRemoteAttachments
         ArrayList retval = new ArrayList();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "select ocl.locationDesc, mess.thesubject from messagetbl mess, oscarcommlocations ocl where mess.sentByLocation = ocl.locationId and mess.messageid = '"+messId+"' ";
 	    MiscUtils.getLogger().debug("sql ="+sql);

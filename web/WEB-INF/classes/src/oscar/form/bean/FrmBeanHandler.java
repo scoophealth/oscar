@@ -47,7 +47,7 @@ public class FrmBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT form_name, hidden FROM encounterForm order by hidden, form_name";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;

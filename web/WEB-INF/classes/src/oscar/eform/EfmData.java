@@ -60,7 +60,7 @@ public class EfmData {
    public Hashtable getLastEformDate(String formName, String demographicNo){
       Hashtable ret = null;
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
+         DBHandler db = new DBHandler();         
          String sql = "select form_name,subject,form_date,form_time,form_provider from eform_data where demographic_no = '"+demographicNo+"' and form_name like '"+formName+"%' and status = '1' order by form_date,form_time desc";        
 
          ResultSet rs = db.GetSQL(sql);                                                

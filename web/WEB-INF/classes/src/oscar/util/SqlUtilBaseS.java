@@ -22,7 +22,7 @@ public class SqlUtilBaseS {
            //------------------private
    protected static void runSQL(String sql) {
        try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            db.RunSQL(sql);
        } catch (SQLException sqe) {
            MiscUtils.getLogger().error("Error", sqe);
@@ -31,7 +31,7 @@ public class SqlUtilBaseS {
    
    protected static String runSQLinsert(String sql) {
        try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            db.RunSQL(sql);
            sql = "SELECT LAST_INSERT_ID()";
            ResultSet rs = db.GetSQL(sql);
@@ -50,14 +50,14 @@ public class SqlUtilBaseS {
 		   String lastID;
 		   String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
 		   if("oracle".equalsIgnoreCase(strDbType)){
-			   DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			   DBHandler db = new DBHandler();
 			   ResultSet rs = db.GetSQL("select HIBERNATE_SEQUENCE.NEXTVAL as nextval from dual");
 			   rs.next();
 			   int lastIDInt = rs.getInt("nextval") - 1;
 			   lastID = String.valueOf(lastIDInt);			   
 			   rs.close();
 		   } else {
-			   DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			   DBHandler db = new DBHandler();
 			   String sql = "SELECT LAST_INSERT_ID()";
 			   ResultSet rs = db.GetSQL(sql);
 			   rs.next();
@@ -81,7 +81,7 @@ public class SqlUtilBaseS {
    protected static ResultSet getSQL(String sql) {
        ResultSet rs = null;
        try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            rs = db.GetSQL(sql);
        } catch (SQLException sqe) {
            MiscUtils.getLogger().error("Error", sqe);

@@ -149,7 +149,7 @@ public class RptDemographicQuerySaver {
         }
         oscar.oscarMessenger.util.MsgStringQuote s = new oscar.oscarMessenger.util.MsgStringQuote();
         try{
-                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                  DBHandler db = new DBHandler();
 
                   String sql = "insert into demographicQueryFavourites "
                   +"(selects,age,startYear,endYear,firstName,lastName,rosterStatus,sex,providerNo,patientStatus,queryName,archived)"

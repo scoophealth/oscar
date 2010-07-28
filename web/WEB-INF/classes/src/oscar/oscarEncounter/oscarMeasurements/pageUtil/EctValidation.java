@@ -50,7 +50,7 @@ public class EctValidation{
     public ResultSet getValidationType(String inputType, String mInstrc){
         ResultSet rs = null;
         try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                
+                DBHandler db = new DBHandler();                
                 String sql = "SELECT validation FROM measurementType WHERE type = '"+ inputType + "'AND measuringInstruction='" + mInstrc + "'"; 
                 rs = db.GetSQL(sql);
                 if (rs.next()){
@@ -204,7 +204,7 @@ public class EctValidation{
     public String getCssPath(String inputGroupName){
         String cssLocation = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
@@ -253,7 +253,7 @@ public class EctValidation{
     public String getCssName(String inputGroupName){
         String cssName = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT * from measurementGroupStyle where groupName = '" + inputGroupName + "'";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;

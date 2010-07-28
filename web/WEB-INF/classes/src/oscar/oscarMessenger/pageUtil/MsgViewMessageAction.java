@@ -78,7 +78,7 @@ public class MsgViewMessageAction extends Action {
         int  i = 1;
 
         try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            java.sql.ResultSet rs;
            
               //print out message

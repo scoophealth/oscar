@@ -117,7 +117,7 @@ public class SupServiceCodeAssocDAO {
         this.VALUE_BY_CODE);
 
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(
           "select billingServiceNo,billingServiceTrayNo from billing_trayfees where billingServiceNo = " +
           primaryCodeId);
@@ -191,7 +191,7 @@ public class SupServiceCodeAssocDAO {
         id;
     DBHandler db = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       db.RunSQL(qry);
     }
     catch (Exception e) {

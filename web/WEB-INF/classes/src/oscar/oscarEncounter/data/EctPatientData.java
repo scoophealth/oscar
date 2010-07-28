@@ -40,7 +40,7 @@ public class EctPatientData {
     public static String getProviderNo(String demographicNo) {
         String ret = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db
                     .GetSQL("SELECT provider_no FROM demographic WHERE demographic_no = "
                             + demographicNo);
@@ -54,7 +54,7 @@ public class EctPatientData {
     }
 
     public Patient getPatient(String demographicNo) throws SQLException {
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         Patient p = null;
         try {
             ResultSet rs = db
@@ -166,7 +166,7 @@ public class EctPatientData {
 
             private void init() {
                 try {
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    DBHandler db = new DBHandler();
                     ResultSet rs;
 
                     String sql = "select * from eChart where demographicNo=" + demographicNo

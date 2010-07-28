@@ -7,7 +7,7 @@
     pid = request.getParameter("pid");
 	if(null != request.getParameter("unlink")){
 		String update_link = "UPDATE hl7_link SET hl7_link.status = 'P' WHERE hl7_link.pid_id='@pid';";
-		oscar.oscarDB.DBHandler dbLink = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+		oscar.oscarDB.DBHandler dbLink = new oscar.oscarDB.DBHandler();
 		dbLink.RunSQL(update_link.replaceAll("@pid", pid));
 	}
 	if(null == demo_no){
@@ -44,7 +44,7 @@ function PopupLab(pid)
 <form action="viewreports.jsp" method="post">
 <table width="100%">
 	<%
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
 	java.sql.ResultSet rs = db.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));
 	if(rs.isBeforeFirst()){
 		String dpid = "",

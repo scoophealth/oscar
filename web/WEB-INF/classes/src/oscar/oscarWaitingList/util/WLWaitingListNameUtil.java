@@ -43,7 +43,7 @@ public class WLWaitingListNameUtil {
 		}
         MiscUtils.getLogger().debug("WLWaitingListNameUtil/removeFromWaitingListName(): waiting list name: " + wlNameId + 
         		           " for groupNo " + groupNo);
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs = null;
         String sql;
         if(db == null){
@@ -82,7 +82,7 @@ public class WLWaitingListNameUtil {
         MiscUtils.getLogger().debug( "WLWaitingListNameUtil/createWaitingListName(): waiting list name: " + wlName + 
         					" for groupNo: " + groupNo + "/ providerNo: " + providerNo);
         
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs = null;
         
         wlName = org.apache.commons.lang.StringEscapeUtils.escapeSql(wlName);
@@ -131,7 +131,7 @@ public class WLWaitingListNameUtil {
         MiscUtils.getLogger().debug("WLWaitingListNameUtil/updateWaitingListName(): wlNameId/wlName = " + 
         		wlNameId + "/" + wlName);
 	    
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs = null;
 
         if(db == null){

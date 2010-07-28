@@ -38,7 +38,7 @@ public class EctMentalHealthRecord
             throws SQLException    {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 
@@ -120,7 +120,7 @@ public class EctMentalHealthRecord
         String temp = props.getProperty("c_lastVisited");
         String page = temp.substring(0,1).toLowerCase()+"_";
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
 
         String sqlDB = "SELECT * FROM formMentalHealth WHERE demographic_no=" + demographic_no + " AND ID=" + formId;
         ResultSet rsDB = db.GetSQL(sqlDB);

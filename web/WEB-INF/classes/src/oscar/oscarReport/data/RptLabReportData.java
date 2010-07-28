@@ -54,7 +54,7 @@ public class RptLabReportData {
         ArrayList arrayList = new ArrayList();
         try{
 
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               ResultSet rs;
               String sql = "select provider_no, last_name, first_name from provider where provider_type = 'doctor' order by last_name";
               rs = db.GetSQL(sql);
@@ -73,7 +73,7 @@ public class RptLabReportData {
        this.days = days;
        try{
               
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               ResultSet rs;
               // mysql function for dates = select date_sub(now(),interval 1 month); 
               String sql = "select distinct l.demographic_no from formLabReq l , demographic d where "
@@ -109,7 +109,7 @@ public class DemoLabDataStruct{
 
     public ArrayList getLabReqs(){
        try{
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBHandler db = new DBHandler();
           java.sql.ResultSet rs;
           String sql = " select * from formLabReq where demographic_no = '"+demoNo+"' "
                       +" and to_days(now()) - to_days(formCreated) <=  "
@@ -131,7 +131,7 @@ public class DemoLabDataStruct{
     public ArrayList getLabReplys(){
 
        try{
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBHandler db = new DBHandler();
           ResultSet rs;
           String sql = "select d.document_no, d.docdesc,d.docfilename, d.updatedatetime, d.status  from ctl_document c, document d where c.module = 'demographic' and c.document_no = d.document_no and d.doctype = 'lab' and module_id = '"+demoNo+"' ";
           rs = db.GetSQL(sql);
@@ -155,7 +155,7 @@ public class DemoLabDataStruct{
     public ArrayList getLabReports(String demographic, java.util.Date startDate){
        ArrayList list = new ArrayList();
        try{
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBHandler db = new DBHandler();
           ResultSet rs;
           String sql = "select p.lab_no, l.collection_date, lab_status, accession_num , lab_type from patientLabRouting p , labPatientPhysicianInfo l where p.lab_type = 'CML' and p.lab_no = l.id and p.demographic_no = '"+demographic+"' ";
           MiscUtils.getLogger().debug(sql);
@@ -226,7 +226,7 @@ public class DemoLabDataStruct{
     public String getDemographicName(){
        String retval = "&nbsp;";
        try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            ResultSet rs;
            String sql = "Select last_name, first_name from demographic where demographic_no = '"+demoNo+"' ";
            rs = db.GetSQL(sql);

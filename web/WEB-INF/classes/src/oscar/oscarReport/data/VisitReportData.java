@@ -66,7 +66,7 @@ public class VisitReportData {
        retVisit[5] = "0";
 
        try{
-             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             DBHandler db = new DBHandler();
              String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
              MiscUtils.getLogger().debug(sql);
              if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
@@ -102,7 +102,7 @@ public class VisitReportData {
                retVisit[5] = "0";
 
 	       try{
-	             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	             DBHandler db = new DBHandler();
 	             String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
                      MiscUtils.getLogger().debug(sql);
                      if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){

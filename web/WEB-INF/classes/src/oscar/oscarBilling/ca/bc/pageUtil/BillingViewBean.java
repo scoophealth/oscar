@@ -91,7 +91,7 @@ public class BillingViewBean {
   private String defaultPayeeLastName;
   public void loadBilling(String billing_no) {
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -156,7 +156,7 @@ public class BillingViewBean {
   public void updateBill(String billingNo,String payeeNo) {
     DBHandler db = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       List billingMasterNos = SqlUtils.getQueryResultsList(
           "select billingmaster_no from billingmaster where billing_no = " +
           billingNo);
@@ -185,7 +185,7 @@ public class BillingViewBean {
     ResultSet rs = null;
     StringBuffer res = new StringBuffer();
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(
           "select billingmaster_no from billingmaster where billing_no = " +
           billingNo);
@@ -619,7 +619,7 @@ public class BillingViewBean {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(sql);
 
       while (rs.next()) {

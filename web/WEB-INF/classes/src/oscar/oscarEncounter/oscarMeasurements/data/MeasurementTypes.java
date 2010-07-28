@@ -93,7 +93,7 @@ public class MeasurementTypes {
             byType = new Hashtable();
 
             try {
-               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+               DBHandler db = new DBHandler();
                String sql = "SELECT * FROM measurementType";   
 
                ResultSet rs = db.GetSQL(sql);        
@@ -125,7 +125,7 @@ public class MeasurementTypes {
     private String getValidation(String val){
         String validation = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
             ResultSet rs = db.GetSQL(sqlValidation);
             if (rs.next()){ 

@@ -57,7 +57,7 @@ public class ProviderColourUpdater {
        DBHandler db;
        
        try {
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
        
         sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
         rs = db.GetSQL(sql);
@@ -90,7 +90,7 @@ public class ProviderColourUpdater {
         else
            sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + c + "', '" + provider + "')";
         
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
         db.RunSQL(sql);
        
        }catch( SQLException ex ) {
@@ -106,7 +106,7 @@ public class ProviderColourUpdater {
        String sql;
        ResultSet rs;       
               
-       db = new DBHandler(DBHandler.OSCAR_DATA);
+       db = new DBHandler();
        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
        
        rs = db.GetSQL(sql);

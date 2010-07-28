@@ -84,7 +84,7 @@ public class BillingAssociationPersistence {
         svc + "','" + dx + "')";
     DBHandler db = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       ret = db.RunSQL(qry);
 
     }
@@ -104,7 +104,7 @@ public class BillingAssociationPersistence {
         svcCode + "'";
     DBHandler db = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       ret = db.RunSQL(qry);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -124,7 +124,7 @@ public class BillingAssociationPersistence {
     ResultSet rs = null;
     try {
       String qry = "select * from ctl_servicecodes_dxcodes";
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(qry);
       String curSvcCode = "";
       ServiceCodeAssociation assoc = new ServiceCodeAssociation();
@@ -205,7 +205,7 @@ public class BillingAssociationPersistence {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(qry);
       if (rs.next()) {
         ret = true;
@@ -238,7 +238,7 @@ public class BillingAssociationPersistence {
       String qry =
           "select * from ctl_servicecodes_dxcodes where service_code = '" +
           svcCode + "'";
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(qry);
 
       while (rs.next()) {

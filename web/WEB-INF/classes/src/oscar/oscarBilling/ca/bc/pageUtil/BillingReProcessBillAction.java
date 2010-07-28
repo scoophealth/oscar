@@ -322,7 +322,7 @@ public class BillingReProcessBillAction extends Action {
         _log.debug("WHAT IS BILL <ASTER2 "+billingmaster.getBillingmasterNo());
         
         try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       //db.RunSQL(sql);
       //db.RunSQL(providerSQL);
       if (!StringUtils.isNullOrEmpty(billingStatus)) {  //What if billing status is null?? the status just doesn't get updated but everything else does??'

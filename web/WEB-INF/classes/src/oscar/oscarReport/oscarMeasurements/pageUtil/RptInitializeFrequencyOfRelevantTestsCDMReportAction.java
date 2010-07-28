@@ -65,7 +65,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
         String endDateA = frm.getEndDateA();
         int nbPatient = 0; 
         try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);  
+                DBHandler db = new DBHandler();  
                 if(!validate(frm, request)){                    
                     return (new ActionForward(mapping.getInput()));
                 }

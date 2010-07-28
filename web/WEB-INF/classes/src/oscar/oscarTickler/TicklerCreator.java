@@ -56,7 +56,7 @@ public class TicklerCreator {
           "','" + provNo + "','4','" + provNo + "')";
       DBHandler db = null;
       try {
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
         db.RunSQL(sql);
       }
       catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -79,7 +79,7 @@ public class TicklerCreator {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(sql);
       return rs.next();
     }
@@ -103,7 +103,7 @@ public class TicklerCreator {
         " and status = 'A'";
     DBHandler db = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       db.RunSQL(sql);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
@@ -130,7 +130,7 @@ public class TicklerCreator {
     DBHandler db = null;
 
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       db.RunSQL(qry);
     }
     catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);

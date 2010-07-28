@@ -52,7 +52,7 @@ public class DemographicData {
 		_log.debug("test");
 		MiscUtils.getLogger().debug("test");
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT first_name, last_name FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = db.GetSQL(sql);
@@ -75,7 +75,7 @@ public class DemographicData {
 		Date date = null;
 
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT year_of_birth,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = db.GetSQL(sql);
@@ -98,7 +98,7 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin + "'";
 			rs = db.GetSQL(sql);
@@ -117,7 +117,7 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 
 			firstName = "first_name='" + firstName.trim() + "' ";
@@ -144,7 +144,7 @@ public class DemographicData {
 	public int numDemographicsWithHIN(String hin) {
 		int num = 0;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT count(*) as c FROM demographic WHERE hin = '" + hin + "'";
 			rs = db.GetSQL(sql);
@@ -165,7 +165,7 @@ public class DemographicData {
 	public ArrayList getDemographicWithHIN(String hin) {
 		ArrayList list = new ArrayList();
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE hin = '" + hin + "'";
 
@@ -201,7 +201,7 @@ public class DemographicData {
 	public ArrayList getDemographicWithLastFirstDOB(String lastname, String firstname, String year_of_birth, String month_of_birth, String date_of_birth) {
 		ArrayList list = new ArrayList();
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic " + " WHERE last_name like '" + lastname + "%' and first_name like '" + lastname + "%'";
 			if (year_of_birth!=null) sql=sql+"  and year_of_birth = '" + year_of_birth + "'";
@@ -224,7 +224,7 @@ public class DemographicData {
 	public String getNameAgeString(String demographicNo) {
 		String nameage = "";
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = db.GetSQL(sql);
@@ -247,7 +247,7 @@ public class DemographicData {
 	public String[] getNameAgeSexArray(String demographicNo) {
 		String[] nameage = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = db.GetSQL(sql);
@@ -270,7 +270,7 @@ public class DemographicData {
 	public String getDemographicSex(String demographicNo) {
 		String retval = "";
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT sex FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = db.GetSQL(sql);
@@ -303,7 +303,7 @@ public class DemographicData {
 		Demographic demographic = null;
 
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT * FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
@@ -328,7 +328,7 @@ public class DemographicData {
 		String demographicNo = "";
 
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin + "'";
 			rs = db.GetSQL(sql);
@@ -346,7 +346,7 @@ public class DemographicData {
 	public String getDemographicDateJoined(String DemographicNo) {
 		String date = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			String sql = "SELECT date_joined FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
@@ -365,7 +365,7 @@ public class DemographicData {
 	}
 
 	public void setDemographicPin(String demographicNo, String pin) throws Exception {
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 		String sql = "UPDATE demographic SET pin = '" + pin + "' WHERE demographic_no = " + demographicNo;
 		db.RunSQL(sql);
 	}
@@ -464,7 +464,7 @@ public class DemographicData {
 		private void init(String DemographicNo) {
 
 			try {
-				DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+				DBHandler db = new DBHandler();
 				ResultSet rs;
 				String sql = "SELECT * FROM demographic WHERE demographic_no = '" + DemographicNo + "'";
 
@@ -898,7 +898,7 @@ public class DemographicData {
 
 		if (!duplicateRecord) {
 			try {
-				DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+				DBHandler db = new DBHandler();
 				Connection conn = DBHandler.getConnection();
 
 				PreparedStatement add_record = conn.prepareStatement(add_record_string);
@@ -967,7 +967,7 @@ public class DemographicData {
 		String sql = "INSERT INTO demographiccust VALUES ('" + demoNo + "','','','','','<unotes>" + content + "</unotes>')";
 		DBHandler db;
 		try {
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			db = new DBHandler();
 			db.RunSQL(sql);
 		} catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);
 		}

@@ -55,7 +55,7 @@ public class MsgGenerate {
         Document doc = MsgCommxml.newDocument();
         Element docRoot = MsgCommxml.addNode(doc, "root");
         
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         
         Document cfg = null;
         try {

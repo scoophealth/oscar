@@ -45,7 +45,7 @@ public class RptSearchData {
     public java.util.ArrayList getRosterTypes(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               rs = db.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");
 
@@ -63,7 +63,7 @@ public class RptSearchData {
     public java.util.ArrayList getPatientTypes(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               rs = db.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");
 
@@ -79,7 +79,7 @@ public class RptSearchData {
     public java.util.ArrayList getProvidersWithDemographics(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               rs = db.GetSQL("select distinct provider_no from demographic order by provider_no");
 
@@ -95,7 +95,7 @@ public class RptSearchData {
     public java.util.ArrayList getQueryTypes(){
             java.util.ArrayList retval = new java.util.ArrayList();
          try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               rs = db.GetSQL("select favId, queryName from demographicQueryFavourites where archived = '1' order by queryName");
 
@@ -115,7 +115,7 @@ public class RptSearchData {
     
     public void deleteQueryFavourite(String id){
        try{
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBHandler db = new DBHandler();
           db.RunSQL("update demographicQueryFavourites set archived = '0' where favId = '"+id+"'");
        }catch (java.sql.SQLException e){ 
            MiscUtils.getLogger().error("Error", e);

@@ -66,7 +66,7 @@ public class PathnetResultsData {
         ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
         ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             ResultSet rs = db.GetSQL(attachQuery);
             while(rs.next()) {
@@ -113,7 +113,7 @@ public class PathnetResultsData {
         ArrayList labResults =  new ArrayList();
         String sql = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             if ( demographicNo == null) {
               
                 sql  ="select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat, providerLabRouting.status " +
@@ -189,7 +189,7 @@ public class PathnetResultsData {
     public String findPathnetObservationDate(String labId){
         String  ret = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             //String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             String sql = "select max(obr.results_report_status_change) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
@@ -206,7 +206,7 @@ public class PathnetResultsData {
     public int findNumOfFinalResults(String labId){
         int ret = 0;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql ="SELECT COUNT(*) FROM hl7_pid pid, hl7_obr obr, hl7_obx obx WHERE obx.observation_result_status = 'F' AND obx.obr_id = obr.obr_id AND obr.pid_id = pid.pid_id AND pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
@@ -222,7 +222,7 @@ public class PathnetResultsData {
     public boolean isLabLinkedWithPatient(String labId){
         boolean ret = false;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             //String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";
             String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = 'BCP' ";
             ResultSet rs = db.GetSQL(sql);
@@ -259,7 +259,7 @@ public class PathnetResultsData {
         int monthsBetween = 0;
         ArrayList labs = new ArrayList();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             // find the accession number
             String sql = "select orc.filler_order_number, max(results_report_status_change) as date from hl7_orc orc, hl7_pid pid, hl7_obr obr where obr.pid_id=pid.pid_id and orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"' GROUP BY pid.message_id";
@@ -311,7 +311,7 @@ public class PathnetResultsData {
     public String findPathnetOrderingProvider(String labId){
         String  ret = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select ordering_provider from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
@@ -326,7 +326,7 @@ public class PathnetResultsData {
     public String findPathnetStatus(String labId){
         String ret = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select min(obr.result_status) as stat from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
@@ -343,7 +343,7 @@ public class PathnetResultsData {
     public String findPathnetDisipline(String labId){
         StringBuffer ret = new StringBuffer();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select distinct diagnostic_service_sect_id from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             boolean first = true;
@@ -363,7 +363,7 @@ public class PathnetResultsData {
     public int findPathnetAdnormalResults(String labId){
         int count = 0;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select abnormal_flags from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and ( obx.abnormal_flags = 'A' or obx.abnormal_flags = 'H' or obx.abnormal_flags = 'HH' or obx.abnormal_flags = 'L' )     and pid.message_id ='"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){

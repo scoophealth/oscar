@@ -56,7 +56,7 @@ public class FrmData {
     public Form[] getForms() throws java.sql.SQLException {
         ArrayList forms = new ArrayList();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT * from encounterForm";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
@@ -92,7 +92,7 @@ public class FrmData {
     public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
         ArrayList forms = new ArrayList();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
                     + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
         ResultSet rs = db.GetSQL(sql);
@@ -111,7 +111,7 @@ public class FrmData {
     public PatientForm getCurrentPatientForm(String demoNo, String studyNo) throws SQLException {
         PatientForm frm = null;
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT e.form_table from encounterForm e, study s where e.form_name = s.form_name and s.study_no = " + studyNo;
         String table = "";
         ResultSet rs = db.GetSQL(sql);
@@ -134,7 +134,7 @@ public class FrmData {
     public String[] getStudyNameLink(String studyNo) throws java.sql.SQLException {
         String[] ret = new String[2];
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT study_name, study_link FROM study WHERE study_no=" + studyNo;
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
@@ -151,7 +151,7 @@ public class FrmData {
         String[] ret = new String[2];
 		String table = null;
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT form_value, form_table FROM encounterForm WHERE form_name='" + formName + "'";
         _log.debug(sql);
         ResultSet rs = db.GetSQL(sql);
@@ -261,7 +261,7 @@ public class FrmData {
     public String getResource() throws java.sql.SQLException {
         String ret = "";
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT value FROM property WHERE name='resource'";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
@@ -278,7 +278,7 @@ public class FrmData {
     public String getResource(String name) throws java.sql.SQLException {
         String ret = "";
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT value FROM property WHERE name='" + name + "'";
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {

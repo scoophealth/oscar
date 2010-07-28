@@ -35,14 +35,17 @@ import java.sql.Statement;
 
 import org.oscarehr.util.DbConnectionFilter;
 
+/**
+ * @deprecated Use JPA instead, no new code should be written against this class.
+ */
 public class DBHandler {
 
     public static String OSCAR_DATA = "oscar_sfhc";
 
-    public DBHandler(String dbName) throws SQLException {
-    }
-
-    public DBHandler(String host, String dbName) throws SQLException {
+    public DBHandler() throws SQLException {
+    	// constructor left here to throw exception so 
+    	// classes jsp's don't get "exception never thrown" or 
+    	// "unreachable code" errors.
     }
 
     public static Connection getConnection() throws SQLException {

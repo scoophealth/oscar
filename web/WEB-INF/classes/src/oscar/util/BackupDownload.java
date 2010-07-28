@@ -77,7 +77,7 @@ public class BackupDownload extends GenericDownload {
         Vector ret = new Vector();
         Properties prop = new Properties();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             java.sql.ResultSet rs;
             String [] objectNames  = getVecObjectName(objName);
             StringBuffer objectWhere = new StringBuffer();

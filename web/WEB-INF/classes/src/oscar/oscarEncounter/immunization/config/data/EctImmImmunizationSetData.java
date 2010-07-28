@@ -51,7 +51,7 @@ public class EctImmImmunizationSetData {
 		String providerNo) {
 		//StringQuote str = new StringQuote();
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql =
 				"insert into config_Immunization (setName,setXmlDoc,createDate,ProviderNo) values ('"
 					+ UtilMisc.charEscape(setName, '\\')
@@ -70,7 +70,7 @@ public class EctImmImmunizationSetData {
 	public boolean estImmunizationVecs() {
 		boolean verdict = true;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql =
 				"select setId, setName, createDate from config_Immunization where archived = 0";
 			ResultSet rs;
@@ -92,7 +92,7 @@ public class EctImmImmunizationSetData {
 	public boolean estImmunizationVecs(int stat) {
 		boolean verdict = true;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql =
 				"select setId, setName, createDate from config_Immunization where archived = "
 					+ stat + " order by setName";
@@ -115,7 +115,7 @@ public class EctImmImmunizationSetData {
 	public String getSetXMLDoc(String setId) {
 		String xmlDoc = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql =
 				String.valueOf(
 					String.valueOf(
@@ -135,7 +135,7 @@ public class EctImmImmunizationSetData {
 
 	public void updateImmunizationSetStatus(String setId, int stat) {
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql =
 				"update config_Immunization set archived = "
 					+ stat

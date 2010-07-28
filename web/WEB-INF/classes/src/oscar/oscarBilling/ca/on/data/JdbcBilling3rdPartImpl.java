@@ -299,7 +299,7 @@ public class JdbcBilling3rdPartImpl {
         public Properties getGstTotal(String invNo) throws SQLException{
             String sql = "SELECT value from billing_on_ext where key_val = 'gst' AND billing_no = '" + invNo + "';";
             _logger.info("getGstTotal(sql= " + sql + ")");
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             Properties props = new Properties();
             if (rs.next()){

@@ -90,7 +90,7 @@ public class RxPharmacyData {
     */   
    synchronized public void addPharmacy(String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email,String notes){
       try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "SELECT max(ID) FROM  pharmacyInfo";            
             rs = db.GetSQL(sql);
@@ -127,7 +127,7 @@ public class RxPharmacyData {
     */   
    public void updatePharmacy(String ID,String name,String address,String city,String province,String postalCode, String phone1, String phone2, String fax, String email,String notes){
       try {           
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql = "Insert into  pharmacyInfo "
             +" (ID, name, address, city, province, postalCode, phone1, phone2, fax, email, notes, status, addDate ) "
             +" values "
@@ -159,7 +159,7 @@ public class RxPharmacyData {
     */   
    public void deletePharmacy(String ID){
       try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql = "update pharmacyInfo set status = '0' where ID = '"+ID+"'";                                                
             db.RunSQL(sql);
         } catch (SQLException e) {
@@ -175,7 +175,7 @@ public class RxPharmacyData {
    public Pharmacy getPharmacy(String ID){
       Pharmacy pharmacy = null;
       try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "SELECT * FROM  pharmacyInfo where ID = '"+ID+"' order by recordID desc limit 1";            
             rs = db.GetSQL(sql);            
@@ -198,7 +198,7 @@ public class RxPharmacyData {
    public Pharmacy getPharmacyByRecordID(String recordID){
       Pharmacy pharmacy = null;
       try {           
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "SELECT * FROM  pharmacyInfo where recordID = '"+recordID+"' ";
             rs = db.GetSQL(sql);            
@@ -221,7 +221,7 @@ public class RxPharmacyData {
    public ArrayList getAllPharmacies(){
       ArrayList  pharmacyList =  new ArrayList();
       try {           
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;            
             String sql = "select max(recordID) as maxrec from pharmacyInfo where status = 1 group by ID order by name";            
             rs = db.GetSQL(sql);            
@@ -242,7 +242,7 @@ public class RxPharmacyData {
     */   
    public void addPharmacyToDemographic(String pharmacyId,String demographicNo){
       try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql = "Insert into  demographicPharmacy "
             +" (pharmacyID,demographic_no,  status, addDate ) "
             +" values "
@@ -267,7 +267,7 @@ public class RxPharmacyData {
    public Pharmacy getPharmacyFromDemographic(String demographicNo){
       Pharmacy pharmacy = null;
       try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             //String sql = "SELECT * FROM  pharmacyInfo group  by  ID order by recordID desc ";                        
             String sql = "select d.pharmacyID from demographicPharmacy d where  d.status = 1 and d.demographic_no = '"+demographicNo+"' order by addDate desc limit 1";

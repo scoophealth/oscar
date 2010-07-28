@@ -40,7 +40,7 @@ public class PatientData
     public Patient getPatient(String demographicNo)
         throws SQLException
     {
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         Patient p = null;
 

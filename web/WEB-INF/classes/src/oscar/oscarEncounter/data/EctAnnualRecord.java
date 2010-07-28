@@ -41,7 +41,7 @@ public class EctAnnualRecord
 	MiscUtils.getLogger().debug("GetAnnualRecord");
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 
@@ -130,7 +130,7 @@ public class EctAnnualRecord
         String demographic_no = props.getProperty("demographic_no");
 //        String ID = props.getProperty("ID");
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql="SELECT * FROM formAnnual WHERE demographic_no=" + demographic_no + " AND ID=0";
         ResultSet rs = db.GetSQL(sql, true);
 

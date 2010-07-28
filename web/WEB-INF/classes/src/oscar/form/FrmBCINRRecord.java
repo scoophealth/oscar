@@ -16,7 +16,7 @@ public class FrmBCINRRecord extends FrmRecord {
 		Properties props = new Properties();
 
 		if (existingID <= 0) {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql = "SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, family_doctor FROM demographic WHERE demographic_no = "
 					+ demographicNo;
 			ResultSet rs = db.GetSQL(sql);
@@ -99,7 +99,7 @@ public class FrmBCINRRecord extends FrmRecord {
 	
 	public Vector getINRLabData(int demographic_no) throws SQLException {
 		Vector ret = new Vector();
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 		String sql = "select lab_no from patientLabRouting where lab_type = 'BCP' and demographic_no ="
 				+ demographic_no + "  order by lab_no";
 		ResultSet rs = db.GetSQL(sql);

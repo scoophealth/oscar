@@ -54,7 +54,7 @@ public class BillingBillingManager {
                 
                 
                 
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql = "SELECT b.service_code, b.description , b.value, b.percentage "
                            + "FROM billingservice b WHERE b.service_code='" + service_code + "'";
@@ -88,7 +88,7 @@ public class BillingBillingManager {
         ArrayList billingItemsArray = new ArrayList();
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;            
             //oscar.oscarBilling.pageUtil.BillingBillingManager bbm = new oscar.oscarBilling.pageUtil.BillingBillingManager();
             
@@ -299,7 +299,7 @@ public class BillingBillingManager {
         
         public void fill(){
             try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql;
                 

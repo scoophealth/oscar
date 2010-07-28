@@ -69,7 +69,7 @@ function posttoText(index){
 	</tr>
 	<%
 	boolean color = false;
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
 	java.sql.ResultSet rs = db.GetSQL("SELECT diagnostic_code, description FROM diagnosticcode where diagnostic_code like '"+searchStr+"' or description like '"+searchStr+"' ORDER BY diagnostic_code");
 	while (rs.next()){
 %>

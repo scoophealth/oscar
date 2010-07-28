@@ -292,7 +292,7 @@ public class EctConsultationFormRequestPrintPdf {
         try {
             
             String sql = "SELECT lab_no FROM patientLabRouting p, consultdocs c WHERE p.id = c.document_no AND c.requestId='"+reqId+"' AND c.doctype='L' AND c.deleted IS NULL";
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 String segmentId = db.getString(rs,"lab_no");

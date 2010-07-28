@@ -58,7 +58,7 @@ try{
 *   dateList: (dateIdHash)
 *   dateIdHash: (date, lab_no)
     */
-    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+    DBHandler db = new DBHandler();
     Connection conn = db.getConnection();
     for (int i = 0; i < items.size(); i++){
         Element e = (Element) items.get(i);

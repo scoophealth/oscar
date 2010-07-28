@@ -52,7 +52,7 @@ public class LabTag extends TagSupport {
    
    public int doStartTag() throws JspException    {
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = new String("select count(*) from providerLabRouting where provider_no = '"+ providerNo +"' and status = 'N'");            
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {

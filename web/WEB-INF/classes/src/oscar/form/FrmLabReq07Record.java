@@ -57,7 +57,7 @@ public class FrmLabReq07Record extends FrmRecord {
             }
 
             //get local clinic information
-        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        	DBHandler db = new DBHandler();
             String sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_province, clinic_postal, clinic_phone, clinic_fax FROM clinic";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -82,7 +82,7 @@ public class FrmLabReq07Record extends FrmRecord {
         String demoProvider = props.getProperty("demoProvider", "");
         String xmlSpecialtyCode = "<xml_p_specialty_code>";
         String xmlSpecialtyCode2 = "</xml_p_specialty_code>";
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs = null;
         String sql = null;
 

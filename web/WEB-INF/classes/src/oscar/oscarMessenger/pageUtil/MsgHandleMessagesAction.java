@@ -111,7 +111,7 @@ public  class MsgHandleMessagesAction extends Action {
 
         if (delete.compareToIgnoreCase("Delete") == 0){
           try{    //sents this message status to del
-             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             DBHandler db = new DBHandler();
              
              String sql = "update messagelisttbl set status = 'del' where provider_no = '"+providerNo+"' and message = '"+messageNo+"'";
              db.RunSQL(sql);
@@ -128,7 +128,7 @@ public  class MsgHandleMessagesAction extends Action {
           StringBuffer theSendMessage = new StringBuffer();
 
           try{   //gets the sender
-             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             DBHandler db = new DBHandler();
              java.sql.ResultSet rs;
              String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = '"+messageNo+"'");
              rs = db.GetSQL(sql);
@@ -179,7 +179,7 @@ public  class MsgHandleMessagesAction extends Action {
            StringBuffer theSendMessage = new StringBuffer();
 
            try{   //gets the sender
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               String sql = new String("Select sentbyNo,thesubject,themessage,sentByLocation from messagetbl where messageid = '"+messageNo+"'");
               rs = db.GetSQL(sql);

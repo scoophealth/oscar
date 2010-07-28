@@ -1541,7 +1541,7 @@ public class HSFODAO {
 //                visitData.isLocked() + " WHERE Patient_Id='" + visitData.getPatient_Id() +"'";
 
 //        try {
-//            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+//            DBHandler db = new DBHandler();
 //            Connection connect = db.getConnection();
 //            st = connect.prepareStatement(sqlstatement);
 //            st.executeUpdate();

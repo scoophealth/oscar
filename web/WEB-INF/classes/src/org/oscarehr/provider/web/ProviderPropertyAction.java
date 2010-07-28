@@ -979,7 +979,7 @@ public class ProviderPropertyAction extends DispatchAction {
 
          ArrayList serviceList = new ArrayList();
          try{
-             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             DBHandler db = new DBHandler();
              ResultSet rs = db.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
              while (rs.next()){
                  String servicetype     = rs.getString("servicetype");
@@ -1035,7 +1035,7 @@ public class ProviderPropertyAction extends DispatchAction {
 
          ArrayList serviceList = new ArrayList();
          try{
-             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             DBHandler db = new DBHandler();
              ResultSet rs = db.GetSQL("select distinct servicetype, servicetype_name from ctl_billingservice where status='A'");
              while (rs.next()){
                  String servicetype     = rs.getString("servicetype");

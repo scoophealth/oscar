@@ -84,7 +84,7 @@ while(true) {
 raf.close();
 
 
-DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+DBHandler db = new DBHandler();
 
 // set patNo
 for (int i = 0; i < props.size(); i++) {

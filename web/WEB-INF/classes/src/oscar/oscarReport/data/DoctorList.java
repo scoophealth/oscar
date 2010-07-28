@@ -25,7 +25,7 @@ public class DoctorList {
 
         ArrayList dnl = new ArrayList();
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             java.sql.ResultSet rs;
             String sql = "select last_name, first_name, provider_no from provider where provider_type='doctor'";

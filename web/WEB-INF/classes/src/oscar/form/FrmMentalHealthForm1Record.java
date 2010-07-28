@@ -25,7 +25,7 @@ public class FrmMentalHealthForm1Record extends FrmRecord {
 	
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         if (existingID <= 0) {            
             String demoProvider = "000000";
             String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, CONCAT(address,' ',city,' ',province,' ',postal) AS clientAddress, provider_no FROM demographic WHERE demographic_no = "
@@ -56,7 +56,7 @@ public class FrmMentalHealthForm1Record extends FrmRecord {
 
 	public Properties getFormCustRecord(Properties props, String provNo) throws SQLException {
         String demoProvider = props.getProperty("demoProvider", "");
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs = null;
         String sql = null;
 

@@ -290,7 +290,7 @@ public final class FrmSetupFormAction extends Action {
     private String getFluShotBillingDate(String demoNo) {
         String s = null;
         try {
-                DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler dbhandler = new DBHandler();
                 String s1 = "select b.billing_no, b.billing_date from billing b, billingdetail bd where b.demographic_no='"
                                 + demoNo
                                 + "' and bd.billing_no=b.billing_no and (bd.service_code='G590A' or bd.service_code='G591A') "
@@ -312,7 +312,7 @@ public final class FrmSetupFormAction extends Action {
             
             if(formId!=null){
                 if(Integer.parseInt(formId)>0){
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    DBHandler db = new DBHandler();
                     String sql = "SELECT * FROM form" + formName + " WHERE ID='" + formId + "' AND demographic_no='" + demographicNo + "'";
                     ResultSet rs = db.GetSQL(sql);
                     if(rs.next()) {
@@ -416,7 +416,7 @@ public final class FrmSetupFormAction extends Action {
     
     private void addLastData(EctMeasurementTypesBean mt,  String demo){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             //get last value and its observation date                
             String sqlData = "SELECT dataField, dateEntered FROM measurements WHERE demographicNo='"+ demo + "' AND type ='" + mt.getType()
                              + "' AND measuringInstruction='" + mt.getMeasuringInstrc() + "' ORDER BY dateEntered DESC limit 1";

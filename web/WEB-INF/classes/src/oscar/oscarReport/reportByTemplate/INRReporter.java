@@ -72,7 +72,7 @@ public class INRReporter implements Reporter {
         String cssCurrent = "";
         boolean firstRow = true;
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             rs = db.GetSQL(sql);
             demographicNo = -1;
             rsHtml.append("<table class=\"reportTable\">\n");

@@ -32,7 +32,7 @@ public class ForwardingRules {
         ArrayList ret = new ArrayList();
         String sql = "SELECT p.provider_no, p.first_name, p.last_name FROM incomingLabRules i, provider p WHERE i.archive='0' AND i.provider_no='"+providerNo+"' AND p.provider_no=i.frwdProvider_no";
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);            
             while (rs.next()){
                 ArrayList info = new ArrayList();
@@ -51,7 +51,7 @@ public class ForwardingRules {
         String ret = "N";
         String sql = "SELECT status FROM incomingLabRules WHERE archive='0' AND provider_no='"+providerNo+"'";
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);            
             if (rs.next()){
                 ret = db.getString(rs,"status");
@@ -66,7 +66,7 @@ public class ForwardingRules {
         boolean ret = false;
         String sql = "SELECT status FROM incomingLabRules WHERE archive='0' AND provider_no='"+providerNo+"'";
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);            
             if (rs.next()){
                 ret = true;

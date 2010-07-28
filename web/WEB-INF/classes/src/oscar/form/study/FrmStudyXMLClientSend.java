@@ -110,7 +110,7 @@ public class FrmStudyXMLClientSend {
 	private synchronized void init (String file, String url) throws java.sql.SQLException, java.io.IOException  {
 		URLService = url;
 		param.load(new FileInputStream(file)); 
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
 
 		GregorianCalendar now=new GregorianCalendar();
 		now.add(now.DATE, -1);

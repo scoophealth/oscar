@@ -66,7 +66,7 @@ public class BillingPreferencesDAO {
         "SELECT * from billing_preferences where providerNo = " +
         pref.getProviderNo();
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(recordExistsQRY);
       if (rs.next()) {
         String updateSQL = "update billing_preferences set referral = " +

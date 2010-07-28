@@ -83,7 +83,7 @@ public class DepressionContinuityReporter implements Reporter{
         ResultSet rs = null;        
         Boolean odd = new Boolean(true);
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             rs = db.GetSQL(cohortSQL);
 
             rsHtml = this.makeHTMLHeader();

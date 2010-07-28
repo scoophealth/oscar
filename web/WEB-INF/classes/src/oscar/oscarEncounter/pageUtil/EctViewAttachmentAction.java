@@ -64,7 +64,7 @@ public final class EctViewAttachmentAction extends Action {
     MiscUtils.getLogger().debug("mess id = "+mesId);
 
     try{
-       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+       DBHandler db = new DBHandler();
        ResultSet rs;
 
 

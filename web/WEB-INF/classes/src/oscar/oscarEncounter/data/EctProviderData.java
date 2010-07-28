@@ -124,7 +124,7 @@ public class EctProviderData {
     public Provider getProvider(String providerNo)    {
         Provider provider = null;
         try        {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT * FROM provider WHERE provider_no = '" +providerNo+ "'";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()) {

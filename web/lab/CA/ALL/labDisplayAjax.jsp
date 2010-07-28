@@ -24,7 +24,7 @@ String patientMatched = request.getParameter("patientMatched");
 Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID.trim()));
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
-DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+DBHandler db = new DBHandler();
 ResultSet rs = db.GetSQL(sql);
 String demographicID = "";
 

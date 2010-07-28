@@ -42,7 +42,7 @@ public class RxCodesData {
         ArrayList lst = new ArrayList();
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "SELECT * FROM ctl_frequency";
             
@@ -67,7 +67,7 @@ public class RxCodesData {
         ArrayList lst = new ArrayList();
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "SELECT * FROM ctl_specialinstructions";
             

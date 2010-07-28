@@ -60,7 +60,7 @@ public class TicklerWorker extends Thread {
 
         try {
             TicklerData td = new TicklerData();
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from consultationRequests where to_days(now()) - to_days(referalDate) > 14 and status = '1' and providerNo = '" + provider + "' ";
 
             ResultSet rs = db.GetSQL(sql);

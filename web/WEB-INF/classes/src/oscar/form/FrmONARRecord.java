@@ -91,7 +91,7 @@ public class FrmONARRecord extends FrmRecord {
         if ("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("PHR", ""))) {
 
             String demographic_no = demoNo;
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select email from demographic where demographic_no=" + demographic_no;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {

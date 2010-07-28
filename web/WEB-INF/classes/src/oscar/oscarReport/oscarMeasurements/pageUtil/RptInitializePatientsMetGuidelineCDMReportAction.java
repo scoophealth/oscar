@@ -65,7 +65,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
         ArrayList reportMsg = new ArrayList();
         
         try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 if(!validate(frm, request)){
                     MiscUtils.getLogger().debug("the form is invalid");
                     return (new ActionForward(mapping.getInput()));

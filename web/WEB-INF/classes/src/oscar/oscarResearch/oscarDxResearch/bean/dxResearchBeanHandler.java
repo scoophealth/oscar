@@ -45,7 +45,7 @@ public class dxResearchBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems();                                            

@@ -114,7 +114,7 @@ public class CPPData {
       String sql= "insert into cpp (demographic_no,provider_no,socialFam,ongoingCon,medHist,reminder,riskfactor,otherMed,otherAller,medsList,allergyList,divArr,created) values (?,?,?,?,?,?,?,?,?,?,?,?,?) "  ;
                               
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          Connection conn = DBHandler.getConnection();
          PreparedStatement ps=  conn.prepareStatement(sql);
          ps.setString(1, demoNo);
@@ -146,7 +146,7 @@ public class CPPData {
       String sql= "select * from cpp  where demographic_no = '"+demoNo+"' order by id desc limit 1";
       MiscUtils.getLogger().debug(sql);
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs =  db.GetSQL(sql);
          if(rs.next()){
    

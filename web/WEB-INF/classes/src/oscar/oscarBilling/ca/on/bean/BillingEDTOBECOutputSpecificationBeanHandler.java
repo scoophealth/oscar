@@ -53,7 +53,7 @@ public class BillingEDTOBECOutputSpecificationBeanHandler {
         String nextline;
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             while ((nextline=input.readLine()) != null){
 
                 if (nextline.length() > 2){

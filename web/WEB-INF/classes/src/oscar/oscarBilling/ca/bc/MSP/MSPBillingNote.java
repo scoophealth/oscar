@@ -73,7 +73,7 @@ public class MSPBillingNote {
                         "'"+UtilMisc.mysqlEscape(note)+"'," +
                         "'1')";
       
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
                 db.RunSQL(notesql);                    
    }
    
@@ -86,7 +86,7 @@ public class MSPBillingNote {
       Note n = new Note();
       String notesql = "select * from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '1' order by createdate desc limit 1";
       try{
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs = db.GetSQL(notesql);
       if(rs.next()){
          n.setBillingnote_no(rs.getString("billingnote_no"));
@@ -107,7 +107,7 @@ public class MSPBillingNote {
       String retStr = "";
       String notesql = "select note from billingnote where billingmaster_no = '"+billingmaster_no+"' and note_type = '1' order by createdate desc limit 1 ";
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(notesql);
          if(rs.next()){
             retStr = rs.getString("note");

@@ -99,7 +99,7 @@ public class MsgDisplayMessagesBean {
   public String getCurrentLocationId(){
         if (currentLocationId == null){
             try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               rs = db.GetSQL("select locationId from oscarcommlocations where current1 = '1'");
 
@@ -268,7 +268,7 @@ public class MsgDisplayMessagesBean {
      int index = 0;
      
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         String sql = new String("select message, status from messagelisttbl where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' order by message");
@@ -328,7 +328,7 @@ public class MsgDisplayMessagesBean {
      String[] searchCols = {"m.thesubject", "m.themessage", "m.sentby", "m.sentto"};
 
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
         //String messageLimit="";
         
@@ -396,7 +396,7 @@ public java.util.Vector estDemographicInbox(){
      String[] searchCols = {"m.thesubject", "m.themessage", "m.sentby", "m.sentto"};
 
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         //String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m, msgDemoMap map"
@@ -473,7 +473,7 @@ public java.util.Vector estDemographicInbox(){
      String[] searchCols = {"m.thesubject", "m.themessage", "m.sentby", "m.sentto"};
 
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         String sql = new String("select map.messageID is null as isnull, map.demographic_no, ml.message, ml.status, m.thesubject, m.thedate, m.theime, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
@@ -532,7 +532,7 @@ public java.util.Vector estDemographicInbox(){
      messageid = new java.util.Vector();
      status  = new java.util.Vector();
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         String sql = new String("select message from messagelisttbl where provider_no = '"+ providerNo+"' and status like \'del\' and remoteLocation = '"+getCurrentLocationId()+"'");
@@ -565,7 +565,7 @@ public java.util.Vector estDemographicInbox(){
      ime  = new java.util.Vector();
      subject  = new java.util.Vector();
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         String sql = new String("select messageid, thedate,  theime, thesubject, sentby from messagetbl where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'");
@@ -600,7 +600,7 @@ public java.util.Vector estDemographicInbox(){
 
 
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         String sql = new String("select map.messageID is null as isnull, map.demographic_no, m.messageid as status, m.messageid as message , thedate, theime, thesubject, sentby, sentto, attachment, pdfattachment from messagetbl m left outer join msgDemoMap map on map.messageID = m.messageid where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'  " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
@@ -663,7 +663,7 @@ public java.util.Vector estDemographicInbox(){
      attach  = new java.util.Vector();
      String att;
      try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         //make search string

@@ -25,7 +25,7 @@ public class GstReport {
 
     
     public Vector getGST(String providerNo, String startDate, String endDate) throws SQLException{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         Properties props;
         Vector billno = new Vector();
         Vector list = new Vector();
@@ -67,7 +67,7 @@ public class GstReport {
     }
     
     public String getGstFlag(String code, String date) throws SQLException{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT b.gstFlag from billingservice b where b.service_code ='" + code + "' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code ='" + code + "' and b2.billingservice_date <= '" + date + "');";
         ResultSet rs = db.GetSQL(sql);
         String ret = "";

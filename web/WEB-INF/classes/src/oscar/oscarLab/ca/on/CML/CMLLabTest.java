@@ -115,7 +115,7 @@ public class CMLLabTest {
     
     private void populateDemoNo(String labId){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             log.debug("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             if (rs.next()){
@@ -141,7 +141,7 @@ public class CMLLabTest {
                 
         log.debug("lab id "+labid);
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL("select * from labPatientPhysicianInfo where id = '"+labid+"'");
             
             
@@ -198,7 +198,7 @@ public class CMLLabTest {
         String dis = "";
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL("select distinct title from labTestResults where title != '' and labPatientPhysicianInfo_id = '"+labid+"'");
             ArrayList alist = new ArrayList();
             int count = 0;
@@ -252,7 +252,7 @@ public class CMLLabTest {
     private void populateLabReportInfo(String labid){
         //labID = labid;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL("select * from labReportInformation where id = '"+labid+"'");
             if (rs.next()){
                 this.locationId = db.getString(rs,"location_id");
@@ -272,7 +272,7 @@ public class CMLLabTest {
     private ArrayList populateLabResultData(String labid){
         ArrayList alist = new ArrayList();
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             log.debug("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             while (rs.next()){
@@ -316,7 +316,7 @@ public class CMLLabTest {
         int count = 0;
         String sql = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
             

@@ -48,7 +48,7 @@ public class CRHelper implements RolesProvider {
 	public String[] getRolesForUser(String user) {
 		DBHandler db = null;
 		try {
-			db=new DBHandler(DBHandler.OSCAR_DATA);
+			db=new DBHandler();
 			Connection con = DBHandler.getConnection();
 			String sql = establishStringToUse(con);
 			if(sql==null){

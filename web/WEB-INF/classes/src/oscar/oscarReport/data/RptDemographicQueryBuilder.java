@@ -351,7 +351,7 @@ public class RptDemographicQueryBuilder {
         MiscUtils.getLogger().debug("SEARCH SQL STATEMENT \n"+stringBuffer.toString());
         java.util.ArrayList searchedArray = new java.util.ArrayList();
         try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               rs = db.GetSQL(stringBuffer.toString());
               MiscUtils.getLogger().debug(stringBuffer.toString());

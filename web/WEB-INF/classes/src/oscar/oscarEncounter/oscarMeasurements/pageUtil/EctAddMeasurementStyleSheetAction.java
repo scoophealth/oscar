@@ -91,7 +91,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
         
         try {
             
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT * FROM measurementCSSLocation WHERE location='" + file.getFileName() + "'";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){
@@ -142,7 +142,7 @@ public class EctAddMeasurementStyleSheetAction extends Action {
     */
     private void write2Database(String fileName){
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             db.RunSQL(sql);

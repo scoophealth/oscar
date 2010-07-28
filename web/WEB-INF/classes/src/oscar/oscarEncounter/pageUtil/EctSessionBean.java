@@ -124,7 +124,7 @@ public class EctSessionBean {
 
         //This block gets the patient age and
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
             sql = "select * from demographic where demographic_no=" + demographicNo;
             rs = db.GetSQL(sql);
             while (rs.next()) {
@@ -243,7 +243,7 @@ public class EctSessionBean {
         String sql;
 
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
             sql = "select * from appointment where appointment_no=" + appointmentNo;
             rs = db.GetSQL(sql);
             while (rs.next()) {
@@ -279,7 +279,7 @@ public class EctSessionBean {
             MiscUtils.getLogger().error("Error", e);
         }
         try {
-            //            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            //            DBHandler db = new DBHandler();
             sql = "select * from eChart where demographicNo='" + demographicNo + "' ORDER BY eChartId DESC limit 1";
             rs = db.GetSQL(sql);
             ;
@@ -310,7 +310,7 @@ public class EctSessionBean {
         //apointmentsIdArray and the appointmentsNamesArray are
         //already set up so no need to get them again
         try {
-            //            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            //            DBHandler db = new DBHandler();
             sql = "select * from demographic where demographic_no=" + demographicNo;
             rs = db.GetSQL(sql);
             while (rs.next()) {
@@ -359,7 +359,7 @@ public class EctSessionBean {
         String sql;
 
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
             sql = "select * from eChart where eChartId = " + echartid + " and demographicNo=" + demographicNo;
             rs = db.GetSQL(sql);
             ;

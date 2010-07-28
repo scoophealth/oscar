@@ -57,7 +57,7 @@ public class ScratchData {
         Hashtable retval = null;
         try {
             //Get Provider from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "SELECT * FROM scratch_pad WHERE provider_no = " + providerNo + " order by id  desc limit 1";
             rs = db.GetSQL(sql);
@@ -79,7 +79,7 @@ public class ScratchData {
         String scratch_id = null;
         try {
             //Get Provider from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values ('" + providerNo + "','"+text+"',now())";
             db.RunSQL(sql);
@@ -100,7 +100,7 @@ public class ScratchData {
         String scratch_id = null;
         try {
             //Get Provider from database
-            //DBHandler db = new DBHandler(DBHandler.OSCAR_DATA); //unused variable db
+            //DBHandler db = new DBHandler(); //unused variable db
              String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values (?,?,now())";
              Connection conn = DBHandler.getConnection();
              PreparedStatement pstat = conn.prepareStatement(sql);

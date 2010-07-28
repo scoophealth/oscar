@@ -37,7 +37,7 @@ public class MsgDemoMap {
         //both msgId + demographic_no is the the primary key
         //if the combination of both msgId and demographic_no value exsit in the table, new data will not be added
         try{            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "";                   
             sql = "insert into msgDemoMap values ('"+msgId+"','"+demographic_no+"')";
             MiscUtils.getLogger().debug(sql);
@@ -51,7 +51,7 @@ public class MsgDemoMap {
     public Hashtable getDemoMap (String msgId){
         Hashtable demoMap = new Hashtable();
         try{            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "";                               
             sql = "select d.last_name, d.first_name, d.demographic_no from msgDemoMap m, demographic d where messageID ='"+msgId + 
                   "' and d.demographic_no = m.demographic_no order by d.last_name, d.first_name";
@@ -71,7 +71,7 @@ public class MsgDemoMap {
     public Vector getMsgVector(String demographic_no){
         Vector msgVector= new Vector();
         try{            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
@@ -92,7 +92,7 @@ public class MsgDemoMap {
         Vector msgVector= new Vector();
         try{          
             MiscUtils.getLogger().debug("input msgId: " + messageID + "  input demographic_no: " + demographic_no);
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";

@@ -123,7 +123,7 @@ public class JDBCUtil
             String formName = fileName.substring(0,indexForm);
             String demographicNo = fileName.substring(indexForm+1, indexDemo);
             String timeStamp = fileName.substring(indexDemo+1,indexTimeStamp);
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             //check if the data existed in the database already...
             String sql = "SELECT * FROM " + formName + " WHERE demographic_no='"

@@ -50,7 +50,7 @@ public class TeleplanMessagesDAO {
     
     private void setMessage(String sequenceNum){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "insert into property (name,value) values ('teleplan_message','"+sequenceNum+"') " ;
             db.RunSQL(query);           
         }catch(Exception e){
@@ -60,7 +60,7 @@ public class TeleplanMessagesDAO {
     
     private void updateMessage(String sequenceNum){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "update property set value = '"+sequenceNum+"' where name = 'teleplan_message' " ;
             db.RunSQL(query);            
         }catch(Exception e){
@@ -71,7 +71,7 @@ public class TeleplanMessagesDAO {
     private boolean hasMessage(){
         boolean hasSequence = false;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String query = "select value from property where name = 'teleplan_message' " ;
             ResultSet rs = db.GetSQL(query); 
             if(rs.next()){

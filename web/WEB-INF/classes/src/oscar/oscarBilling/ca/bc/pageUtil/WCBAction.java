@@ -145,7 +145,7 @@ public final class WCBAction extends Action {
       
 //    DBHandler db = null;
 //    try {
-//      db = new DBHandler(DBHandler.OSCAR_DATA);
+//      db = new DBHandler();
 //      db.RunSQL(frm.SQL("0", "0"));
 //      List idList = SqlUtils.getQueryResultsList("SELECT max(ID) from wcb");
 //      if(idList!=null){

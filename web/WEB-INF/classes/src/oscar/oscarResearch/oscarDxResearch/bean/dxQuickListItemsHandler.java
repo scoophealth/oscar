@@ -51,7 +51,7 @@ public class dxQuickListItemsHandler {
         boolean verdict = true;
         try {
             ResultSet rs;
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems(); 
@@ -101,7 +101,7 @@ public class dxQuickListItemsHandler {
         
         boolean verdict = true;
         try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems(); 
             String codingSystem;

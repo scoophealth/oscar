@@ -38,7 +38,7 @@ public class LabRequestReportLink {
     public static Hashtable getLinkByReport(String reportTable, Long reportId) throws SQLException {
 	Hashtable link = new Hashtable();
 	
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	String sql = "SELECT * FROM labRequestReportLink WHERE report_table='" + reportTable+"'" +
 							    " AND report_id="  + reportId;
 	ResultSet rs = db.GetSQL(sql);
@@ -54,7 +54,7 @@ public class LabRequestReportLink {
     }
     
     public static String getRequestDate(String id) throws SQLException {
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	String sql = "SELECT request_date FROM labRequestReportLink WHERE id=" + id;
 	ResultSet rs = db.GetSQL(sql);
 	Date requestDate = null;
@@ -75,14 +75,14 @@ public class LabRequestReportLink {
 	String requestDateString="null";
 	if (requestDate!=null) requestDateString="'"+requestDate+"'";
 	
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	String sql = "INSERT INTO labRequestReportLink (request_table,request_id,request_date,report_table,report_id) VALUES ('" +
 		     requestTable+"',"+requestId+","+requestDateString+",'"+reportTable+"',"+reportId+")";
 	db.RunSQL(sql);
     }
     
     public static void update(Long id, String requestTable, Long requestId, String requestDate) throws SQLException {
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	String sql = "UPDATE labRequestReportLink SET request_table='" + requestTable + "'" +
 						" AND request_id=" + requestId +
 						" AND request_date='" + requestDate + "'" +

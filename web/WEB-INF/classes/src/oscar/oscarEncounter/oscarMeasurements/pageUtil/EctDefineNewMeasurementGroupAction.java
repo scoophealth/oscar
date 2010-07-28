@@ -90,7 +90,7 @@ public class EctDefineNewMeasurementGroupAction extends Action {
     private boolean write2Database(String inputGroupName, String styleSheet){
         boolean isWrite2Database = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;

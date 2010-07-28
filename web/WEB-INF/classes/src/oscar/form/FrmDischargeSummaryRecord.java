@@ -26,7 +26,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 	public Properties getCaisiFormRecord(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException {
         Properties props = new Properties();
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             /**************will delete this section later *****************************/
             /* For Client Report in Seaton House */
@@ -219,7 +219,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
@@ -247,7 +247,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
 
     public int saveFormRecord(Properties props) throws SQLException {
         String demographic_no = props.getProperty("demographic_no");
-        // DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        // DBHandler db = new DBHandler();
         String sql = "SELECT * FROM formDischargeSummary WHERE demographic_no=" + demographic_no + " AND ID=0";
 
         return ((new FrmRecordHelp()).saveFormRecord(props, sql));

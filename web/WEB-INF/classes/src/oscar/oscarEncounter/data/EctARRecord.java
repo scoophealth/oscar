@@ -37,7 +37,7 @@ public class EctARRecord {
 
     public Properties getARRecord(int demographicNo, int existingID) throws SQLException {
         Properties properties = new Properties();
-        DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler dbhandler = new DBHandler();
         if( existingID <= 0) {
             String s = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, sex, CONCAT(address, ', ', city, ', ', province, ' ', postal) AS address, phone, phone2, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = " + demographicNo;
             ResultSet resultset = dbhandler.GetSQL(s);
@@ -88,7 +88,7 @@ public class EctARRecord {
         String demographic_no = properties.getProperty("demographic_no");
         String temp = properties.getProperty("c_lastVisited");
         String page = temp.substring(0, 3).toLowerCase() + "_";
-        DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler dbhandler = new DBHandler();
 
         String sqlDB = "SELECT * FROM formAR WHERE demographic_no=" + demographic_no + " AND ID=" + formId;
         ResultSet resultset = dbhandler.GetSQL(sqlDB);
@@ -158,7 +158,7 @@ public class EctARRecord {
 
     public Properties getARPrintRecord(int demographicNo, int existingID) throws SQLException {
         Properties properties = new Properties();
-        DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler dbhandler = new DBHandler();
         String s = "SELECT * FROM formAR WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
         ResultSet resultset = dbhandler.GetSQL(s);
         if(resultset.next()) {

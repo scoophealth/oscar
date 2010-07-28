@@ -149,7 +149,7 @@ public class LoginCheckLoginBean {
         //try {
 
             accessDB = new DBHelp();
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
            
             
             String sql = "select * from security where user_name = '" + StringEscapeUtils.escapeSql(username) + "'";

@@ -110,7 +110,7 @@ public class LabUploadAction extends Action {
                     BufferedReader in = new BufferedReader(new FileReader(localFileName));                                       
                     ABCDParser abc = new ABCDParser();     
                     abc.parse(in);              
-                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);             
+                    DBHandler db = new DBHandler();             
                     abc.save(DBHandler.getConnection());
                     outcome = "uploaded";
                 }

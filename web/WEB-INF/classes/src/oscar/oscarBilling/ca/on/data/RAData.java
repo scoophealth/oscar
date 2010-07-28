@@ -55,7 +55,7 @@ public class RAData {
         ArrayList list = new ArrayList();
         String sql = "Select * from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                 Hashtable h = new Hashtable();
@@ -85,7 +85,7 @@ public class RAData {
         String sql = "Select * from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
         sql += " and service_date='" + service_date + "' and providerohip_no='" + ohip_no + "'";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                 Hashtable h = new Hashtable();
@@ -163,7 +163,7 @@ public class RAData {
         boolean ret = false;
         String sql = "Select error_code from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                 if (errorCode.equals(rs.getString("error_code"))) {

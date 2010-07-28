@@ -9,7 +9,7 @@
     	delete_linking = "DELETE FROM hl7_link WHERE hl7_link.pid_id='@pid'",
     	insert_linking = "INSERT INTO hl7_link ( pid_id, demographic_no ) VALUES ('@pid', '@demo'); ",
     	select_lab_matching = "SELECT DISTINCT hl7_pid.pid_id, hl7_pid.patient_name, hl7_pid.date_of_birth as birth, hl7_pid.sex, demographic.demographic_no, demographic.last_name, demographic.first_name, demographic.year_of_birth as year, demographic.month_of_birth as month, demographic.date_of_birth as day, hl7_obr.ordering_provider, hl7_obr.result_copies_to FROM hl7_pid left join hl7_link on hl7_link.pid_id=hl7_pid.pid_id left join demographic on hl7_link.demographic_no=demographic.demographic_no left join hl7_obr on hl7_pid.pid_id=hl7_obr.pid_id WHERE hl7_link.status='P' OR hl7_link.status is null;";
-    oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+    oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
     if(request.getParameterValues("chk")!= null){
     	String[] values = request.getParameterValues("chk");
     	for(int i = 0; i < values.length; ++i){
@@ -102,7 +102,7 @@ function PopupLab(pid){
 		<td class="Header">BirthDate</td>
 	</tr>
 	<%
-		db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+		db = new oscar.oscarDB.DBHandler();
 		java.sql.ResultSet result = db.GetSQL(select_lab_matching);
 		boolean other = true;
 		while(result.next()){

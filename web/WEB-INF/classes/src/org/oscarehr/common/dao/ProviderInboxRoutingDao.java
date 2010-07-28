@@ -65,7 +65,7 @@ public class ProviderInboxRoutingDao extends HibernateDaoSupport {
         boolean fileForMainProvider = false;
         //TODO:Replace 
         try{
-           DBHandler dbh = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler dbh = new DBHandler();
            ResultSet rs= dbh.GetSQL("select * from incomingLabRules where archive = 0 and provider_no = '"+providerNo+"'");   
            while(rs.next()){
               String status = rs.getString("status");

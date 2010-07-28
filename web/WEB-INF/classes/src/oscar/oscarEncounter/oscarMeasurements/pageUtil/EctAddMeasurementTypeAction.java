@@ -61,7 +61,7 @@ public class EctAddMeasurementTypeAction extends Action {
         List messages = new LinkedList();
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             String type = frm.getType();
             String typeUp = type.toUpperCase();
@@ -105,7 +105,7 @@ public class EctAddMeasurementTypeAction extends Action {
         String regExp = validate.getRegCharacterExp();
         boolean isValid = true;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT type FROM measurementType WHERE type='" + type +"'";
             ResultSet rs = db.GetSQL(sql);
             rs.next();

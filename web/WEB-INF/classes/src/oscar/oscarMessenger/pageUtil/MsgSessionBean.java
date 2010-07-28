@@ -61,7 +61,7 @@ public class MsgSessionBean
 
     public void estUserName(){
         try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 java.sql.ResultSet rs;
                 String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
                 rs = db.GetSQL(sql);

@@ -70,7 +70,7 @@ public class MsgAddressBook {
       String retval = new String();
       CurrentLocationName = new String();
       try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             java.sql.ResultSet rs;
             String sql = new String("select locationDesc, addressBook from oscarcommlocations where current1 = 1");
             rs = db.GetSQL(sql);
@@ -95,7 +95,7 @@ public class MsgAddressBook {
       remoteLocationId        = new java.util.Vector();
 
       try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             java.sql.ResultSet rs;
             String sql = new String("select locationDesc, locationId, addressBook from oscarcommlocations where current1 = 0");
             rs = db.GetSQL(sql);

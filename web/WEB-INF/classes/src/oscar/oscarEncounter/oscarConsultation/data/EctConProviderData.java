@@ -39,7 +39,7 @@ public class EctConProviderData
     public String getTeam(String proNo) {
         String team = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select team from provider where provider_no = '" +proNo+ "'";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()) team = db.getString(rs,"team");

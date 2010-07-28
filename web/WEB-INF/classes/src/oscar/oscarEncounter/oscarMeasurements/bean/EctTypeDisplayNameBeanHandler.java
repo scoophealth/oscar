@@ -49,7 +49,7 @@ public class EctTypeDisplayNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT DISTINCT typeDisplayName FROM measurementType";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
@@ -72,7 +72,7 @@ public class EctTypeDisplayNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = null;
             if (excludeGroupName){
                 sql = "SELECT DISTINCT typeDisplayName FROM measurementType";  

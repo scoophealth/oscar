@@ -54,7 +54,7 @@ public class ForwardingRulesAction extends Action{
             String status = request.getParameter("status");
             
             try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 // insert forwarding rules
                 if (providerNums != null){
                     String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='0' AND archive='0'";
@@ -103,7 +103,7 @@ public class ForwardingRulesAction extends Action{
     
     private boolean clearRules(String providerNo){
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"'";
             db.RunSQL(sql);
         }catch(Exception e){
@@ -120,7 +120,7 @@ public class ForwardingRulesAction extends Action{
             
             ForwardingRules fr = new ForwardingRules();
             String status = fr.getStatus(providerNo);
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             if ( autoFileLabs != null && autoFileLabs.equalsIgnoreCase("yes") && status.equals("F")){
                 String sql = "UPDATE incomingLabRules SET archive='1' WHERE provider_no='"+providerNo+"' AND frwdProvider_no='"+remProviderNum+"'";

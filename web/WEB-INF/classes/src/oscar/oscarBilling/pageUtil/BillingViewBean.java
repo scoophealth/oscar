@@ -76,7 +76,7 @@ public class BillingViewBean {
     
     public void loadBilling(String billing_no) {
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql;
             

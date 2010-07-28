@@ -16,7 +16,7 @@ public class FrmConsultantRecord extends FrmRecord {
         	Properties props = new Properties();
 
         	if (existingID <= 0) {
-            	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            	DBHandler db = new DBHandler();
 		
 		String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, address, CONCAT(city, ', ', province, ' ', postal) AS address2, phone, year_of_birth, month_of_birth, date_of_birth, CONCAT(hin, ' ', ver) AS hic FROM demographic WHERE demographic_no = " + demographicNo;
 
@@ -57,7 +57,7 @@ public class FrmConsultantRecord extends FrmRecord {
 
 
         public Properties getDocInfo(Properties props, String billingreferral_no) throws SQLException {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT CONCAT('Dr. ', first_name, ' ', last_name) AS to_name, CONCAT(address1, ' ', address2) AS to_address1, CONCAT(city, ', ', province, ' ', postal) AS to_address2, phone, fax FROM billingreferral WHERE referral_no ='" + billingreferral_no +"';";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
@@ -72,7 +72,7 @@ public class FrmConsultantRecord extends FrmRecord {
         }
         
 	public String getProvName(int provider_no) throws SQLException {
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 		Properties props = new Properties();
 		String sql = "SELECT CONCAT('Dr. ', first_name, ' ', last_name) AS doc_Name FROM provider WHERE provider_no = " + provider_no;
 		ResultSet rs = db.GetSQL(sql);
@@ -84,7 +84,7 @@ public class FrmConsultantRecord extends FrmRecord {
 	}
         
         public Properties getInitRefDoc(Properties props, int demo_no) throws SQLException {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 String sql = "SELECT family_doctor FROM demographic WHERE demographic_no = '" + demo_no + "';";
                 ResultSet rs = db.GetSQL(sql);
                 String refdocno, docno;
@@ -124,7 +124,7 @@ public class FrmConsultantRecord extends FrmRecord {
 	        if ("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("PHR", ""))) {
 
         	    String demographic_no = demoNo;
-		    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		    DBHandler db = new DBHandler();
 	            String sql = "select email from demographic where demographic_no=" + demographic_no;
           	  ResultSet rs = db.GetSQL(sql);
                 if (rs.next()) {

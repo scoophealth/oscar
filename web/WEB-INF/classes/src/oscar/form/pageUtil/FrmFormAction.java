@@ -365,7 +365,7 @@ public class FrmFormAction extends Action {
         boolean newDataAdded = false;
 
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);    
+            DBHandler db = new DBHandler();    
             org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
             if(!gValidator.isBlankOrNull(inputValue)){
                 //Find if the same data has already been entered into the system

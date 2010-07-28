@@ -59,7 +59,7 @@ public class EctMeasurementTypeBeanHandler {
     public String getValidation(String val){
         String validation = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
             ResultSet rs = db.GetSQL(sqlValidation);
             if (rs.next()){ 

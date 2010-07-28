@@ -90,7 +90,7 @@ public class dxResearchAction extends Action {
         ActionMessages errors = new ActionMessages();  
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = null;
             for(int i=0; i<xml_research.length; i++){ 
                 int Count = 0;

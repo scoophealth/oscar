@@ -61,7 +61,7 @@ public class MsgMessengerAdminAction extends Action {
         if (update.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnUpdateGroupMembers"))){
 
            try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               String sql = new String("delete from groupMembers_tbl where groupID = '"+grpNo+"'");
               db.RunSQL(sql);
@@ -79,7 +79,7 @@ public class MsgMessengerAdminAction extends Action {
         }else if(delete.equals(oscarR.getString("oscarMessenger.config.MessengerAdmin.btnDeleteThisGroup"))){
 
             try{
-                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                 DBHandler db = new DBHandler();
                  java.sql.ResultSet rs;
 
                  String sql = new String("select parentID from groups_tbl where groupID = '"+grpNo+"'");

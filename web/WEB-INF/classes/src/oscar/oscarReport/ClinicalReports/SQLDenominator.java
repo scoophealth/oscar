@@ -68,7 +68,7 @@ public class SQLDenominator implements Denominator{
     public List getDenominatorList() {
         ArrayList list = new ArrayList();
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             if (replaceableValues != null){
                 MiscUtils.getLogger().debug("has replaceablevalues"+replaceableValues.size());
                 MiscUtils.getLogger().debug("before replace \n"+sql);

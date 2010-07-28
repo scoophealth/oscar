@@ -62,7 +62,7 @@ public class EctConConstructSpecialistsScriptsFile
             fileWriter.write("{K(-1,\"----All Services-------\");D(-1,\"--------All Specialists-----\");}\n");
             try
             {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 String sql = "select * from  consultationServices";
                 ResultSet rs;
                 for(rs = db.GetSQL(sql); rs.next(); serviceDesc.add(db.getString(rs,"serviceDesc")))
@@ -119,7 +119,7 @@ public class EctConConstructSpecialistsScriptsFile
         stringBuffer.append("{K(-1,\"----" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllServices") + "-------\");D(-1,\"--------" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllSpecs") + "-----\");}\n");
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from  consultationServices where active = '1' order by serviceDesc";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); serviceDesc.add(db.getString(rs,"serviceDesc")))

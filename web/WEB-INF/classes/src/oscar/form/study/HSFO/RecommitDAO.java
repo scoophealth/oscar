@@ -33,7 +33,7 @@ public class RecommitDAO {
 	     RecommitSchedule reSchedule=null;
 	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	     try {
-	            db = new DBHandler(DBHandler.OSCAR_DATA);
+	            db = new DBHandler();
 	            Connection connect = DBHandler.getConnection();
 	            st = connect.prepareStatement(sqlstatement);
 	            st.execute();

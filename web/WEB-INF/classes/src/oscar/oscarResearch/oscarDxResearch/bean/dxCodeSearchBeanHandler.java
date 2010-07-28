@@ -46,7 +46,7 @@ public class dxCodeSearchBeanHandler {
         boolean verdict = true;
         try {
             ResultSet rs;
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "";
             boolean orFlag = false;
             for(int i=0; i<keywords.length; i++){

@@ -43,7 +43,7 @@ public class RptDemographicQueryLoader {
         String qId = frm.getSavedQuery();
         RptDemographicReportForm dRF = new RptDemographicReportForm();
         try{
-                  DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                  DBHandler db = new DBHandler();
                   java.sql.ResultSet rs;
                   String mSelect         = null;
                   String mAge           = null;

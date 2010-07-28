@@ -70,7 +70,7 @@ public class BillingHistoryDAO {
     List list = new ArrayList();
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = (ResultSet) db.GetSQL(qry);
       while (rs.next()) {
         BillHistory bh = new BillHistory();
@@ -128,7 +128,7 @@ public class BillingHistoryDAO {
         "','" + history.getSeqNum() + "','" + history.getAmount() + "','" +
         history.getAmountReceived() + "'," + history.getPaymentTypeId() + ")";
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       db.RunSQL(qry);
       if(null == history.getPaymentTypeId()){
         throw new RuntimeException("Bill History: " + history.getBillingMasterNo() + " Payment type is '0'");
@@ -196,7 +196,7 @@ public class BillingHistoryDAO {
         "SELECT billingmaster_no FROM billingmaster b WHERE b.billing_no = " +
         billingNo;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(qry);
       while (rs.next()) {
         String billMasterNo = rs.getString(1);

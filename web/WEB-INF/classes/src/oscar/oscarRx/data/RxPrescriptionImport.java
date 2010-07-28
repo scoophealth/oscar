@@ -43,7 +43,7 @@ public class RxPrescriptionImport {
 		"dosage, unit, outside_provider_name, outside_provider_ohip, long_term, past_med, patient_compliance, " +
 		"takemin, takemax, `repeat`, GCN_SEQNO, durunit, nosubs, prn, archived, custom_instructions)" +
 		" VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,'D',false,false,0,1)";
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, providerNo);

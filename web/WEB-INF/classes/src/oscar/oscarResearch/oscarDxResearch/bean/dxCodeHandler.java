@@ -17,7 +17,7 @@ public class dxCodeHandler {
       
     	try {
             ResultSet rs;
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT " + codingSystem +",description FROM " + codingSystem + " WHERE " + codingSystem + " = '" + code + "'";
             rs = db.GetSQL(sql);
             if(rs.next()){

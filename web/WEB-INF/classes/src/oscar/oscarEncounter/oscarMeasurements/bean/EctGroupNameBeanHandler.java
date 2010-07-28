@@ -45,7 +45,7 @@ public class EctGroupNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT groupName from measurementGroupStyle ORDER BY groupName";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;

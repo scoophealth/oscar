@@ -116,7 +116,7 @@ public class ExtractBean extends Object implements Serializable {
                errorMsg = "";
 
                value = batchHeader;
-               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+               DBHandler db = new DBHandler();
                query = "select * from billing where provider_ohip_no='"+ providerNo+"' and (status='O' or status='W') " + dateRange;
 
                MiscUtils.getLogger().debug("1st billing query "+query);
@@ -274,7 +274,7 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String query30 = "update billing set status='B' where billing_no='" + newInvNo + "'";
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(query30);
          }catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -286,7 +286,7 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String query30 = "update billingmaster set billingstatus='B' where billingmaster_no='" + newInvNo + "'";
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(query30);
             createBillArchive(newInvNo);
          }catch (SQLException e) {
@@ -308,7 +308,7 @@ public class ExtractBean extends Object implements Serializable {
       if (eFlag.equals("1")){
          String nsql = "update log_teleplantx set claim='" + UtilMisc.mysqlEscape(logValue) + "' where log_no='"+ x +"'";
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(nsql);
          }catch (SQLException e) {
             MiscUtils.getLogger().error("Error", e);
@@ -323,7 +323,7 @@ public class ExtractBean extends Object implements Serializable {
          String nsql ="";
          nsql =  "insert into log_teleplantx (log_no, claim) values ('\\N','" + "New Log" + "')";
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(nsql);
             ResultSet  rs = db.GetSQL("SELECT LAST_INSERT_ID()");
             if (rs.next()){
@@ -564,7 +564,7 @@ public class ExtractBean extends Object implements Serializable {
     public static boolean HasBillingItemsToSubmit() {
       boolean tosubmit = false;
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs =
          db.GetSQL("SELECT COUNT(billing_no) As `count` FROM billing WHERE status <> 'B' AND billingtype IN ('ICBC', 'WCB', 'MSP')");
          tosubmit = rs.next() && 0 < rs.getInt("count");

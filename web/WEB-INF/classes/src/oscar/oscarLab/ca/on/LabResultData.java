@@ -289,7 +289,7 @@ public class LabResultData implements Comparable{
             String date="";
             String sql = "select print_date, print_time from labReportInformation, labPatientPhysicianInfo where labPatientPhysicianInfo.id = '"+this.segmentID+"' and labReportInformation.id = labPatientPhysicianInfo.labReportInfo_id ";
             try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs = db.GetSQL(sql);
                 if(rs.next()){
                     date=db.getString(rs,"print_date")+db.getString(rs,"print_time");

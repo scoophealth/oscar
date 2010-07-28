@@ -79,7 +79,7 @@ public class ArchiveDeletedRecords {
     
     public int recordRowsToBeDeleted(String sql,String provNo,String table){
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);   
+            DBHandler db = new DBHandler();   
             ResultSet rs = db.GetSQL(sql);            
             if ( rs.next()){
                String xmlStr = getStringXmlFromResultSet(rs);
@@ -95,7 +95,7 @@ public class ArchiveDeletedRecords {
     
     private void addRowsToModifiedTable(String demoNo,String provNo,String modType,String table,String rowId,String resultSet){
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);   
+            DBHandler db = new DBHandler();   
             String insertSql = "insert into table_modification (demographic_no,provider_no,modification_type,table_name,row_id,resultSet,modification_date) " +
                                " values ('"+StringEscapeUtils.escapeSql(demoNo)+"', " +
                                " '"+StringEscapeUtils.escapeSql(provNo)+"', " +

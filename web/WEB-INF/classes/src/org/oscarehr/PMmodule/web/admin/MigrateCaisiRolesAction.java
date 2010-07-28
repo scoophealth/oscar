@@ -117,7 +117,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 		 * 
 		 */
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs = db.GetSQL("SELECT * FROM program_provider");
 			while(rs.next()) {
 				long programId = rs.getInt("program_id");
@@ -270,7 +270,7 @@ public class MigrateCaisiRolesAction extends BaseAdminAction {
 		result.setMappings(mappings);
 		
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs = db.GetSQL("SELECT * FROM program_provider");
 			while(rs.next()) {
 				long programId = rs.getInt("program_id");

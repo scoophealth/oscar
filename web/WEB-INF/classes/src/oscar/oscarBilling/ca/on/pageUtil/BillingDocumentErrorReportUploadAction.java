@@ -142,7 +142,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 	 */
 	private void write2Database(String fileName) {
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql = "INSERT INTO measurementCSSLocation(location) VALUES('" + fileName + "')";
 			MiscUtils.getLogger().debug("Sql Statement: " + sql);
 			db.RunSQL(sql);
@@ -306,7 +306,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
 		BillingEDTOBECOutputSpecificationBeanHandler hd = new BillingEDTOBECOutputSpecificationBeanHandler(file);
 		Vector outputSpecVector = hd.getEDTOBECOutputSecifiationBeanVector();
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 
 			for (int i = 0; i < outputSpecVector.size(); i++) {
 				BillingEDTOBECOutputSpecificationBean bean = (BillingEDTOBECOutputSpecificationBean) outputSpecVector

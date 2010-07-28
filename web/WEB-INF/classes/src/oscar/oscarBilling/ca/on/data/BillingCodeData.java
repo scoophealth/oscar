@@ -49,7 +49,7 @@ public class BillingCodeData {
       ArrayList list = new ArrayList();
       String sql = "select * from billingservice where service_code like '"+str+"' or description like '%"+str+"%' ";
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(sql);
          while (rs.next()){            
              list.add(fillCodeDataHashtable(rs));
@@ -85,7 +85,7 @@ public class BillingCodeData {
       int count = 0;
       String sql = "select * from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(sql);
          while (rs.next()){
              count++;
@@ -108,7 +108,7 @@ public class BillingCodeData {
       int count = 0;
       String sql = "select count(*) as coun from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(sql);
          while (rs.next()){
              count = rs.getInt("coun");
@@ -125,7 +125,7 @@ public class BillingCodeData {
       
       String sql = "select service_code from billingservice ";
       try {
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          ResultSet rs = db.GetSQL(sql);
          while (rs.next()){
             String service_code = rs.getString("service_code");
@@ -144,7 +144,7 @@ public class BillingCodeData {
    public boolean editBillingCodeDesc(String desc, String val, String codeId){
       boolean retval = true;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
 
          String str = "update billingservice set "+
                       "description = '"+StringEscapeUtils.escapeSql(desc) +"', "+
@@ -160,7 +160,7 @@ public class BillingCodeData {
    public boolean editBillingCode(String val, String codeId){
       boolean retval = true;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
 
          String str = "update billingservice set "+                      
                       "value =                   '"+StringEscapeUtils.escapeSql(val)  +"' "+
@@ -178,7 +178,7 @@ public class BillingCodeData {
    public boolean editBillingCodeByServiceCode(String val, String codeId, String date){
       boolean retval = true;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
 
          String str = "update billingservice set "+                      
                       "value =                   '"+StringEscapeUtils.escapeSql(val)  +"' "+
@@ -194,7 +194,7 @@ public class BillingCodeData {
    public boolean insertBillingCode(String value, String code, String date, String description, String termDate) {
       boolean retval = true;
       try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
 
          String str = "insert into billingservice (service_compositecode,service_code,description,value,percentage,billingservice_date,specialty,region,anaesthesia,termination_date) Values("+
                       "''," +                      

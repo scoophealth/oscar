@@ -38,7 +38,7 @@ public class GstControlAction extends Action{
     public void writeDatabase( String percent){
         try {
                 String sql;
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 sql = "Update gstControl set gstPercent = " + percent + ";";
                 db.RunSQL(sql);   
             }
@@ -48,7 +48,7 @@ public class GstControlAction extends Action{
     }
     
     public Properties readDatabase() throws SQLException{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         Properties props = new Properties();
         String sql = "Select gstPercent from gstControl;";
         

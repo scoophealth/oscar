@@ -51,7 +51,7 @@ public class BillingFormData {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -81,7 +81,7 @@ public class BillingFormData {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(sql);
 
       if (rs.next()) {
@@ -143,7 +143,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingService billingservice;
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -191,7 +191,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingService billingservice;
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -232,7 +232,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       Diagnostic diagnostic;
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -271,7 +271,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       Location location;
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -308,7 +308,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingVisit billingvisit;
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -345,7 +345,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingPhysician billingphysician;
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -384,7 +384,7 @@ public class BillingFormData {
       ArrayList lst = new ArrayList();
       BillingForm billingForm;
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -557,7 +557,7 @@ public class BillingFormData {
   public String getBillingType(String billNo) {
     String billType = null;
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -580,7 +580,7 @@ public class BillingFormData {
     String provider_n = "";
     try {
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -611,7 +611,7 @@ public class BillingFormData {
     String prac_no = "";
     try {
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -642,7 +642,7 @@ public class BillingFormData {
     String prac_no = "";
     try {
 
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
 
@@ -671,7 +671,7 @@ public class BillingFormData {
   public String getDiagDesc(String dx, String reg) {
     String dxdesc = "";
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
       // SELECT b.service_code, b.description , b.value, b.percentage FROM BillingForm b, ctl_BillingForm c WHERE b.service_code=c.service_code and b.region='BC' and c.service_group='Group1';
@@ -694,7 +694,7 @@ public class BillingFormData {
   public String getServiceDesc(String code, String reg) {
     String codeDesc = "";
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql;
       sql = "select description from billingservice where service_code = '" +
@@ -715,7 +715,7 @@ public class BillingFormData {
     String ret = "";
 
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql =
           "SELECT service_group_name FROM ctl_billingservice WHERE service_group='"
@@ -740,7 +740,7 @@ public class BillingFormData {
     String ret = "";
 
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql =
           "SELECT service_group_name FROM ctl_billingservice WHERE service_group='" +
@@ -763,7 +763,7 @@ public class BillingFormData {
 
   public void setPrivateFees(BillingFormData.BillingService[] svc) {
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       for (int i = 0; i < svc.length; i++) {
         String sql = "SELECT value FROM billingservice WHERE service_code='A" +
@@ -798,7 +798,7 @@ public class BillingFormData {
     ResultSet rs = null;
     DBHandler db = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       rs = db.GetSQL(qry);
     }
     catch (SQLException e) {

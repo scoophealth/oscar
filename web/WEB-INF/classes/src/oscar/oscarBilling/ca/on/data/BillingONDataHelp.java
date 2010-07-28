@@ -48,7 +48,7 @@ public class BillingONDataHelp {
 		int ret = 0;
 		DBHandler db = null;
 		try {
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			db = new DBHandler();
 			db.RunSQL(sql);
 
 			/*
@@ -79,7 +79,7 @@ public class BillingONDataHelp {
 		boolean ret = false;
 		DBHandler db = null;
 		try {
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			db = new DBHandler();
 			ret = db.RunSQL(sql);
 			ret = true;
 		} catch (SQLException e) {
@@ -93,7 +93,7 @@ public class BillingONDataHelp {
 		ResultSet ret = null;
 		DBHandler db = null;
 		try {
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			db = new DBHandler();
 			ret = db.GetSQL(sql);
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);

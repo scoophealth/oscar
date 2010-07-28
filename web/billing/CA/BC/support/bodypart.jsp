@@ -73,7 +73,7 @@ function posttoText(index){
 	</tr>
 	<%
 	boolean color = false;
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
    String wherestr = "where code like '"+searchStr+"' or level1 like '"+searchStr+"' or level2 like '"+searchStr+"' or level3 like '"+searchStr+"'";
 	java.sql.ResultSet rs = db.GetSQL("SELECT code, level1, level2, level3, usagenote FROM wcb_bp_code "+wherestr+"  ORDER BY level1, level2, level3");
 	while (rs.next()){

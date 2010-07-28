@@ -61,7 +61,7 @@ public class EChartDAO {
         UtilMisc.charEscape(echart.getEncounter(), '\'') + "')";
     DBHandler db = null;
     try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db = new DBHandler();
       db.RunSQL(qry);
       MiscUtils.getLogger().debug("qry=" + qry);
     }
@@ -79,7 +79,7 @@ public class EChartDAO {
     Echart echart = null;
 
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       String sql = "select * from eChart where demographicNo=" +
           demographicNo

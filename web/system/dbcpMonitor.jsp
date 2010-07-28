@@ -59,7 +59,7 @@ detect those and search the source.
 
 <%
         BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
-        DBHandler dbHandler = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler dbHandler = new DBHandler();
 
         int numActive = basicDataSource.getNumActive();
         int numIdle = basicDataSource.getNumIdle();

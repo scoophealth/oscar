@@ -128,7 +128,7 @@ public class Message {
    public void linkToProvider(int parent, int id){
       //public void providerRouteReport (int segmentID) {                
         try {                        
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql;        
             try {
                 String providerMinistryNo;
@@ -214,7 +214,7 @@ public class Message {
        MiscUtils.getLogger().debug(sql);
        boolean hasNext = false;       
        try {
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                   
+          DBHandler db = new DBHandler();                   
           ResultSet rsr = db.GetSQL(sql);	               
           if (!rsr.next()){
              sql = "select provider_no from provider where ohip_no='0"+providerMinistryNo+"'";
@@ -239,7 +239,7 @@ public class Message {
    ////
    public void patientRouteReport (int segmentID) {                
       try {                        
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+         DBHandler db = new DBHandler();            
          String sql;        
          try {                            
             //sql ="select healthNumber, patientName, dOB, sex from mdsPID where segmentID='"+segmentID+"'";
@@ -316,7 +316,7 @@ public class Message {
    ////
    public void patientProviderRoute(String lab_no, String demographic_no){
        try {                        
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+          DBHandler db = new DBHandler();            
           String sql;
           sql ="select provider_no from demographic where demographic_no = '"+demographic_no+"'";
           ResultSet rs = db.GetSQL(sql);

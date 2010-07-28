@@ -37,7 +37,7 @@ public class EctConConfigurationJavascriptData {
         //StringQuote str = new StringQuote();
         oscar.oscarMessenger.util.MsgStringQuote str = new oscar.oscarMessenger.util.MsgStringQuote();
 	try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             //String quotedString = UtilMisc.charEscape(jscript,'\\');
             String quotedString = org.apache.commons.lang.StringEscapeUtils.escapeSql(jscript);
 	    String sql = "update specialistsJavascript set javascriptString = '" +quotedString+ "' where setId = '1'";
@@ -50,7 +50,7 @@ public class EctConConfigurationJavascriptData {
     public String getJavascript() {
         String retval = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select javascriptString from specialistsJavascript where setId = '1'";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())

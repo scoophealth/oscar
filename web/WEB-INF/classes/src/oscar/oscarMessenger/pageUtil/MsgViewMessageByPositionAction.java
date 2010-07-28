@@ -75,7 +75,7 @@ public class MsgViewMessageByPositionAction extends Action {
         ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
         
         try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            java.sql.ResultSet rs;
            
                 //String sql = new String("select m.messageid from messagelisttbl ml, messagetbl m, msgDemoMap map"

@@ -32,7 +32,7 @@
     ArrayList<String> newDocArr = (ArrayList<String>)request.getSession().getServletContext().getAttribute("CaseMgmtUsers");    
     
     String sql0 = "select default_new_oscar_cme from preference where provider_no= ?";	 
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	DBHandler db = new DBHandler();
 	ResultSet result = db.GetPreSQL(sql0, userNo);
 	if(result.next()){
 		newCME = result.getString(1);			
@@ -58,7 +58,7 @@
 			--> <%            
             try {
                 String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
-                //DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                //DBHandler db = new DBHandler();
                 ResultSet rs = db.GetSQL(sql);                            
                 
                 while(rs.next()) {

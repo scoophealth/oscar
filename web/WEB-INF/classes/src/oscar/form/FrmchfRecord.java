@@ -25,7 +25,7 @@ public class FrmchfRecord extends FrmRecord {
         Properties props = new Properties();
   
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
    
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
                     + "sex, year_of_birth, month_of_birth, date_of_birth "
@@ -58,7 +58,7 @@ public class FrmchfRecord extends FrmRecord {
 
     public int saveFormRecord(Properties props) throws SQLException {
         String demographic_no = props.getProperty("demographic_no");
-        // DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        // DBHandler db = new DBHandler();
         String sql = "SELECT * FROM formchf WHERE demographic_no=" + demographic_no + " AND ID=0";
 
         return ((new FrmRecordHelp()).saveFormRecord(props, sql));

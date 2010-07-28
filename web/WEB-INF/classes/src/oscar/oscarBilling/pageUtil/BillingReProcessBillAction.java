@@ -221,7 +221,7 @@ public class BillingReProcessBillAction extends Action {
             
             MiscUtils.getLogger().debug("\n"+sql+"\n");
             try {                                                
-               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+               DBHandler db = new DBHandler();
                db.RunSQL(sql);
                if (secondSQL != null){
                     MiscUtils.getLogger().debug(secondSQL);

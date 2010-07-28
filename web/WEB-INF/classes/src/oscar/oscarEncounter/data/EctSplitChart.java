@@ -55,7 +55,7 @@ public class EctSplitChart {
       Vector vec = null;//
       try{              
          vec = new Vector();
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         DBHandler db = new DBHandler();
          String sql = "select eChartId, timeStamp from eChart where demographicNo= '"+demographicNo+"'  and subject = 'SPLIT CHART' order by timeStamp ";
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()) {

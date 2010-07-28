@@ -44,7 +44,7 @@ public class RptConsultReportData {
         ArrayList arrayList = new ArrayList();
         try{
 
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               ResultSet rs;
               String sql = "select provider_no, last_name, first_name from provider where provider_type = 'doctor' order by last_name";
               rs = db.GetSQL(sql);
@@ -63,7 +63,7 @@ public class RptConsultReportData {
        this.days = days;
        try{
               
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               ResultSet rs;
               // mysql function for dates = select date_sub(now(),interval 1 month); 
 
@@ -111,7 +111,7 @@ public class DemoConsultDataStruct{
 
     public ArrayList getConsults(){
        try{
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBHandler db = new DBHandler();
           java.sql.ResultSet rs;
           String sql = " select * from consultationRequests where demographicNo = '"+demoNo+"' "
                       +" and to_days(now()) - to_days(referalDate) <=  "
@@ -135,7 +135,7 @@ public class DemoConsultDataStruct{
     public ArrayList getConReplys(){
 
        try{
-          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          DBHandler db = new DBHandler();
           ResultSet rs;
           String sql = "select d.document_no, d.docdesc,d.docfilename, d.updatedatetime, d.status  from ctl_document c, document d where c.module = 'demographic' and c.document_no = d.document_no and d.doctype = 'consult' and module_id = '"+demoNo+"' ";
           rs = db.GetSQL(sql);
@@ -158,7 +158,7 @@ public class DemoConsultDataStruct{
     public String getDemographicName(){
        String retval = "&nbsp;";
        try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            ResultSet rs;
            String sql = "Select last_name, first_name from demographic where demographic_no = '"+demoNo+"' ";
            rs = db.GetSQL(sql);
@@ -173,7 +173,7 @@ public class DemoConsultDataStruct{
     public String getService(String serId){
        String retval = "";
        try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            ResultSet rs;
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
            rs = db.GetSQL(sql);
@@ -188,7 +188,7 @@ public class DemoConsultDataStruct{
     public String getSpecialist(String specId){
         String retval = "";
        try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            ResultSet rs;
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
            rs = db.GetSQL(sql);
@@ -211,7 +211,7 @@ public class DemoConsultDataStruct{
       public String getService(String serId){
        String retval = "&nbsp;";
        try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            ResultSet rs;
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
            rs = db.GetSQL(sql);
@@ -226,7 +226,7 @@ public class DemoConsultDataStruct{
     public String getSpecialist(String specId){
         String retval = "&nbsp;";
        try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            ResultSet rs;
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
            rs = db.GetSQL(sql);

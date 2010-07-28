@@ -101,7 +101,7 @@ public class BillActivityDAO {
          /////
          DBHandler dbhandler = null;
          try {             
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            dbhandler = new DBHandler();
             String s = "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount";
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
                 pstmt.setString(1,getMonthCode(d));
@@ -146,7 +146,7 @@ public class BillActivityDAO {
         ////
         DBHandler dbhandler = null;
         try {             
-           dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+           dbhandler = new DBHandler();
                                                          //1 2 3 4 5 6 7 8 9 0 1 2 3     
            String query = "insert into billactivity (monthCode,batchcount,htmlfilename,ohipfilename,providerohipno,groupno,creator,htmlcontext,ohipcontext,claimrecord,updatedatetime,status,total ) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
@@ -183,7 +183,7 @@ public class BillActivityDAO {
     public void setStatusToSent(Billactivity b){
         DBHandler dbhandler = null;
         try {             
-           dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+           dbhandler = new DBHandler();
                                                          //1 2 3 4 5 6 7 8 9 0 1 2 3     
            String query = "update billactivity set status = ?, sentdate = ? where id = ? ";
         

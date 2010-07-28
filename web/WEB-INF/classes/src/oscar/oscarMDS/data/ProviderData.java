@@ -69,7 +69,7 @@ public class ProviderData {
     
     public static ArrayList getProviderList () {
         try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ArrayList result = new ArrayList();
             
             String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor' order by last_name , first_name";
@@ -91,7 +91,7 @@ public class ProviderData {
     
     public static ArrayList getProviderListWithLabNo () {
         try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ArrayList result = new ArrayList();
             
             String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor'  and ohip_no != '' order by last_name , first_name";
@@ -112,7 +112,7 @@ public class ProviderData {
     
     public static String getProviderName(String providerNo) {
            try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
                                     
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";

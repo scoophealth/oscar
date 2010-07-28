@@ -45,7 +45,7 @@ public class BillingONDataHelp {
 	public synchronized int saveBillingRecord(String sql) {
 		int ret = 0;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			boolean bDone = db.RunSQL(sql);
 
 			/*
@@ -77,7 +77,7 @@ public class BillingONDataHelp {
 	public synchronized boolean updateDBRecord(String sql) {
 		boolean ret = false;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ret = db.RunSQL(sql);
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -88,7 +88,7 @@ public class BillingONDataHelp {
 	public synchronized ResultSet searchDBRecord(String sql) {
 		ResultSet ret = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ret = db.GetSQL(sql);
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);
@@ -99,7 +99,7 @@ public class BillingONDataHelp {
 	public synchronized ResultSet searchDBRecord_paged(String sql, int iOffSet) {
 		ResultSet ret = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ret = db.GetSQL(sql);
 	        for(int i=1; i<=iOffSet; i++){
 	            if(ret.next()==false) break;

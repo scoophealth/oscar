@@ -35,7 +35,7 @@ import oscar.util.UtilDateUtilities;
 public class FrmStudydiabetes2subjectRecord extends FrmStudyRecord {
     public Properties getFormRecord(int demographicNo, int existingID) throws SQLException    {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         if(existingID <= 0) {
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = " +demographicNo;
             ResultSet rs = db.GetSQL(sql);
@@ -78,7 +78,7 @@ public class FrmStudydiabetes2subjectRecord extends FrmStudyRecord {
 
     public int saveFormRecord(Properties props) throws SQLException {
         String demographic_no = props.getProperty("demographic_no");
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT * FROM formType2Diabetes WHERE demographic_no="+demographic_no+" AND ID=0";
         ResultSet rs = db.GetSQL(sql, true);
         rs.moveToInsertRow();

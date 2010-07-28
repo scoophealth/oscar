@@ -44,7 +44,7 @@ public class RxPatientData {
       Patient[] arr = {};     
       ArrayList lst = new ArrayList();      
       try {         
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
+         DBHandler db = new DBHandler();         
          ResultSet rs;         
          Patient p;         
          rs = db.GetSQL(
@@ -77,7 +77,7 @@ public class RxPatientData {
    /* Patient Information */
    
    public Patient getPatient(int demographicNo) throws java.sql.SQLException {      
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);      
+      DBHandler db = new DBHandler();      
       ResultSet rs;      
       Patient p = null;      
       try {         
@@ -108,7 +108,7 @@ public class RxPatientData {
    
    
    public Patient getPatient(String demographicNo) throws java.sql.SQLException {      
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);      
+      DBHandler db = new DBHandler();      
       ResultSet rs;      
       Patient p = null;      
       try {         
@@ -242,7 +242,7 @@ public class RxPatientData {
       public Allergy getAllergy(int id) {
            Allergy allergy = null;
            try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             ResultSet rs;                        
             
             rs = db.GetSQL("SELECT * FROM allergies WHERE allergyid  = " + String.valueOf(id));
@@ -276,7 +276,7 @@ public class RxPatientData {
          Allergy[] arr = {};         
          LinkedList lst = new LinkedList();         
          try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             ResultSet rs;            
             Allergy allergy;
             
@@ -322,7 +322,7 @@ public class RxPatientData {
       public boolean deleteAllergy(int allergyId) {         
          boolean b = false;
          try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql = "update allergies set archived = '1'  WHERE allergyid = '"+allergyId+"'";            
             b = db.RunSQL(sql);                                  
          }catch (SQLException e) {            
@@ -336,7 +336,7 @@ public class RxPatientData {
          Disease[] arr = {};         
          LinkedList lst = new LinkedList();         
          try {            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             ResultSet rs;            
             Disease d;            
             rs = db.GetSQL("SELECT * FROM diseases WHERE demographic_no = '" + getDemographicNo()+"'");            
@@ -360,7 +360,7 @@ public class RxPatientData {
       
       //TODO should not delete
       public boolean deleteDisease(int diseaseId) throws SQLException {         
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
+         DBHandler db = new DBHandler();         
          String sql = "DELETE FROM diseases WHERE diseaseid = " + diseaseId;         
          boolean b = db.RunSQL(sql);         
          return b;         
@@ -419,7 +419,7 @@ public class RxPatientData {
          
          public boolean Save() throws SQLException {            
             boolean b = false;            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             b = this.Save(db);            
             return b;            
          }
@@ -518,7 +518,7 @@ public class RxPatientData {
          
          public boolean Save() throws SQLException {            
             boolean b = false;            
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             b = this.Save(db);            
             return b;            
          }

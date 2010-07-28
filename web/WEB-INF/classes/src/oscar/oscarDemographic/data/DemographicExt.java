@@ -85,7 +85,7 @@ public class DemographicExt {
    public String getValueForDemoKey(String demo, String key){
       String retval  = null;
       try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             String sql = "select value from demographicExt where demographic_no = ? and key_val = ? order by id desc  limit 1";
             
@@ -114,7 +114,7 @@ public class DemographicExt {
    public Hashtable getAllValuesForDemo(String demo){
       Hashtable retval =  new Hashtable();
       try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
                                     
             String sql = "select key_val, value from demographicExt where demographic_no = ? ";

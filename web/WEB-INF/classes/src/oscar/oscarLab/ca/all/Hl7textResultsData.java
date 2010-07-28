@@ -52,7 +52,7 @@ public class Hl7textResultsData {
         String dateEntered = year+"-"+month+"-"+day+" " + hour + ":" + min + ":" + second + ":";
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             Connection conn = DBHandler.getConnection();
             
             //Check for other versions of this lab
@@ -260,7 +260,7 @@ public class Hl7textResultsData {
         int monthsBetween = 0;
         
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             
             
@@ -311,7 +311,7 @@ public class Hl7textResultsData {
         ArrayList<LabResultData> labResults = new ArrayList<LabResultData>();
         ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             ResultSet rs = db.GetSQL(attachQuery);
             while(rs.next()) {
@@ -360,7 +360,7 @@ public class Hl7textResultsData {
         ArrayList<LabResultData> labResults =  new ArrayList<LabResultData>();
         String sql = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             if ( demographicNo == null) {
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
                 // for the provider number if unable to find correct provider

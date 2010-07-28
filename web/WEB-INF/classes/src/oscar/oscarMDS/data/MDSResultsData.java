@@ -72,7 +72,7 @@ public class MDSResultsData {
         ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(attachQuery);
             
             while(rs.next()) {
@@ -127,7 +127,7 @@ public class MDSResultsData {
         // select lpp.patient_health_num, concat(lpp.patient_last_name,',',lpp.patient_first_name), lpp.patient_sex, lpp.doc_name, lpp.collection_date, lpp.lab_status from labPatientPhysicianInfo lpp;
         String sql = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             if ( demographicNo == null) {
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
                 // for the provider number if unable to find correct provider
@@ -212,7 +212,7 @@ public class MDSResultsData {
     public int findCMLAdnormalResults(String labId){
         int count = 0;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             String sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
             
@@ -251,7 +251,7 @@ public class MDSResultsData {
         String sql = "";
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             if ( demographicNo == null) {
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
                 // for the provider number if unable to find correct provider
@@ -336,7 +336,7 @@ public class MDSResultsData {
         ArrayList<LabResultData> attachedLabs = new ArrayList<LabResultData>();
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             ResultSet rs = db.GetSQL(attachQuery);
             while(rs.next()) {
@@ -395,7 +395,7 @@ public class MDSResultsData {
         String seqId = null;  //for debugging purposes
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             if ( demographicNo == null) {
                 // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
@@ -524,7 +524,7 @@ public class MDSResultsData {
     public String findMDSAccessionNumber(String labId){
         String  ret = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql ="select messageConID from mdsMSH where segmentID = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
@@ -540,7 +540,7 @@ public class MDSResultsData {
     public String findCMLAccessionNumber(String labId){
         String  ret = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql ="select accession_num from labPatientPhysicianInfo where id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
@@ -558,7 +558,7 @@ public class MDSResultsData {
         //String accessionNum = findCMLAccessionNumber(labId);
         int monthsBetween = 0;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             //String sql = "select filler_order_number from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             String sql = "SELECT DISTINCT lpp.id, lpp.service_date, lpp2.service_date as labDate from labPatientPhysicianInfo lpp, labPatientPhysicianInfo lpp2, labReportInformation tr where lpp.accession_num = lpp2.accession_num and lpp2.id='"+labId+"' and tr.id=lpp.labReportInfo_id order by tr.print_date, tr.print_time";
             ResultSet rs = db.GetSQL(sql);
@@ -598,7 +598,7 @@ public class MDSResultsData {
         
         ArrayList labs = new ArrayList();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql ="select a.segmentID, a.messageConID, a.dateTime, b.dateTime as labDate from mdsMSH a, mdsMSH b where a.messageConID like '%"+accessionNum+"%' and b.segmentID='"+labId+"' order by a.messageConID";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
@@ -667,7 +667,7 @@ public class MDSResultsData {
         boolean result;
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             String[] providersArray = selectedProviders.split(",");
             String insertString = "";
@@ -703,7 +703,7 @@ public class MDSResultsData {
     
     public static String searchPatient(String labNo) {
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"'";
             ResultSet rs = db.GetSQL(sql);
@@ -720,7 +720,7 @@ public class MDSResultsData {
         boolean result;
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             // delete old entries
             String sql = "delete from patientLabRouting where lab_no='"+labNo+"'";

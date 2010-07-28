@@ -64,7 +64,7 @@ public class SQLReporter implements Reporter {
         String rsHtml = "An SQL querry error has occured";
         String csv = "";
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             rs = db.GetSQL(sql);
             rsHtml = RptResultStruct.getStructure2(rs);  //makes html from the result set
             StringWriter swr = new StringWriter();

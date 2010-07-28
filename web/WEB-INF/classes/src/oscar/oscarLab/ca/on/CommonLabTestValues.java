@@ -123,7 +123,7 @@ public class CommonLabTestValues {
         logger.info(sql);
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 String testNam = db.getString(rs,"test_name");
@@ -161,7 +161,7 @@ public class CommonLabTestValues {
         logger.info(sql);
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 
@@ -210,7 +210,7 @@ public class CommonLabTestValues {
         logger.info(sql);
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 String testNam = db.getString(rs,"observation_identifier").substring(1+db.getString(rs,"observation_identifier").indexOf('^'));
@@ -235,7 +235,7 @@ public class CommonLabTestValues {
         String sql = "SELECT lab_no FROM patientLabRouting WHERE demographic_no='"+demographic+"' AND lab_type='HL7'";
         logger.info(sql);
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 MessageHandler h = Factory.getHandler(db.getString(rs,"lab_no"));
@@ -283,7 +283,7 @@ public class CommonLabTestValues {
                 "WHERE e2.val = ident_code AND LOINC_CODE='"+loincCode+"' AND demographicNo='"+demographicNo+"' " +
                 "ORDER BY dateObserved DESC";
         try {
-            //DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            //DBHandler db = new DBHandler();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             //ResultSet rs = db.GetSQL(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -320,7 +320,7 @@ public class CommonLabTestValues {
                 "WHERE e2.val = ident_code AND LOINC_CODE='"+loincCode+"' AND demographicNo='"+demographicNo+"' " +
                 "ORDER BY dateObserved DESC";
         try {
-            //DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            //DBHandler db = new DBHandler();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             //ResultSet rs = db.GetSQL(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -376,7 +376,7 @@ public class CommonLabTestValues {
             logger.info(sql);
             
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
                     String testNam = db.getString(rs,"test_name");
@@ -424,7 +424,7 @@ public class CommonLabTestValues {
             logger.info(sql);
             
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
                     
@@ -497,7 +497,7 @@ public class CommonLabTestValues {
             String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x, hl7_orc c  where p.lab_type = 'BCP' and p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and c.pid_id = pi.pid_id and r.obr_id = x.obr_id order by r.observation_date_time";
             logger.info(sql);
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
                     // |   |  |
@@ -556,7 +556,7 @@ public class CommonLabTestValues {
                     " WHERE e1.val='"+identCode+"' AND m.demographicNo='"+demographicNo+"'";
             logger.info(sql);
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
                     String lab_no = db.getString(rs,"lab_no");
@@ -626,7 +626,7 @@ public class CommonLabTestValues {
         
         logger.info(sql);
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
 		Integer id = rs.getInt("id");
@@ -671,7 +671,7 @@ public class CommonLabTestValues {
         logger.info(sql);
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 

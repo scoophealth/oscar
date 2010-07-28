@@ -58,7 +58,7 @@ public class MsgMessengerCreateGroupAction extends Action {
        if (!grpName.equals("")){
            if (type.equals("1")){
               try{
-                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                 DBHandler db = new DBHandler();
                  java.sql.ResultSet rs;
                  String sql = "insert into groups_tbl (parentID,groupDesc) values ('"+parentID+"','"+grpName+"')";
                  db.RunSQL(sql);
@@ -70,7 +70,7 @@ public class MsgMessengerCreateGroupAction extends Action {
                }catch (java.sql.SQLException e){ MiscUtils.getLogger().debug("Update of address book didn't happen when updating groups");MiscUtils.getLogger().error("Error", e); }
            }else if (type.equals("2")){
                 try{
-                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                 DBHandler db = new DBHandler();
                  java.sql.ResultSet rs;
                  String sql = "update groups_tbl set groupDesc = '"+grpName+"' where groupID = '"+parentID+"'";
                  db.RunSQL(sql);

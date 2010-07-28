@@ -38,7 +38,7 @@ public class FrmRecordHelp {
     public Properties getFormRecord(String sql) //int demographicNo, int existingID)
             throws SQLException {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
 
         ResultSet rs = db.GetSQL(sql);
         if (rs.next()) {
@@ -68,7 +68,7 @@ public class FrmRecordHelp {
     }
 
     public synchronized int saveFormRecord(Properties props, String sql) throws SQLException {
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
 
         ResultSet rs = db.GetSQL(sql, true);
         rs.moveToInsertRow();
@@ -190,7 +190,7 @@ public class FrmRecordHelp {
 
     //for page form
     public void updateFormRecord(Properties props, String sql) throws SQLException {
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
 
         ResultSet rs = db.GetSQL(sql, true);
         //rs.relative(0);
@@ -203,7 +203,7 @@ public class FrmRecordHelp {
 
     public Properties getPrintRecord(String sql) throws SQLException {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
 
         ResultSet rs = db.GetSQL(sql);
         if (rs.next()) {

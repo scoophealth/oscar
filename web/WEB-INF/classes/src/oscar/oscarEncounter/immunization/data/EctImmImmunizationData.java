@@ -40,7 +40,7 @@ public class EctImmImmunizationData
         throws SQLException
     {
         String sRet = null;
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
         ResultSet rs = db.GetSQL(sql);
         if(rs.next())
@@ -53,7 +53,7 @@ public class EctImmImmunizationData
         throws SQLException
     {        
         boolean retval = false;
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
         ResultSet rs = db.GetSQL(sql);
         if(rs.next()) {
@@ -66,7 +66,7 @@ public class EctImmImmunizationData
     public void saveImmunizations(String demographicNo, String providerNo, String immunizations)
         throws SQLException
     {
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(demographicNo)))).append(" ").append(providerNo).append(" ").append(immunizations))));
         String sql = String.valueOf(String.valueOf((new StringBuffer("INSERT INTO immunizations (demographic_no, provider_no, immunizations, save_date, archived) VALUES (")).append(demographicNo).append(", '").append(providerNo).append("', '").append(immunizations).append("', CURRENT_DATE, 0)")));
         db.RunSQL(sql);
@@ -87,7 +87,7 @@ public class EctImmImmunizationData
         throws SQLException
     {
         Vector vRet = new Vector();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT provider_no, CONCAT(last_name, ', ', first_name) AS namer FROM provider WHERE status = 1 ORDER BY last_name, first_name";
         ResultSet rs;
         String s;

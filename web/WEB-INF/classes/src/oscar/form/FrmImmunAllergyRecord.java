@@ -38,7 +38,7 @@ public class FrmImmunAllergyRecord extends FrmRecord {
         Properties props = new Properties();
 
         if(existingID <= 0) {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
             String sql = "SELECT demographic_no, last_name, first_name FROM demographic WHERE demographic_no = " +demographicNo ;
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()) {

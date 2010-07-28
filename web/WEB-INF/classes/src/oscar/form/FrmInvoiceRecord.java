@@ -17,7 +17,7 @@ public class FrmInvoiceRecord extends FrmRecord {
         Properties props = new Properties();
 
         if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT demographic_no, last_name, first_name, sex, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, ver, hc_type FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);

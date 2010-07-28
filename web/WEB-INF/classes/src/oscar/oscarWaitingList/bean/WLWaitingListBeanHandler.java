@@ -52,7 +52,7 @@ public class WLWaitingListBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             
             String sql = " SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, " + 
             			 " d.phone, w.listID, w.position, w.note, w.onListSince FROM waitingList w, demographic d " + 
@@ -93,7 +93,7 @@ public class WLWaitingListBeanHandler {
     static public void updateWaitingList(String waitingListID) {
                 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = " SELECT demographic_no FROM waitingList WHERE listID=" + waitingListID + 
                          " AND is_history = 'N' ";
             log.debug(sql);

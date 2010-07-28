@@ -102,7 +102,7 @@ public class ConsultationAttachLabs {
         MiscUtils.getLogger().debug("detachDoc: " + sql);
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sql);
         }
         catch(SQLException e) {
@@ -116,7 +116,7 @@ public class ConsultationAttachLabs {
         MiscUtils.getLogger().debug("attachLab: " + sql);
         
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sql);
         }
         catch(SQLException e) {

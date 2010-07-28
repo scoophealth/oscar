@@ -40,7 +40,7 @@
 	String username = "yilee18";
 	String password = "515750564848564853485353544852485248484851575150";
 
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA); 
+	DBHandler db = new DBHandler(); 
     String sql = "SELECT * from studylogin where provider_no=" + provNo + " and study_no = " + studyId + " and current1=1" ;
 	ResultSet rs = db.GetSQL(sql);
 	while(rs.next()) {

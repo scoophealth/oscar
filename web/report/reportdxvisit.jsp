@@ -66,7 +66,7 @@ Vector vServiceCode = new Vector();
 Vector vServiceDesc = new Vector();
 Vector vBillingDx = new Vector();
 Properties props = new Properties();
-DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+DBHandler db = new DBHandler();
 
 // get nurse name list
 String sql = "select provider_no, last_name, first_name from provider where provider_type like 'nurse%'";

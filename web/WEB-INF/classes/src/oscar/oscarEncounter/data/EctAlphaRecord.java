@@ -37,7 +37,7 @@ public class EctAlphaRecord {
     public Properties getAlphaRecord(int demographicNo, int existingID)
         throws SQLException  {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         if(existingID <= 0) {
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName FROM demographic WHERE demographic_no = " +demographicNo ;
             ResultSet rs = db.GetSQL(sql);
@@ -78,7 +78,7 @@ public class EctAlphaRecord {
 
     public int saveAlphaRecord(Properties props)  throws SQLException  {
         String demographic_no = props.getProperty("demographic_no");
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT * FROM formAlpha WHERE demographic_no=" +demographic_no +" AND ID=0";
         ResultSet rs = db.GetSQL(sql, true);
         rs.moveToInsertRow();
@@ -132,7 +132,7 @@ public class EctAlphaRecord {
 
     public Properties getAlphaPrintRecord(int demographicNo, int existingID) throws SQLException  {
         Properties props = new Properties();
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql = "SELECT * FROM formAlpha WHERE demographic_no = " +demographicNo +" AND ID = " +existingID ;
         ResultSet rs = db.GetSQL(sql);
         if(rs.next())  {

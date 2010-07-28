@@ -432,7 +432,7 @@ public class TeleplanFileWriter {
     //This should be moved out of this class
     private List getBilling(String providerInsNo,Date startDate, Date endDate) throws Exception{
         ArrayList list = new ArrayList();      
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String query = "select * from billing where provider_ohip_no='"+ providerInsNo+"' and (status='O' or status='W') and billingtype != 'Pri' ";
         log.debug("billing query "+query);
         ResultSet rs = db.GetSQL(query);

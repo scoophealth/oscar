@@ -100,7 +100,7 @@ public class BillingSaveBillingAction extends Action {
             sql = "update appointment set status='" + billStatus + "' where appointment_no='" + bean.getApptNo() + "'";
 
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 db.RunSQL(sql);
 
             }catch (SQLException e) {
@@ -214,7 +214,7 @@ public class BillingSaveBillingAction extends Action {
 //            String insertBillingMaster = createBillingMasterInsertString(bean,billingid, billingAccountStatus, wcb.getW_payeeno());//--
 //            String amnt = getFeeByCode(wcb.getW_feeitem());
 //            try {
-//                db = new DBHandler(DBHandler.OSCAR_DATA);
+//                db = new DBHandler();
 //                
 //                Billingmaster billingmaster = saveBill(billingid, "" + billingAccountStatus, dataCenterId, amnt, "" + paymentMode, bean, "1",wcb.getW_feeitem()) ;
 //                billingmasterDAO.save(billingmaster);
@@ -306,7 +306,7 @@ public class BillingSaveBillingAction extends Action {
 //    private String getInsertIdFromBilling(final String billingSQL) {
 //        String billingId = "";
 //        try {
-//            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+//            DBHandler db = new DBHandler();
 //            db.RunSQL(billingSQL);
 //            java.sql.ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID()");
 //            if (rs.next()) {
@@ -402,7 +402,7 @@ public class BillingSaveBillingAction extends Action {
         DBHandler db = null;
         String amnt = "0.00";
         try {
-            db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler();
             rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='" +
                     feeitem + "'");
             if (rs.next()) {
@@ -427,7 +427,7 @@ public class BillingSaveBillingAction extends Action {
         String sql = "update appointment set status='" + billStatus + "' where appointment_no='" + bean.getApptNo() + "'";
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sql);
         } catch (SQLException e) {
             log.error(e.getMessage(), e);

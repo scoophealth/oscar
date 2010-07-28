@@ -56,7 +56,7 @@ public class BillingBillingManager {
         service_code = bi.service_code;
         units = bi.units;
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql =
             "SELECT b.service_code, b.description , b.value, b.percentage "
@@ -90,7 +90,7 @@ public class BillingBillingManager {
   public ArrayList getBillView(String billing_no) {
     ArrayList billingItemsArray = new ArrayList();
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       ResultSet rs;
       ///is msp or wcb?
       rs = db.GetSQL("select billingtype from billing where billing_no = '" +
@@ -346,7 +346,7 @@ public class BillingBillingManager {
 
     public void fill(String billType) {
       try {
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 

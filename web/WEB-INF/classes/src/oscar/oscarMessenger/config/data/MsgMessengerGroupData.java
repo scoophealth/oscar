@@ -54,7 +54,7 @@ public class MsgMessengerGroupData {
       if (Integer.parseInt(grpNo) > 0){
          try{
 
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               String sql = new String("select groupDesc from groups_tbl where groupID = '"+grpNo+"'");
               rs = db.GetSQL(sql);
@@ -72,7 +72,7 @@ public class MsgMessengerGroupData {
    public String parentDirectory(String grpNo){
          String retval = new String();
          try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            java.sql.ResultSet rs;
            String sql = new String("select parentID from groups_tbl where groupID = '"+grpNo+"'");
            rs = db.GetSQL(sql);
@@ -91,7 +91,7 @@ public class MsgMessengerGroupData {
       StringBuffer stringBuffer = new StringBuffer();
       numGroups = 0;
       try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            java.sql.ResultSet rs;
            String sql = new String("select * from groups_tbl where parentID = '"+groupNo+"'");
            rs = db.GetSQL(sql);
@@ -111,7 +111,7 @@ public class MsgMessengerGroupData {
 
       groupMemberVector = new java.util.Vector();
       try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
         String sql = new String("select * from groupMembers_tbl where groupID = '"+grpNo+"'");
         rs = db.GetSQL(sql);
@@ -130,7 +130,7 @@ public class MsgMessengerGroupData {
          java.util.Vector vector = membersInGroups(grpNo);
 
          try{
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               String sql = new String("select * from provider order by last_name");
               rs = db.GetSQL(sql);
@@ -187,7 +187,7 @@ public class MsgMessengerGroupData {
       int untilZero = Integer.parseInt(grpNo);
 
          try{
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           DBHandler db = new DBHandler();
            java.sql.ResultSet rs;
 
            while (untilZero != 0){

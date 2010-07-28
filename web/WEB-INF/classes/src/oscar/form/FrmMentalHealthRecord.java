@@ -36,7 +36,7 @@ public class FrmMentalHealthRecord  extends FrmRecord {
         Properties props = new Properties();
 
         if(existingID <= 0) {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName, "
                 + "sex, CONCAT(address, ', ', city, ', ', province, ' ', postal) AS address, "
                 + "phone, year_of_birth, month_of_birth, date_of_birth, roster_status "
@@ -64,7 +64,7 @@ public class FrmMentalHealthRecord  extends FrmRecord {
 			props = (new FrmRecordHelp()).getFormRecord(sql);
 
 			// get roster_status from demographic table
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs = null;
 			sql = "SELECT roster_status FROM demographic WHERE demographic_no = " + demographicNo;
 			rs = db.GetSQL(sql);
@@ -78,7 +78,7 @@ public class FrmMentalHealthRecord  extends FrmRecord {
     }
 
     public Properties getFormCustRecord(Properties props, int provNo) throws SQLException {
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
 		ResultSet rs = null;
 		String sql = null;
 

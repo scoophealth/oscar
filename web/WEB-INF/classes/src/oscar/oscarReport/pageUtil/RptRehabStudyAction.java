@@ -54,7 +54,7 @@ public class RptRehabStudyAction extends Action {
         String endDate = frm.getEndDate();
         String results = "<table>";
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);    
+            DBHandler db = new DBHandler();    
             String sql = "select * from " + formName + " limit 1"; 
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())

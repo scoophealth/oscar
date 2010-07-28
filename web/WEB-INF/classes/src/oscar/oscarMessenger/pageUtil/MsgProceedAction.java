@@ -62,7 +62,7 @@ public class MsgProceedAction extends Action {
     //id = oscar.oscarMessenger.docxfer.util.xml.decode64(id);
 
     try{
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
 
         String sel = "select * from remoteAttachments where demographic_no = '"+demoId+"' and messageid = '"+id+"' ";

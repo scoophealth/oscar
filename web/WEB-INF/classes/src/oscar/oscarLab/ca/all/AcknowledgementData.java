@@ -31,7 +31,7 @@ public class AcknowledgementData {
     public ArrayList getAcknowledgements(String segmentID) {
         ArrayList acknowledgements = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             acknowledgements = new ArrayList();
             String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='HL7'";
@@ -49,7 +49,7 @@ public class AcknowledgementData {
     public ArrayList getAcknowledgements(String docType, String segmentID) {
         ArrayList acknowledgements = null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             acknowledgements = new ArrayList();
             String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='" + docType + "'";

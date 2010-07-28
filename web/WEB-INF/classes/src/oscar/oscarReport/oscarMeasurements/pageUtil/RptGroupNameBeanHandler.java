@@ -45,7 +45,7 @@ public class RptGroupNameBeanHandler {
         
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT DISTINCT name FROM measurementGroup";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;

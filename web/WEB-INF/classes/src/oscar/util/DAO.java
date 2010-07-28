@@ -87,7 +87,7 @@ public class DAO {
      * @return
      */
     public DBHandler getDb() throws SQLException {
-        return new DBHandler(DBHandler.OSCAR_DATA);
+        return new DBHandler();
     }
 
     /**

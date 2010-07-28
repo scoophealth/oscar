@@ -56,7 +56,7 @@ public class RptByExampleQueryBeanHandler {
         
     public Collection getFavoriteCollection(String providerNo){
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo='" + providerNo + "'ORDER BY name";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
@@ -89,7 +89,7 @@ public class RptByExampleQueryBeanHandler {
     
     public Collection getAllQueryVector(){
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p WHERE r.providerNo=p.provider_No ORDER BY date DESC";
             MiscUtils.getLogger().debug("Sql Statement: " + sql);
             ResultSet rs;
@@ -111,7 +111,7 @@ public class RptByExampleQueryBeanHandler {
     
     public Vector getQueryVector(){
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT r.query, r.date, p.last_name, p.first_name from reportByExamples r, provider p "
                          + "WHERE r.providerNo=p.provider_No AND date>= '" + startDate + "' AND date <='" + endDate
                          + "' ORDER BY date DESC";

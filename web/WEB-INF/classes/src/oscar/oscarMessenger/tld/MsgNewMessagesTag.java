@@ -52,7 +52,7 @@ public class MsgNewMessagesTag extends TagSupport{
   public int doStartTag() throws JspException {
 
    try{
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       java.sql.ResultSet rs;
    //   String sdaf = new String("sdf");
       String sql = new String("select count(*) from messagelisttbl where provider_no = '"+ providerNo +"' and status = 'new' ");

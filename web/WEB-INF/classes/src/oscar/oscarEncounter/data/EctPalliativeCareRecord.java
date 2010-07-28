@@ -39,7 +39,7 @@ public class EctPalliativeCareRecord
     {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 
@@ -114,7 +114,7 @@ public class EctPalliativeCareRecord
     public int savePalliativeCareRecord(Properties props) throws SQLException   {
         String demographic_no = props.getProperty("demographic_no");
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql="SELECT * FROM formPalliativeCare WHERE demographic_no=" + demographic_no + " AND ID=0";
         ResultSet rs = db.GetSQL(sql, true);
 

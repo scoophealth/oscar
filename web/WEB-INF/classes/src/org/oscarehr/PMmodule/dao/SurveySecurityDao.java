@@ -10,7 +10,7 @@ public class SurveySecurityDao {
 	//true = allowed
 	//false = restricted
 	public boolean checkPrivilege(String formName, String providerNo) throws SQLException {
-		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+		DBHandler db = new DBHandler();
         java.sql.ResultSet rs;
         
         //check to see if there's a privilege defined

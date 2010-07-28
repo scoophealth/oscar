@@ -123,7 +123,7 @@ public class MsgSendMessageAction extends Action {
 
             try
             {
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
 
               rs = db.GetSQL(sql);
@@ -145,7 +145,7 @@ public class MsgSendMessageAction extends Action {
 
       try
             {
-              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+              DBHandler db = new DBHandler();
               java.sql.ResultSet rs;
               //String sql = "insert into messagetbl (thedate,thetime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"' ";
               db.RunSQL("insert into messagetbl (thedate,theime,themessage,thesubject,sentby,sentto) values ('today','now','"+message+"','"+subject+"','jay','"+sentToWho+"') ");

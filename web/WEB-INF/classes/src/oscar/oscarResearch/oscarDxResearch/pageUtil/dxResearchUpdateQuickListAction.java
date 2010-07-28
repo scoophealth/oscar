@@ -59,7 +59,7 @@ public class dxResearchUpdateQuickListAction extends Action {
         try{
             
             
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            DBHandler db = new DBHandler();            
             String sql;
             
             if(forward.equals("add")){

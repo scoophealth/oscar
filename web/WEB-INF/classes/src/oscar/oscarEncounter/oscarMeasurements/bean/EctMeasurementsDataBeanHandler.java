@@ -54,7 +54,7 @@ public class EctMeasurementsDataBeanHandler {
     /*public boolean init(String demo) {
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql ="SELECT m.id, mt.type, mt.typeDisplayName, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
@@ -92,7 +92,7 @@ public class EctMeasurementsDataBeanHandler {
     public boolean init(String demo) {
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql ="SELECT mt.type, mt.typeDisplayName, mt.typeDescription, mt.measuringInstruction FROM measurements m," +
                     "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = mt.type " +
                     "GROUP BY mt.type ORDER BY m.type ASC";
@@ -123,7 +123,7 @@ public class EctMeasurementsDataBeanHandler {
         log.debug("Getting type "+type+" for demograph "+demo);
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             MeasurementTypes mt = MeasurementTypes.getInstance();
             EctMeasurementTypesBean mBean = mt.getByType(type);
             if ( mBean != null){
@@ -188,7 +188,7 @@ public class EctMeasurementsDataBeanHandler {
     public boolean init2(String demo, String type) {
         boolean verdict = true;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql ="SELECT m.id, mt.type, mt.typeDisplayName, mt.typeDescription, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+
                     "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," +
                     "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
@@ -235,7 +235,7 @@ public class EctMeasurementsDataBeanHandler {
     
     public static List<EctMeasurementsDataBean> getMeasurementObjectByType(String type, String demographicNo) {
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT m.id, m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction, m.comments," +
                     " m.dateObserved, m.dateEntered, mt.typeDisplayName, mt.typeDescription, p.first_name AS provider_first," +
                     " p.last_name AS provider_last FROM measurements m LEFT JOIN provider p ON m.providerNo=p.provider_no," +
@@ -277,7 +277,7 @@ public class EctMeasurementsDataBeanHandler {
     
 //    public static Hashtable getLast(String demo, String type) {
 //        try {
-//            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+//            DBHandler db = new DBHandler();
 //            String sql ="SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,"+
 //                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last " +
 //                        "FROM measurements m, provider p, measurementType mt " +
@@ -318,7 +318,7 @@ public class EctMeasurementsDataBeanHandler {
         Hashtable data = null;
         log.debug(sql);
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 data = new Hashtable();

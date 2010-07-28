@@ -77,7 +77,7 @@ public class PreventionData {
 			String neverWarn, ArrayList list) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			sql = "Insert into preventions (creator,demographic_no,prevention_date,provider_no,provider_name,prevention_type,refused,creation_date,next_date,never) values " + "('"
 					+ creator + "','" + demoNo + "','" + date + "','" + providerNo + "','" + providerName + "','" + preventionType + "','" + refused + "',now(),'" + nextDate
@@ -110,7 +110,7 @@ public class PreventionData {
 	public void addPreventionKeyValue(String preventionId, String keyval, String val) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			
 			sql = "Insert into preventionsExt (prevention_id,keyval,val) values " + "('" + preventionId + "','" + keyval + "','" + StringEscapeUtils.escapeSql(val) + "')";
 			log.debug(sql);
@@ -126,7 +126,7 @@ public class PreventionData {
 		Hashtable h = new Hashtable();
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			sql = "select * from  preventionsExt where prevention_id = '" + preventionId + "'";
 			log.debug(sql);
@@ -149,7 +149,7 @@ public class PreventionData {
 	public void deletePreventionData(String id) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			
 			sql = "update preventions set deleted = '1' where id = '" + id + "' "; // TODO: logg this in the Deletion record table or generic logging table
 			log.debug(sql);
@@ -164,7 +164,7 @@ public class PreventionData {
 	public void setNextPreventionDate(String date, String id) {
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			
 			sql = "update preventions set next_date = '" + date + "' where id = '" + id + "' ";
 			log.debug(sql);
@@ -204,7 +204,7 @@ public class PreventionData {
 		ArrayList list = new ArrayList();
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			sql = "Select prevention_id from preventionsExt where  keyval = '" + extKey + "' and val = '" + extVal + "'";
 			log.debug(sql);
@@ -315,7 +315,7 @@ public class PreventionData {
 		java.util.Date dob = getDemographicDateOfBirth(demoNo);
 
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			sql = "Select * from preventions where  demographic_no = '" + demoNo + "' and prevention_type like '" + preventionType + "' and deleted != 1 order by prevention_date";
 			log.debug(sql);
@@ -362,7 +362,7 @@ public class PreventionData {
 		String comment = null;
 		String sql = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			sql = "Select val from preventionsExt where  prevention_id = '" + id + "' and keyval = 'comments' ";
 			log.debug(sql);
@@ -389,7 +389,7 @@ public class PreventionData {
 		Prevention p = new Prevention(sex, dob);
 
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			sql = "Select * from preventions where  demographic_no = '" + demoNo + "'  and deleted != 1 order by prevention_type,prevention_date";
 			log.debug(sql);
@@ -510,7 +510,7 @@ public class PreventionData {
 		String sql = null;
 		Hashtable h = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			ResultSet rs;
 			sql = "Select * from preventions where  id = '" + id + "' ";
 			log.debug(sql);

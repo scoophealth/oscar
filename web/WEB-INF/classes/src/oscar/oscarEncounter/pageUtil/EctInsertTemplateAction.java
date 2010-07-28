@@ -49,7 +49,7 @@ public final class EctInsertTemplateAction extends Action {
         String templateName = (String) request.getParameter("templateName");
             
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "SELECT encountertemplate_value FROM encountertemplate WHERE encountertemplate_name='" + templateName + "'";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()){

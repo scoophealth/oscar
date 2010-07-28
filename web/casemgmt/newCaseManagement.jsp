@@ -44,7 +44,7 @@
 <%            
             try {
                 String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs = db.GetSQL(sql);                            
                 
                 while(rs.next()) {

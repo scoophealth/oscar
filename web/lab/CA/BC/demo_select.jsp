@@ -79,7 +79,7 @@ function PopupReturn(index){
 			href="<%=url%>&orderby=patient_status">Status</a></td>
 	</tr>
 	<%
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
 	java.sql.ResultSet rs = db.GetSQL(sql);
 	boolean other = true;
 	int count = 0;

@@ -66,7 +66,7 @@ public class ObecData {
 			eDate = "9999/12/31";
 		}
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql = "select d.demographic_no, d.last_name, d.first_name, LEFT(d.address, 32) as address, LEFT(d.city, 30) as city, d.postal, d.hin, d.ver, d.province from appointment a, demographic d where a.demographic_no=d.demographic_no and d.hin <> '' and a.appointment_date>= '" + sDate + "' and appointment_date<='" + eDate + "' and (d.province='Ontario' or d.province='ON' or d.province='ONTARIO') group by d.demographic_no order by d.last_name";
 			ResultSet rs = db.GetSQL(sql);
 			while (rs.next()) {

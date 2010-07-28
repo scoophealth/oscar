@@ -40,7 +40,7 @@ public class EctConDisplayServiceUtil
         String retval = new String();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = String.valueOf(String.valueOf((new StringBuffer("select serviceDesc from consultationServices where serviceId = '")).append(serId).append("' order by serviceDesc")));
             ResultSet rs = db.GetSQL(sql);
             if(rs.next())
@@ -68,7 +68,7 @@ public class EctConDisplayServiceUtil
         specIdVec = new Vector();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from professionalSpecialists order by lName ";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); specIdVec.add(db.getString(rs,"specId")))
@@ -97,7 +97,7 @@ public class EctConDisplayServiceUtil
         Vector vector = new Vector();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = String.valueOf(String.valueOf((new StringBuffer("select * from serviceSpecialists where serviceId = '")).append(serviceId).append("'")));
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); vector.add(db.getString(rs,"specId")));
@@ -116,7 +116,7 @@ public class EctConDisplayServiceUtil
         serviceName = new Vector();
         try
         {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "select * from consultationServices where active = '1' order by serviceDesc";
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); serviceName.add(db.getString(rs,"serviceDesc")))

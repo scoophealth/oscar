@@ -54,7 +54,7 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
         String[] deleteCheckbox = frm.getDeleteCheckbox();
        
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                                                                    
+            DBHandler db = new DBHandler();                                                                                    
             
             if(deleteCheckbox != null){
                 for(int i=0; i<deleteCheckbox.length; i++){

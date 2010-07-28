@@ -45,7 +45,7 @@ public class DBHelp {
     public static ResultSet searchDBRecord(String sql) throws SQLException {
         ResultSet ret = null;
         try {
-        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        	DBHandler db = new DBHandler();
             ret = db.GetSQL(sql);
         } catch (SQLException e) {
             logger.error("Error", e);
@@ -68,7 +68,7 @@ public class DBHelp {
     public static boolean updateDBRecord(String sql, String userId) throws SQLException {
         boolean ret = false;
         try {
-        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        	DBHandler db = new DBHandler();
             db.RunSQL(sql);
             ret = true;
         } catch (SQLException e) {
@@ -81,7 +81,7 @@ public class DBHelp {
     public static ResultSet searchDBRecord(String sql, String userId) throws SQLException {
         ResultSet ret = null;
         try {
-        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        	DBHandler db = new DBHandler();
             ret = db.GetSQL(sql);
             logger.info("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
         } catch (SQLException e) {

@@ -15,17 +15,17 @@
 	sign = request.getParameter("cmd_sign"),
 	save = request.getParameter("cmd_save");
 	if(null != save){
-		oscar.oscarDB.DBHandler dbSave = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+		oscar.oscarDB.DBHandler dbSave = new oscar.oscarDB.DBHandler();
 		dbSave.RunSQL(update_doc_notes.replaceAll("@pid", pid).replaceAll("@notes", oscar.Misc.mysqlEscape((String)request.getParameter("notes"))));
 	}
 	if(null != sign){
-		oscar.oscarDB.DBHandler dbSign = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+		oscar.oscarDB.DBHandler dbSign = new oscar.oscarDB.DBHandler();
 		dbSign.RunSQL(update_lab_report_signed.replaceAll("@pid", sign).replaceAll("@provider_no", (String)session.getAttribute("user")));
 	}
 	if(null == pid){
 		out.print("<script language=\"JavaScript\">window.close();</script>");
 	}
-	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
+	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler();
 	if(request.getParameter("viewed") != null){
 		db.RunSQL(update_lab_report_viewed.replaceAll("@pid", pid));
 	}

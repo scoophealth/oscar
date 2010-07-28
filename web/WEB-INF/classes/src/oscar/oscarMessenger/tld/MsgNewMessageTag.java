@@ -51,7 +51,7 @@ public class MsgNewMessageTag extends TagSupport {
 
     public int doStartTag() throws JspException    {
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 //            String sql = new String("select count(*) from messagelisttbl where provider_no ='"+ providerNo +"' and status = 'new' ");
             String sql = new String("select count(*) from messagelisttbl m LEFT JOIN oscarcommlocations o ON m.remoteLocation = o.locationId where m.provider_no = '"+ providerNo +"' and m.status = 'new' and o.current1=1" );
             ResultSet rs = db.GetSQL(sql);

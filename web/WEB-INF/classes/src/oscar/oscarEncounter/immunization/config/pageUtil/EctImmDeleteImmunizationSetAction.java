@@ -55,7 +55,7 @@ public class EctImmDeleteImmunizationSetAction extends Action {
       
       if(sets.length > 0)
          try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = stringBuffer.toString();
             db.RunSQL(sql);
          }

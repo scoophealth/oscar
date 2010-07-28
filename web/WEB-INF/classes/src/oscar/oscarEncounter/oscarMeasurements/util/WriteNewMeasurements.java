@@ -90,7 +90,7 @@ public class WriteNewMeasurements {
     static private void preProcess(Vector measures) {
         //fills in required values
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = null;
             for (int i=0; i<measures.size(); i++) {
                 Hashtable curmeasure = (Hashtable) measures.get(i);
@@ -129,7 +129,7 @@ public class WriteNewMeasurements {
     static private ActionMessages validate(Vector measures, String demographicNo) {
         ActionMessages errors = new ActionMessages();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             EctValidation ectValidation = new EctValidation();
             ResultSet rs;
             boolean valid = true;
@@ -224,7 +224,7 @@ public class WriteNewMeasurements {
 
     static public void write(Vector measures, String demographicNo, String providerNo) {
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             for (int i=0; i<measures.size(); i++) {
                 Hashtable measure = (Hashtable) measures.get(i);
 
@@ -248,7 +248,7 @@ public class WriteNewMeasurements {
     
     static public void write(Hashtable measure, String demographicNo, String providerNo) {
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String inputValue = (String) measure.get("value");
             String inputType = (String) measure.get("type");
             String mInstrc = (String) measure.get("measuringInstruction");

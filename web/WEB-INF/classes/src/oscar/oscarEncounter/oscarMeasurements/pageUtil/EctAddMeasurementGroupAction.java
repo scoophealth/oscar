@@ -59,7 +59,7 @@ public class EctAddMeasurementGroupAction extends Action {
                 
         if(frm.getForward()!=null){
             try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                                                                        
+                DBHandler db = new DBHandler();                                                                        
                 
                 if (frm.getForward().compareTo("add")==0) {
                     MiscUtils.getLogger().debug("the add button is pressed");

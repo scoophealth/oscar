@@ -128,7 +128,7 @@ public class EctConsultationFormRequestAction extends Action {
 		if (submission.startsWith("Submit")) {
 
 			try {
-				DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+				DBHandler db = new DBHandler();
 
 				String sql = "insert into consultationRequests (referalDate,serviceId,specId,appointmentDate,appointmentTime,reason,clinicalInfo,currentMeds,allergies,providerNo,demographicNo,status,statusText,sendTo,concurrentProblems,urgency,patientWillBook) "
 				        + " values ('"
@@ -199,7 +199,7 @@ public class EctConsultationFormRequestAction extends Action {
 			requestId = frm.getRequestId();
 
 			try {
-				DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+				DBHandler db = new DBHandler();
 
 				String sql = "update consultationRequests set  serviceId = '" + str.q(serviceId) + "',  specId = '" + str.q(specId) + "',  appointmentDate = '" + str.q(appointmentDate) + "',  appointmentTime = '" + str.q(appointmentTime)
 				        + "',  reason = '" + str.q(reason) + "',  clinicalInfo = '" + str.q(clinicalInfo) + "',  currentMeds = '" + str.q(currentMeds) + "',  allergies = '" + str.q(allergies) + "',  status = '" + str.q(status) + "',  statusText = '"

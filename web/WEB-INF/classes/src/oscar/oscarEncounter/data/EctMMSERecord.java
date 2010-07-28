@@ -36,7 +36,7 @@ public class EctMMSERecord {
     public Properties getMMSERecord(int demographicNo, int existingID)  throws SQLException  {
         Properties props = new Properties();
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         ResultSet rs;
         String sql;
 
@@ -113,7 +113,7 @@ public class EctMMSERecord {
     public int saveMMSERecord(Properties props)  throws SQLException  {
         String demographic_no = props.getProperty("demographic_no");
 
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        DBHandler db = new DBHandler();
         String sql="SELECT * FROM formMMSE WHERE demographic_no=" + demographic_no + " AND ID=0";
         ResultSet rs = db.GetSQL(sql, true);
 

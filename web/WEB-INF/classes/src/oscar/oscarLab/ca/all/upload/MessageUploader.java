@@ -261,7 +261,7 @@ public final class MessageUploader {
 
 		try {
 
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			Connection conn = DBHandler.getConnection();
 			PreparedStatement pstmt;
 

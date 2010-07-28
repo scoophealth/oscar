@@ -73,7 +73,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             rs = db.GetSQL(sql);
@@ -234,7 +234,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             Prescription p;
@@ -357,7 +357,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             Prescription p;
@@ -387,7 +387,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             Prescription p;
@@ -417,7 +417,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             Prescription p;
@@ -451,7 +451,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             Prescription p;
@@ -527,7 +527,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             Prescription p;
@@ -600,7 +600,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             Prescription p;
@@ -686,7 +686,7 @@ public class RxPrescriptionData {
 
         try {
             // Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs, rs2;
             String sql = "SELECT * FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY rx_date DESC, drugId DESC";
             String indivoSql = "SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = ? and docType = 'Rx' limit 1";
@@ -788,7 +788,7 @@ public class RxPrescriptionData {
         LinkedList lst = new LinkedList();
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
             Favorite favorite;
 
@@ -819,7 +819,7 @@ public class RxPrescriptionData {
         Favorite favorite = null;
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs;
 
             rs = db.GetSQL("SELECT * FROM favorites WHERE favoriteid = " + favoriteId);
@@ -845,7 +845,7 @@ public class RxPrescriptionData {
         boolean ret = false;
 
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             String sql = "DELETE FROM favorites WHERE favoriteid = " + favoriteId;
 
             db.RunSQL(sql);
@@ -924,7 +924,7 @@ public class RxPrescriptionData {
         String sql = " insert into prescription " + " (provider_no,demographic_no,date_prescribed,date_printed,textView) " + " values " + " ( '" + provider_no + "', " + "   '" + demographic_no + "', " + "   '" + date_prescribed + "', " + "   '" + date_printed + "', " + "   '" + StringEscapeUtils.escapeSql(textView.toString()) + "') ";
         try {
 
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
 
             db.RunSQL(sql);
 
@@ -947,7 +947,7 @@ public class RxPrescriptionData {
     public void setScriptComment(String scriptNo, String comment) {
         String sql = "update prescription set rx_comments = '" + StringEscapeUtils.escapeSql(comment) + "' where script_no = " + scriptNo;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sql);
         } catch (SQLException e) {
             logger.error("unexpected error", e);
@@ -961,7 +961,7 @@ public class RxPrescriptionData {
         String sql = "select rx_comments from  prescription where script_no = " + scriptNo;
         logger.debug("SQL " + sql);
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 ret = rs.getString("rx_comments");
@@ -1705,7 +1705,7 @@ public class RxPrescriptionData {
 
         public void Delete() {
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 String sql;
 
                 if (this.getDrugId() > 0) {
@@ -1733,7 +1733,7 @@ public class RxPrescriptionData {
                     update = "I";
                 }
 
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 String sql = "INSERT INTO indivoDocs (oscarDocNo, indivoDocIdx, docType, dateSent, `update`)" + " VALUES(" + String.valueOf(getDrugId()) + ",'" + getIndivoIdx() + "','" + docType + "',now(),'" + update + "')";
 
                 db.RunSQL(sql);
@@ -1748,7 +1748,7 @@ public class RxPrescriptionData {
         public boolean Print() {
             boolean ret = false;
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql = "SELECT dates_reprinted, now() FROM prescription WHERE script_no = " + this.getScript_no();
 
@@ -1801,7 +1801,7 @@ public class RxPrescriptionData {
                 logger.error("drug special after escaping appears to be null or empty : " + escapedSpecial, new IllegalStateException("Drug special is invalid after escaping."));
             }
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql;
 
@@ -2300,7 +2300,7 @@ if (getSpecial() == null || getSpecial().length() < 4) {
             }
 
             try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                DBHandler db = new DBHandler();
                 ResultSet rs;
                 String sql;
 

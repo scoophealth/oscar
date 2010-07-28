@@ -57,7 +57,7 @@ public class ProviderFaxUpdater {
        DBHandler db;
        
        try {
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
        
         sql = "SELECT value FROM property WHERE name = '" + faxColName + "' AND provider_no = '" + provider + "'";
         rs = db.GetSQL(sql);
@@ -98,7 +98,7 @@ public class ProviderFaxUpdater {
         else
            sql = "INSERT INTO property (name,value,provider_no) VALUES('" + faxColName + "', '" + fax + "', '" + provider + "')";
         
-        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db = new DBHandler();
         db.RunSQL(sql);
        
        }catch( SQLException ex ) {
@@ -114,7 +114,7 @@ public class ProviderFaxUpdater {
        String sql;
        ResultSet rs;       
               
-       db = new DBHandler(DBHandler.OSCAR_DATA);
+       db = new DBHandler();
        sql = "SELECT value FROM property WHERE name = '" + faxColName + "' AND provider_no = '" + provider + "'";
        
        rs = db.GetSQL(sql);

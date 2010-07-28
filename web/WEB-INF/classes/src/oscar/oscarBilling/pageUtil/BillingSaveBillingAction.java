@@ -81,7 +81,7 @@ public class BillingSaveBillingAction
         "' where appointment_no='" + bean.getApptNo() + "'";
 
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       db.RunSQL(sql);
 
     }
@@ -99,7 +99,7 @@ public class BillingSaveBillingAction
         bean.getBillingPracNo() + "','" + bean.getApptProviderNo() + "','" +
         bean.getCreator() + "')";
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler db = new DBHandler();
       db.RunSQL(sql);
       rs = db.GetSQL("SELECT LAST_INSERT_ID()");
 
@@ -220,7 +220,7 @@ public class BillingSaveBillingAction
               + "'')";
           try {
 
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sql);
             rs = db.GetSQL("SELECT LAST_INSERT_ID()");
 
@@ -290,7 +290,7 @@ public class BillingSaveBillingAction
               "', '', '', '" + bean.getPatientPostal() + "')";
 
           try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            DBHandler db = new DBHandler();
             db.RunSQL(sql);
             rs = db.GetSQL("SELECT LAST_INSERT_ID()");
             /**

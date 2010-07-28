@@ -87,7 +87,7 @@ public class LabUploadAction extends Action {
                 boolean success = true;
                 try {                  
                    int size = messages.size();
-                   DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                   DBHandler db = new DBHandler();
                    String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                    for (int i = 0; i < size; i++) {
                       if (_logger.isDebugEnabled()){ _logger.debug("Call Message Constructor for message # "+i); }

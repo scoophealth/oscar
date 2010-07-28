@@ -327,7 +327,7 @@ public class EFormUtil {
 				"', '" + eForm.getDemographicNo() + "', 1, '" + eForm.getFormDate() + "', '" + eForm.getFormTime() + "', '" + eForm.getProviderNo() +
 				"', '" + html + "', " + eForm.getPatientIndependent() + ")";
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			db.RunSQL(sql);
 			sql = "SELECT LAST_INSERT_ID()";
 			ResultSet rs = db.GetSQL(sql);
@@ -367,7 +367,7 @@ public class EFormUtil {
 		//names.size and values.size must equal!
 		String sql = "";
 		try {  //opens it's own connection - prevents pulling many connections from the pool at once
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			for (int i=0; i<names.size(); i++) {
 				sql = "INSERT INTO eform_values(fdid, fid, demographic_no, var_name, var_value) VALUES " +
 						"(" + fdid + ", " + fid + ", " + demographic_no + ", '" + names.get(i) + "', '" + UtilMisc.charEscape((String) values.get(i), '\'') + "')";
@@ -451,7 +451,7 @@ public class EFormUtil {
 
 	public static void addEFormToGroup(String groupName, String fid) {
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			String sql1 = "SELECT eform_groups.fid FROM eform_groups, eform WHERE eform_groups.fid=" + fid +
 					" AND eform_groups.fid=eform.fid AND eform.status=1 AND eform_groups.group_name='" + groupName +"'";
 			ResultSet rs = db.GetSQL(sql1);
@@ -554,7 +554,7 @@ public class EFormUtil {
 	//------------------private
 	private static void runSQL(String sql) {
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			db.RunSQL(sql);
 		} catch (SQLException sqe) {
 			MiscUtils.getLogger().error("Error", sqe);
@@ -563,7 +563,7 @@ public class EFormUtil {
 
 	private static String runSQLinsert(String sql) {
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			db.RunSQL(sql);
 			sql = "SELECT LAST_INSERT_ID()";
 			ResultSet rs = db.GetSQL(sql);
@@ -578,7 +578,7 @@ public class EFormUtil {
 	private static ResultSet getSQL(String sql) {
 		ResultSet rs = null;
 		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			DBHandler db = new DBHandler();
 			rs = db.GetSQL(sql);
 		} catch (SQLException sqe) {
 			MiscUtils.getLogger().error("Error", sqe);

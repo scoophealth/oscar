@@ -55,7 +55,7 @@ public class EctSaveEncounterAction
   
   private String getLatestID(String demoNo) throws
     SQLException  {
-      DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler dbhandler = new DBHandler();
       String sql = "select MAX(eChartId) as maxID from eChart where demographicNo = " + demoNo;
       ResultSet rs = dbhandler.GetSQL(sql);
       String latestID = null;
@@ -211,7 +211,7 @@ public class EctSaveEncounterAction
 
           DBHandler dbhandler = null;
           try {             
-            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            dbhandler = new DBHandler();
             String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
             PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
                 pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime())); 
@@ -260,7 +260,7 @@ public class EctSaveEncounterAction
     }
 
     try { // save enc. window sizes
-      DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+      DBHandler dbhandler = new DBHandler();
       String s = "delete from encounterWindow where provider_no='" +
           sessionbean.providerNo + "'";
       dbhandler.RunSQL(s);

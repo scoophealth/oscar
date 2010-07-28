@@ -41,7 +41,7 @@ public class SendMessageClient {
         WebServiceClient client = null;
 
         try {
-            db = new DBHandler(databaseURL, databaseName);
+            db = new DBHandler();
 
             String sql = "SELECT remoteServerURL FROM oscarcommlocations WHERE current1 = 1";
             ResultSet rs = db.GetSQL(sql);

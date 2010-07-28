@@ -227,7 +227,7 @@ public class SqlUtils {
 		ResultSet rs = null;
 		DBHandler db = null;
 		try {
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			db = new DBHandler();
 			rs = (ResultSet) db.GetSQL(qry);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			colCount = rsmd.getColumnCount();
@@ -359,7 +359,7 @@ public class SqlUtils {
 		DBHandler db = null;
 		try {
 			records = new ArrayList();
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			db = new DBHandler();
 			rs = (ResultSet) db.GetSQL(qry);
 			int cols = rs.getMetaData().getColumnCount();
 			while (rs.next()) {
@@ -419,7 +419,7 @@ public class SqlUtils {
 		DBHandler db = null;
 		try {
 			records = new ArrayList();
-			db = new DBHandler(DBHandler.OSCAR_DATA);
+			db = new DBHandler();
 			rs = (ResultSet) db.GetSQL(qry);
 			int cols = rs.getMetaData().getColumnCount();
 			while (rs.next()) {
