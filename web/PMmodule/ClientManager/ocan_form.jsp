@@ -540,7 +540,26 @@ $("document").ready(function(){
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "center_count", OcanForm.getOcanFormOptions("Number Of Centres"),prepopulationLevel)%>
 				</select>					
 			</td>
-		</tr>		
+		</tr>	
+		<tr>
+			<td class="genericTableHeader">Program Name</td>
+			<td class="genericTableData">
+				<select name="admissionId">
+					<%
+						for (Admission admission : OcanForm.getAdmissions(currentDemographicId))
+						{
+							String selected="";
+							
+							if (ocanStaffForm.getAdmissionId()!=null && ocanStaffForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
+							
+							%>
+								<option <%=selected%> value="<%=admission.getId()%>"><%=OcanForm.getEscapedAdmissionSelectionDisplay(admission)%></option>
+							<%
+						}
+					%>
+				</select>
+			</td>
+		</tr>	
 		<tr>
 			<td colspan="2">				
 				<div id="center_block">
