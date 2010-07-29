@@ -32,7 +32,7 @@
 	errorPage="../errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <%
   String [][] dbQueries=new String[][] {
     {"search_detail", "select * from demographic where demographic_no=?"},

@@ -32,7 +32,7 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <jsp:useBean id="baseurlBean" class="oscar.AppointmentMainBean"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
   String [][] dbQueries=new String[][] { 
     {"delete_baseurl", "delete from property where name = ?"}, 

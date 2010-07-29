@@ -39,7 +39,6 @@
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries;
 

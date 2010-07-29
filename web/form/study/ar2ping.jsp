@@ -41,7 +41,6 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 <%@ page import="oscar.OscarPingTalk"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 
-<%@ include file="../../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 	//{"search_demographic", "select * from demographic where demographic_no=? "}, 

@@ -43,7 +43,7 @@
 	errorPage="errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <%@ include file="dbBilling.jsp"%>
 
 <html>

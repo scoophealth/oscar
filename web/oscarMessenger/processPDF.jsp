@@ -19,7 +19,6 @@ String pdfTitle = (String) request.getParameter("pdfTitle");
 
 %>
 
-<%@ include file="../admin/dbconnection.jsp"%>
 
 
 

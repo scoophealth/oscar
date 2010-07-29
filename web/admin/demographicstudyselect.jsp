@@ -12,7 +12,7 @@
 
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
     String [][] dbQueries=new String[][] { 
         {"delete_demostudy", "delete from demographicstudy where demographic_no = ?" }, 

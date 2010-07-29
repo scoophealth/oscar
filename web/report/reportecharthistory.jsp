@@ -15,7 +15,7 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <%
   String [][] dbQueries=new String[][] {
 //{"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ? offset ?" },

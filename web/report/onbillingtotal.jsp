@@ -9,7 +9,6 @@
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
 	scope="page" />
 
-<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_billing", "select total, billing_no, billing_date from billing where total not like ? order by billing_no desc" }, 

@@ -34,7 +34,7 @@ String curUser_no = (String) session.getAttribute("user");String userfirstname =
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ include file="../../../admin/dbconnection.jsp"%>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbBilling.jsp"%>

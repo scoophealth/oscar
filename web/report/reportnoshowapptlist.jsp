@@ -38,7 +38,7 @@
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
   String [][] dbQueries=new String[][] { 
 //{"search_noshowappt", "select provider_no, last_name, first_name, chart_no from appointment where provider_no = ? order by "+orderby }, 

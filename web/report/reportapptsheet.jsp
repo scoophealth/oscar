@@ -38,7 +38,7 @@
 <jsp:useBean id="myGroupBean" class="java.util.Properties" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_apptsheetall", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, p.last_name, p.first_name from appointment a, provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>=? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, "+orderby }, 

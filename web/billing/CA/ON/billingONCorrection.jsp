@@ -83,7 +83,6 @@
 <%@ page import="oscar.oscarDemographic.data.*"%>
 <%@ page import="oscar.util.UtilDateUtilities"  %>
 
-<%@ include file="../../../admin/dbconnection.jsp"%>
 <%GregorianCalendar now = new GregorianCalendar();
 			int curYear = now.get(Calendar.YEAR);
 			int curMonth = (now.get(Calendar.MONTH) + 1);

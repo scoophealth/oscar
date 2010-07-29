@@ -37,7 +37,7 @@
 	scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
 	String [][] dbQueries=new String[][] { 
 		{"search_master","select pin from demographic where demographic_no=?" }, 

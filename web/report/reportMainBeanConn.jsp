@@ -26,7 +26,6 @@
  */
 --%>
 
-<%@ include file="../admin/dbconnection.jsp"%>
 <%
   String [][] dbQueries=new String[][] {
     {"search_provider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"}, 

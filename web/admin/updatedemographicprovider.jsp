@@ -44,7 +44,7 @@
 	scope="page" />
 <jsp:useBean id="namevector" class="java.util.Vector" scope="page" />
 <jsp:useBean id="novector" class="java.util.Vector" scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% // table demographiccust: cust1 = nurse   cust2 = resident   cust4 = midwife
 
   String [][] dbQueries = new String[1][1];

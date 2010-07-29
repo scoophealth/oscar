@@ -44,7 +44,6 @@
 	scope="page" />
 <jsp:useBean id="providerNameBean" class="java.util.Properties"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
 <%
   String [][] dbQueries=new String[][] {
 {"select_maxformar_id", "select max(ID) from formONAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no"  },

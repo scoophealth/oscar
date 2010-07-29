@@ -17,7 +17,6 @@
 	scope="session" />
 <jsp:useBean id="studyBean" class="java.util.Properties" scope="page" />
 
-<%@ include file="../admin/dbconnection.jsp"%>
 <% 
 	String [][] dbQueries=new String[][] { 
 		{"search_study", "select study_no, study_name, description from study where current1 = ?"}, 

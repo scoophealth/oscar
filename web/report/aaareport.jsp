@@ -34,7 +34,7 @@
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
 	scope="page" />
 <jsp:useBean id="nameBean" class="java.util.Properties" scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_encounter", "select e.*, d.* from encounter e LEFT JOIN demographicaccessory d ON e.demographic_no=d.demographic_no where e.encounter_no<? order by e.demographic_no, e.encounter_date, e.encounter_time" }, 

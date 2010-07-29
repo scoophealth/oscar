@@ -9,7 +9,7 @@
 
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
     String [][] dbQueries=new String[][] { 
         {"search_echart", "select * from eChart order by timeStamp desc" }, 

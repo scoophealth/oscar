@@ -44,7 +44,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
 <%@ page errorPage="errorpage.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbconnection.jsp"%>
 
 <%
   String orderby="", limit="", limit1="", limit2="";

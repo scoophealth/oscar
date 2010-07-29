@@ -32,7 +32,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /><jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" /><%@ include file="../../../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /><jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@ include file="dbBilling.jsp" %>
 <%
   String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");

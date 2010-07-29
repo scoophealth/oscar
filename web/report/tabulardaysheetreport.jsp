@@ -8,7 +8,6 @@
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 	{"search_daysheetall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no, d.phone, d.date_of_birth, d.month_of_birth, d.year_of_birth, d.hin from appointment a,demographic d,provider p, mygroup m where a.appointment_date=? and  m.mygroup_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no AND p.provider_no=m.provider_no order by p.provider_no, a.appointment_date, "+orderby }, 

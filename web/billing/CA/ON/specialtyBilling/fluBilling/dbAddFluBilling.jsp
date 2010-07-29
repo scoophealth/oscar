@@ -44,7 +44,7 @@ userlastname = (String) session.getAttribute("userlastname");
 %>
 
 <%@ page import="java.sql.*"%>
-<%@ include file="../../../../../admin/dbconnection.jsp"%>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="../../dbBilling.jsp"%>

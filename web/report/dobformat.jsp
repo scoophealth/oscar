@@ -8,7 +8,6 @@
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
 	scope="page" />
 
-<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_demographic", "select demographic_no, month_of_birth, date_of_birth from demographic order by demographic_no" }, 

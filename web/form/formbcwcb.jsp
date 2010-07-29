@@ -28,7 +28,7 @@
 <%@ page import="oscar.form.*"%>
 <%@page
 	import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*"%>
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="../billing/CA/BC/dbBilling.jsp"%>

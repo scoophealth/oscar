@@ -30,7 +30,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 <%@ page
 	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*"
 	errorPage="errorpage.jsp"%>
-<%@ include file="../../../admin/dbconnection.jsp"%>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -53,7 +53,7 @@ String billinggroup_no;
    
 String dateRange = "";
 String htmlValue="";
-//String oscar_home= oscarVariables.getProperty("project_home")+".properties";
+
 
 String dateBegin = request.getParameter("xml_vdate");
 String dateEnd = request.getParameter("xml_appointment_date");

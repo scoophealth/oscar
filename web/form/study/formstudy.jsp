@@ -10,7 +10,7 @@
 
 <jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
 	scope="page" />
-<%@ include file="../../admin/dbconnection.jsp"%>
+
 <% 
     String [][] dbQueries=new String[][] { 
         {"search_study", "select s.* from study s order by ? " }, 

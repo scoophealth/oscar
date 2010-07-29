@@ -44,7 +44,7 @@ if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDat
 	scope="page" />
 <jsp:useBean id="providerNameBean" class="java.util.Properties"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
 String [][] dbQueries=new String[][] { 
 //{"select_bcformar", "select distinct(demographic_no) from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, 

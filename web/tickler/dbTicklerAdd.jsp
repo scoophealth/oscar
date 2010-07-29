@@ -27,7 +27,7 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>                                
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,org.caisi.model.*,org.caisi.dao.*,oscar.util.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
+
 
 <%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbTicker.jsp" %>

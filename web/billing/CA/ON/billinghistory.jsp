@@ -46,7 +46,7 @@
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ include file="../../../admin/dbconnection.jsp"%>
+
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />

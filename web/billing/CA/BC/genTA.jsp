@@ -31,7 +31,7 @@
 	scope="session" />
 <jsp:useBean id="documentBean" class="oscar.DocumentBean"
 	scope="request" />
-<%@ include file="../../../admin/dbconnection.jsp"%>
+
 <%@ include file="dbBilling.jsp"%>
 
 <%  

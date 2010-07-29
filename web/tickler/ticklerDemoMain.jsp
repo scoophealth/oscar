@@ -28,7 +28,6 @@ else
 %>
 <%@ page
 	import="java.util.*, java.sql.*,java.text.*, oscar.*, java.net.*"%>
-<%@ include file="../admin/dbconnection.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />

@@ -61,7 +61,7 @@ sites = siteDao.getAllSites();
 	scope="page" />
 <jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <% 
   String [][] dbQueries=new String[][] { 
     {"search_timecode", "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.provider_no=? and scheduledate.sdate>=? and scheduledate.sdate<=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"}, 

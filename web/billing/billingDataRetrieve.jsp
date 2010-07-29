@@ -24,7 +24,7 @@
  */
 -->
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="page" /><%@ include file="../admin/dbconnection.jsp"%>
+	scope="page" />
 
 <% 
  

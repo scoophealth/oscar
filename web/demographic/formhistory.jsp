@@ -31,7 +31,7 @@
 <%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp"%>
 <jsp:useBean id="formHistBean" class="oscar.AppointmentMainBean"
 	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <%
   String [][] dbQueries=new String[][] {
     {"search_form", "select * from form where demographic_no = ? order by form_date desc, form_time desc, form_no desc"},

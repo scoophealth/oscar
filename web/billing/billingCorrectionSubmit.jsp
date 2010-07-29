@@ -44,7 +44,7 @@
 	class="oscar.BillingPatientDataBean" scope="session" />
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+
 <%@ include file="dbBilling.jsp"%>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">

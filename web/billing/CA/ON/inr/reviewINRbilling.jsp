@@ -29,7 +29,7 @@ if(session.getAttribute("user") == null)    response.sendRedirect("../../../../l
 
 <%@ page
 	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
-<%@ include file="../../../../admin/dbconnection.jsp"%>
+
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%@ include file="dbINR.jsp"%>
