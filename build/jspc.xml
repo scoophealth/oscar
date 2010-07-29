@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<project default="jspc">
+	<!--
+		Generally speaking there's no need to precompile jsp's. Jasper is 
+		fairly quick and efficient anyways so dynamic compilation is fine
+		and offers the ability to change things on the fly. The reason 
+		we want to statically compile here is just for the sake of 
+		error checking, i.e. catching jsp's that don't compile - at compile
+		time rather than at run time. This will also help for automated
+		build systems like Hudson to check that the commited jsp's compile.
+		
+		REQUIRES:
+		This build script requires that the normal build be run and 
+		the expectation is that oscar/build/tmp/oscar.war was built and exists.
+		This script requires the environment variable CATALINA_HOME to be set,
+		this was tested against tomcat 6.0.18 and requires a version that
+		has the jaspter compiler in it (5.0 versions did not).
+	-->
+
+	<property environment="env" />
+	<property name="catalina.home" location="${env.CATALINA_HOME}" />
+	<import file="${catalina.home}/bin/catalina-tasks.xml" />
+
+	<property name="jspcDir" location="tmp/jspc" />
+	<property name="expandedWarDir" value="${jspcDir}/web" />
+	<property name="generatedDir" value="${jspcDir}/generated_jsp_classes" />
+
+	<target name="jspc">
+		<!--
+		The general algorithm is as follows :
+		1) setup a clean working area
+		2) unzip the oscar.war
+		3) compile jsp's into java source
+		4) compilte java source into class files
+		-->
+
+		<antcall target="clean" />
+		<unwar src="tmp/oscar.war" dest="${expandedWarDir}" />
+		
+		<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${generatedDir}" validateXml="false" failOnError="false" />
+		
+		<javac srcdir="${generatedDir}" source="1.5" target="1.5">
+			<classpath>
+				<pathelement location="${expandedWarDir}/WEB-INF/classes" />
+				<fileset dir="${expandedWarDir}/WEB-INF/lib">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement location="${catalina.home}/lib" />
+				<fileset dir="${catalina.home}/bin">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="clean">
+		<delete dir="${jspcDir}" quiet="true" />
+	</target>
+
+</project>
