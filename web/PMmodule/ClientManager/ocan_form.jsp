@@ -263,7 +263,7 @@ $("document").ready(function(){
 
 	//phys health - other
 	//410515003
-	$("input[name='6_medical_conditions'][value='410515003']").change(function(){
+	$("input[name='6_medical_conditions'][value='OTH']").change(function(){
 		if($(this).attr("checked")) {
 			$("#6_medical_conditions_other").attr("disabled","");
 		} else {
@@ -272,8 +272,8 @@ $("document").ready(function(){
 		}
 		
 	});
-
-	if($("input[name='6_medical_conditions'][value='410515003']").attr("checked")) {	
+	
+	if($("input[name='6_medical_conditions'][value='OTH']").attr("checked")) {	
 		$("#6_medical_conditions_other").attr("disabled","");
 	} else {
 		$("#6_medical_conditions_other").attr("disabled","disabled");
