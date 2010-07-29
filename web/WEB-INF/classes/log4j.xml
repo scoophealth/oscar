@@ -58,7 +58,10 @@
 
 	<category name="org.oscarehr.util.VmStat" additivity="false">
 		<level value="INFO" />
+		<!-- uncomment for deployments -->
+		<!-- 
 		<appender-ref ref="VMSTAT_FILE" />
+		-->
 	</category>
 
 	<category name="org.apache.cxf.transport.https.HttpsURLConnectionFactory">
