@@ -31,7 +31,7 @@
 		1) setup a clean working area
 		2) unzip the oscar.war
 		3) compile jsp's into java source
-		4) compilte java source into class files
+		4) compile java source into class files
 		-->
 
 		<antcall target="clean" />
