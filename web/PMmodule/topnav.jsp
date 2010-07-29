@@ -146,4 +146,12 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	<td width="50%" align="right"><b>Hello &nbsp; <%=userfirstname %> &nbsp;<%=userlastname %></b>
 	</td>
 </tr>
+<tr><td colspan="2">
+<c:import url="/SystemMessage.do?method=view" />
+</td>
+</tr>
+<tr><td colspan="2">
+<c:import url="/FacilityMessage.do?method=view" />
+</td>
+</tr>
 </table>

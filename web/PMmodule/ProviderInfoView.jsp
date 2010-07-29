@@ -5,8 +5,7 @@
         window.open(url + topic,'help','width=450, height=200');
     }
 </script>
-<c:import url="/SystemMessage.do?method=view" />
-<c:import url="/FacilityMessage.do?method=view" />
+
 <br />
 <!-- remove all info about agency because table agency has been truncated -->
 <!--  
