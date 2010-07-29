@@ -84,7 +84,7 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     String roleNew = request.getParameter("roleNew");
 
     sql = "update secUserRole set role_name='" + roleNew + "' where id='" + roleId + "'";
-    if(!"-".equals(roleNew) && dbObj.updateDBRecord(sql, curUser_no)){
+    if(!"-".equals(roleNew) && DBHelp.updateDBRecord(sql)){
     	msg = "Role " + roleNew + " is updated. (" + number + ")";
 
     	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
@@ -93,7 +93,7 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     	sql += "'" + "secUserRole" + "',";
     	sql += "'" + number +"|"+ roleOld + "',";
     	sql += "'" + "<provider_no>" + number + "</provider_no>" + "<role_name>" + roleOld + "</role_name>"  + "<role_id>" + roleId + "</role_id>" + "')";
-    	dbObj.updateDBRecord(sql, curUser_no);
+    	DBHelp.updateDBRecord(sql);
 
     	LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleOld +">"+ roleNew, ip);
             
@@ -110,7 +110,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     String roleNew = request.getParameter("roleNew");
 
     sql = "insert into secUserRole(provider_no, role_name, activeyn) values('" + number + "', '" + StringEscapeUtils.escapeSql(roleNew) + "',1)";
-    if(!"-".equals(roleNew) && dbObj.updateDBRecord(sql, curUser_no)){
+    if(!"-".equals(roleNew) && DBHelp.updateDBRecord(sql)){
     	msg = "Role " + roleNew + " is added. (" + number + ")";
 
     	LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, number +"|"+ roleNew, ip);
@@ -130,7 +130,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     String roleNew = request.getParameter("roleNew");
 
     sql = "delete from secUserRole where id='" + roleId + "'";
-    if(dbObj.updateDBRecord(sql, curUser_no)){
+    if(DBHelp.updateDBRecord(sql)){
     	msg = "Role " + roleOld + " is deleted. (" + number + ")";
 
     	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
@@ -139,7 +139,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     	sql += "'" + "secUserRole" + "',";
     	sql += "'" + number +"|"+ roleOld + "',";
     	sql += "'" + "<provider_no>" + number + "</provider_no>" + "<role_name>" + roleOld + "</role_name>" + "')";
-		dbObj.updateDBRecord(sql, curUser_no);
+		DBHelp.updateDBRecord(sql);
 
 		LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_ROLE, number +"|"+ roleOld, ip);
             
@@ -175,7 +175,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                         sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "','" + provNo + "'," + roles.get(roleNew) + ")";
                 }
 
-                dbObj.updateDBRecord(sql,curUser_no);
+                DBHelp.updateDBRecord(sql);
             }
             else {
                 if( roleOld.equals("doctor") || roleOld.equals("nurse") || roleOld.equals("locum") ) {
@@ -183,7 +183,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                     rs = dbObj.searchDBRecord(sql);
                     if(!rs.next()) {
                         sql = "DELETE FROM program_provider WHERE provider_no = '" + provNo + "'";
-                        dbObj.updateDBRecord(sql,curUser_no);
+                        DBHelp.updateDBRecord(sql);
                     }
                 }
             }
@@ -200,7 +200,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                 else
                     sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "','" + provNo + "'," + roles.get(roleNew) + ")";
                                
-                dbObj.updateDBRecord(sql,curUser_no);
+                DBHelp.updateDBRecord(sql);
             }
         }
         
@@ -212,7 +212,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                 ResultSet rs = dbObj.searchDBRecord(sql);
                 if(!rs.next()) {
                     sql = "DELETE FROM program_provider WHERE provider_no = '" + provNo + "'";
-                    dbObj.updateDBRecord(sql,curUser_no);
+                    DBHelp.updateDBRecord(sql);
                 }
                 else {
                     sql = "SELECT cr.role_name AS name from secRole cr, program_provider pp WHERE pp.provider_no = '" + provNo + "' AND cr.role_no = pp.role_id";
@@ -233,7 +233,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                     
                     if( !caisiRole.equals(highRole) ) {
                         sql = "UPDATE program_provider SET role_id = " + roles.get(highRole) + " WHERE provider_no = '" + provNo + "'";
-                        dbObj.updateDBRecord(sql, curUser_no);
+                        DBHelp.updateDBRecord(sql);
                     }
                     rs1.close();
                 }

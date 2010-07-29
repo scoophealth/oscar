@@ -115,7 +115,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 	    sql += StringEscapeUtils.escapeSql(roleUserGroup) + "', '" + StringEscapeUtils.escapeSql(objectName.trim()) + "','";
 	    sql += privilege + "', " + priority + ",'";
 	    sql += curUser_no + "')";
-	    if(dbObj.updateDBRecord(sql, curUser_no)){
+	    if(DBHelp.updateDBRecord(sql)){
 	    	msg += "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is added. ";
 		    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName +"|"+privilege, ip);
 	    } else {
@@ -148,7 +148,7 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
 	sql += "'" + "<roleUserGroup>" + roleUserGroup + "</roleUserGroup>" + "<objectName>" + objectName + "</objectName>";
 	sql += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
 	sql += "<provider_no>" + provider_no + "</provider_no>" + "')";
-	dbObj.updateDBRecord(sql, curUser_no);
+	DBHelp.updateDBRecord(sql);
 
 
     //String privilege = request.getParameter("privilege");
@@ -162,7 +162,7 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     priority   = request.getParameter("priority");
     provider_no   = curUser_no;
     sql = "update secObjPrivilege set privilege='" + privilege + "', priority='" + priority + "',provider_no='" + provider_no + "'  where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
-    if(dbObj.updateDBRecord(sql, curUser_no)){
+    if(DBHelp.updateDBRecord(sql)){
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is updated. ";
 	    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName, ip);
     } else {
@@ -189,7 +189,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 	}
 
     sql = "delete from secObjPrivilege where roleUserGroup='" + roleUserGroup + "' and objectName='" + objectName + "'";
-    if(dbObj.updateDBRecord(sql, curUser_no)){
+    if(DBHelp.updateDBRecord(sql)){
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is deleted. ";
     	sql = "insert into recyclebin (provider_no,updatedatetime,table_name,keyword,table_content) values(";
     	sql += "'" + curUser_no + "',";
@@ -199,7 +199,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     	sql += "'" + "<roleUserGroup>" + roleUserGroup + "</roleUserGroup>" + "<objectName>" + objectName + "</objectName>";
     	sql += "<privilege>" + privilege + "</privilege>" + "<priority>" + priority + "</priority>";
     	sql += "<provider_no>" + provider_no + "</provider_no>" + "')";
-		dbObj.updateDBRecord(sql, curUser_no);
+		DBHelp.updateDBRecord(sql);
 	    LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName, ip);
     } else {
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is <font color='red'>NOT</font> deleted!!! ";

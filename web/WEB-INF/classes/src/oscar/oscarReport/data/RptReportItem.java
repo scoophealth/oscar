@@ -24,21 +24,21 @@ public class RptReportItem {
         boolean ret = false;
         String sql = "insert into reportItem (report_name, status) values ('"
                 + StringEscapeUtils.escapeSql(report_name) + "', " + status + ")";
-        ret = dbObj.updateDBRecord(sql);
+        ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
     public boolean deleteRecord(int recordId) throws SQLException {
         boolean ret = false;
         String sql = "update reportItem set status=0 where id=" + recordId;
-        ret = dbObj.updateDBRecord(sql);
+        ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
     public boolean unDeleteRecord(int recordId) throws SQLException {
         boolean ret = false;
         String sql = "update reportItem set status=1 where id=" + recordId;
-        ret = dbObj.updateDBRecord(sql);
+        ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
@@ -46,9 +46,9 @@ public class RptReportItem {
     public String getReportName(String recordId) throws SQLException {
         String ret = null;
         String sql = "select report_name from reportItem where id = " + recordId;
-        ResultSet rs = dbObj.searchDBRecord(sql);
+        ResultSet rs = DBHelp.searchDBRecord(sql);
         while (rs.next()) {
-            ret = dbObj.getString(rs,"report_name");
+            ret = DBHelp.getString(rs,"report_name");
         }
         rs.close();
         return ret;

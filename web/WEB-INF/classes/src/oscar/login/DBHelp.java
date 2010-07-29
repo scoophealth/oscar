@@ -30,11 +30,6 @@ public class DBHelp {
         }
     }
 
-    public static boolean updateDBRecord(String sql, String userId) throws SQLException {
-    	return(updateDBRecord(sql));
-    }
-
-
     public static int updateDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
         int ret = 0;
         try {

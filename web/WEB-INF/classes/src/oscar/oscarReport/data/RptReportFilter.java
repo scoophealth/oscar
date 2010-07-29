@@ -43,21 +43,21 @@ public class RptReportFilter {
                 + StringEscapeUtils.escapeSql(javascript)
                 + "','"
                 + StringEscapeUtils.escapeSql(date_format) + "')";
-        ret = dbObj.updateDBRecord(sql);
+        ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
     public boolean deleteRecord(int recordId) throws SQLException {
         boolean ret = false;
         String sql = "update reportFilter set status=0 where id=" + recordId;
-        ret = dbObj.updateDBRecord(sql);
+        ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
     public boolean unDeleteRecord(int recordId) throws SQLException {
         boolean ret = false;
         String sql = "update reportFilter set status=1 where id=" + recordId;
-        ret = dbObj.updateDBRecord(sql);
+        ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 

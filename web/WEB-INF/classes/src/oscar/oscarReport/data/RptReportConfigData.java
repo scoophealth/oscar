@@ -47,7 +47,7 @@ public class RptReportConfigData {
                 + StringEscapeUtils.escapeSql(caption) + "', " + order + ", '"
                 + StringEscapeUtils.escapeSql(table_name) + "', '" + StringEscapeUtils.escapeSql(save) + "')";
         try {
-            ret = dbObj.updateDBRecord(sql);
+            ret = DBHelp.updateDBRecord(sql);
         } catch (SQLException e) {
             _logger.error("insertRecord() : sql = " + sql);
         }
@@ -60,7 +60,7 @@ public class RptReportConfigData {
                 + StringEscapeUtils.escapeSql(name) + "' and caption='" + StringEscapeUtils.escapeSql(caption)
                 + "' and table_name='" + StringEscapeUtils.escapeSql(table_name) + "' and save='"
                 + StringEscapeUtils.escapeSql(save) + "'";
-        ret = dbObj.updateDBRecord(sql);
+        ret = DBHelp.updateDBRecord(sql);
         return ret;
     }
 
@@ -69,9 +69,9 @@ public class RptReportConfigData {
         String sql = "update reportConfig set order_no=order_no+1 where report_id=" + reportId + " and save='"
                 + StringEscapeUtils.escapeSql(saveAs) + "' and order_no >=" + newPos + " order by order_no desc";
 
-        if (dbObj.updateDBRecord(sql)) {
+        if (DBHelp.updateDBRecord(sql)) {
             sql = "update reportConfig set order_no=" + newPos + " where id=" + id;
-            ret = dbObj.updateDBRecord(sql);
+            ret = DBHelp.updateDBRecord(sql);
         }
 
         return ret;
@@ -81,7 +81,7 @@ public class RptReportConfigData {
         boolean ret = false;
         String sql = "delete from reportConfig where id=" + recordId;
         try {
-            ret = dbObj.updateDBRecord(sql);
+            ret = DBHelp.updateDBRecord(sql);
         } catch (SQLException e) {
             _logger.error("deleteRecord() : sql = " + sql);
         }

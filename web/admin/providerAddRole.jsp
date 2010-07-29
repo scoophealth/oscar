@@ -50,7 +50,7 @@ String curUser_no = (String)session.getAttribute("user");
 		if(role_name.equals(request.getParameter("action").substring("edit".length()))) {
 			String	sql   = "update secRole set role_name='" + StringEscapeUtils.escapeSql(role_name) + "' ";
 			sql += "where role_name='" + StringEscapeUtils.escapeSql(role_name) + "'";
-			if(dbObj.updateDBRecord(sql, curUser_no)) {
+			if(DBHelp.updateDBRecord(sql)) {
 	  			msg = role_name + " is updated.<br>" + "Type in a role name and search it first to see if it is available.";
 	  			action = "search";
 			    prop.setProperty("role_name", role_name);
@@ -71,7 +71,7 @@ String curUser_no = (String)session.getAttribute("user");
 		if(role_name.equals(request.getParameter("action").substring("add".length()))) {
 			String	sql   = "insert into secRole (role_name) values ('";
 			sql += StringEscapeUtils.escapeSql(role_name) + "' )";
-			if(dbObj.updateDBRecord(sql, curUser_no) ) {
+			if(DBHelp.updateDBRecord(sql) ) {
 	  			msg = role_name + " is added.<br>" + "Type in a role name and search it first to see if it is available.";
 	  			action = "search";
 			    prop.setProperty("role_name", role_name);

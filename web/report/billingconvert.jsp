@@ -114,7 +114,7 @@ busy ...
 				+status+"','','"+visittype+"','"+provider_ohip_no+"','"+provider_rma_no+"','"+apptProvider_no+"','"
 				+asstProvider_no+"','" +creator+"','"+timestamp+"')";
 		 
-		dbObj.updateDBRecord(sql);
+		DBHelp.updateDBRecord(sql);
 	}
 	rs.close();
 	
@@ -144,7 +144,7 @@ busy ...
 		sql="insert into billing_on_item values (" + billing_dt_no + "," + id + ", 'HE', 'T', '" + service_code + "', '" 
 				+ billing_amount + "', '"+billingunit+"','"
 				+ appointment_date + "', '" + diagnostic_code + "', '','','" +status + "',\\N)";
-		if(!dbObj.updateDBRecord(sql)) {
+		if(!DBHelp.updateDBRecord(sql)) {
 			MiscUtils.getLogger().error("error billing_on_item:" + id);
 		}
 	}

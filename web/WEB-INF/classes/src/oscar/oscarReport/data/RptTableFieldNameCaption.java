@@ -54,7 +54,7 @@ public class RptTableFieldNameCaption {
                 + StringEscapeUtils.escapeSql(table_name) + "', '" + StringEscapeUtils.escapeSql(name) + "', '"
                 + StringEscapeUtils.escapeSql(caption) + "')";
         try {
-            ret = dbObj.updateDBRecord(sql);
+            ret = DBHelp.updateDBRecord(sql);
         } catch (SQLException e) {
             _logger.error("insertRecord() : sql = " + sql);
         }
@@ -67,7 +67,7 @@ public class RptTableFieldNameCaption {
                 + "' where table_name='" + StringEscapeUtils.escapeSql(table_name) + "' and name = '"
                 + StringEscapeUtils.escapeSql(name) + "'";
         try {
-            ret = dbObj.updateDBRecord(sql);
+            ret = DBHelp.updateDBRecord(sql);
         } catch (SQLException e) {
             _logger.error("updateRecord() : sql = " + sql);
         }
