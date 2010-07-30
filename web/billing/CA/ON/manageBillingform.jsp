@@ -200,8 +200,6 @@ if (clinicview.compareTo("000") == 0) { %>
 <%@ include file="manageBillingform_dx.jsp"%>
 <%
 }
-
-apptMainBean.closePstmtConn();
 %>
 
 <%@ include file="zfooterbackclose.jsp"%>

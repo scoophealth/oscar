@@ -122,7 +122,6 @@ plannerBean.doConfigure(dbQueries);
 	  }
     }
   }
-  plannerBean.closePstmtConn();
 %>
 <table bgcolor='silver' width='100%' cellspacing=0 cellpadding=0>
 	<tr>

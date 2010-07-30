@@ -189,7 +189,6 @@ if(!props.getProperty("isNewONbilling", "").equals("true")) {
 	<% 
     }
   }
-  apptMainBean.closePstmtConn();
 %>
 
 </table>

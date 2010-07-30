@@ -194,7 +194,6 @@ while(rslocal.next()){
 	vecProviderName.add(proLast + ", " + proFirst);
 }
 rslocal.close();
-apptMainBean.closePstmtConn();
 for(int i=0; i<vecOHIP.size(); i++) {
 	proOHIP = (String)vecOHIP.get(i);
 %>

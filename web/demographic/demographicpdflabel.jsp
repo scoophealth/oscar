@@ -508,7 +508,6 @@ while (rs.next()) {
 <%
     }
   }
-  apptMainBean.closePstmtConn();
 %>
 
 </body>

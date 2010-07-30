@@ -345,7 +345,6 @@
 
 <%
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 <%@ include file="footer.jsp"%></center>

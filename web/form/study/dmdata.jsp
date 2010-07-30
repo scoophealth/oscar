@@ -110,8 +110,6 @@ studyBean.doConfigure(dbQueries);
 		form.setProperty("formType2Diabetes.eyes", rsdemo.getString("eyes" + k)==null?"":rsdemo.getString("eyes" + k));
 	}
 
-    studyBean.closePstmtConn();
-
 	//xml part
     Document doc = UtilXML.newDocument();
 

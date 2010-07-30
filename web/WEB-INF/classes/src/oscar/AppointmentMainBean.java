@@ -288,10 +288,6 @@ public class AppointmentMainBean {
       return dbPH.queryResults(sqlQuery);
     }
 
-  // Don't forget to clean up!
-  public void closePstmtConn() throws SQLException {
-    dbPH.closePstmt();
-  }
   public String getString(ResultSet rs, java.lang.String columnName) throws SQLException
   {
   	return Misc.getString(rs, columnName);

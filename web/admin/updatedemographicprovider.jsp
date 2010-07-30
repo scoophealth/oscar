@@ -415,9 +415,6 @@ function setregexp2() {
 	</form>
 </table>
 
-<%
-    updatedpBean.closePstmtConn();
-%>
 </center>
 </body>
 </html:html>

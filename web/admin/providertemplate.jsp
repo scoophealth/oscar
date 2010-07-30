@@ -135,7 +135,6 @@ function setfocus() {
       tValue = rsdemo.getString("encountertemplate_value");
 	}
   }
-  apptMainBean.closePstmtConn();
 %>
 <center>
 <table width="90%" border="0" cellspacing="2" cellpadding="2">

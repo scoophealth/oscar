@@ -155,7 +155,6 @@
 		<br>
 		<%
  } //end for loop
- if(rsdemo!=null) encPrintBean.closePstmtConn();
 %>
 		</td>
 	</tr>

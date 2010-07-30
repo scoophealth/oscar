@@ -143,9 +143,6 @@ if(connected){
 	}
 
 
-    studyBean.closePstmtConn();
-
-
 
 	String [] elementName1 = {"fpVisit", "bloodPressure", "hbA1c", "glucose", "smoking", "exercise", "weight", "medsACE", "medsASA","lipids", "albuminuria", "footCheck", "eyeCheck"} ;
 	String nodeName = "DMRecord";

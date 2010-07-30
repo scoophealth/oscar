@@ -200,7 +200,6 @@ if (reportAction.compareTo("dxcode") == 0) {
 
 
 <%
- apptMainBean.closePstmtConn();
   %>
 
 <%@ include file="../demographic/zfooterbackclose.jsp"%>

@@ -325,7 +325,6 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
           	if (appNo != null) {
           		ResultSet rs = apptMainBean.queryResults(appNo, "get_appt_location");
           		if(rs.next()) location=apptMainBean.getString(rs,1);
-          		apptMainBean.closePstmtConn();
           	}
       %> 
       <script>
@@ -375,8 +374,7 @@ function changeSite(sel) {
             %> 
             <option value="<%=proOHIP%>" <%=user_no.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
             <%
-                }      
-                apptMainBean.closePstmtConn();
+                }
             %>
       </select>
 <% } %>

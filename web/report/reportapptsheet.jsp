@@ -179,7 +179,6 @@ function setfocus() {
 	</tr>
 	<%
   }
-  daySheetBean.closePstmtConn();
 %>
 
 </table>

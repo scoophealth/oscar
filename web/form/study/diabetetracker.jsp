@@ -134,7 +134,6 @@ if(session.getAttribute("user") == null || !( ((String) session.getAttribute("us
 		k++;
 	}
 
-    studyBean.closePstmtConn();
 
 	//xml part
     Document doc = UtilXML.newDocument();

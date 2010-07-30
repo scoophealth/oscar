@@ -210,7 +210,6 @@
 
 				}
 			}
-			apptMainBean.closePstmtConn();
 
 		%>
 <script LANGUAGE="JavaScript">

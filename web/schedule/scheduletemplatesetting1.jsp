@@ -407,8 +407,5 @@ function addDataString1() {
 
 
 </form>
-<%
-   //scheduleMainBean.closePstmtConn();
-%>
 </body>
 </html>

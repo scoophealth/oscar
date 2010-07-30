@@ -193,7 +193,6 @@ while(rslocal.next()){
 					<%=proFirst%></option>
 					<% 
 }
-apptMainBean.closePstmtConn();
 %>
 				</select> </font></td>
 			</tr>

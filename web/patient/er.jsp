@@ -175,8 +175,7 @@
 				</a></font><br>
 				<%
      }
-   } 
-   apptMainBean.closePstmtConn();       
+   }       
 %>
 				</td>
 			</tr>

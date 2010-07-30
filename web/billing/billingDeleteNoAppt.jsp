@@ -88,7 +88,6 @@
       self.close();
    	self.opener.refresh();
 </script> <%
-  apptMainBean.closePstmtConn();
   }
 %>
 <p></p>

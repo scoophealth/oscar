@@ -388,7 +388,6 @@ function loadPage() {
 		</tr>
 		<% 
         }
-        reportMainBean.closePstmtConn();
         %>
 
 	</tbody>

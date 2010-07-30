@@ -198,7 +198,6 @@ function refreshstudy() {
 	</tr>
 	<%
   }
-  studyBean.closePstmtConn();
 %>
 
 </table>

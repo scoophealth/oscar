@@ -53,7 +53,7 @@ for (int i=1; i<11; i++){
 
 	}
 }
-if (rowsAffected != 100) apptMainBean.closePstmtConn();
+if (rowsAffected != 100)
 %>
 
 <% response.sendRedirect("manageBillingform.jsp"); %>

@@ -51,8 +51,6 @@ for (int i=0; i<45; i++){
 		int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_ctldiagcode");
 	}
 }
-
-apptMainBean.closePstmtConn();
 %>
 
 <% response.sendRedirect("manageBillingform.jsp"); %>

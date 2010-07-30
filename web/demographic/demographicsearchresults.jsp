@@ -328,7 +328,6 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 	<%
 		}
 	}
-	apptMainBean.closePstmtConn();
 %>
 
 </table>

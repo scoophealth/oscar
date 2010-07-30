@@ -125,7 +125,6 @@
 
 <%
   }
-   apptMainBean.closePstmtConn();
   %>
 
 <%

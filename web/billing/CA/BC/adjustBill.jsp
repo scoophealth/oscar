@@ -708,8 +708,6 @@ BillingService billService = bcd.getBillingCodeByCode(allFields.getProperty("bil
  </table>
  <table width="100%" border=1>
   <%
-
-   apptMainBean.closePstmtConn();
    %>
 
     <tr>

@@ -188,9 +188,7 @@ if (reportAction.compareTo("") == 0 || reportAction == null) {
 %>
 <%@ include file="billingReport_flu.jsp"%>
 <%
-} 
-
-apptMainBean.closePstmtConn();
+}
 %>
 
 <br>

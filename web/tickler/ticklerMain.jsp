@@ -780,8 +780,6 @@ function changeSite(sel) {
                             %>
                             
                             <%}
-                            
-                            apptMainBean.closePstmtConn();
               
                             if (nItems == 0) {
                             %>

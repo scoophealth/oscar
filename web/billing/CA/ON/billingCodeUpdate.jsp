@@ -125,8 +125,7 @@ if(request.getParameter("nameF") != null) {
   	 rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updatebillservice");
  
 %>
-<%  
-   apptMainBean.closePstmtConn();
+<%
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>

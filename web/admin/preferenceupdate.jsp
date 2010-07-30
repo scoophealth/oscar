@@ -79,8 +79,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 %>
 <h1><bean:message key="admin.preferenceupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.
 <%  
-  }
-  apptMainBean.closePstmtConn(); 
+  } 
 %>
 <p></p>
 <%@ include file="footer2htm.jsp"%>

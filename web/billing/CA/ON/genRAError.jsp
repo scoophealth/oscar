@@ -232,7 +232,6 @@ if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){
 
 	<%
 }
-apptMainBean.closePstmtConn();
 %>
 
 </body>

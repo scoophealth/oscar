@@ -133,7 +133,7 @@ function CodeAttach(File0, File1, File2,dx1,dx2,dx3) {
   //	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
   rowsAffected = apptMainBean.queryExecuteUpdate(param1, "updatebillservice");
 %>
-<%apptMainBean.closePstmtConn();%>
+
 <p>
 <h1>Successful Addition of a billing Record.</h1>
 </p>

@@ -87,7 +87,6 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 <hr width="90%"></hr>

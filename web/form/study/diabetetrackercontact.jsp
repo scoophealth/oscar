@@ -79,8 +79,6 @@
         demo.setProperty("demographic.postal", rsdemo.getString("postal")!=null?rsdemo.getString("postal").replaceAll(" ", ""):"");
         demo.setProperty("demographic.dob", rsdemo.getString("year_of_birth") +"-"+ (rsdemo.getString("month_of_birth").length()<2?("0"+rsdemo.getString("month_of_birth")):rsdemo.getString("month_of_birth")) +"-"+ (rsdemo.getString("date_of_birth").length()<2?("0"+rsdemo.getString("date_of_birth")):rsdemo.getString("date_of_birth")) );
 	}
-    
-    studyBean.closePstmtConn();
 
 	//xml part
     Document doc = UtilXML.newDocument();

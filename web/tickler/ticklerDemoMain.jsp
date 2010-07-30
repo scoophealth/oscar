@@ -485,8 +485,6 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
 
 			<%}
 
-apptMainBean.closePstmtConn();
-
 if (nItems == 0) {
 %>
 			<tr>

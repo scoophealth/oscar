@@ -162,8 +162,6 @@ while(rslocal.next()){
 	co_total= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_co_total>","</xml_co_total>");
 }
 
-apptMainBean.closePstmtConn();
-
 file.close();
 reader.close();
 input.close();

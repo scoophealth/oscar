@@ -721,8 +721,6 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
   }
 
-       apptMainBean.closePstmtConn();
-
     %>
 
 

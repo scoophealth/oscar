@@ -845,7 +845,6 @@ function tranbuttonb7_click() {
 </form>
 <%
 } //end if
-   //scheduleMainBean.closePstmtConn();
 %>
 </body>
 <%! String getSelectAddr(String s, String [] site, String sel) {

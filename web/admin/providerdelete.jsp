@@ -58,7 +58,6 @@
 <h1><bean:message key="admin.providerdelete.msgDeletionFailure" />:
 <%= request.getParameter("keyword") %>. <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 <%@ include file="footerhtm.jsp"%>

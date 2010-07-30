@@ -234,7 +234,6 @@ td {
 	</tr>
 	<%
   }
-  daySheetBean.closePstmtConn();
 %>
 
 </table>

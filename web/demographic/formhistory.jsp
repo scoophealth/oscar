@@ -124,7 +124,6 @@
 		<%=rsdemo.getString("form_name")%></a></font> by <%=rsdemo.getString("provider_no")%><br>
 		<%
    }     
-   formHistBean.closePstmtConn();
 %>
 		</td>
 	</tr>

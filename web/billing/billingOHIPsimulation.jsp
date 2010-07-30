@@ -140,7 +140,7 @@ String billinggroup_no;
 			<% 
 
  }
-// apptMainBean.closePstmtConn();
+//
   %>
 		</select> </font></b></td>
 		<td width="254"><font color="#003366"><b><font

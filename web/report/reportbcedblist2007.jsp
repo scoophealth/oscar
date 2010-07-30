@@ -154,7 +154,6 @@ reportMainBean.doConfigure(dbQueries);
 	</tr>
 	<%
   }
-  reportMainBean.closePstmtConn();
 %>
 
 </table>

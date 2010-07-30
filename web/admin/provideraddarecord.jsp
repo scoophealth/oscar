@@ -154,7 +154,7 @@ if (isOk) {
 <h1><bean:message key="admin.provideraddrecord.msgAdditionFailure" /></h1>
 <%
   }
-  //apptMainBean.closePstmtConn();
+
 %> <%@ include file="footer2htm.jsp"%></center>
 </body>
 </html:html>

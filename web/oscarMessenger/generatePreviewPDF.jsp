@@ -312,7 +312,7 @@ request.getSession().setAttribute("EctSessionBean",bean);
 
 						<%
                                       }
-                                      daySheetBean.closePstmtConn();
+                                      
                                     %>
 
 						<tr>

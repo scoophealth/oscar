@@ -146,7 +146,7 @@ providerArray.add(providerArr);
 			<% 
 
  }
-// apptMainBean.closePstmtConn(); 
+// 
   %>
 		</select> </font></b></td>
 		<td width="254"><font color="#003366"><b><font
@@ -327,7 +327,6 @@ proName1 = proFirst + " " + proLast;
    </td>
 <%
 }
-apptMainBean.closePstmtConn();
 %>
 </table> 
     </td>

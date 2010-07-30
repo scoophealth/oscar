@@ -298,7 +298,6 @@ function refresh() {
 
 
 <%
- apptMainBean.closePstmtConn();
   %>
 <br>
 <%

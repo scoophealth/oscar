@@ -167,7 +167,6 @@ function setfocus() {
 	<%
     }
   }
-  apptMainBean.closePstmtConn();
 %>
 
 </table>

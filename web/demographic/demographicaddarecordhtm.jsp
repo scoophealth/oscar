@@ -1203,7 +1203,6 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 *
 <font face="Courier New, Courier, mono" size="-1"><bean:message
 	key="demographic.demographicaddrecordhtm.formDateFormat" /> </font>
-<% addDemoBean.closePstmtConn(); %>
 
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });

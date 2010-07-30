@@ -405,7 +405,6 @@ while (rsdemo.next()) {
 	</tr>
 	<%
 }
-apptMainBean.closePstmtConn();
 
 %>
 </table>

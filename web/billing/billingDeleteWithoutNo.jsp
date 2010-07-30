@@ -104,7 +104,7 @@ String billNo ="";
 //	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));
   
   if (rowsAffected ==1) {
-    //apptMainBean.closePstmtConn();//change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
+    //change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
   oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
 String unbillStatus = as.unbillStatus(request.getParameter("status"));
   String[] param1 =new String[2];
@@ -135,7 +135,6 @@ String unbillStatus = as.unbillStatus(request.getParameter("status"));
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
   }
 %>
 <p></p>

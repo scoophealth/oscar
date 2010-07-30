@@ -181,7 +181,6 @@ function popupPageNew(vheight,vwidth,varpage) {
 <%
     }
   }
-  apptMainBean.closePstmtConn();
   
 %>
 

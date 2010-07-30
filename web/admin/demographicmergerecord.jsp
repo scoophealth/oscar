@@ -314,7 +314,6 @@ if(rs==null) {
 	<%
     }
 }
-apptMainBean.closePstmtConn();
 %>
 
 </table>

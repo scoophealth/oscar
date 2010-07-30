@@ -284,7 +284,6 @@
 </table>
 <%
   }
-  ptsLoginBean.closePstmtConn();
 %>
 
 <p>

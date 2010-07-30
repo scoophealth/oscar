@@ -42,8 +42,6 @@ type_name = request.getParameter("type_name");
 
 ResultSet rslocal = apptMainBean.queryResults(type_id, "search_ctlbilltype");
 if (rslocal.next()) billtype = rslocal.getString("billtype");
-
-apptMainBean.closePstmtConn();
 %>
 
 <table width=95%>

@@ -214,7 +214,6 @@
     currentBillingNo = billno;
     } //else
         } //while
-        apptMainBean.closePstmtConn();
   %>
 </table>
 <br>

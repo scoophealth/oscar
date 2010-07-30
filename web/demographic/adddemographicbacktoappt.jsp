@@ -71,7 +71,6 @@
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
     if(rs.next()) { 
       out.println("!!!!!!!!!!!<br><font color='red'>You may have the CPP record already!!! <BR>Please search it first or add it at 'Search/Add Patients'.</font><br>******************");
-  		apptMainBean.closePstmtConn();
       return;
     }
    
@@ -100,5 +99,4 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>

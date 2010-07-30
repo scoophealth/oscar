@@ -93,10 +93,8 @@
 	while (rs.next()) { 
 		pin = daySheetBean.getString(rs,"pin") ;
 	}
-	daySheetBean.closePstmtConn();
 
 	if(pin == null) {
-		daySheetBean.closePstmtConn();
 		out.println("The patient does not have a pin number.<br><br>Please close this window first,<br> then set a pin for the patient before trying to send eChart.<br><br><input type='button' name='button' value='Close' onclick='window.close()'>");
 		return;
 	}

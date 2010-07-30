@@ -98,7 +98,6 @@
 			</tr>
 			<%
    }
-   apptMainBean.closePstmtConn();
 %>
 			<INPUT TYPE="hidden" NAME="displaymode" VALUE='newgroup'>
 

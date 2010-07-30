@@ -119,7 +119,6 @@
 	</tr>
 	<%
 	}
-	reportMainBean.closePstmtConn();
 %>
 </table>
 <br>

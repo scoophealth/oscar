@@ -132,7 +132,6 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
 
 <%
   }
-   apptMainBean.closePstmtConn();
   %>
 
 <%

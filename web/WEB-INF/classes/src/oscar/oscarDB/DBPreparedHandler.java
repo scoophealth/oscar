@@ -350,20 +350,6 @@ public final class DBPreparedHandler {
         return rs;
     }
 
-    // Don't forget to clean up!
-    public void closePstmt() throws SQLException {
-        if (stmt != null) {
-            stmt.close();
-            stmt = null;
-        }
-        else {
-		if(preparedStmt != null) {
-	            preparedStmt.close();
-		}
-            preparedStmt = null;
-        }
-    }
-
     public String getString(ResultSet rs, String columnName) throws SQLException
     {
     	return oscar.Misc.getString(rs, columnName);

@@ -623,8 +623,6 @@ param2[1] = raNo;
 
 recordAffected = apptMainBean.queryExecuteUpdate(param2,"update_rahd_content");
 
-apptMainBean.closePstmtConn();
-
 file.close();
 reader.close();
 input.close();

@@ -137,8 +137,7 @@
 	  prepregwt = prepregwt==null?"":prepregwt;
     }
   }
-  //boolean bNewDemoAcc=true;
-  formMainBean.closePstmtConn();
+
 %>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">

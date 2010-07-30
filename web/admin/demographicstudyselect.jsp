@@ -125,7 +125,6 @@ function setfocus() {
 	</tr>
 	<%
   }
-  studyBean.closePstmtConn();
 %>
 	<tr>
 		<td>&nbsp;</td>

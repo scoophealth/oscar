@@ -218,7 +218,6 @@ if (reportAction.compareTo("billob") == 0) {
 
 
 <%
- apptMainBean.closePstmtConn();
   %>
 
 <%@ include file="../demographic/zfooterbackclose.jsp"%>

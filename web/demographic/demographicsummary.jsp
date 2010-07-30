@@ -237,7 +237,6 @@
 		<%
      }
    }     
-   demosummaryBean.closePstmtConn();
 %>
 		</td>
 	</tr>

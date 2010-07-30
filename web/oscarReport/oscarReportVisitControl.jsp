@@ -190,8 +190,6 @@ function refresh() {
 <%         }
        }
    }
-
-apptMainBean.closePstmtConn();
 %>
 
 <%@ include file="../demographic/zfooterbackclose.jsp"%>

@@ -88,7 +88,6 @@ self.close();
 self.opener.refresh();
 </script> <%
 	if(!props.getProperty("isNewONbilling", "").equals("true")) {
-		apptMainBean.closePstmtConn();
 	}
 }
 %>

@@ -120,9 +120,6 @@ public class TeleplanCorrectionActionWCB
 
             bean.queryExecuteUpdate(s, provider_wcb);
 
-            //{"update_provider_wcb","Update wcb set provider=?, w_payeeno = ?, w_pracno = ? where billing_no=?"},
-            //bean.queryExecuteUpdate(data.getBillingMaster(),CLOSE_RECONCILIATION);
-            bean.closePstmtConn();
         } catch (Exception ex) {
             log.error("WCB Teleplan Correction Query Error: " +ex.getMessage() + " - ", ex);
         }

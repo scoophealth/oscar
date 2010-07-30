@@ -362,8 +362,7 @@
 %>
 <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.</h1>
 <%  
-  }
-  apptMainBean.closePstmtConn(); 
+  } 
 %>
 <p></p>
 

@@ -170,7 +170,6 @@ function setfocus() {
 	<%
   }
   }
-  patientBean.closePstmtConn();
 %>
 
 </table>

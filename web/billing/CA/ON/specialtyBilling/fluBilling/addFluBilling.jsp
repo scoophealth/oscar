@@ -508,7 +508,7 @@ SPAN.bold {
            //     <%
 
 		   //}
-		  // apptMainBean.closePstmtConn();
+		  //
   --%>
 				</select> </font></td>
 				<td width="26%"><font size="1"
@@ -540,7 +540,6 @@ SPAN.bold {
 					<%=proFirst%></option>
 					<%
 }
-apptMainBean.closePstmtConn();
 %>
 				</select> </font></td>
 				<td width="31%"><font size="1"

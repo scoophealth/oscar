@@ -167,11 +167,6 @@ function upCaseCtrl(ctrl) {
 </form>
 <%
   if(scheduleMainBean.getBDoConfigure()) scheduleMainBean.setBDoConfigure();
-  try {
-    scheduleMainBean.closePstmtConn();
- }catch(SQLException e) {
-	 MiscUtils.getLogger().error("Error", e);
- }
 %>
 
 

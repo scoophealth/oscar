@@ -76,6 +76,5 @@
 %>
 <h1>Sorry, fail to update !!! <%= request.getParameter("cpp_id") %>.
 <%  
-  }
-  apptMainBean.closePstmtConn(); 
+  } 
 %>

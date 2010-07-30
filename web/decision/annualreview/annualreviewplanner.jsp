@@ -169,8 +169,6 @@
           riskDataBean.setProperty("996", "checked");
         }
       }
-
-      plannerBean.closePstmtConn();
 %>
 <table bgcolor='silver' width='100%'>
 	<tr>

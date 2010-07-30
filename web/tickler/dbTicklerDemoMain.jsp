@@ -61,8 +61,6 @@ int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_tickler");
 
 }
 
-apptMainBean.closePstmtConn();
-
 %>
 <jsp:forward page='ticklerDemoMain.jsp'>
 	<jsp:param name="demoview" value='<%=demoview%>' />

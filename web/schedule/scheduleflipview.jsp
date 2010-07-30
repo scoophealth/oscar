@@ -232,7 +232,7 @@ function t(s1,s2,s3,s4,s5,s6) {
     DateTimeCodeBean.put("color"+rsdemo.getString("code"), (rsdemo.getString("color")==null || rsdemo.getString("color").equals(""))?bgcolordef:rsdemo.getString("color") );
     DateTimeCodeBean.put("bookinglimit" + rsdemo.getString("code"), rsdemo.getString("bookinglimit"));
   } 
-  flipviewMainBean.closePstmtConn();
+
   DateTimeCodeBean.put("color-", "silver");
   DateTimeCodeBean.put("color|", "gold");
   DateTimeCodeBean.put("color||", "red");

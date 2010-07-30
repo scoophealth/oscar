@@ -1072,7 +1072,6 @@ if (errorFlag.compareTo("1")==0){
 	}
 	session.setAttribute("content", content); 
 }
-apptMainBean.closePstmtConn();
 
 if(bPercS) {
     billing_pCode = oscarVariables.getProperty("billing_pCode","");

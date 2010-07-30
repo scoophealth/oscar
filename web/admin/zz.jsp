@@ -98,7 +98,6 @@ function setfocus() {
 	<%
 		}
   }
-  studyBean.closePstmtConn();
 %>
 
 </table>

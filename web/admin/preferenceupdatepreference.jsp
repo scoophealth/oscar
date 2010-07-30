@@ -147,7 +147,6 @@
 	</tr>
 	<%
   }}
-  apptMainBean.closePstmtConn();
 %>
 	</form>
 </table>

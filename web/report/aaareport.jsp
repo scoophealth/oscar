@@ -102,7 +102,6 @@ busy ...
   inf.write(asql);
   inf.close();
   
-  daySheetBean.closePstmtConn();
 %>
 
 done.

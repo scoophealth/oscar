@@ -64,7 +64,6 @@
 <h1>Sorry, fail to delete !!! <%= request.getParameter("demographic_no") %>.
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 <%@ include file="footer.jsp"%>

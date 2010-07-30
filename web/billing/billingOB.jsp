@@ -652,7 +652,7 @@ function showHideLayers() { //v3.0
 					<%
 						CountService = CountService + 1;
 						}
-						// apptMainBean.closePstmtConn();
+						//
 
 						// headerTitle="Premium";
 					%>
@@ -749,7 +749,7 @@ function showHideLayers() { //v3.0
 					<%
 						CountService = CountService + 1;
 						}
-						// apptMainBean.closePstmtConn();
+						//
 					%>
 				</table>
 				</td>
@@ -843,7 +843,7 @@ function showHideLayers() { //v3.0
 					<%
 						CountService = CountService + 1;
 						}
-						// apptMainBean.closePstmtConn();
+						//
 					%>
 					<tr bgcolor="#CCCCFF">
 						<td align="center" valign="top" height="71" colspan="3">
@@ -996,7 +996,6 @@ function showHideLayers() { //v3.0
 						</td>
 					</tr>
 					<%
-						apptMainBean.closePstmtConn();
 					%>
 				</table>
 				<table width="100%" border="0" cellspacing="0" cellpadding="0">

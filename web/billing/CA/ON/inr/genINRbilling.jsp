@@ -155,8 +155,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
               
          
 	}
-} 
-apptMainBean.closePstmtConn();
+}
 %>
 <script LANGUAGE="JavaScript">
       self.close();

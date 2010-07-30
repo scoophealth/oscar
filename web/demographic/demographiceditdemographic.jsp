@@ -2209,7 +2209,6 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 				<%
                     }
                   }
-                  apptMainBean.closePstmtConn();
                 %>
 
 		</table>

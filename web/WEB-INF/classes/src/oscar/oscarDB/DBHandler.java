@@ -38,7 +38,7 @@ import org.oscarehr.util.DbConnectionFilter;
 /**
  * @deprecated Use JPA instead, no new code should be written against this class.
  */
-public class DBHandler {
+public final class DBHandler {
 
     public static String OSCAR_DATA = "oscar_sfhc";
 

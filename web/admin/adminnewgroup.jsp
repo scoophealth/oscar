@@ -143,7 +143,6 @@ function validate() {
 			</tr>
 			<%
    }
-   apptMainBean.closePstmtConn();
 %>
 			<INPUT TYPE="hidden" NAME="dboperation" VALUE='savemygroup'>
 			<INPUT TYPE="hidden" NAME="displaymode" VALUE='savemygroup'>

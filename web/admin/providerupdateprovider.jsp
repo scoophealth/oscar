@@ -395,7 +395,6 @@ for (int i=0; i<sites.size(); i++) {
 </table>
 <%
   }}
-  apptMainBean.closePstmtConn();
 %>
 </form>
 

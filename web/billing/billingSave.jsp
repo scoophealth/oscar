@@ -124,7 +124,7 @@ function closeit() {
 //	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));
   
     if (rowsAffected ==1) {
-    //apptMainBean.closePstmtConn();//change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
+    //change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
         rsdemo = apptMainBean.queryResults(request.getParameter("appointment_no"), "searchapptstatus");
         String apptCurStatus = rsdemo.next()?rsdemo.getString("status"):"T";
 
@@ -157,7 +157,6 @@ function closeit() {
 </p>
 <%  
     }
-    apptMainBean.closePstmtConn();
 %>
 <p></p>
 <hr width="90%"></hr>

@@ -78,7 +78,7 @@ function onUnbilled(url) {
     while (rsprov.next()) {
    apptProvider=rsprov.getString("last_name")+","+rsprov.getString("first_name");
    }
-   // apptMainBean.closePstmtConn();
+   //
    %>
 <H4>Billing Report for <%=apptProvider%></H4>
 <br>
@@ -130,7 +130,6 @@ function onUnbilled(url) {
 	<%
     }
   }
-  apptMainBean.closePstmtConn();
   
 %>
 

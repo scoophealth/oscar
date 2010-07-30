@@ -150,7 +150,6 @@ if (rsdemo.next()) {
 	}
 }
 
-studyBean.closePstmtConn();
 
 // send to ping
 oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();

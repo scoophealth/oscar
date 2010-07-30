@@ -1507,7 +1507,6 @@ else {
 	out.println(checklist.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/provider/obarchecklist_99_12.xml"), savedar1risk));
 }	
 }
-  formMainBean.closePstmtConn();
 		
 %>
 

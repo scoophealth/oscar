@@ -95,7 +95,6 @@ mygroup = request.getParameter(temp).substring(request.getParameter(temp).indexO
       self.close();
       self.opener.refresh();
 </script> <%
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 <hr width="90%"></hr>

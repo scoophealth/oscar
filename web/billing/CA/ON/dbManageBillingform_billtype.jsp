@@ -54,7 +54,6 @@ else if (billtype_old.equals("no")) {
     param[1]=servicetype;
     int recordAffected = apptMainBean.queryExecuteUpdate(param,"update_ctlbilltype");
 }
-apptMainBean.closePstmtConn();
 %>
 
 <script LANGUAGE="JavaScript">

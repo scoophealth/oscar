@@ -101,8 +101,7 @@
 %>
 <h1><bean:message key="admin.providerupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.
 <%  
-  }
-  apptMainBean.closePstmtConn(); 
+  } 
 %>
 <p></p>
 <%@ include file="footer2htm.jsp"%>

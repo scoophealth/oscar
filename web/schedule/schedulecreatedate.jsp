@@ -437,9 +437,6 @@ function refresh() {
 </table>
 
 </form>
-<%
-   //scheduleMainBean.closePstmtConn();
-%>
 
 
 </body>

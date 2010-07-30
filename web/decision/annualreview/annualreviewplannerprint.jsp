@@ -102,7 +102,7 @@ plannerBean.doConfigure(dbQueries);
     if (age>=65 && age<=69)
       riskDataBean.setProperty("996", "checked" ); 
   }
-  plannerBean.closePstmtConn();
+
 %>
 <table bgcolor='silver' width='100%' cellspacing=0 cellpadding=0>
 	<tr>

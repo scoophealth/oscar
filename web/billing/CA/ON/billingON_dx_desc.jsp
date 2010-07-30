@@ -41,8 +41,6 @@ String description = "";
 
 ResultSet rslocal = apptMainBean.queryResults(diagnostic_code, "search_diagnostic_desc");
 if (rslocal.next()) description = rslocal.getString("description").trim();
-
-apptMainBean.closePstmtConn();
 %>
 
 <%=(!description.equals("") && description.length()>32)?description.substring(0,32)+"...":description%>

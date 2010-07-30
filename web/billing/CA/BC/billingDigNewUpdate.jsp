@@ -135,7 +135,6 @@ function CodeAttach(File0, File1, File2) {
 	  param1[1]=code;
           try{
   	 rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updatedigcode");
-            apptMainBean.closePstmtConn();
          }catch(Exception e){
         	 MiscUtils.getLogger().error("Error", e);
          }

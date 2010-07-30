@@ -151,7 +151,6 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
 
   }
-  plannerBean.closePstmtConn();
 %>
 <table bgcolor='silver' width='100%'>
   <tr>

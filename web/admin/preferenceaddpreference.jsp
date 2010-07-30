@@ -113,7 +113,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <%  
     }
   }
-  apptMainBean.closePstmtConn();
 %> <!-- footer -->
 <hr width="100%" color="navy">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">

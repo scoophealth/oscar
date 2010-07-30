@@ -153,7 +153,6 @@ if (errorCode.compareTo("") ==0){
 <input type="button" value="Change" onClick="history.go(-1);return false;">
 <%
 }
-apptMainBean.closePstmtConn();
 %>
   <p><%=request.getParameter("inraction")%> Bill number <%=billinginr_no%></p>
   <hr width="90%"></hr>

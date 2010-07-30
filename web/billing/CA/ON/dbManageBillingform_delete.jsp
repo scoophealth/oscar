@@ -39,8 +39,6 @@ String typeid = request.getParameter("servicetype");
 int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbillservice");	    
 int recordAffected = apptMainBean.queryExecuteUpdate(typeid,"delete_ctldiagcode");
 int recordAffected1 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbilltype");
-
-apptMainBean.closePstmtConn();
 %>
 
 <script LANGUAGE="JavaScript">

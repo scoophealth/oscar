@@ -172,7 +172,6 @@ if (nBillNo > 0) {
 </script> <%
             break; //get only one billing_no
         }//end of while
-		apptMainBean.closePstmtConn();
     }  else {
 %>
 <p>

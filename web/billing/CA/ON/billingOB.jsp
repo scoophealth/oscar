@@ -890,7 +890,7 @@ rslocal.close();
 </table>
 </form>
 
-<% apptMainBean.closePstmtConn();%>
+<%%>
 
 </body>
 </html>

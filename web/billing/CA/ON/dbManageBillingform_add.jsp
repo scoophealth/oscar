@@ -102,8 +102,6 @@ if (type.compareTo("") == 0 || group1.compareTo("") == 0 || group2.compareTo("")
 	    param4[1]=billtype;
 	    int recordAffected1 = apptMainBean.queryExecuteUpdate(param4,"save_ctlbilltype");
 	}
-	
-	apptMainBean.closePstmtConn();
 
 response.sendRedirect("manageBillingform.jsp");
 } %>

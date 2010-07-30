@@ -153,7 +153,6 @@ function setfocus() {
   }
 
   if(reportMainBean.getBDoConfigure()) reportMainBean.setBDoConfigure();
-     reportMainBean.closePstmtConn();
 %>
 
 </table>

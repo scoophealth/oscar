@@ -53,8 +53,7 @@
     rowsAffected1 = baseurlBean.queryExecuteUpdate(request.getParameter("resource_baseurl"), "add_resource");
     out.println("<script language=\"JavaScript\"><!--");
     out.println("self.close();");
-    out.println("//--></SCRIPT>");
-    baseurlBean.closePstmtConn();  
+    out.println("//--></SCRIPT>");  
   }
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

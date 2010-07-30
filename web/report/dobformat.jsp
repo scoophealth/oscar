@@ -67,7 +67,6 @@ busy ... busy ... busy
 		}
 	}
 
-	daySheetBean.closePstmtConn();
 %>
 
 <p>

@@ -230,7 +230,7 @@ function setfocus() {
 			}
 		}
 	}
-	daySheetBean.closePstmtConn();
+
 	while (18 > hour)
 	{
 		if (veryFirst)

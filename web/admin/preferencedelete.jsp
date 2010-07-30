@@ -56,7 +56,6 @@
 <h1><bean:message key="admin.preferencedelete.msgDeletionFailure" />:
 <%= request.getParameter("keyword") %>. <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 

@@ -147,7 +147,6 @@
 	<% 
     }
   }
-  apptMainBean.closePstmtConn();
   
 %>
 

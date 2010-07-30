@@ -157,7 +157,7 @@ String billinggroup_no;
 			<% 
 
  }
-// apptMainBean.closePstmtConn();
+//
   %>
 		</select> </font></b></td>
 		<td width="181"><b><font face="Arial, Helvetica, sans-serif"
@@ -259,9 +259,6 @@ String billinggroup_no;
 			target="_blank"><%=hFile%></a></font></td>
 	</tr>
 	<%  }
-  
-   
- apptMainBean.closePstmtConn();
   %>
 </table>
 </body>

@@ -187,7 +187,7 @@ function showHideLayers() { //v3.0
 			<%
 
              }
-// apptMainBean.closePstmtConn();
+//
   %>
 		</select> </font></b></td>
 		<td width="181"><b><!--<font face="Arial, Helvetica, sans-serif" size="2">Select
@@ -289,7 +289,6 @@ function showHideLayers() { //v3.0
 	</tr>
 	<%
 }
-apptMainBean.closePstmtConn();
 %>
 </table>
 </body>

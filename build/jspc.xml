@@ -38,14 +38,19 @@
 		<unwar src="tmp/oscar.war" dest="${expandedWarDir}" />
 		
 		<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${generatedDir}" validateXml="false" failOnError="false" />
-		
+
 		<javac srcdir="${generatedDir}" source="1.5" target="1.5">
+			<compilerarg value="-Xmaxerrs" />
+			<compilerarg value="1000" />
+			
 			<classpath>
 				<pathelement location="${expandedWarDir}/WEB-INF/classes" />
 				<fileset dir="${expandedWarDir}/WEB-INF/lib">
 					<include name="*.jar" />
 				</fileset>
-				<pathelement location="${catalina.home}/lib" />
+				<fileset dir="${catalina.home}/lib">
+					<include name="*.jar" />
+				</fileset>
 				<fileset dir="${catalina.home}/bin">
 					<include name="*.jar" />
 				</fileset>

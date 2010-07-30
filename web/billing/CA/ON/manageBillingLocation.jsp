@@ -198,9 +198,7 @@ if(rs==null) {
 			</tr>
 			<%
 	}
-}     
-
-apptMainBean.closePstmtConn();
+}
 %>
 
 		</table>

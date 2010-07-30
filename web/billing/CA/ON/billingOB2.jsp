@@ -301,7 +301,6 @@ billUnit = rsBillRec.getString("billingunit");
  while(rsDiagCode.next()){
   diagDesc = rsDiagCode.getString("description");
   }
-       apptMainBean.closePstmtConn();
     %>
 
 	<tr bgcolor="#CCCCCC">

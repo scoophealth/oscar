@@ -154,7 +154,6 @@ while(rslocal.next()){
 			<% 
 }
 rslocal.close();
-apptMainBean.closePstmtConn();
 %>
 
 		</select></td>

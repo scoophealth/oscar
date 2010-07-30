@@ -131,8 +131,7 @@ function CodeAttach(File0, File1, File2) {
   	 rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updatedigcode");
  
 %>
-<%  
-   apptMainBean.closePstmtConn();
+<%
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>

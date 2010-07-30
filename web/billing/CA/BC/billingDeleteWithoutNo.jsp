@@ -124,7 +124,6 @@ if (cannotDelete) {
 </p>
 <%  
     }
-    apptMainBean.closePstmtConn();
 }
 %>
 <p></p>

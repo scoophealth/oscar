@@ -209,7 +209,6 @@ if (provider.compareTo("all") == 0 ){
 		extract.writeHtml(htmlcontext);
 	}
 }
-apptMainBean.closePstmtConn();
 
 %>
 

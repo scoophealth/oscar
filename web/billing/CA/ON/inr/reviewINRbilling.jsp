@@ -263,6 +263,5 @@ if (errorCode.compareTo("") != 0) {
 	</form>
 </table>
 <% 
-} 
-apptMainBean.closePstmtConn();
+}
 %>

@@ -63,7 +63,6 @@ ResultSet rsPatient = apptMainBean.queryResults(demono, "search_demographic_deta
  demo_dob = MyDateFormat.getStandardDate(Integer.parseInt(rsPatient.getString("year_of_birth")),Integer.parseInt(rsPatient.getString("month_of_birth")),Integer.parseInt(rsPatient.getString("date_of_birth")));
  demo_hin = rsPatient.getString("hin") + rsPatient.getString("ver").toUpperCase();
    }
-apptMainBean.closePstmtConn();
 
 %>
 <html>

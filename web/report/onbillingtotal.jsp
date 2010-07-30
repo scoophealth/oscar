@@ -68,7 +68,6 @@
 
 	}
 	out.println("total: " + rowsAffected);
-	daySheetBean.closePstmtConn();
 %>
 
 <p>

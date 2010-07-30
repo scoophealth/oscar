@@ -118,7 +118,6 @@ function typeInData(v) {
 	</tr>
 	<%
   }
-  reportMainBean.closePstmtConn();
 %>
 
 </table>

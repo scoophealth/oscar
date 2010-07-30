@@ -317,7 +317,6 @@ while(rslocal.next()){
 
 	<%
 }
-apptMainBean.closePstmtConn();
 %>
 
 </table>

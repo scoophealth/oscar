@@ -51,8 +51,7 @@ if (temp == null){
         }
         
 
-    } 
-    apptMainBean.closePstmtConn();  
+    }  
     response.sendRedirect("ticklerMain.jsp"); 
 }
 %>

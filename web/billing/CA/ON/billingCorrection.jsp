@@ -578,7 +578,6 @@ if (bFlag) {
 		diagDesc = rsDiagCode.getString("description");
 	}
 }
-apptMainBean.closePstmtConn();
 %>
 
 	<tr bgcolor="#CCCCFF">

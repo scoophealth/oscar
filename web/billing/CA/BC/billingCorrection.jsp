@@ -489,7 +489,6 @@ String proFirst="", proLast="", proOHIP="", proNo="";
  while(rsDiagCode.next()){
   diagDesc = rsDiagCode.getString("description");
   }
-       apptMainBean.closePstmtConn();
     %>
 
 

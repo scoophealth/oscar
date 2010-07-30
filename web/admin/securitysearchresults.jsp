@@ -185,7 +185,6 @@ if(apptMainBean.isPINEncrypted()==false){
 	<%
     }
   }
-  apptMainBean.closePstmtConn();
 %>
 
 </table>

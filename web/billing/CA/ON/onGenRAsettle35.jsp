@@ -107,8 +107,6 @@ paramx[0] = "F";
 paramx[1] = raNo;
 
 int recordAffected1 = apptMainBean.queryExecuteUpdate(paramx,"update_rahd_status");
-
-apptMainBean.closePstmtConn();
 %>
 
 <script LANGUAGE="JavaScript">
