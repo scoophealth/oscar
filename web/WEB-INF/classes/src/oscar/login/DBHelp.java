@@ -17,6 +17,9 @@ import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 import oscar.util.SqlUtils;
 
+/**
+ * @deprecated Use JPA instead, no new code should be written against this class.
+ */
 public final class DBHelp {
     private static final Logger logger = MiscUtils.getLogger();
 
@@ -30,18 +33,6 @@ public final class DBHelp {
         }
     }
 
-    public static int updateDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
-        int ret = 0;
-        try {
-        	DBPreparedHandler db = new DBPreparedHandler();
-            ret = db.queryExecuteUpdate(sql, params);
-        } catch (SQLException e) {
-        	logger.error("Error", e);
-        }
-        return ret;
-    }
-
-    	
     public static ResultSet searchDBRecord(String sql) throws SQLException {
         ResultSet ret = null;
         try {

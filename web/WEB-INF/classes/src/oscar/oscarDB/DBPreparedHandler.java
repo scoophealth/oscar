@@ -36,6 +36,9 @@ import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.OscarProperties;
 
+/**
+ * @deprecated Use JPA instead, no new code should be written against this class.
+ */
 public final class DBPreparedHandler {
 
     DBHandler db = null;
