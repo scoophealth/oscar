@@ -17,7 +17,7 @@ import oscar.oscarDB.DBPreparedHandler;
 import oscar.oscarDB.DBPreparedHandlerParam;
 import oscar.util.SqlUtils;
 
-public class DBHelp {
+public final class DBHelp {
     private static final Logger logger = MiscUtils.getLogger();
 
     public static boolean updateDBRecord(String sql) throws SQLException {
@@ -54,29 +54,6 @@ public class DBHelp {
         return ret;
     }
 
-    public static ResultSet searchDBRecord(String sql, DBPreparedHandlerParam[] params) throws SQLException {
-        ResultSet ret = null;
-        try {
-        	DBPreparedHandler db = new DBPreparedHandler();
-            ret = db.queryResults_paged(sql, params, 0);
-        } catch (SQLException e) {
-            logger.error("Error", e);
-        }
-        return ret;
-    }
-    
-    public static ResultSet searchDBRecord(String sql, String userId) throws SQLException {
-        ResultSet ret = null;
-        try {
-        	DBHandler db = new DBHandler();
-            ret = db.GetSQL(sql);
-            logger.info("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
-        } catch (SQLException e) {
-            logger.error("searchDBRecord(sql = " + sql + ", userId = " + userId + ")");
-        }
-        return ret;
-    }
-    
     public static String getString(ResultSet rs,String columnName) throws SQLException
     {
     	return oscar.Misc.getString(rs, columnName);
