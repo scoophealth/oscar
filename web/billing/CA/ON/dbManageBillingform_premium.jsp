@@ -53,7 +53,6 @@ for (int i=1; i<11; i++){
 
 	}
 }
-if (rowsAffected != 100)
-%>
 
-<% response.sendRedirect("manageBillingform.jsp"); %>
+response.sendRedirect("manageBillingform.jsp"); 
+%>

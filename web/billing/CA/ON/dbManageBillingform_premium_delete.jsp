@@ -46,7 +46,5 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	recordAffected = apptMainBean.queryExecuteUpdate(request.getParameter(temp),"delete_ctlpremium");
 }
 
-if (recordAffected != -100)
+response.sendRedirect("manageBillingform.jsp"); 
 %>
-
-<% response.sendRedirect("manageBillingform.jsp"); %>

@@ -60,7 +60,5 @@ for(int j=1;j<4;j++){
 	}
 }
 
-if (rowsAffected != -100)
-
 response.sendRedirect("manageBillingform.jsp"); 
 %>
