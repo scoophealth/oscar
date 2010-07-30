@@ -107,7 +107,14 @@ public class UtilMisc {
         }else if (c == '#') {
 
           String temp =new String();
-          temp = temp + S.charAt(i) + S.charAt(i+1) + S.charAt(i+2) + S.charAt(i+3) ;
+         temp = temp + S.charAt(i);
+          if(i+1<N)
+        	 temp=temp+ S.charAt(i+1);
+          if(i+2<N)
+        	  temp = temp + S.charAt(i+2);
+          if(i+3<N)
+        	  temp = temp + S.charAt(i+3);
+        	 
           if(temp.equalsIgnoreCase("#39;")){//'
               sb.append("\'");
               i=i+4;//move on
