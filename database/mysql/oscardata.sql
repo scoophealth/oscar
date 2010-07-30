@@ -1753,9 +1753,9 @@ insert into `secObjPrivilege` values('Client Service Worker','_pmm.clientSearch'
 insert into `secObjPrivilege` values('Client Service Worker','_pmm.newClient','x',0,'999998');
 insert into `secObjPrivilege` values('Client Service Worker','_tasks','x',0,'999998');
 
-
 insert into `secObjPrivilege` values('Recreation Therapist','_appointment','x',0,'999998');
-insert into `secObjPrivilege` values('Recreation Therapist','_appointment.doctorLink','x',0,'999998');
+insert into `secObjPrivilege` values('Recreation Therapist','_casemgmt.issues','x',0,'999998');
+insert into `secObjPrivilege` values('Recreation Therapist','_casemgmt.notes','x',0,'999998');
 insert into `secObjPrivilege` values('Recreation Therapist','_demographic','x',0,'999998');
 insert into `secObjPrivilege` values('Recreation Therapist','_eChart','x',0,'999998');
 insert into `secObjPrivilege` values('Recreation Therapist','_eChart.verifyButton','x',0,'999998');
