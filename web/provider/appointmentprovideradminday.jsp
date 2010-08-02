@@ -364,11 +364,11 @@ function confirmPopupPage(height, width, queryString, doConfirm, allowDay, allow
                         alert("<bean:message key="provider.appointmentProviderAdminDay.sameWeek"/>");
                 }
                 else {
-                        popupPage(height, width, queryString);
+                        popupPage2(queryString, 'appointment', height, width);
                 }
         }
         else {
-                popupPage(height, width, queryString);
+                popupPage2(queryString, 'appointment', height, width);
         }
 }
 
@@ -430,21 +430,25 @@ function popupInboxManager(varpage){
         popup.focus();
     }
 }
+
 function popupPage2(varpage) {
 popupPage2(varpage, "apptProviderSearch");
 }
 
 function popupPage2(varpage, windowname) {
+popupPage2(varpage, windowname, 700, 1024);
+}
+
+function popupPage2(varpage, windowname, vheight, vwidth) {
 var page = "" + varpage;
-windowprops = "height=700,width=1024,location=no,"
-+ "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
+windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
 var popup = window.open(page, windowname, windowprops);
 if (popup != null) {
-if (popup.opener == null) {
-  popup.opener = self;
-}
-popup.focus();
-}
+	if (popup.opener == null) {
+  		popup.opener = self;
+	}
+	popup.focus();
+	}
 }
 
 <!--oscarMessenger code block-->
