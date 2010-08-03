@@ -2123,6 +2123,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 caseIssueList[k].setChecked(oldList[i].getChecked());
                 caseIssueList[k].setUsed(oldList[i].isUsed());
                 caseIssueList[k].setIssue(oldList[i].getIssue());
+                caseIssueList[k].setIssueDisplay(oldList[i].getIssueDisplay());
                 k++;
             }
             if (i == ind.intValue()) {

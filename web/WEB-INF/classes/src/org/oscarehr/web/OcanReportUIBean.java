@@ -229,7 +229,7 @@ public class OcanReportUIBean {
 					
 				}			
 				
-			}catch(IOException e) {MiscUtils.getLogger().error("Error", e);}
+			}catch(IOException e) {e.printStackTrace();}
 		}
 		*/
 		try {
@@ -1267,10 +1267,10 @@ public class OcanReportUIBean {
 		}else {
 			ageHospitalization.setYears(BigInteger.valueOf(Long.valueOf(getStaffAnswer("ageHospitalization_year",ocanStaffFormData)).longValue()));
 		}
-		if(getStaffAnswer("ageTypeOnsetMental_month",ocanStaffFormData)=="") {
+		if(getStaffAnswer("ageHospitalization_month",ocanStaffFormData)=="") {
 			ageHospitalization.setMonths(0);
 		} else {
-			ageHospitalization.setMonths(Integer.valueOf(getStaffAnswer("ageTypeOnsetMental_month",ocanStaffFormData)).intValue());
+			ageHospitalization.setMonths(Integer.valueOf(getStaffAnswer("ageHospitalization_month",ocanStaffFormData)).intValue());
 		}
 		return ageHospitalization;
 	}
@@ -1278,7 +1278,7 @@ public class OcanReportUIBean {
 	public static AgeOnsetMental convertAgeOnsetMental(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		AgeOnsetMental ageOnsetMental = AgeOnsetMental.Factory.newInstance();
 		
-		ageOnsetMental.setAgeType(AgeOnsetMental.AgeType.Enum.forString(getStaffAnswer("ageOnsetMental",ocanStaffFormData)));
+		ageOnsetMental.setAgeType(AgeOnsetMental.AgeType.Enum.forString(getStaffAnswer("ageTypeOnsetMental",ocanStaffFormData)));
 		if(getStaffAnswer("ageOnsetMental_year",ocanStaffFormData)=="") {
 			ageOnsetMental.setYears(BigInteger.valueOf(0));
 		} else {

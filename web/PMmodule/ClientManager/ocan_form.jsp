@@ -460,7 +460,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Date of Birth (YYYY-MM-DD)</td>
 			<td class="genericTableData" class="{validate: {required:true}}">
-				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",true,ocanStaffForm.getDateOfBirth(),prepopulationLevel)%>				
+				<input type="text" name="date_of_birth" id="date_of_birth" value="<%=ocanStaffForm.getDateOfBirth()%>" />
 			</td>
 		</tr>		
 		<tr>
@@ -1098,7 +1098,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Age in Months for Onset of Mental Illness </td>
 			<td class="genericTableData">
-				<select name="ageTypeOnsetMental_month" id="ageTypeOnsetMental_month">
+				<select name="ageOnsetMental_month" id="ageOnsetMental_month">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "ageOnsetMental_month", OcanForm.getOcanFormOptions("Age in Months"),prepopulationLevel)%>
 				</select>	
 			</td>
@@ -1107,7 +1107,7 @@ $("document").ready(function(){
 			<td class="genericTableHeader">Age in Years for Onset of Mental Illness</td>
 			<td class="genericTableData">
 				<select name="ageTypeOnsetMental" id="ageTypeOnsetMental">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "ageOnsetMental", OcanForm.getOcanFormOptions("Age of Onset"),prepopulationLevel)%>
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "ageTypeOnsetMental", OcanForm.getOcanFormOptions("Age of Onset"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>	
@@ -1120,7 +1120,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Age in Months for Psychiatric Hospitalization </td>
 			<td class="genericTableData">
-				<select name="ageTypeOnsetMental_month" id="ageTypeOnsetMental_month">
+				<select name="ageHospitalization_month" id="ageHospitalization_month">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "ageHospitalization_month", OcanForm.getOcanFormOptions("Age in Months"),prepopulationLevel)%>
 				</select>	
 			</td>
