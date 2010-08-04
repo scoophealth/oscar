@@ -539,6 +539,7 @@
  -->
 	
 	<import file="codeCheck.xml"/>
+	<import file="jspc.xml"/>
 	
 </project>
 

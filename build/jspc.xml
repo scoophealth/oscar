@@ -22,8 +22,8 @@
 	<import file="${catalina.home}/bin/catalina-tasks.xml" />
 
 	<property name="jspcDir" location="tmp/jspc" />
-	<property name="expandedWarDir" value="${jspcDir}/web" />
-	<property name="generatedDir" value="${jspcDir}/generated_jsp_classes" />
+	<property name="jspc.expandedWarDir" value="${jspcDir}/web" />
+	<property name="jspc.generatedDir" value="${jspcDir}/generated_jsp_classes" />
 
 	<target name="jspc">
 		<!--
@@ -34,18 +34,18 @@
 		4) compile java source into class files
 		-->
 
-		<antcall target="clean" />
-		<unwar src="tmp/oscar.war" dest="${expandedWarDir}" />
+		<antcall target="jspc.clean" />
+		<unwar src="tmp/oscar.war" dest="${jspc.expandedWarDir}" />
 		
-		<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${generatedDir}" validateXml="false" failOnError="false" />
+		<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
 
-		<javac srcdir="${generatedDir}" source="1.5" target="1.5">
+		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5">
 			<compilerarg value="-Xmaxerrs" />
 			<compilerarg value="1000" />
 			
 			<classpath>
-				<pathelement location="${expandedWarDir}/WEB-INF/classes" />
-				<fileset dir="${expandedWarDir}/WEB-INF/lib">
+				<pathelement location="${jspc.expandedWarDir}/WEB-INF/classes" />
+				<fileset dir="${jspc.expandedWarDir}/WEB-INF/lib">
 					<include name="*.jar" />
 				</fileset>
 				<fileset dir="${catalina.home}/lib">
@@ -58,7 +58,7 @@
 		</javac>
 	</target>
 
-	<target name="clean">
+	<target name="jspc.clean">
 		<delete dir="${jspcDir}" quiet="true" />
 	</target>
 
