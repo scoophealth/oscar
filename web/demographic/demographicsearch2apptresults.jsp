@@ -232,7 +232,7 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 			key="demographic.demographicsearch2apptresults.doctor" /></B></TH>
 	</tr>
 
-	<%@ include file="../demographic/zzdemographicsearchresult.jsp"%>
+	<%@ include file="../demographic/zzdemographicsearchresult.jspf"%>
 	<%
 String bgColor = bodd?"#EEEEFF":"white";
 %>

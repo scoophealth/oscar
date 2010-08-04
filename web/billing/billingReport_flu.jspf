@@ -1,0 +1,152 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+--> 
+<table width="100%" border="2" cellpadding="0" cellspacing="0">
+
+  <% 
+ String dateBegin = request.getParameter("xml_vdate");
+   String dateEnd = request.getParameter("xml_appointment_date");
+   if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+   if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+  BigDecimal bdOBFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+ BigDecimal BigOBTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+     BigDecimal Total1 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal Total2 = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+            
+ double dOBFee = 0.00;
+
+ ResultSet rs=null ;
+  ResultSet rs2=null ; 
+  String specialty=null;
+  String[] param =new String[3];
+  String[] param2 =new String[10];
+  param[0] = request.getParameter("providerview");
+ param[1] = dateBegin;  
+  param[2] = dateEnd;  
+  rs = apptMainBean.queryResults(param, "search_billflu");
+int rCount = 0;
+int rowCount1 = 0;
+
+        
+     		
+  boolean bodd=false;
+   nItems=0;
+  String apptDoctorNo="", apptNo="", demoNo = "", demoName="", userno="", apptDate="", apptTime="", reason="",  note="", total="";
+  if(rs==null) {
+    out.println("failed!!!"); 
+  } else {
+  %>
+  <tr bgcolor="#CCCCFF"> 
+    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">INVOICE</font></b></TH>
+    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
+    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">DATE</font></b></TH>
+    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">APPT.CLINIC</font></b></TH>
+    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">WALK-IN</font></b></TH>
+    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">STATUS</font></b></TH>
+    
+  </tr>
+  <%
+    while (rs.next()) {
+     
+      bodd=bodd?false:true; //for the color of rows
+      nItems++; //to calculate if it is the end of records
+     demoName = rs.getString("demographic_name");
+       apptDate = rs.getString("billing_date");
+     specialty = SxmlMisc.getXmlContent(rs.getString("content"),"specialty")==null?"":SxmlMisc.getXmlContent(rs.getString("content"),"specialty");
+     reason = rs.getString("status");
+    total = rs.getString("total").indexOf(".") > 0?rs.getString("total"):rs.getString("total").substring(0,rs.getString("total").length()-2)+"."+rs.getString("total").substring(rs.getString("total").length()-2) ;
+      
+      if (specialty.equals("flu")){
+            
+      
+  
+  
+   
+
+%>
+  <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
+    <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../billing/billingOB2.jsp?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+      <%=rs.getString("billing_no")%></a></font></b></TD>
+        <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
+        <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
+
+    <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
+  
+    <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
+   <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
+
+  </tr>
+  <%  rowCount1 = rowCount1 + 1;
+      rowCount = rowCount + 1;
+      BigDecimal bdFee = new BigDecimal(Double.parseDouble(total)).setScale(2, BigDecimal.ROUND_HALF_UP);
+      Total1 = Total1.add(bdFee);
+  } else{
+  %>
+    <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">       
+      <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
+        <%=rs.getString("billing_no")%></a></font></b></TD>
+          <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
+          <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
+      <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
+      <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
+    
+  
+     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason.compareTo("X")==0?"Bad Debt":reason.compareTo("B")==0?"Submitted to OHIP":reason.compareTo("S")==0?"Settled":"<a href=# onClick='popupPage(700,720, \"../billing/billingDeleteNoAppt.jsp?billing_no=" + rs.getString("billing_no") + "&billCode=" +reason+ "&dboperation=delete_bill&hotclick=0\")'>-B</a>"%></font></b></TD>
+  
+    </tr>
+  <%  
+    rowCount = rowCount + 1;
+    BigDecimal bdFee = new BigDecimal(Double.parseDouble(total)).setScale(2, BigDecimal.ROUND_HALF_UP);
+          Total2 = Total2.add(bdFee);
+
+  }
+    
+    }
+    }
+    if (rowCount == 0) {
+    %>
+  <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
+    <TD colspan="6" align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">No 
+      flu billing items</font></b></TD>
+  </tr>
+  <% }else{
+%>
+  <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
+       <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif">Total</font></b></TD>
+       <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif">Clinic Count: <%=rowCount-rowCount1%></font></b></TD>
+       <TD align="left" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif">Walk-in Count: <%=rowCount1%></font></font></b></TD>
+	 <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=Total2%></font></b></TD>
+      <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=Total1%></font></b></TD>
+    
+  
+     <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></b></TD>
+  
+
+  </tr>
+<%
+}}%>
+
+</table>
