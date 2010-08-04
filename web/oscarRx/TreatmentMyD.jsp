@@ -46,8 +46,6 @@ if ( bean == null ){
         for (int i=0; i < pricesArray.length; i++){
             Hashtable ht = (Hashtable) pricesArray[i]; 
 
-            +"\nPrice: "+ht.get("cost")
-            +"\nRetailer: "+ht.get("reference"));
             String author=(String)ht.get("author");
             if(author==null) author="";
             Date updateTime=(Date)ht.get("updated_at");
