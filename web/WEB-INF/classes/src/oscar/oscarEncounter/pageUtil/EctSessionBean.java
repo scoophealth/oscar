@@ -141,13 +141,13 @@ public class EctSessionBean {
                 roster = db.getString(rs,"roster_status");
                 patientSex = db.getString(rs,"sex");
 
-                if (yearOfBirth.equals("null")) {
+                if (yearOfBirth.equals("null") || yearOfBirth=="") {
                     yearOfBirth = "0";
                 }
-                if (monthOfBirth.equals("null")) {
+                if (monthOfBirth.equals("null") || monthOfBirth=="") {
                     monthOfBirth = "0";
                 }
-                if (dateOfBirth.equals("null")) {
+                if (dateOfBirth.equals("null") || dateOfBirth=="") {
                     dateOfBirth = "0";
                 }
             }
