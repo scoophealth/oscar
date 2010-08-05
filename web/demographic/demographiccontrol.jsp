@@ -141,7 +141,6 @@
 	  {"appt_history" , "demographicappthistory.jsp"},
 	  {"Update Record" , "demographicupdatearecord.jsp"},
 	
-	  {"Add Demographic" , "adddemographictoappt.jsp"},
 	  {" Search" , "demographicsearch2editapptresults.jsp"},
 	  {"Delete" , "demographicdeletearecord.jsp"},
 	  {"Save Record & Back to Appointment" , "demographicaddbacktoappt.jsp"},
