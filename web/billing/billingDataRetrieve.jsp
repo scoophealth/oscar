@@ -23,8 +23,7 @@
  * Ontario, Canada 
  */
 -->
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="page" />
 
 <% 
  

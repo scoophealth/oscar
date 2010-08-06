@@ -19,7 +19,7 @@
 	  String bgcolor;
 	%>
 		<logic:iterate id="preparedTickler"
-			collection="<%=request.getAttribute("preparedTicklers")%>">
+			collection='<%=request.getAttribute("preparedTicklers")%>'>
 			<%
 		
 		if(index++%2!=0) {
