@@ -4,7 +4,7 @@
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
 %>
 <%@ page
-	import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*,java.lang.String"%>
+	import="oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*,java.lang.String,org.apache.commons.lang.StringEscapeUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--  
@@ -62,7 +62,8 @@ if (request.getAttribute("submitted") != null) {
    if (request.getAttribute("formHtml") != null) {
        formHtml = (String) request.getAttribute("formHtml");
    }
-   formHtml = UtilMisc.htmlEscape(formHtmlRaw);
+   formHtml = UtilMisc.rhtmlEscape(formHtmlRaw);
+   formHtml = UtilMisc.htmlEscape(formHtml);
 %>
 <html:html locale="true">
 <head>

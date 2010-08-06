@@ -38,9 +38,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.oscarehr.util.MiscUtils;
 
 public class UtilMisc {
-  public static String htmlEscape(String s) {
-    //call to remove '&lt' to '<' etc...
-    String  S=rhtmlEscape(s);
+  public static String htmlEscape(String S) {
+
     if (null == S) {
       return S;
     }
