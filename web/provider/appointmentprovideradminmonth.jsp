@@ -326,7 +326,7 @@ function refreshTabAlerts(id) {
 				href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday"
 				TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>'
 				OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"><bean:message
-				key="global.day" /></a></li>
+				key="global.today" /></a></li>
 			<li><a
 				href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth"
 				TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>'
@@ -336,7 +336,7 @@ function refreshTabAlerts(id) {
 				ONCLICK="popupOscarRx(550,687,'<%=resourcebaseurl%>');return false;"
 				title="<bean:message key="global.resources"/>"
 				onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message
-				key="global.resources" /></a></li>
+				key="oscarEncounter.Index.clinicalResources" /></a></li>
 			<li><caisi:isModuleLoad moduleName="caisi">
 				<a HREF="../PMmodule/ClientSearch2.do"
 					TITLE='<bean:message key="global.searchPatientRecords"/>'
