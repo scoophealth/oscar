@@ -165,9 +165,8 @@ public final class OruR01 {
 		observationData.subject="txt test";
 		observationData.textMessage="once upon a time";
 		observationData.binaryDataFileName="/tmp/oscar.properties";
-		byte[] b=FileUtils.readFileToByteArray(new File(observationData.binaryDataFileName));;
+		byte[] b=FileUtils.readFileToByteArray(new File(observationData.binaryDataFileName));
 		observationData.binaryData = b;
-		
 
 		Provider sender = new Provider();
 		sender.setProviderNo("111");
