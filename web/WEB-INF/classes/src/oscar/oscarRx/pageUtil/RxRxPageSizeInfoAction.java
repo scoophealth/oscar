@@ -29,50 +29,37 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 public final class RxRxPageSizeInfoAction extends DispatchAction {
 
-    private static Log log2 = LogFactory.getLog(RxMyDrugrefInfoAction.class);
-  /*  private void p(String s){
-        MiscUtils.getLogger().debug(s);
-    }
-    private void p(String s1,String s2){
-        MiscUtils.getLogger().debug(s1+"="+s2);
-    }*/
-    public ActionForward view(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
-       // p("===========view in RxRxPageSizeInfoAction.java=====================");
+    private static Logger logger = MiscUtils.getLogger();
+
+    public ActionForward view(ActionMapping mapping,ActionForm form, HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
         long start = System.currentTimeMillis();
         String provider = (String) request.getSession().getAttribute("user");
 
         WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
-       // p("ctx",ctx.getDisplayName());
         UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
-       // p("propDAO",propDAO.toString());
 
         UserProperty prop = propDAO.getProp(provider, UserProperty.RX_PAGE_SIZE);
         String rxPageSize = null;
         if (prop != null){
-           // p("if2");
             rxPageSize = prop.getValue();
         }
 
-      //  p("rxpagesize",rxPageSize);
-
         request.getSession().setAttribute("rxPageSize", rxPageSize);
-        ///////
-        log2.debug("MyDrugref return time " + (System.currentTimeMillis() - start) );
-        //p("===========end of view in RxRxPageSizeInfoAction.java=====================");
+        logger.debug("MyDrugref return time " + (System.currentTimeMillis() - start) );
         return mapping.findForward("success");
     }
 }
