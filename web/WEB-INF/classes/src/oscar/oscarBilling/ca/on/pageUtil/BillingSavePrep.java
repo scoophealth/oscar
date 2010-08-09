@@ -340,6 +340,8 @@ public class BillingSavePrep {
 			ret = "N";
 		} else if( payProg.startsWith("BON") ) {
                         ret = "I";
+                } else if( payProg.startsWith("PAT")) {
+                        ret = "P";
                 }
 		return ret;
 	}

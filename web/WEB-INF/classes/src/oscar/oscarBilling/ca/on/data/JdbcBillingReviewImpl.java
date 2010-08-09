@@ -114,8 +114,9 @@ public class JdbcBillingReviewImpl {
 		BillingClaimHeader1Data ch1Obj = null;
 		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType;
 		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
-		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp1,total,paid,clinic" + " from billing_on_cheader1 where " + temp
+		String sql = "select id,pay_program,billing_on_cheader1.demographic_no,demographic_name,billing_date,billing_time,status,"
+				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp1,total,paid,clinic" + " from billing_on_cheader1 " +
+                                "where " + temp
 				+ " order by billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
@@ -137,6 +138,13 @@ public class JdbcBillingReviewImpl {
 				ch1Obj.setTotal(rs.getString("total"));
 				ch1Obj.setPay_program(rs.getString("pay_program"));
 				ch1Obj.setPaid(rs.getString("paid"));
+
+                                sql = "select value from billing_on_ext where key_val = 'payDate' and billing_no = " + rs.getInt("id");
+                                ResultSet rs2 = dbObj.searchDBRecord(sql);
+                                if( rs2.next() ) {
+                                    ch1Obj.setSettle_date(rs2.getString("value"));
+                                }
+                                rs2.close();
 				
 				ch1Obj.setClinic(rs.getString("clinic"));
 				
@@ -157,8 +165,9 @@ public class JdbcBillingReviewImpl {
 		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType + " " + visitType ;
 		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
 
-		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
-				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid,clinic" + " from billing_on_cheader1 where " + temp
+		String sql = "select id,pay_program,billing_on_cheader1.demographic_no,demographic_name,billing_date,billing_time,status,"
+				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp1,total,paid,clinic from billing_on_cheader1 " +
+                                "where " + temp
 				+ " order by billing_date, billing_time";
 
 		_logger.info("getBill(sql = " + sql + ")");
@@ -188,8 +197,15 @@ public class JdbcBillingReviewImpl {
 					
 					// ch1Obj.setTotal(rs.getString("total"));
 					ch1Obj.setPay_program(rs.getString("pay_program"));
-					if (!bSameBillCh1) 
+					if (!bSameBillCh1) {
                                             ch1Obj.setPaid(rs.getString("paid")); 
+                                            sql = "select value from billing_on_ext where key_val = 'payDate' and billing_no = " + rs.getInt("id");
+                                            ResultSet rs2 = dbObj.searchDBRecord(sql);
+                                            if( rs2.next() ) {
+                                                ch1Obj.setSettle_date(rs2.getString("value"));
+                                            }
+                                            rs2.close();
+                                        }
                                         else 
                                             ch1Obj.setPaid("0.00"); 
 
@@ -233,7 +249,7 @@ public class JdbcBillingReviewImpl {
 				" and status!='D' order by billing_date desc, billing_time desc, id desc ";// + strLimit;
 	      rs = dbPH.queryResults_paged(sql, pDateRange, iOffSet);
 		}	
-		// _logger.info("getBillingHist(sql = " + sql + ")");
+		 _logger.error("getBillingHist(sql = " + sql + ")");
 
 		try {
 			while (rs.next()) {
