@@ -50,6 +50,7 @@ public class BillingCorrectionPrep {
 	public boolean updateBillingClaimHeader(BillingClaimHeader1Data ch1Obj,
 			HttpServletRequest requestData) {
 		boolean ret = true;
+                String status;
 		if (isChangedBillingClaimHeader(ch1Obj, requestData)) {
 			int i = dbObj.addRepoClaimHeader(ch1Obj);
 			_logger.info("updateBillingClaimHeader(old value = " + i
@@ -58,10 +59,12 @@ public class BillingCorrectionPrep {
 					+ ch1Obj.getFacilty_num() + "|" + ch1Obj.getMan_review()
 					+ "|" + ch1Obj.getBilling_date() + "|"
 					+ ch1Obj.getProviderNo() + "|" + ch1Obj.getCreator());
-
-			ch1Obj
-					.setStatus(requestData.getParameter("status").substring(0,
-							1));
+                        
+                        status = requestData.getParameter("status").substring(0,1);
+                        if( status.equals("S") && !ch1Obj.getStatus().equals(status)) {
+                            this.updateExt("payDate", requestData);
+                        }
+			ch1Obj.setStatus(status);
 			
 			ch1Obj.setPay_program(requestData.getParameter("payProgram"));
 			if(requestData.getParameter("status").substring(0,1).equals("N")){
@@ -101,6 +104,8 @@ public class BillingCorrectionPrep {
 			ret = update3rdPartyItem("payment", requestData);
                         ret = update3rdPartyItem("refund", requestData);
                         ret = update3rdPartyItem("payDate", requestData);
+                        ch1Obj.setPaid(requestData.getParameter("payment"));
+                        ret = dbObj.updateBillingClaimHeader(ch1Obj);
 		}
 
 		if (requestData.getParameter("billTo") != null) {
@@ -109,6 +114,14 @@ public class BillingCorrectionPrep {
 
 		return ret;
 	}
+
+        /*
+         * Need to use billing extension table to capture data for invoices in
+         * addition to 3rd party bills
+         */
+        public void updateExt(String key, HttpServletRequest request) {
+            update3rdPartyItem(key, request);
+        }
 
         public boolean update3rdPartyItem(String key, HttpServletRequest request) {
 		boolean ret = true;
@@ -182,13 +195,7 @@ public class BillingCorrectionPrep {
 		// recalculate amount
 		String newAmount = sumFee(vecFee);
 		_logger.info(" lItemObj(newAmount = " + newAmount);
-		updateAmount(newAmount, claimId);
-		// update paid if needed
-		if (request.getParameter("status").substring(0, 1).equals("S")
-				&& request.getParameter("payProgram").matches(
-						BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
-			updatePaid(newAmount, claimId);
-		}
+		updateAmount(newAmount, claimId);		
 
 		return ret;
 	}

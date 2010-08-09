@@ -48,6 +48,7 @@ public class BillingClaimHeader1Data {
 
 	String billing_date;
 	String billing_time;
+        private String settle_date;
 	String total;
 	String paid;
 	String status;
@@ -363,5 +364,19 @@ public class BillingClaimHeader1Data {
 	public void setUpdate_datetime(String update_datetime) {
 		this.update_datetime = update_datetime;
 	}
+
+    /**
+     * @return the settle_date
+     */
+    public String getSettle_date() {
+        return settle_date;
+    }
+
+    /**
+     * @param settle_date the settle_date to set
+     */
+    public void setSettle_date(String settle_date) {
+        this.settle_date = settle_date;
+    }
 
 }
