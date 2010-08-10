@@ -32,7 +32,7 @@ if ( bean == null ){
         %>
         
 <%@page import="org.oscarehr.util.MiscUtils"%><div style="background-color:white;margin:100px;padding:40px;border:2px solid grey">
-            <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');">NOTHING FOUND</a>
+            <a href="javascript: function myFunction() {return false; }" onclick="$('treatmentsMyD').toggle();">NOTHING FOUND</a>
         </div>
         <%
            return ;
@@ -60,7 +60,7 @@ if ( bean == null ){
             <strong><%=ht.get("name")%>&nbsp;&nbsp;&nbsp;&nbsp;:</strong>
         </td>
         <td align="right">
-            <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');" style="text-decoration: none;font-size:larger">X</a>
+            <a href="javascript: function myFunction() {return false; }" onclick="$('treatmentsMyD').toggle();" style="text-decoration: none;font-size:larger">X</a>
         </td>
     </tr>
     <tr>
@@ -78,7 +78,7 @@ if ( bean == null ){
 if (ht.get("drugs") != null){
     Vector<Hashtable> drugs = (Vector) ht.get("drugs");
     for(Hashtable drug :drugs){%>
-<%=DrugLing((String)drug.get("label"))%>  <a href="javascript:void(0);" onclick="$('searchString').value ='<%=drug.get("tc_atc")%>';hidepic('treatmentsMyD');$('searchString').focus();"><%=drug.get("tc_atc")%></a>  <%=drug.get("tc_atc_number")%> <br/>
+<%=DrugLing((String)drug.get("label"))%>  <a href="javascript:void(0);" onclick="$('searchString').value ='<%=drug.get("tc_atc")%>';$('treatmentsMyD').toggle();$('searchString').focus();"><%=drug.get("tc_atc")%></a>  <%=drug.get("tc_atc_number")%> <br/>
   <%}
 }          
 if(content.length()<100){%>
@@ -92,10 +92,10 @@ if(content.length()<100){%>
 <%}
     }else if(prices == null){ %>
 <div style="background-color:green;margin-right:10px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-MyDrug to MyDrug Price Service not available -- <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');" style="text-decoration: none;">CLOSE</a></div>
+MyDrug to MyDrug Price Service not available -- <a href="javascript: function myFunction() {return false; }" onclick="$('treatmentsMyD').toggle();" style="text-decoration: none;">CLOSE</a></div>
 <%  }else{   %>
  <div style="background-color:white;margin:100px;padding:40px;border:2px solid grey">
-            <a href="javascript: function myFunction() {return false; }" onclick="hidepic('treatmentsMyD');">NOTHING FOUND</a>
+            <a href="javascript: function myFunction() {return false; }" onclick="$('treatmentsMyD').toggle();">NOTHING FOUND</a>
         </div>
 
 
