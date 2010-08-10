@@ -31,7 +31,40 @@ function submitOcanForm() {
 		return false;
 	}
 	
-	if($("#reason_for_assessment").val() == 'OTHR') {		
+	if($("#clientDOBType").val() == 'EST') {		
+		if($("#date_of_birth").val().length==0) {			
+			alert('Date of Birth (YYYY-MM-DD) - Please provide date of birth');
+			$("#date_of_birth").focus();
+			return false;
+		}		
+	}
+	if($("#clientDOBType").val() == 'UNK') {		
+		if($("#date_of_birth").val().length!=0) {			
+			alert('Date of Birth (YYYY-MM-DD) - Please do not provide date of birth');
+			$("#date_of_birth").focus();
+			return false;
+		}		
+	}
+	/*
+	if($("#clientDOBType").val().length == 0) {	
+		alert('Date of Birth - Please choose the type of date of birth');
+		$("#clientDOBType").focus();
+		return false;				
+	}
+	*/
+	
+	var newCount = $("#center_count").val(); 
+	for(var x=1;x<=newCount;x++) { 
+		if($("#exitDate"+x).val().length != 0) {		
+			if($("#serviceUseRecord_exitDisposition"+x).val().length==0) {			
+				alert('Exit Disposition - Please specify one');
+				$("#serviceUseRecord_exitDisposition"+x).focus();
+				return false;
+			}		
+		}
+	}
+	
+	if($("#reasonForAssessment").val() == 'OTHR') {		
 		if($("#reason_for_assessment_other").val().length==0) {			
 			alert('Reason for assessment - Please specify other');
 			$("#reason_for_assessment_other").focus();

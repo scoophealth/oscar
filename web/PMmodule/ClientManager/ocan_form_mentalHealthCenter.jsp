@@ -55,7 +55,10 @@
 		<tr>
 			<td class="genericTableHeader">Organization Name</td>
 			<td class="genericTableData">
+			<!--  
 				<input type="text" id="serviceUseRecord_orgName<%=centerNumber %>" name="serviceUseRecord_orgName<%=centerNumber %>"value="<%=LoggedInInfo.loggedInInfo.get().currentFacility.getName() %>" readonly=readonly onfocus="this.blur();"/>
+			-->
+				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgName"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -67,7 +70,10 @@
 		<tr>
 			<td class="genericTableHeader">Organization Number</td>
 			<td class="genericTableData">
+			<!--  
 				<input type="text" id="serviceUseRecord_orgNumber<%=centerNumber %>" name="serviceUseRecord_orgNumber<%=centerNumber %>" value="<%=LoggedInInfo.loggedInInfo.get().currentFacility.getOcanServiceOrgNumber() %>" readonly=readonly onfocus="this.blur();"/>
+			-->
+				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgNumber"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -76,11 +82,11 @@
 				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_orgNumberOther"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
-		<!--  
+		<!--    
 		<tr>
 			<td class="genericTableHeader">Program Name</td>
 			<td class="genericTableData">
-				<select name="admissionId">
+				<select name="admissionId<%=centerNumber %>">
 					<%
 						for (Admission admission : OcanForm.getAdmissions(currentDemographicId))
 						{
@@ -94,6 +100,13 @@
 						}
 					%>
 				</select>
+			</td>
+		</tr>
+		-->
+		<tr>
+			<td class="genericTableHeader">Program Name</td>
+			<td class="genericTableData">
+				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_programName"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
@@ -114,7 +127,7 @@
 				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_programNumberOther"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
-		-->
+		
 		<tr>
 			<td class="genericTableHeader">Functional Center Name</td>
 			<td class="genericTableData">
@@ -194,7 +207,7 @@
 		<tr>
 			<td class="genericTableHeader">Exit Disposition</td>
 			<td class="genericTableData">
-				<select name="serviceUseRecord_exitDisposition<%=centerNumber %>" class="{validate: {required:true}}">
+				<select name="serviceUseRecord_exitDisposition<%=centerNumber %>" id="serviceUseRecord_exitDisposition<%=centerNumber %>" >
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_exitDisposition"+centerNumber, OcanForm.getOcanFormOptions("Exit Disposition"),prepopulationLevel)%>
 				</select>					
 			</td>

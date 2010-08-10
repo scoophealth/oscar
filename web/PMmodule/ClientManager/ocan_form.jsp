@@ -466,7 +466,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Date of Birth</td>
 			<td class="genericTableData">
-				<select name="clientDOBType">
+				<select name="clientDOBType" id="clientDOBType" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "clientDOBType", OcanForm.getOcanFormOptions("client DOB Type"),prepopulationLevel)%>
 				</select>	
 			</td>
@@ -541,25 +541,7 @@ $("document").ready(function(){
 				</select>					
 			</td>
 		</tr>	
-		<tr>
-			<td class="genericTableHeader">Program Name</td>
-			<td class="genericTableData">
-				<select name="admissionId">
-					<%
-						for (Admission admission : OcanForm.getAdmissions(currentDemographicId))
-						{
-							String selected="";
-							
-							if (ocanStaffForm.getAdmissionId()!=null && ocanStaffForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
-							
-							%>
-								<option <%=selected%> value="<%=admission.getId()%>"><%=OcanForm.getEscapedAdmissionSelectionDisplay(admission)%></option>
-							<%
-						}
-					%>
-				</select>
-			</td>
-		</tr>	
+			
 		<tr>
 			<td colspan="2">				
 				<div id="center_block">
@@ -1095,6 +1077,7 @@ $("document").ready(function(){
 						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"ageOnsetMental_year",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
+		<!-- duplication? removed. 
 		<tr>
 			<td class="genericTableHeader">Age in Months for Onset of Mental Illness </td>
 			<td class="genericTableData">
@@ -1103,6 +1086,7 @@ $("document").ready(function(){
 				</select>	
 			</td>
 		</tr>
+		-->
 		<tr>
 			<td class="genericTableHeader">Age in Years for Onset of Mental Illness</td>
 			<td class="genericTableData">
@@ -1117,6 +1101,7 @@ $("document").ready(function(){
 						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"ageHospitalization_year",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
+		<!-- duplication? removed.
 		<tr>
 			<td class="genericTableHeader">Age in Months for Psychiatric Hospitalization </td>
 			<td class="genericTableData">
@@ -1125,6 +1110,7 @@ $("document").ready(function(){
 				</select>	
 			</td>
 		</tr>
+		 -->
 		<tr>
 			<td class="genericTableHeader">Age of first Psychiatric Hospitalization</td>
 			<td class="genericTableData">

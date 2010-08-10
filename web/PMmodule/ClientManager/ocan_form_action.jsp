@@ -10,9 +10,11 @@
 	HashMap<String,String[]> parameters=new HashMap(request.getParameterMap());
 
 	// for these values get them and pop them from map so subsequent iterating through map doesn't process these parameters again.
-	Integer admissionId=Integer.valueOf(parameters.get("admissionId")[0]);	
-	parameters.remove("admissionId");
-
+	//Integer admissionId=Integer.valueOf(parameters.get("admissionId")[0]);	
+	//parameters.remove("admissionId");
+	Integer admissionId=0;   //useless default value.
+	
+	
 	//Integer clientAge=Integer.valueOf(parameters.get("age")[0]);	
 	parameters.remove("age");
 
@@ -42,7 +44,7 @@
 	ocanStaffForm.setHcVersion(request.getParameter("hcVersion"));
 	ocanStaffForm.setDateOfBirth(request.getParameter("date_of_birth"));
 	ocanStaffForm.setGender(gender);
-	ocanStaffForm.setAdmissionId(admissionId);
+	//ocanStaffForm.setAdmissionId(admissionId);
 	ocanStaffForm.setAssessmentStatus(assessmentStatus);
 	ocanStaffForm.setReasonForAssessment(reasonForAssessment);
 	java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");

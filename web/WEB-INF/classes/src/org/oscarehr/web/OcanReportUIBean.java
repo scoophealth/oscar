@@ -924,7 +924,8 @@ public class OcanReportUIBean {
 	
 	public static Program convertProgram(String index, List<OcanStaffFormData> ocanStaffFormData) {
 		Program program = Program.Factory.newInstance();
-		program.setName(getStaffAnswer("admissionId",ocanStaffFormData));
+		//program.setName(getStaffAnswer("admissionId",ocanStaffFormData));
+		program.setName(getStaffAnswer("serviceUseRecord_programName"+index,ocanStaffFormData));
 		program.setNameOther(getStaffAnswer("serviceUseRecord_programNameOther"+index,ocanStaffFormData));
 		program.setNumber(getStaffAnswer("serviceUseRecord_programNumber"+index,ocanStaffFormData));
 		program.setNumberOther(getStaffAnswer("serviceUseRecord_programNumberOther"+index,ocanStaffFormData));		
@@ -1267,11 +1268,13 @@ public class OcanReportUIBean {
 		}else {
 			ageHospitalization.setYears(BigInteger.valueOf(Long.valueOf(getStaffAnswer("ageHospitalization_year",ocanStaffFormData)).longValue()));
 		}
+		/*
 		if(getStaffAnswer("ageHospitalization_month",ocanStaffFormData)=="") {
 			ageHospitalization.setMonths(0);
 		} else {
 			ageHospitalization.setMonths(Integer.valueOf(getStaffAnswer("ageHospitalization_month",ocanStaffFormData)).intValue());
 		}
+		*/
 		return ageHospitalization;
 	}
 	
@@ -1284,12 +1287,13 @@ public class OcanReportUIBean {
 		} else {
 			ageOnsetMental.setYears(BigInteger.valueOf(Long.valueOf(getStaffAnswer("ageOnsetMental_year",ocanStaffFormData)).longValue()));
 		}
-		
+		/*
 		if(getStaffAnswer("ageOnsetMental_month",ocanStaffFormData)=="") {
 			ageOnsetMental.setMonths(0);
 		} else {
 			ageOnsetMental.setMonths(Integer.valueOf(getStaffAnswer("ageOnsetMental_month",ocanStaffFormData)).intValue());
 		}
+		*/
 		return ageOnsetMental;
 	}
 	public static ClientCapacity convertClientCapacity(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
