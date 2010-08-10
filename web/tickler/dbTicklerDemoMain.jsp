@@ -24,11 +24,9 @@
  */
 -->
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbTicker.jsp"%>
 <%
  String demoview = request.getParameter("demoview")==null?"all":request.getParameter("demoview") ;
@@ -40,9 +38,9 @@ String[] temp = request.getParameterValues("checkbox");
 if (temp== null){
 %>
 <jsp:forward page='ticklerDemoMain.jsp'>
-	<jsp:param name="demoview" value='<%=demoview%>' />
-	<jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
-	<jsp:param name="updateParent" value="<%=updateParent%>" />
+         <jsp:param name="demoview" value='<%=demoview%>' />
+         <jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
+         <jsp:param name="updateParent" value="<%=updateParent%>" />
 </jsp:forward>
 <%}else{
 		//temp=e.nextElement().toString();
@@ -63,7 +61,7 @@ int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_tickler");
 
 %>
 <jsp:forward page='ticklerDemoMain.jsp'>
-	<jsp:param name="demoview" value='<%=demoview%>' />
-	<jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
-	<jsp:param name="updateParent" value="<%=updateParent%>" />
+    <jsp:param name="demoview" value='<%=demoview%>' />
+    <jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
+    <jsp:param name="updateParent" value="<%=updateParent%>" />
 </jsp:forward>
