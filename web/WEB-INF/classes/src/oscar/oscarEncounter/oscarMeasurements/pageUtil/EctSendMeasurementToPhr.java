@@ -34,7 +34,6 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandle
 public class EctSendMeasurementToPhr extends Action {
     
     PHRService phrService = null;
-    PHRConstants phrConstants = null;
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, 
             HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, JAXBException, IndivoException {
@@ -52,7 +51,7 @@ public class EctSendMeasurementToPhr extends Action {
         for (String measurementType: measurementTypeList) {
             List<EctMeasurementsDataBean> measurements =  hd.getMeasurementObjectByType(measurementType, demographicNo);
             for (EctMeasurementsDataBean measurement: measurements) {
-                if (!phrService.isIndivoRegistered(phrConstants.DOCTYPE_MEASUREMENT(), measurement.getId()+"")) {
+                if (!phrService.isIndivoRegistered(PHRConstants.DOCTYPE_MEASUREMENT(), measurement.getId()+"")) {
                       PHRMeasurement phrMeasurement = new PHRMeasurement(provider, demographicNo, patientMyOscarId, measurement);
                       phrService.sendAddDocument(phrMeasurement, measurement.getId() + "");
                 }
@@ -65,9 +64,5 @@ public class EctSendMeasurementToPhr extends Action {
     
     public void setPhrService(PHRService pServ){
         this.phrService = pServ;
-    }
-    
-    public void setPhrConstants(PHRConstants pConst) {
-        this.phrConstants = pConst;
-    }
+    }    
 }

@@ -666,8 +666,7 @@ public class ProviderData {
     }
  
     public void initMyOscarId() {
-         ProviderMyOscarIdData myOscar = new ProviderMyOscarIdData(this.getProviderNo());
-         this.myOscarId = myOscar.getMyOscarId();
+         this.myOscarId = ProviderMyOscarIdData.getMyOscarId(this.getProviderNo());
     }
     private String myOscarId = null;
     

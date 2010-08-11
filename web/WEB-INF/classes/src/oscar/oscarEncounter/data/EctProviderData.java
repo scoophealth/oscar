@@ -145,8 +145,7 @@ public class EctProviderData {
                 String clinicPhone = clinic.getClinicPhone();
                 String clinicFax = clinic.getClinicFax();
                 
-                ProviderMyOscarIdData myOscar = new ProviderMyOscarIdData(providerNo);
-                String myOscarLoginId = myOscar.getMyOscarId();
+                String myOscarLoginId = ProviderMyOscarIdData.getMyOscarId(providerNo);
                 
                 provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax, myOscarLoginId, selfLearningPasswd);
             }

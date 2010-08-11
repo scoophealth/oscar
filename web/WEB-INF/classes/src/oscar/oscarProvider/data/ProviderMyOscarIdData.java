@@ -54,7 +54,7 @@ public class ProviderMyOscarIdData {
    /**
     *Retrieve myOscar login id for current provider first by querying property table 
     */
-   public String getMyOscarId() {
+   public static String getMyOscarId(String providerNo) {
        String sql;
        String myOscarId = "";
        ResultSet rs;
@@ -63,7 +63,7 @@ public class ProviderMyOscarIdData {
        try {
         db = new DBHandler();
        
-        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
+        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + providerNo + "'";
         rs = db.GetSQL(sql);
             
         if( rs.next() ) {
