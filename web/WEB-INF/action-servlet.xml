@@ -232,20 +232,16 @@
 	<bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 		<property name="phrDocumentDAO" ref="phrDocumentDAO" />
-		<property name="phrConstants" ref="phrConstants" />
 		<property name="phrActionDAO" ref="phrActionDAO" />
 	</bean>
 	<bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false">
 		<property name="phrService" ref="phrService" />
-		<property name="phrConstants" ref="phrConstants" />
 	</bean>
     <bean name="/oscarEncounter/oscarMeasurements/SendToPhr" class="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSendMeasurementToPhr" singleton="false">
 		<property name="phrService" ref="phrService" />
-		<property name="phrConstants" ref="phrConstants" />
 	</bean>
 	<bean name="/dms/SendDocToPhr" class="oscar.dms.actions.SendDocToPhrAction" singleton="false">
 		<property name="phrService" ref="phrService" />
-		<property name="phrConstants" ref="phrConstants" />
 	</bean>
 	<bean name="/phr/Login" class="org.oscarehr.phr.web.PHRLoginAction" singleton="false">
 		<property name="phrService" ref="phrService" />
@@ -258,7 +254,6 @@
 	<bean name="/phr/UserManagement" class="org.oscarehr.phr.web.PHRUserManagementAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 		<property name="phrActionDAO" ref="phrActionDAO" />
-		<property name="phrConstants" ref="phrConstants" />
 	</bean>
     <bean name="/SendToPhr" class="org.oscarehr.phr.web.PHRGenericSendToPhrAction" singleton="false">
         <property name="phrService" ref="phrService" />
