@@ -101,7 +101,7 @@ public class SendDocToPhrAction extends Action {
 	    	if (phrService.isIndivoRegistered(PHRConstants.DOCTYPE_BINARYDATA(), doc.getDocId())) {
 	    		// update
 	    		String phrIndex = phrService.getPhrIndex(PHRConstants.DOCTYPE_BINARYDATA(), doc.getDocId());
-	    		phrService.sendUpdateBinaryData(provider, demographic.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demographic.getPin(), doc, phrIndex);
+	    		phrService.sendUpdateBinaryData(provider, demographic.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demographic.getPin(), doc.getDocId(), doc.getType(), doc.getContentType(), doc.getDescription(), phrIndex);
 	    	} else {
 	    		// add
 	    		phrService.sendAddBinaryData(provider, demographic.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demographic.getPin(), doc);

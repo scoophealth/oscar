@@ -240,9 +240,7 @@
     <bean name="/oscarEncounter/oscarMeasurements/SendToPhr" class="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSendMeasurementToPhr" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
-	<bean name="/dms/SendDocToPhr" class="oscar.dms.actions.SendDocToPhrAction" singleton="false">
-		<property name="phrService" ref="phrService" />
-	</bean>
+	<bean name="/dms/SendDocToPhr" class="oscar.dms.actions.SendDocToPhrAction" singleton="false" />
 	<bean name="/phr/Login" class="org.oscarehr.phr.web.PHRLoginAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
