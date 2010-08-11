@@ -496,13 +496,9 @@ function popup1(height, width, url, windowName){
 				onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');" />
 			<%
                     if( module.equals("demographic") ) {
-              %> <oscarProp:oscarPropertiesCheck property="MY_OSCAR"
-				value="yes">
-				<indivo:indivoRegistered demographic="<%=moduleid%>"
-					provider="<%=curUser%>">
-
-					<%-- input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/  
-                                --%>
+              %> 
+              <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+				<indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">
 
 					<input type="button"
 						onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');"
