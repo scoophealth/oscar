@@ -81,8 +81,7 @@ String domain = "@myoscar.org";
 	<tr>
 		<td class="MainTableLeftColumn">&nbsp;</td>
 		<td class="MainTableRightColumn"><html:errors /> <%
-              ProviderMyOscarIdData myOscarLogin = new ProviderMyOscarIdData(curUser_no);
-              String login = myOscarLogin.getMyOscarId();
+              String login = ProviderMyOscarIdData.getMyOscarId(curUser_no);
                int atsign = login.indexOf("@");
                if( atsign > -1 )
                    login = login.substring(0,atsign);

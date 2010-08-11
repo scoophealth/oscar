@@ -19,7 +19,6 @@
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="org.oscarehr.phr.model.PHRAction"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
-<%@ page import="org.oscarehr.phr.indivo.IndivoConstantsImpl"%>
 <%@ page import="org.oscarehr.phr.PHRConstants"%>
 <%@ page import="org.oscarehr.phr.model.PHRMessage"%>
 <%@ page import="org.oscarehr.phr.dao.PHRActionDAO, org.springframework.web.context.support.WebApplicationContextUtils"%>
@@ -51,10 +50,9 @@ pageContext.setAttribute("STATUS_ON_HOLD", PHRAction.STATUS_ON_HOLD);
 pageContext.setAttribute("ACTION_ADD", PHRAction.ACTION_ADD);
 pageContext.setAttribute("ACTION_UPDATE", PHRAction.ACTION_UPDATE);
 
-PHRConstants phrConstants = new IndivoConstantsImpl();
-pageContext.setAttribute("TYPE_BINARYDATA", phrConstants.DOCTYPE_BINARYDATA());
-pageContext.setAttribute("TYPE_MEDICATION", phrConstants.DOCTYPE_MEDICATION());
-pageContext.setAttribute("TYPE_ACCESSPOLICIES", phrConstants.DOCTYPE_ACCESSPOLICIES());
+pageContext.setAttribute("TYPE_BINARYDATA", PHRConstants.DOCTYPE_BINARYDATA());
+pageContext.setAttribute("TYPE_MEDICATION", PHRConstants.DOCTYPE_MEDICATION());
+pageContext.setAttribute("TYPE_ACCESSPOLICIES", PHRConstants.DOCTYPE_ACCESSPOLICIES());
 
 String pageMethod = request.getParameter("method");
 if (pageMethod.equals("delete") || pageMethod.equals("resend")) 
