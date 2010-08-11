@@ -64,7 +64,7 @@ public interface PHRService {
     
     public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception;
     public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception;
-    public void sendUpdateBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception;
+    public void sendUpdateBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, String documentId, String documentType, String documentContentType, String documentDesription, String phrDocIndex) throws Exception;
     public Integer sendAddBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception;
 
     public void sendAddAnnotation(ProviderData sender, String recipientOscarId, String recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception;

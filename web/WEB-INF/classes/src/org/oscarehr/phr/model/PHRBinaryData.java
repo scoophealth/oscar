@@ -62,13 +62,13 @@ public class PHRBinaryData extends PHRDocument {
         setConstructorData(recipientOscarId, recipientType, recipientPhrId, indivoDoc);
     }
 
-    public PHRBinaryData(Provider provider, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws JAXBException, IndivoException {        
+    public PHRBinaryData(Provider provider, String recipientOscarId, int recipientType, String recipientPhrId, String documentType, String documentContentType, String documentDesription) throws JAXBException, IndivoException {        
         //Temp data: We're not setting the document just yet
         
         GregorianCalendar calendar = new GregorianCalendar();
-        String fname = document.getType() + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
+        String fname = documentType + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
         
-        BinaryDataType binaryDataType = getPhrBinaryData(document.getContentType(), document.getDescription(), fname, new byte[0]);
+        BinaryDataType binaryDataType = getPhrBinaryData(documentContentType, documentDesription, fname, new byte[0]);
         IndivoDocumentType indivoDoc = getPhrBinaryDataDocument(provider, binaryDataType);
         this.setSenderOscar(provider.getProviderNo());
         this.setSenderPhr(ProviderMyOscarIdData.getMyOscarId(provider.getProviderNo()));

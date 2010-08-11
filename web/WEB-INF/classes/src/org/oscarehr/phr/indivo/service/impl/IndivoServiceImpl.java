@@ -184,7 +184,7 @@ public class IndivoServiceImpl  implements PHRService{
     }
 
     public Integer sendAddBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {
-        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, null, null, null);
         PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
         action.setOscarId(document.getDocId());
         //write action to phr_actions table
@@ -213,10 +213,10 @@ public class IndivoServiceImpl  implements PHRService{
         phrActionDAO.save(action);
     }
     
-    public void sendUpdateBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception {
-        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+    public void sendUpdateBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, String documentId, String documentType, String documentContentType, String documentDesription, String phrDocIndex) throws Exception {
+        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, documentType, documentContentType, documentDesription);
         PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
-        action.setOscarId(document.getDocId());
+        action.setOscarId(documentId);
         
         //set which phrIndex to update
         action.setPhrIndex(phrDocIndex);
