@@ -31,6 +31,7 @@ package org.oscarehr.phr.service;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
@@ -63,6 +64,8 @@ public interface PHRService {
     
     public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception;
     public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception;
+    public void sendUpdateBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception;
+    public Integer sendAddBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception;
 
     public void sendAddAnnotation(ProviderData sender, String recipientOscarId, String recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception;
 

@@ -67,7 +67,6 @@ public class PHRUserManagementAction extends DispatchAction {
     PHRDocumentDAO phrDocumentDAO;
     PHRActionDAO phrActionDAO;
     PHRService phrService;
-    PHRConstants phrConstants;
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
        return super.execute(mapping, form, request, response);
@@ -83,10 +82,6 @@ public class PHRUserManagementAction extends DispatchAction {
     
     public void setPhrActionDAO(PHRActionDAO phrActionDAO) {
         this.phrActionDAO = phrActionDAO;
-    }
-    
-    public void setPhrConstants(PHRConstants phrConstants) {
-        this.phrConstants = phrConstants;
     }
     
     public void setPhrService(PHRService phrService) {

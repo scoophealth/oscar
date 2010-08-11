@@ -47,7 +47,6 @@ import org.indivo.xml.phr.medication.MedicationType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.phr.PHRConstants;
-import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.w3c.dom.Element;
 
 import oscar.oscarEncounter.data.EctProviderData;
@@ -72,8 +71,7 @@ public class PHRMedication extends PHRDocument{
         byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
         
-        PHRConstants phrConstants = new IndivoConstantsImpl();
-        this.setPhrClassification(phrConstants.DOCTYPE_MEDICATION());
+        this.setPhrClassification(PHRConstants.DOCTYPE_MEDICATION());
         this.setReceiverOscar(demographicNo);
         this.setReceiverType(this.TYPE_DEMOGRAPHIC);
         this.setReceiverPhr(demographicPhrId);

@@ -20,8 +20,6 @@ import org.indivo.xml.phr.DocumentUtils;
 import org.indivo.xml.phr.document.IndivoDocument;
 import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.types.AuthorType;
-import org.oscarehr.phr.PHRConstants;
-import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import oscar.oscarProvider.data.ProviderData;

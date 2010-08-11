@@ -28,19 +28,31 @@
  */
 package org.oscarehr.phr;
 
-/**
- *
- * @author Paul
- */
-public interface PHRConstants {
-    
-    //document type
-    
-    public String DOCTYPE_MEDICATION();
-    public String DOCTYPE_MESSAGE();
-    public String DOCTYPE_BINARYDATA();
-    public String DOCTYPE_ACCESSPOLICIES();
-    public String DOCTYPE_MEASUREMENT();
-    public String DOCTYPE_ANNOTATION();
-}
+import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 
+public final class PHRConstants {
+
+	public static String DOCTYPE_MEDICATION() {
+		return DocumentClassificationUrns.MEDICATION;
+	}
+
+	public static String DOCTYPE_MESSAGE() {
+		return DocumentClassificationUrns.MESSAGE;
+	}
+
+	public static String DOCTYPE_BINARYDATA() {
+		return DocumentClassificationUrns.BINARYDATA;
+	}
+
+	public static String DOCTYPE_ACCESSPOLICIES() {
+		return org.indivo.xml.urns.DocumentClassificationUrns.ACCESS_POLICIES;
+	}
+
+	public static String DOCTYPE_MEASUREMENT() {
+		return DocumentClassificationUrns.VITAL;
+	}
+
+	public static String DOCTYPE_ANNOTATION() {
+		return DocumentClassificationUrns.ANNOTATION;
+	}
+}

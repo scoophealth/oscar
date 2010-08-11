@@ -59,7 +59,6 @@ import org.indivo.xml.phr.message.TextMessage;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.phr.PHRConstants;
-import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
@@ -178,8 +177,7 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
         
-        PHRConstants phrConstants = new IndivoConstantsImpl();
-        this.setPhrClassification(phrConstants.DOCTYPE_MESSAGE());
+        this.setPhrClassification(PHRConstants.DOCTYPE_MESSAGE());
         
         this.setSenderOscar(sender.getProviderNo());
         this.setSenderType(PHRDocument.TYPE_PROVIDER);

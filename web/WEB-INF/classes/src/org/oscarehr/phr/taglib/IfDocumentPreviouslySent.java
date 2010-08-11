@@ -32,8 +32,7 @@ public class IfDocumentPreviouslySent extends TagSupport {
     @Override
     public int doStartTag() {
         PHRService service = (PHRService) SpringUtils.getBean("phrService");
-        PHRConstants constants = (PHRConstants) SpringUtils.getBean("phrConstants");
-        if (service.isIndivoRegistered(constants.DOCTYPE_BINARYDATA(), documentOscarId)) {
+        if (service.isIndivoRegistered(PHRConstants.DOCTYPE_BINARYDATA(), documentOscarId)) {
             if (invertResult) return SKIP_BODY;
             else return EVAL_BODY_INCLUDE;
         }

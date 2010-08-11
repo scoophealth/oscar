@@ -27,7 +27,6 @@ import org.indivo.xml.phr.vital.ResultType;
 import org.indivo.xml.phr.vital.VitalSign;
 import org.indivo.xml.phr.vital.VitalSignType;
 import org.oscarehr.phr.PHRConstants;
-import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Element;
 
@@ -59,8 +58,7 @@ public class PHRMeasurement extends PHRDocument{
         byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
         
-        PHRConstants phrConstants = new IndivoConstantsImpl();
-        this.setPhrClassification(phrConstants.DOCTYPE_MEASUREMENT());
+        this.setPhrClassification(PHRConstants.DOCTYPE_MEASUREMENT());
         this.setReceiverOscar(demographicNo);
         this.setReceiverType(this.TYPE_DEMOGRAPHIC);
         this.setReceiverPhr(demographicPhrId);

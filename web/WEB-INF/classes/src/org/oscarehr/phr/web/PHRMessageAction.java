@@ -65,7 +65,6 @@ public class PHRMessageAction extends DispatchAction {
     PHRDocumentDAO phrDocumentDAO;
     PHRActionDAO phrActionDAO;
     PHRService phrService;
-    PHRConstants phrConstants;
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
        return super.execute(mapping, form, request, response);
@@ -81,10 +80,6 @@ public class PHRMessageAction extends DispatchAction {
     
     public void setPhrActionDAO(PHRActionDAO phrActionDAO) {
         this.phrActionDAO = phrActionDAO;
-    }
-    
-    public void setPhrConstants(PHRConstants phrConstants) {
-        this.phrConstants = phrConstants;
     }
     
     public void setPhrService(PHRService phrService) {
@@ -104,7 +99,7 @@ public class PHRMessageAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocumentsReceived(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        List docs = phrDocumentDAO.getDocumentsReceived(PHRConstants.DOCTYPE_MESSAGE(), providerNo);
         ArrayList<PHRMessage> messages = null;
         List<PHRAction> actionsPendingApproval = phrActionDAO.getActionsByStatus(PHRAction.STATUS_APPROVAL_PENDING, providerNo);
         if(docs != null) {
@@ -132,17 +127,17 @@ public class PHRMessageAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocumentsSent(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        List docs = phrDocumentDAO.getDocumentsSent(PHRConstants.DOCTYPE_MESSAGE(), providerNo);
         
-        List messageActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MESSAGE(), PHRAction.ACTION_ADD, providerNo);
-        List otherActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MEDICATION(), -1, providerNo);
-        otherActions.addAll(phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_BINARYDATA(), -1, providerNo));
+        List messageActions = phrActionDAO.getPendingActionsByProvider(PHRConstants.DOCTYPE_MESSAGE(), PHRAction.ACTION_ADD, providerNo);
+        List otherActions = phrActionDAO.getPendingActionsByProvider(PHRConstants.DOCTYPE_MEDICATION(), -1, providerNo);
+        otherActions.addAll(phrActionDAO.getPendingActionsByProvider(PHRConstants.DOCTYPE_BINARYDATA(), -1, providerNo));
         ArrayList<Integer> statusList = new ArrayList();
         statusList.add(PHRAction.STATUS_ON_HOLD);
         statusList.add(PHRAction.STATUS_NOT_AUTHORIZED);
         statusList.add(PHRAction.STATUS_SEND_PENDING);
         statusList.add(PHRAction.STATUS_OTHER_ERROR);
-        otherActions.addAll(phrActionDAO.getActionsByStatus(statusList, providerNo, phrConstants.DOCTYPE_ACCESSPOLICIES()));
+        otherActions.addAll(phrActionDAO.getActionsByStatus(statusList, providerNo, PHRConstants.DOCTYPE_ACCESSPOLICIES()));
         request.getSession().setAttribute("indivoSentMessages", docs);
         request.getSession().setAttribute("indivoMessageActions", messageActions);
         request.getSession().setAttribute("indivoOtherActions", otherActions);
@@ -157,7 +152,7 @@ public class PHRMessageAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocumentsArchived(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        List docs = phrDocumentDAO.getDocumentsArchived(PHRConstants.DOCTYPE_MESSAGE(), providerNo);
         request.getSession().setAttribute("indivoArchivedMessages", docs);
         
         return mapping.findForward("view");
@@ -336,8 +331,7 @@ public class PHRMessageAction extends DispatchAction {
             DemographicData demo = new DemographicData();
             recipientPhrId = demo.getDemographic(recipientOscarId).getIndivoId();
         }else if (recipientType == PHRDocument.TYPE_PROVIDER){
-            ProviderMyOscarIdData theirId = new ProviderMyOscarIdData(recipientOscarId); 
-            recipientPhrId = theirId.getMyOscarId(); 
+            recipientPhrId = ProviderMyOscarIdData.getMyOscarId(recipientOscarId); 
         }
         
         log.debug("SENDER ID >"+recipientPhrId+"<");

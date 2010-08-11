@@ -21,7 +21,6 @@ import org.indivo.xml.phr.types.AuthorType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 import org.oscarehr.phr.PHRConstants;
-import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.phr.model.PHRDocument;
 import org.w3c.dom.Element;
 import oscar.oscarProvider.data.ProviderData;
@@ -64,8 +63,7 @@ public class PHRIndivoAnnotation extends PHRIndivoDocument {
         annotationType.setAuthor(super.getAuthorType(provider));
         annotationType.setDateTime(PHRIndivoDocument.getXMLGregorianCalendar(new Date()));
         DocumentReferenceType documentReferenceType = new DocumentReferenceType();
-        IndivoConstantsImpl indivoConstants = new IndivoConstantsImpl();
-        documentReferenceType.setClassification(indivoConstants.DOCTYPE_BINARYDATA());
+        documentReferenceType.setClassification(PHRConstants.DOCTYPE_BINARYDATA());
         documentReferenceType.setDocumentIndex(documentReferenceIndex);
         documentReferenceType.setVersion(BigInteger.ZERO); //assuming document just added - don't really know the version TODO: maybe fix this, put stuff in mountDocumentReference
         annotationType.setDocumentReference(documentReferenceType);
@@ -89,7 +87,7 @@ public class PHRIndivoAnnotation extends PHRIndivoDocument {
     }
 
     protected String getClassification() {
-        return new IndivoConstantsImpl().DOCTYPE_ANNOTATION();
+        return PHRConstants.DOCTYPE_ANNOTATION();
     }
 
 }

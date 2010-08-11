@@ -33,7 +33,6 @@ import org.indivo.xml.security.ProfileCollection;
 import org.indivo.xml.security.ProfileCollectionType;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.PHRConstants;
-import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.phr.indivo.service.impl.IndivoServiceImpl;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
@@ -79,10 +78,9 @@ public class IndivoAPService extends IndivoServiceImpl {
     //before it is queued and sent*/
     public void proposeAccessPolicy(String providerOscarId, String permissionRecipientPhrId, String newPolicy, String providerIdPerformingAction) {
         PHRAction action = new PHRAction();
-        PHRConstants phrConstants = new IndivoConstantsImpl();
         action.setActionType(PHRAction.ACTION_UPDATE);
         action.setStatus(PHRAction.STATUS_APPROVAL_PENDING);
-        action.setPhrClassification(phrConstants.DOCTYPE_ACCESSPOLICIES());
+        action.setPhrClassification(PHRConstants.DOCTYPE_ACCESSPOLICIES());
         action.setDateQueued(new Date());
         action.setReceiverOscar(providerOscarId);
         //TOTHINK: might have to get Id later
@@ -138,8 +136,7 @@ public class IndivoAPService extends IndivoServiceImpl {
     
     //PROVIDER needs to be authed with the indivoServer, and providerNo must be set in the auth object
     public void packageAllAccessPolicies(PHRAuthentication auth) throws Exception {
-        PHRConstants phrConstants = new IndivoConstantsImpl();
-        List<PHRAction> policiesOnHold = phrActionDAO.getActionsByStatus(PHRAction.STATUS_ON_HOLD, auth.getProviderNo(), phrConstants.DOCTYPE_ACCESSPOLICIES());
+        List<PHRAction> policiesOnHold = phrActionDAO.getActionsByStatus(PHRAction.STATUS_ON_HOLD, auth.getProviderNo(), PHRConstants.DOCTYPE_ACCESSPOLICIES());
         for (PHRAction curPolicy: policiesOnHold) {
             packageAccessPolicy(auth, curPolicy);
         }

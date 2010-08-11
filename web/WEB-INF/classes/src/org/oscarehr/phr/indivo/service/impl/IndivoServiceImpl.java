@@ -45,8 +45,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.indivo.IndivoException;
 import org.indivo.client.ActionNotPerformedException;
 import org.indivo.client.TalkClient;
@@ -77,12 +76,12 @@ import org.indivo.xml.talk.ReadDocumentResultType;
 import org.indivo.xml.talk.ReadResultType;
 import org.indivo.xml.talk.SendMessageResultType;
 import org.indivo.xml.talk.UpdateDocumentResultType;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.IndivoAuthentication;
-import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.phr.indivo.IndivoUtil;
 import org.oscarehr.phr.indivo.model.PHRIndivoAnnotation;
 import org.oscarehr.phr.indivo.model.PHRIndivoDocument;
@@ -109,13 +108,9 @@ import oscar.oscarRx.data.RxPrescriptionData;
  */
 public class IndivoServiceImpl  implements PHRService{
     
-    private static Log log = LogFactory.getLog(IndivoServiceImpl.class); ///IndivoServiceImpl.class
+    private static final Logger logger = MiscUtils.getLogger();
     protected PHRDocumentDAO phrDocumentDAO;
     protected PHRActionDAO  phrActionDAO;
-    
-    /** Creates a new instance of IndivoServiceImpl */
-    public IndivoServiceImpl() {
-    }
     
     public boolean canAuthenticate(String providerNo){
         EctProviderData.Provider prov = new EctProviderData().getProvider(providerNo);
@@ -136,8 +131,8 @@ public class IndivoServiceImpl  implements PHRService{
         //}
         
         try{
-            log.debug(auth.getExpirationDate());
-        }catch(Exception e){log.debug("ERROR",e);}
+            logger.debug(auth.getExpirationDate());
+        }catch(Exception e){logger.debug("ERROR",e);}
         
         //Also should do quick check to see if connection is active
         
@@ -165,7 +160,7 @@ public class IndivoServiceImpl  implements PHRService{
         //Throws IndivoException & ActionNotPerformedException
         //could be incorrect password or server down
         //distinguish like this: if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
-        log.debug("actor ticket "+authResult.getActorTicket());
+        logger.debug("actor ticket "+authResult.getActorTicket());
         phrAuth = new IndivoAuthentication(authResult);
         return phrAuth;
         
@@ -188,17 +183,37 @@ public class IndivoServiceImpl  implements PHRService{
         return phrActionDAO.saveAndGetId(action);
     }
 
+    public Integer sendAddBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {
+        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+        PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
+        action.setOscarId(document.getDocId());
+        //write action to phr_actions table
+        return phrActionDAO.saveAndGetId(action);
+    }
+
     public void sendAddAnnotation(ProviderData sender, String recipientOscarId, String recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception {
         PHRIndivoAnnotation phrAnnotation = new PHRIndivoAnnotation(sender, recipientOscarId, recipientPhrId, documentReferenceOscarActionId, message);
         PHRAction action = phrAnnotation.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
         //write action to phr_actions table
         
         Integer oscarId = phrActionDAO.saveAndGetId(action);
-        action.setOscarId(oscarId + ""); //guaranteed unique, but there is no annotation object in oscar, so can't assign proper oscarId
+        action.setOscarId(String.valueOf(oscarId)); //guaranteed unique, but there is no annotation object in oscar, so can't assign proper oscarId
         phrActionDAO.update(action);
     }
     
     public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception {
+        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+        PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
+        action.setOscarId(document.getDocId());
+        
+        //set which phrIndex to update
+        action.setPhrIndex(phrDocIndex);
+        
+        //write action to phr_actions table
+        phrActionDAO.save(action);
+    }
+    
+    public void sendUpdateBinaryData(Provider sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception {
         PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
         PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
         action.setOscarId(document.getDocId());
@@ -269,14 +284,14 @@ public class IndivoServiceImpl  implements PHRService{
     
     
     public void retrieveDocuments2(PHRAuthentication auth,String providerNo) throws Exception{
-       log.info("In retrieveDocuments");
+       logger.debug("In retrieveDocuments");
        TalkClient client = getTalkClient();
        ReadResultType readResult = client.readRecord(auth.getToken(),auth.getUserId());
        
        if (readResult != null){
           IndivoRecordType record = readResult.getIndivoRecord();
           List<IndivoDocumentType>list = record.getIndivoDocument();
-          log.info("getMessages:Msgs List has "+list.size());
+          logger.debug("getMessages:Msgs List has "+list.size());
           
           
           for(IndivoDocumentType document:list){
@@ -285,54 +300,54 @@ public class IndivoServiceImpl  implements PHRService{
              String classification = theType.getClassification();
              String documentIndex  = docHeaderType.getDocumentIndex();
     
-             log.debug("Document is of type "+classification+ " index is "+documentIndex);
+             logger.debug("Document is of type "+classification+ " index is "+documentIndex);
              
              // Check if this document has been imported before
              boolean importStatus = checkImportStatus(documentIndex);
              
              if (importStatus && checkClassification(classification)){
-                log.debug("PASSED check ");  
+                logger.debug("PASSED check ");  
                 PHRMessage mess =  new PHRMessage(document);
                 mess.checkImportStatus();
                 PHRDocument phrdoc = new PHRDocument();
                 BeanUtils.copyProperties(phrdoc,mess);
                 phrDocumentDAO.save( phrdoc);
              }else if (importStatus){
-                 log.info("need to check for updates on this message");
+                 logger.debug("need to check for updates on this message");
              }
           }      
        }
     }
     
     public void retrieveDocuments(PHRAuthentication auth,String providerNo) throws Exception{
-       log.info("In retrieveDocuments");
+       logger.debug("In retrieveDocuments");
        TalkClient client = getTalkClient();
        ReadDocumentHeaderListResultType readResult = client.readDocumentHeaders(auth.getToken(), auth.getUserId(), org.indivo.xml.phr.urns.DocumentClassificationUrns.MESSAGE, true);
        List<DocumentHeaderType> docHeaders = readResult.getDocumentHeader();
-       log.info("docheaders found: " + docHeaders.size());
+       logger.debug("docheaders found: " + docHeaders.size());
        for (DocumentHeaderType docHeader : docHeaders) {
              // Retrieve each document
-             log.debug("Date Created set to "+new Date(docHeader.getCreationDateTime().toGregorianCalendar().getGregorianChange().getTime()));
+             logger.debug("Date Created set to "+new Date(docHeader.getCreationDateTime().toGregorianCalendar().getGregorianChange().getTime()));
              DocumentClassificationType theType = docHeader.getDocumentClassification();
              String classification = theType.getClassification();
              String documentIndex  = docHeader.getDocumentIndex();
-             log.debug("Document is of type "+classification+ " index is "+documentIndex);
+             logger.debug("Document is of type "+classification+ " index is "+documentIndex);
              boolean importStatus = checkImportStatus(documentIndex);
             
              //first check if user is registered (making two separate checks - one for sent documents and one for received for faster performance)
              boolean sendingDocument = docHeader.getAuthor().getIndivoId().equals(auth.getUserId());
              DemographicData dd = new DemographicData();
-             log.debug("file created by: " + docHeader.getAuthor().getIndivoId());
-             log.debug("currentUser: " + auth.getUserId());
-             log.debug("sendingDocument: " + sendingDocument);
-             log.debug("userInOscar: " + !dd.getDemographicNoByPIN(docHeader.getAuthor().getIndivoId()).equals(""));
+             logger.debug("file created by: " + docHeader.getAuthor().getIndivoId());
+             logger.debug("currentUser: " + auth.getUserId());
+             logger.debug("sendingDocument: " + sendingDocument);
+             logger.debug("userInOscar: " + !dd.getDemographicNoByPIN(docHeader.getAuthor().getIndivoId()).equals(""));
              
              if (!sendingDocument) {
                  boolean userInOscar = !dd.getDemographicNoByPIN(docHeader.getAuthor().getIndivoId()).equals("");
                  if (!userInOscar) continue;
              }
              if (importStatus) {
-                log.debug("PASSED check, retrieving the document..."); 
+                logger.debug("PASSED check, retrieving the document..."); 
                 //now get the actual document
                 ReadDocumentResultType readDocResult = client.readDocument(auth.getToken(), auth.getUserId(), docHeader.getDocumentIndex(), true);
                 IndivoDocumentType indivoDoc = readDocResult.getIndivoDocument();
@@ -349,7 +364,7 @@ public class IndivoServiceImpl  implements PHRService{
                 BeanUtils.copyProperties(phrdoc, mess);
                 phrDocumentDAO.save(phrdoc);
              } else {
-                 log.info("need to check for updates on this message");
+                 logger.debug("need to check for updates on this message");
              }
        }
     }
@@ -364,25 +379,24 @@ public class IndivoServiceImpl  implements PHRService{
         List<PHRAction> actions = phrActionDAO.getQueuedActions(providerNo);
         
         TalkClient client = getTalkClient();
-        PHRConstants constants = new IndivoConstantsImpl();
-        log.debug("Processing "+actions.size()+" actions ");
+        logger.debug("Processing "+actions.size()+" actions ");
         for (PHRAction action :actions) {
             boolean updated  = false;
             //handle messages differently
-            log.debug("ACTION classification "+action.getPhrClassification()+ " action type "+action.getActionType() );
-            log.debug("BB"+constants.DOCTYPE_MESSAGE());
-            log.debug("AA "+PHRAction.ACTION_ADD);
+            logger.debug("ACTION classification "+action.getPhrClassification()+ " action type "+action.getActionType() );
+            logger.debug("BB"+PHRConstants.DOCTYPE_MESSAGE());
+            logger.debug("AA "+PHRAction.ACTION_ADD);
             try {
-                if (action.getPhrClassification().equalsIgnoreCase(constants.DOCTYPE_MESSAGE()) && action.getActionType() == PHRAction.ACTION_ADD) {
-                    log.debug("Sending Add Message");
+                if (action.getPhrClassification().equalsIgnoreCase(PHRConstants.DOCTYPE_MESSAGE()) && action.getActionType() == PHRAction.ACTION_ADD) {
+                    logger.debug("Sending Add Message");
                     IndivoDocumentType doc = action.getIndivoDocument();
-                    log.debug("doc is null?? "+doc);
+                    logger.debug("doc is null?? "+doc);
                     JAXBContext messageContext =JAXBContext.newInstance(MessageType.class.getPackage().getName());
                     MessageType msg = (MessageType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(doc, messageContext.createUnmarshaller());
-                    log.debug("doc is msg?? "+msg);
+                    logger.debug("doc is msg?? "+msg);
                     //need to set the document index on attachments (don't know phr index at time of attachment)
                     for (DocumentReferenceType attachment: msg.getReferencedIndivoDocuments()) {
-                        log.debug("attaching document");
+                        logger.debug("attaching document");
                         String actionId = attachment.getDocumentIndex();
                         PHRAction attachedDocumentAction = phrActionDAO.getActionById(actionId); //assuming aleady sent...
                         if (attachedDocumentAction == null) continue;
@@ -397,15 +411,15 @@ public class IndivoServiceImpl  implements PHRService{
                         phrActionDAO.update(action);
                     }
                     client.sendMessage(auth.getToken(), msg);
-                    log.debug("message is going to "+msg.getRecipient());
+                    logger.debug("message is going to "+msg.getRecipient());
                     //client.sendMessage(auth.getToken(),msg.getRecipient(),msg.getPriorThreadMessageId(),msg.getSubject(),msg.getMessageContent().getAny().getTextContent() );  
                     updated = true;
                 } else if (action.getActionType() == PHRAction.ACTION_ADD) {
                     //if adding
                     IndivoDocumentType doc = action.getIndivoDocument();
-                    if (action.getPhrClassification().equals(constants.DOCTYPE_BINARYDATA()))
+                    if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_BINARYDATA()))
                         doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
-                    if (action.getPhrClassification().equals(constants.DOCTYPE_ANNOTATION())) {
+                    if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_ANNOTATION())) {
                         try {
                             String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);//temporarily stored
                             PHRAction referencedDocumentAction = phrActionDAO.getActionById(referenceIndex);
@@ -415,7 +429,7 @@ public class IndivoServiceImpl  implements PHRService{
                             action = PHRIndivoDocument.setDocContent(doc, action);
                             phrActionDAO.save(action);
                         } catch (Exception e) {
-                            log.error("Could not send the annotation with ID: '" + action.getId() + "' to PHR; skipping it...", e);
+                            logger.error("Could not send the annotation with ID: '" + action.getId() + "' to PHR; skipping it...", e);
                             action.setStatus(PHRAction.STATUS_OTHER_ERROR);
                             phrActionDAO.update(action);
                             continue;  //if there is an error sending annotation, screw it...move on
@@ -429,8 +443,8 @@ public class IndivoServiceImpl  implements PHRService{
                     actions = PHRAction.updateIndexes(action.getPhrClassification(), action.getOscarId(), resultIndex, actions);
                     updated = true;
                 //if updating
-                }else if (action.getPhrClassification().equalsIgnoreCase(constants.DOCTYPE_MESSAGE()) && action.getActionType() == PHRAction.ACTION_UPDATE) {    
-                    log.debug("HERE MESSAGE UPDATE");
+                }else if (action.getPhrClassification().equalsIgnoreCase(PHRConstants.DOCTYPE_MESSAGE()) && action.getActionType() == PHRAction.ACTION_UPDATE) {    
+                    logger.debug("HERE MESSAGE UPDATE");
                     org.indivo.xml.JAXBUtils jaxbUtils  = new   org.indivo.xml.JAXBUtils(); 
 
                     IndivoDocumentType document = action.getIndivoDocument();
@@ -438,39 +452,39 @@ public class IndivoServiceImpl  implements PHRService{
                     JAXBContext messageContext = JAXBContext.newInstance("org.indivo.xml.phr.message");
                     MessageType msg = (MessageType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(document,messageContext.createUnmarshaller());
                     //??? Should i use reflection to abstract the call to ObjectFactory??? how will in know what method to call?  the one that will take MessageType as a param???
-                    log.debug("IS READ "+msg.isRead());
+                    logger.debug("IS READ "+msg.isRead());
                     Element element = jaxbUtils.marshalToElement(new org.indivo.xml.phr.message.ObjectFactory().createMessage(msg), 
                                                          JAXBContext.newInstance("org.indivo.xml.phr.message"));   
 
                     DocumentVersionGenerator dvg = new DocumentVersionGenerator();
                     DocumentVersionType newVersion = dvg.generateDefaultDocumentVersion(auth.getUserId(),auth.getName(),auth.getRole(),element);
-                    log.debug("BEFORE UPDATE DOCUMENT calling with token "+auth.getToken()+" id "+auth.getUserId()+" idx "+ action.getPhrIndex()+" v "+ newVersion);
+                    logger.debug("BEFORE UPDATE DOCUMENT calling with token "+auth.getToken()+" id "+auth.getUserId()+" idx "+ action.getPhrIndex()+" v "+ newVersion);
                     UpdateDocumentResultType updateDocRes = client.updateDocument(auth.getToken(),auth.getUserId(), action.getPhrIndex(), newVersion); 
                     if (updateDocRes == null){
-                        log.debug("UPDATE DOC IS NULL");
+                        logger.debug("UPDATE DOC IS NULL");
                     }else{
-                        log.debug("UPDATE DOC IS NOT NULL"+updateDocRes.toString());    
+                        logger.debug("UPDATE DOC IS NOT NULL"+updateDocRes.toString());    
                     }
-                    log.debug("AFTER UPDATE DOCUMENT");
+                    logger.debug("AFTER UPDATE DOCUMENT");
                     updated = true;
 
 
                 } else if (action.getActionType() == PHRAction.ACTION_UPDATE) {
-                    if (action.getPhrIndex() == null && !action.getPhrClassification().equals(constants.DOCTYPE_ACCESSPOLICIES())) throw new Exception("Error: PHR index not set");
+                    if (action.getPhrIndex() == null && !action.getPhrClassification().equals(PHRConstants.DOCTYPE_ACCESSPOLICIES())) throw new Exception("Error: PHR index not set");
                     
-                    if (action.getPhrClassification().equals(constants.DOCTYPE_ACCESSPOLICIES()))
+                    if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_ACCESSPOLICIES()))
                         action = apService.packageAccessPolicy(auth, action);
                     IndivoDocumentType doc = action.getIndivoDocument();
-                    if (action.getPhrClassification().equals(constants.DOCTYPE_BINARYDATA()))
+                    if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_BINARYDATA()))
                         doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
                     Element documentElement = DocumentUtils.getDocumentAnyElement(doc);
                     //Retrieve current file record from indivo
-                    log.debug("phr index "+action.getPhrIndex());
+                    logger.debug("phr index "+action.getPhrIndex());
                     //ReadDocumentResultType readResult = client.readDocument(auth.getToken(), action.getSenderPhr(), action.getPhrIndex());
                     //IndivoDocumentType phrDoc = readResult.getIndivoDocument();
 
                     IndivoDocumentType phrDoc = null;
-                    if (action.getPhrClassification().equals(constants.DOCTYPE_MESSAGE())) {
+                    if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_MESSAGE())) {
                         PHRDocument phrd = phrDocumentDAO.getDocumentByIndex(action.getPhrIndex());
                         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
                         Unmarshaller unmarshaller = docContext.createUnmarshaller();
@@ -488,28 +502,28 @@ public class IndivoServiceImpl  implements PHRService{
                     VersionBodyType body = version.getVersionBody();
                     body.setAny(documentElement);
                     version.setVersionBody(body);
-                    if (action.getPhrClassification().equals(constants.DOCTYPE_MESSAGE())) {
+                    if (action.getPhrClassification().equals(PHRConstants.DOCTYPE_MESSAGE())) {
                         client.updateDocument(auth.getToken(),auth.getUserId(), action.getPhrIndex(), version); 
                     } else {
                         client.updateDocument(auth.getToken(), action.getReceiverPhr(), action.getPhrIndex(), version);
                     }
                     updated = true;
                 }else{
-                    log.debug("NOTHING IS GETTING CALLED FOR THIS ");
+                    logger.debug("NOTHING IS GETTING CALLED FOR THIS ");
 
                 }   
             } catch (ActionNotPerformedException anpe) {
                 //assuming user does not have authorization for the action - in this case mark it as unauthorized and stop trying to send
-                log.debug("Setting Status Not Authorized");
+                logger.debug("Setting Status Not Authorized");
                 action.setStatus(PHRAction.STATUS_NOT_AUTHORIZED);
                 phrActionDAO.update(action);
             } catch (IndivoException ie) {
                 //assuming connection problems - in this case log the user off to take load off the server
-                log.debug("IndivoException thrown");
+                logger.debug("IndivoException thrown");
                 throw new Exception(ie);
             } catch (Exception e) {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-                log.error("Exception Thrown that is not due to connection or Authorization...probably jaxb problem " + formatter.format(new Date()) , e);
+                logger.error("Exception Thrown that is not due to connection or Authorization...probably jaxb problem " + formatter.format(new Date()) , e);
                 updated = false;
                 action.setStatus(PHRAction.STATUS_OTHER_ERROR);
                 phrActionDAO.update(action);
@@ -584,8 +598,7 @@ public class IndivoServiceImpl  implements PHRService{
     }
     
     public int countUnreadMessages(String providerNo) {
-        PHRConstants phrConstants = new IndivoConstantsImpl();
-        return phrDocumentDAO.countUnreadDocuments(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        return phrDocumentDAO.countUnreadDocuments(PHRConstants.DOCTYPE_MESSAGE(), providerNo);
     }
     
     public boolean hasUnreadMessages(String providerNo) {
@@ -643,14 +656,14 @@ public class IndivoServiceImpl  implements PHRService{
         try {
             adminAuth = this.authenticateIndivoId((String) adminLoginInfo.get("username"), (String) adminLoginInfo.get("password"));
         } catch (Exception e) {
-            log.error("Could not authenticate as admin");
+            logger.error("Could not authenticate as admin");
             throw e;
         }
         try {
         //Create a record:
         String[] iRoles = new String[1];
         iRoles[0] = iRole;  //at the moment this feature doesn't appear to be implemented, more investigation needed
-        log.debug("Creating user: \n" +
+        logger.debug("Creating user: \n" +
                 adminAuth.getUserId() + ", \n" +
                 adminLoginInfo.get("firstName") + ", \n" +
                 adminLoginInfo.get("lastName") + ", \n" +
@@ -685,7 +698,7 @@ public class IndivoServiceImpl  implements PHRService{
         newRecord.getIndivoDocument().add(indiContactDocument);
         newRecord.getIndivoDocument().add(indiDemographicsDocument);
 
-        log.debug("DONE......------------" + iGrantProviders.length);
+        logger.debug("DONE......------------" + iGrantProviders.length);
 
         TalkClient talkClient = getTalkClient();
         talkClient.createRecord(adminAuth.getToken(), iUsername, newRecord);
@@ -706,10 +719,10 @@ public class IndivoServiceImpl  implements PHRService{
         }
         
         } catch (JAXBException jaxbe) {
-            log.error("Failed to marshall account details");
+            logger.error("Failed to marshall account details");
             throw jaxbe;
         } catch (Exception e) {
-            log.error("Indivo failed to create the new record");
+            logger.error("Indivo failed to create the new record");
             throw e;
         }
     }
