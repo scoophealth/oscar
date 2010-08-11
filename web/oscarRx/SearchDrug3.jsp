@@ -1134,7 +1134,7 @@ function changeLt(drugId){
         {method: 'post',postBody:data,
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
-                popForm2();
+                popForm2(scriptNo);
             }});
         return false;
     }
@@ -1409,7 +1409,7 @@ function saveCustomName(element){
 function updateDeleteOnCloseRxBox(){
     $('deleteOnCloseRxBox').value='true';
 }
-function popForm2(){
+function popForm2(scriptId){
         try{
             //oscarLog("popForm2 called");
             var url1="<c:out value="${ctx}"/>"+"/oscarRx/WriteScript.do?parameterValue=checkNoStashItem";
@@ -1423,7 +1423,7 @@ function popForm2(){
                     h=h+(n-4)*100;
                 }
                 //oscarLog("h="+h+"--n="+n);
-                var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp";
+                var url= "<c:out value="${ctx}"/>" + "/oscarRx/ViewScript2.jsp?scriptId="+scriptId;
                 //oscarLog( "preview2 done");
                 myLightWindow.activateWindow({
                     href: url,
@@ -1848,7 +1848,7 @@ function updateQty(element){
             onSuccess:function(transport){
                 oscarLog("successfully sent data "+url);
                 callReplacementWebService("ListDrugs.jsp",'drugProfile');
-                popForm2();
+                popForm2(null);
                 resetReRxDrugList();
             }});
         return false;

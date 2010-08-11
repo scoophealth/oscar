@@ -37,6 +37,9 @@
  */
 -->
 
+<%
+	String scriptid=request.getParameter("scriptId");
+%>
 
 <html:html locale="true">
 <head>

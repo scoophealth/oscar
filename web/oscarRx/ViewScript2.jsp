@@ -205,7 +205,8 @@ if (pharmacy != null) {
                                         }});
                             }});
     }
-    function onPrint2(method) {
+    
+    function onPrint2(method, scriptId) {
         var useSC=false;
         var scAddress="";
         var rxPageSize=$('printPageSize').value;
@@ -221,7 +222,7 @@ if (pharmacy != null) {
             }
 <%       }
       }%>
-              var action="../form/createcustomedpdf?__title=Rx&__method=" +  method+"&useSC="+useSC+"&scAddress="+scAddress+"&rxPageSize="+rxPageSize;
+              var action="../form/createcustomedpdf?__title=Rx&__method=" +  method+"&useSC="+useSC+"&scAddress="+scAddress+"&rxPageSize="+rxPageSize+"&scriptId="+scriptId;
             document.getElementById("preview").contentWindow.document.getElementById("preview2Form").action = action;
             document.getElementById("preview").contentWindow.document.getElementById("preview2Form").target="_blank";
             document.getElementById("preview").contentWindow.document.getElementById("preview2Form").submit();
@@ -399,7 +400,7 @@ function toggleView(form) {
 				<td width=420px>
 				<div class="DivContentPadding"><!-- src modified by vic, hsfo -->
 				<iframe id='preview' name='preview' width=420px height=10000px
-					src="<%= dx<0?"Preview2.jsp?rePrint="+reprint:dx==7?"HsfoPreview.jsp?dxCode=7":"about:blank" %>"
+					src="<%= dx<0?"Preview2.jsp?scriptId="+request.getParameter("scriptId")+"&rePrint="+reprint:dx==7?"HsfoPreview.jsp?dxCode=7":"about:blank" %>"
 					align=center border=0 frameborder=0></iframe></div>
 				</td>
 
@@ -500,7 +501,7 @@ function toggleView(form) {
 						<!--td width=10px></td-->
 						<td><span><input type=button
 							value="Print PDF" class="ControlPushButton"
-							style="width: 120px" onClick="<%=reprint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint');" : "javascript:return onPrint2('print');" %>" /></span></td>
+							style="width: 120px" onClick="<%=reprint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint', "+request.getParameter("scriptId")+");" : "javascript:return onPrint2('print', "+request.getParameter("scriptId")+");" %>" /></span></td>
 					</tr>
 					<tr>
 						<!--td width=10px></td-->
