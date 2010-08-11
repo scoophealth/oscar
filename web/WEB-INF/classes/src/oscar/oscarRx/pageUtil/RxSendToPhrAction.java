@@ -34,7 +34,6 @@ import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 public class RxSendToPhrAction extends Action {
     
     PHRService phrService = null;
-    PHRConstants phrConstants = null;
     
     /** Creates a new instance of RxSendToPhr */
     public RxSendToPhrAction() {
@@ -75,17 +74,17 @@ public class RxSendToPhrAction extends Action {
               if(drug.isCurrent() == true && !drug.isArchived() ){
                   try {
                       // if updating removed because drugs are never edited, only represcribed
-                      /*if (phrService.isIndivoRegistered(phrConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"")) {
+                      /*if (phrService.isIndivoRegistered(PHRConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"")) {
                            //if updating
                            MiscUtils.getLogger().debug("running update");
-                           String phrDrugIndex = phrService.getPhrIndex(phrConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"");
+                           String phrDrugIndex = phrService.getPhrIndex(PHRConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"");
                            phrService.sendUpdateMedication(prov, demoNo, patientMyOscarId, drug, phrDrugIndex);
                            //drug.setIndivoIdx(newIndex);
                       } else { //if adding*/
                       
                       //only add new drugs, no updating old drugs because they cannot be edited
 
-                      if (!phrService.isIndivoRegistered(phrConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"")) {
+                      if (!phrService.isIndivoRegistered(PHRConstants.DOCTYPE_MEDICATION(), drug.getDrugId()+"")) {
 
                           phrService.sendAddMedication(prov, demoNo, patientMyOscarId, drug);
                       }
@@ -105,10 +104,6 @@ public class RxSendToPhrAction extends Action {
     
     public void setPhrService(PHRService pServ){
         this.phrService = pServ;
-    }
-    
-    public void setPhrConstants(PHRConstants pConst) {
-        this.phrConstants = pConst;
     }
     
 }

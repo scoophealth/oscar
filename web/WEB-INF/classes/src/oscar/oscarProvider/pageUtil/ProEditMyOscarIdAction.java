@@ -50,9 +50,9 @@ public class ProEditMyOscarIdAction extends Action {
         DynaActionForm frm = (DynaActionForm)form;
         String loginId = (String)frm.get("myOscarLoginId") + (String)frm.get("myOscarDomain");       
                 
-        ProviderMyOscarIdData myOscarId = new ProviderMyOscarIdData(providerNo);
+        ProviderMyOscarIdData myOscarId = new ProviderMyOscarIdData();
         
-        if( myOscarId.getMyOscarId().equals(loginId) ) {
+        if( ProviderMyOscarIdData.getMyOscarId(providerNo).equals(loginId) ) {
             ActionMessages errors = new ActionMessages();
             errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("provider.setMyOscarLogin.msgNotUnique"));
             this.addErrors(request, errors);
