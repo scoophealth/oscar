@@ -391,7 +391,7 @@ function GetTextBottom(){
 	textBottom += "px; left:0px;&quot;&gt;\n"
 	textBottom += "\t &lt;table&gt;&lt;tr&gt;&lt;td&gt;\n"
 	textBottom += "\t\t Subject: &lt;input name=&quot;subject&quot; size=&quot;40&quot; type=&quot;text&quot;&gt;\n"
-	textBottom += "\t\t	&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;releaseDirtyFlag();setTimout('document.FormName.submit()',1000);&quot;&gt; \n"
+	textBottom += "\t\t	&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;releaseDirtyFlag();setTimeout('document.FormName.submit()',1000);&quot;&gt; \n"
         textBottom += "\t\t     &lt;input value=&quot;Reset&quot; name=&quot;ResetButton&quot; id=&quot;ResetButton&quot; type=&quot;button&quot; onclick=&quot;document.FormName.reset();&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print&quot; name=&quot;PrintButton&quot; id=&quot;PrintButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print &amp; Submit&quot; name=&quot;PrintSubmitButton&quot; id=&quot;PrintSubmitButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();releaseDirtyFlag();setTimeout('document.FormName.submit()',1000);&quot;&gt; \n"
@@ -1866,7 +1866,7 @@ function _CompInt(x, y)
 	<p>Repeat step # 3 until all input boxes are done.  Please leave the gender selection boxes out for now.</p>
 
 <hr>
-<h2>4. Special Case With Gender Checkboxes:</h2>eloadimages: []
+<h2>4. Special Case With Gender Checkboxes:</h2>
 			<p>Gender checkboxes used in this form?<input name="preCheckGender" id="preCheckGender" type="checkbox">
 			<br>
 			<b>Male</b>:
