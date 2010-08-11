@@ -51,7 +51,7 @@ import oscar.util.SqlUtilBaseS;
 import oscar.util.UtilDateUtilities;
 
 // all SQL statements here
-public class EDocUtil extends SqlUtilBaseS {
+public final class EDocUtil extends SqlUtilBaseS {
     static Log log = LogFactory.getLog(EDocUtil.class);
 
     public static final String PUBLIC = "public";
