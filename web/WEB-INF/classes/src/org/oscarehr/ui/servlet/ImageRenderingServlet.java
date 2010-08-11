@@ -33,6 +33,8 @@ import org.oscarehr.util.SpringUtils;
  * <br />
  * This servlet assumes the image exists, for the most part this servlet is a "drop in" replacement for serving images from the HD directly, i.e. things like existence and appropriateness of the image should have already been checked. In general security
  * should also be checked before hand, we also check again here as security is a special case.
+ * <br /> <br />
+ * This servlet should no longer be extended, look at ContentRenderingServlet instead which is much more versatile
  */
 public final class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
