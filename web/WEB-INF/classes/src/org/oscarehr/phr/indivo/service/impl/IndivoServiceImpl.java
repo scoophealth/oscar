@@ -100,6 +100,7 @@ import oscar.dms.EDoc;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.oscarProvider.data.ProviderMyOscarIdData;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 /**
@@ -113,9 +114,8 @@ public class IndivoServiceImpl  implements PHRService{
     protected PHRActionDAO  phrActionDAO;
     
     public boolean canAuthenticate(String providerNo){
-        EctProviderData.Provider prov = new EctProviderData().getProvider(providerNo);
-        String indivoId = prov.getIndivoId();
-        if (indivoId == null){
+    	String myOscarLoginId = ProviderMyOscarIdData.getMyOscarId(providerNo);
+        if (myOscarLoginId == null){
             return false;
         } else {
             return true;
