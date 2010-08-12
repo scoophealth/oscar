@@ -459,8 +459,8 @@ $("document").ready(function(){
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Date of Birth (YYYY-MM-DD)</td>
-			<td class="genericTableData" class="{validate: {required:true}}">
-				<input type="text" name="date_of_birth" id="date_of_birth" value="<%=ocanStaffForm.getDateOfBirth()%>" />
+			<td class="genericTableData">
+				<%=OcanForm.renderAsDate(ocanStaffForm.getId(), "date_of_birth",false,prepopulationLevel)%>				
 			</td>
 		</tr>		
 		<tr>
