@@ -35,8 +35,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.service.PHRService;
@@ -87,24 +85,6 @@ public class SendDocToPhrAction extends Action {
 	    	} else {
 	    		// add
 	    		phrService.sendAddBinaryData(prov, demo.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demo.getPin(), doc);
-	    	}
-	    } catch (Exception e) {
-	    	logger.error("Error", e);
-	    	request.setAttribute("error_msg", e.getMessage());
-	    }
-    }
-
-	public static void addOrUpdate(HttpServletRequest request, Demographic demographic, Provider provider, EDoc doc) {
-		PHRService phrService = (PHRService) SpringUtils.getBean("phrService");
-
-		try {
-	    	if (phrService.isIndivoRegistered(PHRConstants.DOCTYPE_BINARYDATA(), doc.getDocId())) {
-	    		// update
-	    		String phrIndex = phrService.getPhrIndex(PHRConstants.DOCTYPE_BINARYDATA(), doc.getDocId());
-	    		phrService.sendUpdateBinaryData(provider, demographic.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demographic.getPin(), doc.getDocId(), doc.getType(), doc.getContentType(), doc.getDescription(), phrIndex);
-	    	} else {
-	    		// add
-	    		phrService.sendAddBinaryData(provider, demographic.getChartNo(), PHRDocument.TYPE_DEMOGRAPHIC, demographic.getPin(), doc);
 	    	}
 	    } catch (Exception e) {
 	    	logger.error("Error", e);
