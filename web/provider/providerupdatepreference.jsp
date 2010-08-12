@@ -55,8 +55,10 @@
 <%
 String[] param=null;
 String op = request.getParameter("dboperation"); // updatepreference
-String programId = request.getParameter("programId_oscarView");
-session.setAttribute("programId_oscarView",programId);
+//String programId = request.getParameter("programId_oscarView");
+//session.setAttribute("programId_oscarView",programId);
+String programId_forCME = request.getParameter("case_program_id");
+request.getSession().setAttribute("case_program_id",programId_forCME);
 
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   param = new String[9];

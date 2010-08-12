@@ -148,7 +148,10 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
 	default_pmm = (String)session.getAttribute("default_pmm");
-	programId_oscarView= (String)session.getAttribute("programId_oscarView");   
+	//Disable schedule view associated with the program
+	//Made the default program id "0";
+	//programId_oscarView= (String)session.getAttribute("programId_oscarView");
+	programId_oscarView = "0";
 } else {
 	programId_oscarView="0";
 	session.setAttribute("programId_oscarView",programId_oscarView);
@@ -513,8 +516,13 @@ if(newGroupNo.indexOf("_grp_") != -1) {
 }
 <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 %>
-	var programId = document.getElementById("bedprogram_no").value;
-	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId);
+	//Disable schedule view associated with the program
+	//Made the default program id "0";
+	//var programId = document.getElementById("bedprogram_no").value;
+	var programId = 0;
+	var programId_forCME = document.getElementById("bedprogram_no").value;
+	
+	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME);
 <%}else {%>
   var programId=0;
   popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId);
@@ -1299,10 +1307,19 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
                   for (Map demo : demoList) {
                     ver = (String)demo.get("ver");
                     roster = (String)demo.get("roster_status");
-                    int intMob = Integer.parseInt(String.valueOf(demo.get("month_of_birth")));
-                    int intDob = Integer.parseInt(String.valueOf(demo.get("date_of_birth")));
-                    mob = String.valueOf(intMob);
-                    dob = String.valueOf(intDob);
+                    
+                    int intMob = 0;
+                    int intDob = 0;
+                    
+                    mob = String.valueOf(demo.get("month_of_birth"));
+                    if(mob.length()>0 && !mob.equals("null"))
+                    	intMob = Integer.parseInt(mob);           
+                    	
+                    dob = String.valueOf(demo.get("date_of_birth"));
+                    if(dob.length()>0 && !dob.equals("null"))
+                    	intDob = Integer.parseInt(dob);
+                    
+                    
                     demBday = mob + "-" + dob;
 
                     if (roster == null ) { //|| !(roster.equalsIgnoreCase("FS") || roster.equalsIgnoreCase("NR") || roster.equalsIgnoreCase("PL"))) {
