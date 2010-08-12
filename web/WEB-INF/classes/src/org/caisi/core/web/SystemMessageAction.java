@@ -70,6 +70,9 @@ public class SystemMessageAction extends DispatchAction {
 				return list(mapping,form,request,response);
 			}
 			systemMessageForm.set("system_message",msg);
+			request.getSession().setAttribute("systemMessageId",messageId);
+		} else {
+			request.getSession().setAttribute("systemMessageId","");
 		}
 		
 		return mapping.findForward("edit");
@@ -79,7 +82,14 @@ public class SystemMessageAction extends DispatchAction {
 		DynaActionForm userForm = (DynaActionForm)form;
 		SystemMessage msg = (SystemMessage)userForm.get("system_message");
 		msg.setCreationDate(new Date());
-		if(msg.getId() != null && msg.getId().intValue()>0) {
+		int messageId = 0;
+		String messageId_str= (String)request.getSession().getAttribute("systemMessageId");
+		if(messageId_str!=null) {
+			messageId = Integer.valueOf(messageId_str).intValue();
+		}
+		
+		if(messageId>0 || (msg.getId() != null && msg.getId().intValue()>0)) {			
+			msg.setId(messageId);
 			systemMessageDao.merge(msg);
 		} else {
 			systemMessageDao.persist(msg);

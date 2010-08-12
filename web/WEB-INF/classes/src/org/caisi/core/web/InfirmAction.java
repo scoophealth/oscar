@@ -231,13 +231,26 @@ public class InfirmAction extends BaseAction
 		Boolean onsig=getInfirmBedProgramManager().getProviderSig(providerNo);
 		request.getSession().setAttribute("signOnNote",onsig);
 		int pid = getInfirmBedProgramManager().getDefaultProgramId(providerNo);
-		String ppid = (String)request.getSession().getAttribute("programId_oscarView");
-		if(ppid==null) {
+		
+		/*Disable schedule view associated with the program. Make the default program id equal to "0".
+		String ppid1 = (String)request.getSession().getAttribute("programId_oscarView");
+		if(ppid1==null) {
 			request.getSession().setAttribute("programId_oscarView",String.valueOf(pid));
 		} else {
-			request.getSession().setAttribute("programId_oscarView", ppid);
+			request.getSession().setAttribute("programId_oscarView", ppid1);
+			//getInfirmBedProgramManager().setDefaultProgramId(providerNo,Integer.valueOf(ppid).intValue());
+		}
+		*/
+		request.getSession().setAttribute("programId_oscarView","0");
+		
+		String ppid = (String)request.getSession().getAttribute("case_program_id");
+		if(ppid==null) {
+			request.getSession().setAttribute("case_program_id",String.valueOf(pid));
+		} else {
+			request.getSession().setAttribute("case_program_id", ppid);
 			getInfirmBedProgramManager().setDefaultProgramId(providerNo,Integer.valueOf(ppid).intValue());
 		}
+		
 		return null;
 	}
 	

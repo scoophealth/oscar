@@ -61,7 +61,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 
     public List<OcanStaffForm> findLatestSignedOcanForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
 		
-		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanFormVersion=?3 and x.startDate>=?4 and x.startDate<?5";
+		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanFormVersion=?3 and x.completionDate>=?4 and x.completionDate<?5";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
