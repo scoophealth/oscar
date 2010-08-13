@@ -77,51 +77,43 @@ public class UtilMisc {
   *
   */
   public static String rhtmlEscape(String S) {
-    if (null == S) {
-      return S;
-    }
+    if (null == S) return S;
+
     int N = S.length();
     StringBuffer sb = new StringBuffer(N);
     for (int i = 0; i < N; i++) {
-      char c = S.charAt(i);
+        char c = S.charAt(i);
         if (c == '&') {//the read one more char and encode
-          String temp =new String();
-          temp = temp +(S.charAt(i+1));
-          if(temp.equalsIgnoreCase("a")){//&amp
+            String temp =new String();
+            if (i+1<N) temp += S.charAt(i+1);
+            if(temp.equalsIgnoreCase("a")) {//&amp
               sb.append("&");
-              i=i+4;//move on
-          }else if (temp.equalsIgnoreCase("l")) {//&lt
+              i+=4;
+              continue;
+            } else if (temp.equalsIgnoreCase("l")) {//&lt
               sb.append("<");
-              i=i+3;//move on
-          }else if (temp.equalsIgnoreCase("g")) {//&gt
+              i+=3;
+              continue;
+            } else if (temp.equalsIgnoreCase("g")) {//&gt
               sb.append(">");
-              i=i+3;//move on
-          }else if (temp.equalsIgnoreCase("q")) {//&quot
+              i+=3;
+              continue;
+            } else if (temp.equalsIgnoreCase("q")) {//&quot
               sb.append("\"");
-              i=i+5;//move on
-          }
-          else {
-              //do nothing to the char
-      }
-        }else if (c == '#') {
-
-          String temp =new String();
-         temp = temp + S.charAt(i);
-          if(i+1<N)
-        	 temp=temp+ S.charAt(i+1);
-          if(i+2<N)
-        	  temp = temp + S.charAt(i+2);
-          if(i+3<N)
-        	  temp = temp + S.charAt(i+3);
-        	 
-          if(temp.equalsIgnoreCase("#39;")){//'
-              sb.append("\'");
-              i=i+4;//move on
-          }
-        }else {
-          //do nothing
+              i+=5;
+              continue;
+            } else if (temp.equals("#")) {//&#
+                if (i+2<N) temp += S.charAt(i+2);//&#?
+                if (i+3<N) temp += S.charAt(i+3);//&#??
+                if (i+4<N) temp += S.charAt(i+4);//&#???
+                if (temp.equals("&#39;")) {//'
+                    sb.append("\'");
+                    i+=5;
+                    continue;
+                }
+            }
+        }
         sb.append(c);
-      }
     }
     return sb.toString();
   }
