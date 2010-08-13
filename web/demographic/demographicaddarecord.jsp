@@ -254,7 +254,6 @@
 
        dem = apptMainBean.getString(rs,"demographic_no");
        DemographicExt dExt = new DemographicExt();
-	   OtherIdManager oidManager = new OtherIdManager();
 	   
        String proNo = (String) session.getValue("user");
        dExt.addKey(proNo, dem, "hPhoneExt", request.getParameter("hPhoneExt"), "");
@@ -269,7 +268,7 @@
        dExt.addKey(proNo, dem, "given_consent", request.getParameter("given_consent"), "");
 
        //for the IBD clinic
-		oidManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
+		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
      
        // customized key
        if(oscarVariables.getProperty("demographicExt") != null) {

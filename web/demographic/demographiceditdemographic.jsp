@@ -93,7 +93,6 @@
 	oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
 	ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
 	Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
-	OtherIdManager oidManager = new OtherIdManager();
 
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
@@ -1042,7 +1041,7 @@ if ( PatStat.equals(Dead) ) {%>
 								key="demographic.demographiceditdemographic.formChartNo" />: <b><%=apptMainBean.getString(rs,"chart_no")%></b>
 							</li>
 							<% if (oscarProps.isPropertyActive("meditech_id")) { %>
-							<li>Meditech ID: <b><%=oidManager.getDemoOtherId(demographic_no, "meditech_id")%></b>
+							<li>Meditech ID: <b><%=OtherIdManager.getDemoOtherId(demographic_no, "meditech_id")%></b>
 							</li>
 <% } %>
 							<li><bean:message
@@ -1936,9 +1935,9 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                         <tr>
                                                             <td align="right"><b>Meditech ID: </b></td>
                                                             <td align="left"><input type="text" name="meditech_id" size="30"
-																value="<%=oidManager.getDemoOtherId(demographic_no, "meditech_id")%>">
+																value="<%=OtherIdManager.getDemoOtherId(demographic_no, "meditech_id")%>">
                                                             <input type="hidden" name="meditech_idOrig"
-																value="<%=oidManager.getDemoOtherId(demographic_no, "meditech_id")%>">
+																value="<%=OtherIdManager.getDemoOtherId(demographic_no, "meditech_id")%>">
                                                             </td>
                                                         </tr>
 <% } %>

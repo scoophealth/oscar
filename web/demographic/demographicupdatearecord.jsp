@@ -58,7 +58,6 @@
 
   ResultSet rs = null;
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-  OtherIdManager oidManager = new OtherIdManager();
 
   //if action is good, then give me the result
     String[] param =new String[29];
@@ -162,7 +161,7 @@
      dExt.addKey(proNo, demoNo, "given_consent", request.getParameter("given_consent"), request.getParameter("given_consentOrig"));
      
      // for the IBD clinic
-	 oidManager.saveIdDemographic(demoNo, "meditech_id", request.getParameter("meditech_id"));
+	 OtherIdManager.saveIdDemographic(demoNo, "meditech_id", request.getParameter("meditech_id"));
     
      // customized key
      if(oscarVariables.getProperty("demographicExt") != null) {
