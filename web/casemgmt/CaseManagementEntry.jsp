@@ -155,7 +155,7 @@
 			return false;
 	}
 		
-	function validateSave(){
+	function validateSave(count_issues_display){
 	
 		var str1="You cannot save a note when there is no issue checked, please add an issue or check a currently available issue before save." ;
 		var str2="Are you sure that you want to sign and save without changing the status of any of the issues?";
