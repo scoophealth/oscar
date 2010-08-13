@@ -33,71 +33,71 @@ import org.oscarehr.util.SpringUtils;
  * @author Ronnie Cheng
  */
 public class OtherIdManager {
-	final public Integer DEMOGRAPHIC = 1;
-	final public Integer APPOINTMENT = 2;
+	final public static Integer DEMOGRAPHIC = 1;
+	final public static Integer APPOINTMENT = 2;
 
-	private OtherIdDAO otherIdDao = (OtherIdDAO) SpringUtils.getBean("otherIdDao");
+	private static OtherIdDAO otherIdDao = (OtherIdDAO) SpringUtils.getBean("otherIdDao");
 
-    public String getDemoOtherId(Integer demographicNo, String otherKey) {
+    public static String getDemoOtherId(Integer demographicNo, String otherKey) {
 		String oid = "";
-		OtherId oidObj = getOtherIdObj(this.DEMOGRAPHIC, demographicNo, otherKey);
+		OtherId oidObj = getOtherIdObj(DEMOGRAPHIC, demographicNo, otherKey);
 		if (oidObj!=null) oid=oidObj.getOtherId();
 		return oid;
     }
 
-    public String getDemoOtherId(String demographicNo, String otherKey) {
+    public static String getDemoOtherId(String demographicNo, String otherKey) {
 		return getDemoOtherId(getNumeric(demographicNo), otherKey);
     }
 
-    public String getApptOtherId(Integer appointmentNo, String otherKey) {
+    public static String getApptOtherId(Integer appointmentNo, String otherKey) {
 		String oid = "";
-		OtherId oidObj = getOtherIdObj(this.APPOINTMENT, appointmentNo, otherKey);
+		OtherId oidObj = getOtherIdObj(APPOINTMENT, appointmentNo, otherKey);
 		if (oidObj!=null) oid=oidObj.getOtherId();
 		return oid;
     }
 
-	public String getApptOtherId(String appointmentNo, String otherKey) {
+	public static String getApptOtherId(String appointmentNo, String otherKey) {
 		return getApptOtherId(getNumeric(appointmentNo), otherKey);
 	}
 
-	public void saveIdAppointment(Integer appointmentNo, String otherKey, String otherId) {
-		OtherId oid = getOtherIdObj(this.APPOINTMENT, appointmentNo, otherKey);
+	public static void saveIdAppointment(Integer appointmentNo, String otherKey, String otherId) {
+		OtherId oid = getOtherIdObj(APPOINTMENT, appointmentNo, otherKey);
 		if (doNotSave(oid, otherId)) return;
 
-		oid = new OtherId(this.APPOINTMENT, appointmentNo, otherKey, otherId);
+		oid = new OtherId(APPOINTMENT, appointmentNo, otherKey, otherId);
 		otherIdDao.save(oid);
 	}
 
-	public void saveIdAppointment(String appointmentNo, String otherKey, String otherId) {
+	public static void saveIdAppointment(String appointmentNo, String otherKey, String otherId) {
 		Integer apptNo = getNumeric(appointmentNo);
 		if (apptNo!=null) saveIdAppointment(apptNo, otherKey, otherId);
 	}
 
-	public void saveIdDemographic(Integer demographicNo, String otherKey, String otherId) {
-		OtherId oid = getOtherIdObj(this.DEMOGRAPHIC, demographicNo, otherKey);
+	public static void saveIdDemographic(Integer demographicNo, String otherKey, String otherId) {
+		OtherId oid = getOtherIdObj(DEMOGRAPHIC, demographicNo, otherKey);
 		if (doNotSave(oid, otherId)) return;
 
-		oid = new OtherId(this.DEMOGRAPHIC, demographicNo, otherKey, otherId);
+		oid = new OtherId(DEMOGRAPHIC, demographicNo, otherKey, otherId);
 		otherIdDao.save(oid);
 	}
 
-	public void saveIdDemographic(String demographicNo, String otherKey, String otherId) {
+	public static void saveIdDemographic(String demographicNo, String otherKey, String otherId) {
 		Integer demoNo = getNumeric(demographicNo);
 		if (demoNo!=null) saveIdDemographic(demoNo, otherKey, otherId);
 	}
 
-    private OtherId getOtherIdObj(Integer tableName, Integer tableId, String otherKey) {
+    private static OtherId getOtherIdObj(Integer tableName, Integer tableId, String otherKey) {
 		return otherIdDao.getOtherId(tableName, tableId, otherKey);
     }
 
-	private void setDelete(OtherId otherId) {
+	private static void setDelete(OtherId otherId) {
 		if (otherId!=null) {
 			otherId.setDeleted(Boolean.TRUE);
 			otherIdDao.save(otherId);
 		}
 	}
 
-	private boolean doNotSave(OtherId oid, String otherId) {
+	private static boolean doNotSave(OtherId oid, String otherId) {
 		if (otherId==null) return true;
 		if (oid==null) {
 			if (otherId.trim().equals("")) return true;
@@ -108,7 +108,7 @@ public class OtherIdManager {
 		return false;
 	}
 
-	private Integer getNumeric(String n) {
+	private static Integer getNumeric(String n) {
 		String numeric="0123456789";
 		for (int i=0; i<n.length(); i++) {
 			if (!numeric.contains(n.subSequence(i, i+1))) return null;
