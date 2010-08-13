@@ -370,6 +370,51 @@ public class DemographicData {
 		db.RunSQL(sql);
 	}
 
+	public void setDemographic(Demographic dm) throws Exception {
+		if (dm.getDemographicNo()==null || dm.getDemographicNo().trim().equals("")) return;
+
+		DBHandler db = new DBHandler();
+		String sql = "UPDATE demographic SET " +
+						"title = '" + dm.getTitle() + "', " +
+						"last_name = '" + dm.getLastName() + "', " +
+						"first_name = '" + dm.getFirstName() + "', " +
+						"address = '" + dm.getAddress() + "', " +
+						"city = '" + dm.getCity() + "', " +
+						"province = '" + dm.getProvince() + "', " +
+						"postal = '" + dm.getPostal() + "', " +
+						"phone = '" + dm.getPhone() + "', " +
+						"phone2 = '" + dm.getPhone2() + "', " +
+						"email = '" + dm.getEmail() + "', " +
+						"pin = '" + dm.getPin() + "', " +
+						"year_of_birth = '" + dm.getYearOfBirth() + "', " +
+						"month_of_birth = '" + dm.getMonthOfBirth() + "', " +
+						"date_of_birth = '" + dm.getDateOfBirth() + "', " +
+						"hin = '" + dm.getHIN() + "', " +
+						"ver = '" + dm.getVersionCode() + "', " +
+						"roster_status = '" + dm.getRosterStatus() + "', " +
+						"patient_status = '" + dm.getPatientStatus() + "', " +
+						"date_joined = '" + dm.getDateJoined() + "', " +
+						"chart_no = '" + dm.getChartNo() + "', " +
+						"official_lang = '" + dm.getOfficialLang() + "', " +
+						"spoken_lang = '" + dm.getSpokenLang() + "', " +
+						"provider_no = '" + dm.getProviderNo() + "', " +
+						"sex = '" + dm.getSex() + "', " +
+						"end_date = '" + dm.getEndDate() + "', " +
+						"eff_date = '" + dm.getEffDate() + "', " +
+						"pcn_indicator = '" + dm.getPCNindicator() + "', " +
+						"hc_type = '" + dm.getHCType() + "', " +
+						"hc_renew_date = '" + dm.getHCRenewDate() + "', " +
+						"family_doctor = '" + dm.getFamilyDoctor() + "', " +
+						"alias = '" + dm.getAlias() + "', " +
+						"previousAddress = '" + dm.getPreviousAddress() + "', " +
+						"children = '" + dm.getChildren() + "', " +
+						"sourceOfIncome = '" + dm.getSourceOfIncome() + "', " +
+						"citizenship = '" + dm.getCitizenship() + "', " +
+						"sin = '" + dm.getSin() + "' " +
+					"WHERE demographic_no = " + dm.getDemographicNo();
+		db.RunSQL(sql);
+	}
+
 	public class Demographic {
 
 		protected String demographic_no;
@@ -523,48 +568,96 @@ public class DemographicData {
 			return demographic_no;
 		}
 
+		public void setDemographicNo(String data) {
+			demographic_no = data;
+		}
+
 		public String getTitle() {
 			return title;
+		}
+
+		public void setTitle(String data) {
+			title = data;
 		}
 
 		public String getLastName() {
 			return last_name;
 		}
 
+		public void setLastName(String data) {
+			last_name = data;
+		}
+
 		public String getFirstName() {
 			return first_name;
+		}
+
+		public void setFirstName(String data) {
+			first_name = data;
 		}
 
 		public String getAddress() {
 			return address;
 		}
 
+		public void setAddress(String data) {
+			address = data;
+		}
+
 		public String getCity() {
 			return city;
+		}
+
+		public void setCity(String data) {
+			city = data;
 		}
 
 		public String getProvince() {
 			return province;
 		}
 
+		public void setProvince(String data) {
+			province = data;
+		}
+
 		public String getPostal() {
 			return postal;
+		}
+
+		public void setPostal(String data) {
+			postal = data;
 		}
 
 		public String getPhone() {
 			return phone;
 		}
 
+		public void setPhone(String data) {
+			phone = data;
+		}
+
 		public String getPhone2() {
 			return phone2;
+		}
+
+		public void setPhone2(String data) {
+			phone2 = data;
 		}
 
 		public String getEmail() {
 			return email;
 		}
 
+		public void setEmail(String data) {
+			email = data;
+		}
+
 		public String getPin() {
 			return pin;
+		}
+
+		public void setPin(String data) {
+			pin = data;
 		}
 
 		public String getIndivoId() {
@@ -572,6 +665,11 @@ public class DemographicData {
 		}
 
 		public String getAge() {
+			if (oscar.util.StringUtils.empty(year_of_birth) ||
+				oscar.util.StringUtils.empty(month_of_birth) ||
+				oscar.util.StringUtils.empty(date_of_birth)) {
+				return "";
+			}
 			return (String.valueOf(oscar.util.UtilDateUtilities.calcAge(year_of_birth, month_of_birth, date_of_birth)));
 		}
 
@@ -624,12 +722,24 @@ public class DemographicData {
 			return addZero(year_of_birth, 4);
 		}
 
+		public void setYearOfBirth(String data) {
+			year_of_birth = data;
+		}
+
 		public String getMonthOfBirth() {
 			return addZero(month_of_birth, 2);
 		}
 
+		public void setMonthOfBirth(String data) {
+			month_of_birth = data;
+		}
+
 		public String getDateOfBirth() {
 			return addZero(date_of_birth, 2);
+		}
+
+		public void setDateOfBirth(String data) {
+			date_of_birth = data;
 		}
 
 		public String getHIN() {
@@ -640,40 +750,80 @@ public class DemographicData {
 			return hin;
 		}
 
+		public void setJustHIN(String data) {
+			hin = data;
+		}
+
 		public String getVersionCode() {
 			return ver;
+		}
+
+		public void setVersionCode(String data) {
+			ver = data;
 		}
 
 		public String getRosterStatus() {
 			return roster_status;
 		}
 
+		public void setRosterStatus(String data) {
+			roster_status = data;
+		}
+
 		public String getPatientStatus() {
 			return patient_status;
+		}
+
+		public void setPatientStatus(String data) {
+			patient_status = data;
 		}
 
 		public String getDateJoined() {
 			return date_joined;
 		}
 
+		public void setDateJoined(String data) {
+			date_joined = data;
+		}
+
 		public String getChartNo() {
 			return chart_no;
+		}
+
+		public void setChartNo(String data) {
+			chart_no = data;
 		}
 
 		public String getOfficialLang() {
 			return official_lang;
 		}
 
+		public void setOfficialLang(String data) {
+			official_lang = data;
+		}
+
 		public String getSpokenLang() {
 			return spoken_lang;
+		}
+
+		public void setSpokenLang(String data) {
+			spoken_lang = data;
 		}
 
 		public String getProviderNo() {
 			return provider_no;
 		}
 
+		public void setProviderNo(String data) {
+			provider_no = data;
+		}
+
 		public String getSex() {
 			return sex;
+		}
+
+		public void setSex(String data) {
+			sex = data;
 		}
 
 		public boolean isFemale() {
@@ -696,48 +846,96 @@ public class DemographicData {
 			return end_date;
 		}
 
+		public void setEndDate(String data) {
+			end_date = data;
+		}
+
 		public String getEffDate() {
 			return eff_date;
+		}
+
+		public void setEffDate(String data) {
+			eff_date = data;
 		}
 
 		public String getPCNindicator() {
 			return pcn_indicator;
 		}
 
+		public void setPCNindicator(String data) {
+			pcn_indicator = data;
+		}
+
 		public String getHCType() {
 			return hc_type;
+		}
+
+		public void setHCType(String data) {
+			hc_type = data;
 		}
 
 		public String getHCRenewDate() {
 			return hc_renew_date;
 		}
 
+		public void setHCRenewDate(String data) {
+			hc_renew_date = data;
+		}
+
 		public String getFamilyDoctor() {
 			return family_doctor;
+		}
+
+		public void setFamilyDoctor(String data) {
+			family_doctor = data;
 		}
 
 		public String getAlias() {
 			return alias;
 		}
 
+		public void setAlias(String data) {
+			alias = data;
+		}
+
 		public String getChildren() {
 			return children;
+		}
+
+		public void setChildren(String data) {
+			children = data;
 		}
 
 		public String getCitizenship() {
 			return citizenship;
 		}
 
+		public void setCitizenship(String data) {
+			citizenship = data;
+		}
+
 		public String getPreviousAddress() {
 			return previousAddress;
+		}
+
+		public void setPreviousAddress(String data) {
+			previousAddress = data;
 		}
 
 		public String getSin() {
 			return sin;
 		}
 
+		public void setSin(String data) {
+			sin = data;
+		}
+
 		public String getSourceOfIncome() {
 			return sourceOfIncome;
+		}
+
+		public void setSourceOfIncome(String data) {
+			sourceOfIncome = data;
 		}
 
 		public String addZero(String text, int num) {
@@ -854,8 +1052,14 @@ public class DemographicData {
 	// //////////////
 	String add_record_string = "insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email," + "pin,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,patient_status,date_joined,chart_no," + "official_lang,spoken_lang,provider_no,sex,end_date,eff_date,pcn_indicator,hc_type,hc_renew_date," + "family_doctor,alias,previousAddress,children,sourceOfIncome,citizenship,sin) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	public DemographicAddResult addDemographic(String title, String last_name, String first_name, String address, String city, String province, String postal, String phone, String phone2, String year_of_birth, String month_of_birth, String date_of_birth, String hin, String ver, String roster_status, String patient_status, String date_joined, String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date, String eff_date, String pcn_indicator, String hc_type,
-	        String hc_renew_date, String family_doctor, String email, String pin, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, String sin) {
+	public DemographicAddResult addDemographic(String title, String last_name, String first_name, String address, String city,
+			String province, String postal, String phone, String phone2, String year_of_birth, String month_of_birth,
+			String date_of_birth, String hin, String ver, String roster_status, String patient_status, String date_joined,
+			String chart_no, String official_lang, String spoken_lang, String provider_no, String sex, String end_date,
+			String eff_date, String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor, String email,
+			String pin, String alias, String previousAddress, String children, String sourceOfIncome, String citizenship, 
+			String sin) {
+		
 		boolean duplicateRecord = false;
 		DemographicAddResult ret = new DemographicAddResult();
 
