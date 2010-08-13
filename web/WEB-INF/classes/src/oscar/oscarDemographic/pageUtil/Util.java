@@ -22,8 +22,8 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.xmlbeans.XmlCalendar;
+import oscar.util.StringUtils;
 import org.oscarehr.util.MiscUtils;
-
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -37,11 +37,11 @@ public class Util {
     }
     
     static public String appendLine(String baseStr, String label, String addStr) {
-	String newStr = noNull(baseStr);
-	if (filled(newStr)) {
-	    newStr += filled(addStr) ? "\n"+noNull(label)+addStr : "";
+	String newStr = StringUtils.noNull(baseStr);
+	if (StringUtils.filled(newStr)) {
+	    newStr += StringUtils.filled(addStr) ? "\n"+StringUtils.noNull(label)+addStr : "";
 	} else {
-	    newStr += filled(addStr) ? noNull(label)+addStr : "";
+	    newStr += StringUtils.filled(addStr) ? StringUtils.noNull(label)+addStr : "";
 	}
 	return newStr;
     }
@@ -153,7 +153,7 @@ public class Util {
     }
 
     static public String extractDrugInstr(String special) {
-	if (!filled(special)) return "";
+	if (!StringUtils.filled(special)) return "";
 	if (!special.contains("Repeats:")) return special;
 	
 	Integer rear = special.indexOf("Repeats:");
@@ -169,16 +169,8 @@ public class Util {
 	return special;
     }
     
-    static public boolean empty(String s) {
-	return !filled(s);
-    }
-
-    static public boolean filled(String s) {
-	return (s!=null && s.trim().length()>0);
-    }
-    
     static public String getNum(String s) {
-	if (!filled(s)) return "0";
+	if (!StringUtils.filled(s)) return "0";
 	String numbers = "1234567890";
 	Integer cut = -1;
 	for (int i=0; i<s.length(); i++) {
@@ -192,15 +184,15 @@ public class Util {
     }
 
     static public String fixDirName(String dirName) {
-        if (filled(dirName)) {
+        if (StringUtils.filled(dirName)) {
             if (dirName.charAt(dirName.length()-1)!='/') dirName = dirName + '/';
         }
-        return noNull(dirName);
+        return StringUtils.noNull(dirName);
     }
 
     static public String mimeToExt(String mimeType) {
 	String ret = "";
-	if (!filled(mimeType)) return ret;
+	if (!StringUtils.filled(mimeType)) return ret;
 	if (mimeType.charAt(0)=='.') return mimeType;
 
 	String type_ext = "application/envoy=evy|application/fractals=fif|application/futuresplash=spl|application/hta=hta|application/internet-property-stream=acx|application/mac-binhex40=hqx|application/msword=doc|application/msword=dot|application/octet-stream=bin|application/octet-stream=class|application/octet-stream=dms|application/octet-stream=exe|application/octet-stream=lha|application/octet-stream=lzh|application/oda=oda|application/olescript=axs|application/pdf=pdf|application/pics-rules=prf|application/pkcs10=p10|application/pkix-crl=crl|application/postscript=ai|application/postscript=eps|application/postscript=ps|application/rtf=rtf|application/set-payment-initiation=setpay|application/set-registration-initiation=setreg|application/vnd.ms-excel=xla|application/vnd.ms-excel=xlc|application/vnd.ms-excel=xlm|application/vnd.ms-excel=xls|application/vnd.ms-excel=xlt|application/vnd.ms-excel=xlw|application/vnd.ms-outlook=msg|application/vnd.ms-pkicertstore=sst|application/vnd.ms-pkiseccat=cat|application/vnd.ms-pkistl=stl|application/vnd.ms-powerpoint=pot|application/vnd.ms-powerpoint=pps|application/vnd.ms-powerpoint=ppt|application/vnd.ms-project=mpp|application/vnd.ms-works=wcm|application/vnd.ms-works=wdb|application/vnd.ms-works=wks|application/vnd.ms-works=wps|application/winhlp=hlp|application/x-bcpio=bcpio|application/x-cdf=cdf|application/x-compress=z|application/x-compressed=tgz|application/x-cpio=cpio|application/x-csh=csh|application/x-director=dcr|application/x-director=dir|application/x-director=dxr|application/x-dvi=dvi|application/x-gtar=gtar|application/x-gzip=gz|application/x-hdf=hdf|application/x-internet-signup=ins|application/x-internet-signup=isp|application/x-iphone=iii|application/x-javascript=js|application/x-latex=latex|application/x-msaccess=mdb|application/x-mscardfile=crd|application/x-msclip=clp|application/x-msdownload=dll|application/x-msmediaview=m13|application/x-msmediaview=m14|application/x-msmediaview=mvb|application/x-msmetafile=wmf|application/x-msmoney=mny|application/x-mspublisher=pub|application/x-msschedule=scd|application/x-msterminal=trm|application/x-mswrite=wri|application/x-netcdf=cdf|application/x-netcdf=nc|application/x-perfmon=pma|application/x-perfmon=pmc|application/x-perfmon=pml|application/x-perfmon=pmr|application/x-perfmon=pmw|application/x-pkcs12=p12|application/x-pkcs12=pfx|application/x-pkcs7-certificates=p7b|application/x-pkcs7-certificates=spc|application/x-pkcs7-certreqresp=p7r|application/x-pkcs7-mime=p7c|application/x-pkcs7-mime=p7m|application/x-pkcs7-signature=p7s|application/x-sh=sh|application/x-shar=shar|application/x-shockwave-flash=swf|application/x-stuffit=sit|application/x-sv4cpio=sv4cpio|application/x-sv4crc=sv4crc|application/x-tar=tar|application/x-tcl=tcl|application/x-tex=tex|application/x-texinfo=texi|application/x-texinfo=texinfo|application/x-troff=roff|application/x-troff=t|application/x-troff=tr|application/x-troff-man=man|application/x-troff-me=me|application/x-troff-ms=ms|application/x-ustar=ustar|application/x-wais-source=src|application/x-x509-ca-cert=cer|application/x-x509-ca-cert=crt|application/x-x509-ca-cert=der|application/ynd.ms-pkipko=pko|application/zip=zip|audio/basic=au|audio/basic=snd|audio/mid=mid|audio/mid=rmi|audio/mpeg=mp3|audio/x-aiff=aif|audio/x-aiff=aifc|audio/x-aiff=aiff|audio/x-mpegurl=m3u|audio/x-pn-realaudio=ra|audio/x-pn-realaudio=ram|audio/x-wav=wav|image/png=png|image/bmp=bmp|image/cis-cod=cod|image/gif=gif|image/ief=ief|image/jpeg=jpe|image/jpeg=jpeg|image/jpeg=jpg|image/pipeg=jfif|image/svg+xml=svg|image/tiff=tif|image/tiff=tiff|image/x-cmu-raster=ras|image/x-cmx=cmx|image/x-icon=ico|image/x-portable-anymap=pnm|image/x-portable-bitmap=pbm|image/x-portable-graymap=pgm|image/x-portable-pixmap=ppm|image/x-rgb=rgb|image/x-xbitmap=xbm|image/x-xpixmap=xpm|image/x-xwindowdump=xwd|message/rfc822=mht|message/rfc822=mhtml|message/rfc822=nws|text/css=css|text/h323=323|text/html=htm|text/html=html|text/html=stm|text/iuls=uls|text/plain=bas|text/plain=c|text/plain=h|text/plain=txt|text/richtext=rtx|text/scriptlet=sct|text/tab-separated-values=tsv|text/webviewhtml=htt|text/x-component=htc|text/x-setext=etx|text/x-vcard=vcf|video/mpeg=mp2|video/mpeg=mpa|video/mpeg=mpe|video/mpeg=mpeg|video/mpeg=mpg|video/mpeg=mpv2|video/quicktime=mov|video/quicktime=qt|video/x-la-asf=lsf|video/x-la-asf=lsx|video/x-ms-asf=asf|video/x-ms-asf=asr|video/x-ms-asf=asx|video/x-msvideo=avi|video/x-sgi-movie=movie|x-world/x-vrml=flr|x-world/x-vrml=vrml|x-world/x-vrml=wrl|x-world/x-vrml=wrz|x-world/x-vrml=xaf|x-world/x-vrml=xof|";
@@ -215,10 +207,6 @@ public class Util {
 	return ret;
     }
 
-    static public String noNull(String maybeNullText) {
-	return filled(maybeNullText) ? maybeNullText : "";
-    }
-
     static public cdsDt.HealthCardProvinceCode.Enum setProvinceCode(String provinceCode) {
 	provinceCode = setCountrySubDivCode(provinceCode);
 	if (provinceCode.equals("US")) return cdsDt.HealthCardProvinceCode.X_50; //Not available, temporarily
@@ -228,7 +216,7 @@ public class Util {
 	
     static public String setCountrySubDivCode(String countrySubDivCode) {
 	countrySubDivCode = countrySubDivCode.trim();
-	if (filled(countrySubDivCode)) {
+	if (StringUtils.filled(countrySubDivCode)) {
 	    if (countrySubDivCode.equals("OT")) return "non-Canada/US";
 	    if (!countrySubDivCode.substring(0,2).equals("US")) return "CA-"+countrySubDivCode;
 	}
@@ -236,31 +224,31 @@ public class Util {
     }
     
     static public void writeNameSimple(cdsDt.PersonNameSimpleWithMiddleName personName, String firstName, String lastName) {
-	if (!filled(firstName)) firstName = "";
-	if (!filled(lastName))  lastName = "";
+	if (!StringUtils.filled(firstName)) firstName = "";
+	if (!StringUtils.filled(lastName))  lastName = "";
 	personName.setFirstName(firstName);
 	personName.setLastName(lastName);
     }
     
     static public void writeNameSimple(cdsDt.PersonNameSimple personName, String firstName, String lastName) {
-	if (!filled(firstName)) firstName = "";
-	if (!filled(lastName))  lastName = "";
+	if (!StringUtils.filled(firstName)) firstName = "";
+	if (!StringUtils.filled(lastName))  lastName = "";
 	personName.setFirstName(firstName);
 	personName.setLastName(lastName);
     }
     
     static public void writeNameSimple(cdsDt.PersonNameSimple personName, String name) {
-	if (!filled(name)) name = "";
+	if (!StringUtils.filled(name)) name = "";
         if (name.contains(",")) {
             String[] names = name.split(",");
             String firstName = "";
-            for (int i=1; i<names.length; i++) firstName += filled(firstName) ? ","+names[i] : names[i];
+            for (int i=1; i<names.length; i++) firstName += StringUtils.filled(firstName) ? ","+names[i] : names[i];
             personName.setFirstName(firstName);
             personName.setLastName(names[0]);
         } else if (name.contains(" ")) {
             String[] names = name.split(" ");
             String firstName = "";
-            for (int i=0; i<names.length-1; i++) firstName += filled(firstName) ? " "+names[i] : names[i];
+            for (int i=0; i<names.length-1; i++) firstName += StringUtils.filled(firstName) ? " "+names[i] : names[i];
             personName.setFirstName(firstName);
             personName.setLastName(names[names.length-1]);
         } else {
@@ -281,7 +269,7 @@ public class Util {
                 MiscUtils.getLogger().debug("Error! No source file for zipping");
                 return false;
             }
-            if (!filled(zipFileName)) {
+            if (!StringUtils.filled(zipFileName)) {
                 MiscUtils.getLogger().debug("Error! Zip filename not given");
                 return false;
             }
