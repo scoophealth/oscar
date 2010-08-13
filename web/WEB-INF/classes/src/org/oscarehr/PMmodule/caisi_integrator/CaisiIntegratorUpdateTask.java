@@ -218,13 +218,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	public void pushAllFacilities() throws ShutdownException {
-		List<Facility> facilities = facilityDao.findAll(null);
+		List<Facility> facilities = facilityDao.findAll(true);
 
 		for (Facility facility : facilities) {
 			MiscUtils.checkShutdownSignaled();
 
 			try {
-				if (!facility.isDisabled() && facility.isIntegratorEnabled()) {
+				if (facility.isIntegratorEnabled()) {
 					pushAllDataForOneFacility(facility);
 				}
 			} catch (WebServiceException e) {
