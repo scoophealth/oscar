@@ -45,6 +45,7 @@ import org.oscarehr.util.MiscUtils;
 import oscar.eform.EFormUtil;
 import oscar.eform.data.EForm;
 import oscar.oscarEncounter.data.EctProgram;
+import oscar.util.StringUtils;
 
 public class AddEFormAction extends Action {
     
@@ -83,16 +84,34 @@ public class AddEFormAction extends Action {
              request.setAttribute("page_errors", "true");
              return mapping.getInputForward();
          }
-         String fdid = EFormUtil.addEForm(curForm);
 
-         //adds parsed values
-         EFormUtil.addEFormValues(paramNames, paramValues, fdid, fid, demographic_no);
-         //add to oscarMeasurements
+         //Check if eform same as previous, if same -> not saved
+         String prev_fdid = (String)request.getSession().getAttribute("eform_data_id");
+         request.getSession().removeAttribute("eform_data_id");
+         boolean sameform = false;
+         if (StringUtils.filled(prev_fdid)) {
+             EForm prevForm = new EForm(prev_fdid);
+             if (prevForm!=null) {
+                 sameform = curForm.getFormHtml().equals(prevForm.getFormHtml());
+             }
+         }
+         if (!sameform) {
+             String fdid = EFormUtil.addEForm(curForm); //save eform with data
+             EFormUtil.addEFormValues(paramNames, paramValues, fdid, fid, demographic_no); //adds parsed values
 
-         //write template message to echart
-         String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
-         EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, fdid, program_no);
-         
+             //write template message to echart
+             String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
+             String path = request.getRequestURL().toString();
+             String uri = request.getRequestURI();
+             path = path.substring(0, path.indexOf(uri));
+             path += request.getContextPath();
+
+             EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, fdid, program_no, path);
+         }
+         else {
+             MiscUtils.getLogger().debug("Warning! Form HTML exactly the same, new form data not saved.");
+         }
+
          return(mapping.findForward("close"));
     }
 }
