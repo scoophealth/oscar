@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
@@ -45,9 +47,13 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
 import oscar.eform.data.EForm;
 import oscar.eform.data.EFormBase;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarMessenger.data.MsgMessageData;
+import oscar.oscarProvider.data.ProviderData;
 import oscar.util.UtilDateUtilities;
 import oscar.util.UtilMisc;
 
@@ -63,7 +69,6 @@ public class EFormUtil {
 	public static final String ALL = "all";
 
 	private static CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
-
 
 	private EFormUtil() {}
 
@@ -530,25 +535,97 @@ public class EFormUtil {
 		return(results);
 	}
 
-	public static void writeEformTemplate(ArrayList paramNames, ArrayList paramValues, EForm eForm, String fdid, String programNo) {
-		if (eForm==null) return;
+	public static void writeEformTemplate(ArrayList paramNames, ArrayList paramValues, EForm eForm, String fdid, String programNo, String context_path) {
+        String text = eForm!=null ? eForm.getTemplate() : null;
+        if (empty(text)) return;
 
-		String[] template = {"EncounterNote","SocialHistory","FamilyHistory","MedicalHistory","OngoingConcerns","RiskFactors","Reminders","OtherMeds"};
+        text = putTemplateValues(paramNames, paramValues, text);
+        text = putTemplateEformValues(eForm, fdid, context_path, text);
+		String[] template_echart = {"EncounterNote","SocialHistory","FamilyHistory","MedicalHistory","OngoingConcerns","RiskFactors","Reminders","OtherMeds"};
 		String[] code = {"","SocHistory","FamHistory","MedHistory","Concerns","RiskFactors","Reminders","OMeds"};
-		for (int i=0; i<code.length; i++) {
-			String text = eForm.getTemplate(template[i]);
-			if (empty(text)) continue;
+        ArrayList<String> templates = new ArrayList<String>();
 
-			text = putTemplateValues(paramNames, paramValues, new StringBuffer(text));
-			Long noteId = saveCMNote(eForm, programNo, code[i], text);
+        //write to echart
+        for (int i=0; i<template_echart.length; i++) {
+            templates = getWithin(template_echart[i], text);
+            for (String template : templates) {
+                if (empty(template)) continue;
 
-			if (noteId!=null) {
-				CaseManagementNoteLink cmLink = new CaseManagementNoteLink(CaseManagementNoteLink.EFORMDATA, Long.valueOf(fdid), noteId);
-				CaseManagementNoteLinkDAO cmDao = (CaseManagementNoteLinkDAO) SpringUtils.getBean("CaseManagementNoteLinkDAO");
-				cmDao.save(cmLink);
-			}
+                template = putTemplateEformHtml(eForm.getFormHtml(), template);
+                saveCMNote(eForm, fdid, programNo, code[i], template);
+            }
+        }
+
+        //write to document
+        templates = getWhole("document", text);
+        for (String template : templates) {
+            if (empty(template)) continue;
+
+            String docDesc = getInfo("docdesc", template, eForm.getFormName());
+            String belong = getAttribute("belong", getBeginTag("document", template));
+            if (empty(belong)) belong = "provider";
+            String docOwner = getInfo("docowner", template, eForm.getProviderNo());
+            if (belong.equalsIgnoreCase("patient")) docOwner = getInfo("docowner", template, eForm.getDemographicNo());
+            String docText = getContent(template);
+            docText = putTemplateEformHtml(eForm.getFormHtml(), docText);
+            EDoc edoc = new EDoc(docDesc,"forms","html",docText,docOwner,eForm.getProviderNo(),
+                                 "",'H',eForm.getFormDate().toString(),"",null,belong,docOwner);
+            edoc.setContentType("text/html");
+            edoc.setDocPublic("0");
+            EDocUtil.addDocumentSQL(edoc);
+        }
+
+        // write to message
+        templates = getWithin("message", text);
+        for (String template : templates) {
+            if (empty(template)) continue;
+
+            String subject = getInfo("subject", template, eForm.getFormName());
+            String sentWho = getSentWho(template);
+            String[] sentList = getSentList(template);
+            String userNo = eForm.getProviderNo();
+            String userName = getProviderName(eForm.getProviderNo());
+            String message = getContent(template);
+            message = putTemplateEformHtml(eForm.getFormHtml(), message);
+
+            MsgMessageData msg = new MsgMessageData();
+            msg.sendMessage2(message, subject, userName, sentWho, userNo, msg.getProviderStructure(sentList), null, null);
 		}
 	}
+
+	public static int findIgnoreCase(String phrase, String text, int start) {
+		if (empty(phrase) || empty(text)) return -1;
+
+		text = text.toLowerCase();
+		phrase = phrase.toLowerCase();
+		return text.indexOf(phrase, start);
+	}
+
+	public static String removeBlanks(String text) {
+		if (empty(text)) return "";
+
+		text = text.trim();
+		while (text.startsWith("\n") || text.startsWith("\r") || text.startsWith("\t")) { //remove all beginning blanks
+			text = text.substring(1).trim();
+		}
+		while (text.endsWith("\n") || text.endsWith("\r") || text.endsWith("\t")) { //remove all trailing blanks
+			text = text.substring(0, text.length()-1).trim();
+		}
+		return text;
+	}
+
+    public static String removeQuotes(String s) {
+        if (empty(s)) return s;
+        
+        s = s.trim();
+        if (empty(s)) return s;
+
+        if (s.charAt(0)=='"' || s.charAt(0)=='\'') s = s.substring(1);
+        if (empty(s)) return s;
+
+        if (s.charAt(s.length()-1)=='"' || s.charAt(s.length()-1)=='\'') s = s.substring(0, s.length()-1);
+        return s;
+    }
 
 
 	//------------------private
@@ -593,32 +670,107 @@ public class EFormUtil {
 		return thisStr;
 	}
 
-	private static String putTemplateValues(ArrayList paramNames, ArrayList paramValues, StringBuffer sb) {
-		if (sb.length()==0) return "";
+	private static String putTemplateValues(ArrayList paramNames, ArrayList paramValues, String template) {
+		if (empty(template)) return template;
 
-		//Replace "$T{" with "$t{", making tags work regardless of case
-		while (sb.indexOf("$T{")>=0) {
-			int tagAt = sb.indexOf("$T{");
-			sb = sb.replace(tagAt, tagAt+2, "$t");
-		}
-
-		//Replace field markers with values
-		while (sb.indexOf("$t{")>=0) {
-			int fieldBegin = sb.indexOf("$t{");
-			int fieldEnd = sb.indexOf("}", fieldBegin);
-			String field = sb.substring(fieldBegin+3, fieldEnd);
-			if (paramNames.contains(field)) {
-				sb = sb.replace(fieldBegin, fieldEnd+1, (String)paramValues.get(paramNames.indexOf(field)));
-			} else {
-				MiscUtils.getLogger().debug("EForm Template Error! Cannot find template field $t{"+field+"} in eform");
-				sb = sb.delete(fieldBegin, fieldBegin+2);
-			}
-		}
-		return sb.toString();
+        String tag = "$t{";
+        String nwTemplate = "";
+        int pointer = 0;
+        ArrayList<Integer> fieldBeginList = getFieldIndices(tag, template);
+        for (int fieldBegin : fieldBeginList) {
+            nwTemplate += template.substring(pointer, fieldBegin);
+            int fieldEnd = template.indexOf("}", fieldBegin);
+            pointer = fieldEnd + 1;
+            String field = template.substring(fieldBegin+tag.length(), fieldEnd);
+            if (paramNames.contains(field)) {
+                nwTemplate += (String)paramValues.get(paramNames.indexOf(field));
+            } else {
+                nwTemplate += "{"+field+"}";
+                MiscUtils.getLogger().error("EForm Template Error! Cannot find input name {"+field+"} in eform");
+            }
+        }
+        nwTemplate += template.substring(pointer, template.length());
+		return nwTemplate;
 	}
 
-	private static Long saveCMNote(EForm eForm, String programNo, String code, String note) {
-		if (empty(note)) return null;
+    private static String putTemplateEformValues(EForm eForm, String fdid, String path, String template) {
+        if (eForm==null || empty(template)) return template;
+
+        String[] efields = {"name","subject","patient","provider","link"};
+        String[] eValues = {eForm.getFormName(),
+                            eForm.getFormSubject(),
+                            eForm.getDemographicNo(),
+                            eForm.getProviderNo(),
+                            "<a href='"+path+"/eform/efmshowform_data.jsp?fdid="+fdid+"' target='_blank'>"+eForm.getFormName()+"</a>"};
+
+        String tag = "$te{";
+        String nwTemplate = "";
+        int pointer = 0;
+        ArrayList<Integer> fieldBeginList = getFieldIndices(tag, template);
+        for (int fieldBegin : fieldBeginList) {
+            nwTemplate += template.substring(pointer, fieldBegin);
+            int fieldEnd = template.indexOf("}", fieldBegin);
+            pointer = fieldEnd + 1;
+            String field = template.substring(fieldBegin+tag.length(), fieldEnd);
+            if (field.equalsIgnoreCase("eform.html")) {
+                nwTemplate += "$te{eform.html}";
+                continue;
+            }
+            boolean match = false;
+            for (int i=0; i<efields.length; i++) {
+                if (field.equalsIgnoreCase("eform."+efields[i])) {
+                    nwTemplate += eValues[i];
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) {
+                nwTemplate += "{"+field+"}";
+                MiscUtils.getLogger().error("EForm Template Error! Cannot find input name {"+field+"} in eform");
+            }
+        }
+        nwTemplate += template.substring(pointer, template.length());
+		return nwTemplate;
+    }
+
+    private static String putTemplateEformHtml(String html, String template) {
+        if (empty(html) || empty(template)) return "";
+
+        html = removeAction(html);
+        String tag = "$te{eform.html}";
+        String nwTemplate = "";
+        int pointer = 0;
+        ArrayList<Integer> fieldBeginList = getFieldIndices(tag, template);
+        for (int fieldBegin : fieldBeginList) {
+            nwTemplate += template.substring(pointer, fieldBegin);
+            nwTemplate += html;
+            pointer = fieldBegin + tag.length();
+        }
+        nwTemplate += template.substring(pointer, template.length());
+		return nwTemplate;
+    }
+
+    private static String removeAction(String html) {
+        if (empty(html)) return html;
+
+        Pattern p = Pattern.compile("<form[^<>]*>", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(html);
+        String nwHtml = "";
+        int pointer = 0;
+        while (m.find()) {
+            nwHtml += html.substring(pointer, m.start());
+            String formTag = m.group();
+            pointer += m.start()+formTag.length();
+            p = Pattern.compile("\\baction[ ]*=[ ]*\"[^>\"]*\"|\\b[a-zA-Z]+[ ]*=[ ]*'[^>']*'|\\b[a-zA-Z]+[ ]*=[^ >]*", Pattern.CASE_INSENSITIVE);
+            m = p.matcher(formTag);
+            nwHtml += m.replaceAll("");
+        }
+        nwHtml += html.substring(pointer, html.length());
+        return nwHtml;
+    }
+
+	private static void saveCMNote(EForm eForm, String fdid, String programNo, String code, String note) {
+		if (empty(note)) return;
 
 		CaseManagementNote cNote = createCMNote(eForm.getDemographicNo(), eForm.getProviderNo(), programNo, note);
 		if (!empty(code)) {
@@ -626,7 +778,9 @@ public class EFormUtil {
 			cNote.setIssues(scmi);
 		}
 		cmm.saveNoteSimple(cNote);
-		return cNote.getId();
+        CaseManagementNoteLink cmLink = new CaseManagementNoteLink(CaseManagementNoteLink.EFORMDATA, Long.valueOf(fdid), cNote.getId());
+        CaseManagementNoteLinkDAO cmDao = (CaseManagementNoteLinkDAO)SpringUtils.getBean("CaseManagementNoteLinkDAO");
+        cmDao.save(cmLink);
 	}
 
 	private static CaseManagementNote createCMNote(String demographicNo, String providerNo, String programNo, String note) {
@@ -663,7 +817,164 @@ public class EFormUtil {
 		return sCmIssu;
 	}
 
+    private static ArrayList getFieldIndices(String fieldtag, String s) {
+        ArrayList fieldIndexList = new ArrayList();
+        if (empty(fieldtag) || empty(s)) return fieldIndexList;
+
+        fieldtag = fieldtag.toLowerCase();
+        s = s.toLowerCase();
+
+        int from = 0;
+        int fieldAt = s.indexOf(fieldtag, from);
+        while (fieldAt>=0) {
+            fieldIndexList.add(fieldAt);
+            from = fieldAt + 1;
+            fieldAt = s.indexOf(fieldtag, from);
+        }
+        return fieldIndexList;
+    }
+
+    private static String getInfo(String tag, String template, String deflt) {
+        if (empty(tag) || empty(template)) return deflt;
+
+        ArrayList<String> infos = getWithin(tag, template);
+        if (infos.isEmpty()) return deflt;
+
+        String info = removeBlanks(infos.get(0));
+        return empty(info) ? deflt : info;
+    }
+
+    private static String getContent(String template) {
+        ArrayList<String> contents = getWithin("content", template);
+        if (contents.isEmpty()) return "";
+
+        String content = contents.get(0);
+        if (content.startsWith("\n") || content.startsWith("\r")) {
+            content = content.substring(1); //remove first blank line
+        }
+        return content;
+    }
+
+    private static ArrayList getWithin(String tag, String s) {
+        ArrayList within = new ArrayList();
+        if (empty(tag) || empty(s)) return within;
+
+        ArrayList<String> w = getWhole(tag, s);
+        for (String whole : w) {
+            int begin = getBeginTag(tag, whole).length();
+            int end = whole.length()-("</"+tag+">").length();
+            within.add(whole.substring(begin, end));
+        }
+        return within;
+    }
+    
+    private static ArrayList getWhole(String tag, String s) {
+        ArrayList whole = new ArrayList();
+        if (empty(tag) || empty(s)) return whole;
+
+		String sBegin = "<"+tag;
+		String sEnd = "</"+tag+">";
+        int begin = -1;
+        boolean search = true;
+        while (search) {
+            begin = findIgnoreCase(sBegin, s, begin+1);
+            if (begin==-1) {
+                search = false;
+                break;
+            }
+            int end = findIgnoreCase(sEnd, s, begin);
+
+            //search for middle begin tags; if found, extend end tag to include complete begin-end within
+            int mid_begin = findIgnoreCase(sBegin, s, begin+1);
+            int count_mbegin = 0;
+            while (mid_begin>=0 && mid_begin<end) {
+                count_mbegin++;
+                mid_begin = findIgnoreCase(sBegin, s, mid_begin+1);
+            }
+            while (count_mbegin>0) {
+                end = findIgnoreCase(sEnd, s, end+1);
+                if (end>=0) count_mbegin--;
+                else count_mbegin=-1;
+            }
+            //end search
+
+            if (begin>=0 && end>=0) {
+                whole.add(s.substring(begin, end+sEnd.length()));
+            }
+        }
+        return whole;
+    }
+
+    private static String getBeginTag(String tag, String template) {
+        if (empty(tag) || empty(template)) return "";
+
+        Pattern p = Pattern.compile("<"+tag+"[^<>]*>", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(template);
+        return m.find() ? m.group() : "";
+    }
+
+    private static String getAttribute(String key, String beginTag) {
+        String value = "";
+        if (empty(key) || empty(beginTag)) return value;
+
+        Pattern p = Pattern.compile("\\b[a-zA-Z]+[ ]*=[ ]*\"[^>\"]*\"|\\b[a-zA-Z]+[ ]*=[ ]*'[^>']*'|\\b[a-zA-Z]+[ ]*=[^ >]*", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(beginTag);
+
+        while (m.find()) {
+            String[] keyvalue = m.group().split("=");
+            if (keyvalue[0].trim().equalsIgnoreCase(key.trim())) {
+                value = keyvalue[1].trim();
+                break;
+            }
+        }
+        return removeQuotes(value);
+    }
+
+    private static String getProviderName(String providerNo) {
+        ProviderData pd = new ProviderData(providerNo);
+        String firstname = pd.getFirst_name();
+        String lastname = pd.getLast_name();
+        String name = empty(firstname) ? "" : firstname;
+        name += empty(lastname) ? "" : " "+lastname;
+        return name;
+    }
+
+    private static String[] getSentList(String msgtxt) {
+        String sentListTxt = getInfo("sendto", msgtxt, "");
+        String[] sentList = sentListTxt.split(",");
+        for (int i=0; i<sentList.length; i++) {
+            sentList[i] = sentList[i].trim();
+            if (!numeric(sentList[i])) sentList[i] = "";
+        }
+        return sentList;
+    }
+
+    private static String getSentWho(String msgtxt) {
+        String[] sentList = getSentList(msgtxt);
+        String sentWho = "";
+        for (String sent : sentList) {
+            sent = getProviderName(sent);
+            if (!empty(sentWho) && !empty(sent)) {
+                sentWho += ", " + sent;
+            } else {
+                sentWho += sent;
+            }
+        }
+        return sentWho;
+    }
+
 	private static boolean empty(String s) {
 		return (s==null || s.trim().equals(""));
 	}
+
+    private static boolean numeric(String s) {
+        if (empty(s)) return false;
+
+        for (int i=0; i<s.length(); i++) {
+            if (!"-0123456789".contains(""+s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
