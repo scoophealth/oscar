@@ -20,7 +20,7 @@ CREATE TABLE `log` (
   `data` text
 ) ;
 
-insert into log (dateTime,provider_no,action,content,contentId,ip,demographic_no,data) select * from log_temp;
+insert into log (id,dateTime,provider_no,action,content,contentId,ip,demographic_no,data) select * from log_temp;
 
 update log set content=null where content='';
 update log set provider_no=null where provider_no='';
