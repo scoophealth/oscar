@@ -156,7 +156,7 @@
 		if (apptList.size()>0) {
 			Integer apptNo = (Integer)apptList.get(0).get("appointment_no");
 			String mcNumber = request.getParameter("appt_mc_number");
-			new OtherIdManager().saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+			OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
 		}
 	} else {
 %>

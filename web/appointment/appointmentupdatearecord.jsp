@@ -90,7 +90,7 @@
 <%
 	String apptNo = request.getParameter("appointment_no");
 	String mcNumber = request.getParameter("appt_mc_number");
-	new OtherIdManager().saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
+	OtherIdManager.saveIdAppointment(apptNo, "appt_mc_number", mcNumber);
   } else {
 %>
 <p>

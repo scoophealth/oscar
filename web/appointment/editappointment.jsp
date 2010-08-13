@@ -426,7 +426,7 @@ function onCut() {
 				</font></td>
 			</tr>
 			<% if (pros.isPropertyActive("mc_number")) {
-		String mcNumber = new OtherIdManager().getApptOtherId(appointment_no, "appt_mc_number");
+		String mcNumber = OtherIdManager.getApptOtherId(appointment_no, "appt_mc_number");
 %>
 			<tr valign="middle">
 				<td align="right">M/C number :</td>
