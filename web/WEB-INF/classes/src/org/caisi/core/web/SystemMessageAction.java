@@ -84,7 +84,7 @@ public class SystemMessageAction extends DispatchAction {
 		msg.setCreationDate(new Date());
 		int messageId = 0;
 		String messageId_str= (String)request.getSession().getAttribute("systemMessageId");
-		if(messageId_str!=null) {
+		if(messageId_str!=null && messageId_str!="") {
 			messageId = Integer.valueOf(messageId_str).intValue();
 		}
 		
