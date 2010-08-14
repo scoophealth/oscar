@@ -218,7 +218,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	}
 
         confirmAck=function() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+		<% if ( demographicID.equals("") || demographicID.equals("0") || demographicID.equals("-1")) { %>
+		return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
+		<% } else { %>
+		return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+		<% } %>
         }
         matchMe();
 
