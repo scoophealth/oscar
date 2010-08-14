@@ -483,7 +483,7 @@ if(totalDocs>0||totalHL7>0){%><br><%}
 
    <dt><img id="plus<%=patientId%>" alt="plus" src="../images/plus.png" onclick="showhideSubCat('plus','<%=patientId%>');"/>
        <img id="minus<%=patientId%>" alt="minus" style="display:none;" src="../images/minus.png" onclick="showhideSubCat('minus','<%=patientId%>');"/>
-       <a id="patient<%=patientId%>all" href="javascript:void(0);"  onclick="resetCurrentFirstDocLab();showThisPatientDocs('<%=patientId%>');un_bold(this);" title="<%=patientName%>"><%=patientName%> (<span id="patientNumDocs<%=patientId%>"><%=numDocs%></span>)</a>
+       <a id="patient<%=patientId%>all" href="javascript:void(0);"  onclick="resetCurrentFirstDocLab();showThisPatientDocs('<%=patientId%>');un_bold(this);" title="<%=patientName%>"><% if ( patientId.equals("-1")) { %>Unmatched<% } else { %><%=patientName%><% } %>(<span id="patientNumDocs<%=patientId%>"><%=numDocs%></span>)</a>
                          <dl id="labdoc<%=patientId%>showSublist" style="display:none" >
                         <%if(scanDocs>0){%>
                         <dt><a id="patient<%=patientId%>docs" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showSubType('<%=patientId%>','DOC');un_bold(this);" title="Documents">Documents(<span id="pDocNum_<%=patientId%>"><%=scanDocs%></span>)</a>
