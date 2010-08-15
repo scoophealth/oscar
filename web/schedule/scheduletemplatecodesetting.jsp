@@ -186,19 +186,28 @@ function checkInput() {
 				<bean:message
 					key="schedule.scheduletemplatecodesetting.msgColorExample" /></td>
 			</tr>
-			<tr bgcolor='ivory'>
-				<td><font color="red">Confirm:</font></td>
-				<td><input type="radio" name="confirm" value="Yes"
-					<%=((bEdit && dataBean.getProperty("confirm").equals("Yes"))? "checked" : "")%>>Yes
-				<input type="radio" name="confirm" value="No"
-					<%=(bEdit? (dataBean.getProperty("confirm").startsWith("N")? "checked" : "") : "checked")%>>No
-				</td>
-			</tr>
                         <tr bgcolor='ivory'>
 				<td><font color="red"><bean:message
 					key="schedule.scheduletemplatecodesetting.formBookingLimit" />:</font></td>
 				<td><input type="text" id="bookinglimit" name="bookinglimit" size="10"
 					<%=bEdit?("value='"+dataBean.getProperty("bookinglimit")+"'"):"value='1'"%>></td>
+			</tr>
+			<tr bgcolor='ivory'>
+				<td><font color="red">Limit Type:</font></td>
+				<td>
+				<input type="radio" name="confirm" value="No"
+					<%=(bEdit? (dataBean.getProperty("confirm").startsWith("N")? "checked" : "") : "checked")%>>Off
+				<input type="radio" name="confirm" value="Yes"
+					<%=((bEdit && dataBean.getProperty("confirm").equals("Yes"))? "checked" : "")%>>Warning
+				<!-- <input type="radio" name="confirm" value="Str"
+					<%=(bEdit? (dataBean.getProperty("confirm").startsWith("Str")? "checked" : "") : "checked")%>>Strict
+				not implimented --> <br>
+				<input type="radio" name="confirm" value="Day"
+					<%=(bEdit? (dataBean.getProperty("confirm").equals("Day")? "checked" : "") : "checked")%>>Same Day
+				<input type="radio" name="confirm" value="Wk"
+					<%=(bEdit? (dataBean.getProperty("confirm").equals("Wk")? "checked" : "") : "checked")%>>Same Week
+
+				</td>
 			</tr>
 		</table>
 		<table width="95%" border="0" cellspacing="0" cellpadding="2"
