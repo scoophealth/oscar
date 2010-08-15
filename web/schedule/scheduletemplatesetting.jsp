@@ -177,7 +177,7 @@ function go() {
 			</tr>
 			<tr>
 				<td nowrap bgcolor="#CCFFCC">&nbsp; <a HREF="#"
-					ONCLICK="popupPage(380,530,'scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>')"
+					ONCLICK="popupPage(440,530,'scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>')"
 					TITLE='<bean:message key="schedule.scheduletemplatesetting.msgHolidaySettingTip"/>;return true'><bean:message
 					key="schedule.scheduletemplatesetting.btnHolidaySetting" /></a></td>
 			</tr>
@@ -186,7 +186,7 @@ function go() {
 			</tr>
 			<tr>
 				<td nowrap bgcolor="#CCFFFF">&nbsp; <a HREF="#"
-					ONCLICK="popupPage(380,530,'scheduletemplatecodesetting.jsp')"><bean:message
+					ONCLICK="popupPage(600,700,'scheduletemplatecodesetting.jsp')"><bean:message
 					key="schedule.scheduletemplatesetting.btnTemplateCodeSetting" /></a></td>
 			</tr>
 			<tr>
