@@ -26,7 +26,6 @@
 <%  
 //This Page handles both viewing uploaded forms (from admin screen) and viewing added forms
 //to the patient.
-  if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
 <%@ page import="java.sql.*, oscar.eform.data.*"%>
 <%
