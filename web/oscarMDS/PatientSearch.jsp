@@ -284,7 +284,7 @@ function checkTypeIn() {
 
 	<tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
 		<td><input type="submit" name="demographicNo"
-			value="<%=db.getString(rs,"demographic_no")%>"></td>
+			value="<%=db.getString(rs,"demographic_no")%>" onclick="window.opener.updateLabDemoStatus('<%=request.getParameter("labNo")%>');"></td>
 		<td><%=nbsp( Misc.toUpperLowerCase(db.getString(rs,"last_name")) )%></td>
 		<td><%=nbsp( Misc.toUpperLowerCase(db.getString(rs,"first_name")) )%></td>
 		<td><%= age %></td>

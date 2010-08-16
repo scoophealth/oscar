@@ -336,8 +336,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top">
                                                     <tr>
                                                         <td valign="top" align="left">
-                                                            <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( demographicID.equals("") || demographicID.equals("0")){ %> bgcolor="orange" <% } %> >
-                                                                <tr>
+                                                            <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( demographicID.equals("") || demographicID.equals("0")){ %> bgcolor="orange" <% } %> id="DemoTable<%=segmentID%>" >                                                                <tr>
                                                                     <td nowrap>
                                                                         <div class="FieldData">
                                                                             <strong><bean:message key="oscarMDS.segmentDisplay.formPatientName"/>: </strong>

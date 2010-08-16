@@ -80,6 +80,15 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         <title><%=handler.getPatientName()+" Lab Results"%></title>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <script language="javascript" type="text/javascript" src="../../../share/javascript/Oscar.js" ></script>
+        <script language="javascript" type="text/javascript">
+            // alternately refer to this function in oscarMDSindex.js as labDisplayAjax.jsp does
+		function updateLabDemoStatus(labno){
+                                    if(document.getElementById("DemoTable"+labno)){
+					alert("now I am here");
+                                       document.getElementById("DemoTable"+labno).style.backgroundColor="#FFF";
+                                    }
+                                }
+	</script>
         <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
         <style type="text/css">
             <!--
@@ -321,8 +330,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <table valign="top" border="0" cellpadding="2" cellspacing="0" width="100%">
                                         <tr valign="top">
                                             <td valign="top" width="33%" align="left">
-                                                <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( demographicID.equals("") || demographicID.equals("0")){ %> bgcolor="orange" <% } %> >
-                                                    <tr>
+                                                <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( demographicID.equals("") || demographicID.equals("0")){ %> bgcolor="orange" <% } %> id="DemoTable<%=segmentID%>" >                                                    <tr>
                                                         <td valign="top" align="left">
                                                             <table valign="top" border="0" cellpadding="3" cellspacing="0" width="100%">
                                                                 <tr>
