@@ -32,12 +32,17 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+
 import net.sf.cookierevolver.CRFactory;
 
 /**
  * @author Dennis Langdeau
  */
 public class LoginFilter implements Filter {
+
+	private static final Logger logger=MiscUtils.getLogger();
 
 	private static final String[] EXEMPT_URLS = { 
 		"/images/", 
@@ -66,6 +71,8 @@ public class LoginFilter implements Filter {
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		logger.debug("Entering LoginFilter.doFilter()");
+
 		if (!CRHelper.isCRFrameworkEnabled()) {
 			HttpServletRequest httpRequest = (HttpServletRequest) request;
 			HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -87,6 +94,7 @@ public class LoginFilter implements Filter {
 			}
 		}
 
+		logger.debug("LoginFilter chainning");
 		chain.doFilter(request, response);
 	}
 

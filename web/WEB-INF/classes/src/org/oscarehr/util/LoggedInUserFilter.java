@@ -32,11 +32,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 
 public class LoggedInUserFilter implements javax.servlet.Filter
 {
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		// nothing
@@ -44,6 +47,8 @@ public class LoggedInUserFilter implements javax.servlet.Filter
 
 	public void doFilter(ServletRequest tmpRequest, ServletResponse tmpResponse, FilterChain chain) throws IOException, ServletException
 	{
+		logger.debug("Entering LoggedInUserFilter.doFilter()");
+		
 		try
 		{
 			LoggedInInfo.checkForLingeringData();
@@ -58,6 +63,7 @@ public class LoggedInUserFilter implements javax.servlet.Filter
 			x.initiatingCode=request.getRequestURI();
 			LoggedInInfo.loggedInInfo.set(x);
 			
+			logger.debug("LoggedInUserFilter chainning");
 			chain.doFilter(tmpRequest, tmpResponse);
 		}
 		finally
