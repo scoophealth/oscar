@@ -583,7 +583,9 @@ public class OcanReportUIBean {
 	
 	public static MedicationList getMedicationList(List<OcanStaffFormData> ocanStaffFormData) {
 		MedicationList medicationList = MedicationList.Factory.newInstance();
-		
+		if(getStaffAnswer("medications_count",ocanStaffFormData)==null || getStaffAnswer("medications_count",ocanStaffFormData).equals("")) {
+			return medicationList;
+		}
 		int numberOfMedications = Integer.valueOf(getStaffAnswer("medications_count",ocanStaffFormData));
 		List<MedicationDetail> medicationDetailList = new ArrayList<MedicationDetail>();
 		for(int x=0;x<numberOfMedications;x++) {
