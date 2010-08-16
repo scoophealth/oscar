@@ -232,7 +232,6 @@
 		<servlet-class>oscar.DocumentUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-
     <servlet>
         <servlet-name>FileUpload</servlet-name>
         <servlet-class>FileUpload</servlet-class>
@@ -266,11 +265,14 @@
 	 	<servlet-name>ImageRenderingServlet</servlet-name>
 	 	<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class>
     </servlet>
-
     <servlet>
 	 	<servlet-name>ContentRenderingServlet</servlet-name>
 	 	<servlet-class>org.oscarehr.ui.servlet.ContentRenderingServlet</servlet-class>
     </servlet>
+	<servlet>
+		<servlet-name>eformViewForPdfGenerationServlet</servlet-name>
+		<servlet-class>org.oscarehr.web.eform.EformViewForPdfGenerationServlet</servlet-class>
+	</servlet>
 
     <servlet>
 		<servlet-name>DATISExportTest</servlet-name>
@@ -368,6 +370,10 @@
 	 	<servlet-name>ContentRenderingServlet</servlet-name>
 	 	<url-pattern>/contentRenderingServlet/*</url-pattern>
     </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>eformViewForPdfGenerationServlet</servlet-name>
+		<url-pattern>/eformViewForPdfGenerationServlet</url-pattern>
+	</servlet-mapping>
     <servlet-mapping>
         <servlet-name>jsp</servlet-name>
         <url-pattern>*.json</url-pattern>
