@@ -357,7 +357,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Was Consumer Self-Assessment Completed?</td>
 			<td class="genericTableData">
-				<select name="consumerSelfAxCompleted">
+				<select name="consumerSelfAxCompleted" id="consumerSelfAxCompleted" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "consumerSelfAxCompleted", OcanForm.getOcanFormOptions("Consumer Self-Assessment completed"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -536,7 +536,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Number of Mental Health Functional Centres?</td>
 			<td class="genericTableData">
-				<select name="center_count" id="center_count" onchange="changeNumberOfcentres();">
+				<select name="center_count" id="center_count" onchange="changeNumberOfcentres();" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "center_count", OcanForm.getOcanFormOptions("Number Of Centres"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -1911,7 +1911,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">How many times did you visit an Emergency Department in the last 6 months for Mental Health Reasons?</td>
 			<td class="genericTableData">
-				<select name="visitEmergencyDepartment">
+				<select name="visitEmergencyDepartment" id="visitEmergencyDepartment" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "visitEmergencyDepartment", OcanForm.getOcanFormOptions("Emergency Department"),prepopulationLevel)%>
 				</select>					
 			</td>
