@@ -35,9 +35,23 @@ public class FrmLabReqPreSet {
                 }
                 else if( LabType.equals("AnteNatal") ) {
                     AnteNatalSet(props);
+                }else if (LabType.equals("DM")){
+                    DMSet(props);
                 }
 
                 return props;
+        }
+
+        static void DMSet(Properties props){
+            props.setProperty("b_glucose","checked");
+            props.setProperty("b_glucose_fasting","checked");
+            props.setProperty("b_hba1c","checked");
+            props.setProperty("b_creatinine","checked");
+            props.setProperty("b_uricAcid","checked");
+            props.setProperty("b_alt","checked");
+            props.setProperty("b_alkPhosphatase","checked");
+            props.setProperty("b_lipidAssessment","checked");
+            props.setProperty("aci","\n Fast for 12 hours");
         }
         
         static void AnteNatalSet(Properties props) {
