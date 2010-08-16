@@ -1510,6 +1510,48 @@ public class CaseManagementManager {
 		return this.dxResearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
 	}
 
+        /**
+         * This method takes in a string (template) eg
+         * "Signed on ${DATE} by {$USERSIGNATURE}"
+         * it then searches the string for values surrounded by ${ }.  Once a value is found it looks in the map to see if there is a value for that key.
+         * If it doesn't find a value in the map, it looks in the in recource bundle (this allows templates to be i18n compliant).  If nothing is found in the resource
+         * bundle the value is added as a blank in the returned formatted string.
+         * This is the default signing line.
+         *
+         * ECHART_SIGN_LINE=[${oscarEncounter.class.EctSaveEncounterAction.msgSigned} ${DATE} ${oscarEncounter.class.EctSaveEncounterAction.msgSigBy} ${USERSIGNATURE}]\n
+         *
+         * @param template string with template values used to create the String that is returned
+         * @param rc  The current locale's resource bundle
+         * @param map Values that can be subtituted in.
+         * @return Formatted String
+         */
+        public String getTemplateSignature(String template,ResourceBundle rc,Map<String,String> map){
+            StringBuffer ret = new StringBuffer();
+            int tagstart = -2;
+            int tagend;
+            int currentPosition = 0;
+            while ((tagstart = template.indexOf("${", tagstart+2)) >= 0) {
+                tagend = template.indexOf("}", tagstart);
+                String substituteName = template.substring(tagstart+2, tagend);
+                String substituteValue = map.get(substituteName);
+                if (substituteValue == null){
+                    try{
+                    substituteValue = rc.getString(substituteName);
+                    }catch(Exception e){
+                        substituteValue = "";
+                    }
+                }
+
+                ret.append(template.substring(currentPosition,tagstart));
+                ret.append(substituteValue);
+                currentPosition = tagend+1;
+            }
+
+            ret.append(template.substring(currentPosition));
+            return ret.toString();
+        }
+
+
 	public String getSignature(String cproviderNo, String userName, String roleName, Locale locale, int type) {
 
 		SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy H:mm", locale);
@@ -1523,18 +1565,30 @@ public class CaseManagementManager {
 		// if (providerSignitureDao.isOnSig(cproviderNo))
 		tempS = providerSignitureDao.getProviderSig(cproviderNo);
 		if (tempS != null && !"".equals(tempS.trim())) userName = tempS;
-
-		ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
+                
+		ResourceBundle resourceBundle = ResourceBundle.getBundle("oscarResources", locale);
 		String signature;
-		if (userName != null && !"".equals(userName.trim())) {
-			if (type == this.SIGNATURE_SIGNED) {
-				signature = "[" + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + dt.format(now) + " " + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName + "]\n";
+                if (userName != null && !"".equals(userName.trim())) {
+                    try{
+                        HashMap map = new HashMap();
+                        map.put("DATE",dt.format(now));
+                        map.put("USERSIGNATURE",userName);
+                        map.put("ROLENAME",rolename);
 
+			if (type == this.SIGNATURE_SIGNED) {
+                            //TODO: In the future pull this from a USER/PROGRAM preference.
+                            String signLine = OscarProperties.getInstance().getProperty("ECHART_SIGN_LINE");
+                            signature = getTemplateSignature(signLine,resourceBundle,map);
 			} else if (type == this.SIGNATURE_VERIFY) {
-				signature = "[" + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + dt.format(now) + " " + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName + "]";
+                            String signLine = OscarProperties.getInstance().getProperty("ECHART_VERSIGN_LINE");
+                            signature = getTemplateSignature(signLine,resourceBundle,map);
 			} else {
-				signature = "[Unknown Signature Type Requested]";
+                            throw new Exception("No Signature type defined");
 			}
+                    }catch(Exception eSignature){
+                        signature = "[Unknown Signature Type Requested]";
+                        logger.error("Signature error while signing note ",eSignature);
+                    }
 		} else {
 			signature = "\n[" + dt.format(now) + "]\n";
 		}
