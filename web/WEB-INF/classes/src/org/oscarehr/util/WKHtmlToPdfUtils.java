@@ -1,0 +1,128 @@
+package org.oscarehr.util;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import oscar.OscarProperties;
+
+public class WKHtmlToPdfUtils {
+	private static final Logger logger = MiscUtils.getLogger();
+	private static final int PROCESS_COMPLETION_CYCLE_CHECK_PERIOD = 250;
+	private static final int MAX_NO_CHANGE_COUNT = 30000 / PROCESS_COMPLETION_CYCLE_CHECK_PERIOD;
+	private static final String CONVERT_COMMAND;
+	static {
+		String convertCommand = OscarProperties.getInstance().getProperty("WKHTMLTOPDF_COMMAND");
+		if (convertCommand != null) CONVERT_COMMAND = convertCommand;
+		else throw (new RuntimeException("Properties file is missing property : WKHTMLTOPDF_COMMAND"));
+	}
+
+	private WKHtmlToPdfUtils() {
+		// not meant for instantiation
+	}
+
+	/**
+	 * This method should convert the html page at the sourceUrl into a pdf as returned by the byte[]. This method requires wkhtmltopdf to be installed on the machine.
+	 * 
+	 * @throws IOException
+	 */
+	public static byte[] convertToPdf(String sourceUrl) throws IOException {
+		File outputFile = null;
+
+		try {
+			outputFile = File.createTempFile("wkhtmltopdf.", ".pdf");
+			outputFile.deleteOnExit();
+
+			convertToPdf(sourceUrl, outputFile);
+
+			FileInputStream fis = new FileInputStream(outputFile);
+			try {
+				byte[] results = IOUtils.toByteArray(fis);
+				return (results);
+			} finally {
+				if (fis != null) fis.close();
+			}
+		} finally {
+			if (outputFile != null) outputFile.delete();
+		}
+	}
+
+	/**
+	 * This method should convert the html page at the sourceUrl into a pdf written to the outputFile. This method requires wkhtmltopdf to be installed on the machine. In general the outputFile should be a unique temp file. If you're not sure what you're
+	 * doing don't call this method as you will leave lingering data everywhere or you may overwrite important files...
+	 * @throws IOException 
+	 */
+	public static void convertToPdf(String sourceUrl, File outputFile) throws IOException {
+		String outputFilename = outputFile.getCanonicalPath();
+
+		// example command : wkhtmltopdf-i386 "https://127.0.0.1:8443/oscar/eformViewForPdfGenerationServlet?fdid=2&parentAjaxId=eforms" /tmp/out.pdf
+		ArrayList<String> command = new ArrayList<String>();
+		command.add(CONVERT_COMMAND);
+		command.add(sourceUrl);
+		command.add(outputFilename);
+
+		logger.debug(command);
+		runtimeExec(command, outputFilename);
+	}
+
+	/**
+	 * Normally you can just run a command and it'll complete. The problem with doing that is if the command takes a while and you need to know when it's completed, like if it's cpu intensive like image processing and possibly in this case pdf creation.
+	 * This method will run the command and it has 2 stopping conditions, 1) normal completion as per the process.exitValue() or if the process does not appear to be doing anything. As a result there's a polling thread to check the out put file to see if
+	 * anything is happening. The example is if you're doing image processing and you're scaling an image with say imagemagick it could take 5 minutes to finish. You don't want to set a time out that long, but you don't want to stop if it it's proceeding
+	 * normally. Normal proceeding is defined by the out put file is still changing. If the out put file isn't changing, and it's taking "a while" then we would assume it's failed some how or hung or stalled at which point we'll terminate it.
+	 */
+	private static void runtimeExec(ArrayList<String> command, String outputFilename) throws IOException {
+		File f = new File(outputFilename);
+		Process process = Runtime.getRuntime().exec(command.toArray(new String[0]));
+
+		long previousFileSize = 0;
+		int noFileSizeChangeCounter = 0;
+
+		try {
+			while (true) {
+				try {
+					Thread.sleep(PROCESS_COMPLETION_CYCLE_CHECK_PERIOD);
+				} catch (InterruptedException e) {
+					logger.error("Thread interrupted", e);
+				}
+
+				try {
+					int exitValue = process.exitValue();
+
+					if (exitValue != 0) {
+						logger.debug("Error running command : " + command);
+
+						String errorMsg = StringUtils.trimToNull(IOUtils.toString(process.getInputStream()));
+						if (errorMsg != null) logger.debug(errorMsg);
+
+						errorMsg = StringUtils.trimToNull(IOUtils.toString(process.getErrorStream()));
+						if (errorMsg != null) logger.debug(errorMsg);
+					}
+
+					return;
+				} catch (IllegalThreadStateException e) {
+					long tempSize = f.length();
+
+					logger.debug("Progress output filename=" + outputFilename + ", filesize=" + tempSize);
+
+					if (tempSize != previousFileSize) noFileSizeChangeCounter = 0;
+					else {
+						noFileSizeChangeCounter++;
+
+						if (noFileSizeChangeCounter > MAX_NO_CHANGE_COUNT) break;
+					}
+				}
+			}
+
+			logger.error("Error, process appears stalled. command=" + command);
+		} finally {
+			process.destroy();
+		}
+	}
+
+}
