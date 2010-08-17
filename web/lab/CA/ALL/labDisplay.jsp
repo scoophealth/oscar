@@ -229,7 +229,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         }
 
         function matchMe() {
-            <% if ( patientMatched != null && patientMatched.equals("no") ) { %>
+            <% if ( demographicID.equals("") || demographicID.equals("0") || demographicID.equals("-1")) { %>
                	popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow');
             <% } %>
 	}
