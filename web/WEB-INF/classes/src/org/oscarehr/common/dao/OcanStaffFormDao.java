@@ -19,6 +19,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 
     public List<OcanStaffForm> findLatestSignedOcanForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
 		
-		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanFormVersion=?3 and x.completionDate>=?4 and x.completionDate<?5";
+		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanFormVersion=?3 and x.completionDate>=?4 and x.completionDate<?5 order by x.clientId ASC, x.created DESC";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
@@ -72,7 +73,18 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		
 		@SuppressWarnings("unchecked")
 		List<OcanStaffForm> results=query.getResultList();
+		//return(results);
 		
-		return(results);
+		List<OcanStaffForm> list = new ArrayList<OcanStaffForm>();
+		int clientId_0=0;
+		for(OcanStaffForm res:results) {
+			int clientId_1 = res.getClientId().intValue();
+			if(clientId_0!=clientId_1) {
+				clientId_0 = clientId_1;
+				list.add(res);
+			}
+		}
+		return list;
     }
+    
 }
