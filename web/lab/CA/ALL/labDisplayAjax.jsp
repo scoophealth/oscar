@@ -211,20 +211,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
         }
 
-         matchMe=function() {
-            <% if ( patientMatched != null && patientMatched.equals("no") ) { %>
-               	popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow');
-            <% } %>
-	}
-
         confirmAck=function() {
-		<% if ( demographicID.equals("") || demographicID.equals("0") || demographicID.equals("-1")) { %>
-		return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
-		<% } else { %>
 		return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-		<% } %>
         }
-        matchMe();
+
 
         updateStatus=function(formid){
             var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
