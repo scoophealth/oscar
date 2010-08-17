@@ -70,7 +70,7 @@ public final class EfmpatientformlistSendPhrAction {
 			logger.debug("Writing pdf to : "+tempFile.getCanonicalPath());
 			
 			// upload pdf to oscar docs
-			
+logger.error("NOT COMPLETED, NEED TO UPLOAD TO OSCAR DOCS AND SEND TO PHR HERE");			
 		} catch (IOException e) {
 			logger.error("Error converting and sending eform. id=" + eFormId, e);
 		} finally {
