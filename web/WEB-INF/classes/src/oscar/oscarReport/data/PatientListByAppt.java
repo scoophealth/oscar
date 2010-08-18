@@ -1,13 +1,29 @@
 /*
- * PatientListByAppt.java
  *
- * Created on August 27, 2007, 4:53 PM
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 
 package oscar.oscarReport.data;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.SQLException;
@@ -16,11 +32,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.oscarehr.util.MiscUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -36,14 +50,12 @@ public class PatientListByAppt extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("plain/text");
+        response.setHeader("Content-disposition", "attachment; filename=patientlist.txt");
         
         String drNo = request.getParameter("provider_no");
         String datefrom = request.getParameter("date_from");
         String dateto = request.getParameter("date_to");
-        OscarProperties props = OscarProperties.getInstance();
-        String home = props.getProperty("project_home");
-        String url = "/usr/local/tomcat/webapps/"+ home + "/oscarReport/patientlist.txt";
         try{
             DBHandler db = new DBHandler();
             
@@ -68,9 +80,7 @@ public class PatientListByAppt extends HttpServlet {
 
             rs = db.GetSQL(sql);
             
-            File ffile = new File(url);
-            FileOutputStream file = new FileOutputStream( ffile );
-            PrintStream ps = new PrintStream( file );
+            PrintStream ps = new PrintStream(response.getOutputStream());
 
               while(rs.next()){
                ps.print(db.getString(rs,1)+",");
@@ -87,11 +97,9 @@ public class PatientListByAppt extends HttpServlet {
             }
             ps.println("");
         }
-        catch(SQLException e)
-        {
+        catch(SQLException e){
             MiscUtils.getLogger().error("Error", e);
         } 
-        response.sendRedirect(response.encodeRedirectURL("oscarReport/downloadpatientlist.jsp"));
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
