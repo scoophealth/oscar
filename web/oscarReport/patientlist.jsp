@@ -38,7 +38,7 @@
 <link rel="stylesheet" href="../web.css">
 </head>
 <body>
-<form action="../patientlistbyappt" method="get">
+    <form action="../patientlistbyappt" method="get" target="_blank">
 <table width="525">
 	<tr>
 		<td>Select a Doctor</td>
