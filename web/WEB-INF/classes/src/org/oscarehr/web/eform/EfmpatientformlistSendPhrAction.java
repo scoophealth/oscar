@@ -1,22 +1,37 @@
 package org.oscarehr.web.eform;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.WKHtmlToPdfUtils;
+
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
+import oscar.dms.actions.AddEditDocumentAction;
 
 public final class EfmpatientformlistSendPhrAction {
 
 	private static final Logger logger = MiscUtils.getLogger();
 
-	private static String localUri = null;
+	private String localUri = null;
+	private String clientId=null;
+	private String providerNo=null;
 
 	public EfmpatientformlistSendPhrAction(HttpServletRequest request) {
 		localUri = getEformRequestUrl(request);
+
+		clientId=request.getParameter("clientId");
+		
+		LoggedInInfo loggedInfo = LoggedInInfo.loggedInInfo.get();
+		providerNo=loggedInfo.loggedInProvider.getProviderNo();
+		
+		logger.debug(ReflectionToStringBuilder.toString(this));
 	}
 
 	/**
@@ -67,15 +82,33 @@ public final class EfmpatientformlistSendPhrAction {
 			// convert to PDF
 			String viewUri = localUri + eFormId;
 			WKHtmlToPdfUtils.convertToPdf(viewUri, tempFile);
-			logger.debug("Writing pdf to : "+tempFile.getCanonicalPath());
-			
+			logger.debug("Writing pdf to : " + tempFile.getCanonicalPath());
+
 			// upload pdf to oscar docs
-logger.error("NOT COMPLETED, NEED TO UPLOAD TO OSCAR DOCS AND SEND TO PHR HERE");			
-		} catch (IOException e) {
+			uploadToOscarDocuments(tempFile, "eform", "eform");
+			logger.error("NOT COMPLETED, NEED TO SEND DOCUMENT TO PHR HERE");
+		} catch (Exception e) {
 			logger.error("Error converting and sending eform. id=" + eFormId, e);
 		} finally {
 			// we'll be nice and if debugging is enabled we'll leave the file lying around so you can see it.
 			if (tempFile != null && !logger.isDebugEnabled()) tempFile.delete();
 		}
+	}
+
+	private void uploadToOscarDocuments(File file, String description, String type) throws Exception {
+
+		String originalFileName = file.getName();
+		EDoc newDoc = new EDoc(description, type, originalFileName, "", providerNo, "", "", 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", clientId);
+		newDoc.setContentType("application/pdf");
+		String newFileName = newDoc.getFileName();
+		
+		FileInputStream fis = new FileInputStream(file);
+		try {
+			AddEditDocumentAction.writeLocalFile(fis, newFileName);
+		} finally {
+			fis.close();
+		}
+		
+		EDocUtil.addDocumentSQL(newDoc);
 	}
 }

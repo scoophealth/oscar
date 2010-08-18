@@ -297,20 +297,6 @@ function popup1(height, width, url, windowName){
 		</td>
 	</tr>
 	<tr>
-		<%--
-         <td class="MainTableLeftColumn" valign="top">
-             <div class="leftplane">
-                  <h3>&nbsp; Tags</h3>
-                  <div style="background-color: #EEEEFF;">
-                      <ul>
-                         <li>Tag 1</li>
-                         <li>Tag 2</li>
-                         <li>Tag 3</li>
-                      </ul>
-                  </div>
-             </div>
-         </td>
-         --%>
 		<td class="MainTableRightColumn" colspan="2" valign="top"><jsp:include
 			page="addDocument.jsp" /> <html:form action="/dms/combinePDFs">
 			<input type="hidden" name="curUser" value="<%=curUser%>">

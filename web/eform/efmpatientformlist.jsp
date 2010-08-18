@@ -160,6 +160,7 @@ function updateAjax() {
 		<td class="MainTableRightColumn" valign="top">
 
 			<form action="efmpatientformlistSendPhrAction.jsp">
+				<input type="hidden" name="clientId" value="<%=request.getParameter("demographic_no")%>" />
 				<table class="elements" width="100%">
 					<tr bgcolor=<%=deepColor%>>
 						<%

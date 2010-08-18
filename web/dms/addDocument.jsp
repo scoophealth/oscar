@@ -90,16 +90,6 @@ else
 
 if (request.getAttribute("completedForm") != null) {
 formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
-/*  Moved the edit to a separate popup window
-} else if (editDocumentNo != null) {
-    EDoc currentDoc = EDocUtil.getDoc(editDocumentNo);
-    formdata.setFunction(currentDoc.getModule());
-    formdata.setFunctionId(currentDoc.getModuleId());
-    formdata.setDocType(currentDoc.getType());
-    formdata.setDocDesc(currentDoc.getDescription());
-    formdata.setDocPublic((currentDoc.getDocPublic().equals("1"))?"checked":"");
-    formdata.setDocCreator(user_no);
-    formdata.setObservationDate(currentDoc.getObservationDate());*/
 } else {
     formdata.setFunction(module);  //"module" and "function" are the same
     formdata.setFunctionId(moduleid);
