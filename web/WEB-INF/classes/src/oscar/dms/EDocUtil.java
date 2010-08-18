@@ -129,6 +129,9 @@ public final class EDocUtil extends SqlUtilBaseS {
         MiscUtils.getLogger().debug("ADD CASEMGMT NOTE LINK : Id=" + cmnl.getId());
     }
 
+    /**
+     * @return the new documentId
+     */
     public static String addDocumentSQL(EDoc newDocument) {
         String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate,number_of_pages) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?,?,?)";
         DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[14];

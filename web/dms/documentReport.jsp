@@ -486,9 +486,7 @@ function popup1(height, width, url, windowName){
               <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 				<indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">
 
-					<input type="button"
-						onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');"
-						value="Send To PHR" />
+					<input type="button" onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');"	value="Send To PHR" />
 
 				</indivo:indivoRegistered>
 			</oscarProp:oscarPropertiesCheck> <%

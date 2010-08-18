@@ -2,6 +2,7 @@ package org.oscarehr.web.eform;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,17 +21,17 @@ public final class EfmpatientformlistSendPhrAction {
 	private static final Logger logger = MiscUtils.getLogger();
 
 	private String localUri = null;
-	private String clientId=null;
-	private String providerNo=null;
+	private String clientId = null;
+	private String providerNo = null;
 
 	public EfmpatientformlistSendPhrAction(HttpServletRequest request) {
 		localUri = getEformRequestUrl(request);
 
-		clientId=request.getParameter("clientId");
-		
+		clientId = request.getParameter("clientId");
+
 		LoggedInInfo loggedInfo = LoggedInInfo.loggedInInfo.get();
-		providerNo=loggedInfo.loggedInProvider.getProviderNo();
-		
+		providerNo = loggedInfo.loggedInProvider.getProviderNo();
+
 		logger.debug(ReflectionToStringBuilder.toString(this));
 	}
 
@@ -59,18 +60,32 @@ public final class EfmpatientformlistSendPhrAction {
 
 	/**
 	 * This method will take eforms and send them to a PHR.
+	 * 
+	 * @return a list of documentIds it just added
 	 */
-	public void sendEFormsToPhr(String[] eFormIds) {
+	public ArrayList<String> sendEFormsToPhr(String[] eFormIds) {
 		// This is a 2 phase algorithm,
 		// 1) convert an eform to a pdf oscar document
 		// 2) send the pdf oscar document to the phr
 
+		ArrayList<String> docIds=new ArrayList<String>();
+		
 		for (String eFormId : eFormIds) {
-			sendEformToPhr(Integer.parseInt(eFormId));
+			try {
+				String newDocId=sendEformToPhr(Integer.parseInt(eFormId));
+				docIds.add(newDocId);
+			} catch (Exception e) {
+				logger.error("Error converting eform to oscar document. eformId="+eFormId, e);
+			}
 		}
+		
+		return(docIds);
 	}
 
-	private void sendEformToPhr(int eFormId) {
+	/**
+	 * @return the new document id
+	 */
+	private String sendEformToPhr(int eFormId) throws Exception {
 		File tempFile = null;
 
 		try {
@@ -85,30 +100,30 @@ public final class EfmpatientformlistSendPhrAction {
 			logger.debug("Writing pdf to : " + tempFile.getCanonicalPath());
 
 			// upload pdf to oscar docs
-			uploadToOscarDocuments(tempFile, "eform", "eform");
-			logger.error("NOT COMPLETED, NEED TO SEND DOCUMENT TO PHR HERE");
-		} catch (Exception e) {
-			logger.error("Error converting and sending eform. id=" + eFormId, e);
+			return(uploadToOscarDocuments(tempFile, "eform", "eform"));
 		} finally {
 			// we'll be nice and if debugging is enabled we'll leave the file lying around so you can see it.
 			if (tempFile != null && !logger.isDebugEnabled()) tempFile.delete();
 		}
 	}
 
-	private void uploadToOscarDocuments(File file, String description, String type) throws Exception {
+	/**
+	 * @return the new documentId
+	 */
+	private String uploadToOscarDocuments(File file, String description, String type) throws Exception {
 
 		String originalFileName = file.getName();
 		EDoc newDoc = new EDoc(description, type, originalFileName, "", providerNo, "", "", 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", clientId);
 		newDoc.setContentType("application/pdf");
 		String newFileName = newDoc.getFileName();
-		
+
 		FileInputStream fis = new FileInputStream(file);
 		try {
 			AddEditDocumentAction.writeLocalFile(fis, newFileName);
 		} finally {
 			fis.close();
 		}
-		
-		EDocUtil.addDocumentSQL(newDoc);
+
+		return(EDocUtil.addDocumentSQL(newDoc));
 	}
 }
