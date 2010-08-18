@@ -85,6 +85,12 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
       
             item.setDate(date);            
             String strTitle = StringUtils.maxLenString(allergies[idx].getAllergy().getDESCRIPTION(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+            String severity = allergies[idx].getAllergy().getSeverityOfReaction();
+            if (severity != null && severity.equals("3")){
+                item.setColour("red");
+            }else if(severity != null && severity.equals("2")){
+                item.setColour("orange");
+            }
             
             item.setTitle(strTitle);
             item.setLinkTitle(allergies[idx].getAllergy().getDESCRIPTION() + " " + serviceDateStr);
