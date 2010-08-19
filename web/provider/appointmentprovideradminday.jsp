@@ -1226,7 +1226,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- caisi infirmary view exteion add -->
 <!--  fffffffffffffffffffffffffffffffffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
-<%@ include file="infirmarydemographiclist.jsp" %>
+<%@ include file="infirmarydemographiclist.jspf" %>
 </caisi:isModuleLoad>
 <logic:notEqual name="infirmaryView_isOscar" value="false">
 <!-- caisi infirmary view exteion add end ffffffffffffffffff-->
