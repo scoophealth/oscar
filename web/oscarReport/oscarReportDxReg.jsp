@@ -41,12 +41,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 <%@page import="org.oscarehr.common.dao.DxresearchDAO"%>
 <%@page import="org.oscarehr.common.model.Dxresearch"%>
 <%@page import="oscar.oscarResearch.oscarDxResearch.util.*"%>
-<%@page import="java.util.*, java.sql.*"%>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="../../report/reportMainBeanConn.jsp"%>
-<% }  %>
+<%@page import="java.util.*"%>
 
 
 <html:html locale="true">
@@ -74,12 +69,6 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 	</style>
     </head>
     <%
-                String curUser_no = (String) session.getAttribute("user");
-                String mygroupno = (String) session.getAttribute("groupno");
-                String radiostatus = (String) session.getAttribute("radiovaluestatus");
-                if (radiostatus==null || radiostatus=="")
-                    radiostatus="patientRegistedAll";
-                String formAction =  "/report/DxresearchReport?method=" + radiostatus;
                 request.setAttribute("listview", request.getSession().getAttribute("listview"));
                 request.setAttribute("codeSearch", request.getSession().getAttribute("codeSearch"));
                 //request.setAttribute("codeSearch", request.getSession().getAttribute("codeSearch"));
@@ -161,7 +150,7 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
                         </tbody>
                     </table>
 
-                    <nested:form action='<%=formAction%>'>
+                    <nested:form action="/report/DxresearchReport?method=patientRegistedAll">
 
                         <table border="1" width="100%">
                             <tbody>
@@ -192,47 +181,24 @@ objectName="_admin,_admin.reporting" rights="r" reverse="<%=true%>">
 
                         Filter: &nbsp;&nbsp;
                         <label>
-                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" <%="patientRegistedDistincted".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDistincted'">
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDistincted'">
                             ALL(distincted)</label>
                         <label>
-                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" <%="patientRegistedAll".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedAll'">
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedAll'">
                             ALL</label>
                          <label>
-                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" <%="patientRegistedActive".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedActive'">
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedActive'">
                             Active</label>
                         <label>
-                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" <%="patientRegistedDeleted".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDeleted'">
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_0" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedDeleted'">
                             Deleted</label>
                          <label>
-                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" <%="patientRegistedResolve".equals(radiostatus)?"checked":""%> onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedResolve'">
+                            <input type="radio" name="SearchBy" value="radio" id="SearchBy_1" onclick="javascript:this.form.action='<%= request.getContextPath()%>/report/DxresearchReport.do?method=patientRegistedResolve'">
                             Resolved</label>
 
 
-                            <select name="provider_no">
-                                <%
-                                            ResultSet rsgroup = reportMainBean.queryResults("search_group");
-                                            while (rsgroup.next()) {
-                                %>
-                                <option value="<%="_grp_" + rsgroup.getString("mygroup_no")%>"
-                                        <%=mygroupno.equals(rsgroup.getString("mygroup_no")) ? "selected" : ""%>><%="GRP: " + rsgroup.getString("mygroup_no")%></option>
-                                <%
-                                            }
-                                %>
-                                <%
-                                            rsgroup = reportMainBean.queryResults("search_provider");
-                                            while (rsgroup.next()) {
-                                %>
-                                <option value="<%=rsgroup.getString("provider_no")%>"
-                                        <%=curUser_no.equals(rsgroup.getString("provider_no")) ? "selected" : ""%>><%=rsgroup.getString("last_name") + ", " + rsgroup.getString("first_name")%></option>
-                                <%
-                                            }
-                                %>
-                                <option value="*"><bean:message
-                                        key="report.reportindex.formAllProviders" /></option>
-                            </select>
-
                         &nbsp;&nbsp;
-                        <nested:submit style="border:1px solid #666666;">Search Patients</nested:submit>
+                        <nested:submit style="border:1px solid #666666;">Search Registed Patients</nested:submit>
                     </nested:form>
 
                         <display:table name="listview" id="listview" class="mars" style="border:1px solid #666666; width:99%;margin-top:2px;">
