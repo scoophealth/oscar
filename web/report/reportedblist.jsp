@@ -43,7 +43,7 @@
 	scope="page" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="reportMainBeanConn.jsp"%>
+<%@ include file="reportMainBeanConn.jspf"%>
 <% } %>
 
 <html>

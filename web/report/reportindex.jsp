@@ -43,7 +43,7 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="reportMainBeanConn.jsp"%>
+<%@ include file="reportMainBeanConn.jspf"%>
 <% }  %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
