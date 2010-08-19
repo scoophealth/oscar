@@ -30,7 +30,7 @@
 
 
 <%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbTicker.jsp" %>
+<%@ include file="dbTicker.jspf" %>
 <% 
 
 //GregorianCalendar now=new GregorianCalendar();

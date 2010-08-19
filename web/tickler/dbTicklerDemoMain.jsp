@@ -27,7 +27,7 @@
 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbTicker.jsp"%>
+<%@ include file="dbTicker.jspf"%>
 <%
  String demoview = request.getParameter("demoview")==null?"all":request.getParameter("demoview") ;
  String parentAjaxId = request.getParameter("parentAjaxId")==null?"":request.getParameter("parentAjaxId");

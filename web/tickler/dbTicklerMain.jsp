@@ -28,7 +28,7 @@
 	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,oscar.log.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbTicker.jsp"%>
+<%@ include file="dbTicker.jspf"%>
 <%
 String[] param = new String[2];
 String[] temp = request.getParameterValues("checkbox");

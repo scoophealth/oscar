@@ -55,7 +55,7 @@
 
 %>
 
-<%@ include file="dbTicker.jsp" %>
+<%@ include file="dbTicker.jspf" %>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
