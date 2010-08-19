@@ -40,6 +40,11 @@
 		<ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${address}, ${city}, ${province}, ${postal}</ap-output>
 	</databaseap>
+        <databaseap>
+		<ap-name>address_street_number_and_name</ap-name>
+		<ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+		<ap-output>${address}</ap-output>
+	</databaseap>
 	<databaseap>
 		<ap-name>province</ap-name>
 		<ap-sql>SELECT province FROM demographic WHERE demographic_no=${demographic}</ap-sql>
@@ -110,9 +115,19 @@
 		<ap-output>${ver}</ap-output>
 	</databaseap>
         <databaseap>
+		<ap-name>hc_renew_date</ap-name>
+		<ap-sql>SELECT hc_renew_date FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+		<ap-output>${hc_renew_date}</ap-output>
+	</databaseap>
+        <databaseap>
 		<ap-name>chartno</ap-name>
 		<ap-sql>SELECT chart_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${chart_no}</ap-output>
+	</databaseap>
+        <databaseap>
+		<ap-name>demographic_no</ap-name>
+		<ap-sql>SELECT demographic_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+		<ap-output>${demographic_no}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>phone</ap-name>
@@ -123,6 +138,21 @@
 		<ap-name>phone2</ap-name>
 		<ap-sql>SELECT phone2 FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${phone2}</ap-output>
+	</databaseap>
+        <databaseap>
+		<ap-name>cell</ap-name>
+		<ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='demo_cell';</ap-sql>
+		<ap-output>${value}</ap-output>
+	</databaseap>
+        <databaseap>
+		<ap-name>phone_extension</ap-name>
+		<ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='hPhoneExt';</ap-sql>
+		<ap-output>${value}</ap-output>
+	</databaseap>
+        <databaseap>
+		<ap-name>phone2_extension</ap-name>
+		<ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='wPhoneExt';</ap-sql>
+		<ap-output>${value}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>clinic_name</ap-name>
