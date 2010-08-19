@@ -81,7 +81,7 @@ Tickler tickler = new Tickler();
              TicklerLinkDAO ticklerLinkDAO = (TicklerLinkDAO) ctx.getBean("ticklerLinkDAO");
              ticklerLinkDAO.save(tLink);
              }catch(Exception e){
-            	 MiscUtils.getLogger.error("No link with this tickler", e);
+            	 MiscUtils.getLogger().error("No link with this tickler", e);
              }
       }
    }
