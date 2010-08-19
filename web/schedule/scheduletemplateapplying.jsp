@@ -70,7 +70,7 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
 <%  if(!scheduleMainBean.getBDoConfigure()) { %>
-<%@ include file="scheduleMainBeanConn.jsp"%>
+<%@ include file="scheduleMainBeanConn.jspf"%>
 <% } %>
 <%
   String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );  

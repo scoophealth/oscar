@@ -33,7 +33,7 @@
 
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="scheduleMainBeanConn.jsp"%>
+<%@ include file="scheduleMainBeanConn.jspf"%>
 <%  
   GregorianCalendar now=new GregorianCalendar();
   int year = now.get(Calendar.YEAR);

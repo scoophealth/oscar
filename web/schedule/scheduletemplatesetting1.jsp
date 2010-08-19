@@ -36,7 +36,7 @@
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"
 	scope="session" />
 <%  if(!scheduleMainBean.getBDoConfigure()) { %>
-<%@ include file="scheduleMainBeanConn.jsp"%>
+<%@ include file="scheduleMainBeanConn.jspf"%>
 <% } %>
 
 <% scheduleRscheduleBean.clear(); %>
