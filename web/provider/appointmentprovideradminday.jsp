@@ -1057,7 +1057,7 @@ if (curProvider_no[provIndex].equals(provNum)) { %>
 <!-- caisi infirmary view extension add fffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
 	
-	<%@ include file="infirmaryviewprogramlist.jsp" %>	
+	<%@ include file="infirmaryviewprogramlist.jspf" %>	
 
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end fffffffffffff-->
