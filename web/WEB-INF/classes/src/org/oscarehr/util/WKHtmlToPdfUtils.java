@@ -14,7 +14,7 @@ import oscar.OscarProperties;
 public class WKHtmlToPdfUtils {
 	private static final Logger logger = MiscUtils.getLogger();
 	private static final int PROCESS_COMPLETION_CYCLE_CHECK_PERIOD = 250;
-	private static final int MAX_NO_CHANGE_COUNT = 30000 / PROCESS_COMPLETION_CYCLE_CHECK_PERIOD;
+	private static final int MAX_NO_CHANGE_COUNT = 40000 / PROCESS_COMPLETION_CYCLE_CHECK_PERIOD;
 	private static final String CONVERT_COMMAND;
 	static {
 		String convertCommand = OscarProperties.getInstance().getProperty("WKHTMLTOPDF_COMMAND");
@@ -55,7 +55,6 @@ public class WKHtmlToPdfUtils {
 	/**
 	 * This method should convert the html page at the sourceUrl into a pdf written to the outputFile. This method requires wkhtmltopdf to be installed on the machine. In general the outputFile should be a unique temp file. If you're not sure what you're
 	 * doing don't call this method as you will leave lingering data everywhere or you may overwrite important files...
-	 * @throws IOException 
 	 */
 	public static void convertToPdf(String sourceUrl, File outputFile) throws IOException {
 		String outputFilename = outputFile.getCanonicalPath();
