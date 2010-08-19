@@ -183,10 +183,10 @@ function refresh() {
 <p>&nbsp;</p>
 <% } else {  
        if (reportAction.compareTo("lk") == 0) { %>
-<%@ include file="oscarReportVisit_lk.jsp"%>
+<%@ include file="oscarReportVisit_lk.jspf"%>
 <%     } else {
            if (reportAction.compareTo("vr") == 0) { %>
-<%@ include file="oscarReportVisit_vr.jsp"%>
+<%@ include file="oscarReportVisit_vr.jspf"%>
 <%         }
        }
    }
