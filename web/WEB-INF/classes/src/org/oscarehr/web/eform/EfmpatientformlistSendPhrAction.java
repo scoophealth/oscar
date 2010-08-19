@@ -47,6 +47,16 @@ public final class EfmpatientformlistSendPhrAction {
 
 		url.append(scheme);
 		url.append("://");
+		
+		// IMPORTANT : do not change the serverName to 127.0.0.1
+		// you can not do that because on virtual hosts or named hosts 127.0.0.1 may
+		// not resolve to the same webapp. You must use the serverName that maps properly
+		// as per the server.xml (in tomcat). Admittedly 95% of the time 127.0.0.1 would
+		// work because most people don't do virtual hosting with tomcat on an oscar
+		// system (but some caisi systems have in the past), but by keeping the hostName
+		// this code would then work with everyone - although everyone needs to ensure
+		// the serverName now resolves properly from localhost, i.e. usually this means
+		// make a /etc/hosts entry if you're using NAT.
 		url.append(request.getServerName());
 		if ((scheme.equals("http") && (port != 80)) || (scheme.equals("https") && (port != 443))) {
 			url.append(':');
