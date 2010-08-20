@@ -716,9 +716,12 @@ $("document").ready(function(){
 			</td>
 		</tr>
 		<tr>
+			<td colspan="2"></td>
+		</tr>
+		<tr>
 			<td class="genericTableHeader">Contact Type</td>
 			<td class="genericTableData">
-				<select name="1_otherContactType">
+				<select name="1_otherContactType" id="1_otherContactType" >
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_otherContactType", OcanForm.getOcanFormOptions("Practioner List"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -750,7 +753,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Province</td>
 			<td class="genericTableData">
-				<select name="1_otherContactProvince">
+				<select name="1_otherContactProvince" id="1_otherContactProvince">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_otherContactProvince", OcanForm.getOcanFormOptions("Province List"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -783,7 +786,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Other Contact - Last Seen</td>
 			<td class="genericTableData">
-				<select name="1_otherContactLastSeen">
+				<select name="1_otherContactLastSeen" id="1_otherContactLastSeen">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_otherContactLastSeen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -791,18 +794,11 @@ $("document").ready(function(){
 		<tr>
 			<td colspan="2"></td>
 		</tr>
-		<tr>
-			<td class="genericTableHeader">Other Contact</td>
-			<td class="genericTableData">
-				<select name="2_otherContact">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_otherContact", OcanForm.getOcanFormOptions("Other Contacts Agency"),prepopulationLevel)%>
-				</select>					
-			</td>
-		</tr>
+				
 		<tr>
 			<td class="genericTableHeader">Contact Type</td>
 			<td class="genericTableData">
-				<select name="2_otherContactType">
+				<select name="2_otherContactType" id="2_otherContactType">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_otherContactType", OcanForm.getOcanFormOptions("Practioner List"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -834,7 +830,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Province</td>
 			<td class="genericTableData">
-				<select name="2_otherContactProvince">
+				<select name="2_otherContactProvince" id="2_otherContactProvince">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_otherContactProvince", OcanForm.getOcanFormOptions("Province List"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -866,7 +862,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Other Contact - Last Seen</td>
 			<td class="genericTableData">
-				<select name="2_otherContactLastSeen">
+				<select name="2_otherContactLastSeen" id="2_otherContactLastSeen">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_otherContactLastSeen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -875,78 +871,301 @@ $("document").ready(function(){
 		<tr>
 			<td colspan="2"></td>
 		</tr>
+		
 		<tr>
-			<td class="genericTableHeader">Other Agency</td>
+			<td class="genericTableHeader">Contact Type</td>
 			<td class="genericTableData">
-				<select name="otherAgency">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "otherAgency", OcanForm.getOcanFormOptions("Other Contacts Agency"),prepopulationLevel)%>
+				<select name="3_otherContactType" id="3_otherContactType">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_otherContactType", OcanForm.getOcanFormOptions("Practioner List"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Name</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyName",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactName",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 1</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactAddress1",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyAddress1",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactAddress2",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">City</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyCity",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactCity",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Province</td>
 			<td class="genericTableData">
-				<select name="otherAgencyProvince">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "otherAgencyProvince", OcanForm.getOcanFormOptions("Province List"),prepopulationLevel)%>
+				<select name="3_otherContactProvince" id="3_otherContactProvince">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_otherContactProvince", OcanForm.getOcanFormOptions("Province List"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Postal Code</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyPostalCode",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactPostalCode",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Phone Number</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyPhoneNumber",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactPhoneNumber",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Ext</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyPhoneNumberExt",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactPhoneNumberExt",1,30,prepopulationLevel)%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Email Address</td>
 			<td class="genericTableData">
-						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"otherAgencyEmail",1,30,prepopulationLevel)%>
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherContactEmail",1,30,prepopulationLevel)%>
 			</td>
-		</tr>		
+		</tr>	
+		
 		<tr>
-			<td class="genericTableHeader">Family Doctor - Last Seen</td>
+			<td class="genericTableHeader">Other Contact - Last Seen</td>
 			<td class="genericTableData">
-				<select name="otherAgencyLastSeen">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "otherAgencyLastSeen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
+				<select name="3_otherContactLastSeen" id="3_otherContactLastSeen">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_otherContactLastSeen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
+		<tr>
+			<td colspan="2"></td>
+		</tr>
+						
+		<tr>
+			<td class="genericTableHeader">Other Agency</td>
+			<td class="genericTableData">
+				<select name="otherAgency" id="otherAgency" class="{validate: {required:true}}">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "otherAgency", OcanForm.getOcanFormOptions("Other Contacts Agency"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"></td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Name</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyName",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Address Line 1</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyAddress1",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Address Line 2</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyAddress2",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">City</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyCity",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Province</td>
+			<td class="genericTableData">
+				<select name="1_otherAgencyProvince" id="1_otherAgencyProvince">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_otherAgencyProvince", OcanForm.getOcanFormOptions("Province List"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Postal Code</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyPostalCode",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Phone Number</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyPhoneNumber",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Ext</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyPhoneNumberExt",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Email Address</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"1_otherAgencyEmail",1,30,prepopulationLevel)%>
+			</td>
+		</tr>		
+		<tr>
+			<td class="genericTableHeader">Other Agency - Last Seen</td>
+			<td class="genericTableData">
+				<select name="1_otherAgencyLastSeen" id="1_otherAgencyLastSeen">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_otherAgencyLastSeen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"></td>
+		</tr>
+			
+		
+		<tr>
+			<td class="genericTableHeader">Name</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyName",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Address Line 1</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyAddress1",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Address Line 2</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyAddress2",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">City</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyCity",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Province</td>
+			<td class="genericTableData">
+				<select name="2_otherAgencyProvince" id="2_otherAgencyProvince">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_otherAgencyProvince", OcanForm.getOcanFormOptions("Province List"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Postal Code</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyPostalCode",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Phone Number</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyPhoneNumber",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Ext</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyPhoneNumberExt",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Email Address</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"2_otherAgencyEmail",1,30,prepopulationLevel)%>
+			</td>
+		</tr>		
+		<tr>
+			<td class="genericTableHeader">Other Agency - Last Seen</td>
+			<td class="genericTableData">
+				<select name="2_otherAgencyLastSeen" id="2_otherAgencyLastSeen">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "2_otherAgencyLastSeen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"></td>
+		</tr>
+		
+		<tr>
+			<td class="genericTableHeader">Name</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyName",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Address Line 1</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyAddress1",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Address Line 2</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyAddress2",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">City</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyCity",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Province</td>
+			<td class="genericTableData">
+				<select name="3_otherAgencyProvince" id="3_otherAgencyProvince">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_otherAgencyProvince", OcanForm.getOcanFormOptions("Province List"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Postal Code</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyPostalCode",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Phone Number</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyPhoneNumber",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Ext</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyPhoneNumberExt",1,30,prepopulationLevel)%>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Email Address</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"3_otherAgencyEmail",1,30,prepopulationLevel)%>
+			</td>
+		</tr>		
+		<tr>
+			<td class="genericTableHeader">Other Agency - Last Seen</td>
+			<td class="genericTableData">
+				<select name="3_otherAgencyLastSeen" id="3_otherAgencyLastSeen">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "3_otherAgencyLastSeen", OcanForm.getOcanFormOptions("Last Seen"),prepopulationLevel)%>
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"></td>
+		</tr>
+		
+			
 		
 		<tr>
 			<td colspan="2">Client Capacity</td>
