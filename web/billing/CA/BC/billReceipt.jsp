@@ -495,7 +495,7 @@
                                                             <div align="right" class="style2">
                                                                 <strong>Balance</strong>
                                                                 :</div>                          </td>
-                                                                <%double gtotal = bean.calculateSubtotal() - totalPayments + totalRefunds;%>
+                                                                <%double gtotal = bean.calculateSubtotal() - totalPayments - totalRefunds;%>
                                                         <td align="right">
                                                             <strong><%=java.text.NumberFormat.getCurrencyInstance().format(gtotal).replace('$', ' ')%>                            </strong>                          </td>
                                                     </tr>
