@@ -1180,10 +1180,9 @@ public class OcanReportUIBean {
 	}
 	public static List<OtherPractitionerContact> convertOtherPractitionerContact(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		List<OtherPractitionerContact> list = new ArrayList<OtherPractitionerContact>();
-		for(int x=0;x<3;x++) {
-			int index = x+1;
-			String contact = getStaffAnswer(index+"_other_contact",ocanStaffFormData);
-			if(contact.length()>0) {
+		String contact = getStaffAnswer("otherContact",ocanStaffFormData);		
+		if(contact.length()>0 && "TRUE".equals(contact)) {
+				for(int index=1; index <=3; index++) {
 				OtherPractitionerContact otherPractitionerContact = OtherPractitionerContact.Factory.newInstance();
 				
 				otherPractitionerContact.setPractitionerType(OtherPractitionerContact.PractitionerType.Enum.forString(getStaffAnswer(index+"_otherContactType",ocanStaffFormData)));
@@ -1210,25 +1209,30 @@ public class OcanReportUIBean {
 		return contactInfo;
 	}
 	public static List<OtherAgencyContact> convertOtherAgencyContact(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
-		OtherAgencyContact otherAgencyContact = OtherAgencyContact.Factory.newInstance();
 		List<OtherAgencyContact> list = new ArrayList<OtherAgencyContact>();
-		otherAgencyContact.setOtherAgency(OtherAgencyContact.OtherAgency.Enum.forString(getStaffAnswer("otherAgency",ocanStaffFormData)));
-		otherAgencyContact.setContactInfo(convertContactInfo_agencyContact(ocanStaffFormData));
-		otherAgencyContact.setLastSeen(OtherAgencyContact.LastSeen.Enum.forString(getStaffAnswer("otherAgencyLastSeen",ocanStaffFormData)));		
-		list.add(otherAgencyContact);
+		String contact = getStaffAnswer("otherAgency",ocanStaffFormData);
+		if(contact.length()>0 && "TRUE".equals(contact)) {
+			for(int index=1; index<=3; index++) {
+				OtherAgencyContact otherAgencyContact = OtherAgencyContact.Factory.newInstance();
+				otherAgencyContact.setOtherAgency(OtherAgencyContact.OtherAgency.Enum.forString(getStaffAnswer("otherAgency",ocanStaffFormData)));
+				otherAgencyContact.setContactInfo(convertContactInfo_agencyContact(index,ocanStaffFormData));
+				otherAgencyContact.setLastSeen(OtherAgencyContact.LastSeen.Enum.forString(getStaffAnswer(index+"_otherAgencyLastSeen",ocanStaffFormData)));		
+				list.add(otherAgencyContact);
+			}
+		}
 		return list;
 	}
-	public static ContactInfo convertContactInfo_agencyContact(List<OcanStaffFormData> ocanStaffFormData) {
+	public static ContactInfo convertContactInfo_agencyContact(int index,List<OcanStaffFormData> ocanStaffFormData) {
 		ContactInfo contactInfo = ContactInfo.Factory.newInstance();
-		contactInfo.setContactName(getStaffAnswer("otherAgencyName",ocanStaffFormData));
-		contactInfo.setAddressLine1(getStaffAnswer("otherAgencyAddress1",ocanStaffFormData));
-		contactInfo.setAddressLine2(getStaffAnswer("otherAgencyAddress1",ocanStaffFormData));
-		contactInfo.setCity(getStaffAnswer("otherAgencyCity",ocanStaffFormData));
-		contactInfo.setProvince(ContactInfo.Province.Enum.forString(getStaffAnswer("otherAgencyProvince",ocanStaffFormData)));
-		contactInfo.setPostalCode(getStaffAnswer("otherAgencyPostalCode",ocanStaffFormData));
-		contactInfo.setPhoneNumber(getStaffAnswer("otherAgencyPhoneNumber",ocanStaffFormData));
-		contactInfo.setExtension(getStaffAnswer("otherAgencyPhoneNumberExt",ocanStaffFormData));
-		contactInfo.setEmailAddress(getStaffAnswer("otherAgencyEmail",ocanStaffFormData));
+		contactInfo.setContactName(getStaffAnswer(index+"_otherAgencyName",ocanStaffFormData));
+		contactInfo.setAddressLine1(getStaffAnswer(index+"_otherAgencyAddress1",ocanStaffFormData));
+		contactInfo.setAddressLine2(getStaffAnswer(index+"_otherAgencyAddress2",ocanStaffFormData));
+		contactInfo.setCity(getStaffAnswer(index+"_otherAgencyCity",ocanStaffFormData));
+		contactInfo.setProvince(ContactInfo.Province.Enum.forString(getStaffAnswer(index+"_otherAgencyProvince",ocanStaffFormData)));
+		contactInfo.setPostalCode(getStaffAnswer(index+"_otherAgencyPostalCode",ocanStaffFormData));
+		contactInfo.setPhoneNumber(getStaffAnswer(index+"_otherAgencyPhoneNumber",ocanStaffFormData));
+		contactInfo.setExtension(getStaffAnswer(index+"_otherAgencyPhoneNumberExt",ocanStaffFormData));
+		contactInfo.setEmailAddress(getStaffAnswer(index+"_otherAgencyEmail",ocanStaffFormData));
 	
 		return contactInfo;
 	}
