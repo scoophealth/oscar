@@ -16,6 +16,192 @@ $("document").ready(function() {
 	}
 });
 
+$("document").ready(function() {
+	
+	$("#otherContact").each(function() {
+		if($("#otherContact").val()!='TRUE' || $("#otherContact").val()=='') { 
+			for(var x=1;x<=3;x++) { 
+				$("#"+x+"_otherContactType").attr('disabled','disabled');
+				$("#"+x+"_otherContactType").val("");
+				$("#"+x+"_otherContactName").attr('disabled','disabled');
+				$("#"+x+"_otherContactName").val("");
+				$("#"+x+"_otherContactAddress1").attr('disabled','disabled');
+				$("#"+x+"_otherContactAddress1").val("");
+				$("#"+x+"_otherContactAddress2").attr('disabled','disabled');
+				$("#"+x+"_otherContactAddress2").val("");
+				$("#"+x+"_otherContactCity").attr('disabled','disabled');
+				$("#"+x+"_otherContactCity").val("");
+				$("#"+x+"_otherContactProvince").attr('disabled','disabled');
+				$("#"+x+"_otherContactProvince").val("");
+				$("#"+x+"_otherContactPostalCode").attr('disabled','disabled');
+				$("#"+x+"_otherContactPostalCode").val("");
+				$("#"+x+"_otherContactPhoneNumber").attr('disabled','disabled');
+				$("#"+x+"_otherContactPhoneNumber").val("");
+				$("#"+x+"_otherContactPhoneNumberExt").attr('disabled','disabled');
+				$("#"+x+"_otherContactPhoneNumberExt").val("");
+				$("#"+x+"_otherContactEmail").attr('disabled','disabled');
+				$("#"+x+"_otherContactEmail").val("");
+				$("#"+x+"_otherContactLastSeen").attr('disabled','disabled');
+				$("#"+x+"_otherContactLastSeen").val("");
+			}
+					
+		} else {
+			for(var x=1;x<=3;x++) { 
+				$("#"+x+"_otherContactType").attr('disabled','');
+				$("#"+x+"_otherContactName").attr('disabled','');
+				$("#"+x+"_otherContactAddress1").attr('disabled','');
+				$("#"+x+"_otherContactAddress2").attr('disabled','');
+				$("#"+x+"_otherContactCity").attr('disabled','');
+				$("#"+x+"_otherContactProvince").attr('disabled','');
+				$("#"+x+"_otherContactPostalCode").attr('disabled','');
+				$("#"+x+"_otherContactPhoneNumber").attr('disabled','');
+				$("#"+x+"_otherContactPhoneNumberExt").attr('disabled','');
+				$("#"+x+"_otherContactEmail").attr('disabled','');
+				$("#"+x+"_otherContactLastSeen").attr('disabled','');
+			}
+		}
+		});
+		
+	
+	$("#otherContact").change(function() {		
+	if($("#otherContact").val()!='TRUE' || $("#otherContact").val()=='') { 
+		for(var x=1;x<=3;x++) { 
+			$("#"+x+"_otherContactType").attr('disabled','disabled');
+			$("#"+x+"_otherContactType").val("");
+			$("#"+x+"_otherContactName").attr('disabled','disabled');
+			$("#"+x+"_otherContactName").val("");
+			$("#"+x+"_otherContactAddress1").attr('disabled','disabled');
+			$("#"+x+"_otherContactAddress1").val("");
+			$("#"+x+"_otherContactAddress2").attr('disabled','disabled');
+			$("#"+x+"_otherContactAddress2").val("");
+			$("#"+x+"_otherContactCity").attr('disabled','disabled');
+			$("#"+x+"_otherContactCity").val("");
+			$("#"+x+"_otherContactProvince").attr('disabled','disabled');
+			$("#"+x+"_otherContactProvince").val("");
+			$("#"+x+"_otherContactPostalCode").attr('disabled','disabled');
+			$("#"+x+"_otherContactPostalCode").val("");
+			$("#"+x+"_otherContactPhoneNumber").attr('disabled','disabled');
+			$("#"+x+"_otherContactPhoneNumber").val("");
+			$("#"+x+"_otherContactPhoneNumberExt").attr('disabled','disabled');
+			$("#"+x+"_otherContactPhoneNumberExt").val("");
+			$("#"+x+"_otherContactEmail").attr('disabled','disabled');
+			$("#"+x+"_otherContactEmail").val("");
+			$("#"+x+"_otherContactLastSeen").attr('disabled','disabled');
+			$("#"+x+"_otherContactLastSeen").val("");
+		}
+				
+	} else {
+		for(var x=1;x<=3;x++) { 
+			$("#"+x+"_otherContactType").attr('disabled','');
+			$("#"+x+"_otherContactName").attr('disabled','');
+			$("#"+x+"_otherContactAddress1").attr('disabled','');
+			$("#"+x+"_otherContactAddress2").attr('disabled','');
+			$("#"+x+"_otherContactCity").attr('disabled','');
+			$("#"+x+"_otherContactProvince").attr('disabled','');
+			$("#"+x+"_otherContactPostalCode").attr('disabled','');
+			$("#"+x+"_otherContactPhoneNumber").attr('disabled','');
+			$("#"+x+"_otherContactPhoneNumberExt").attr('disabled','');
+			$("#"+x+"_otherContactEmail").attr('disabled','');
+			$("#"+x+"_otherContactLastSeen").attr('disabled','');
+		}
+	}
+	});
+	
+	
+	$("#otherAgency").each(function() {
+		if($("#otherAgency").val()!='TRUE' || $("#otherAgency").val()=='') { 
+			for(var x=1;x<=3;x++) { 
+				$("#"+x+"_otherAgencyType").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyType").val("");
+				$("#"+x+"_otherAgencyName").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyName").val("");
+				$("#"+x+"_otherAgencyAddress1").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyAddress1").val("");
+				$("#"+x+"_otherAgencyAddress2").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyAddress2").val("");
+				$("#"+x+"_otherAgencyCity").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyCity").val("");
+				$("#"+x+"_otherAgencyProvince").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyProvince").val("");
+				$("#"+x+"_otherAgencyPostalCode").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyPostalCode").val("");
+				$("#"+x+"_otherAgencyPhoneNumber").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyPhoneNumber").val("");
+				$("#"+x+"_otherAgencyPhoneNumberExt").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyPhoneNumberExt").val("");
+				$("#"+x+"_otherAgencyEmail").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyEmail").val("");
+				$("#"+x+"_otherAgencyLastSeen").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyLastSeen").val("");
+			}
+					
+		} else {
+			for(var x=1;x<=3;x++) { 
+				$("#"+x+"_otherAgencyType").attr('disabled','');
+				$("#"+x+"_otherAgencyName").attr('disabled','');
+				$("#"+x+"_otherAgencyAddress1").attr('disabled','');
+				$("#"+x+"_otherAgencyAddress2").attr('disabled','');
+				$("#"+x+"_otherAgencyCity").attr('disabled','');
+				$("#"+x+"_otherAgencyProvince").attr('disabled','');
+				$("#"+x+"_otherAgencyPostalCode").attr('disabled','');
+				$("#"+x+"_otherAgencyPhoneNumber").attr('disabled','');
+				$("#"+x+"_otherAgencyPhoneNumberExt").attr('disabled','');
+				$("#"+x+"_otherAgencyEmail").attr('disabled','');
+				$("#"+x+"_otherAgencyLastSeen").attr('disabled','');
+			}
+		}
+		});
+	
+	
+	
+	$("#otherAgency").change(function() {		
+		if($("#otherAgency").val()!='TRUE' || $("#otherAgency").val()=='') { 
+			for(var x=1;x<=3;x++) { 
+				$("#"+x+"_otherAgencyType").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyType").val("");
+				$("#"+x+"_otherAgencyName").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyName").val("");
+				$("#"+x+"_otherAgencyAddress1").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyAddress1").val("");
+				$("#"+x+"_otherAgencyAddress2").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyAddress2").val("");
+				$("#"+x+"_otherAgencyCity").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyCity").val("");
+				$("#"+x+"_otherAgencyProvince").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyProvince").val("");
+				$("#"+x+"_otherAgencyPostalCode").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyPostalCode").val("");
+				$("#"+x+"_otherAgencyPhoneNumber").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyPhoneNumber").val("");
+				$("#"+x+"_otherAgencyPhoneNumberExt").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyPhoneNumberExt").val("");
+				$("#"+x+"_otherAgencyEmail").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyEmail").val("");
+				$("#"+x+"_otherAgencyLastSeen").attr('disabled','disabled');
+				$("#"+x+"_otherAgencyLastSeen").val("");
+			}
+					
+		} else {
+			for(var x=1;x<=3;x++) { 
+				$("#"+x+"_otherAgencyType").attr('disabled','');
+				$("#"+x+"_otherAgencyName").attr('disabled','');
+				$("#"+x+"_otherAgencyAddress1").attr('disabled','');
+				$("#"+x+"_otherAgencyAddress2").attr('disabled','');
+				$("#"+x+"_otherAgencyCity").attr('disabled','');
+				$("#"+x+"_otherAgencyProvince").attr('disabled','');
+				$("#"+x+"_otherAgencyPostalCode").attr('disabled','');
+				$("#"+x+"_otherAgencyPhoneNumber").attr('disabled','');
+				$("#"+x+"_otherAgencyPhoneNumberExt").attr('disabled','');
+				$("#"+x+"_otherAgencyEmail").attr('disabled','');
+				$("#"+x+"_otherAgencyLastSeen").attr('disabled','');
+			}
+		}
+		});
+	
+	
+});
+
+
 function submitOcanForm() {
 	var status = document.getElementById('assessment_status').value;
 	if(status == 'Active') {
