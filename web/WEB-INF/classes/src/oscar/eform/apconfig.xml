@@ -40,7 +40,7 @@
 		<ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${address}, ${city}, ${province}, ${postal}</ap-output>
 	</databaseap>
-        <databaseap>
+	<databaseap>
 		<ap-name>address_street_number_and_name</ap-name>
 		<ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${address}</ap-output>
@@ -124,7 +124,7 @@
 		<ap-sql>SELECT chart_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${chart_no}</ap-output>
 	</databaseap>
-        <databaseap>
+	<databaseap>
 		<ap-name>demographic_no</ap-name>
 		<ap-sql>SELECT demographic_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${demographic_no}</ap-output>
@@ -139,7 +139,7 @@
 		<ap-sql>SELECT phone2 FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${phone2}</ap-output>
 	</databaseap>
-        <databaseap>
+	<databaseap>
 		<ap-name>cell</ap-name>
 		<ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='demo_cell';</ap-sql>
 		<ap-output>${value}</ap-output>
@@ -370,14 +370,14 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
 		</databaseap>
         <databaseap>
             <ap-name>_eform_values_first</ap-name>
-            <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid} 
+            <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
                     AND demographic_no=${demographic} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)
                     ORDER BY id LIMIT 1</ap-sql>
             <ap-output>${var_value}</ap-output>
         </databaseap>
         <databaseap>
             <ap-name>_eform_values_last</ap-name>
-            <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid} 
+            <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
                     AND demographic_no=${demographic} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)
                     ORDER BY id DESC LIMIT 1</ap-sql>
             <ap-output>${var_value}</ap-output>
@@ -396,34 +396,34 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
         </databaseap>
         <databaseap>
             <ap-name>_eform_values_count_ref</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}' AND fdid IN
-                    (SELECT fdid FROM eform_data WHERE status=1 AND fdid IN
-                    (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
+            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}' 
+                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                    AND fdid IN (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
                     AND fid=${fid}))</ap-sql>
             <ap-output>${count(0)}</ap-output>
         </databaseap>
         <databaseap>
             <ap-name>_eform_values_countall_ref</ap-name>
             <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1 AND fdid IN
-                    (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
+                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                    AND fdid IN (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
                     AND fid=${fid}))</ap-sql>
             <ap-output>${count(0)}</ap-output>
         </databaseap>
         <databaseap>
             <ap-name>_eform_values_count_refall</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}' AND fdid IN
-                    (SELECT fdid FROM eform_data WHERE status=1 AND fdid IN
-                    (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND NOT (var_value='' OR var_value IS NULL)
-                    AND fid=${fid}))</ap-sql>
+            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}' 
+                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                    AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}
+                    AND var_name='${ref_var_name}' AND NOT (var_value='' OR var_value IS NULL)))</ap-sql>
             <ap-output>${count(0)}</ap-output>
         </databaseap>
-        <databaseap>
+		<databaseap>
             <ap-name>_eform_values_countall_refall</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value<>'' AND var_value IS NOT NULL
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1 AND fdid IN
-                    (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value<>'' AND var_value IS NOT NULL
-                    AND fid=${fid}))</ap-sql>
+            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
+                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                    AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}
+                    AND var_name='${ref_var_name}' AND NOT (var_value='' OR var_value IS NULL)))</ap-sql>
             <ap-output>${count(0)}</ap-output>
         </databaseap>
 		<databaseap>
