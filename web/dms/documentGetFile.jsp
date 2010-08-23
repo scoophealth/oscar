@@ -41,7 +41,7 @@
     filename = request.getParameter("document");
     filetype = request.getParameter("type");
     doc_no = request.getParameter("doc_no");
-    String filePath = docdownload + filename;
+    String filePath = docdownload +'/'+ filename;
     if (filetype.compareTo("active") == 0) {              
       if ( downloadMethod == null ) {
       filePath = "../../OscarDocument"+request.getContextPath()+"/document/"+filename;
