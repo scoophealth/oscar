@@ -78,7 +78,7 @@ ResourceBundle spellcheckBundle = ResourceBundle.getBundle( "spellcheckBundle", 
 <body onload="processNextMistake();" onkeypress="miscKeyPress();">
 
 <%@ include file="spellcheck-form.jsp"%>
-<%@ include file="spellcheck-functions.jsp"%>
+<%@ include file="spellcheck-functions.jspf"%>
 <%@ include file="spellcheck-dictionary.jsp"%>
 
 <script>
