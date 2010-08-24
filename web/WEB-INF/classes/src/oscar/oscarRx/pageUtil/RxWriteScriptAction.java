@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
@@ -97,13 +96,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				rx.setGCN_SEQNO(0);
 				rx.setCustomName(frm.getCustomName());
 			}
-			/*
-			 * p("frm.getRxDate()", frm.getRxDate()); p("frm.getWrittenDate()", frm.getWrittenDate()); p("frm.getTakeMinFloat()", Float.toString(frm.getTakeMinFloat())); p("frm.getTakeMaxFloat()", Float.toString(frm.getTakeMaxFloat()));
-			 * p("frm.getFrequencyCode()", frm.getFrequencyCode()); p("frm.getDuration()", frm.getDuration()); p("frm.getRepeat()", Integer.toString(frm.getRepeat())); p("frm.getLastRefillDate()", frm.getLastRefillDate()); p("frm.getSpecial()",
-			 * frm.getSpecial()); p("frm.getAtcCode()", frm.getAtcCode()); p("frm.getRegionalIdentifier()", frm.getRegionalIdentifier()); p("frm.getUnit()", frm.getUnit()); p("frm.getUnitName()", frm.getUnitName()); p("frm.getMethod()", frm.getMethod());
-			 * p("frm.getRoute()", frm.getRoute()); p("frm.getDosage()", frm.getDosage()); p("frm.getBrandName()", frm.getBrandName()); p("frm.getGenericName()", frm.getGenericName()); p("rxdate before process", frm.getRxDate()); p("rxdate after process",
-			 * RxUtil.StringToDate(frm.getRxDate(), "yyyy-MM-dd").toString());
-			 */
+
 			rx.setRxDate(RxUtil.StringToDate(frm.getRxDate(), "yyyy-MM-dd"));
 			rx.setWrittenDate(RxUtil.StringToDate(frm.getWrittenDate(), "yyyy-MM-dd"));
 			rx.setTakeMin(frm.getTakeMinFloat());
@@ -174,13 +167,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 					rx.Save(scriptId);
 					auditStr.append(rx.getAuditString());
 					auditStr.append("\n");
-					// p("rx.getAuditString()", rx.getAuditString());
+
 					/* Save annotation */
 					HttpSession se = request.getSession();
 					WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
 					CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
 					String attrib_name = attrib_names.get(i);
-					// p("attrib_names.get(i)", attrib_names.get(i));
 					if (attrib_name != null) {
 						CaseManagementNote cmn = (CaseManagementNote) se.getAttribute(attrib_name);
 						if (cmn != null) {
@@ -198,7 +190,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 				}
 				fwd = "viewScript";
 				String ip = request.getRemoteAddr();
-				// p("ip", ip);
 				request.setAttribute("scriptId", scriptId);
 				LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, scriptId, ip, "" + bean.getDemographicNo(), auditStr.toString());
 			}
@@ -222,7 +213,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 		} else if (action.equals("clearReRxDrugIdList")) {
 			bean.clearReRxDrugIdList();
 		} else {
-			MiscUtils.getLogger().warn("WARNING: reRxDrugId not updated");
+			logger.warn("WARNING: reRxDrugId not updated");
 		}
 
 		return null;
@@ -230,7 +221,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 	}
 
 	public ActionForward saveCustomName(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// p("=============Start  saveCustomName RxWriteScriptAction.java===============");
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -239,8 +229,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 		try {
 			String randomId = request.getParameter("randomId");
 			String customName = request.getParameter("customName");
-			// p("randomId from request",randomId);
-			// p("customName from request", customName);
 			RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
 			if (rx == null) {
 				logger.error("rx is null", new NullPointerException());
@@ -249,15 +237,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 			rx.setCustomName(customName);
 			rx.setBrandName(null);
 			rx.setGenericName(null);
-			// bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
-			// p("updateDrug parseIntr bean.getStashIndex()", Integer.toString(bean.getStashIndex()));
 			bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
 
 		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Error", e);
 		}
 
-		// p("=============END saveCustomName  RxWriteScriptAction.java===============");
 		return null;
 	}
 
@@ -274,14 +259,13 @@ public final class RxWriteScriptAction extends DispatchAction {
 				logger.error("Provider is null", new NullPointerException());
 			}
 		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Error", e);
 		}
 	}
 
 	private RxPrescriptionData.Prescription setCustomRxDurationQuantity(RxPrescriptionData.Prescription rx) {
 		String quantity = rx.getQuantity();
 		if (RxUtil.isMitte(quantity)) {
-			// MiscUtils.getLogger().info("quantity is mitte");
 			String duration = RxUtil.getDurationFromQuantityText(quantity);
 			String durationUnit = RxUtil.getDurationUnitFromQuantityText(quantity);
 			rx.setDuration(duration);
@@ -296,9 +280,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 	public ActionForward newCustomNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		logger.debug("=============Start newCustomNote RxWriteScriptAction.java===============");
 
-		MessageResources messages = getResources(request);
-		// set default quantity;
-		// setDefaultQuantity(request);
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -333,10 +314,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 			int rxStashIndex = bean.addStashItem(rx);
 			bean.setStashIndex(rxStashIndex);
 
-			// bean.setStashIndex(bean.addStashItem(rx));
-			// p("brandName of rx", rx.getBrandName());
-			// p("stash index it's set to", "" + bean.getStashIndex());
-
 			String today = null;
 			Calendar calendar = Calendar.getInstance();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -344,7 +321,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				today = dateFormat.format(calendar.getTime());
 				// p("today's date", today);
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				logger.error("Error", e);
 			}
 			Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
 			rx.setRxDate(tod);
@@ -352,7 +329,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 			request.setAttribute("listRxDrugs", listRxDrugs);
 		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Error", e);
 		}
 		logger.debug("=============END newCustomNote RxWriteScriptAction.java===============");
 		return (mapping.findForward("newRx"));
@@ -421,10 +398,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 			int rxStashIndex = bean.addStashItem(rx);
 			bean.setStashIndex(rxStashIndex);
 
-			// bean.setStashIndex(bean.addStashItem(rx));
-			// p("brandName of rx", rx.getBrandName());
-			// p("stash index it's set to", "" + bean.getStashIndex());
-
 			String today = null;
 			Calendar calendar = Calendar.getInstance();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -432,7 +405,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				today = dateFormat.format(calendar.getTime());
 				// p("today's date", today);
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				logger.error("Error", e);
 			}
 			Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
 			rx.setRxDate(tod);
@@ -440,14 +413,12 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 			request.setAttribute("listRxDrugs", listRxDrugs);
 		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Error", e);
 		}
-		// p("=============END newCustomDrug RxWriteScriptAction.java===============");
 		return (mapping.findForward("newRx"));
 	}
 
 	public ActionForward normalDrugSetCustom(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// p("=============Start normalDrugSetCustom RxWriteScriptAction.java===============");
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		if (bean == null) {
 			response.sendRedirect("error.html");
@@ -481,7 +452,6 @@ public final class RxWriteScriptAction extends DispatchAction {
 					listRxDrugs.add(customRx);
 				}
 				request.setAttribute("listRxDrugs", listRxDrugs);
-				// p("=============END normalDrugSetCustom RxWriteScriptAction.java===============");
 				return (mapping.findForward("newRx"));
 			} else {
 
@@ -573,7 +543,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			try {
 				today = dateFormat.format(calendar.getTime());
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				logger.error("Error", e);
 			}
 			Date tod = RxUtil.StringToDate(today, "yyyy-MM-dd");
 			rx.setRxDate(tod);
@@ -581,7 +551,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			rx.setDiscontinuedLatest(RxUtil.checkDiscontinuedBefore(rx));// check and set if rx was discontinued before.
 			request.setAttribute("listRxDrugs", listRxDrugs);
 		} catch (Exception e) {
-			MiscUtils.getLogger().error("Error", e);
+			logger.error("Error", e);
 		}
 		logger.debug("=============END createNewRx RxWriteScriptAction.java===============");
 		return (mapping.findForward("newRx"));
@@ -632,7 +602,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				logger.debug("jsonObject:"+jsonObject.toString());
 				response.getOutputStream().write(jsonObject.toString().getBytes());
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				logger.error("Error", e);
 			}
 			return null;
 		} else if (action != null && action.equals("updateQty")) {
@@ -714,9 +684,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 				JSONObject jsonObject = JSONObject.fromObject(hm);
 				response.getOutputStream().write(jsonObject.toString().getBytes());
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				logger.error("Error", e);
 			}
-			// p("===================END updateQty RxWriteScriptAction.java======================");
 			return null;
 		} else {
 			return null;
@@ -967,7 +936,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 					bean.setStashItem(stashIndex, rx);
 				}
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				logger.error("Error", e);
 				continue;
 			}
 		}
@@ -1033,7 +1002,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 				auditStr.append(rx.getAuditString());
 				auditStr.append("\n");
 			} catch (Exception e) {
-				MiscUtils.getLogger().error("Error", e);
+				logger.error("Error", e);
 			}
 			// Save annotation
 			HttpSession se = request.getSession();
