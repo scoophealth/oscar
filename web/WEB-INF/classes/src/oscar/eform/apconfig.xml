@@ -371,15 +371,13 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
         <databaseap>
             <ap-name>_eform_values_first</ap-name>
             <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
-                    AND demographic_no=${demographic} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)
-                    ORDER BY id LIMIT 1</ap-sql>
+                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id LIMIT 1</ap-sql>
             <ap-output>${var_value}</ap-output>
         </databaseap>
         <databaseap>
             <ap-name>_eform_values_last</ap-name>
             <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
-                    AND demographic_no=${demographic} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)
-                    ORDER BY id DESC LIMIT 1</ap-sql>
+                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id DESC LIMIT 1</ap-sql>
             <ap-output>${var_value}</ap-output>
         </databaseap>
         <databaseap>
