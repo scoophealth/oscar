@@ -51,10 +51,13 @@ public class EForm extends EFormBase {
     private static HashMap sql_params = new HashMap();
     private static Log log = LogFactory.getLog(EForm.class);
     private String parentAjaxId = null;
-    private boolean setAP2nd=false, hasCountType=false;
+    private HashMap<String,String> fieldValues = new HashMap<String,String>();
+    private int needValueInForm=0;
+    private boolean setAP2nd=false;
 
     private static final String VAR_NAME = "var_name";
     private static final String VAR_VALUE = "var_value";
+    private static final String REF_FID = "fid";
     private static final String REF_VAR_NAME = "ref_var_name";
     private static final String REF_VAR_VALUE = "ref_var_value";
     private static final String TABLE_NAME = "table_name";
@@ -189,49 +192,60 @@ public class EForm extends EFormBase {
     
     //--------------------------Setting APs utilities----------------------------------------
     public void setDatabaseAPs() {
-        String marker = EFormLoader.getInstance().getMarker();  //default: marker: "oscarDB="
         StringBuffer html = new StringBuffer(this.formHtml);
-        String apName = "";
-        DatabaseAP curAP = null;
+        String marker = EFormLoader.getInstance().getMarker();  //default: marker: "oscarDB="
         if (demographicNo==null) demographicNo = "";
         if (providerNo==null) providerNo = "";
         for (int i=0; i<2; i++) { //run the following twice if "count"-type field is found
-            int markerLoc;
-            int pointer = 0;
-            while ((markerLoc = StringBufferUtils.indexOfIgnoreCase(html, marker, pointer)) >= 0) {
+            int markerLoc = -1;
+            while ((markerLoc = getFieldIndex(html, markerLoc+1)) >= 0) {
                 log.debug("===============START CYCLE===========");
-                pointer = (markerLoc + marker.length());  //move to the AP string
-                apName = getAPstr(html, pointer);  //gets varname from oscarDB=varname
-                pointer++;
+                String fieldHeader = getFieldHeader(html, markerLoc);
+                String apName = EFormUtil.getAttribute(marker, fieldHeader); //gets varname from oscarDB=varname
+                if (blank(apName)) {
+                    if (!setAP2nd) saveFieldValue(html, markerLoc);
+                    continue;
+                }
+
                 log.debug("AP ====" + apName);
-                curAP = EFormLoader.getInstance().getAP(EFormUtil.removeQuotes(apName));
-                if (curAP == null) curAP = getExtra(EFormUtil.removeQuotes(apName));
+                if (setAP2nd && !apName.startsWith("e$")) continue; //ignore non-e$ oscarDB on 2nd run
+
+                int needing = needValueInForm;
+                DatabaseAP curAP = EFormLoader.getInstance().getAP(EFormUtil.removeQuotes(apName));
+                if (curAP == null) curAP = getExtra(EFormUtil.removeQuotes(apName), fieldHeader);
                 if (curAP == null) continue;
 
-                String fieldType = getFieldType(html, pointer); //textarea, text, hidden etc..
+                String fieldType = getFieldType(html, markerLoc+1); //textarea, text, hidden etc..
                 if ((fieldType.equals("")) || (EFormUtil.removeQuotes(apName).equals(""))) continue;
                 //sets up the pointer where to write the value
+                int pointer = markerLoc + EFormUtil.getAttributePos(marker,fieldHeader) + marker.length() + 1;
                 if (!fieldType.equals("textarea")) {
                     pointer += apName.length();
                 }
-                html = putValue(curAP, fieldType, pointer, html);
+                if (!setAP2nd) { //1st run
+                    html = putValue(curAP, fieldType, pointer, html);
+                    saveFieldValue(html, markerLoc);
+                } else { //2nd run
+                    if (needing>needValueInForm) html = putValue(curAP, fieldType, pointer, html);
+                }
+                
                 log.debug("Marker ==== " + markerLoc);
                 log.debug("FIELD TYPE ====" + fieldType);
                 log.debug("=================End Cycle==============");
             }
             formHtml = html.toString();
-            if (hasCountType) setAP2nd=true;
+            if (needValueInForm>0) setAP2nd=true;
             else i=2;
         }
     }
-    
+
     public void setNowDateTime() {
         this.formTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
         this.formDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
     }
     //------------------------------------------------------------------------------------
 
-    public DatabaseAP getExtra(String apName) {
+    public DatabaseAP getExtra(String apName, String fieldHeader) {
         Pattern p = Pattern.compile("\\b[a-z]\\$[^ \\$#]+#[^\n]+");
         Matcher m = p.matcher(apName);
         if (!m.matches()) return null;
@@ -250,31 +264,40 @@ public class EForm extends EFormBase {
             }
         } else if (module.equals("e")) {
             log.debug("SWITCHING TO EFORM_VALUES");
-            String[] values={"",""}, varnames={"",""};
-            if (type.equalsIgnoreCase("count")) {
-                varnames = getVarnamesFromField(field);
-                values = getValuesFromField(field);
-                if (values[0].trim().startsWith("{") || values[1].trim().startsWith("{")) {
-                    if (setAP2nd) { //2nd run, put value into count type
-                        values[0] = findValueInForm(values[0]);
-                        values[1] = findValueInForm(values[1]);
-                    } else { //1st run, mark count type exists
-                        hasCountType = true;
-                        return null;
-                    }
+            String eform_name = EFormUtil.getAttribute("eform$name", fieldHeader);
+            String var_value = EFormUtil.getAttribute("var$value", fieldHeader);
+            String ref = EFormUtil.getAttribute("ref$", fieldHeader, true);
+            String ref_name=null, ref_value=null, ref_fid=fid;
+            if (!blank(ref) && ref.contains("=")) {
+                ref_name = ref.substring(4, ref.indexOf("="));
+                ref_value = EFormUtil.removeQuotes(ref.substring(ref.indexOf("=")+1));
+            } else {
+                ref_name = blank(ref) ? "" : ref.substring(4);
+            }
+            if (!blank(eform_name)) ref_fid = getRefFid(eform_name);
+            if ((!blank(var_value) && var_value.trim().startsWith("{")) ||
+                (!blank(ref_value) && ref_value.trim().startsWith("{"))) {
+                if (setAP2nd) { //2nd run, put value in required field
+                    var_value = findValueInForm(var_value);
+                    ref_value = findValueInForm(ref_value);
+                    needValueInForm--;
+                } else { //1st run, note the need to reference other value in form
+                    needValueInForm++;
+                    return null;
                 }
-                if (values[0].equals("")) type = "countall";
-                if (!varnames[1].equals("")) {
-                    type += "_ref";
-                    if (values[1].equals("")) type += "all";
-                }
+            }
+            if (type.equalsIgnoreCase("count") && var_value==null) type = "countall";
+            if (!ref_name.equals("")) {
+                type += "_ref";
+                if (ref_value==null) type += "all";
             }
             curAP = EFormLoader.getInstance().getAP("_eform_values_"+type);
             if (curAP!=null) {
-                setSqlParams(VAR_NAME, varnames[0]);
-                setSqlParams(REF_VAR_NAME, varnames[1]);
-                setSqlParams(VAR_VALUE, values[0]);
-                setSqlParams(REF_VAR_VALUE, values[1]);
+                setSqlParams(VAR_NAME, field);
+                setSqlParams(REF_VAR_NAME, ref_name);
+                setSqlParams(VAR_VALUE, var_value);
+                setSqlParams(REF_VAR_VALUE, ref_value);
+                setSqlParams(REF_FID, ref_fid);
             }
         } else if (module.equals("o")) {
             log.debug("SWITCHING TO OTHER_ID");
@@ -286,7 +309,7 @@ public class EForm extends EFormBase {
             } else if (type.equalsIgnoreCase("appointment")) {
                 table_name = OtherIdManager.APPOINTMENT.toString();
                 table_id = appointment_no;
-                if (table_id==null) table_id = "-1";
+                if (blank(table_id)) table_id = "-1";
             }
             setSqlParams(OTHER_KEY, field);
             setSqlParams(TABLE_NAME, table_name);
@@ -300,7 +323,7 @@ public class EForm extends EFormBase {
     }
 
 	public void setContextPath(String contextPath) {
-		if (contextPath==null) return;
+		if (blank(contextPath)) return;
 
 		String oscarJS = contextPath+"/share/javascript/";
 		this.formHtml = this.formHtml.replace(jsMarker, oscarJS);
@@ -308,7 +331,7 @@ public class EForm extends EFormBase {
 
 	public String getTemplate() {
 	// Get content between "<!-- <template>" & "</template> -->"
-        if (this.formHtml==null) return "";
+        if (blank(formHtml)) return "";
 
 		String sTemplateBegin = "<template>";
 		String sTemplateEnd = "</template>";
@@ -325,7 +348,7 @@ public class EForm extends EFormBase {
             if (templateBegin==-1 || templateEnd==-1 || commentBegin==-1 || commentEnd==-1) {
                 searching = false;
             } else if (commentEnd>templateEnd) {
-                text += EFormUtil.removeBlanks(formHtml.substring(templateBegin+sTemplateBegin.length(), templateEnd));
+                text += formHtml.substring(templateBegin+sTemplateBegin.length(), templateEnd);
             }
         }
         return text;
@@ -408,13 +431,6 @@ public class EForm extends EFormBase {
         return nextIndex(text, " ", ">", pointer);
     }
 
-    private String getAPstr(StringBuffer html, int startIndex) {
-        //Isolates the databaseAP string
-        int endIndex = nextSpot(html, startIndex);
-        String isolated = html.substring(startIndex+1, endIndex);
-        return isolated.trim();
-    }
-
     private String getFieldType(StringBuffer html, int pointer) {
         //pointer can be any place in the tag - isolates tag and sends back field type
         int open = html.substring(0, pointer).lastIndexOf("<");
@@ -451,7 +467,7 @@ public class EForm extends EFormBase {
         String sql = ap.getApSQL();
         String output = ap.getApOutput();
         //replace ${demographic} with demogrpahicNo
-        if (sql != null) {
+        if (!blank(sql)) {
 			sql = replaceAllFields(sql);
             log.debug("SQL----" + sql);
             ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
@@ -490,11 +506,11 @@ public class EForm extends EFormBase {
 	private String replaceAllFields(String sql) {
         sql = DatabaseAP.parserReplace("demographic", demographicNo, sql);
         sql = DatabaseAP.parserReplace("provider", providerNo, sql);
-        sql = DatabaseAP.parserReplace("fid", fid, sql);
         
         sql = DatabaseAP.parserReplace("appt_no", appointment_no, sql);
         sql = DatabaseAP.parserReplace("appt_provider", appt_provider, sql);
 
+        sql = DatabaseAP.parserReplace(REF_FID, getSqlParams(REF_FID), sql);
         sql = DatabaseAP.parserReplace(VAR_NAME, getSqlParams(VAR_NAME), sql);
         sql = DatabaseAP.parserReplace(VAR_VALUE, getSqlParams(VAR_VALUE), sql);
         sql = DatabaseAP.parserReplace(REF_VAR_NAME, getSqlParams(REF_VAR_NAME), sql);
@@ -515,98 +531,106 @@ public class EForm extends EFormBase {
         sql_params.put(key, value);
     }
 
-    private String[] getVarnamesFromField(String field) {
-        String[] varnames = {"",""};
-        if (field==null || field.trim().equals("")) return varnames;
-
-        String[] parts = field.split("@@");
-        int limit = parts.length<=2 ? parts.length : 2;
-        for (int i=0; i<limit; i++) {
-            if (parts[i].contains("==")) {
-                varnames[i] = parts[i].substring(0, parts[i].indexOf("=="));
-            } else {
-                varnames[i] = parts[i];
-            }
-        }
-        return varnames;
-    }
-
-    private String[] getValuesFromField(String field) {
-        String[] values = {"",""};
-        if (field==null || !field.contains("==")) return values;
-
-        String[] parts = field.split("@@");
-        int limit = parts.length<=2 ? parts.length : 2;
-        for (int i=0; i<limit; i++) {
-            if (parts[i].contains("==")) {
-                values[i] = EFormUtil.removeQuotes(parts[i].substring(parts[i].indexOf("==")+2));
-            }
-        }
-        return values;
-    }
-
     private String findValueInForm(String name) {
         //name format = {xxx}
-        if (name==null || !name.trim().startsWith("{") || !name.trim().endsWith("}")) return "";
+        if (blank(name) || !name.trim().startsWith("{") || !name.trim().endsWith("}")) return name;
 
         //extract content from brackets {}
-        name = name.trim().substring(1, name.trim().length()-1);
-        if (name.trim().equals("")) return "";
+        name = name.trim().substring(1, name.trim().length()-1).toLowerCase();
+        if (blank(name)) return "";
 
-        Pattern pfield = Pattern.compile("<input [^<>]* name[ ]*=[^<>]*>|<select [^<>]* name[ ]*=[^<>]*>|<textarea [^<>]* name[ ]*=[^<>]*>", Pattern.CASE_INSENSITIVE);
-        Matcher mfield = pfield.matcher(formHtml);
-        while (mfield.find()) { //found a field
-            String field = mfield.group();
-            Pattern p1 = Pattern.compile("\\bname[ ]*=[ ]*\"[^>\"]*\"|\\bname[ ]*=[ ]*'[^>']*'|\\bname[ ]*=[^ >]*", Pattern.CASE_INSENSITIVE);
-            Matcher m1 = p1.matcher(field);
-            if (m1.find()) { //found a field name
-                String fieldname = m1.group();
-                fieldname = EFormUtil.removeQuotes(fieldname.substring(fieldname.indexOf("=")+1));
-                if (name.equalsIgnoreCase(fieldname)) { //field name equal parameter "name"
-                    if (field.toLowerCase().startsWith("<input")) {
-                        p1 = Pattern.compile("\\btype[ ]*=[ ]*['\"]?radio['\"]?", Pattern.CASE_INSENSITIVE);
-                        m1 = p1.matcher(field);
-                        if (m1.find() && !field.toLowerCase().contains(" checked")) continue;
+        String value = fieldValues.get(name);
+        return value==null ? "" : value;
+    }
 
-                        p1 = Pattern.compile("\\bvalue[ ]*=[ ]*\"[^>\"]*\"|\\bvalue[ ]*=[ ]*'[^>']*'|\\bvalue[ ]*=[^ >]*", Pattern.CASE_INSENSITIVE);
-                        m1 = p1.matcher(field);
-                        if (m1.find()) {
-                            String value = m1.group();
-                            value = EFormUtil.removeQuotes(value.substring(value.indexOf("=")+1));
-                            return value;
-                        }
-                        break;
+    private int getFieldIndex(StringBuffer html, int from) {
+        if (html==null) return -1;
 
-                    } else if (field.toLowerCase().startsWith("<select")) {
-                        String partHtml = formHtml.substring(mfield.end());
-                        p1 = Pattern.compile("<option [^<>]*>|</select>", Pattern.CASE_INSENSITIVE);
-                        m1 = p1.matcher(partHtml);
-                        while (m1.find()) {
-                            String entry = m1.group();
-                            if (!entry.toLowerCase().contains(" selected")) continue;
-                            if (entry.equalsIgnoreCase("</select>")) break;
+        Integer[] index = new Integer[3];
+        index[0] = StringBufferUtils.indexOfIgnoreCase(html, "<input", from);
+        index[1] = StringBufferUtils.indexOfIgnoreCase(html, "<select", from);
+        index[2] = StringBufferUtils.indexOfIgnoreCase(html, "<textarea", from);
 
-                            p1 = Pattern.compile("\\bvalue[ ]*=[ ]*\"[^>\"]*\"|\\bvalue[ ]*=[ ]*'[^>']*'|\\bvalue[ ]*=[^ >]*", Pattern.CASE_INSENSITIVE);
-                            m1 = p1.matcher(entry);
-                            if (m1.find()) {
-                                String value = m1.group();
-                                value = EFormUtil.removeQuotes(value.substring(value.indexOf("=")+1));
-                                return value;
-                            }
-                        }
-                        break;
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for (int i=0; i<index.length; i++) if (index[i]>=0) list.add(index[i]);
 
-                    } else if (field.toLowerCase().startsWith("<textarea")) {
-                        String partHtml = formHtml.substring(mfield.end());
-                        partHtml = partHtml.substring(0, partHtml.toLowerCase().indexOf("</textarea>"));
-                        if (partHtml.startsWith("\n") || partHtml.startsWith("\r")) {
-                            partHtml = partHtml.substring(1);
-                        }
-                        return partHtml;
-                    }
-                }
+        int min = list.isEmpty() ? -1 : list.get(0);
+        for (int i=1; i<list.size(); i++) min = min>list.get(i) ? list.get(i) : min;
+        
+        return min;
+    }
+
+    private String getFieldHeader(String html, int fieldIndex) {
+        StringBuffer sb_html = new StringBuffer(html);
+        return getFieldHeader(sb_html, fieldIndex);
+    }
+
+    private String getFieldHeader(StringBuffer html, int fieldIndex) {
+        if (html==null || fieldIndex<0) return "";
+        if (html.charAt(fieldIndex)!='<') return ""; //field header must be "<...>"
+
+        //look for char '>' which is NOT inside quotes ("..." or '...')
+        int end = fieldIndex;
+        boolean quoteOpen=false, quote2Open=false;
+        for (int i=fieldIndex+1; i<html.length(); i++) {
+            char c = html.charAt(i);
+            if (c=='"' && !quoteOpen) quote2Open = !quote2Open;
+            if (c=='\'' && !quote2Open) quoteOpen = !quoteOpen;
+            if (!quoteOpen && !quote2Open && c=='>') {
+                end = i+1;
+                break;
             }
         }
-        return "";
+        return html.substring(fieldIndex, end);
+    }
+
+    private void saveFieldValue(StringBuffer html, int fieldIndex) {
+        String header = getFieldHeader(html, fieldIndex);
+        if (blank(header)) return;
+
+        String name = EFormUtil.getAttribute("name", header);
+        String value = EFormUtil.getAttribute("value", header);
+        if (blank(name)) return;
+
+        if (header.toLowerCase().startsWith("<input ")) {
+            String type = EFormUtil.getAttribute("type", header);
+            if (blank(type)) return;
+
+            if (type.equalsIgnoreCase("radio")) {
+                String checked = EFormUtil.getAttribute("checked", header);
+                if (blank(checked) || !checked.equalsIgnoreCase("checked")) return;
+            }
+        } else if (header.toLowerCase().startsWith("<select ")) {
+            String selects = html.substring(fieldIndex, html.indexOf("</select>", fieldIndex));
+            int pos = selects.indexOf("<option ", 0);
+            while (pos>=0) {
+                String option = getFieldHeader(selects, pos);
+                String selected = EFormUtil.getAttribute("selected", option);
+                if (!blank(selected) && selected.equalsIgnoreCase("selected")) {
+                    value = EFormUtil.getAttribute("value", option);
+                    break;
+                }
+                pos = selects.indexOf("<option ", pos+1);
+            }
+        } else if (header.toLowerCase().startsWith("<textarea ")) {
+            int fieldEnd = html.indexOf("</textarea>", fieldIndex);
+            value = html.substring(fieldIndex+header.length(), fieldEnd).trim();
+            if (value.startsWith("\n")) value = value.substring(1); //remove 1st line break, UNIX style
+            else if(value.startsWith("\r\n")) value = value.substring(2); //remove 1st line break, WINDOWS style
+        }
+        name = name.toLowerCase();
+        if (!blank(value)) fieldValues.put(name, value);
+    }
+
+    private String getRefFid(String eform_name) {
+        if (blank(eform_name)) return fid;
+
+        String refFid = EFormUtil.getEFormIdByName(eform_name);
+        if (blank(refFid)) refFid=fid;
+        return refFid;
+    }
+
+    private boolean blank(String s) {
+        return (s==null || s.trim().equals(""));
     }
 }

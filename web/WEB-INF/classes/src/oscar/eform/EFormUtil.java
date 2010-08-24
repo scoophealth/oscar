@@ -278,6 +278,20 @@ public class EFormUtil {
 		return null;
 	}
 
+    public static String getEFormIdByName(String name) {
+        //opens an eform that was uploaded (used to fill out patient data)
+        String sql = "SELECT MAX(fid) FROM eform WHERE form_name='" + name + "' AND status=1";
+        ResultSet rs = getSQL(sql);
+        try {
+            if (rs.next()) {
+                return rsGetString(rs, "MAX(fid)");
+            }
+        } catch (SQLException sqe) {
+            MiscUtils.getLogger().error("Error", sqe);
+        }
+        return null;
+    }
+
 	public static void delEForm(String fid) {
 		//deletes the form so no one can add it to the patient (sets status to deleted)
 		String sql = "UPDATE eform SET status=0 WHERE fid=" + fid;
@@ -537,7 +551,7 @@ public class EFormUtil {
 
 	public static void writeEformTemplate(ArrayList paramNames, ArrayList paramValues, EForm eForm, String fdid, String programNo, String context_path) {
         String text = eForm!=null ? eForm.getTemplate() : null;
-        if (empty(text)) return;
+        if (blank(text)) return;
 
         text = putTemplateValues(paramNames, paramValues, text);
         text = putTemplateEformValues(eForm, fdid, context_path, text);
@@ -549,7 +563,7 @@ public class EFormUtil {
         for (int i=0; i<template_echart.length; i++) {
             templates = getWithin(template_echart[i], text);
             for (String template : templates) {
-                if (empty(template)) continue;
+                if (blank(template)) continue;
 
                 template = putTemplateEformHtml(eForm.getFormHtml(), template);
                 saveCMNote(eForm, fdid, programNo, code[i], template);
@@ -559,11 +573,11 @@ public class EFormUtil {
         //write to document
         templates = getWhole("document", text);
         for (String template : templates) {
-            if (empty(template)) continue;
+            if (blank(template)) continue;
 
             String docDesc = getInfo("docdesc", template, eForm.getFormName());
             String belong = getAttribute("belong", getBeginTag("document", template));
-            if (empty(belong)) belong = "provider";
+            if (blank(belong)) belong = "provider";
             String docOwner = getInfo("docowner", template, eForm.getProviderNo());
             if (belong.equalsIgnoreCase("patient")) docOwner = getInfo("docowner", template, eForm.getDemographicNo());
             String docText = getContent(template);
@@ -578,7 +592,7 @@ public class EFormUtil {
         // write to message
         templates = getWithin("message", text);
         for (String template : templates) {
-            if (empty(template)) continue;
+            if (blank(template)) continue;
 
             String subject = getInfo("subject", template, eForm.getFormName());
             String sentWho = getSentWho(template);
@@ -594,38 +608,53 @@ public class EFormUtil {
 	}
 
 	public static int findIgnoreCase(String phrase, String text, int start) {
-		if (empty(phrase) || empty(text)) return -1;
+		if (blank(phrase) || blank(text)) return -1;
 
 		text = text.toLowerCase();
 		phrase = phrase.toLowerCase();
 		return text.indexOf(phrase, start);
 	}
 
-	public static String removeBlanks(String text) {
-		if (empty(text)) return "";
-
-		text = text.trim();
-		while (text.startsWith("\n") || text.startsWith("\r") || text.startsWith("\t")) { //remove all beginning blanks
-			text = text.substring(1).trim();
-		}
-		while (text.endsWith("\n") || text.endsWith("\r") || text.endsWith("\t")) { //remove all trailing blanks
-			text = text.substring(0, text.length()-1).trim();
-		}
-		return text;
-	}
-
     public static String removeQuotes(String s) {
-        if (empty(s)) return s;
+        if (blank(s)) return s;
         
         s = s.trim();
-        if (empty(s)) return s;
+        if (blank(s)) return s;
 
         if (s.charAt(0)=='"' || s.charAt(0)=='\'') s = s.substring(1);
-        if (empty(s)) return s;
+        if (blank(s)) return s;
 
         if (s.charAt(s.length()-1)=='"' || s.charAt(s.length()-1)=='\'') s = s.substring(0, s.length()-1);
         return s;
     }
+
+    public static String getAttribute(String key, String htmlTag) {
+        return getAttribute(key, htmlTag, false);
+    }
+
+    public static String getAttribute(String key, String htmlTag, boolean startsWith) {
+        if (blank(key) || blank(htmlTag)) return null;
+
+        Matcher m = getAttributeMatcher(key, htmlTag, startsWith);
+        if (m==null) return null;
+
+        String value = m.group();
+        int keysplit = m.group().indexOf("=");
+        if (!startsWith && keysplit>=0) value = m.group().substring(keysplit+1, m.group().length());
+        
+        return removeQuotes(value.trim()).trim();
+    }
+
+    public static int getAttributePos(String key, String htmlTag) {
+        int pos = -1;
+        if (blank(key) || blank(htmlTag)) return pos;
+
+        Matcher m = getAttributeMatcher(key, htmlTag, false);
+        if (m==null) return pos;
+
+        return m.start();
+    }
+    
 
 
 	//------------------private
@@ -670,8 +699,29 @@ public class EFormUtil {
 		return thisStr;
 	}
 
+    private static Matcher getAttributeMatcher(String key, String htmlTag, boolean startsWith) {
+        Matcher m_return = null;
+        if (blank(key) || blank(htmlTag)) return m_return;
+
+        Pattern p = Pattern.compile("\\b[^ '\"=>]+[ ]*=[ ]*\"[^\"]*\"|\\b[^ '\"=>]+[ ]*=[ ]*'[^']*'|\\b[^ '\"=>]+[ ]*=[ ]*[^ >]*|\\b[^ >]+", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(htmlTag);
+
+        while (m.find()) {
+            int keysplit = m.group().indexOf("=");
+            if (keysplit<0) keysplit = m.group().length();
+
+            String keypart = m.group().substring(0, keysplit).trim().toLowerCase();
+            key = key.trim().toLowerCase();
+            if ((keypart.equals(key)) || (startsWith && keypart.startsWith(key))) {
+                m_return = m;
+                break;
+            }
+        }
+        return m_return;
+    }
+
 	private static String putTemplateValues(ArrayList paramNames, ArrayList paramValues, String template) {
-		if (empty(template)) return template;
+		if (blank(template)) return template;
 
         String tag = "$t{";
         String nwTemplate = "";
@@ -694,7 +744,7 @@ public class EFormUtil {
 	}
 
     private static String putTemplateEformValues(EForm eForm, String fdid, String path, String template) {
-        if (eForm==null || empty(template)) return template;
+        if (eForm==null || blank(template)) return template;
 
         String[] efields = {"name","subject","patient","provider","link"};
         String[] eValues = {eForm.getFormName(),
@@ -734,7 +784,7 @@ public class EFormUtil {
     }
 
     private static String putTemplateEformHtml(String html, String template) {
-        if (empty(html) || empty(template)) return "";
+        if (blank(html) || blank(template)) return "";
 
         html = removeAction(html);
         String tag = "$te{eform.html}";
@@ -751,7 +801,7 @@ public class EFormUtil {
     }
 
     private static String removeAction(String html) {
-        if (empty(html)) return html;
+        if (blank(html)) return html;
 
         Pattern p = Pattern.compile("<form[^<>]*>", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(html);
@@ -770,10 +820,10 @@ public class EFormUtil {
     }
 
 	private static void saveCMNote(EForm eForm, String fdid, String programNo, String code, String note) {
-		if (empty(note)) return;
+		if (blank(note)) return;
 
 		CaseManagementNote cNote = createCMNote(eForm.getDemographicNo(), eForm.getProviderNo(), programNo, note);
-		if (!empty(code)) {
+		if (!blank(code)) {
 			Set<CaseManagementIssue> scmi = createCMIssue(eForm.getDemographicNo(), code);
 			cNote.setIssues(scmi);
 		}
@@ -819,7 +869,7 @@ public class EFormUtil {
 
     private static ArrayList getFieldIndices(String fieldtag, String s) {
         ArrayList fieldIndexList = new ArrayList();
-        if (empty(fieldtag) || empty(s)) return fieldIndexList;
+        if (blank(fieldtag) || blank(s)) return fieldIndexList;
 
         fieldtag = fieldtag.toLowerCase();
         s = s.toLowerCase();
@@ -835,29 +885,28 @@ public class EFormUtil {
     }
 
     private static String getInfo(String tag, String template, String deflt) {
-        if (empty(tag) || empty(template)) return deflt;
+        if (blank(tag) || blank(template)) return deflt;
 
         ArrayList<String> infos = getWithin(tag, template);
         if (infos.isEmpty()) return deflt;
 
         String info = removeBlanks(infos.get(0));
-        return empty(info) ? deflt : info;
+        return blank(info) ? deflt : info;
     }
 
     private static String getContent(String template) {
         ArrayList<String> contents = getWithin("content", template);
         if (contents.isEmpty()) return "";
 
-        String content = contents.get(0);
-        if (content.startsWith("\n") || content.startsWith("\r")) {
-            content = content.substring(1); //remove first blank line
-        }
+        String content = contents.get(0).trim();
+        if (content.startsWith("\n")) content = content.substring(1); //remove 1st line break, UNIX style
+        else if(content.startsWith("\r\n")) content = content.substring(2); //remove 1st line break, WINDOWS style
         return content;
     }
 
     private static ArrayList getWithin(String tag, String s) {
         ArrayList within = new ArrayList();
-        if (empty(tag) || empty(s)) return within;
+        if (blank(tag) || blank(s)) return within;
 
         ArrayList<String> w = getWhole(tag, s);
         for (String whole : w) {
@@ -870,7 +919,7 @@ public class EFormUtil {
     
     private static ArrayList getWhole(String tag, String s) {
         ArrayList whole = new ArrayList();
-        if (empty(tag) || empty(s)) return whole;
+        if (blank(tag) || blank(s)) return whole;
 
 		String sBegin = "<"+tag;
 		String sEnd = "</"+tag+">";
@@ -906,36 +955,19 @@ public class EFormUtil {
     }
 
     private static String getBeginTag(String tag, String template) {
-        if (empty(tag) || empty(template)) return "";
+        if (blank(tag) || blank(template)) return "";
 
         Pattern p = Pattern.compile("<"+tag+"[^<>]*>", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(template);
         return m.find() ? m.group() : "";
     }
 
-    private static String getAttribute(String key, String beginTag) {
-        String value = "";
-        if (empty(key) || empty(beginTag)) return value;
-
-        Pattern p = Pattern.compile("\\b[a-zA-Z]+[ ]*=[ ]*\"[^>\"]*\"|\\b[a-zA-Z]+[ ]*=[ ]*'[^>']*'|\\b[a-zA-Z]+[ ]*=[^ >]*", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(beginTag);
-
-        while (m.find()) {
-            String[] keyvalue = m.group().split("=");
-            if (keyvalue[0].trim().equalsIgnoreCase(key.trim())) {
-                value = keyvalue[1].trim();
-                break;
-            }
-        }
-        return removeQuotes(value);
-    }
-
     private static String getProviderName(String providerNo) {
         ProviderData pd = new ProviderData(providerNo);
         String firstname = pd.getFirst_name();
         String lastname = pd.getLast_name();
-        String name = empty(firstname) ? "" : firstname;
-        name += empty(lastname) ? "" : " "+lastname;
+        String name = blank(firstname) ? "" : firstname;
+        name += blank(lastname) ? "" : " "+lastname;
         return name;
     }
 
@@ -954,7 +986,7 @@ public class EFormUtil {
         String sentWho = "";
         for (String sent : sentList) {
             sent = getProviderName(sent);
-            if (!empty(sentWho) && !empty(sent)) {
+            if (!blank(sentWho) && !blank(sent)) {
                 sentWho += ", " + sent;
             } else {
                 sentWho += sent;
@@ -963,12 +995,25 @@ public class EFormUtil {
         return sentWho;
     }
 
-	private static boolean empty(String s) {
+	private static String removeBlanks(String text) {
+		if (blank(text)) return "";
+
+		text = text.trim();
+		while (text.startsWith("\n") || text.startsWith("\r") || text.startsWith("\t")) { //remove all beginning blanks
+			text = text.substring(1).trim();
+		}
+		while (text.endsWith("\n") || text.endsWith("\r") || text.endsWith("\t")) { //remove all trailing blanks
+			text = text.substring(0, text.length()-1).trim();
+		}
+		return text;
+	}
+
+	private static boolean blank(String s) {
 		return (s==null || s.trim().equals(""));
 	}
 
     private static boolean numeric(String s) {
-        if (empty(s)) return false;
+        if (blank(s)) return false;
 
         for (int i=0; i<s.length(); i++) {
             if (!"-0123456789".contains(""+s.charAt(i))) {
