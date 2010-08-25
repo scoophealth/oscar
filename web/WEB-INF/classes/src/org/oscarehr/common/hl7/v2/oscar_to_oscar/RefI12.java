@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
@@ -42,24 +43,22 @@ public final class RefI12 {
 		// not meant to be instantiated
 	}
 	
-	public static REF_I12 makeRefI12(String facilityName, ConsultationRequest consultationRequest, StreetAddressDataHolder referringOfficeStreetAddress) throws HL7Exception, UnsupportedEncodingException
+	public static REF_I12 makeRefI12(Clinic clinic, ConsultationRequest consultationRequest) throws HL7Exception, UnsupportedEncodingException
 	{
 		REF_I12 referralMsg=new REF_I12();
 
-		DataTypeUtils.fillMsh(referralMsg.getMSH(), new Date(), facilityName, "REF", "I12", "REF_I12", DataTypeUtils.HL7_VERSION_ID);
+		DataTypeUtils.fillMsh(referralMsg.getMSH(), new Date(), clinic.getClinicName(), "REF", "I12", "REF_I12", DataTypeUtils.HL7_VERSION_ID);
 		DataTypeUtils.fillSft(referralMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
 
 		fillRf1(referralMsg.getRF1(), null, null, null, null, consultationRequest.getId(), consultationRequest.getReferralDate(), null, null);
 
 		ProviderDao providerDao=(ProviderDao) SpringUtils.getBean("providerDao");
 		Provider referringProvider=providerDao.getProvider(consultationRequest.getProviderNo());
-		DataTypeUtils.fillPrd(referralMsg.getPROVIDER_CONTACT(0).getPRD(), referringProvider, "RP", "Referring Provider", referringOfficeStreetAddress);
+		DataTypeUtils.fillPrd(referralMsg.getPROVIDER_CONTACT(0).getPRD(), referringProvider, "RP", "Referring Provider", clinic);
 
 		ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
 		ProfessionalSpecialist referredToProfessionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
-		StreetAddressDataHolder referredToOfficeStreetAddress=new StreetAddressDataHolder();
-		referredToOfficeStreetAddress.streetAddress=referredToProfessionalSpecialist.getStreetAddress();
-		DataTypeUtils.fillPrd(referralMsg.getPROVIDER_CONTACT(1).getPRD(), referredToProfessionalSpecialist, "RT", "Referred to Provider", referredToOfficeStreetAddress);
+		DataTypeUtils.fillPrd(referralMsg.getPROVIDER_CONTACT(1).getPRD(), referredToProfessionalSpecialist, "RT", "Referred to Provider");
 
 		DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
 		Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());		

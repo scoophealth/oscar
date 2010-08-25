@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
@@ -54,8 +55,8 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.StreetAddressDataHolder;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Hl7TextInfo;
@@ -267,16 +268,18 @@ public class EctConsultationFormRequestAction extends Action {
 	    ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
 	    ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
 	    Hl7TextInfoDao hl7TextInfoDao=(Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
+	    ClinicDAO clinicDAO=(ClinicDAO)SpringUtils.getBean("clinicDAO");
 
 	    ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
 	    ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
+	    Clinic clinic=clinicDAO.getClinic();
 	    
         LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	    
 	    // set status now so the remote version shows this status
 	    consultationRequest.setStatus("2");
 
-	    REF_I12 refI12=RefI12.makeRefI12(loggedInInfo.currentFacility.getName(), consultationRequest, new StreetAddressDataHolder());
+	    REF_I12 refI12=RefI12.makeRefI12(clinic, consultationRequest);
 	    SendingUtils.send(refI12, professionalSpecialist);
 	    
 	    // save after the sending just in case the sending fails.
@@ -286,7 +289,6 @@ public class EctConsultationFormRequestAction extends Action {
     	Provider sendingProvider=loggedInInfo.loggedInProvider;
     	DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
     	Demographic demographic=demographicDao.getDemographicById(consultationRequest.getDemographicId());
-    	Provider receivingProvider=DataTypeUtils.getReceivingProvider(professionalSpecialist);
 
     	//--- process all documents ---
 	    ArrayList<EDoc> attachments=EDocUtil.listDocs(demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), true);
@@ -298,7 +300,7 @@ public class EctConsultationFormRequestAction extends Action {
 	        observationData.binaryDataFileName=attachment.getFileName();
 	        observationData.binaryData=attachment.getFileBytes();
 
-	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);        
+	        ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);        
 	        SendingUtils.send(hl7Message, professionalSpecialist);	    	
 	    }
 	    
@@ -318,7 +320,7 @@ public class EctConsultationFormRequestAction extends Action {
 	            observationData.binaryData=dataBytes;
 
 	            
-	            ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);        
+	            ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);        
 	            int statusCode=SendingUtils.send(hl7Message, professionalSpecialist);
 	            if (HttpServletResponse.SC_OK!=statusCode) throw(new ServletException("Error, received status code:"+statusCode));
             } catch (DocumentException e) {

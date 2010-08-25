@@ -14,11 +14,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
@@ -52,9 +53,11 @@ public class OruR01UploadAction extends Action {
 
 	    	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
 	    	ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(oruR01UploadForm.getProfessionalSpecialistId());
-	        Provider receivingProvider=DataTypeUtils.getReceivingProvider(professionalSpecialist);
 	        
-	        ORU_R01 hl7Message=OruR01.makeOruR01(loggedInInfo.currentFacility.getName(), demographic, observationData, sendingProvider, receivingProvider);
+	    	ClinicDAO clinicDAO=(ClinicDAO) SpringUtils.getBean("clinicDAO");
+	    	Clinic clinic=clinicDAO.getClinic();
+	    	
+	        ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
 	        
 	        int statusCode=SendingUtils.send(hl7Message, professionalSpecialist);
 	        

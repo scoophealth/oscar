@@ -9,6 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
@@ -120,12 +121,21 @@ public final class DataTypeUtils {
 	 * @param addressType hlt0190 code, i.e. O=office, H=Home
 	 * @throws DataTypeException
 	 */
-	public static void fillXAD(XAD xad, StreetAddressDataHolder streetAddressDataHolder, String addressType) throws DataTypeException {
-		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(streetAddressDataHolder.streetAddress));
-		xad.getCity().setValue(StringUtils.trimToNull(streetAddressDataHolder.city));
-		xad.getStateOrProvince().setValue(StringUtils.trimToNull(streetAddressDataHolder.province));
-		xad.getCountry().setValue(StringUtils.trimToNull(streetAddressDataHolder.country));
-		xad.getZipOrPostalCode().setValue(StringUtils.trimToNull(streetAddressDataHolder.postalCode));
+	public static void fillXAD(XAD xad, Clinic clinic, String country, String addressType) throws DataTypeException {
+		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(clinic.getClinicAddress()));
+		xad.getCity().setValue(StringUtils.trimToNull(clinic.getClinicCity()));
+		xad.getStateOrProvince().setValue(StringUtils.trimToNull(clinic.getClinicProvince()));
+		if (country != null) xad.getCountry().setValue(StringUtils.trimToNull(country));
+		xad.getZipOrPostalCode().setValue(StringUtils.trimToNull(clinic.getClinicPostal()));
+		xad.getAddressType().setValue(addressType);
+	}
+
+	public static void fillXAD(XAD xad, Demographic demographic, String country, String addressType) throws DataTypeException {
+		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(demographic.getAddress()));
+		xad.getCity().setValue(StringUtils.trimToNull(demographic.getCity()));
+		xad.getStateOrProvince().setValue(StringUtils.trimToNull(demographic.getProvince()));
+		if (country != null) xad.getCountry().setValue(StringUtils.trimToNull(country));
+		xad.getZipOrPostalCode().setValue(StringUtils.trimToNull(demographic.getPostal()));
 		xad.getAddressType().setValue(addressType);
 	}
 
@@ -173,7 +183,7 @@ public final class DataTypeUtils {
 	 * @param providerRoleId Note that this is not the oscar provider role, look in the method to see valid values
 	 * @param providerRoleDescription Note that this is not the oscar provider role, look in the method to see valid values
 	 */
-	public static void fillPrd(PRD prd, Provider provider, String providerRoleId, String providerRoleDescription, StreetAddressDataHolder officeStreetAddressDataHolder) throws DataTypeException, HL7Exception {
+	public static void fillPrd(PRD prd, Provider provider, String providerRoleId, String providerRoleDescription, Clinic clinic) throws DataTypeException, HL7Exception {
 		// Value Description
 		// -----------------
 		// RP Referring Provider
@@ -189,7 +199,7 @@ public final class DataTypeUtils {
 		xpn.getPrefixEgDR().setValue(provider.getTitle());
 
 		XAD xad = prd.getProviderAddress(0);
-		fillXAD(xad, officeStreetAddressDataHolder, "O");
+		fillXAD(xad, clinic, null, "O");
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		xtn.getUnformattedTelephoneNumber().setValue(provider.getWorkPhone());
@@ -230,7 +240,7 @@ public final class DataTypeUtils {
 	 * @param providerRoleId Note that this is not the oscar provider role, look in the method to see valid values
 	 * @param providerRoleDescription Note that this is not the oscar provider role, look in the method to see valid values
 	 */
-	public static void fillPrd(PRD prd, ProfessionalSpecialist professionalSpecialist, String providerRoleId, String providerRoleDescription, StreetAddressDataHolder officeStreetAddressDataHolder) throws DataTypeException, HL7Exception {
+	public static void fillPrd(PRD prd, ProfessionalSpecialist professionalSpecialist, String providerRoleId, String providerRoleDescription) throws DataTypeException, HL7Exception {
 		// Value Description
 		// -----------------
 		// RP Referring Provider
@@ -246,7 +256,8 @@ public final class DataTypeUtils {
 		xpn.getPrefixEgDR().setValue(professionalSpecialist.getProfessionalLetters());
 
 		XAD xad = prd.getProviderAddress(0);
-		fillXAD(xad, officeStreetAddressDataHolder, "O");
+		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(professionalSpecialist.getStreetAddress()));
+		xad.getAddressType().setValue("O");
 
 		XTN xtn = prd.getProviderCommunicationInformation(0);
 		xtn.getUnformattedTelephoneNumber().setValue(professionalSpecialist.getPhoneNumber());
@@ -340,12 +351,7 @@ public final class DataTypeUtils {
 		pid.getAdministrativeSex().setValue(getHl7GenderFromOscarGender(demographic.getSex()));
 
 		XAD address = pid.getPatientAddress(0);
-		StreetAddressDataHolder streetAddressDataHolder = new StreetAddressDataHolder();
-		streetAddressDataHolder.streetAddress = demographic.getAddress();
-		streetAddressDataHolder.city = demographic.getCity();
-		streetAddressDataHolder.province = demographic.getProvince();
-		streetAddressDataHolder.postalCode = demographic.getPostal();
-		fillXAD(address, streetAddressDataHolder, "H");
+		fillXAD(address, demographic, null, "H");
 
 		XTN phone = pid.getPhoneNumberHome(0);
 		phone.getUnformattedTelephoneNumber().setValue(demographic.getPhone());
@@ -498,29 +504,48 @@ public final class DataTypeUtils {
 	 * @param actionRole the role of the given provider with regards to this communcations. There is HL7 table 0443. We will also add DataTypeUtils.ACTION_ROLE_* as roles so we can send and receive arbitrary data under arbitrary conditions.
 	 * @throws HL7Exception
 	 */
-	public static void fillRol(ROL rol, Provider provider, String actionRole) throws HL7Exception {
+	public static void fillRol(ROL rol, ProfessionalSpecialist professionalSpecialist, String actionRole) throws HL7Exception {
+		rol.getActionCode().setValue("unused");
+		rol.getRoleROL().getIdentifier().setValue(actionRole);
+
+		fillXcn(rol.getRolePerson(0), professionalSpecialist);
+
+		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
+		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(professionalSpecialist.getStreetAddress()));
+		xad.getAddressType().setValue("O");
+
+		XTN xtn = rol.getPhone(0);
+		xtn.getUnformattedTelephoneNumber().setValue(professionalSpecialist.getPhoneNumber());
+		xtn.getCommunicationAddress().setValue(professionalSpecialist.getEmailAddress());
+	}
+
+	public static void fillRol(ROL rol, Provider provider, Clinic clinic, String actionRole) throws HL7Exception {
 		rol.getActionCode().setValue("unused");
 		rol.getRoleROL().getIdentifier().setValue(actionRole);
 
 		fillXcn(rol.getRolePerson(0), provider);
 
 		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
-		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(provider.getAddress()));
-		xad.getAddressType().setValue("O");
+		fillXAD(xad, clinic, null, "O");
 
 		XTN xtn = rol.getPhone(0);
 		xtn.getUnformattedTelephoneNumber().setValue(provider.getPhone());
 		xtn.getCommunicationAddress().setValue(provider.getEmail());
 	}
 
-	public static void fillXcn(XCN xcn, Provider provider) throws DataTypeException
-	{
+	public static void fillXcn(XCN xcn, Provider provider) throws DataTypeException {
 		xcn.getIDNumber().setValue(provider.getProviderNo());
 		xcn.getFamilyName().getSurname().setValue(provider.getLastName());
 		xcn.getGivenName().setValue(provider.getFirstName());
 		xcn.getPrefixEgDR().setValue(provider.getTitle());
 	}
-	
+
+	public static void fillXcn(XCN xcn, ProfessionalSpecialist professionalSpecialist) throws DataTypeException {
+		xcn.getFamilyName().getSurname().setValue(professionalSpecialist.getLastName());
+		xcn.getGivenName().setValue(professionalSpecialist.getFirstName());
+		xcn.getPrefixEgDR().setValue(professionalSpecialist.getProfessionalLetters());
+	}
+
 	/**
 	 * The provider returned is just a detached/unmanaged Provider object which may not represent an entry in the db, it is used as a data structure only.
 	 * 
@@ -544,18 +569,4 @@ public final class DataTypeUtils {
 
 		return (provider);
 	}
-
-    public static Provider getReceivingProvider(ProfessionalSpecialist professionalSpecialist) {    	
-    	
-    	Provider provider=new Provider();
-    	
-    	provider.setFirstName(professionalSpecialist.getFirstName());
-    	provider.setLastName(professionalSpecialist.getLastName());
-    	provider.setEmail(professionalSpecialist.getEmailAddress());
-    	provider.setPhone(professionalSpecialist.getPhoneNumber());
-    	provider.setTitle(professionalSpecialist.getProfessionalLetters());
-    	provider.setAddress(professionalSpecialist.getStreetAddress());
-    	
-    	return(provider);
-    }
 }

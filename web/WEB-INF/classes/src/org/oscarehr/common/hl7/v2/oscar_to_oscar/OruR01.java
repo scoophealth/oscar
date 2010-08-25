@@ -8,7 +8,9 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
@@ -59,10 +61,10 @@ public final class OruR01 {
 	 * This method is essentially used to make an ORU_R01 containing pretty much any random data.
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static ORU_R01 makeOruR01(String facilityName, Demographic demographic, ObservationData observationData, Provider sendingProvider, Provider receivingProvider) throws HL7Exception, UnsupportedEncodingException {
+	public static ORU_R01 makeOruR01(Clinic clinic, Demographic demographic, ObservationData observationData, Provider sendingProvider, ProfessionalSpecialist receivingProfessionalSpecialist) throws HL7Exception, UnsupportedEncodingException {
 		ORU_R01 observationMsg = new ORU_R01();
 
-		DataTypeUtils.fillMsh(observationMsg.getMSH(), new Date(), facilityName, "ORU", "R01", "ORU_R01", DataTypeUtils.HL7_VERSION_ID);
+		DataTypeUtils.fillMsh(observationMsg.getMSH(), new Date(), clinic.getClinicName(), "ORU", "R01", "ORU_R01", DataTypeUtils.HL7_VERSION_ID);
 		DataTypeUtils.fillSft(observationMsg.getSFT(), BuildInfo.getBuildTag(), BuildInfo.getBuildDate());
 
 		ORU_R01_PATIENT_RESULT patientResult = observationMsg.getPATIENT_RESULT(0);
@@ -73,8 +75,8 @@ public final class OruR01 {
 		fillNtesWithObservationData(orderObservation, observationData);
 
 		// use ROL for the sending and receiving provider
-		DataTypeUtils.fillRol(orderObservation.getROL(0), sendingProvider, DataTypeUtils.ACTION_ROLE_SENDER);
-		DataTypeUtils.fillRol(orderObservation.getROL(1), receivingProvider, DataTypeUtils.ACTION_ROLE_RECEIVER);
+		DataTypeUtils.fillRol(orderObservation.getROL(0), sendingProvider, clinic, DataTypeUtils.ACTION_ROLE_SENDER);
+		DataTypeUtils.fillRol(orderObservation.getROL(1), receivingProfessionalSpecialist, DataTypeUtils.ACTION_ROLE_RECEIVER);
 
 		return (observationMsg);
 	}
@@ -156,6 +158,13 @@ public final class OruR01 {
 		// this is here just to test some of the above functions since 
 		// we are not using junit tests...
 		
+		Clinic clinic=new Clinic();
+		clinic.setClinicName("test clinic");
+		clinic.setClinicAddress("123 my street");
+		clinic.setClinicCity("my city");
+		clinic.setClinicProvince("bc");
+		clinic.setClinicPhone("12345");
+
 		Demographic demographic = new Demographic();
 		demographic.setLastName("test LN");
 		demographic.setLastName("test FN");
@@ -173,12 +182,12 @@ public final class OruR01 {
 		sender.setLastName("sender ln");
 		sender.setFirstName("sender fn");
 
-		Provider receiver = new Provider();
-		receiver.setProviderNo("222");
+		ProfessionalSpecialist receiver = new ProfessionalSpecialist();
 		receiver.setLastName("receiver ln");
 		receiver.setFirstName("receiver fn");
+		receiver.setProfessionalLetters("Dr");
 
-		ORU_R01 observationMsg = makeOruR01("facility name", demographic, observationData, sender, receiver);
+		ORU_R01 observationMsg = makeOruR01(clinic, demographic, observationData, sender, receiver);
 
 		String messageString = OscarToOscarUtils.pipeParser.encode(observationMsg);
 		logger.info(messageString);

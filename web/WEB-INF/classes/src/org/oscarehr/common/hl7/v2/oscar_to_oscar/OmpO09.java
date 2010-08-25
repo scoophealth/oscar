@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.model.Prescription;
 import org.oscarehr.common.model.Clinic;
@@ -16,7 +17,9 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.util.BuildInfo;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v26.datatype.XAD;
 import ca.uhn.hl7v2.model.v26.datatype.XON;
+import ca.uhn.hl7v2.model.v26.datatype.XTN;
 import ca.uhn.hl7v2.model.v26.group.OMP_O09_ORDER;
 import ca.uhn.hl7v2.model.v26.group.OMP_O09_PATIENT;
 import ca.uhn.hl7v2.model.v26.message.OMP_O09;
@@ -38,9 +41,19 @@ public final class OmpO09 {
 		OMP_O09_PATIENT patient=prescriptionMsg.getPATIENT();
 		DataTypeUtils.fillPid(patient.getPID(), 1, demographic);
 
-		OMP_O09_ORDER order=prescriptionMsg.getORDER(0);
-		fillOrc(order, prescription, provider, clinic);
 		DataTypeUtils.fillNte(prescriptionMsg.getNTE(0), "Rx Comments", null, prescription.getRxComments().getBytes());
+
+		for (Drug drug : drugs)
+		{
+			int counter=0;
+			
+			OMP_O09_ORDER order=prescriptionMsg.getORDER(counter);
+			fillOrc(order, prescription, provider, clinic);
+			
+// done to this point, need to continue after ORC
+
+			counter++;
+		}		
 		
 		return (prescriptionMsg);
 	}
@@ -62,8 +75,15 @@ public final class OmpO09 {
 	    
 	    // set facility name / doctors office name
 	    XON xon=orc.getOrderingFacilityName(0);	    
-	    // NOT FINISHED, NEED TO FILL IN CLINIC INFO HERE
-    }
+		xon.getOrganizationName().setValue(StringUtils.trimToNull(clinic.getClinicName()));
+
+		XAD xad=orc.getOrderingFacilityAddress(0);
+		DataTypeUtils.fillXAD(xad, clinic, null, "O");
+		
+		XTN xtn=orc.getOrderingFacilityPhoneNumber(0);
+		xtn.getUnformattedTelephoneNumber().setValue(StringUtils.trimToNull(clinic.getClinicPhone()));
+	}
+
 
 	public static void main(String... argv) throws Exception {
 		// this is here just to test some of the above functions since
