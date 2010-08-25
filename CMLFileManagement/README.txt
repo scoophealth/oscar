@@ -1,6 +1,7 @@
 
 CML Lab Management README
 #########################
+This module is now deprecated and should not be used unless you can only work with CML's ABCD format files. CML's HL7 Files are handled by the HL7FileManagement
 
 Building
 #########
