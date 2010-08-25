@@ -30,9 +30,6 @@
 		<property name="date_printed" type="java.util.Date" />
 		<property name="dates_reprinted" />
 		<property name="textView" />
-		<!--
-			many-to-one name="drug" class="org.oscarehr.casemgmt.model.Drug"
-			column="script_no" update="false" insert="false" lazy="false" /
-		-->
+		<property name="rxComments" column="rx_comments" />
 	</class>
 </hibernate-mapping>

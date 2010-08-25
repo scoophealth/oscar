@@ -138,7 +138,7 @@ public final class DataTypeUtils {
 	 * @param messageStructure i.e. "REF_I12"
 	 * @param hl7VersionId is the version of hl7 in use, i.e. "2.6"
 	 */
-	public static void fillMsh(MSH msh, Date dateOfMessage, String facilityName, String messageCode, String triggerEvent, String messageStructure, String hl7VersionId) throws DataTypeException {
+	public static void fillMsh(MSH msh, Date dateOfMessage, String clinicName, String messageCode, String triggerEvent, String messageStructure, String hl7VersionId) throws DataTypeException {
 		msh.getFieldSeparator().setValue("|");
 		msh.getEncodingCharacters().setValue("^~\\&");
 		msh.getVersionID().getVersionID().setValue(hl7VersionId);
@@ -147,7 +147,7 @@ public final class DataTypeUtils {
 
 		msh.getSendingApplication().getNamespaceID().setValue("OSCAR");
 
-		msh.getSendingFacility().getNamespaceID().setValue(facilityName);
+		msh.getSendingFacility().getNamespaceID().setValue(clinicName);
 
 		// message code "REF", event "I12", structure "REF I12"
 		msh.getMessageType().getMessageCode().setValue(messageCode);
@@ -502,11 +502,7 @@ public final class DataTypeUtils {
 		rol.getActionCode().setValue("unused");
 		rol.getRoleROL().getIdentifier().setValue(actionRole);
 
-		XCN xcn = rol.getRolePerson(0);
-		xcn.getIDNumber().setValue(provider.getProviderNo());
-		xcn.getFamilyName().getSurname().setValue(provider.getLastName());
-		xcn.getGivenName().setValue(provider.getFirstName());
-		xcn.getPrefixEgDR().setValue(provider.getTitle());
+		fillXcn(rol.getRolePerson(0), provider);
 
 		XAD xad = rol.getOfficeHomeAddressBirthplace(0);
 		xad.getStreetAddress().getStreetOrMailingAddress().setValue(StringUtils.trimToNull(provider.getAddress()));
@@ -517,6 +513,14 @@ public final class DataTypeUtils {
 		xtn.getCommunicationAddress().setValue(provider.getEmail());
 	}
 
+	public static void fillXcn(XCN xcn, Provider provider) throws DataTypeException
+	{
+		xcn.getIDNumber().setValue(provider.getProviderNo());
+		xcn.getFamilyName().getSurname().setValue(provider.getLastName());
+		xcn.getGivenName().setValue(provider.getFirstName());
+		xcn.getPrefixEgDR().setValue(provider.getTitle());
+	}
+	
 	/**
 	 * The provider returned is just a detached/unmanaged Provider object which may not represent an entry in the db, it is used as a data structure only.
 	 * 

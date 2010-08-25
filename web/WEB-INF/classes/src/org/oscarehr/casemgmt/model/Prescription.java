@@ -34,6 +34,7 @@ public class Prescription extends BaseObject {
 	private Date date_printed;
 	private String dates_reprinted;
 	private String textView;
+	private String rxComments;
 	
 	
 	public Date getDate_prescribed() {
@@ -78,4 +79,10 @@ public class Prescription extends BaseObject {
 	public void setTextView(String textView) {
 		this.textView = textView;
 	}
+	public String getRxComments() {
+    	return rxComments;
+    }
+	public void setRxComments(String rxComments) {
+    	this.rxComments = rxComments;
+    }
 }
