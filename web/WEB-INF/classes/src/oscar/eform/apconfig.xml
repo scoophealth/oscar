@@ -387,7 +387,7 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
             <ap-output>${count(0)}</ap-output>
         </databaseap>
         <databaseap>
-            <ap-name>_eform_values_countall</ap-name>
+            <ap-name>_eform_values_countname</ap-name>
             <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
                     AND fid=${fid} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)</ap-sql>
             <ap-output>${count(0)}</ap-output>
@@ -401,7 +401,7 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
             <ap-output>${count(0)}</ap-output>
         </databaseap>
         <databaseap>
-            <ap-name>_eform_values_countall_ref</ap-name>
+            <ap-name>_eform_values_countname_ref</ap-name>
             <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
                     AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
                     AND fdid IN (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
@@ -409,7 +409,7 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
             <ap-output>${count(0)}</ap-output>
         </databaseap>
         <databaseap>
-            <ap-name>_eform_values_count_refall</ap-name>
+            <ap-name>_eform_values_count_refname</ap-name>
             <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}' 
                     AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
                     AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}
@@ -417,7 +417,7 @@ DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth
             <ap-output>${count(0)}</ap-output>
         </databaseap>
 		<databaseap>
-            <ap-name>_eform_values_countall_refall</ap-name>
+            <ap-name>_eform_values_countname_refname</ap-name>
             <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
                     AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
                     AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}

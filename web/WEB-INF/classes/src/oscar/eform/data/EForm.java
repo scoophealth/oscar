@@ -286,10 +286,10 @@ public class EForm extends EFormBase {
                     return null;
                 }
             }
-            if (type.equalsIgnoreCase("count") && var_value==null) type = "countall";
+            if (type.equalsIgnoreCase("count") && var_value==null) type = "countname";
             if (!ref_name.equals("")) {
                 type += "_ref";
-                if (ref_value==null) type += "all";
+                if (ref_value==null) type += "name";
             }
             curAP = EFormLoader.getInstance().getAP("_eform_values_"+type);
             if (curAP!=null) {
