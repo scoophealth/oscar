@@ -575,7 +575,7 @@
 				found = true;
 		%> 
 			<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
-			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
+			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
 			 <nested:write property="caseNote.note" /></textarea>
 		<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getNoteId()%>"><%@ include file="noteIssueList.jsp"%></div>
 
@@ -870,7 +870,7 @@
 		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;"> 
 		<input type="hidden" id="editWarn<%=savedId%>" value="false">
 		<div id="n<%=savedId%>" style="line-height: 1.1em;">
-			<textarea tabindex="7" cols="84" rows="10" class="txtArea" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note" /></textarea>
+			<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note" /></textarea>
 			<div class="sig" id="sig0"><%@ include file="noteIssueList.jsp"%></div>
 
 			<c:if test="${sessionScope.passwordEnabled=='true'}">
