@@ -17,13 +17,19 @@ import org.oscarehr.util.MiscUtils;
 
 import oscar.util.BuildInfo;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v26.datatype.CQ;
+import ca.uhn.hl7v2.model.v26.datatype.CWE;
+import ca.uhn.hl7v2.model.v26.datatype.NM;
+import ca.uhn.hl7v2.model.v26.datatype.RPT;
 import ca.uhn.hl7v2.model.v26.datatype.XAD;
 import ca.uhn.hl7v2.model.v26.datatype.XON;
 import ca.uhn.hl7v2.model.v26.datatype.XTN;
 import ca.uhn.hl7v2.model.v26.group.OMP_O09_ORDER;
 import ca.uhn.hl7v2.model.v26.group.OMP_O09_PATIENT;
+import ca.uhn.hl7v2.model.v26.group.OMP_O09_TIMING;
 import ca.uhn.hl7v2.model.v26.message.OMP_O09;
 import ca.uhn.hl7v2.model.v26.segment.ORC;
+import ca.uhn.hl7v2.model.v26.segment.TQ1;
 
 public final class OmpO09 {
 	private static final Logger logger = MiscUtils.getLogger();
@@ -43,19 +49,41 @@ public final class OmpO09 {
 
 		DataTypeUtils.fillNte(prescriptionMsg.getNTE(0), "Rx Comments", null, prescription.getRxComments().getBytes());
 
+		int drugCounter=0;
 		for (Drug drug : drugs)
-		{
-			int counter=0;
+		{			
+			OMP_O09_ORDER order=prescriptionMsg.getORDER(drugCounter);
+			fillOrc(order, prescription, provider, clinic);			
+			fillTq1(order, drug);
 			
-			OMP_O09_ORDER order=prescriptionMsg.getORDER(counter);
-			fillOrc(order, prescription, provider, clinic);
-			
-// done to this point, need to continue after ORC
+// done to this point : need to add RXO
 
-			counter++;
+			drugCounter++;
 		}		
 		
 		return (prescriptionMsg);
+	}
+
+	private static void fillTq1(OMP_O09_ORDER order, Drug drug) throws HL7Exception {
+	    OMP_O09_TIMING timing=order.getTIMING(0);
+	    TQ1 tq1=timing.getTQ1();
+	    
+	    CQ cq=tq1.getQuantity();
+	    NM quantity=cq.getQuantity();
+	    quantity.setValue(drug.getQuantity());
+	    CWE units=cq.getUnits();
+	    units.getText().setValue(drug.getUnit());
+	    units.getNameOfCodingSystem().setValue(drug.getUnitName());
+
+	    RPT rpt=tq1.getRepeatPattern(0);
+	    rpt.getGeneralTimingSpecification().setValue(drug.getFreqCode());
+	    
+	    CQ serviceDuration=tq1.getServiceDuration();
+	    serviceDuration.getQuantity().setValue(drug.getDuration());
+	    serviceDuration.getUnits().getNameOfCodingSystem().setValue(drug.getDurUnit());
+	    
+	    tq1.getStartDateTime().setValue(DataTypeUtils.getAsHl7FormattedString(drug.getRxDate()));
+	    tq1.getEndDateTime().setValue(DataTypeUtils.getAsHl7FormattedString(drug.getEndDate()));
 	}
 
 	private static void fillOrc(OMP_O09_ORDER order, Prescription prescription, Provider provider, Clinic clinic) throws HL7Exception {
