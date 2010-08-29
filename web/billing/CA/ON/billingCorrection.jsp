@@ -190,7 +190,7 @@ if (billNo.compareTo("") == 0 || billNo == null) {
 } else {         
 	bFlag =true;         
 %>
-<%@ include file="billingDataRetrieve.jsp"%>
+<%@ include file="billingDataRetrieve.jspf"%>
 <% 
 	if(oscarVariables.getProperty("isSpecialist", "").equals("true")) {
 	    r_doctor_ohip = r_doctor_ohip_s;

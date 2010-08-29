@@ -135,7 +135,7 @@ if (billNo.compareTo("") == 0 || billNo == null) {
 } else {         
 	bFlag =true;         
 %>
-<%@ include file="billingDataRetrieve.jsp"%>
+<%@ include file="billingDataRetrieve.jspf"%>
 <% } %>
 
 <table width="100%" border="0" bgcolor="#FFFFFF">

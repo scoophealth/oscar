@@ -155,7 +155,7 @@
 	</tr>
 </table>
 <% int bFlag = 0;	String billNo = request.getParameter("billing_no");         if (billNo.compareTo("") == 0 || billNo == null) {         bFlag = 0;         } else {         bFlag =1;         %>
-<%@ include file="billingDataRetrieve.jsp"%>
+<%@ include file="billingDataRetrieve.jspf"%>
 <% } %>
 <table width="100%" border="0" bgcolor="#FFFFFF">
 	<form name="form1" method="post" action="billingCorrection.jsp">
