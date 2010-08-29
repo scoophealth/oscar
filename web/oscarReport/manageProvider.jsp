@@ -29,7 +29,7 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbReport.jsp"%>
+<%@ include file="dbReport.jspf"%>
 <%    
  
 GregorianCalendar now=new GregorianCalendar();
