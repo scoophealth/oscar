@@ -46,7 +46,6 @@
 <%@page import="org.apache.cxf.common.i18n.UncheckedException"%>
 <%@page import="org.oscarehr.casemgmt.web.NoteDisplay"%>
 <%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
-<%@page import="org.oscarehr.common.dao.CaseManagementIssueNotesDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
 <%@page import="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO"%>
@@ -58,7 +57,6 @@
 
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
-	CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
     CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
       
 	String demographicNo = request.getParameter("demographicNo");
@@ -419,7 +417,6 @@
 		long time1, time2;
 		String noteStr;
 		int length;
-		String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors"};
 
 		/*
 		 *  Cycle through notes starting from the most recent and marking them for full inclusion or one line display
@@ -431,7 +428,6 @@
 		ArrayList<String> colourStyle = new ArrayList<String>(noteSize);
 		int pos;
 		idx = 0;
-		boolean isCPP;
 		//set all colours
 		String blackColour = "000000";
 		String documentColour = "color:#" + blackColour + ";background-color:#" + Colour.documents + ";";
@@ -449,22 +445,11 @@
 		{
 			NoteDisplay cmNote = notesToDisplay.get(pos);
 
-			isCPP = false;
 			bgColour = "color:#000000;background-color:#CCCCFF;";
 
-			List<CaseManagementIssue> nIssues=caseManagementIssueNotesDao.getNoteIssues(cmNote.getNoteId());
-			for (CaseManagementIssue issue : nIssues)
+			if (cmNote.isCpp())
 			{
-				for (int cppIdx = 0; cppIdx < cppCodes.length; ++cppIdx)
-				{
-					if (issue.getIssue().getCode().equals(cppCodes[cppIdx]))
-					{
-						bgColour = "color:#FFFFFF;background-color:#996633;";
-						isCPP = true;
-						break;
-					}
-				}
-				if (isCPP) break;
+				bgColour = "color:#FFFFFF;background-color:#996633;";
 			}
 
 			//set document note to blue but document annotation remains bkground colour.
@@ -478,7 +463,7 @@
 
 			colourStyle.add(bgColour);
 
-			if (isCPP)
+			if (cmNote.isCpp())
 			{
 				fullTxtFormat.add(Boolean.FALSE);
 				continue;
@@ -575,8 +560,9 @@
 				found = true;
 		%> 
 			<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
-			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
-			 <nested:write property="caseNote.note" /></textarea>
+			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
+			 	<nested:write property="caseNote.note" />
+			 </textarea>
 		<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getNoteId()%>"><%@ include file="noteIssueList.jsp"%></div>
 
 		<c:if test="${sessionScope.passwordEnabled=='true'}">
@@ -633,16 +619,18 @@
 					<%
 				}
 
-				if (note.getRemoteFacilityId()==null && !note.isDocument()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
+				if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
 				{
 				 	%> 
 				 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> 
 					<%
 				}
 				
-			 	if (!note.isDocument()&&!note.isRxAnnotation())
+			 	if (!note.isDocument() && !note.isRxAnnotation())
 			 	{
-			 		if (note.getRemoteFacilityId()==null ) // only allow editing for local notes
+			 		// only allow editing for local notes
+			 		// also disallow editing of cpp's inline (can be edited in the cpp area) 
+			 		if (note.getRemoteFacilityId()==null && !note.isCpp())
 					{
 			 			if(!note.isReadOnly()) {
 					 		%>
@@ -750,92 +738,88 @@
 						src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> <%
 			 	}
 			
-			 %>
-					<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
-					<div id="sumary<%=note.getNoteId()%>">
-					<%
-						if (!note.isDocument())
-						{
-							%>
-								<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
-									<i>Date:&nbsp;<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
-										<bean:message key="oscarEncounter.noteRev.title" />
-										<%
-											if (rev!=null)
-											{
-												%>
-													<a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
-												<%
-											}
-											else
-											{
-												%>
-													N/A
-												<%
-											}
-										%>
-									</i>
-								</div>
-								
-								<div>
-									<span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
-									<ul style="list-style: none inside none; margin: 0px;">
-										<%
-											ArrayList<String> editorNames = note.getEditorNames();
-											Iterator<String> it = editorNames.iterator();
-											int count = 0;
-											int MAXLINE = 2;
-											while (it.hasNext())
-											{
-												String providerName = it.next();
-							
-												if (count % MAXLINE == 0)
-												{
-													out.print("<li>" + providerName + "; ");
-												}
-												else
-												{
-													out.print(providerName + "</li>");
-												}
-												if (it.hasNext()) ++count;
-											}
-											if (count % MAXLINE == 0) out.print("</li>");
-										%>
-							
-									</ul>
-								</div>
-								<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
-					
-								<div style="display: block;">
-									<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
-									<%
-										ArrayList<String> issueDescriptions = note.getIssueDescriptions();
-									
-										if (issueDescriptions.size() > 0)
-										{
-											%>
-												<ul style="float: left; list-style: circle inside none; margin: 0px;">
-													<%
-														for (String issueDescription : issueDescriptions)
-														{
-															%>
-																<li><%=issueDescription.trim()%></li>
-															<%
-														}
-													%>
-												</ul>
-											<%
-										}
-									%>
-									<br style="clear: both;">
-								</div>
-							<%
-						}
+				if (!note.isDocument() && !note.isCpp())
+				{
 					%>
+						<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
+						<div id="sumary<%=note.getNoteId()%>">
+						<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
+							<i>Date:&nbsp;<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
+								<bean:message key="oscarEncounter.noteRev.title" />
+								<%
+									if (rev!=null)
+									{
+										%>
+											<a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
+										<%
+									}
+									else
+									{
+										%>
+											N/A
+										<%
+									}
+								%>
+							</i>
+						</div>
+						
+						<div>
+							<span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
+							<ul style="list-style: none inside none; margin: 0px;">
+								<%
+									ArrayList<String> editorNames = note.getEditorNames();
+									Iterator<String> it = editorNames.iterator();
+									int count = 0;
+									int MAXLINE = 2;
+									while (it.hasNext())
+									{
+										String providerName = it.next();
 					
-					</div>
-					</div>
+										if (count % MAXLINE == 0)
+										{
+											out.print("<li>" + providerName + "; ");
+										}
+										else
+										{
+											out.print(providerName + "</li>");
+										}
+										if (it.hasNext()) ++count;
+									}
+									if (count % MAXLINE == 0) out.print("</li>");
+								%>
+					
+							</ul>
+						</div>
+						<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
+			
+						<div style="display: block;">
+							<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
+							<%
+								ArrayList<String> issueDescriptions = note.getIssueDescriptions();
+							
+								if (issueDescriptions.size() > 0)
+								{
+									%>
+										<ul style="float: left; list-style: circle inside none; margin: 0px;">
+											<%
+												for (String issueDescription : issueDescriptions)
+												{
+													%>
+														<li><%=issueDescription.trim()%></li>
+													<%
+												}
+											%>
+										</ul>
+									<%
+								}
+							%>
+							<br style="clear: both;">
+						</div>
+						</div>
+						</div>
 					<%
+				}
+
 						}
 					}
 					%>
@@ -870,7 +854,8 @@
 		<input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;"> 
 		<input type="hidden" id="editWarn<%=savedId%>" value="false">
 		<div id="n<%=savedId%>" style="line-height: 1.1em;">
-			<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note" /></textarea>
+			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
+  			 <nested:write property="caseNote_note" /></textarea>
 			<div class="sig" id="sig0"><%@ include file="noteIssueList.jsp"%></div>
 
 			<c:if test="${sessionScope.passwordEnabled=='true'}">

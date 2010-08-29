@@ -171,4 +171,8 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	public CaseManagementNoteLink getNoteLink() {
 		return null;
 	}
+
+	public boolean isCpp() {
+	    return false;
+    }
 }

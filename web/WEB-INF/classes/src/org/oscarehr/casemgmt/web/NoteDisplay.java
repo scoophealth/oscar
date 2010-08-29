@@ -100,4 +100,5 @@ public interface NoteDisplay {
 
 	public boolean isGroupNote();
 
+	public boolean isCpp();
 }
