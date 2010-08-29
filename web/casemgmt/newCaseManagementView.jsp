@@ -586,9 +586,9 @@
 				String rev = note.getRevision();
 				if (note.getRemoteFacilityId()==null) // always display full note for remote notes
 				{
-					if (note.isDocument())
+					if (note.isDocument() || note.isCpp())
 					{
-						// blank if so it never prints min/max icon for documents
+						// blank if so it never displays min/max icon for documents
 					}
 					else if (fulltxt)
 					{
