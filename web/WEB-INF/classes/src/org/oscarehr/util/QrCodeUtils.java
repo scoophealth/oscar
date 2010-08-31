@@ -1,9 +1,11 @@
 package org.oscarehr.util;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.IIOImage;
@@ -12,6 +14,8 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
+import org.apache.log4j.Logger;
+
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
@@ -19,12 +23,67 @@ import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
 
 public class QrCodeUtils {
-	public static byte[] toQrCodePng(String s, ErrorCorrectionLevel ec) throws IOException, WriterException
+	
+	private static final Logger logger=MiscUtils.getLogger();
+	
+	public static final int MAX_QR_CODE_DATA_LENGTH=2953;
+	public static final float DEFAULT_QR_CODE_GAP=.20f;
+
+	public enum QrCodesOrientation
+	{
+		VERTICAL, HORIZONTAL
+	}
+	
+	public static byte[] toMultipleQrCodePngs(String s, ErrorCorrectionLevel ec, QrCodesOrientation qrCodesOrientation) throws IOException, WriterException
+	{
+		return(toMultipleQrCodePngs(s, ec, qrCodesOrientation, null, MAX_QR_CODE_DATA_LENGTH));
+	}
+	
+	/**
+	 * This method will break the longInputString into maxQrCodeDataSize size
+	 * segments and create separate qr codes for each segment. There is no 
+	 * interpretation of the data; therefore, the individual qr codes should not be
+	 * assumed to make sense individually but only collectively after all qr codes 
+	 * are interpreted and the resulting data concatenated.
+	 * 
+	 * @param qrCodeImageGap the number of pixels between the QR code images, if this value is null it will calculate it at DEFAULT_QR_CODE_GAP % of the size of the first (and presumably full size) qr code image
+	 */
+	public static byte[] toMultipleQrCodePngs(String s, ErrorCorrectionLevel ec, QrCodesOrientation qrCodesOrientation, Integer qrCodeImageGap, int maxQrCodeDataSize) throws IOException, WriterException
+	{
+		ArrayList<BufferedImage> results=new ArrayList<BufferedImage>();
+		
+		int startIndex=0;
+		int endIndex=0;
+		while (true)
+		{
+			endIndex=Math.min(startIndex+maxQrCodeDataSize, s.length());
+			
+			String stringChunk=s.substring(startIndex, endIndex);
+			logger.debug("Encoding chunk : "+stringChunk);
+			
+			results.add(toSingleQrCodeBufferedImage(stringChunk, ec));
+
+			if (endIndex==s.length()) break;
+			else startIndex=endIndex;
+		}
+	
+		if (qrCodeImageGap==null) qrCodeImageGap=(int)(results.get(0).getWidth()*DEFAULT_QR_CODE_GAP);
+		
+		byte[] mergedResults=mergeImages(results, qrCodesOrientation, qrCodeImageGap);
+		
+		return(mergedResults);
+	}
+	
+	public static BufferedImage toSingleQrCodeBufferedImage(String s, ErrorCorrectionLevel ec) throws WriterException
 	{
 		QRCode qrCode = new QRCode();
 		Encoder.encode(s, ec, qrCode);
-		BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(qrCode.getMatrix());
-		return(toPng(bufferedImage));
+		return(MatrixToImageWriter.toBufferedImage(qrCode.getMatrix()));
+	}
+
+	public static byte[] toSingleQrCodePng(String s, ErrorCorrectionLevel ec) throws IOException, WriterException
+	{
+		return(toPng(toSingleQrCodeBufferedImage(s, ec)));
 	}
 
 	private static byte[] toPng(BufferedImage bufferedImage) throws IOException
@@ -49,6 +108,60 @@ public class QrCodeUtils {
 		}
 	}
 
+	private static byte[] mergeImages(ArrayList<BufferedImage> results, QrCodesOrientation qrCodesOrientation, int qrCodeImageGap) throws IOException {
+
+		int requiredWidth=getRequiredWidth(results, qrCodesOrientation, qrCodeImageGap);
+		int requiredHeight=getRequiredHeight(results, qrCodesOrientation, qrCodeImageGap);
+		
+		BufferedImage mergedImage=new BufferedImage(requiredWidth, requiredHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D doubleBuffer=(Graphics2D) mergedImage.getGraphics();
+		int x=0;
+		int y=0;
+		for (BufferedImage bi : results)
+		{
+			doubleBuffer.drawImage(bi, x, y, null);
+			
+			if (qrCodesOrientation==QrCodesOrientation.VERTICAL) y=y+bi.getHeight()+qrCodeImageGap;
+			else x=x+bi.getWidth()+qrCodeImageGap;
+		}
+			
+	    return(toPng(mergedImage));
+    }
+	
+	private static int getRequiredHeight(ArrayList<BufferedImage> results, QrCodesOrientation qrCodesOrientation, int qrCodeImageGap) {
+		if (qrCodesOrientation==QrCodesOrientation.VERTICAL) return(sumHeight(results)+(qrCodeImageGap*(results.size()-1)));
+		else return(maxHeight(results));
+    }
+
+	private static int maxHeight(ArrayList<BufferedImage> results) {
+	    int max=0;
+	    for (BufferedImage bi : results) max=Math.max(max, bi.getHeight());
+	    return(max);
+    }
+
+	private static int sumHeight(ArrayList<BufferedImage> results) {
+	    int total=0;
+	    for (BufferedImage bi : results) total=total+bi.getHeight();
+	    return(total);
+    }
+
+	private static int getRequiredWidth(ArrayList<BufferedImage> results, QrCodesOrientation qrCodesOrientation, int qrCodeImageGap) {
+		if (qrCodesOrientation==QrCodesOrientation.HORIZONTAL) return(sumWidth(results)+(qrCodeImageGap*(results.size()-1)));
+		else return(maxWidth(results));
+	}
+
+	private static int maxWidth(ArrayList<BufferedImage> results) {
+	    int max=0;
+	    for (BufferedImage bi : results) max=Math.max(max, bi.getWidth());
+	    return(max);
+    }
+
+	private static int sumWidth(ArrayList<BufferedImage> results) {
+	    int total=0;
+	    for (BufferedImage bi : results) total=total+bi.getWidth();
+	    return(total);
+    }
+
 	/**
 	 * Remember to dispose of the ImageWriter when you're finished with it.
 	 */
@@ -67,12 +180,20 @@ public class QrCodeUtils {
 
 	public static void main(String... argv) throws Exception
 	{
-		byte[] b = toQrCodePng("this is a test of some text", ErrorCorrectionLevel.H);
+		byte[] b = toSingleQrCodePng("this is a test of some text", ErrorCorrectionLevel.H);
 		
 		FileOutputStream fos = new FileOutputStream("/tmp/test_h.png");
 		fos.write(b);
 		fos.flush();
 		fos.close();
 
+		//------
+		
+		byte[] b1=toMultipleQrCodePngs("1234567890abcdefghijklmnopqrstuvwxyz", ErrorCorrectionLevel.H, QrCodesOrientation.HORIZONTAL, null, 5);
+
+		FileOutputStream fos1 = new FileOutputStream("/tmp/test_h1.png");
+		fos1.write(b1);
+		fos1.flush();
+		fos1.close();
 	}
 }

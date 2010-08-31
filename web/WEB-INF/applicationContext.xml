@@ -59,7 +59,7 @@
 	<bean id="OnCallDAO" class="org.oscarehr.casemgmt.dao.OnCallDAO" autowire="byName" />
 
 	<bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.AllergyDAO" autowire="byName" />
-	<bean id="PrescriptionDAO" class="org.oscarehr.casemgmt.dao.PrescriptionDAO" autowire="byName" />
+	<bean id="prescriptionDAO" class="org.oscarehr.casemgmt.dao.PrescriptionDAO" autowire="byName" />
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
 	<bean id="EncounterFormDAO" class="org.oscarehr.casemgmt.dao.EncounterFormDAO" autowire="byName" />
 	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
@@ -213,7 +213,7 @@
 		<property name="caseManagementIssueDAO" ref="CaseManagementIssueDAO" />
 		<property name="caseManagementCPPDAO" ref="CaseManagementCPPDAO" />
 		<property name="allergyDAO" ref="AllergyDAO" />
-		<property name="prescriptionDAO" ref="PrescriptionDAO" />
+		<property name="prescriptionDAO" ref="prescriptionDAO" />
 		<property name="issueDAO" ref="IssueDAO" />
 		<property name="encounterFormDAO" ref="EncounterFormDAO" />
 		<property name="messagetblDAO" ref="MessagetblDAO" />

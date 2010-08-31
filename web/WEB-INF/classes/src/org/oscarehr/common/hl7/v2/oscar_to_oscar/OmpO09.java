@@ -48,7 +48,8 @@ public final class OmpO09 {
 		OMP_O09_PATIENT patient=prescriptionMsg.getPATIENT();
 		DataTypeUtils.fillPid(patient.getPID(), 1, demographic);
 
-		DataTypeUtils.fillNte(prescriptionMsg.getNTE(0), "Rx Comments", null, prescription.getRxComments().getBytes());
+		String rxComments=prescription.getRxComments();
+		if (rxComments!=null) DataTypeUtils.fillNte(prescriptionMsg.getNTE(0), "Rx Comments", null, rxComments.getBytes());
 
 		int drugCounter=0;
 		for (Drug drug : drugs)
@@ -57,7 +58,9 @@ public final class OmpO09 {
 			fillOrc(order, prescription, provider, clinic);			
 			fillTq1(order, drug);
 			fillRxo(order.getRXO(), drug);
-			DataTypeUtils.fillNte(order.getNTE(0), "Prescription Text", null, drug.getSpecial().getBytes());
+			
+			String special=drug.getSpecial();
+			if (special!=null) DataTypeUtils.fillNte(order.getNTE(0), "Prescription Text", null, special.getBytes());
 
 			drugCounter++;
 		}		

@@ -33,6 +33,19 @@ public class DrugDao extends AbstractDao<Drug> {
 		super(Drug.class);
 	}
 
+    public List<Drug> findByPrescriptionId(Integer prescriptionId) {
+
+    	String sqlCommand = "select x from Drug x where x.scriptNo=?1";
+
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, prescriptionId);
+
+        @SuppressWarnings("unchecked")
+        List<Drug> results = query.getResultList();
+
+        return (results);
+    }
+
 	/**
      * @param archived can be null for both archived and non archived entries
      */
