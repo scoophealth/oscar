@@ -1,433 +1,412 @@
 <eformap-config>
-<!-- OLD IMPORTED EFORM APs -->
-	<databaseap>
-		<ap-name>patient_name</ap-name>
-		<ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${last_name}, ${first_name}</ap-output>
-	</databaseap>
-        <databaseap>
-		<ap-name>first_last_name</ap-name>
-		<ap-sql>SELECT CONCAT(UPPER(SUBSTRING(first_name, 1, 1)), LOWER(SUBSTRING(first_name FROM 2))) AS first_name, CONCAT(UPPER(SUBSTRING(last_name, 1, 1)), LOWER(SUBSTRING(last_name FROM 2))) AS last_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${first_name} ${last_name}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>patient_nameL</ap-name>
-		<ap-sql>SELECT last_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${last_name}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>patient_nameF</ap-name>
-		<ap-sql>SELECT first_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${first_name}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>today</ap-name>
-		<ap-sql>SELECT curdate()</ap-sql>
-		<ap-output>${curdate()}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>label</ap-name>
-		<ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${last_name}, ${first_name}\n${address}\n${city}, ${province}, ${postal}\nHome: ${phone}\nWork: ${phone2}\n${date_of_birth}/${month_of_birth}/${year_of_birth} (${sex})\n${hin} ${ver}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>address</ap-name>
-		<ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${address}\n${city}, ${province}, ${postal}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>addressline</ap-name>
-		<ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${address}, ${city}, ${province}, ${postal}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>address_street_number_and_name</ap-name>
-		<ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${address}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>province</ap-name>
-		<ap-sql>SELECT province FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${province}</ap-output>
-	</databaseap>
-	<databaseap>
-                <ap-name>city</ap-name>
-                <ap-sql>SELECT city FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-                <ap-output>${city}</ap-output>
-        </databaseap>
-	<databaseap>
-                <ap-name>postal</ap-name>
-                <ap-sql>SELECT postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-                <ap-output>${postal}</ap-output>
-        </databaseap>
 
-	<databaseap>
-		<ap-name>doctor</ap-name>
-		<ap-sql>SELECT provider.first_name, provider.last_name  FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
-		<ap-output>${last_name}, ${first_name}</ap-output>
-	</databaseap>
-        <databaseap>
-		<ap-name>doctor_ohip_no</ap-name>
-		<ap-sql>SELECT provider.ohip_no FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
-		<ap-output>${ohip_no}</ap-output>
-        </databaseap>
-        <databaseap>
-		<ap-name>current_user_ohip_no</ap-name>
-		<ap-sql>SELECT provider.ohip_no
-			FROM provider
-			WHERE provider.provider_no=${provider} </ap-sql>
-		<ap-output>${ohip_no}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>dob</ap-name>
-		<ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${date_of_birth}/${month_of_birth}/${year_of_birth} (d/m/y)</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>dobc</ap-name>
-		<ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${date_of_birth}/${month_of_birth}/${year_of_birth}</ap-output>
-	</databaseap>
-	<databaseap>
-                <ap-name>dobc2</ap-name>
-		<ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-                <ap-output>${year_of_birth}/${month_of_birth}/${date_of_birth}</ap-output>
-        </databaseap>
+<!-- Date information -->
+    <databaseap>
+        <ap-name>today</ap-name>
+        <ap-sql>SELECT curdate()</ap-sql>
+        <ap-output>${curdate()}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>appt_date</ap-name>
+        <ap-sql>SELECT appointment_date from appointment WHERE appointment_no=${appt_no}</ap-sql>
+        <ap-output>${appointment_date}</ap-output>
+    </databaseap>
 
-	<databaseap>
-		<ap-name>NameAddress</ap-name>
-		<ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${last_name}, ${first_name}\n${address}\n${city},${postal},${province}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>hin</ap-name>
-		<ap-sql>SELECT hin, ver FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${hin} ${ver}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>hinc</ap-name>
-		<ap-sql>SELECT hin FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${hin}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>hinversion</ap-name>
-		<ap-sql>SELECT ver FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${ver}</ap-output>
-	</databaseap>
-        <databaseap>
-		<ap-name>hc_renew_date</ap-name>
-		<ap-sql>SELECT hc_renew_date FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${hc_renew_date}</ap-output>
-	</databaseap>
-        <databaseap>
-		<ap-name>chartno</ap-name>
-		<ap-sql>SELECT chart_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${chart_no}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>demographic_no</ap-name>
-		<ap-sql>SELECT demographic_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${demographic_no}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>phone</ap-name>
-		<ap-sql>SELECT phone FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${phone}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>phone2</ap-name>
-		<ap-sql>SELECT phone2 FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${phone2}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>cell</ap-name>
-		<ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='demo_cell';</ap-sql>
-		<ap-output>${value}</ap-output>
-	</databaseap>
-        <databaseap>
-		<ap-name>phone_extension</ap-name>
-		<ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='hPhoneExt';</ap-sql>
-		<ap-output>${value}</ap-output>
-	</databaseap>
-        <databaseap>
-		<ap-name>phone2_extension</ap-name>
-		<ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='wPhoneExt';</ap-sql>
-		<ap-output>${value}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>clinic_name</ap-name>
-		<ap-sql>SELECT clinic_name FROM clinic</ap-sql>
-		<ap-output>${clinic_name}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>clinic_phone</ap-name>
-		<ap-sql>SELECT clinic_phone FROM clinic</ap-sql>
-		<ap-output>${clinic_phone}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>clinic_fax</ap-name>
-		<ap-sql>SELECT clinic_fax FROM clinic</ap-sql>
-		<ap-output>${clinic_fax}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>clinic_label</ap-name>
-		<ap-sql>SELECT * FROM clinic</ap-sql>
-		<ap-output>${clinic_name}\n${clinic_address}\n${clinic_city},${clinic_province},${clinic_postal}\nTel:${clinic_phone}\nFax:${clinic_fax}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>clinic_addressLine</ap-name>
-		<ap-sql>SELECT clinic_address FROM clinic</ap-sql>
-		<ap-output>${clinic_address}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>clinic_addressLineFull</ap-name>
-		<ap-sql>SELECT * FROM clinic</ap-sql>
-		<ap-output>${clinic_address}, ${clinic_city}, ${clinic_province}, ${clinic_postal}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>clinic_address</ap-name>
-		<ap-sql>SELECT * FROM clinic</ap-sql>
-		<ap-output>${clinic_address}\n${clinic_city},${clinic_postal}\n${clinic_province},Canada</ap-output>
-	</databaseap>
-	<databaseap>
-                <ap-name>clinic_city</ap-name>
-                <ap-sql>SELECT * FROM clinic</ap-sql>
-                <ap-output>${clinic_city}</ap-output>
-	</databaseap>
-	<databaseap>
-                <ap-name>clinic_province</ap-name>
-                <ap-sql>SELECT * FROM clinic</ap-sql>
-                <ap-output>${clinic_province}</ap-output>
-	</databaseap>
+<!-- Current user information -->
+    <databaseap>
+        <ap-name>current_user</ap-name>
+        <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no=${provider} </ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_ohip_no</ap-name>
+        <ap-sql>SELECT provider.ohip_no FROM provider WHERE provider.provider_no=${provider} </ap-sql>
+        <ap-output>${ohip_no}</ap-output>
+    </databaseap>
 
-	 <databaseap>
-                <ap-name>clinic_postal</ap-name>
-                <ap-sql>SELECT * FROM clinic</ap-sql>
-                <ap-output>${clinic_postal}</ap-output>
-        </databaseap>
+<!-- Patient demographic information -->
+    <databaseap>
+        <ap-name>patient_name</ap-name>
+        <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>first_last_name</ap-name>
+        <ap-sql>SELECT CONCAT(UPPER(SUBSTRING(first_name, 1, 1)), LOWER(SUBSTRING(first_name FROM 2))) AS first_name, CONCAT(UPPER(SUBSTRING(last_name, 1, 1)), LOWER(SUBSTRING(last_name FROM 2))) AS last_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${first_name} ${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>patient_nameL</ap-name>
+        <ap-sql>SELECT last_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>patient_nameF</ap-name>
+        <ap-sql>SELECT first_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>label</ap-name>
+        <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${last_name}, ${first_name}\n${address}\n${city}, ${province}, ${postal}\nHome: ${phone}\nWork: ${phone2}\n${date_of_birth}/${month_of_birth}/${year_of_birth} (${sex})\n${hin} ${ver}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>address</ap-name>
+        <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address}\n${city}, ${province}, ${postal}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>addressline</ap-name>
+        <ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address}, ${city}, ${province}, ${postal}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>address_street_number_and_name</ap-name>
+        <ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>province</ap-name>
+        <ap-sql>SELECT province FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${province}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>city</ap-name>
+        <ap-sql>SELECT city FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${city}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>postal</ap-name>
+        <ap-sql>SELECT postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${postal}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dob</ap-name>
+        <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${date_of_birth}/${month_of_birth}/${year_of_birth} (d/m/y)</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dobc</ap-name>
+        <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${date_of_birth}/${month_of_birth}/${year_of_birth}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dobc2</ap-name>
+        <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${year_of_birth}/${month_of_birth}/${date_of_birth}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>NameAddress</ap-name>
+        <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${last_name}, ${first_name}\n${address}\n${city},${postal},${province}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hin</ap-name>
+        <ap-sql>SELECT hin, ver FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${hin} ${ver}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hinc</ap-name>
+        <ap-sql>SELECT hin FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${hin}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hinversion</ap-name>
+        <ap-sql>SELECT ver FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${ver}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hc_renew_date</ap-name>
+        <ap-sql>SELECT hc_renew_date FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${hc_renew_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>chartno</ap-name>
+        <ap-sql>SELECT chart_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${chart_no}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>phone</ap-name>
+        <ap-sql>SELECT phone FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${phone}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>phone2</ap-name>
+        <ap-sql>SELECT phone2 FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${phone2}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>cell</ap-name>
+        <ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='demo_cell';</ap-sql>
+        <ap-output>${value}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>phone_extension</ap-name>
+        <ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='hPhoneExt';</ap-sql>
+        <ap-output>${value}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>phone2_extension</ap-name>
+        <ap-sql>SELECT value FROM demographicExt WHERE demographic_no=${demographic} and key_val ='wPhoneExt';</ap-sql>
+        <ap-output>${value}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>age</ap-name>
+        <ap-sql>SELECT (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d')))-(RIGHT(CURRENT_DATE, 5) &lt; RIGHT(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d'),5)) AS 'age' FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${age}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ageComplex</ap-name>
+        <ap-sql>SELECT (IF ( (YEAR(CURRENT_DATE) - YEAR(@bdate))&lt; 3,
+                (IF ( (((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2))&lt; 3,
+                (IF ( FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7)&lt; 5,
+                (IF ( (TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))&lt; 2,
+                'newborn', CONCAT((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate)),' day old'))), CONCAT(FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7),' week old'))), CONCAT((((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2)),' month old'))), CONCAT((YEAR(CURRENT_DATE) - YEAR(@bdate)) - (MID(CURRENT_DATE, 6, 5) &lt;  MID(CURRENT_DATE, 6, 5)),' year old'))) as ageComplex from (SELECT @bdate:=
+                DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d') AS birthdate FROM demographic WHERE demographic_no=${demographic}) as t</ap-sql>
+        <ap-output>${ageComplex}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>sex</ap-name>
+        <ap-sql>SELECT sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${sex}</ap-output>
+    </databaseap>
 
+<!-- Patient medical information -->
+    <databaseap>
+        <ap-name>social_family_history</ap-name>
+        <ap-sql>SELECT socialHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
+        <ap-output>${socialHistory}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>other_medications_history</ap-name>
+        <ap-sql>SELECT familyHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
+        <ap-output>${familyHistory}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>medical_history</ap-name>
+        <ap-sql>SELECT medicalHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
+        <ap-output>${medicalHistory}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ongoingconcerns</ap-name>
+        <ap-sql>SELECT ongoingConcerns FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
+        <ap-output>${ongoingConcerns}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>reminders</ap-name>
+        <ap-sql>SELECT reminders FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
+        <ap-output>${reminders}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>allergies_des</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ')as allergy FROM allergies, demographic
+                WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no</ap-sql>
+        <ap-output>${allergy}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>recent_rx</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),'\n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} </ap-sql>
+        <ap-output>${rx}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>druglist_generic</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR '\n' ) AS rxgen
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+        <ap-output>${rxgen}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>druglist_trade</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, BN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR '\n' ) AS rxlist
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+        <ap-output>${rxlist}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>druglist_line</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, CONCAT(UCASE(SUBSTRING(d.BN, 1, 1)),LOWER(SUBSTRING(d.BN, 2))), d.customName) , IF(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , IF(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ', ' ) AS rxlist
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+        <ap-output>${rxlist}</ap-output>
+    </databaseap>
 
+<!-- Doctor information -->
+    <databaseap>
+        <ap-name>doctor</ap-name>
+        <ap-sql>SELECT provider.first_name, provider.last_name  FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>doctor_ohip_no</ap-name>
+        <ap-sql>SELECT provider.ohip_no FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${ohip_no}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>provider_name</ap-name>
+        <ap-sql>SELECT provider.last_name, provider.first_name FROM provider, demographic
+                WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>provider_name_first_init</ap-name>
+        <ap-sql>select  substring(provider.first_name,1,1) as first_init,provider.last_name FROM provider, demographic
+                WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${first_init}. ${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>doctor_work_phone</ap-name>
+        <ap-sql>SELECT provider.work_phone FROM provider, demographic
+                WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${work_phone}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>referral_name</ap-name>
+        <ap-sql>SELECT billingreferral.last_name, billingreferral.first_name FROM billingreferral, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0
+                AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>referral_address</ap-name>
+        <ap-sql>SELECT CONCAT(billingreferral.address1,', ',billingreferral.address2,', ',billingreferral.city,', ',billingreferral.province,', ',billingreferral.country,', ',billingreferral.postal) AS raddress
+                FROM billingreferral, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
+        <ap-output>${raddress}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>referral_phone</ap-name>
+        <ap-sql>SELECT billingreferral.phone FROM billingreferral, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
+        <ap-output>${phone}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>referral_fax</ap-name>
+        <ap-sql>SELECT billingreferral.fax FROM billingreferral, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
+        <ap-output>${fax}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>appt_provider_name</ap-name>
+        <ap-sql>SELECT last_name, first_name FROM provider WHERE provider_no='${appt_provider}'</ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>appt_provider_id</ap-name>
+        <ap-sql>SELECT IF(${appt_provider} IS NULL, '', '${appt_provider}') AS id</ap-sql>
+        <ap-output>${id}</ap-output>
+    </databaseap>
 
-	<databaseap>
-		<ap-name>social_family_history</ap-name>
-		<ap-sql>SELECT socialHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-		<ap-output>${socialHistory}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>other_medications_history</ap-name>
-		<ap-sql>SELECT familyHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-		<ap-output>${familyHistory}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>medical_history</ap-name>
-		<ap-sql>SELECT medicalHistory FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-		<ap-output>${medicalHistory}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>ongoingconcerns</ap-name>
-		<ap-sql>SELECT ongoingConcerns FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-		<ap-output>${ongoingConcerns}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>reminders</ap-name>
-		<ap-sql>SELECT reminders FROM eChart WHERE demographicNo=${demographic} ORDER BY eChartId DESC limit 1</ap-sql>
-		<ap-output>${reminders}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>age</ap-name>
-		<ap-sql>SELECT (YEAR(CURRENT_DATE)-YEAR(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d')))-(RIGHT(CURRENT_DATE, 5) &lt; RIGHT(DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d'),5)) AS 'age' FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${age}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>ageComplex</ap-name>
-		<ap-sql>SELECT (IF ( (YEAR(CURRENT_DATE) - YEAR(@bdate))&lt; 3, 
-(IF ( (((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2))&lt; 3, 
-(IF ( FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7)&lt; 5, 
-(IF ( (TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))&lt; 2, 
-'newborn', CONCAT((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate)),' day old'))), CONCAT(FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7),' week old'))), CONCAT((((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2)),' month old'))), CONCAT((YEAR(CURRENT_DATE) - YEAR(@bdate)) - (MID(CURRENT_DATE, 6, 5) &lt;  MID(CURRENT_DATE, 6, 5)),' year old'))) as ageComplex from (SELECT @bdate:=
-DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d') AS birthdate FROM demographic WHERE demographic_no=${demographic}) as t</ap-sql>
-		<ap-output>${ageComplex}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>sex</ap-name>
-		<ap-sql>SELECT sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${sex}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>provider_name</ap-name>
-		<ap-sql>SELECT provider.last_name, provider.first_name 
-                        FROM provider, demographic 
-			WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
-		<ap-output>${last_name}, ${first_name}</ap-output>
-	</databaseap>
-        
-        
-        <databaseap>
-		<ap-name>provider_name_first_init</ap-name>
-		<ap-sql>select  substring(provider.first_name,1,1) as first_init,provider.last_name 
-                        FROM provider, demographic 
-			WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
-		<ap-output>${first_init}. ${last_name}</ap-output>
-	</databaseap>
-        
-        
-        
-        <databaseap>
-		<ap-name>current_user</ap-name>
-		<ap-sql>SELECT provider.first_name, provider.last_name
-			FROM provider 
-			WHERE provider.provider_no=${provider} </ap-sql>
-		<ap-output>${last_name}, ${first_name}</ap-output>
-	</databaseap>
-        
-        <databaseap>
-		<ap-name>doctor_work_phone</ap-name>
-		<ap-sql>SELECT provider.work_phone
-			FROM provider, demographic 
-			WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
-		<ap-output>${work_phone}</ap-output>
-	</databaseap>
-        
-        <databaseap>
-                <ap-name>referral_name</ap-name>
-                <ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
-                        FROM billingreferral, demographic 
-                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-                <ap-output>${last_name}, ${first_name}</ap-output>
-        </databaseap>
-        <databaseap>
-                <ap-name>referral_address</ap-name>
-                <ap-sql>SELECT CONCAT(billingreferral.address1,', ',billingreferral.address2,', ',billingreferral.city,', ',billingreferral.province,', ',billingreferral.country,', ',billingreferral.postal) AS raddress
-                        FROM billingreferral, demographic 
-                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-                <ap-output>${raddress}</ap-output>
-        </databaseap>
-        <databaseap>
-                <ap-name>referral_phone</ap-name>
-                <ap-sql>SELECT billingreferral.phone
-                        FROM billingreferral, demographic 
-                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-                <ap-output>${phone}</ap-output>
-        </databaseap>
-        <databaseap>
-                <ap-name>referral_fax</ap-name>
-                <ap-sql>SELECT billingreferral.fax
-                        FROM billingreferral, demographic 
-                        WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0 AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-                <ap-output>${fax}</ap-output>
-        </databaseap>
-        <databaseap>
-                <ap-name>allergies_des</ap-name>
-                <ap-sql>SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ')as allergy
-                        FROM allergies, demographic
-                        WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no</ap-sql>
-                <ap-output>${allergy}</ap-output>
-        </databaseap>
-        <databaseap>
-                <ap-name>recent_rx</ap-name>
-                <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),'\n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} </ap-sql>
-                <ap-output>${rx}</ap-output>
-        </databaseap> 
-        <databaseap>       
-                <ap-name>druglist_generic</ap-name>
-                <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR '\n' ) AS rxgen
-			FROM drugs d 
-			WHERE d.demographic_no=${demographic} 
-			AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
-                <ap-output>${rxgen}</ap-output>
-        </databaseap>    
-        <databaseap>     
-                <ap-name>druglist_trade</ap-name>
-                <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, BN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR '\n' ) AS rxlist
-			FROM drugs d 
-			WHERE d.demographic_no=${demographic} 
-			AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
-                <ap-output>${rxlist}</ap-output>
-        </databaseap>    
-        <databaseap>
-                <ap-name>druglist_line</ap-name>
-                <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, CONCAT(UCASE(SUBSTRING(d.BN, 1, 1)),LOWER(SUBSTRING(d.BN, 2))), d.customName) , IF(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , IF(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ', ' ) AS rxlist
-			FROM drugs d 
-			WHERE d.demographic_no=${demographic} 
-			AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
-                <ap-output>${rxlist}</ap-output>
-        </databaseap>
+<!-- Clinic information -->
+    <databaseap>
+        <ap-name>clinic_name</ap-name>
+        <ap-sql>SELECT clinic_name FROM clinic</ap-sql>
+        <ap-output>${clinic_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_phone</ap-name>
+        <ap-sql>SELECT clinic_phone FROM clinic</ap-sql>
+        <ap-output>${clinic_phone}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_fax</ap-name>
+        <ap-sql>SELECT clinic_fax FROM clinic</ap-sql>
+        <ap-output>${clinic_fax}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_label</ap-name>
+        <ap-sql>SELECT * FROM clinic</ap-sql>
+        <ap-output>${clinic_name}\n${clinic_address}\n${clinic_city},${clinic_province},${clinic_postal}\nTel:${clinic_phone}\nFax:${clinic_fax}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_addressLine</ap-name>
+        <ap-sql>SELECT clinic_address FROM clinic</ap-sql>
+        <ap-output>${clinic_address}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_addressLineFull</ap-name>
+        <ap-sql>SELECT * FROM clinic</ap-sql>
+        <ap-output>${clinic_address}, ${clinic_city}, ${clinic_province}, ${clinic_postal}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_address</ap-name>
+        <ap-sql>SELECT * FROM clinic</ap-sql>
+        <ap-output>${clinic_address}\n${clinic_city},${clinic_postal}\n${clinic_province},Canada</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_city</ap-name>
+        <ap-sql>SELECT * FROM clinic</ap-sql>
+        <ap-output>${clinic_city}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_province</ap-name>
+        <ap-sql>SELECT * FROM clinic</ap-sql>
+        <ap-output>${clinic_province}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>clinic_postal</ap-name>
+        <ap-sql>SELECT * FROM clinic</ap-sql>
+        <ap-output>${clinic_postal}</ap-output>
+    </databaseap>
 
-		<databaseap>
-			<ap-name>appt_provider_name</ap-name>
-			<ap-sql>SELECT last_name, first_name FROM provider WHERE provider_no='${appt_provider}'</ap-sql>
-			<ap-output>${last_name}, ${first_name}</ap-output>
-		</databaseap>
-		<databaseap>
-			<ap-name>appt_provider_id</ap-name>
-			<ap-sql>SELECT IF(${appt_provider} IS NULL, '', '${appt_provider}') AS id</ap-sql>
-			<ap-output>${id}</ap-output>
-		</databaseap>
-		<databaseap>
-			<ap-name>appt_date</ap-name>
-			<ap-sql>SELECT appointment_date from appointment WHERE appointment_no=${appt_no}</ap-sql>
-			<ap-output>${appointment_date}</ap-output>
-		</databaseap>
-        <databaseap>
-            <ap-name>_eform_values_first</ap-name>
-            <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id LIMIT 1</ap-sql>
-            <ap-output>${var_value}</ap-output>
-        </databaseap>
-        <databaseap>
-            <ap-name>_eform_values_last</ap-name>
-            <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id DESC LIMIT 1</ap-sql>
-            <ap-output>${var_value}</ap-output>
-        </databaseap>
-        <databaseap>
-            <ap-name>_eform_values_count</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}'
-                    AND fid=${fid} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)</ap-sql>
-            <ap-output>${count(0)}</ap-output>
-        </databaseap>
-        <databaseap>
-            <ap-name>_eform_values_countname</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
-                    AND fid=${fid} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)</ap-sql>
-            <ap-output>${count(0)}</ap-output>
-        </databaseap>
-        <databaseap>
-            <ap-name>_eform_values_count_ref</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}' 
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
-                    AND fdid IN (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
-                    AND fid=${fid}))</ap-sql>
-            <ap-output>${count(0)}</ap-output>
-        </databaseap>
-        <databaseap>
-            <ap-name>_eform_values_countname_ref</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
-                    AND fdid IN (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
-                    AND fid=${fid}))</ap-sql>
-            <ap-output>${count(0)}</ap-output>
-        </databaseap>
-        <databaseap>
-            <ap-name>_eform_values_count_refname</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}' 
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
-                    AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}
-                    AND var_name='${ref_var_name}' AND NOT (var_value='' OR var_value IS NULL)))</ap-sql>
-            <ap-output>${count(0)}</ap-output>
-        </databaseap>
-		<databaseap>
-            <ap-name>_eform_values_countname_refname</ap-name>
-            <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
-                    AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
-                    AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}
-                    AND var_name='${ref_var_name}' AND NOT (var_value='' OR var_value IS NULL)))</ap-sql>
-            <ap-output>${count(0)}</ap-output>
-        </databaseap>
-		<databaseap>
-			<ap-name>_other_id</ap-name>
-			<ap-sql>SELECT other_id FROM other_id WHERE table_name=${table_name} AND table_id=${table_id}
-                    AND other_key='${other_key}' AND deleted=false ORDER BY id DESC LIMIT 1</ap-sql>
-			<ap-output>${other_id}</ap-output>
-		</databaseap>
+<!-- Extended eform tags -->
+    <databaseap>
+        <ap-name>_eform_values_first</ap-name>
+        <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
+                AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id LIMIT 1</ap-sql>
+        <ap-output>${var_value}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_eform_values_last</ap-name>
+        <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
+                AND fdid IN (SELECT fdid FROM eform_data WHERE status=1) ORDER BY id DESC LIMIT 1</ap-sql>
+        <ap-output>${var_value}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_eform_values_count</ap-name>
+        <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}'
+                AND fid=${fid} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)</ap-sql>
+        <ap-output>${count(0)}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_eform_values_countname</ap-name>
+        <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
+                AND fid=${fid} AND fdid IN (SELECT fdid FROM eform_data WHERE status=1)</ap-sql>
+        <ap-output>${count(0)}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_eform_values_count_ref</ap-name>
+        <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}'
+                AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                AND fdid IN (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
+                AND fid=${fid}))</ap-sql>
+        <ap-output>${count(0)}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_eform_values_countname_ref</ap-name>
+        <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
+                AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                AND fdid IN (SELECT fdid FROM eform_values WHERE var_name='${ref_var_name}' AND var_value='${ref_var_value}'
+                AND fid=${fid}))</ap-sql>
+        <ap-output>${count(0)}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_eform_values_count_refname</ap-name>
+        <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND var_value='${var_value}'
+                AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}
+                AND var_name='${ref_var_name}' AND NOT (var_value='' OR var_value IS NULL)))</ap-sql>
+        <ap-output>${count(0)}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_eform_values_countname_refname</ap-name>
+        <ap-sql>SELECT count(0) FROM eform_values WHERE var_name='${var_name}' AND NOT (var_value='' OR var_value IS NULL)
+                AND fdid IN (SELECT fdid FROM eform_data WHERE status=1
+                AND fdid IN (SELECT fdid FROM eform_values WHERE fid=${fid}
+                AND var_name='${ref_var_name}' AND NOT (var_value='' OR var_value IS NULL)))</ap-sql>
+        <ap-output>${count(0)}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>_other_id</ap-name>
+        <ap-sql>SELECT other_id FROM other_id WHERE table_name=${table_name} AND table_id=${table_id}
+                AND other_key='${other_key}' AND deleted=false ORDER BY id DESC LIMIT 1</ap-sql>
+        <ap-output>${other_id}</ap-output>
+    </databaseap>
+
 </eformap-config>
