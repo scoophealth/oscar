@@ -29,6 +29,7 @@ import ca.uhn.hl7v2.model.v26.group.OMP_O09_PATIENT;
 import ca.uhn.hl7v2.model.v26.group.OMP_O09_TIMING;
 import ca.uhn.hl7v2.model.v26.message.OMP_O09;
 import ca.uhn.hl7v2.model.v26.segment.ORC;
+import ca.uhn.hl7v2.model.v26.segment.RXO;
 import ca.uhn.hl7v2.model.v26.segment.TQ1;
 
 public final class OmpO09 {
@@ -55,14 +56,53 @@ public final class OmpO09 {
 			OMP_O09_ORDER order=prescriptionMsg.getORDER(drugCounter);
 			fillOrc(order, prescription, provider, clinic);			
 			fillTq1(order, drug);
-			
-// done to this point : need to add RXO
+			fillRxo(order.getRXO(), drug);
+			DataTypeUtils.fillNte(order.getNTE(0), "Prescription Text", null, drug.getSpecial().getBytes());
 
 			drugCounter++;
 		}		
 		
 		return (prescriptionMsg);
 	}
+
+	private static void fillRxo(RXO rxo, Drug drug) throws HL7Exception {
+
+		CWE drugType=rxo.getRequestedGiveCode();
+		
+		StringBuilder drugTypeSb=new StringBuilder();
+		if (drug.getGenericName()!=null) drugTypeSb.append(drug.getGenericName());
+		if (drug.getBrandName()!=null)
+		{
+			drugTypeSb.append('(');
+			drugTypeSb.append(drug.getBrandName());
+			drugTypeSb.append(')');
+		}
+		drugType.getText().setValue(drugTypeSb.toString());
+		
+		NM dosageMin=rxo.getRequestedGiveAmountMinimum();
+		dosageMin.setValue(drug.getDosage());
+		
+		CWE dosageUnits=rxo.getRequestedGiveUnits();
+		dosageUnits.getText().setValue(drug.getUnit());
+		
+		CWE dosageForm=rxo.getRequestedDosageForm();
+		dosageForm.getText().setValue(drug.getDrugForm());
+		
+		CWE specialInstructions=rxo.getProviderSPharmacyTreatmentInstructions(0);
+		specialInstructions.getText().setValue(drug.getSpecialInstruction());
+		
+		CWE administraionRouteMethod=rxo.getProviderSAdministrationInstructions(0);
+		StringBuilder routeMethodSb=new StringBuilder();
+		if (drug.getRoute()!=null) routeMethodSb.append(drug.getRoute());
+		if (drug.getMethod()!=null)
+		{
+			if (routeMethodSb.length()>0) routeMethodSb.append(", ");
+			routeMethodSb.append(drug.getMethod());
+		}
+		administraionRouteMethod.getText().setValue(routeMethodSb.toString());
+		
+		rxo.getAllowSubstitutions().setValue(String.valueOf(!drug.isNoSubs()));
+    }
 
 	private static void fillTq1(OMP_O09_ORDER order, Drug drug) throws HL7Exception {
 	    OMP_O09_TIMING timing=order.getTIMING(0);
