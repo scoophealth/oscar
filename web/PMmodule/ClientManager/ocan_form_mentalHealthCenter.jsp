@@ -142,17 +142,8 @@
 				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_functionNameOther"+centerNumber,1,30, prepopulationLevel)%>
 			</td>
 		</tr>
-		<!--
+
 		<tr>
-			<td class="genericTableHeader">Functional Center Number</td>
-			<td class="genericTableData">
-				<select name="serviceUseRecord_functionNumber<%=centerNumber %>" class="{validate: {required:true}}">					
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_functionNumber"+centerNumber, OcanForm.getOcanFormOptions("MIS Functional Centre List"), prepopulationLevel)%>
-				</select>					
-			</td>
-		</tr>
-		<tr>
-		-->
 			<td class="genericTableHeader">Functional Center Number - Other</td>
 			<td class="genericTableData">
 				<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"serviceUseRecord_functionNumberOther"+centerNumber,1,30, prepopulationLevel)%>

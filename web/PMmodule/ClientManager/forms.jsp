@@ -5,9 +5,13 @@
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.common.model.OcanClientForm"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="java.util.Enumeration"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
+
+<% Demographic currentDemographic=(Demographic)request.getAttribute("client");
+%>
 
 <script>
 function updateQuickIntake(clientId) {
@@ -377,7 +381,15 @@ New User Created Form:&nbsp;
 			<td width="10%"><c:out value="${form.formattedCompletionDate}" /></td>	
 			<td><c:out value="${form.providerName}" /></td>
 			<td><c:out value="${form.assessmentStatus}" /></td>
+			<c:set var="form" value="${form}" scope="request" />
+			<%
+				OcanStaffForm ocanStaffForm=(OcanStaffForm)request.getAttribute("form");
+				String ocanStaffFormUrl="ClientManager/ocan_form.jsp?demographicId="+currentDemographic.getDemographicNo()+ "&ocanStaffFormId="+ocanStaffForm.getId();
+			%>
+			<!--  
 			<td><input type="button" value="Print Preview" onclick="printOcanStaffForm('<c:out value="${client.demographicNo}" />','<c:out value="${form.id}" />')" /></td>	
+		-->
+			<td><input type="button" value="Print Preview" onclick="document.location='<%=ocanStaffFormUrl+"&print=true"%>'" /></td>
 		</tr>
 	</c:forEach>
 </table>
