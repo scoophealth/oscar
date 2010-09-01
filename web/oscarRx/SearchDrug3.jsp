@@ -160,7 +160,7 @@
         <html:base />
 
         <link rel="stylesheet" href="<c:out value="${ctx}/share/lightwindow/css/lightwindow.css"/>" type="text/css" media="screen" />
-        <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  ></link>
+        <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
         <!--link rel="stylesheet" type="text/css" href="modaldbox.css"  /-->
         <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
@@ -194,7 +194,6 @@
             }
             function onPrint(cfgPage) {
                 var docF = $('printFormDD');
-                oscarLog('in onPrint'+docF);
 
                 docF.action = "../form/createpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
                 docF.target="_blank";
@@ -291,14 +290,14 @@ var SORT_COLUMN_INDEX;
 
 function sortables_init() {
     // Find all tables with class sortable and make them sortable
-    oscarLog("in here");
+
     if (!document.getElementsByTagName) return;
-    oscarLog("Made it pat getElementsByTagName");
+
     tbls = document.getElementsByTagName("table");
-    oscarLog("able "+tbls.length);
+
     for (ti=0;ti<tbls.length;ti++) {
         thisTbl = tbls[ti];
-        oscarLog(thisTbl.className);
+
         if (((' '+thisTbl.className+' ').indexOf("sortable") != -1) && (thisTbl.id)) {
             //initTable(thisTbl.id);
             ts_makeSortable(thisTbl);
@@ -725,7 +724,7 @@ body {
                                                             <div style="margin-top: 10px;  width: 100%">
                                                                 <table width="100%" cellspacing="0" cellpadding="0">
                                                                     <tr>
-                                                                        <td align="left">
+                                                                        <td align="left"  height="30px">
                                                                             <a href="javascript:void(0);" title="View drug profile legend" onclick="ThemeViewer();" style="font-style:normal;color:#000000" ><bean:message key="SearchDrug.msgProfileLegend"/></a>
                                                                             <a href="#"  title="<bean:message key="provider.rxChangeProfileViewMessage"/>" onclick="popupPage(230,860,'../setProviderStaleDate.do?method=viewRxProfileView');" style="color:red;vertical-align:super;text-decoration:none" ><bean:message key="provider.rxChangeProfileView"/></a>
                                                                             <%if(show_current){%>
@@ -951,7 +950,6 @@ function changeLt(drugId){
         parseIntr($('instructions_'+randomId));
     }
     function addSpecialInstruction(content,randomId){
-                //oscarLog("in show hide spec inst="+randomId);
                 if($('siAutoComplete_'+randomId).getStyle('display')=='none'){
                   Effect.BlindDown('siAutoComplete_'+randomId);
                 }else{}
@@ -963,9 +961,7 @@ function changeLt(drugId){
    }
     var modalBox=function(){
         this.show=function(randomId){
-            oscarLog('mb, show called,randomid '+randomId);
             if(!document.getElementById("xmaskframe")){
-                oscarLog('inkk ');
                 var divFram=document.createElement('iframe');
                 divFram.setAttribute("id","xmaskframe");
                 divFram.setAttribute("name","xmaskframe");
@@ -982,18 +978,12 @@ function changeLt(drugId){
                 divSty.zIndex="45";
                 //divSty.cursor="move";
             }
-            oscarLog('adf ');
             this.waitifrm=document.getElementById("xmaskframe");
 
-            oscarLog('nn ');
             this.waitifrm.setAttribute("src","displayMedHistory.jsp?randomId="+randomId);
-            oscarLog('dd ');
             this.waitifrm.style.display="block";
             $("dragifm").appendChild(this.waitifrm);
-            //oscarLog('cc ');
-            //oscarLog('aa ');
             Effect.Appear('xmaskframe');
-            oscarLog('ff ');
         };
         this.hide=function()
             {
@@ -1033,9 +1023,6 @@ function changeLt(drugId){
         prnStr=prnStr.strip();
         var prnStyle=$('prn_'+randomId).getStyle('textDecoration');
         if(prnStr=='prn' || prnStr=='PRN'|| prnStr=='Prn'){
-            oscarLog("prnStyle="+prnStyle);
-            oscarLog("randomId="+randomId);
-            oscarLog("$('prnVal_'+randomId).value="+$('prnVal_'+randomId).value);
             if(prnStyle.match("line-through")!=null){
                 $('prn_'+randomId).setStyle({textDecoration:'none'});
                 $('prnVal_'+randomId).value=true;
@@ -1046,7 +1033,6 @@ function changeLt(drugId){
         }
     }
      function focusTo(elementId){
-         oscarLog(elementId);
          $(elementId).contentEditable='true';
          $(elementId).focus();
      }
@@ -1059,8 +1045,6 @@ function changeLt(drugId){
      }
 
     function changeText(elementId){
-        oscarLog("in clearText");
-        oscarLog("text value="+$(elementId).value);
         if($(elementId).value=='Enter Special Instruction'){
             $(elementId).value="";
             $(elementId).setStyle({color:'black'});
@@ -1071,8 +1055,6 @@ function changeLt(drugId){
 
     }
     function updateMoreLess(elementId){
-        oscarLog(elementId);
-        oscarLog($(elementId).innerHTML);
         if($(elementId).innerHTML=='more')
             $(elementId).innerHTML='less';
         else
@@ -1090,7 +1072,6 @@ function changeLt(drugId){
             //call another function to bring up prescribe.jsp
             var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=normalDrugSetCustom";
             var customDrugName=$("drugName_"+randomId).getValue();
-            oscarLog("customDrugName="+customDrugName);
             var data="randomId="+randomId+"&customDrugName="+customDrugName;
             new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,insertion: Insertion.Bottom,onSuccess:function(transport){
                     $('set_'+randomId).remove();
@@ -1134,8 +1115,8 @@ function changeLt(drugId){
        new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){
-                oscarLog("successfully sent data "+url);
-                popForm2(scriptNo);
+                popForm2();
+
             }});
         return false;
     }
@@ -1145,7 +1126,6 @@ function changeLt(drugId){
         var data="randomId="+randomId;
         var url="<c:out value="${ctx}"/>" + "/oscarRx/rxStashDelete.do?parameterValue=deletePrescribe";
         new Ajax.Request(url, {method: 'get',parameters:data,asynchronous:false,onSuccess:function(transport){
-                oscarLog("in deletePrescribe success");
                 updateCurrentInteractions();
                 if($('deleteOnCloseRxBox').value=='true'){
                     deleteRxOnCloseRxBox(randomId);
@@ -1171,7 +1151,6 @@ function changeLt(drugId){
                              $(del).style.textDecoration='line-through';
                              $(discont).style.textDecoration='line-through';
                              $(prescrip).style.textDecoration='line-through';
-                             oscarLog("in deleteRxOnCloseRxBox success");
                     }
                 }});
 
@@ -1193,12 +1172,10 @@ function changeLt(drugId){
         var randomId=Math.round(Math.random()*1000000);
         var data="favoriteId="+favoriteId+"&randomId="+randomId;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/useFavorite.do?parameterValue=useFav2";
-        //oscarLog("---"+url);
         new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom});
     }
 
    function Delete2(element){
-        oscarLog(element.id);
 
         if(confirm('Are you sure you wish to delete the selected prescriptions?')==true){
              var id_str=(element.id).split("_");
@@ -1210,18 +1187,14 @@ function changeLt(drugId){
              var discont="discont_"+ id;
              var prescrip="prescrip_"+id;
 
-           //  oscarLog(document.getElementsByName(caonima)[0]);
-           //  oscarLog(document.getElementById(id));
              var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=Delete2"  ;
              var data="deleteRxId="+element.id;
             new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                  oscarLog("here");
                   $(rxDate).style.textDecoration='line-through';
                   $(reRx).style.textDecoration='line-through';
                   $(del).style.textDecoration='line-through';
                   $(discont).style.textDecoration='line-through';
                   $(prescrip).style.textDecoration='line-through';
-                  oscarLog("here2");
             }});
         }
         return false;
@@ -1231,12 +1204,10 @@ function changeLt(drugId){
          var url="<c:out value="${ctx}"/>" + "/oscarRx/getAllergyData.jsp"  ;
          var data="atcCode="+atcCode+"&id="+id;
          new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                 //oscarLog("here");
                  var json=transport.responseText.evalJSON();
                  if(json!=null&&json.DESCRIPTION!=null&&json.reaction!=null){
                       var str = "Allergy: "+ json.DESCRIPTION + " Reaction: "+json.reaction;
                       $('alleg_'+json.id).innerHTML = str;
-                      //oscarLog("-- "+ $('alleg_'+json.id).innerHTML);
                  }
             }});
    }
@@ -1244,13 +1215,11 @@ function changeLt(drugId){
         var url="<c:out value="${ctx}"/>" + "/oscarRx/getInactiveDate.jsp"  ;
          var data="din="+dinNumber+"&id="+id;
          new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                 //oscarLog("here");
                  var json=transport.responseText.evalJSON();
                 if(json!=null){
                     var str = "Inactive Drug Since: "+new Date(json.vec[0].time).toDateString();
                     $('inactive_'+json.id).innerHTML = str;
                 }
-                  //oscarLog("-- "+ $('inactive_'+json.id).innerHTML);
             }});
    }
 
@@ -1261,8 +1230,6 @@ function changeLt(drugId){
        var widVal = ($('drugProfile').getWidth()-300);
        var widStr=widVal+'px';
        var heightDrugProfile=$('discontinueUI').getHeight();
-       //oscarLog(heightDrugProfile);
-       //get x and y of mouse click
        var posx=0,posy=0;
        if(event.pageX||event.pageY){
            posx=event.pageX;
@@ -1280,22 +1247,15 @@ function changeLt(drugId){
            posy = posy+'px';
        }else{
            var xy = Position.page($('drugProfile'));
-           //oscarLog("xy="+xy);
            posx = (xy[0]+200)+'px';
            if(xy[1]>=0)
                posy = xy[1]+'px';
            else
                posy=0+'px';
        }
-
-       //oscarLog("posx="+posx+"--posy="+posy+"--widStr="+widStr);
-
-
        var styleStr= {left: posx, top: posy,width: widStr};
-       //oscarLog("styleStr="+styleStr);
 
         var drugName = $('prescrip_'+id).innerHTML;
-        //oscarLog("drugName="+drugName);
        $('discontinueUI').setStyle(styleStr);
        $('disDrug').innerHTML = drugName;
        $('discontinueUI').show();
@@ -1309,7 +1269,6 @@ function changeLt(drugId){
         var demoNo='<%=patient.getDemographicNo()%>';
         var data="drugId="+id+"&reason="+reason+"&comment="+comment+"&demoNo="+demoNo+"&drugSpecial="+drugSpecial;
             new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                  oscarLog("Drug is now discontinued>"+transport.responseText);
                   var json=transport.responseText.evalJSON();
                   $('discontinueUI').hide();
                   $('rxDate_'+json.id).style.textDecoration='line-through';
@@ -1317,7 +1276,6 @@ function changeLt(drugId){
                   $('del_'+json.id).style.textDecoration='line-through';
                   $('discont_'+json.id).innerHTML = json.reason;
                   $('prescrip_'+json.id).style.textDecoration='line-through';
-                  oscarLog("here2");
             }});
 
     }
@@ -1329,18 +1287,14 @@ function changeLt(drugId){
                                             str=str.replace('<script type="text/javascript">','');
                                             str=str.replace(/<\/script>/,'');
                                             eval(str);
-                                            //oscarLog("before calling mydrugrefinfo view");
                                             <oscar:oscarPropertiesCheck property="MYDRUGREF_DS" value="yes">
                                               callReplacementWebService("GetmyDrugrefInfo.do?method=view",'interactionsRxMyD');
                                              </oscar:oscarPropertiesCheck>
-                                            //oscarLog("after calling mydrugrefinfo view");
                                         }});
                             }});
     }
 //represcribe long term meds
     function RePrescribeLongTerm(){
-        //var longTermDrugs=$(longTermDrugList).value;
-       // var data="drugIdList="+longTermDrugs;
        var demoNo='<%=patient.getDemographicNo()%>';
         var data="demoNo="+demoNo+"&showall=<%=showall%>";
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=repcbAllLongTerm";
@@ -1380,7 +1334,6 @@ function customWarning2(){
         var data="randomId="+randomId;
         new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,
             insertion: Insertion.Bottom, onComplete:function(transport){
-                //oscarLog('xxxxxxxxxxxxxxxxxxxxxxxx');
                 updateQty($('quantity_'+randomId));
             }});
 
@@ -1397,14 +1350,7 @@ function saveCustomName(element){
     var quantity="quantity_"+rand;
     var repeat="repeats_"+rand;
     new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
-            //output default instructions
-         /*   var json=transport.responseText.evalJSON();
-                oscarLog("json: "+json.instructions);
-            if(json!=null){
-                $(instruction).value=json.instructions;
-                $(quantity).value=json.quantity;
-                $(repeat).value=json.repeat;
-            }*/
+
             }});
 }
 function updateDeleteOnCloseRxBox(){
@@ -1459,7 +1405,6 @@ function popForm2(scriptId){
      }
 
      function callReplacementWebService(url,id){
-         //oscarLog("in callReplacementWebService,url="+url+"--id"+id);
               var ran_number=Math.round(Math.random()*1000000);
               var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
               var updater=new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:false,evalScripts:true});
@@ -1471,7 +1416,6 @@ function popForm2(scriptId){
           callReplacementWebService("ListDrugs.jsp",'drugProfile');
 
 YAHOO.example.FnMultipleFields = function(){
-    oscarLog("FnMultipleFields ");
     var url = "<c:out value="${ctx}"/>" + "/oscarRx/searchDrug.do?method=jsonSearch";
     var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ingoreStaleResponse'});
     oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;// Set the responseType
@@ -1483,7 +1427,6 @@ YAHOO.example.FnMultipleFields = function(){
     // Enable caching
     oDS.maxCacheEntries =0;
     oDS.connXhrMode ="cancelStaleRequests";
-    //oscarLog(oDS.responseSchema);
     // Instantiate AutoComplete
     var oAC = new YAHOO.widget.AutoComplete("searchString", "autocomplete_choices", oDS);
     oAC.useShadow = true;
@@ -1497,14 +1440,10 @@ YAHOO.example.FnMultipleFields = function(){
     // when an item gets selected and populate the input field
     //var myHiddenField = YAHOO.util.Dom.get("myHidden");
     var myHandler = function(type, args) {
-                    //oscarLog(type+" :: "+args);
-                    //oscarLog(args[2]);
                     var arr = args[2];
-                    //oscarLog('In yahoo----'+arr.name);
                     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx"; //"prescribe.jsp";
                     var ran_number=Math.round(Math.random()*1000000);
                     var name=encodeURIComponent(arr.name);
-                    //oscarLog("after encode="+name);
                     var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+arr.id+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
                    new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:false,evalScripts:true,
                         insertion: Insertion.Bottom,onSuccess:function(transport){
@@ -1544,9 +1483,7 @@ function addFav(randomId,brandName){
     //not used
     function showHiddenRes(){
         var list = $$('div.hiddenResource');
-        oscarLog("list="+list);
         if(resHidden2 == 0){
-          oscarLog("resHidden2 is 0");
           list.invoke('show');
           resHidden2 = 1;
           $('showHiddenResWord').update('hide');
@@ -1554,7 +1491,6 @@ function addFav(randomId,brandName){
           var params="hiddenResources=";
           new Ajax.Request(url, {method: 'post',parameters:params});
         }else{
-            oscarLog("resHidden2 is not 0");
             $('showHiddenResWord').update('show');
             list.invoke('hide');
             resHidden2 = 0;
@@ -1562,13 +1498,10 @@ function addFav(randomId,brandName){
     }
     var showOrHide=0;
     function showOrHideRes(hiddenRes){
-        oscarLog("hiddenRes="+hiddenRes);
-
         hiddenRes=hiddenRes.replace(/\{/g,"");
         hiddenRes=hiddenRes.replace(/\}/g,"");
         hiddenRes=hiddenRes.replace(/\s/g,"");
         var arr=hiddenRes.split(",");
-        oscarLog(arr);
         var numberOfHiddenResources=0;
         if(showOrHide==0){
             numberOfHiddenResources=0;
@@ -1579,7 +1512,6 @@ function addFav(randomId,brandName){
                 var resId=elementArr[0];
                 var resUpdated=elementArr[1];
                 var id=resId+"."+resUpdated;
-                oscarLog("id="+id);
                 $(id).show();
                 $('show_'+id).hide();
                 $('showHideWord').update('hide');
@@ -1614,7 +1546,6 @@ function addFav(randomId,brandName){
     function showAddText(randId){
         var addTextId="addText_"+randId;
         var addTextWordId="addTextWord_"+randId;
-        oscarLog("randId="+randId);
         if(addTextView==0){
             $(addTextId).show();
             addTextView=1;
@@ -1633,7 +1564,6 @@ function addFav(randomId,brandName){
         var url='GetmyDrugrefInfo.do?method=setWarningToShow';
         new Ajax.Updater('showHideTotal',url,{method:'get',parameters:params,asynchronous:true,evalScripts:true,onSuccess:function(transport){
 
-                //oscarLog("successfully sent data "+url);
                 $(id).show();
                 $('show_'+id).hide();
 
@@ -1642,14 +1572,11 @@ function addFav(randomId,brandName){
 
    function HideW(id,resourceId,updated){
         var url = 'GetmyDrugrefInfo.do?method=setWarningToHide';
-        //oscarLog("hidew in searchdrug3");
-        //callReplacementWebService("GetmyDrugrefInfo.do?method=setWarningToHide",'interactionsRxMyD');function callReplacementWebService(url,id){
         var ran_number=Math.round(Math.random()*1000000);
         var params = "resId="+resourceId+"&updatedat="+updated+"&rand="+ran_number;  //hack to get around ie caching the page
         //totalHiddenResources++;
         new Ajax.Updater('showHideTotal',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,onSuccess:function(transport){
 
-                //oscarLog("successfully sent data "+url);
                 $(id).hide();
                 $("show_"+id).show();
 
@@ -1661,11 +1588,8 @@ function setSearchedDrug(drugId,name){
 
     var url = "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=createNewRx";
     var ran_number=Math.round(Math.random()*1000000);
-    oscarLog("name in setSearchedDrug: "+name);
-    oscarLog("encodeURIComponent name in setSearchedDrug: "+encodeURIComponent(name));
     name=encodeURIComponent(name);
-    var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+drugId+"&text="+name+"&randomId="+ran_number;  //hack to get around ie caching the page
-    oscarLog(params);
+    var params = "demographicNo=<%=bean.getDemographicNo()%>&drugId="+drugId+"&text="+name+"&randomId="+ran_number;
     new Ajax.Updater('rxText',url, {method:'get',parameters:params,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom,onSuccess:function(transport){
                             updateCurrentInteractions();
             }});
@@ -1676,12 +1600,10 @@ function updateReRxDrugId(elementId){
         var ar=elementId.split("_");
         var drugId=ar[1];
    if(drugId!=null && $(elementId).checked==true){
-       oscarLog("checked");
        var data="reRxDrugId="+drugId+"&action=addToReRxDrugIdList";
        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateReRxDrug";
        new Ajax.Request(url, {method: 'get',parameters:data});
    }else if(drugId!=null){
-       oscarLog("unchecked");
        var data="reRxDrugId="+drugId+"&action=removeFromReRxDrugIdList";
        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateReRxDrug";
        new Ajax.Request(url, {method: 'get',parameters:data});
@@ -1693,7 +1615,6 @@ function updateReRxDrugId(elementId){
         var ar=elemId.split("_");
         var drugId=ar[1];
         if(drugId!=null && $("reRxCheckBox_"+drugId).checked==true){
-            oscarLog("this checked");
             var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=represcribeMultiple";
             new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:false,evalScripts:true,
                 insertion: Insertion.Bottom,onSuccess:function(transport){
@@ -1767,8 +1688,6 @@ function updateQty(element){
         return true;
 }
     function parseIntr(element){
-       // var instruction="instruction="+element.value+"&action=parseInstructions";
-        //oscarLog(instruction);
         var elemId=element.id;
         var ar=elemId.split("_");
         var rand=ar[1];
@@ -1801,15 +1720,11 @@ function updateQty(element){
                 }
                 $(durationUnitStr).innerHTML=json.durationUnit;
                 $(quantityStr).innerHTML=json.calQuantity;
-                oscarLog("json.prn0="+json.prn);
-                oscarLog("json.unitName="+json.unitName);
-                oscarLog("$(unitNameStr).innerHTML="+$(unitNameStr).innerHTML);
                 if(json.unitName!=null && json.unitName!="null" && json.unitName!="NULL" && json.unitName!="Null"){
                     $(unitNameStr).innerHTML=json.unitName;
                 }else{
                     $(unitNameStr).innerHTML='';
                 }
-                oscarLog("json.prn="+json.prn);
                 if(json.prn){
                     $(prnStr).innerHTML="prn";$(prnVal).value=true;
                 } else{
@@ -1847,7 +1762,6 @@ function updateQty(element){
         new Ajax.Request(url,
         {method: 'post',postBody:data,asynchronous:false,
             onSuccess:function(transport){
-                oscarLog("successfully sent data "+url);
                 callReplacementWebService("ListDrugs.jsp",'drugProfile');
                 popForm2(null);
                 resetReRxDrugList();
@@ -1856,12 +1770,10 @@ function updateQty(element){
     }
     function updateSaveAllDrugs(){
         var data=Form.serialize($('drugForm'));
-        oscarLog("data="+data);
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs";
         new Ajax.Request(url,
         {method: 'post',postBody:data,asynchronous:false,
             onSuccess:function(transport){
-                oscarLog("successfully sent data "+url);
                 callReplacementWebService("ListDrugs.jsp",'drugProfile');
                 resetReRxDrugList();
                 resetStash();
