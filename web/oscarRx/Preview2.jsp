@@ -88,7 +88,7 @@ if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {
     signingProvider = bean.getStashItem(0).getProviderNo();
     rxDate = bean.getStashItem(0).getRxDate();
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(signingProvider);
-    session.setAttribute("tmpBeanRX", null);
+//    session.setAttribute("tmpBeanRX", null);
     String ip = request.getRemoteAddr();
     //LogAction.addLog((String) session.getAttribute("user"), LogConst.UPDATE, LogConst.CON_PRESCRIPTION, String.valueOf(bean.getDemographicNo()), ip);
 }
@@ -278,25 +278,40 @@ ProviderData user = new ProviderData(strUser);
 
 
                                                     </tr>
-                                                    <% if( rePrint.equalsIgnoreCase("true") && rx != null ) { %>
-                                                    <tr valign=bottom style="font-size: 6px;">
-                                                        <td height=25px colspan="2"><bean:message key="RxPreview.msgReprintBy"/> <%=user.getProviderName(strUser)%><span style="float: left;">
-                                                            <bean:message key="RxPreview.msgOrigPrinted"/>:&nbsp;<%=rx.getPrintDate()%></span> <span
-                                                                    style="float: right;"><bean:message key="RxPreview.msgTimesPrinted"/>:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
-                                                            <input type="hidden" name="origPrintDate" value="<%=rx.getPrintDate()%>"/>
-                                                            <input type="hidden" name="numPrints" value="<%=String.valueOf(rx.getNumPrints())%>"/>
-                                                        </td>
+                                                    <% 
+                                                    	 if( rePrint.equalsIgnoreCase("true") && rx != null ) 
+                                                    	 { 
+                                                    	 %>
+		                                                    <tr valign=bottom style="font-size: 6px;">
+		                                                        <td height=25px colspan="2"><bean:message key="RxPreview.msgReprintBy"/> <%=user.getProviderName(strUser)%><span style="float: left;">
+		                                                            <bean:message key="RxPreview.msgOrigPrinted"/>:&nbsp;<%=rx.getPrintDate()%></span> <span
+		                                                                    style="float: right;"><bean:message key="RxPreview.msgTimesPrinted"/>:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
+		                                                            <input type="hidden" name="origPrintDate" value="<%=rx.getPrintDate()%>"/>
+		                                                            <input type="hidden" name="numPrints" value="<%=String.valueOf(rx.getNumPrints())%>"/>
+		                                                        </td>
+		                                                    </tr>
+	                                                    <%
+                                     					}
+                                                    %>
+                                                    
+                                                    <tr>
+	                                                    <td colspan="2">
+	                                                    	<img src="<%=request.getContextPath()%>/contentRenderingServlet/prescription_qr_code_<%=rx.getScript_no()%>.png?source=prescriptionQrCode&prescriptionId=<%=rx.getScript_no()%>" alt="qr_code" />
+	                                                    </td>
                                                     </tr>
-
-                                                    <%
-                                       }
-                                     if (oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){%>
-                                                    <tr valign=bottom align="center" style="font-size: 9px">
-                                                            <td height=25px colspan="2"></br>
-                                                            <%= oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") %>
-                                                            </td>
-                                                    </tr>
-                                                    <%}%>
+                                                    
+                                                    <%                                                    
+	                                     				if (oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null)
+	                                     				{
+	                                     				%>
+		                                                    <tr valign=bottom align="center" style="font-size: 9px">
+		                                                            <td height=25px colspan="2"></br>
+		                                                            <%= oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") %>
+		                                                            </td>
+		                                                    </tr>
+	                                                    <%
+                                                    	}
+                                                    %>
                                             </table>
                                             </td>
                                     </tr>

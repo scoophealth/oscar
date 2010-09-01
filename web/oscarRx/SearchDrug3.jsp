@@ -1127,6 +1127,7 @@ function changeLt(drugId){
                var params = "demographicNo=<%=bean.getDemographicNo()%>&rand="+ran_number;  //hack to get around ie caching the page
                new Ajax.Request(url, {method: 'post',parameters:params});
     }
+    
     function reprint2(scriptNo){
         var data="scriptNo="+scriptNo;
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=reprint2";
@@ -1414,7 +1415,7 @@ function popForm2(scriptId){
             //oscarLog("popForm2 called");
             var url1="<c:out value="${ctx}"/>"+"/oscarRx/WriteScript.do?parameterValue=checkNoStashItem";
             var data="";
-            var h=700;
+            var h=900;
             new Ajax.Request(url1, {method: 'get',parameters:data, onSuccess:function(transport){
                 //output default instructions
                 var json=transport.responseText.evalJSON();
