@@ -44,7 +44,9 @@ import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
+import org.bouncycastle.asn1.ocsp.Request;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.web.PrescriptionQrCodeUIBean;
 
 import oscar.OscarProperties;
 
@@ -52,6 +54,7 @@ import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
+import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
@@ -63,34 +66,20 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 
-/**
- *
- *
- */
 public class FrmCustomedPDFServlet extends HttpServlet {
 
 	public static final String HSFO_RX_DATA_KEY = "hsfo.rx.data";
 	private static Logger logger = MiscUtils.getLogger();
 
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException, java.io.IOException {
-
-		doPost(req, res);
-	}
-
-	/**
-	 * @param req HTTP request object
-	 * @param resp HTTP response object
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException, java.io.IOException {
-
-		DocumentException ex = null;
+	@Override
+    public void service(HttpServletRequest req, HttpServletResponse res) throws javax.servlet.ServletException, java.io.IOException {
 
 		ByteArrayOutputStream baosPDF = null;
 
 		try {
 			baosPDF = generatePDFDocumentBytes(req, this.getServletContext());
 
-			StringBuffer sbFilename = new StringBuffer();
+			StringBuilder sbFilename = new StringBuilder();
 			sbFilename.append("filename_");
 			sbFilename.append(".pdf");
 
@@ -101,7 +90,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			res.setContentType("application/pdf");
 
 			// The Content-disposition value will be inline
-			StringBuffer sbContentDispValue = new StringBuffer();
+			StringBuilder sbContentDispValue = new StringBuilder();
 			sbContentDispValue.append("inline; filename="); // inline - display
 			// the pdf file
 			// directly rather
@@ -169,7 +158,6 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		private String patientCityPostal;
 		private String patientAddress;
 		private String patientName;
-		private String doctorName;
 		private String sigDoctorName;
 		private String rxDate;
 		private String promoText;
@@ -177,12 +165,9 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		private String numPrint = null;
 
 		public EndPage() {
-			/*
-			 * now = new Date(); promoTxt = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"); if( promoTxt == null ) { promoTxt = ""; }
-			 */
 		}
 
-		public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress, String patientName, String doctorName, String sigDoctorName, String rxDate, String origPrintDate, String numPrint) {
+		public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress, String patientName, String sigDoctorName, String rxDate, String origPrintDate, String numPrint) {
 			this.clinicName = clinicName;
 			this.clinicTel = clinicTel;
 			this.clinicFax = clinicFax;
@@ -190,7 +175,6 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			this.patientCityPostal = patientCityPostal;
 			this.patientAddress = patientAddress;
 			this.patientName = patientName;
-			this.doctorName = doctorName;
 			this.sigDoctorName = sigDoctorName;
 			this.rxDate = rxDate;
 			this.promoText = OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT");
@@ -201,7 +185,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			}
 		}
 
-		public void onEndPage(PdfWriter writer, Document document) {
+		@Override
+        public void onEndPage(PdfWriter writer, Document document) {
 			renderPage(writer, document);
 		}
 
@@ -214,21 +199,12 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 		public void renderPage(PdfWriter writer, Document document) {
 			Rectangle page = document.getPageSize();
-			// p("page to string", page.toString());
 			PdfContentByte cb = writer.getDirectContent();
 
 			try {
 
-				/*
-				 * File file=new File("/oscar/form/prop/rx.gif"); RandomAccessFile rf=new RandomAccessFile(file,"r"); int size=(int)rf.length(); byte imext[]=new byte[size]; rf.readFully(imext); rf.close(); Image rxPic= Image.getInstance(imext);
-				 * head.addCell(new PdfPCell(rxPic,false));
-				 */
 
-				// head.setTotalWidth(page.width()-document.leftMargin()-document.rightMargin());
-				// p("topmargin: " + document.topMargin());
-				// p("page height: " + page.height());
 				float height = page.height();
-				// head.writeSelectedRows(0, 1,document.leftMargin(), page.height() - document.topMargin()+ head.getTotalHeight(),writer.getDirectContent());
 
 				// header table for patient's information.
 				PdfPTable head = new PdfPTable(1);
@@ -270,12 +246,6 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, str2, 188, (page.height() - 80), 0);
 					writeDirectContent(cb, bf, 10, PdfContentByte.ALIGN_LEFT, "Fax:" + this.clinicFax, 188, (page.height() - 88), 0);
 				}
-				// render line after header
-				// cb.setRGBColorStrokeF(0f, 0f, 0f);
-				// cb.setLineWidth(0.8f);
-				// cb.moveTo(17f, height - 90f);
-				// cb.lineTo(280f, height - 90f);
-				// cb.stroke();
 
 				// get the end of paragraph
 				float endPara = writer.getVerticalPosition(true);
@@ -371,16 +341,10 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		while (em.hasMoreElements())
 			logger.debug("attr: " + em.nextElement());
 
-		/*
-		 * p("test",req.getLocalAddr()); p("test",req.getLocalName()); p("test",req.getRequestURL().toString()); p("test",req.getServerName()); p("test",req.getContextPath()); p("test",req.getPathInfo()); p("test",req.getPathTranslated());
-		 * p("test",req.getProtocol()); p("test",req.getQueryString()); p("test",req.getRemoteAddr()); p("test",req.getRemoteHost()); p("test",req.getRequestURI()); p("test",req.getServletPath()); p("test",req.getServerName());
-		 * p("test",""+req.getLocalPort()); p("test",""+req.getRemotePort());
-		 */
 		if (HSFO_RX_DATA_KEY.equals(req.getParameter("__title"))) {
 			return generateHsfoRxPDF(req);
 		}
 		String newline = System.getProperty("line.separator");
-		final String PAGESIZE = "printPageSize";
 
 		ByteArrayOutputStream baosPDF = new ByteArrayOutputStream();
 		PdfWriter writer = null;
@@ -417,19 +381,12 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		String patientCityPostal = req.getParameter("patientCityPostal");
 		String patientAddress = req.getParameter("patientAddress");
 		String patientName = req.getParameter("patientName");
-		String doctorName = req.getParameter("doctorName");
 		String sigDoctorName = req.getParameter("sigDoctorName");
 		String rxDate = req.getParameter("rxDate");
 		String rx = req.getParameter("rx");
 		if (rx == null) {
 			rx = "";
 		}
-		logger.debug("1");
-		Enumeration eee = req.getParameterNames();
-		Enumeration fff = req.getAttributeNames();
-		logger.debug("-------------");
-		while (fff.hasMoreElements())
-			logger.debug(fff.nextElement());
 
 		String additNotes = req.getParameter("additNotes");
 		String[] rxA = rx.split(newline);
@@ -437,11 +394,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		String listElem = "";
 		// parse rx and put into a list of rx;
 		for (String s : rxA) {
-			// p("splitted", s);
-			// p("s length=" + s.length());
 
 			if (s.equals("") || s.equals(newline) || s.length() == 1) {
-				// p("s if");
 				listRx.add(listElem);
 				listElem = "";
 			} else {
@@ -450,35 +404,23 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			}
 
 		}
-		// for (String s : listRx) {
-		// p("each list element", s);
-		// }
 
 		// get the print prop values
 		Properties props = new Properties();
-		StringBuffer temp = new StringBuffer("");
+		StringBuilder temp = new StringBuilder();
 		for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
-			temp = new StringBuffer(e.nextElement().toString());
-			// p("temp", temp.toString());
-			// p("temp para", req.getParameter(temp.toString()));
+			temp = new StringBuilder(e.nextElement().toString());
 			props.setProperty(temp.toString(), req.getParameter(temp.toString()));
 		}
 
 		for (Enumeration e = req.getAttributeNames(); e.hasMoreElements();) {
-			temp = new StringBuffer(e.nextElement().toString());
-			// p("temp", temp.toString());
-			// p("temp attr", req.getAttribute(temp.toString()).toString());
+			temp = new StringBuilder(e.nextElement().toString());
 			props.setProperty(temp.toString(), req.getAttribute(temp.toString()).toString());
 		}
 		Document document = new Document();
 
 		try {
 			String title = req.getParameter("__title") != null ? req.getParameter("__title") : "Unknown";
-			// p("title", title);
-			// String[] cfgFile = req.getParameterValues("__cfgfile");
-			// for (String s : cfgFile) {
-			// p("cfgFile", s);
-			// }
 
 			// specify the page of the picture using __graphicPage, it may be used multiple times to specify multiple pages
 			// however the same graphic will be applied to all pages
@@ -525,7 +467,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			document.setMargins(15, pageSize.width() - 285f + 5f, 140, 60);// left, right, top , bottom
 
 			writer = PdfWriter.getInstance(document, baosPDF);
-			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName, doctorName, sigDoctorName, rxDate, origPrintDate, numPrint));
+			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName, sigDoctorName, rxDate, origPrintDate, numPrint));
 			document.addTitle(title);
 			document.addSubject("");
 			document.addKeywords("pdf, itext");
@@ -534,20 +476,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			document.addHeader("Expires", "0");
 
 			document.open();
-			int n = document.getPageNumber();
-			// p("number of pages before: ", "" + n);
 			document.newPage();
-			n = document.getPageNumber();
-			// p("number of pages after: ", "" + n);
-			Rectangle pSize = document.getPageSize();
-			float width = pSize.width();
-			float height = pSize.height();
 
 			PdfContentByte cb = writer.getDirectContent();
-			// p("here2");
 			BaseFont bf; // = normFont;
 
-			// p("here3");
 			cb.setRGBColorStroke(0, 0, 255);
 			// render prescriptions
 			for (String rxStr : listRx) {
@@ -558,15 +491,19 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				document.add(p);
 			}
 			// render additional notes
-			// p("addtNotes",additNotes);
 			if (additNotes != null && !additNotes.equals("")) {
-				// p("additional notes not null");
 				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
 				Paragraph p = new Paragraph(new Phrase(additNotes, new Font(bf, 10)));
 				p.setKeepTogether(true);
 				p.setSpacingBefore(10f);
 				document.add(p);
 			}
+			
+			// render QrCode
+			Integer scriptId=Integer.parseInt(req.getParameter("scriptId"));
+			byte[] qrCodeImage=PrescriptionQrCodeUIBean.getPrescriptionHl7QrCodeImage(scriptId);
+			Image qrCode=Image.getInstance(qrCodeImage);
+			document.add(qrCode);
 		}
 		catch (DocumentException dex) {
 			baosPDF.reset();
