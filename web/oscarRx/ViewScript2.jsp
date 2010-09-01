@@ -499,9 +499,11 @@ function toggleView(form) {
                                         </tr>
 					<tr>
 						<!--td width=10px></td-->
-						<td><span><input type=button
-							value="Print PDF" class="ControlPushButton"
-							style="width: 120px" onClick="<%=reprint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint', "+request.getParameter("scriptId")+");" : "javascript:return onPrint2('print', "+request.getParameter("scriptId")+");" %>" /></span></td>
+						<td>
+						<span>
+							<input type=button value="Print PDF" class="ControlPushButton" style="width: 120px" onClick="<%=reprint.equalsIgnoreCase("true") ? "javascript:return onPrint2('rePrint', "+request.getParameter("scriptId")+");" : "javascript:return onPrint2('print', "+request.getParameter("scriptId")+");" %>" />
+						</span>
+						</td>
 					</tr>
 					<tr>
 						<!--td width=10px></td-->
