@@ -426,7 +426,7 @@ function toggleView(form) {
                                     var data="method=getPharmacyInfo&pharmacyId="+id;
                                     new Ajax.Request(url, {method: 'get',parameters:data, onSuccess:function(transport){
                                         var json=transport.responseText.evalJSON();
-                                            oscarLog("json: "+json);
+
                                             if(json!=null){
                                                 var text=json.name+"<br>"+json.address+"<br>"+json.city+","+json.province+","
                                                     +json.postalCode+"<br>Tel:"+json.phone1+","+json.phone2+"<br>Fax:"+json.fax+"<br>Email:"+json.email+"<br>Note:"+json.notes;
@@ -437,7 +437,6 @@ function toggleView(form) {
 
                                 }
                                 function expandPreview(text){
-                                    oscarLog(text);
                                     parent.document.getElementById('lightwindow_container').style.width="840px";
                                     parent.document.getElementById('lightwindow_contents').style.width="820px";
                                     document.getElementById('preview').style.width="580px";
@@ -452,7 +451,6 @@ function toggleView(form) {
                                     document.getElementById('preview').style.width="420px";
                                     frames['preview'].document.getElementById('pharmInfo').innerHTML="";
                                     $("selectedPharmacy").innerHTML="";
-                                    oscarLog(document.getElementById("selectedPharmacy").innerHTML);
                                 }
                             </script>
 
@@ -461,7 +459,7 @@ function toggleView(form) {
                                         if(vecAddress != null) { %>
 					<tr>
 						<td align="left" colspan=2><bean:message key="ViewScript.msgAddress"/>
-                                                    <select	name="addressSel" id="addressSel" onChange="addressSelect()">
+                                                    <select	name="addressSel" id="addressSel" onChange="addressSelect()" style="width:200px;" >
 							<% String rxAddr = (String) session.getAttribute("RX_ADDR");
                                                           for (int i =0; i < vecAddressName.size();i++){
 					                 String te = (String) vecAddressName.get(i);
