@@ -49,7 +49,7 @@ public final class AdtA09Handler {
 		GregorianCalendar startTime = new GregorianCalendar();
 		startTime.add(GregorianCalendar.HOUR_OF_DAY, -checkInLateAllowance);
 		GregorianCalendar endTime = new GregorianCalendar();
-		// add 24 because it's atthe start of the day and it's exclusive of that day
+		// add 24 because it's at the start of the day and it's exclusive of that day
 		endTime.add(GregorianCalendar.HOUR_OF_DAY, 24+checkInEarlyAllowance);
 
 		// so this only sorts out the day ranges i.e. we could have just done a select from today but this way we bridge 
@@ -103,6 +103,11 @@ public final class AdtA09Handler {
 		// lastname, firstname, health number, health province, (gender/birthday are not ubiquitously available)
 		// there's a chance we may need to relax the birthday requirement to only need birth year/month as some or all BC cards may have no birthdays on them.
 		// because of name truncation, we will match only first and last initials of the names.
+		
+		if (appointmentDemographic==null) {
+			logger.debug("appointmentDemographic was null");
+			return(false);
+		}
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Checking demographic : " + ReflectionToStringBuilder.toString(demographic));
