@@ -48,7 +48,7 @@
     <databaseap>
         <ap-name>label</ap-name>
         <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${last_name}, ${first_name}\n${address}\n${city}, ${province}, ${postal}\nHome: ${phone}\nWork: ${phone2}\n${date_of_birth}/${month_of_birth}/${year_of_birth} (${sex})\n${hin} ${ver}</ap-output>
+        <ap-output>${last_name}, ${first_name}\n${address}, ${city}, ${province} ${postal}\nTel:${phone}(H)  ${phone2}(W)\n${date_of_birth}/${month_of_birth}/${year_of_birth}(${sex})  HIN:${hin}${ver}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>address</ap-name>
@@ -345,7 +345,7 @@
         <ap-output>${clinic_postal}</ap-output>
     </databaseap>
 
-<!-- Extended eform tags -->
+<!-- Extended eform tags, cannot be directly called -->
     <databaseap>
         <ap-name>_eform_values_first</ap-name>
         <ap-sql>SELECT var_value FROM eform_values WHERE var_name='${var_name}' AND fid=${fid}
