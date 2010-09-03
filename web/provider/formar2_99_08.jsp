@@ -225,7 +225,6 @@ function onSubmitForm() {
 		<input type="submit" name="print" value="Print Preview"
 			onClick='onPrint()'> <a href=#
 			onClick="popupPage(200,300,'formarprintsetting.jsp');return false;">.</a>
-		<!--a href="providercontrol.jsp?appointment_no=<%--=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=request.getParameter("curProvider_no")%>&username=<%=request.getParameter("username")%>&reason=<%=request.getParameter("reason")--%>&displaymode=ar2&dboperation=search_demograph&template=&bNew=1"  title="A New AR2 Form">
 		  <font color='yellow'> New AR2 </font></a--> <input type="hidden"
 			name="oox" value="0"> <input type="hidden" name="ooy"
 			value="0"> <input type="hidden" name="cmd" value="">

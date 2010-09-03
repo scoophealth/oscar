@@ -172,7 +172,6 @@ function gotoAccs() {
 %>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<!--for form use-->
-	<!--form name="demoacce" method="post" action="providercontrol.jsp" target="encounterhist" onSubmit="popupPage(1,1,'providercontrol.jsp')"-->
 	<form name="encounter" method="post" action="providercontrol.jsp">
 	<tr>
 		<td>
@@ -335,7 +334,6 @@ function gotoAccs() {
 </table>
 
 <table width="100%" border="1" bgcolor="#87CEEB">
-	<!--form name="encounter" method="post" action="providercontrol.jsp" -->
 	<tr>
 		<td align="center">
 		<%

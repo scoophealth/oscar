@@ -97,19 +97,6 @@
         }
         //save as an encounter attachment 
         if(request.getParameter("cmd")!=null && request.getParameter("cmd").compareTo("Save & Enc")==0) {
-%>
-<script LANGUAGE="JavaScript">
-//  self.close();
-//  self.location.href = urll;  
-//  var page = "index.html" ;
-//  windowprops = "height=600,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-//  window.open(page, "apptProvider1", windowprops);
-//  var urll = "providercontrol.jsp?appointment_no="+<%=request.getParameter("appointment_no")%>+"&demographic_no="+<%=request.getParameter("demographic_no")%>+"&curProvider_no=&status=T";
-//  urll +=  "&reason="+<%=request.getParameter("reason")%>+"&appointment_date="+<%=form_date%>+"&start_time="+<%=form_time%>+"&displaymode=encounter&dboperation=search_demograph&template=";
-//  urll += "&encounterattachment="+<%=URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+form.get("form_no")+"&bNewForm=0</form>")%> ;
-//  urll += "&attachmentdisplay=" +<%=request.getParameter("xml_subject")%> ;
-</script>
-<%
           response.sendRedirect("providercontrol.jsp?appointment_no="+request.getParameter("appointment_no")+"&demographic_no="+request.getParameter("demographic_no")+"&curProvider_no=&status=T"+"&reason="+request.getParameter("reason")+"&appointment_date="+form_date+"&start_time="+form_time+"&displaymode=encounter&dboperation=search_demograph&template="+
             "&encounterattachment="+URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+form.get("form_no")+"&bNewForm=0</form>") +
             "&attachmentdisplay=" +request.getParameter("xml_subject") );

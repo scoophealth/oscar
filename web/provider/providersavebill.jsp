@@ -87,10 +87,8 @@
 </p>
 <script LANGUAGE="JavaScript">
       self.close();
-      //self.top.location = 'providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=Integer.parseInt(request.getParameter("demographic_no"))%>&curProvider_no=<%=curUser_no%>&username=<%= userfirstname+" "+userlastname %>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&status=B&displaymode=encounter&dboperation=search_demograph&template=';
       self.opener.document.encounter.encounterattachment.value +="<billing>providercontrol.jsp?billing_no=<%=bill.get("billing_no")%>^displaymode=vary^displaymodevariable=billing<%=request.getParameter("billing_name")%>.jsp^dboperation=search_bill</billing>";
       self.opener.document.encounter.attachmentdisplay.value +="Billing "; //:<%=request.getParameter("billing_name")%> ";
-      //self.opener.refresh();
 </script>
 <%
 	  break; //get only one billing_no

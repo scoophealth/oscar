@@ -727,7 +727,6 @@ if(wLReadonly.equals("")){
 				rights="r" reverse="<%=false%>">
                     <special:SpecialEncounterTag moduleName="eyeform" reverse="true">
                     <tr><td>
-					<!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("telephone encounter with client")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
 					<a href="javascript: function myFunction() {return false; }" onClick="popupEChart(710, 1024,encURL);return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
 					<bean:message key="demographic.demographiceditdemographic.btnEChart" /></a>&nbsp;<a style="text-decoration: none;" href="#" onmouseover="return !showMenu('1', event);">+</a>
 					<div id='menu1' class='menu' onclick='event.cancelBubble = true;'>
@@ -751,7 +750,6 @@ if(wLReadonly.equals("")){
                     </special:SpecialEncounterTag>
                     <special:SpecialEncounterTag moduleName="eyeform">
                     <tr><td>
-                            <!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("telephone encounter with client")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
                             <a href="javascript: function myFunction() {return false; }" onClick="popupEChart(710, 1024,encURL);return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
                             <bean:message key="demographic.demographiceditdemographic.btnEChart"/></a>
                     </td></tr>

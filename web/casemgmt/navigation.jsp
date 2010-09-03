@@ -177,15 +177,6 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 </caisirole:SecurityAccess>
 <!-- tr><td><a href="</td></tr -->
 
-<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-
-<%--<tr style="background-color:#BBBBBB;"><td>Master</td></tr>--%>
-<!-- go back to oscar main page -->
-<!-- <tr><td><a href="../provider/providercontrol.jsp">Oscar Medical</a></td></tr> -->
-<!-- PMM link here / removed because of navigation concerns! -->
-<%--<tr><td><a href="../PMmodule/ClientManager.do?id=<%=bean.demographicNo%>">Program Management</a></td></tr>--%>
-</caisi:isModuleLoad>
-
 <tr style="background-color:#BBBBBB;"><td>Clinical Modules</td></tr>
 
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">

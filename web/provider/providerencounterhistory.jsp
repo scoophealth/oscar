@@ -64,13 +64,7 @@
 		<td width="95%">
 <%
    List<Map> resultList = oscarSuperManager.find("providerDao", "search_encounter", new Object[] {request.getParameter("demographic_no")});
-   //int i=0;
    for (Map enc : resultList) {
-     //i++;
-     //if(i>3) {
-     //  out.println("<a href=# onClick=\"popupPage(400,600,'providercontrol.jsp?demographic_no=" +request.getParameter("demographic_no")+ "&dboperation=search_encounter&displaymode=encounterhistory')\">... more</a>");
-     //  break;
-     //}
 %> &nbsp;<%=enc.get("encounter_date")%> <%=enc.get("encounter_time")%><font
 			color="yellow"> <%
      String historysubject = enc.get("subject")==null?"NULL":((String)enc.get("subject")).equals("")?"Unknown":(String)enc.get("subject");

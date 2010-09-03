@@ -397,7 +397,6 @@
 <%if ((request.getParameter("from") == null) || (!request.getParameter("from").equals("CaseMgmt"))) { %>
 <table width="100%">
 	<tr>
-		<!-- <td><a href="../provider/providercontrol.jsp">Back to Schedule Page</a></td> -->
 		<td><a href="javascript:void(0);" onclick="wrapUp();">Close Window</a></td>
 	</tr>
 </table>
