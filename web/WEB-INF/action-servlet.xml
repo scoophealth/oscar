@@ -7,38 +7,32 @@
 	</bean>
 	<bean name="/shelterSelection" class="oscar.login.ShelterSelectionAction" singleton="false" autowire="byName" />
 
-    <bean name="/login/recordLogin" class="oscar.login.LoginAgreementAction" singleton="false">
-        <property name="providerDao" ref="providerDao" />
-    </bean>
+	<bean name="/login/recordLogin" class="oscar.login.LoginAgreementAction" singleton="false">
+		<property name="providerDao" ref="providerDao" />
+	</bean>
 
 	<bean name="/Home" class="org.oscarehr.PMmodule.web.HomeAction" singleton="false" autowire="byName" />
 
-	<!--
-		<bean name="/topazSave" class="com.quatro.web.TopazSaveAction" singleton="false"> <property name="topazManager" ref="topazManager"/> </bean> <bean name="/topazGetImage" class="com.quatro.web.TopazGetImageAction" singleton="false"> <property
-		name="topazManager" ref="topazManager"/> </bean>
-	-->
-
-
 	<bean name="/dms/ManageDocument" class="org.oscarehr.document.web.ManageDocumentAction">
 		<property name="documentDAO" ref="documentDAO" />
-                <property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
+		<property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
 	</bean>
-        <bean name="/dms/inboxManage" class="oscar.dms.actions.DmsInboxManageAction">
-                <property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
-                <property name="queueDocumentLinkDAO" ref="queueDocumentLinkDAO" />
-                <property name="secObjectNameDao" ref="secObjectNameDao" />
+	<bean name="/dms/inboxManage" class="oscar.dms.actions.DmsInboxManageAction">
+		<property name="providerInboxRoutingDAO" ref="providerInboxRoutingDAO" />
+		<property name="queueDocumentLinkDAO" ref="queueDocumentLinkDAO" />
+		<property name="secObjectNameDao" ref="secObjectNameDao" />
 	</bean>
 
-        <bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction">
+	<bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction">
 		<property name="flowSheetCustomizerDAO" ref="flowSheetCustomizerDAO" />
 	</bean>
 
-        <bean name="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" class="org.oscarehr.common.web.FlowSheetDrugAction">
+	<bean name="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" class="org.oscarehr.common.web.FlowSheetDrugAction">
 		<property name="flowSheetDrugDAO" ref="flowSheetDrugDAO" />
 	</bean>
 
- 	<bean name="/MeasurementHL7Uploader" class="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" autowire="byName">
- 	</bean>
+	<bean name="/MeasurementHL7Uploader" class="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" autowire="byName">
+	</bean>
 
 	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true" />
 	<bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">
@@ -77,11 +71,9 @@
 	</bean>
 	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false" autowire="byName" />
-        <bean name="/FacilityManager" class="oscar.facility.FacilityManagerAction" singleton="false" autowire="byName" />
-    <bean name="/PMmodule/MergeClient" class="org.oscarehr.PMmodule.web.admin.MergeClientAction"
-    	singleton="false"  autowire="byName"/>
-    <bean name="/PMmodule/UnmergeClient" class="org.oscarehr.PMmodule.web.admin.UnMergeClientAction"
-    	singleton="false"  autowire="byName" />
+	<bean name="/FacilityManager" class="oscar.facility.FacilityManagerAction" singleton="false" autowire="byName" />
+	<bean name="/PMmodule/MergeClient" class="org.oscarehr.PMmodule.web.admin.MergeClientAction" singleton="false" autowire="byName" />
+	<bean name="/PMmodule/UnmergeClient" class="org.oscarehr.PMmodule.web.admin.UnMergeClientAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ProviderSearch" class="org.oscarehr.PMmodule.web.ProviderSearchAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/IntakeA" class="org.oscarehr.PMmodule.web.IntakeAAction2" singleton="false" autowire="byName" />
@@ -173,42 +165,42 @@
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
 	<bean name="/Lookup/LookupTree" class="com.quatro.web.lookup.LookupTreeAction" singleton="false">
-        	<property name="lookupManager" ref="lookupManager"/>
- 	</bean>
+		<property name="lookupManager" ref="lookupManager" />
+	</bean>
 	<bean name="/Lookup/LookupTableList" class="com.quatro.web.lookup.LookupTableListAction" singleton="false">
-        	<property name="lookupManager" ref="lookupManager"/>
- 	</bean>
+		<property name="lookupManager" ref="lookupManager" />
+	</bean>
 	<bean name="/Lookup/LookupCodeList" class="com.quatro.web.lookup.LookupCodeListAction" singleton="false">
-        	<property name="lookupManager" ref="lookupManager"/>
+		<property name="lookupManager" ref="lookupManager" />
 	</bean>
 	<bean name="/Lookup/LookupCodeEdit" class="com.quatro.web.lookup.LookupCodeEditAction" singleton="false">
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
 
 
-<!-- Admin Start -->
+	<!-- Admin Start -->
 	<bean name="/PMmodule/Admin/SysAdmin" class="org.oscarehr.PMmodule.web.admin.AdminHomeAction" singleton="false">
- 	</bean>
+	</bean>
 
 	<bean name="/PMmodule/Admin/ShowORGTree" class="com.quatro.web.admin.ShowORGTreeAction" singleton="false">
 		<property name="orgManager" ref="orgManager" />
 	</bean>
 	<bean name="/PMmodule/Admin/RoleManager" class="com.quatro.web.admin.RoleManagerAction" singleton="false">
-		<property name="rolesManager" ref="rolesManager"/>
-		<property name="logManager" ref="logManager"/>
-		<property name="lookupManager" ref="lookupManager"/>
+		<property name="rolesManager" ref="rolesManager" />
+		<property name="logManager" ref="logManager" />
+		<property name="lookupManager" ref="lookupManager" />
 	</bean>
 	<bean name="/PMmodule/Admin/UserManager" class="com.quatro.web.admin.UserManagerAction" singleton="false" autowire="byName">
-                <!--<property name="rolesManager" ref="rolesManager"/>-->
-                <property name="logManager" ref="logManager"/>
-                <property name="usersManager" ref="usersManager"/>
-                <!--<property name="orgManager" ref="orgManager"/>-->
-                <property name="lookupManager" ref="lookupManager" />
+		<!--<property name="rolesManager" ref="rolesManager"/>-->
+		<property name="logManager" ref="logManager" />
+		<property name="usersManager" ref="usersManager" />
+		<!--<property name="orgManager" ref="orgManager"/>-->
+		<property name="lookupManager" ref="lookupManager" />
 	</bean>
 	<bean name="/PMmodule/Admin/UserSearch" class="com.quatro.web.admin.UserSearchAction" singleton="false">
-		<property name="rolesManager" ref="rolesManager"/>
-		<property name="logManager" ref="logManager"/>
-		<property name="usersManager" ref="usersManager"/>
+		<property name="rolesManager" ref="rolesManager" />
+		<property name="logManager" ref="logManager" />
+		<property name="usersManager" ref="usersManager" />
 	</bean>
 	<bean name="/PMmodule/Admin/UnlockAccount" class="oscar.login.UnlockAccountAction" singleton="false">
 	</bean>
@@ -218,14 +210,14 @@
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />
 	</bean>
 
-        <bean name="/saveWorkView" class="org.oscarehr.provider.web.ProviderViewAction" singleton="false">
-                <property name="userViewDAO" ref="UserViewDAO" />
-        </bean>
+	<bean name="/saveWorkView" class="org.oscarehr.provider.web.ProviderViewAction" singleton="false">
+		<property name="userViewDAO" ref="UserViewDAO" />
+	</bean>
 
-        <bean name="/report/DxresearchReport" class="org.oscarehr.common.web.DxresearchReportAction" singleton="false">
-            <property name="dxresearchdao" ref="DxresearchDAO" />
-            <property name="mygroupdao" ref="MyGroupDAO" />
-        </bean>
+	<bean name="/report/DxresearchReport" class="org.oscarehr.common.web.DxresearchReportAction" singleton="false">
+		<property name="dxresearchdao" ref="DxresearchDAO" />
+		<property name="mygroupdao" ref="MyGroupDAO" />
+	</bean>
 
 	<!-- Indivo -->
 
@@ -237,7 +229,7 @@
 	<bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
-    <bean name="/oscarEncounter/oscarMeasurements/SendToPhr" class="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSendMeasurementToPhr" singleton="false">
+	<bean name="/oscarEncounter/oscarMeasurements/SendToPhr" class="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSendMeasurementToPhr" singleton="false">
 		<property name="phrService" ref="phrService" />
 	</bean>
 	<bean name="/dms/SendDocToPhr" class="oscar.dms.actions.SendDocToPhrAction" singleton="false" />
@@ -253,21 +245,21 @@
 		<property name="phrService" ref="phrService" />
 		<property name="phrActionDAO" ref="phrActionDAO" />
 	</bean>
-    <bean name="/SendToPhr" class="org.oscarehr.phr.web.PHRGenericSendToPhrAction" singleton="false">
-        <property name="phrService" ref="phrService" />
-    </bean>
-    <bean name="/testAction" class="org.oscarehr.decisionSupport.web.TestActionW" singleton="false">
-            <property name="dsService" ref="dsService"/>
-    </bean>
-    <bean name="/oscarEncounter/decisionSupport/guidelineAction" class="org.oscarehr.decisionSupport.web.DSGuidelineAction" singleton="false">
-            <property name="dsService" ref="dsService"/>
-    </bean>
-    <bean name="/appointment/apptStatusSetting" class="oscar.appt.status.web.AppointmentStatusAction" singleton="false">
+	<bean name="/SendToPhr" class="org.oscarehr.phr.web.PHRGenericSendToPhrAction" singleton="false">
+		<property name="phrService" ref="phrService" />
 	</bean>
-    <bean name="/oscarRx/copyFavorite" class="oscar.oscarRx.web.CopyFavoritesAction" singleton="false">
+	<bean name="/testAction" class="org.oscarehr.decisionSupport.web.TestActionW" singleton="false">
+		<property name="dsService" ref="dsService" />
+	</bean>
+	<bean name="/oscarEncounter/decisionSupport/guidelineAction" class="org.oscarehr.decisionSupport.web.DSGuidelineAction" singleton="false">
+		<property name="dsService" ref="dsService" />
+	</bean>
+	<bean name="/appointment/apptStatusSetting" class="oscar.appt.status.web.AppointmentStatusAction" singleton="false">
+	</bean>
+	<bean name="/oscarRx/copyFavorite" class="oscar.oscarRx.web.CopyFavoritesAction" singleton="false">
 	</bean>
 
-    <bean name="/oscarRx/copyFavorite2" class="oscar.oscarRx.web.CopyFavoritesAction" singleton="false">
+	<bean name="/oscarRx/copyFavorite2" class="oscar.oscarRx.web.CopyFavoritesAction" singleton="false">
 	</bean>
 
 	<bean name="/admin/ManageClinic" class="org.oscarehr.common.web.ClinicManageAction" singleton="false">
@@ -278,20 +270,13 @@
 	</bean>
 
 
-        <bean name="/admin/ManageBillingReferral" class="org.oscarehr.common.web.BillingreferralEditAction" singleton="false">
-            <property name="bDao" ref="BillingreferralDAO" />
-        </bean>
+	<bean name="/admin/ManageBillingReferral" class="org.oscarehr.common.web.BillingreferralEditAction" singleton="false">
+		<property name="bDao" ref="BillingreferralDAO" />
+	</bean>
 
-        <bean name="/billing/CA/ON/BatchBill" class="org.oscarehr.billing.CA.ON.web.BatchBillAction" singleton="false">
-            <property name="billClaimDAO" ref="billingClaimDAO" />
-        </bean>
-	<!--
-    <bean name="/PMmodule/Reports/CustomReport" class="org.oscarehr.PMmodule.web.reports.CustomReportAction" singleton="false" autowire="byName">
-    </bean>
--->
+	<bean name="/billing/CA/ON/BatchBill" class="org.oscarehr.billing.CA.ON.web.BatchBillAction" singleton="false">
+		<property name="billClaimDAO" ref="billingClaimDAO" />
+	</bean>
 
-<!--
-	<bean name="/PMmodule/CaseLoad" class="org.oscarehr.PMmodule.web.CaseLoadService" singleton="false" autowire="byName"/>
--->
-	<bean name="/PMmodule/Admin/MigrateCaisiRoles" class="org.oscarehr.PMmodule.web.admin.MigrateCaisiRolesAction" singleton="false" autowire="byName"/>
+	<bean name="/PMmodule/Admin/MigrateCaisiRoles" class="org.oscarehr.PMmodule.web.admin.MigrateCaisiRolesAction" singleton="false" autowire="byName" />
 </beans>
