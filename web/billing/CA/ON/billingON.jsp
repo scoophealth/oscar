@@ -27,7 +27,7 @@
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%--<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />--%>
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%//
+<%
 			if (session.getAttribute("user") == null) {
 				response.sendRedirect("../../../logout.jsp");
 			}
@@ -75,21 +75,22 @@
 			    ctlBillForm = curBillForm;
 			} else {
 			    // check user preference to show a bill form
-			    sql = "select default_servicetype from preference where provider_no='";
-                            if( apptProvider_no.equalsIgnoreCase("none") ) {
-                                sql += user_no + "'";
-                            }
-                            else {
-                                sql += apptProvider_no + "'";
-                            }
-
-			    rs = dbObj.searchDBRecord(sql);
-			    if (rs.next() && rs.getString("default_servicetype")!=null) {
-				ctlBillForm = rs.getString("default_servicetype");
+			    ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao)SpringUtils.getBean("providerPreferenceDao");
+			    ProviderPreference providerPreference=null;
+			    
+                if( apptProvider_no.equalsIgnoreCase("none") ) {
+    			    providerPreferenceDao.find(user_no);
+                }
+                else {
+    			    providerPreferenceDao.find(apptProvider_no);
+                }
+			    
+			    if (providerPreference!=null) {
+					ctlBillForm = providerPreference.getDefaultServiceType();
 			    } else {
-				// check oscar.properties to show a default bill form
-				String dv = OscarProperties.getInstance().getProperty("default_view");
-				if (dv!=null) ctlBillForm = dv;
+					// check oscar.properties to show a default bill form
+					String dv = OscarProperties.getInstance().getProperty("default_view");
+					if (dv!=null) ctlBillForm = dv;
 			    }
 			}
 			
@@ -168,10 +169,6 @@
 			JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
 			List aL = hdbObj.getBillingHist(demo_no, 5,0, null);
 			
-			/////////////////////////////////////
-			//sql = "select id,billing_date,admission_date,visitType, timestamp, facilty_num, ref_num from billing_on_cheader1 "+ " where demographic_no="+ demo_no	+ " and status!='D' order by billing_date desc, id desc limit 1";
-			//rs = dbObj.searchDBRecord(sql);
-
 			Vector vecHistD = new Vector();
 			if (aL.size()>0) {
 				BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(0);
@@ -370,7 +367,10 @@
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
-<%@page import="org.oscarehr.util.MiscUtils"%><html>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.common.dao.ProviderPreferenceDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%><html>
 <head>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=ISO-8859-1" />

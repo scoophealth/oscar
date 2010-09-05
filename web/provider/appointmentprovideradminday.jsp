@@ -131,9 +131,9 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
     String defaultServiceType = (String) session.getAttribute("default_servicetype");
     if( defaultServiceType == null ) {
-        List<Map> prefList = oscarSuperManager.find("providerDao", "search_pref_defaultbill", new Object[] {curUser_no});
-        if (prefList.size() > 0) {
-            defaultServiceType = String.valueOf(prefList.get(0).get("default_servicetype"));
+    	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+        if (providerPreference!=null) {
+            defaultServiceType = providerPreference.getDefaultServiceType();
         }
     }
 
@@ -278,7 +278,9 @@ if (apptDate.before(minDate)) {
 <%@page import="oscar.appt.JdbcApptImpl"%>
 <%@page import="oscar.appt.ApptUtil"%>
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
-<%@page import="org.oscarehr.common.model.Site"%><html:html locale="true">
+<%@page import="org.oscarehr.common.model.Site"%>
+<%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
+<%@page import="org.oscarehr.common.model.ProviderPreference"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>

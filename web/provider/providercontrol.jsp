@@ -90,8 +90,7 @@
             {"ar1" , "formar1_99_12.jsp"},
             {"ar2" , "formar2_99_08.jsp"},
             {"newgroup" , "providernewgroup.jsp"},
-            {"savemygroup" , "providersavemygroup.jsp"},
-//    {"billingobstetric" , "billingobstetric.jsp"},
+            {"savemygroup" , "providersavemygroup.jsp"}
 
     };
 

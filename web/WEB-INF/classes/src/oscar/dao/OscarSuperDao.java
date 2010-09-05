@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
  */
 public abstract class OscarSuperDao extends JdbcDaoSupport {
 
-        private static final Log _log = LogFactory.getLog(OscarSuperDao.class);
+    private static final Log _log = LogFactory.getLog(OscarSuperDao.class);
 
 	protected abstract String[][] getDbQueries();
 

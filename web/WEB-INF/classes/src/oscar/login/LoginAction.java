@@ -31,9 +31,11 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.decisionSupport.service.DSService;
 import org.oscarehr.util.SessionConstants;
@@ -61,6 +63,7 @@ public final class LoginAction extends DispatchAction {
 
     private ProviderManager providerManager = (ProviderManager) SpringUtils.getBean("providerManager");
     private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
+    private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -137,8 +140,6 @@ public final class LoginAction extends DispatchAction {
             Properties pvar = cl.getOscarVariable();
             session.setAttribute("oscarVariables", pvar);
 
-
-
             // get View Type
             String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());
             String providerNo = strAuth[0];
@@ -151,23 +152,22 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute("expired_days", strAuth[5]);
             
             // initiate security manager
-            //com.quatro.service.security.UserAccessManager userAccessManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
-            //com.quatro.service.security.SecurityManager secManager = userAccessManager.getUserUserSecurityManager(providerNo);
-            //session.setAttribute("securitymanager", secManager);
             String default_pmm = null;
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
                 // get preferences from preference table
-                String[] strPreferAuth = cl.getPreferences();
-                session.setAttribute("starthour", strPreferAuth[0]);
-                session.setAttribute("endhour", strPreferAuth[1]);
-                session.setAttribute("everymin", strPreferAuth[2]);
-                session.setAttribute("groupno", strPreferAuth[3]);
+            	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
+            	if (providerPreference==null) providerPreference=new ProviderPreference();
+            	
+                session.setAttribute("starthour", providerPreference.getStartHour().toString());
+                session.setAttribute("endhour", providerPreference.getEndHour().toString());
+                session.setAttribute("everymin", providerPreference.getEveryMin().toString());
+                session.setAttribute("groupno", providerPreference.getMyGroupNo());
                 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
-                    session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
-                    session.setAttribute("default_pmm", strPreferAuth[5]);
-                    default_pmm = strPreferAuth[5];
+                    session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
+                    session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
+                    default_pmm = providerPreference.getDefaultCaisiPmm();
                     ArrayList<String> newDocArr = (ArrayList<String>)request.getSession().getServletContext().getAttribute("CaseMgmtUsers");    
-                    if("enabled".equals(strPreferAuth[6])) {
+                    if("enabled".equals(providerPreference.getDefaultNewOscarCme())) {
                     	newDocArr.add(providerNo);
                     	session.setAttribute("CaseMgmtUsers", newDocArr);
                     }
@@ -237,9 +237,9 @@ public final class LoginAction extends DispatchAction {
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
             }
             else {
-        		List facilities = facilityDao.findAll(true);
+        		List<Facility> facilities = facilityDao.findAll(true);
         		if(facilities!=null && facilities.size()>=1) {
-        			Facility fac = (Facility)facilities.get(0);
+        			Facility fac = facilities.get(0);
         			int first_id = fac.getId();
         			ProviderDao.addProviderToFacility(providerNo, first_id);
         			Facility facility=facilityDao.find(first_id);

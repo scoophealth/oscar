@@ -6318,24 +6318,21 @@ CREATE TABLE patientLabRouting (
   KEY `all_index` (`lab_type`,`lab_no`,`demographic_no`)
 ) ;
 
---
--- Table structure for table `preference`
---
-
-CREATE TABLE preference (
-  preference_no int(6) NOT NULL auto_increment,
-  provider_no varchar(6) NOT NULL default '',
-  start_hour char(2) default NULL,
-  end_hour char(2) default NULL,
-  every_min char(3) default NULL,
-  mygroup_no varchar(10) default NULL,
-  color_template varchar(10) default NULL,
-  default_servicetype varchar(10) default NULL,
-  default_caisi_pmm varchar(10) default 'disabled',
-  default_new_oscar_cme varchar(10) default 'disabled',
-  PRIMARY KEY  (preference_no),
-  KEY provider_no (provider_no)
-) ;
+create table ProviderPreference
+(
+	providerNo varchar(6) not null primary key,
+	startHour tinyint,
+	endHour tinyint,
+	everyMin tinyint,
+	myGroupNo varchar(10),
+	colourTemplate varchar(10),
+	newTicklerWarningWindow varchar(10),
+	defaultServiceType varchar(10),
+	defaultCaisiPmm varchar(10),
+	defaultNewOscarCme varchar(10),
+	printQrCodeOnPrescriptions tinyint not null,
+	lastUpdated datetime not null
+);
 
 --
 -- Table structure for table `prescribe`
@@ -6387,7 +6384,7 @@ CREATE TABLE professionalSpecialists (
   eDataServiceKey varchar(1024),
   eDataServiceName varchar(255),
   lastUpdated datetime not null
-) ;
+);
 
 --
 -- Table structure for table `property`

@@ -2,6 +2,8 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String provider_name = (String) session.getAttribute("userlastname")+", "+(String) session.getAttribute("userfirstname");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
+  LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+  String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -36,7 +38,10 @@
  * Ontario, Canada 
  */
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%><html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -150,13 +155,13 @@ function showHideBillPref() {
 </head>
 
 <body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0">
-<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="<%=deepcolor%>"> 
-      <th><font face="Helvetica"><bean:message key="provider.providerpreference.description"/></font></th>
-  </tr>
-</table>
+	<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
 
+		<table border=0 cellspacing=0 cellpadding=0 width="100%" >
+		  <tr bgcolor="<%=deepcolor%>"> 
+		      <th><font face="Helvetica"><bean:message key="provider.providerpreference.description"/></font></th>
+		  </tr>
+		</table>
 
         <table BORDER="0" WIDTH="100%">
           <tr BGCOLOR="<%=weakcolor%>"> 
@@ -246,11 +251,20 @@ function showHideBillPref() {
             </td>
           </tr>
           
+          <!-- QR Code on prescriptions setting -->
+          <tr style="background-color:<%=weakcolor%>"> 
+            <td colspan="2" style="text-align:right"> 
+              <bean:message key="provider.providerpreference.qrCodeOnPrescriptions"/>
+            </td>
+            <td colspan="2">
+            	<input type="checkbox" />
+            </td>
+          </tr>
           
           
       </caisi:isModuleLoad>
       
-              <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=request.getParameter("provider_no")%>'>
+              <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=providerNo%>'>
               <INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
               <INPUT TYPE="hidden" NAME="dboperation" VALUE='updatepreference'>
               <INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
@@ -278,7 +292,7 @@ function showHideBillPref() {
     <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
   </tr>
    <tr> 
-    <TD align="center">  <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting1.jsp?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=URLEncoder.encode(provider_name)%>');return false;" title="Holiday and Schedule Setting" ><bean:message key="provider.btnScheduleSetting"/></a> 
+    <TD align="center">  <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting1.jsp?provider_no=<%=providerNo%>&provider_name=<%=URLEncoder.encode(provider_name)%>');return false;" title="Holiday and Schedule Setting" ><bean:message key="provider.btnScheduleSetting"/></a> 
       &nbsp;&nbsp;&nbsp; | <a href="#" ONCLICK ="popupPage(550,800,'http://oscar1.mcmaster.ca:8888/oscarResource/manage?username=oscarfp&pw=oscarfp');return false;" title="Resource Management" ><bean:message key="provider.btnManageClinicalResource"/></a--> </td>
   </tr>
   <tr>
@@ -293,7 +307,7 @@ function showHideBillPref() {
     <td align="center">
 <% String br = OscarProperties.getInstance().getProperty("billregion");
    if (br.equals("BC")) { %>
-	<a href=# onClick ="popupPage(230,400,'../billing/CA/BC/viewBillingPreferencesAction.do?providerNo=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnBillPreference"/></a>
+	<a href=# onClick ="popupPage(230,400,'../billing/CA/BC/viewBillingPreferencesAction.do?providerNo=<%=providerNo%>');return false;"><bean:message key="provider.btnBillPreference"/></a>
 <% } else { %>
 	<a href=# onClick ="showHideBillPref();return false;"><bean:message key="provider.btnBillPreference"/></a>
 <% } %>
@@ -306,10 +320,10 @@ function showHideBillPref() {
 	  <select name="default_servicetype">
 	      <option value="no">-- no --</option>
 <%
-	List<Map> resultList = oscarSuperManager.find("providerDao", "search_pref_defaultbill", new Object[] {request.getParameter("provider_no")});
-	if (resultList.size() > 0) {
-		String def = String.valueOf(resultList.get(0).get("default_servicetype"));
-		resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+	if (providerPreference!=null) {
+		String def = providerPreference.getDefaultServiceType();
+		List<Map> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
 		for (Map bill : resultList) {
 %>
 				<option value="<%=bill.get("servicetype")%>"
@@ -318,7 +332,7 @@ function showHideBillPref() {
 <%
 		}
 	} else {
-		resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
+		List<Map> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
 		for (Map bill : resultList) {	
 %>
 		<option value="<%=bill.get("servicetype")%>"><%=bill.get("servicetype_name")%></option>
@@ -347,7 +361,7 @@ function showHideBillPref() {
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDefaultQuantity');return false;"><bean:message key="provider.SetDefaultPrescriptionQuantity"/></a></td>
       </tr>
       <tr>
-          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a></td>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=providerNo%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a></td>
       </tr>
       <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewMyDrugrefId');return false;"><bean:message key="provider.btnSetmyDrugrefID"/></a></td>

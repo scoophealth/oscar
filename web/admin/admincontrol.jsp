@@ -139,15 +139,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"security_update_record2", "update security set user_name=?,password=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
     {"security_update_record3", "update security set user_name=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
     {"security_update_record4", "update security set user_name=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    
-    {"preference_add_record", "insert into preference (provider_no,start_hour,end_hour,every_min,mygroup_no,default_servicetype,color_template,new_tickler_warning_window) values(?,?,?,?,?,?,?,?)" },
-    {"preference_search_titlename", "select * from preference where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
-    {"preference_search_detail", "select * from preference where preference_no=?"},
-    {"preference_list_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
-    {"preference_delete", "delete from preference where preference_no=?"},
-    {"preference_update_record", "update preference set provider_no=?,start_hour=?,end_hour=?,every_min=?,mygroup_no=?,default_servicetype=?,color_template=?,new_tickler_warning_window=? where preference_no=?" },
-    {"preference_addupdate_record", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=?, new_tickler_warning_window=? where provider_no=? "},
-    
+        
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchmygroupall", "select * from mygroup order by mygroup_no"},
@@ -193,14 +185,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"security_update_record3", "update security set user_name=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
     {"security_update_record4", "update security set user_name=?,provider_no=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },    
     
-    {"preference_add_record", "insert into preference (provider_no,start_hour,end_hour,every_min,mygroup_no,default_servicetype,color_template) values(?,?,?,?,?,?,?)" },
-    {"preference_search_titlename", "select * from preference where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
-    {"preference_search_detail", "select * from preference where preference_no=?"},
-    {"preference_list_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
-    {"preference_delete", "delete from preference where preference_no=?"},
-    {"preference_update_record", "update preference set provider_no=?,start_hour=?,end_hour=?,every_min=?,mygroup_no=?,default_servicetype=?,color_template=? where preference_no=?" },
-    {"preference_addupdate_record", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=? where provider_no=? "},
-    
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchmygroupall", "select * from mygroup order by mygroup_no"},
@@ -236,9 +220,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Security_Delete" , "securitydelete.jsp"},
     {"Security_Update_Record" , "securityupdate.jsp"},
     {"Preference_Add_Record" , "preferenceaddpreference.jsp"},
-    {"Preference_Add_Record_Pre" , "preferenceaddarecord.jsp"},
     {"Preference_Search" , "preferencesearchresults.jsp"},
-    {"Preference_Update" , "preferenceupdatepreference.jsp"},
     {"Preference_Delete" , "preferencedelete.jsp"},
     {"Preference_Update_Record" , "preferenceupdate.jsp"},
 

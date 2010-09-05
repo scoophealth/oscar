@@ -40,11 +40,6 @@ public class ReceptionistDao extends OscarSuperDao {
 		    {"search_providersgroup", "select mygroup_no, last_name, first_name from mygroup where last_name like ? and first_name like ? order by last_name, first_name, mygroup_no"}, 
 		    {"search_mygroup", "select mygroup_no from mygroup where mygroup_no like ? group by mygroup_no order by mygroup_no"}, 
 
-			{"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, color_template=? where provider_no=? "},
-			{"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, color_template) values (?, ?, ?, ?, ?, ?)"},
-			{"updatepreference_newtickler", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, color_template=?,new_tickler_warning_window=? where provider_no=? "},
-			{"add_preference_newtickler", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, color_template, new_tickler_warning_window) values (?, ?, ?, ?, ?, ?, ?)"},
-
 			{"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" }, 
 			{"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? order by sdate, reason" }, 
 			{"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? order by sdate" }, 

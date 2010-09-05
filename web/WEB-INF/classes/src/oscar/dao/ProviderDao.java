@@ -38,12 +38,6 @@ public class ProviderDao extends OscarSuperDao {
             {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
             {"updateapptstatus", "update appointment set status=? where appointment_no=? "},
 
-            {"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=? where provider_no=? "},
-            {"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template) values (?, ?, ?, ?, ?, ?, ?)"},
-
-            {"updatepreference_newtickler", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=?, new_tickler_warning_window=? , default_caisi_pmm=? where provider_no=? "},
-			{"add_preference_newtickler", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, default_servicetype, color_template, new_tickler_warning_window, default_caisi_pmm) values (?, ?, ?, ?, ?, ?, ?, ?, ?)"},
-
             {"search_demograph", "select *  from demographic where demographic_no=?"},
             {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
             {"search_encounter_no", "select * from encounter where demographic_no = ? and encounter_date=? and encounter_time=? and provider_no=? order by encounter_no desc limit 1"},
@@ -92,7 +86,6 @@ public class ProviderDao extends OscarSuperDao {
 
 			{"search_numgrpscheduledate", "select count(scheduledate.provider_no) from mygroup, scheduledate where mygroup_no = ? and scheduledate.sdate=? and mygroup.provider_no=scheduledate.provider_no and scheduledate.available = '1'  and scheduledate.status = 'A'"},
 
-			{"search_pref_defaultbill", "select default_servicetype from preference where provider_no = ?"},
 			{"list_bills_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
 
 			{"searchpassword", "select password from security where provider_no = ?" },

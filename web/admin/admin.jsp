@@ -240,19 +240,6 @@ div.logoutBox {
 				key="admin.admin.btnSearchGroupNoRecords" /></a></li>
 		</ul>
 		</div>
-
-		<div class="adminBox">
-		<h3>&nbsp;<bean:message key="admin.admin.preference" /></h3>
-		<ul>
-			<li><html:link
-				page="/admin/admincontrol.jsp?displaymode=Preference_Add_Record_Pre">
-				<bean:message key="admin.admin.btnAddPreference" />
-			</html:link></li>
-			<li><html:link page="/admin/preferencesearchrecordshtm.jsp">
-				<bean:message key="admin.admin.btnSearchPreference" />
-			</html:link></li>
-		</ul>
-		</div>
 	</caisi:isModuleLoad>
 </security:oscarSec>
 <security:oscarSec roleName="<%=roleName$%>"

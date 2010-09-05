@@ -5,38 +5,6 @@
 -- Server version	4.0.12-standard
 
 --
--- Dumping data for table 'FaxClientLog'
---
-
---
--- Dumping data for table 'allergies'
---
-
---
--- Dumping data for table 'billactivity'
---
-
---
--- Dumping data for table 'billcenter'
---
-
---
--- Dumping data for table 'billing'
---
-
---
--- Dumping data for table 'billingdetail'
---
-
---
--- Dumping data for table 'billinginr'
---
-
---
--- Dumping data for table 'billingservice'
---
-
---
 -- Dumping data for table 'clinic'
 --
 
@@ -67,10 +35,6 @@ INSERT INTO config_Immunization VALUES (2,'Late Infants & Children','<?xml versi
 INSERT INTO config_Immunization VALUES (3,'>7 year old children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"&gt;7 year old children\"><columnList><column name=\"First visit\"/><column name=\"2 months later\"/><column name=\"6-12 months later\"/><column name=\"10 years later\"/></columnList><rowList><row name=\"dTap\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"MMR\"><cell index=\"1\"/></row><row name=\"Hep B\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"Varicella\"><cell index=\"1\"/></row><row name=\"Meningococcal&#10;Vaccine\"><cell index=\"1\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
 INSERT INTO config_Immunization VALUES (4,'Adult','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Adult\"><columnList><column name=\"Td (Every 10 years)\"/><column name=\"Influenza (yearly)\"/><column name=\"Pneumococcal&#13;&lt;br&gt;(&gt;65 years + risks)\"/><column name=\"MMR(Adults born 1970 or later)\"/><column name=\"Other\"/><column name=\"Other\"/><column name=\"Other\"/></columnList><rowList><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row><row name=\"Date\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/><cell index=\"5\"/><cell index=\"6\"/><cell index=\"7\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
 INSERT INTO config_Immunization VALUES (5,'Routine Infants & Children','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<immunizationSet headers=\"true\" name=\"Routine Infants &amp; Children\"><columnList><column name=\"2 months\"/><column name=\"4 months\"/><column name=\"6 months\"/><column name=\"12 months\"/><column name=\"18 months\"/><column name=\"4-6 years\"/><column name=\"14-16 years\"/></columnList><rowList><row name=\"DTP+IPV\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/><cell index=\"6\"/></row><row name=\"Hib\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"5\"/></row><row name=\"MMR\"><cell index=\"4\"/><cell index=\"6\"/></row><row name=\"Td\"><cell index=\"7\"/></row><row name=\"Hep B (first visit,&#10;1 month, 6 months)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/></row><row name=\"VariVax&#10;(chickenpox)\"><cell index=\"4\"/></row><row name=\"Prevnar&#10;(pneumococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"4\"/></row><row name=\"Menjugate or others&#10;(meningococcus)\"><cell index=\"1\"/><cell index=\"2\"/><cell index=\"3\"/><cell index=\"7\"/></row></rowList></immunizationSet>','2002-07-30','174',0);
-
---
--- Dumping data for table 'consultationRequests'
---
 
 --
 -- Dumping data for table 'consultationServices'
@@ -1042,8 +1006,6 @@ INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringI
 -- Dumping data for table 'measurementGroup'
 --
 
-
-
 --
 -- Dumping data for table 'measurementGroupStyle'
 --
@@ -1068,34 +1030,14 @@ INSERT INTO mygroup VALUES ('IT Support','88888','Support','IT',NULL);
 
 INSERT INTO oscarcommlocations VALUES (145,'Oscar Users',NULL,1,'<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<addressBook><group><group desc=\"doc\" id=\"17\"><address desc=\"Chan, David\" id=\"174\"/><address desc=\"oscardoc, doctor\" id=\"999998\"/></group><group desc=\"receptionist\" id=\"18\"><address desc=\"oscarrep, receptionist\" id=\"999999\"/><address desc=\"Support, IT\" id=\"88888\"/></group><group desc=\"admin\" id=\"19\"><address desc=\"oscaradmin, admin\" id=\"999997\"/></group><address desc=\"Chan, David\" id=\"174\"/><address desc=\"oscaradmin, admin\" id=\"999997\"/><address desc=\"oscardoc, doctor\" id=\"999998\"/><address desc=\"oscarrep, receptionist\" id=\"999999\"/><address desc=\"Support, IT\" id=\"88888\"/></group></addressBook>',NULL);
 
---
--- Dumping data for table 'preference'
---
 
-INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue','','disabled','disabled');
-
---
--- Dumping data for table 'prescribe'
---
-
---
--- Dumping data for table 'professionalSpecialists'
---
-
---
--- Dumping data for table 'property'
---
-
+insert into ProviderPreference (providerNo, startHour, endHour, everyMin, myGroupNo, colourTemplate, defaultCaisiPmm, defaultNewOscarCme, printQrCodeOnPrescriptions, lastUpdated) values ('999998','8','18','15','.default','deepblue','disabled','disabled', 0, now());
 
 --
 -- Dumping data for table 'provider'
 --
 
 INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','','','','','','','','',NULL,'0001-01-01');
-
---
--- Dumping data for table 'providerExt'
---
 
 --
 -- Dumping data for table 'quickList'

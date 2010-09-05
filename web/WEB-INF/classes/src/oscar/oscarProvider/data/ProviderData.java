@@ -38,7 +38,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.oscarehr.common.dao.ProviderPreferenceDao;
+import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -671,18 +674,12 @@ public class ProviderData {
     private String myOscarId = null;
     
     public String getDefaultBillingView(String providerNo){
-        String defaultView = null;
-         try {
-            DBHandler db = new DBHandler();
-            String sql = "select default_servicetype from preference where provider_no='" + providerNo + "'";
-            ResultSet rs = db.GetSQL(sql);   
-               if (rs.next() && db.getString(rs,"default_servicetype")!=null) {
-		   defaultView = db.getString(rs,"default_servicetype");
-               } 
-         }catch (Exception e){
-             MiscUtils.getLogger().error("Error", e);
-         }
-         return defaultView;
+    	
+    	ProviderPreferenceDao providerPreferenceDao=(ProviderPreferenceDao)SpringUtils.getBean("providerPreferenceDao");
+    	ProviderPreference providerPreference=providerPreferenceDao.find(providerNo);
+    	
+    	if (providerPreference!=null) return(providerPreference.getDefaultServiceType());
+    	else return(null);
     }
 
 

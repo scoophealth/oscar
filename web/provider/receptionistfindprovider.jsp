@@ -47,9 +47,9 @@
   String strEveryMin = (String) session.getAttribute("everymin");
   String defaultServiceType = (String) session.getAttribute("default_servicetype");
   if( defaultServiceType == null ) {
-      List<Map> prefList = oscarSuperManager.find("providerDao", "search_pref_defaultbill", new Object[] {curUser_no});
-      if (prefList.size() > 0) {
-        defaultServiceType = String.valueOf(prefList.get(0).get("default_servicetype"));
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+      if (providerPreference!=null) {
+        defaultServiceType = providerPreference.getDefaultServiceType();
       }
   }
   
@@ -66,7 +66,9 @@
   }
   boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
 %>
-<html>
+
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%><html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message

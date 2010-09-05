@@ -32,7 +32,9 @@
 <%@ page import="java.sql.*, java.util.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.model.ProviderPreference"%>
+<%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script LANGUAGE="JavaScript">
@@ -57,86 +59,23 @@ function closeit() {
 	</tr>
 </table>
 <%
-	String[] param = null;
-	String operation = request.getParameter("dboperation");
-	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-		param = new String[7];
-		param[5] = request.getParameter("new_tickler_warning_window");
-		if (param[5] == null) {
-			param[5] = (String) session.getAttribute("newticklerwarningwindow");
-		}
-		param[6] = request.getParameter("provider_no");
-		operation += "_newtickler";
-	} else {
-		param = new String[6];
-		param[5] = request.getParameter("provider_no");
-	}
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.updateOrCreateProviderPreferences(request);
 
-	param[0] = request.getParameter("start_hour");
-	param[1] = request.getParameter("end_hour");
-	param[2] = request.getParameter("every_min");
-	param[3] = request.getParameter("mygroup_no");
-	param[4] = request.getParameter("color_template");
+	//--- 
+	
+	session.setAttribute("starthour", providerPreference.getStartHour().toString());
+	session.setAttribute("endhour", providerPreference.getEndHour().toString());
+	session.setAttribute("everymin", providerPreference.getEveryMin().toString());
+	session.setAttribute("groupno", providerPreference.getMyGroupNo());
+	session.setAttribute("default_servicetype", providerPreference.getDefaultServiceType());
+	session.setAttribute("newticklerwarningwindow", providerPreference.getNewTicklerWarningWindow());
+	session.setAttribute("default_pmm", providerPreference.getDefaultCaisiPmm());
 
-	int rowsAffected = oscarSuperManager.update("receptionistDao", operation, param);
-
-	if (rowsAffected >=1) { //Successful Update of a Preference Record.
-		session.setAttribute("starthour", param[0]);
-		session.setAttribute("endhour", param[1]);
-		session.setAttribute("everymin", param[2]);
-		session.setAttribute("groupno", param[3]);  
-		if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-			session.setAttribute("newticklerwarningwindow", param[5]);
-		}
 %>
 <script LANGUAGE="JavaScript">
 	self.opener.refresh1();
 	self.close();
 </script>
-<%  
-	} else {
-		//now try to add a new preference record
-		operation = "add_preference";
-		param[0] = request.getParameter("provider_no");
-		param[1] = request.getParameter("start_hour");
-		param[2] = request.getParameter("end_hour");
-		param[3] = request.getParameter("every_min");
-		param[4] = request.getParameter("mygroup_no");
-		param[5] = request.getParameter("color_template");
-		if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-			param[6] = request.getParameter("new_tickler_warning_window");
-			if (param[6] == null) {
-				param[6] = (String) session.getAttribute("newticklerwarningwindow");
-			}
-			operation += "_newtickler";
-		}
-
-		rowsAffected = oscarSuperManager.update("receptionistDao", operation, param);
-
-		if (rowsAffected ==1) { //Successful add a Preference Record.
-			session.setAttribute("starthour", param[1]);
-			session.setAttribute("endhour", param[2]);
-			session.setAttribute("everymin", param[3]);
-			session.setAttribute("groupno", param[4]);  
-			if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-				session.setAttribute("newticklerwarningwindow", param[6]);
-			}
-%>
-<script LANGUAGE="JavaScript">
-	self.opener.refresh1();
-	self.close();
-</script>
-<%
-		} else {
-%>
-<p>
-<h1><bean:message
-	key="receptionist.receptionistupdatepreference.msgUpdateFailure" /></h1>
-</p>
-<%
-		}
-	}
-%>
 <p></p>
 <hr width="90%"/>
 <form><input type="button"

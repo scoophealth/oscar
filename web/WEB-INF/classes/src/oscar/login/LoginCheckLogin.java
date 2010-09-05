@@ -178,10 +178,6 @@ public class LoginCheckLogin {
         return pvar;
     }
 
-    public String[] getPreferences() {
-        return lb.getPreferences();
-    }
-
     public boolean unlock(String userName) {
         boolean bBlock = false;
 
