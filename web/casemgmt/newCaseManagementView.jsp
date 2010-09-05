@@ -729,8 +729,10 @@
 					%>
 					<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> <%
 				}
+				
 				%>
-			  <span id="txt<%=note.getNoteId()%>"><%=noteStr%></span> 
+				
+			  <div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp())?(bgColour+";color:white"):""%>"><%=noteStr%></div> 
 			 <%
 			 	if (largeNote(noteStr))
 				{
