@@ -573,264 +573,276 @@
 						</c:if> 
 					<%
 		 		}
-		//else display contents of note for viewing
- 		else
- 		{
-			if (note.isLocked())
-			{
-			 %>
-				 <span id="txt<%=note.getNoteId()%>">
-				 	<bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdateDate(), dateFormat, request.getLocale()) + " " + note.getProviderName()%>
-				 </span>
-			 <%
-			}
-			else
-			{
-				String rev = note.getRevision();
-				if (note.getRemoteFacilityId()==null) // always display full note for remote notes
+				else //else display contents of note for viewing
 				{
-					if (note.isDocument() || note.isCpp())
+					if (note.isLocked())
 					{
-						// blank if so it never displays min/max icon for documents
-					}
-					else if (fulltxt)
-					{
-					%> 
-	 					<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)"
-						style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> 
+					%>
+						<span id="txt<%=note.getNoteId()%>">
+							<bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdateDate(), dateFormat, request.getLocale()) + " " + note.getProviderName()%>
+						</span>
 					<%
-	 				}
+					}
 					else
 					{
-					%> 
-						<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'> 
-					<%
-					}
-				}
-				
-				if (note.getRemoteFacilityId()!=null) // if it's a remote note, say where if came from on the top of the note
-				{
-				 	%> 
-				 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" /> <%=note.getLocation()%></div>
-					<%
-				}
-				
-				if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
-				{
-				 	%> 
-				 	<div style="background-color:#33FFCC; text-align:right">Group Note - Editable note in this <a target="_blank" href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<%=note.getLocation() %>">client</a></div>
-					<%
-				}
-
-				if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
-				{
-				 	%> 
-				 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> 
-					<%
-				}
-				
-			 	if (!note.isDocument() && !note.isRxAnnotation())
-			 	{
-			 		// only allow editing for local notes
-			 		// also disallow editing of cpp's inline (can be edited in the cpp area) 
-			 		if (note.getRemoteFacilityId()==null && !note.isCpp())
-					{
-			 			if(!note.isReadOnly()) {
-					 		%>
-					 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" 
-					 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
-					 		<bean:message key="oscarEncounter.edit.msgEdit" />
-					 		</a> 
+						String rev = note.getRevision();
+						if (note.getRemoteFacilityId()==null) // always display full note for remote notes
+						{
+							if (note.isDocument() || note.isCpp())
+							{
+								// blank if so it never displays min/max icon for documents
+							}
+							else if (fulltxt)
+							{
+							%> 
+	 							<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)"
+								style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> 
 							<%
+		 					}
+							else
+							{
+							%> 
+								<img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>" id='quitImg<%=note.getNoteId()%>' alt="Maximize Display" onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'> 
+							<%
+							}
 						}
+					
+						if (note.getRemoteFacilityId()!=null) // if it's a remote note, say where if came from on the top of the note
+						{
+					 	%> 
+						 	<div style="background-color:#ffcccc; text-align:right"><bean:message key="oscarEncounter.noteFrom.label" /> <%=note.getLocation()%></div>
+						<%
+						}
+					
+						if (note.isGroupNote()) // if it's a remote note, say where if came from on the top of the note
+						{
+					 	%> 
+						 	<div style="background-color:#33FFCC; text-align:right">Group Note - Editable note in this <a target="_blank" href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<%=note.getLocation() %>">client</a></div>
+						<%
+						}
+			
+						if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
+						{
+					 	%> 
+						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> 
+						<%
+						}
+				
+					 	if (!note.isDocument() && !note.isRxAnnotation())
+					 	{
+					 		// only allow editing for local notes
+					 		// also disallow editing of cpp's inline (can be edited in the cpp area) 
+					 		if (note.getRemoteFacilityId()==null && !note.isCpp())
+							{
+					 			if(!note.isReadOnly()) 
+					 			{
+						 		%>
+							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>" 
+							 		href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+							 		<bean:message key="oscarEncounter.edit.msgEdit" />
+							 		</a> 
+								<%
+								}
 			 			
-			 			if (professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists())
-			 			{
-				 			%>
-				 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message key="oscarEncounter.eSend" /></a>
-				 			<%
-			 			}
-			 		}
-			 	}else if(note.isRxAnnotation()){//prescription note
-                                    String winName="dummie";
-                                    int hash = Math.abs(winName.hashCode());
-                                    //get drug from note id.
-                                    RxPrescriptionData.Prescription rx=note.getRxFromAnnotation(note.getNoteLink());
-                                    
-                                    if (note.getRemoteFacilityId()==null) // only allow editing for local notes
-					{
-                                    		if(!note.isReadOnly()) {
-						%>
-				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
-				 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
-				 		<bean:message key="oscarEncounter.edit.msgEdit" />
-				 		</a>
-				 		<%
-					}
-                    		}
-                    if(rx!=null){
-                        String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
-
-                        %>
-                        <a class="links" title="<%=rx.getSpecial()%>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.rxView" /> </a>
-                        <%
-                        }
-
-                }
-				else if (note.isDocument() && !note.getProviderNo().equals("-1"))
-				{ 
-					//document annotation
-					String url;
-			
-					Enumeration em = request.getAttributeNames();
-			
-					String winName = "docs" + demographicNo;
-					int hash = Math.abs(winName.hashCode());
-			
-					url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
-					url = url + "return false;";
-			
-					if (note.getRemoteFacilityId()==null) // only allow editing for local notes
-					{
-						if(!note.isReadOnly()) {
-						%> 
-				 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
-				 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
-				 		<bean:message key="oscarEncounter.edit.msgEdit" />
-				 		</a>
-				 		<%
-					}}
-			 		%>
-			 		
-					<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> <%
-			 	}
-				else
-				{ //document note
-					String url;
-			
-					Enumeration em = request.getAttributeNames();
-					String winName = "docs" + demographicNo;
-					int hash = Math.abs(winName.hashCode());
-			
-					url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
-					url = url + "return false;";
-				 	%> 
-				 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;color:black">
-				 	<bean:message key="oscarEncounter.view" /> 
-					</a> 
-					<%
-			 	}
-				if (note.isEformData())
-				{
-					String winName = "eforms"+demographicNo;
-					int hash = Math.abs(winName.hashCode());
-					String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmshowform_data.jsp?fdid=";
-
-					CaseManagementNoteLink noteLink = note.getNoteLink();
-					if (noteLink!=null) url += noteLink.getTableId();
-					url += "'); return false;";
-					%>
-					<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> <%
-				}
-				
-				%>
-				
-			  <div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp())?(bgColour+";color:white;font-size:9px"):""%>"><%=noteStr%></div>
-			   
-			 <%
-			 	if (largeNote(noteStr))
-				{
-			 %> <img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='bottomQuitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)" style='float: right; margin-right: 5px; margin-bottom: 3px;'
-						src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> <%
-			 	}
-			
-				if (!note.isDocument() && !note.isCpp())
-				{
-					%>
-						<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
-						<div id="sumary<%=note.getNoteId()%>">
-						<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
-							<i>Date:&nbsp;<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
-								<bean:message key="oscarEncounter.noteRev.title" />
-								<%
-									if (rev!=null)
-									{
-										%>
-											<a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
-										<%
-									}
-									else
-									{
-										%>
-											N/A
-										<%
-									}
+					 			if (professionalSpecialistDao.hasRemoteCapableProfessionalSpecialists())
+					 			{
+					 			%>
+					 				<a href="" onclick="window.open('<%=request.getContextPath()+"/lab/CA/ALL/sendOruR01.jsp?noteId="+note.getNoteId()%>', 'eSend');return(false);" title="<bean:message key="oscarEncounter.eSendTitle"/>" style="float: right; margin-right: 5px; font-size: 8px;"><bean:message key="oscarEncounter.eSend" /></a>
+					 			<%
+					 			}
+					 		}
+					 	}
+					 	else if(note.isRxAnnotation())//prescription note
+					 	{
+	                        String winName="dummie";
+	                        int hash = Math.abs(winName.hashCode());
+	                        //get drug from note id.
+	                        RxPrescriptionData.Prescription rx=note.getRxFromAnnotation(note.getNoteLink());
+	                                   
+	                        if (note.getRemoteFacilityId()==null) // only allow editing for local notes
+							{
+	                      		if(!note.isReadOnly()) 
+	                      		{
 								%>
-							</i>
-						</div>
-						
-						<div>
-							<span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
-							<ul style="list-style: none inside none; margin: 0px;">
-								<%
-									ArrayList<String> editorNames = note.getEditorNames();
-									Iterator<String> it = editorNames.iterator();
-									int count = 0;
-									int MAXLINE = 2;
-									while (it.hasNext())
-									{
-										String providerName = it.next();
+							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
+							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+							 		<bean:message key="oscarEncounter.edit.msgEdit" />
+							 		</a>
+						 		<%
+								}
+	                   		}
+	                           
+		                    if(rx!=null)
+	       		            {
+	               		        String url="popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/oscarRx/StaticScript2.jsp?regionalIdentifier="+rx.getRegionalIdentifier()+"&cn="+response.encodeURL(rx.getCustomName())+"');";
+		                        %>
+		                        	<a class="links" title="<%=rx.getSpecial()%>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view.rxView" /> </a>
+		                        <%
+	                        }
+		                }
+						else if (note.isDocument() && !note.getProviderNo().equals("-1"))
+						{ 
+							//document annotation
+							String url;
 					
-										if (count % MAXLINE == 0)
-										{
-											out.print("<li>" + providerName + "; ");
-										}
-										else
-										{
-											out.print(providerName + "</li>");
-										}
-										if (it.hasNext()) ++count;
-									}
-									if (count % MAXLINE == 0) out.print("</li>");
-								%>
+							Enumeration em = request.getAttributeNames();
 					
-							</ul>
-						</div>
-						<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
-			
-						<div style="display: block;">
-							<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
-							<%
-								ArrayList<String> issueDescriptions = note.getIssueDescriptions();
-							
-								if (issueDescriptions.size() > 0)
+							String winName = "docs" + demographicNo;
+							int hash = Math.abs(winName.hashCode());
+					
+							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
+							url = url + "return false;";
+					
+							if (note.getRemoteFacilityId()==null) // only allow editing for local notes
+							{
+								if(!note.isReadOnly()) 
 								{
-									%>
-										<ul style="float: left; list-style: circle inside none; margin: 0px;">
+								%> 
+							 		<a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getNoteId()%>"
+							 		href="javascript:void(0);" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float: right; margin-right: 5px; font-size: 8px;">
+							 		<bean:message key="oscarEncounter.edit.msgEdit" />
+							 		</a>
+						 		<%
+								}
+							}
+			 				%>
+								<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
+							<%
+			 			}
+						else
+						{ //document note
+							String url;
+						
+							Enumeration em = request.getAttributeNames();
+							String winName = "docs" + demographicNo;
+							int hash = Math.abs(winName.hashCode());
+					
+							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
+							url = url + "return false;";
+						 	%> 
+							 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;color:black">
+							 		<bean:message key="oscarEncounter.view" /> 
+								</a> 
+							<%
+					 	}
+	
+					 	if (note.isEformData())
+						{
+							String winName = "eforms"+demographicNo;
+							int hash = Math.abs(winName.hashCode());
+							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmshowform_data.jsp?fdid=";
+		
+							CaseManagementNoteLink noteLink = note.getNoteLink();
+							if (noteLink!=null) url += noteLink.getTableId();
+							url += "'); return false;";
+							%>
+								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
+							<%
+						}	
+						
+						%>
+			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp())?(bgColour+";color:white;font-size:9px"):""%>">
+		  						<%=noteStr%>
+			  				</div>   
+						<%
+							
+			 			if (largeNote(noteStr))
+						{
+			 			%> 
+						 	<img title="<bean:message key="oscarEncounter.MinDisplay.title"/>" id='bottomQuitImg<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>" onclick="minView(event)" style='float: right; margin-right: 5px; margin-bottom: 3px;'
+							src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'> 
+						<%
+				 		}
+				
+						if (!note.isDocument() && !note.isCpp())
+						{
+						%>
+							<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
+								<div id="sumary<%=note.getNoteId()%>">
+									<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
+										<i>
+											Date:&nbsp;
+											<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
+											<bean:message key="oscarEncounter.noteRev.title" />
 											<%
-												for (String issueDescription : issueDescriptions)
+												if (rev!=null)
 												{
 													%>
-														<li><%=issueDescription.trim()%></li>
+														<a href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
+													<%
+												}
+												else
+												{
+													%>
+														N/A
 													<%
 												}
 											%>
+										</i>
+									</div>
+							
+									<div>
+										<span style="float: left;"><bean:message key="oscarEncounter.editors.title" />:</span>
+										<ul style="list-style: none inside none; margin: 0px;">
+											<%
+												ArrayList<String> editorNames = note.getEditorNames();
+												Iterator<String> it = editorNames.iterator();
+												int count = 0;
+												int MAXLINE = 2;
+												while (it.hasNext())
+												{
+													String providerName = it.next();
+								
+													if (count % MAXLINE == 0)
+													{
+														out.print("<li>" + providerName + "; ");
+													}
+													else
+													{
+														out.print(providerName + "</li>");
+													}
+													if (it.hasNext()) ++count;
+												}
+												if (count % MAXLINE == 0) out.print("</li>");
+											%>
 										</ul>
-									<%
-								}
-							%>
-							<br style="clear: both;">
-						</div>
-						</div>
-						</div>
-					<%
-				}
-
+									</div>
+							
+									<div style="clear: right; margin-right: 3px; float: right;">Enc Type:&nbsp;<span id="encType<%=note.getNoteId()%>"><%=note.getEncounterType().equals("")?"":"&quot;" + note.getEncounterType() + "&quot;"%></span></div>
+				
+									<div style="display: block;">
+										<span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title" /></span>
+										<%
+											ArrayList<String> issueDescriptions = note.getIssueDescriptions();
+										
+											if (issueDescriptions.size() > 0)
+											{
+												%>
+													<ul style="float: left; list-style: circle inside none; margin: 0px;">
+														<%
+															for (String issueDescription : issueDescriptions)
+															{
+																%>
+																	<li><%=issueDescription.trim()%></li>
+																<%
+															}
+														%>
+													</ul>
+												<%
+											}
+										%>
+										<br style="clear: both;">
+									</div>
+								</div>
+							</div>
+						<%
 						}
 					}
-					%>
-					</div>
-					</div>
+				}
+				%>
+			</div>
+		</div>
+
 					<%
 						//if we are not editing note, remember note ids for setting event listeners
 						//Internet Explorer does not play nice with inserting javascript between divs
