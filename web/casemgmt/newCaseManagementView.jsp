@@ -549,27 +549,30 @@
 			time1 = System.currentTimeMillis();
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
 	%>
-		<div id="nc<%=idx+1%>" class="note"><input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> <input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> <input type="hidden"
-			id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>"> <input type="hidden" id="editWarn<%=note.getNoteId()%>" value="<%=editWarn%>">
+		<div id="nc<%=idx+1%>" class="note">
+			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
+			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> 
+			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">
+			<input type="hidden" id="editWarn<%=note.getNoteId()%>" value="<%=editWarn%>">
 
-  		<div id="n<%=note.getNoteId()%>">
-		<%
-	       //display last saved note for editing
-	       if (note.getNoteId() !=null && note.getNoteId().equals(savedId))
-			{
-				found = true;
-		%> 
-			<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
-			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
-			 	<nested:write property="caseNote.note" />
-			 </textarea>
-		<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getNoteId()%>"><%@ include file="noteIssueList.jsp"%></div>
-
-		<c:if test="${sessionScope.passwordEnabled=='true'}">
-			<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password" /></p>
-		</c:if> 
-		<%
- 		}
+	  		<div id="n<%=note.getNoteId()%>">
+			<%
+				//display last saved note for editing
+				if (note.getNoteId() !=null && note.getNoteId().equals(savedId))
+				{
+					found = true;
+					%> 
+						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
+						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
+							<nested:write property="caseNote.note" />
+						</textarea>
+						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getNoteId()%>"><%@ include file="noteIssueList.jsp"%></div>
+	
+						<c:if test="${sessionScope.passwordEnabled=='true'}">
+							<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password" /></p>
+						</c:if> 
+					<%
+		 		}
 		//else display contents of note for viewing
  		else
  		{
@@ -712,7 +715,7 @@
 					url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
 					url = url + "return false;";
 				 	%> 
-				 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;">
+				 	<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=note.getNoteId()%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;color:black">
 				 	<bean:message key="oscarEncounter.view" /> 
 					</a> 
 					<%
@@ -732,7 +735,8 @@
 				
 				%>
 				
-			  <div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp())?(bgColour+";color:white"):""%>"><%=noteStr%></div> 
+			  <div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp())?(bgColour+";color:white;font-size:9px"):""%>"><%=noteStr%></div>
+			   
 			 <%
 			 	if (largeNote(noteStr))
 				{
