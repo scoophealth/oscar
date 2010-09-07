@@ -66,6 +66,7 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
+import org.oscarehr.casemgmt.common.Colour;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -746,9 +747,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if (noteSort.trim().equalsIgnoreCase("UP")) notesToDisplay=sortNotes(notesToDisplay, "observation_date_asc");
 		else notesToDisplay=sortNotes(notesToDisplay, "observation_date_desc");
 
-		request.setAttribute("notesToDisplay", notesToDisplay);
-		
-		// request.setAttribute("surveys", surveyManager.getForms(demographicNo));
+		request.setAttribute("notesToDisplay", notesToDisplay);		
 	}
 
 	private List applyRoleFilter(List notes, String[] roleId) {
@@ -1430,5 +1429,36 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public boolean hasPrivilege(String objectName, String roleName) {
 		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
 		return OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
+	}
+	
+	public static String getNoteColour(NoteDisplay noteDisplay)
+	{
+		//set all colours
+		String blackColour = "000000";
+		String documentColour = "color:#" + blackColour + ";background-color:#" + Colour.documents + ";";
+		String diseaseColour = "color:#" + blackColour + ";background-color:#" + Colour.disease + ";";
+		String eFormsColour = "color:#" + blackColour + ";background-color:#" + Colour.eForms + ";";
+		String formsColour = "color:#" + blackColour + ";background-color:#" + Colour.forms + ";";
+		String labsColour = "color:#" + blackColour + ";background-color:#" + Colour.labs + ";";
+		String measurementsColour = "color:#" + blackColour + ";background-color:#" + Colour.measurements + ";";
+		String messagesColour = "color:#" + blackColour + ";background-color:#" + Colour.messages + ";";
+		String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.prevention + ";";
+		String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.tickler + ";";
+        String rxColour="color:#" + blackColour + ";background-color:#"+Colour.rx+";";
+
+        String bgColour = "color:#000000;background-color:#CCCCFF;";
+
+		if (noteDisplay.isCpp()) {
+			bgColour = "color:#FFFFFF;background-color:#996633;";
+		}
+
+		// set document note to blue but document annotation remains bkground colour.
+		if (noteDisplay.isDocument()) {
+			bgColour = documentColour;
+		} else if (noteDisplay.isRxAnnotation()) {
+			bgColour = rxColour;
+		}
+
+		return(bgColour);
 	}
 }

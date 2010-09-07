@@ -23,8 +23,8 @@
 */
 --%>
 
-<%@ include file="/casemgmt/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@include file="/casemgmt/taglibs.jsp"%>
+<%@taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO"%>
 <%@page	import="java.util.Arrays,java.util.Properties,java.util.List,java.util.Set,java.util.ArrayList,java.util.Enumeration,java.util.HashSet,java.util.Iterator,java.text.SimpleDateFormat,java.util.Calendar,java.util.Date,java.text.ParseException"%>
@@ -268,7 +268,7 @@
 		<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>"> 
 		<input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)">
 		
-		<div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index: 1; display: none">&nbsp</div>
+		<div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index: 1; display: none">&nbsp;</div>
 		
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 		
@@ -425,43 +425,12 @@
 		 *  Else show all notes withing the user preference
 		*/
 		ArrayList<Boolean> fullTxtFormat = new ArrayList<Boolean>(noteSize);
-		ArrayList<String> colourStyle = new ArrayList<String>(noteSize);
 		int pos;
 		idx = 0;
-		//set all colours
-		String blackColour = "000000";
-		String documentColour = "color:#" + blackColour + ";background-color:#" + Colour.documents + ";";
-		String diseaseColour = "color:#" + blackColour + ";background-color:#" + Colour.disease + ";";
-		String eFormsColour = "color:#" + blackColour + ";background-color:#" + Colour.eForms + ";";
-		String formsColour = "color:#" + blackColour + ";background-color:#" + Colour.forms + ";";
-		String labsColour = "color:#" + blackColour + ";background-color:#" + Colour.labs + ";";
-		String measurementsColour = "color:#" + blackColour + ";background-color:#" + Colour.measurements + ";";
-		String messagesColour = "color:#" + blackColour + ";background-color:#" + Colour.messages + ";";
-		String preventionColour = "color:#" + blackColour + ";background-color:#" + Colour.prevention + ";";
-		String ticklerColour = "color:#" + blackColour + ";background-color:#" + Colour.tickler + ";";
-                String rxColour="color:#" + blackColour + ";background-color:#"+Colour.rx+";";
 
 		for (pos = noteSize - 1; pos >= 0; --pos)
 		{
 			NoteDisplay cmNote = notesToDisplay.get(pos);
-
-			bgColour = "color:#000000;background-color:#CCCCFF;";
-
-			if (cmNote.isCpp())
-			{
-				bgColour = "color:#FFFFFF;background-color:#996633;";
-			}
-
-			//set document note to blue but document annotation remains bkground colour.
-			if (cmNote.isDocument())
-			{
-				bgColour = documentColour;
-			}
-                        else if (cmNote.isRxAnnotation()){
-                            bgColour=rxColour;
-                        }
-
-			colourStyle.add(bgColour);
 
 			if (cmNote.isCpp())
 			{
@@ -535,7 +504,7 @@
 			noteStr = StringEscapeUtils.escapeHtml(noteStr);
 			// for remote notes, the full text is always shown.
 			fulltxt = fullTxtFormat.get(pos) || note.getRemoteFacilityId()!=null;
-			bgColour = colourStyle.get(pos--);
+			bgColour = CaseManagementViewAction.getNoteColour(note);
 			if (fulltxt)
 			{
 				noteStr = noteStr.replaceAll("\n", "<br>");

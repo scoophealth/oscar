@@ -1,4 +1,7 @@
-    var numNotes;   //How many saved notes do we have?
+<%@page contentType="text/javascript"%>
+<%@page import="org.oscarehr.casemgmt.common.Colour"%>
+
+	var numNotes;   //How many saved notes do we have?
     var ctx;        //url context
     var providerNo;
     var demographicNo;
@@ -288,27 +291,27 @@ function navBarLoader() {
     this.load = function() {
 
             var leftNavBar = [
-                  ctx + "/oscarEncounter/displayPrevention.do?hC=009999",
-                  ctx + "/oscarEncounter/displayTickler.do?hC=FF6600",
-                  ctx + "/oscarEncounter/displayDisease.do?hC=5A5A5A",
-                  ctx + "/oscarEncounter/displayForms.do?hC=917611",
-                  ctx + "/oscarEncounter/displayEForms.do?hC=11CC00",
-                  ctx + "/oscarEncounter/displayDocuments.do?hC=476BB3",
-                  ctx + "/oscarEncounter/displayLabs.do?hC=A0509C",
-                  ctx + "/oscarEncounter/displayMessages.do?hC=DDDD00",
-                  ctx + "/oscarEncounter/displayMeasurements.do?hC=344887",
+                  ctx + "/oscarEncounter/displayPrevention.do?hC=<%=Colour.prevention%>",
+                  ctx + "/oscarEncounter/displayTickler.do?hC=<%=Colour.tickler%>",
+                  ctx + "/oscarEncounter/displayDisease.do?hC=<%=Colour.disease%>",
+                  ctx + "/oscarEncounter/displayForms.do?hC=<%=Colour.forms%>",
+                  ctx + "/oscarEncounter/displayEForms.do?hC=<%=Colour.eForms%>",
+                  ctx + "/oscarEncounter/displayDocuments.do?hC=<%=Colour.documents%>",
+                  ctx + "/oscarEncounter/displayLabs.do?hC=<%=Colour.labs%>",
+                  ctx + "/oscarEncounter/displayMessages.do?hC=<%=Colour.messages%>",
+                  ctx + "/oscarEncounter/displayMeasurements.do?hC=<%=Colour.measurements%>",
                   ctx + "/oscarEncounter/displayConsultation.do?hC="
               ];
 
             var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs", "labs", "msgs", "measurements", "consultation"];
 
             var rightNavBar = [
-                  ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
-                  ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3&numToDisplay=12",
-                  ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds",
-                  ctx + "/CaseManagementView.do?hc=993333&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors",
-                  ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory",
-                  ctx + "/oscarEncounter/displayIssues.do?hC=CC9900",
+                  ctx + "/oscarEncounter/displayAllergy.do?hC=<%=Colour.allergy%>",
+                  ctx + "/oscarEncounter/displayRx.do?hC=<%=Colour.rx%>&numToDisplay=12",
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.omed%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds",
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.riskFactors%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors",
+                  ctx + "/CaseManagementView.do?hc=<%=Colour.familyHistory%>&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory",
+                  ctx + "/oscarEncounter/displayIssues.do?hC=<%=Colour.issues%>",
                   ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo
               ];
 

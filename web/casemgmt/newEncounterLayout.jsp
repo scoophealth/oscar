@@ -89,7 +89,7 @@
   <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
 
   <!--js code for newCaseManagementView.jsp -->
-  <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>
+  <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js.jsp"/>"></script>
   
     <style type="text/css">
         
@@ -337,19 +337,6 @@
     <title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=(String) request.getAttribute(\"demographicNo\")%>"/></title>
     <meta http-equiv="Cache-Control" content="no-cache">
     <script type="text/javascript">
-        
-        //Text items used in newCaseManagementView.js
-        <%--
-        socHistoryLabel = encodeURI("<bean:message key="oscarEncounter.socHistory.title"/>");
-        medHistoryLabel = encodeURI("<bean:message key="oscarEncounter.medHistory.title"/>");
-        //onGoingLabel = "<bean:message key="oscarEncounter.onGoing.title"/>";
-        onGoingLabel = "<bean:message key="oscarEncounter.onGoing.title"/>";
-        console.log(onGoingLabel);
-        remindersLabel = encodeURI("<bean:message key="oscarEncounter.reminders.title"/>");
-        oMedsLabel = encodeURI("<bean:message key="oscarEncounter.oMeds.title"/>");
-        famHistoryLabel = encodeURI("<bean:message key="oscarEncounter.famHistory.title"/>");
-        riskFactorsLabel = encodeURI("<bean:message key="oscarEncounter.riskFactors.title"/>");
-        --%>
             
         socHistoryLabel = "oscarEncounter.socHistory.title";
         medHistoryLabel = "oscarEncounter.medHistory.title";
