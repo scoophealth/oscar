@@ -15,13 +15,14 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QrCodeUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.QrCodeUtils.QrCodesOrientation;
+import org.oscarehr.web.admin.ProviderPreferencesUIBean;
 
 import oscar.OscarProperties;
-
 import ca.uhn.hl7v2.model.v26.message.OMP_O09;
 
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
@@ -82,4 +83,12 @@ public final class PrescriptionQrCodeUIBean {
 		
 		return null;
     }
+	
+	public static boolean isPrescriptionQrCodeEnabledForCurrentProvider()
+	{
+		ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+		if (providerPreference==null) providerPreference=new ProviderPreference();
+			
+		return(providerPreference.isPrintQrCodeOnPrescriptions());
+	}
 }

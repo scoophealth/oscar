@@ -9,6 +9,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ProviderPreference;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
 
 public final class ProviderPreferencesUIBean {
 	
@@ -75,6 +76,8 @@ public final class ProviderPreferencesUIBean {
 		
 		temp=StringUtils.trimToNull(request.getParameter("color_template"));
 		if (temp!=null)	providerPreference.setColourTemplate(temp);
+		
+		providerPreference.setPrintQrCodeOnPrescriptions(WebUtils.isChecked(request, "prescriptionQrCodes"));
 		
 		providerPreferenceDao.merge(providerPreference);
 		

@@ -499,10 +499,13 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			}
 			
 			// render QrCode
-			Integer scriptId=Integer.parseInt(req.getParameter("scriptId"));
-			byte[] qrCodeImage=PrescriptionQrCodeUIBean.getPrescriptionHl7QrCodeImage(scriptId);
-			Image qrCode=Image.getInstance(qrCodeImage);
-			document.add(qrCode);
+			if (PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider())
+			{
+				Integer scriptId=Integer.parseInt(req.getParameter("scriptId"));
+				byte[] qrCodeImage=PrescriptionQrCodeUIBean.getPrescriptionHl7QrCodeImage(scriptId);
+				Image qrCode=Image.getInstance(qrCodeImage);
+				document.add(qrCode);
+			}
 		}
 		catch (DocumentException dex) {
 			baosPDF.reset();

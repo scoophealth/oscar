@@ -41,7 +41,8 @@
 
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
-<%@page import="org.oscarehr.util.LoggedInInfo"%><html:html locale="true">
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%><html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -154,6 +155,10 @@ function showHideBillPref() {
 </script>
 </head>
 
+<%
+	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
+%>
+
 <body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0">
 	<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
 
@@ -257,7 +262,10 @@ function showHideBillPref() {
               <bean:message key="provider.providerpreference.qrCodeOnPrescriptions"/>
             </td>
             <td colspan="2">
-            	<input type="checkbox" />
+            	<%
+            		boolean checked=PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider();
+            	%>
+            	<input type="checkbox" name="prescriptionQrCodes" <%=checked?"checked=\"checked\"":""%> />
             </td>
           </tr>
           
@@ -266,7 +274,6 @@ function showHideBillPref() {
       
               <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=providerNo%>'>
               <INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
-              <INPUT TYPE="hidden" NAME="dboperation" VALUE='updatepreference'>
               <INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
 
         </table>
@@ -320,7 +327,6 @@ function showHideBillPref() {
 	  <select name="default_servicetype">
 	      <option value="no">-- no --</option>
 <%
-	ProviderPreference providerPreference=ProviderPreferencesUIBean.getLoggedInProviderPreference();
 	if (providerPreference!=null) {
 		String def = providerPreference.getDefaultServiceType();
 		List<Map> resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});

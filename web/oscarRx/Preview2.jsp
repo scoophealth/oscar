@@ -41,7 +41,8 @@
 	String scriptid=request.getParameter("scriptId");
 %>
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.web.PrescriptionQrCodeUIBean"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
@@ -292,15 +293,19 @@ ProviderData user = new ProviderData(strUser);
 		                                                    </tr>
 	                                                    <%
                                      					}
-                                                    %>
                                                     
-                                                    <tr>
-	                                                    <td colspan="2">
-	                                                    	<img src="<%=request.getContextPath()%>/contentRenderingServlet/prescription_qr_code_<%=rx.getScript_no()%>.png?source=prescriptionQrCode&prescriptionId=<%=rx.getScript_no()%>" alt="qr_code" />
-	                                                    </td>
-                                                    </tr>
-                                                    
-                                                    <%                                                    
+                                                    	if (PrescriptionQrCodeUIBean.isPrescriptionQrCodeEnabledForCurrentProvider())
+                                                    	{
+                                                    	%>                                                    
+		                                                    <tr>
+			                                                    <td colspan="2">
+			                                                    	<img src="<%=request.getContextPath()%>/contentRenderingServlet/prescription_qr_code_<%=rx.getScript_no()%>.png?source=prescriptionQrCode&prescriptionId=<%=rx.getScript_no()%>" alt="qr_code" />
+			                                                    </td>
+		                                                    </tr>
+                                                    	<%
+                                                    	}
+                                                    	
+                                                    	
 	                                     				if (oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null)
 	                                     				{
 	                                     				%>
