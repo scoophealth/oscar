@@ -1115,7 +1115,7 @@ function changeLt(drugId){
        new Ajax.Request(url,
         {method: 'post',postBody:data,
             onSuccess:function(transport){
-                popForm2();
+                popForm2(scriptNo);
 
             }});
         return false;
