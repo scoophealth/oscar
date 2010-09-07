@@ -144,4 +144,12 @@
     <measurement type="ASPR" typeDesc="Asthma Specialist Referral" typeDisplayName="Asthma Specialist Referral" measuringInstrc="">
         <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
     </measurement>
+    <item measurement_type="LHAD" display_name="Lung Related Hospital Admission" guideline="" value_name="Admission" />
+    <measurement type="LHAD" typeDesc="Lung Related Hospital Admission" typeDisplayName="Lung Related Hospital Admission" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
+    <item measurement_type="OUTR" display_name="Outside Spirometry Referral" guideline="" value_name="Referred" />
+    <measurement type="OUTR" typeDesc="Outside Spirometry Referral" typeDisplayName="Outside Spirometry Referral" measuringInstrc="">
+        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+    </measurement>
 </flowsheet>
