@@ -1,6 +1,7 @@
 package org.oscarehr.util;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -34,9 +35,9 @@ public class QrCodeUtils {
 		VERTICAL, HORIZONTAL
 	}
 	
-	public static byte[] toMultipleQrCodePngs(String s, ErrorCorrectionLevel ec, QrCodesOrientation qrCodesOrientation) throws IOException, WriterException
+	public static byte[] toMultipleQrCodePngs(String s, ErrorCorrectionLevel ec, QrCodesOrientation qrCodesOrientation, float scaleFactor) throws IOException, WriterException
 	{
-		return(toMultipleQrCodePngs(s, ec, qrCodesOrientation, null, MAX_QR_CODE_DATA_LENGTH));
+		return(toMultipleQrCodePngs(s, ec, qrCodesOrientation, null, MAX_QR_CODE_DATA_LENGTH, scaleFactor));
 	}
 	
 	/**
@@ -47,8 +48,9 @@ public class QrCodeUtils {
 	 * are interpreted and the resulting data concatenated.
 	 * 
 	 * @param qrCodeImageGap the number of pixels between the QR code images, if this value is null it will calculate it at DEFAULT_QR_CODE_GAP % of the size of the first (and presumably full size) qr code image
+	 * @param scaleFactor this scales the resulting image by the provided factor
 	 */
-	public static byte[] toMultipleQrCodePngs(String s, ErrorCorrectionLevel ec, QrCodesOrientation qrCodesOrientation, Integer qrCodeImageGap, int maxQrCodeDataSize) throws IOException, WriterException
+	public static byte[] toMultipleQrCodePngs(String s, ErrorCorrectionLevel ec, QrCodesOrientation qrCodesOrientation, Integer qrCodeImageGap, int maxQrCodeDataSize, float scaleFactor) throws IOException, WriterException
 	{
 		ArrayList<BufferedImage> results=new ArrayList<BufferedImage>();
 		
@@ -61,7 +63,7 @@ public class QrCodeUtils {
 			String stringChunk=s.substring(startIndex, endIndex);
 			logger.debug("Encoding chunk : "+stringChunk);
 			
-			results.add(toSingleQrCodeBufferedImage(stringChunk, ec));
+			results.add(toSingleQrCodeBufferedImage(stringChunk, ec, scaleFactor));
 
 			if (endIndex==s.length()) break;
 			else startIndex=endIndex;
@@ -74,16 +76,27 @@ public class QrCodeUtils {
 		return(mergedResults);
 	}
 	
-	public static BufferedImage toSingleQrCodeBufferedImage(String s, ErrorCorrectionLevel ec) throws WriterException
+	public static BufferedImage toSingleQrCodeBufferedImage(String s, ErrorCorrectionLevel ec, float scaleFactor) throws WriterException
 	{
 		QRCode qrCode = new QRCode();
 		Encoder.encode(s, ec, qrCode);
-		return(MatrixToImageWriter.toBufferedImage(qrCode.getMatrix()));
+		
+		BufferedImage bufferedImage=MatrixToImageWriter.toBufferedImage(qrCode.getMatrix());
+		
+		if (scaleFactor!=1.0)
+		{
+			int newWidth=(int) (bufferedImage.getWidth()*scaleFactor);
+			int newHeight=(int) (bufferedImage.getHeight()*scaleFactor);
+			Image image=bufferedImage.getScaledInstance(newWidth, newHeight, Image.SCALE_FAST);
+			bufferedImage=ImageIoUtils.toBufferedImage(image);
+		}
+		
+		return(bufferedImage);
 	}
 
-	public static byte[] toSingleQrCodePng(String s, ErrorCorrectionLevel ec) throws IOException, WriterException
+	public static byte[] toSingleQrCodePng(String s, ErrorCorrectionLevel ec, float scaleFactor) throws IOException, WriterException
 	{
-		return(toPng(toSingleQrCodeBufferedImage(s, ec)));
+		return(toPng(toSingleQrCodeBufferedImage(s, ec, scaleFactor)));
 	}
 
 	private static byte[] toPng(BufferedImage bufferedImage) throws IOException
@@ -180,7 +193,7 @@ public class QrCodeUtils {
 
 	public static void main(String... argv) throws Exception
 	{
-		byte[] b = toSingleQrCodePng("this is a test of some text", ErrorCorrectionLevel.H);
+		byte[] b = toSingleQrCodePng("this is a test of some text", ErrorCorrectionLevel.H, 1.5f);
 		
 		FileOutputStream fos = new FileOutputStream("/tmp/test_h.png");
 		fos.write(b);
@@ -188,12 +201,22 @@ public class QrCodeUtils {
 		fos.close();
 
 		//------
-		
-		byte[] b1=toMultipleQrCodePngs("1234567890abcdefghijklmnopqrstuvwxyz", ErrorCorrectionLevel.H, QrCodesOrientation.HORIZONTAL, null, 5);
-
-		FileOutputStream fos1 = new FileOutputStream("/tmp/test_h1.png");
-		fos1.write(b1);
-		fos1.flush();
-		fos1.close();
+		{
+			byte[] b1=toMultipleQrCodePngs("1234567890abcdefghijklmnopqrstuvwxyz", ErrorCorrectionLevel.H, QrCodesOrientation.HORIZONTAL, null, 5, 1f);
+	
+			FileOutputStream fos1 = new FileOutputStream("/tmp/test_h1.png");
+			fos1.write(b1);
+			fos1.flush();
+			fos1.close();
+		}
+		//------
+		{
+			byte[] b1=toMultipleQrCodePngs("1234567890abcdefghijklmnopqrstuvwxyz", ErrorCorrectionLevel.H, QrCodesOrientation.HORIZONTAL, null, 5, 3f);
+	
+			FileOutputStream fos1 = new FileOutputStream("/tmp/test_h1_x3.png");
+			fos1.write(b1);
+			fos1.flush();
+			fos1.close();
+		}
 	}
 }
