@@ -96,7 +96,6 @@ import org.oscarehr.ocan.ClientCapacityDocument.ClientCapacity;
 import org.oscarehr.ocan.ClientContactDocument.ClientContact;
 import org.oscarehr.ocan.ClientIDDocument.ClientID;
 import org.oscarehr.ocan.ClientNameDocument.ClientName;
-import org.oscarehr.ocan.ClientOHIPDocument.ClientOHIP;
 import org.oscarehr.ocan.ClientRecordDocument.ClientRecord;
 import org.oscarehr.ocan.ConcernAreaListDocument.ConcernAreaList;
 import org.oscarehr.ocan.DiagnosticListDocument.DiagnosticList;
@@ -121,7 +120,7 @@ import org.oscarehr.ocan.NeedRatingDocument.NeedRating;
 import org.oscarehr.ocan.OCANDomainsDocument.OCANDomains;
 import org.oscarehr.ocan.OCANv2SubmissionFileDocument.OCANv2SubmissionFile;
 import org.oscarehr.ocan.OCANv2SubmissionRecordDocument.OCANv2SubmissionRecord;
-import org.oscarehr.ocan.OrganizationRecordDocument.OrganizationRecord;
+
 import org.oscarehr.ocan.OtherAgencyContactDocument.OtherAgencyContact;
 import org.oscarehr.ocan.OtherIllnessListDocument.OtherIllnessList;
 import org.oscarehr.ocan.OtherPractitionerContactDocument.OtherPractitionerContact;
@@ -135,14 +134,14 @@ import org.oscarehr.ocan.ServiceLangDocument.ServiceLang;
 import org.oscarehr.ocan.LegalIssuesDocument.LegalIssues;
 import org.oscarehr.ocan.ReferralDocument.Referral;
 import org.oscarehr.ocan.ReferralListDocument.ReferralList;
-import org.oscarehr.ocan.RiskUnemploymentListDocument.RiskUnemploymentList;
+
 import org.oscarehr.ocan.SafetyToSelfRiskListDocument.SafetyToSelfRiskList;
 import org.oscarehr.ocan.ServiceDeliveryLHINDocument.ServiceDeliveryLHIN;
 import org.oscarehr.ocan.ServiceOrgDocument.ServiceOrg;
 import org.oscarehr.ocan.SubmitOrgDocument.SubmitOrg;
 import org.oscarehr.ocan.ServiceRecipientLHINDocument.ServiceRecipientLHIN;
 import org.oscarehr.ocan.ServiceRecipientLocationDocument.ServiceRecipientLocation;
-import org.oscarehr.ocan.SideEffectsDetailListDocument.SideEffectsDetailList;
+
 import org.oscarehr.ocan.SymptomListDocument.SymptomList;
 import org.oscarehr.ocan.TimeLivedInCanadaDocument.TimeLivedInCanada;
 import org.oscarehr.ocan.ConsumerSelfAxCompletedDocument.ConsumerSelfAxCompleted;
@@ -177,11 +176,12 @@ public class OcanReportUIBean {
 		
 		OCANv2SubmissionFileDocument submissionFileDoc = OCANv2SubmissionFileDocument.Factory.newInstance();		
 		OCANv2SubmissionFile submissionFile = OCANv2SubmissionFile.Factory.newInstance();
-		submissionFile.setSchemaVersion(OCANv2SubmissionFile.SchemaVersion.X_2_0_4);
-		submissionFile.setToolRevision(OCANv2SubmissionFile.ToolRevision.X_2_0_3);
+		submissionFile.setToolRevision(OCANv2SubmissionFile.ToolRevision.X_2_0_5);
+		submissionFile.setSchemaVersion(OCANv2SubmissionFile.SchemaVersion.X_2_0_6);
 		submissionFile.setID("File-" + ( (increment<10)?("0"+increment):(increment) ));
-		submissionFile.setTimestamp(new GregorianCalendar());
 		
+		submissionFile.setTimestamp(convertToOcanXmlDateTime(new Date()));
+			
 		List<OCANv2SubmissionRecord> submissionRecordList = new ArrayList<OCANv2SubmissionRecord>();
 		for(OcanStaffForm staffForm:ocanStaffForms) {
 			//check for a clientform
@@ -236,7 +236,7 @@ public class OcanReportUIBean {
 			XmlOptions options = new XmlOptions();
 			options.setUseDefaultNamespace();
 			options.setSavePrettyPrint();
-			options.setCharacterEncoding("UTF-16");
+			options.setCharacterEncoding("UTF-8");		
 			Map<String,String> implicitNamespaces = new HashMap<String,String>();
 			implicitNamespaces.put("", "http://oscarehr.org/ocan");
 			options.setSaveImplicitNamespaces(implicitNamespaces);
@@ -250,13 +250,14 @@ public class OcanReportUIBean {
 	
 	public static OCANv2SubmissionRecord convertOcanForm(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData, OcanClientForm ocanClientForm, List<OcanClientFormData> ocanClientFormData) {
 		OCANv2SubmissionRecord ocanSubmissionRecord = OCANv2SubmissionRecord.Factory.newInstance();
-		ocanSubmissionRecord.setAssessmentStatus(OCANv2SubmissionRecord.AssessmentStatus.COMPLETE);
-		ocanSubmissionRecord.setAssessmentID(String.valueOf(ocanStaffForm.getId()));
-		ocanSubmissionRecord.setStartDate(convertToOcanXmlCalendar(ocanStaffForm.getStartDate()));
-		ocanSubmissionRecord.setCompletionDate(convertToOcanXmlCalendar(ocanStaffForm.getCompletionDate()));
+		
 		ocanSubmissionRecord.setOCANType(OCANv2SubmissionRecord.OCANType.Enum.forString("FULL"));
-		ocanSubmissionRecord.setIARViewingConsent(OCANv2SubmissionRecord.IARViewingConsent.Enum.forString("TRUE"));
+		ocanSubmissionRecord.setAssessmentID(String.valueOf(ocanStaffForm.getId()));
 		ocanSubmissionRecord.setAssessmentRevision("1");
+		ocanSubmissionRecord.setStartDate(convertToOcanXmlDate(ocanStaffForm.getStartDate()));
+		ocanSubmissionRecord.setCompletionDate(convertToOcanXmlDate(ocanStaffForm.getCompletionDate()));
+		ocanSubmissionRecord.setAssessmentStatus(OCANv2SubmissionRecord.AssessmentStatus.COMPLETE);
+		ocanSubmissionRecord.setIARViewingConsent(OCANv2SubmissionRecord.IARViewingConsent.Enum.forString("TRUE"));
 		
 		ocanSubmissionRecord.setSubmitOrganizationRecord(convertSubmitOrganizationRecord(ocanStaffForm,ocanStaffFormData));
 		ocanSubmissionRecord.setClientRecord(convertClientRecord(ocanStaffForm,ocanStaffFormData));
@@ -383,12 +384,14 @@ public class OcanReportUIBean {
 			domain.setPhysicalHealthConcern(PhysicalHealthConcern.Enum.forString(getStaffAnswer("6_physical_health_concerns",ocanStaffFormData)));
 			
 			ConcernAreaList concernAreaList = getConcernAreaList(ocanStaffFormData);
-			if(concernAreaList.getConcernAreaList().size()>0) {
+			
+			if(concernAreaList.getConcernAreaArray().length>0) {
 				domain.setConcernAreaList(concernAreaList);
 			}
 			
 			MedicationList medicationList = getMedicationList(ocanStaffFormData);
-			if(medicationList.getMedicationDetailList().size()>0) {
+			
+			if(medicationList.getMedicationDetailArray().length>0) {
 				domain.setMedicationList(medicationList);
 			}
 								
@@ -408,19 +411,22 @@ public class OcanReportUIBean {
 			domain.setVisitEmergencyDepartment(VisitEmergencyDepartment.Enum.forString(getStaffAnswer("visitEmergencyDepartment",ocanStaffFormData)));
 			domain.setPsychiatricAdditionalInfo(getStaffAnswer("7_psychiatric_history_addl_info",ocanStaffFormData));
 			SymptomList symptomList = getSymptomList(ocanStaffFormData);
-			if(symptomList.getSymptomList().size()>0) {
+			
+			if(symptomList.getSymptomArray().length>0) {
 				domain.setSymptomList(symptomList);
 			}			
 			break;
 		
 		case 8:
 			DiagnosticList diagnosticList = getDiagnosticList(ocanStaffFormData);
-			if(diagnosticList.getDiagnosticList().size()>0) {
+			
+			if(diagnosticList.getDiagnosticArray().length>0) {
 				domain.setDiagnosticList(diagnosticList);
 			}	
 			
 			OtherIllnessList otherIllnessList = getOtherIllnessList(ocanStaffFormData);
-			if(otherIllnessList.getOtherIllnessList().size()>0) {
+			
+			if(otherIllnessList.getOtherIllnessArray().length>0) {
 				domain.setOtherIllnessList(otherIllnessList);
 			}
 			
@@ -433,7 +439,8 @@ public class OcanReportUIBean {
 			domain.setSafetyConcernSelf(SafetyConcernSelf.Enum.forString(getStaffAnswer("safety_concerns",ocanStaffFormData)));
 
 			SafetyToSelfRiskList safetyToSelfRiskList = getSafetyToSelfRiskList(ocanStaffFormData);
-			if(safetyToSelfRiskList.getSafetyToSelfRiskList().size()>0) {
+			
+			if(safetyToSelfRiskList.getSafetyToSelfRiskArray().length>0) {
 				domain.setSafetyToSelfRiskList(safetyToSelfRiskList);
 			}
 			break;
@@ -454,9 +461,11 @@ public class OcanReportUIBean {
 		case 14:
 			
 			AddictionTypeList addictionTypeList = getAddictionTypeList(ocanStaffFormData);
-			if(addictionTypeList.getAddictionTypeList().size()>0) {
+			
+			if(addictionTypeList.getAddictionTypeArray().length>0) {
 				domain.setAddictionTypeList(addictionTypeList);
 			}
+			
 			domain.setStageOfChangeAddictions(StageOfChangeAddictions.Enum.forString(getStaffAnswer("14_state_of_change",ocanStaffFormData)));
 			domain.setAddictionImpact(getStaffAnswer("addiction_impact",ocanStaffFormData));
 			
@@ -537,14 +546,14 @@ public class OcanReportUIBean {
 		return domainActions;
 	}
 	
-	public static RiskUnemploymentList getRiskUnemploymentList(List<OcanStaffFormData> ocanStaffFormData) {
+	/*public static RiskUnemploymentList getRiskUnemploymentList(List<OcanStaffFormData> ocanStaffFormData) {
 		RiskUnemploymentList riskUnemploymentList = RiskUnemploymentList.Factory.newInstance();
 		List<String> answers = getMultipleStaffAnswer("5_unemployment_risk",ocanStaffFormData);
 		if(answers.size()>0)
 			riskUnemploymentList.setRiskUnemploymentArray(answers.toArray(new String[answers.size()]));		
 		return riskUnemploymentList;
 	}
-	
+	*/
 	public static MedicalConditionList getMedicalConditionList(List<OcanStaffFormData> ocanStaffFormData) {
 		MedicalConditionList medicalConditionList = MedicalConditionList.Factory.newInstance();		
 		List<String> answers = getMultipleStaffAnswer("6_medical_conditions",ocanStaffFormData);
@@ -669,7 +678,7 @@ public class OcanReportUIBean {
 		staffWorker.setExtension(getStaffAnswer("serviceUseRecord_phoneNumber"+index,ocanStaffFormData));		
 		return staffWorker;
 	}
-	
+	/*
 	public static SideEffectsDetailList getSideEffectsDetailList(List<OcanStaffFormData> ocanStaffFormData) {
 		SideEffectsDetailList sideEffectsDetailList = SideEffectsDetailList.Factory.newInstance();
 		List<String> answers = getMultipleStaffAnswer("se_description",ocanStaffFormData);
@@ -677,7 +686,7 @@ public class OcanReportUIBean {
 		sideEffectsDetailList.setOtherSideEffectsDetail(getStaffAnswer("se_description_other",ocanStaffFormData));
 		return sideEffectsDetailList;
 	}
-	
+	*/
 	public static SymptomList getSymptomList(List<OcanStaffFormData> ocanStaffFormData) {
 		SymptomList symptomList = SymptomList.Factory.newInstance();
 		List<String> answers = getMultipleStaffAnswer("symptom_checklist",ocanStaffFormData);
@@ -818,6 +827,7 @@ public class OcanReportUIBean {
 		submitOrganizationRecord.setSubmitOrg(convertSubmitOrg(ocanStaffForm));		
 		return submitOrganizationRecord;
 	}
+	/*
 	public static OrganizationRecord convertOrganizationRecord(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		OrganizationRecord organizationRecord = OrganizationRecord.Factory.newInstance();
 		organizationRecord.setServiceOrg(convertServiceOrg(ocanStaffForm));		
@@ -825,7 +835,7 @@ public class OcanReportUIBean {
 		organizationRecord.setMISFunction(convertMISFunction(ocanStaffForm,ocanStaffFormData));
 		return organizationRecord;
 	}
-		
+	*/	
 	public static ServiceOrg convertServiceOrg(OcanStaffForm ocanStaffForm) {
 		Facility facility = facilityDao.find(ocanStaffForm.getFacilityId());
 		ServiceOrg serviceOrg = ServiceOrg.Factory.newInstance();
@@ -1063,7 +1073,7 @@ public class OcanReportUIBean {
 		return clientAddress;
 	}
 	
-	
+	/*
 	public static ClientOHIP convertClientOHIP(OcanStaffForm ocanStaffForm, List<OcanStaffFormData> ocanStaffFormData) {
 		ClientOHIP clientOhip = ClientOHIP.Factory.newInstance();	
 		//clientOhip.setNumber(ocanStaffForm.getHcNumber());
@@ -1072,7 +1082,7 @@ public class OcanReportUIBean {
 		clientOhip.setVersion("");
 		return clientOhip;
 	}
-	
+	*/
 	public static ReasonConsumerSelfAxNotCompletedList convertReasonConsumerSelfAxNotCompletedList(List<OcanStaffFormData> ocanStaffFormData) {
 		ReasonConsumerSelfAxNotCompletedList self = ReasonConsumerSelfAxNotCompletedList.Factory.newInstance();	
 		self.setOtherReason(getStaffAnswer("otherReason",ocanStaffFormData));

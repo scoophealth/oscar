@@ -60,6 +60,15 @@ public class OcanStaffFormDao extends AbstractDao<OcanStaffForm> {
 		return (results);
 	}
 
+    public OcanStaffForm findOcanStaffFormById(Integer ocanStaffFormId) {
+    	String sqlCommand = "select * from OcanStaffForm where id=?1 ";
+
+		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
+		query.setParameter(1, ocanStaffFormId);		
+		
+		return getSingleResultOrNull(query);
+    }
+    
     public List<OcanStaffForm> findLatestSignedOcanForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
 		
 		String sqlCommand="select x from OcanStaffForm x where x.facilityId=?1 and x.assessmentStatus=?2 and x.ocanFormVersion=?3 and x.completionDate>=?4 and x.completionDate<?5 order by x.clientId ASC, x.created DESC";

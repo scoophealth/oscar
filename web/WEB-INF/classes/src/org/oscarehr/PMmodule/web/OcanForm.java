@@ -44,6 +44,12 @@ public class OcanForm {
 		return demographicDao.getDemographic(demographicId);
 	}
 	
+	public static OcanStaffForm getOcanStaffForm(Integer ocanStaffFormId) {
+		OcanStaffForm ocanStaffForm = null;
+		ocanStaffForm = ocanStaffFormDao.findOcanStaffFormById(ocanStaffFormId);
+		return ocanStaffForm;
+	}
+	
 	public static OcanStaffForm getOcanStaffForm(Integer clientId, int prepopulationLevel)
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
