@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OCANv2SubmissionFile tool_revision="2.0.5" schema_version="2.0.6" ID="File-01" timestamp="2009-03-16T00:00:00Z">
+
+	<!-- assessment record# 1: this assessment shows all TAGs have their values populated -->
+	<OCANv2SubmissionRecord OCANType="FULL" assessmentID="1001" assessmentRevision="1" startDate="2009-01-16Z" completionDate="2009-01-31Z" assessmentStatus="Complete" IARViewingConsent="TRUE">
+		<submitOrganizationRecord>
+			<submitOrg name="NE LHIN Test Org" number="123"/>
+		</submitOrganizationRecord>
+		<clientRecord>
+			<clientID orgClientID="123000"/>
+			<completedByOCANLead>TRUE</completedByOCANLead>
+			<reasonForOCAN value="OTHR" other="detail text for other reason for OCAN"/>
+			<consumerSelfAxCompleted>FALSE</consumerSelfAxCompleted>
+			<reasonConsumerSelfAxNotCompletedList otherReason="text for other reason the Consumer Self-Assessment was not Completed">
+				<value>CMFLVL</value>
+				<value>LOA</value>
+				<value>LIT</value>
+				<value>MHC</value>
+				<value>PYSCON</value>
+				<value>LANG</value>
+				<value>OTH</value>
+			</reasonConsumerSelfAxNotCompletedList>
+			<clientName first="Mike" middle="K." last="Hilton" preferred="Micky"/>
+			<clientAddress line1="123 Yonge St." line2="unit #4444" city="Toronto" province="ON" postalCode="L1L2K2"/>
+			<clientPhone number="416-555-9999" extension="1234"/>
+			<clientEmailAddress>micky@server.com</clientEmailAddress>
+			<clientDOB value="2001-03-15Z" type=""/>
+			<clientHealthCardInfo number="1111-222-333" version="XY" issuingTerritory="ON"/>
+			<serviceRecipientLocation>010-52</serviceRecipientLocation>
+			<serviceRecipientLHIN>12</serviceRecipientLHIN>
+			<gender>F</gender>
+			<maritalStatus>125681006</maritalStatus>
+			<serviceUseRecordList>
+				<serviceUseRecord>
+					<OCANLead>TRUE</OCANLead>
+					<staffWorker name="Joe Anderson" phoneNumber="416-111-6666" extension="7878"/>
+					<serviceOrg LHIN="2" name="Other" number="123" nameOther="Service Org 1 name" numberOther="5555"/>
+					<program name="Other" number="1234" nameOther="Intensive Case Management" numberOther="3025"/>
+					<MISFunction value="725 10 76 99" nameOther="Other MISFunction Name" numberOther="111-222-333" subFunction="any sub function name"/>
+					<serviceDeliveryLHIN>12</serviceDeliveryLHIN>
+					<referralSource>018-01</referralSource>
+					<requestForServiceDate>2001-01-01Z</requestForServiceDate>
+					<serviceDecisionDate>2001-01-01Z</serviceDecisionDate>
+					<accepted>TRUE</accepted>
+					<serviceInitiationDate>2001-01-01Z</serviceInitiationDate>
+					<exitDate>2001-01-01Z</exitDate>
+					<exitDisposition>019-01</exitDisposition>
+				</serviceUseRecord>
+				<serviceUseRecord>
+					<OCANLead>FALSE</OCANLead>
+					<staffWorker name="Joe Leno" phoneNumber="416-222-6666" extension="4545"/>
+					<serviceOrg LHIN="2" name="Other" number="123" nameOther="Service Org 2 name" numberOther="7777"/>
+					<program name="Other" number="1234" nameOther="Intensive Case Management" numberOther="3025"/>
+					<MISFunction value="725 10 76 99" nameOther="Other MISFunction Name" numberOther="111-222-333" subFunction="any sub function name"/>
+					<serviceDeliveryLHIN>12</serviceDeliveryLHIN>
+					<referralSource>018-01</referralSource>
+					<requestForServiceDate>2001-01-01Z</requestForServiceDate>
+					<serviceDecisionDate>2001-01-01Z</serviceDecisionDate>
+					<accepted>TRUE</accepted>
+					<serviceInitiationDate>2001-01-01Z</serviceInitiationDate>
+					<exitDate>2001-01-01Z</exitDate>
+					<exitDisposition>019-01</exitDisposition>
+				</serviceUseRecord>
+			</serviceUseRecordList>
+			<clientContact>
+				<doctorContact doctor="TRUE" lastSeen="LS-6">
+					<contactInfo contactName="doctor name" addressLine1="doctor address line 1" addressLine2="doctor address line 2" city="doctor city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="doctor@clinic.ca"/>
+				</doctorContact>
+				<psychiatristContact psychiatrist="TRUE" lastSeen="LS-12">
+					<contactInfo contactName="psychiatrist name" addressLine1="psychiatrist address line 1" addressLine2="psychiatrist address line 2" city="psychiatrist city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="psychiatrist@clinic.ca"/>
+				</psychiatristContact>
+				<otherPractitionerContact otherContact="TRUE" practitionerType="3111" lastSeen="LS-1">
+					<contactInfo contactName="other contact#1 name" addressLine1="other contact#1 address line 1" addressLine2="other contact#1 address line 2" city="other contact#1 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="othercontact#1@clinic.ca"/>
+				</otherPractitionerContact>
+				<otherPractitionerContact otherContact="TRUE" practitionerType="3112" lastSeen="LS-13">
+					<contactInfo contactName="other contact#2 name" addressLine1="other contact#2 address line 1" addressLine2="other contact#2 address line 2" city="other contact#2 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="othercontact#2@clinic.ca"/>
+				</otherPractitionerContact>
+				<otherPractitionerContact otherContact="TRUE" practitionerType="4217" lastSeen="LS-6">
+					<contactInfo contactName="other contact#3 name" addressLine1="other contact#3 address line 1" addressLine2="other contact#3 address line 2" city="other contact#3 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="othercontact#3@clinic.ca"/>
+				</otherPractitionerContact>
+				<otherAgencyContact otherAgency="TRUE" lastSeen="LS-12">
+					<contactInfo contactName="other agency#1 name" addressLine1="other agency#1 address line 1" addressLine2="other agency#1 address line 2" city="other agency#1 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="otheragency#1@clinic.ca"/>
+				</otherAgencyContact>
+				<otherAgencyContact otherAgency="TRUE" lastSeen="LS-12">
+					<contactInfo contactName="other agency#2 name" addressLine1="other agency#2 address line 1" addressLine2="other agency#2 address line 2" city="other agency#2 city" province="ON" postalCode="L1L2K2" phoneNumber="416-111-2222" extension="1234" emailAddress="agency#2@clinic.ca"/>
+				</otherAgencyContact>
+			</clientContact>
+			<clientCapacity>
+				<powerAttorneyPersonalCare personalCare="TRUE" name="Mike Hantash" address="1230 Yonge Cr. unit #44, Toronto, ON, X1M 2K3" phoneNumber="416-222-5555" extension="1357"/>
+				<powerAttorneyProperty property="TRUE" name="Steve Solo" address="5665 Bay Blvd. unit #12, Toronto, ON, X1M 2K3" phoneNumber="416-444-9999" extension="5656"/>
+				<legalGuardian guardian="TRUE" name="Nick Anderson" address="655 Dundas St. unit #23, Toronto, ON, X1M 2K3" phoneNumber="416-888-6666" extension="8909"/>
+				<areasOfConcern financeProperty="TRUE" treatmentDecisions="FALSE"/>
+			</clientCapacity>
+			<ageOnsetMental years="22" ageType="EST"/>
+			<ageHospitalization years="19" ageType="EST"/>
+			<firstEntryDate entryYear="1992" entryMonth="3" ageType="EST"/>
+			<clientCulture>15086000</clientCulture>
+			<aboriginalOrigin>011-02</aboriginalOrigin>
+			<citizenshipStatus>CDN</citizenshipStatus>
+			<timeLivedInCanada years="3" months="8"/>
+			<immigExpList otherImmigExp="other immigration experience text">
+				<value>2</value>
+				<value>3</value>
+				<value>OTH</value>
+				<value>8</value>
+			</immigExpList>
+			<immigExpFreeText>any free text about immigration exprerience</immigExpFreeText>
+			<discrimExpList otherDiscrimExp="other discrimination experience text">
+				<value>21134002</value>
+				<value>365873007</value>
+				<value>OTH</value>
+			</discrimExpList>
+			<prefLang>fra</prefLang>
+			<serviceLang>eng</serviceLang>
+			<legalIssues>Civil</legalIssues>
+			<legalStatusList>
+				<legalStatus>013-01</legalStatus>
+				<legalStatus>013-02</legalStatus>
+				<legalStatus>013-03</legalStatus>
+				<legalStatus>013-08</legalStatus>
+				<legalStatus>013-09</legalStatus>
+			</legalStatusList>
+			<generalComments>any free text for general comments</generalComments>
+		</clientRecord>
+		<OCANDomains>
+			<domain name="01-accommodation">
+				<needRating staff="1" client="2"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #01" client="Ax. 1001: consumer comments on domain #01"/>
+				<domainActions actionText="Ax. 1001: action on domain #01" byWhom="user #1 on domain #01" reviewDate="2009-08-17Z"/>
+				<residenceType value="OTH" other="detail text for other reason for residenceType"/>
+				<residenceSupport>UNK</residenceSupport>
+				<livingArrangementType>CDA</livingArrangementType>
+			</domain>
+			<domain name="02-food">
+				<needRating staff="0" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #02" client="Ax. 1001: consumer comments on domain #02"/>
+				<domainActions actionText="Ax. 1001: action on domain #02" byWhom="user #1 on domain #02" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="03-looking after the home">
+				<needRating staff="1" client="2"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #03" client="Ax. 1001: consumer comments on domain #03"/>
+				<domainActions actionText="Ax. 1001: action on domain #03" byWhom="user #1 on domain #03" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="04-self-care">
+				<needRating staff="9" client="0"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="0"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #04" client="Ax. 1001: consumer comments on domain #04"/>
+				<domainActions actionText="Ax. 1001: action on domain #04" byWhom="user #1 on domain #04" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="05-daytime activities">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="3"/>
+				<formalHelpNeed staff="0"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #05" client="Ax. 1001: consumer comments on domain #05"/>
+				<domainActions actionText="Ax. 1001: action on domain #05" byWhom="user #1 on domain #05" reviewDate="2009-08-17Z"/>
+				<employStatus>224366004</employStatus>
+				<educationProgramStatus value="OTH" other="other text for educationProgramStatus"/>
+				<barriersFindingWorkList otherBarriers="other barriers free text" barriersComments="barriers comments free text">
+					<barriersFindingWork>ADD</barriersFindingWork>
+					<barriersFindingWork>CAB</barriersFindingWork>
+					<barriersFindingWork>CON</barriersFindingWork>
+				</barriersFindingWorkList>
+			</domain>
+			<domain name="06-physical health">
+				<needRating staff="1" client="1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #06" client="Ax. 1001: consumer comments on domain #06"/>
+				<domainActions actionText="Ax. 1001: action on domain #06" byWhom="user #1 on domain #06" reviewDate="2009-08-17Z"/>
+				<medicalConditionList autismDetail="autism specific text" otherDetail="other medical text" comments="medical condition comments free text">
+					<medicalCondition>408856003</medicalCondition>
+					<medicalCondition>OTH</medicalCondition>
+					<medicalCondition>414916001</medicalCondition>
+				</medicalConditionList>
+				<physicalHealthConcern>TRUE</physicalHealthConcern>
+				<concernAreaList otherConcernArea="other concern text">
+					<concernArea>119415007</concernArea>
+					<concernArea>118952005</concernArea>
+					<concernArea>410515003</concernArea>
+				</concernAreaList>
+				<medicationList additionalInfo="medication additional information free text">
+					<medicationDetail medicationName="medicine#1" sourceInfo="264372000" dosage="dosage free text#1" takenAsPrescribed="TRUE" isHelpProvided="FALSE" isHelpNeeded="TRUE"/>
+					<medicationDetail medicationName="medicine#2" sourceInfo="264372000" dosage="dosage free text#2" takenAsPrescribed="FALSE" isHelpProvided="UNK" isHelpNeeded="TRUE"/>
+					<medicationDetail medicationName="medicine#3" sourceInfo="264372000" dosage="dosage free text#3" takenAsPrescribed="UNK" isHelpProvided="TRUE" isHelpNeeded="FALSE"/>
+				</medicationList>
+			</domain>
+			<domain name="07-psychotic symptoms">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="9"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #07" client="Ax. 1001: consumer comments on domain #07"/>
+				<domainActions actionText="Ax. 1001: action on domain #07" byWhom="user #1 on domain #07" reviewDate="2009-08-17Z"/>
+				<hospitalizedPastTwoYears>TRUE</hospitalizedPastTwoYears>
+				<totalAdmissions>5</totalAdmissions>
+				<totalHospitalDays>78</totalHospitalDays>
+				<visitEmergencyDepartment>UNK</visitEmergencyDepartment>
+				<communityTreatOrder>CDA</communityTreatOrder>
+				<psychiatricAdditionalInfo>free text for psychiatric additional information</psychiatricAdditionalInfo>
+				<symptomList symptomComments="free text for symptoms comments">
+					<symptom>2073000</symptom>
+					<symptom>7011001</symptom>
+					<symptom>247640008</symptom>
+					<symptom>24199005</symptom>
+				</symptomList>
+			</domain>
+			<domain name="08-condition and treatment">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="0"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #08" client="Ax. 1001: consumer comments on domain #08"/>
+				<domainActions actionText="Ax. 1001: action on domain #08" byWhom="user #1 on domain #08" reviewDate="2009-08-17Z"/>
+				<diagnosticList>
+					<diagnostic>2776000</diagnostic>
+					<diagnostic>MDGMC</diagnostic>
+					<diagnostic>87858002</diagnostic>
+					<diagnostic>SRD</diagnostic>
+					<diagnostic>UNK</diagnostic>
+				</diagnosticList>
+				<otherIllnessList>
+					<otherIllness>016A-01</otherIllness>
+					<otherIllness>016A-02</otherIllness>
+				</otherIllnessList>
+			</domain>
+			<domain name="09-psychological distress">
+				<needRating staff="0" client="-1"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #09" client="Ax. 1001: consumer comments on domain #09"/>
+				<domainActions actionText="Ax. 1001: action on domain #09" byWhom="user #1 on domain #09" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="10-safety to self">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #10" client="Ax. 1001: consumer comments on domain #10"/>
+				<domainActions actionText="Ax. 1001: action on domain #10" byWhom="user #1 on domain #10" reviewDate="2009-08-17Z"/>
+				<suicideAttempt>TRUE</suicideAttempt>
+				<suicideThoughts>TRUE</suicideThoughts>
+				<safetyConcernSelf>TRUE</safetyConcernSelf>
+				<safetyToSelfRiskList otherSafetyToSelfRisk="other risk to self text">
+					<safetyToSelfRisk>225915006</safetyToSelfRisk>
+					<safetyToSelfRisk>401206008</safetyToSelfRisk>
+					<safetyToSelfRisk>OTH</safetyToSelfRisk>
+				</safetyToSelfRiskList>
+			</domain>
+			<domain name="11-safety to others">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="-1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #11" client="Ax. 1001: consumer comments on domain #11"/>
+				<domainActions actionText="Ax. 1001: action on domain #11" byWhom="user #1 on domain #11" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="12-alcohol">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #12" client="Ax. 1001: consumer comments on domain #12"/>
+				<domainActions actionText="Ax. 1001: action on domain #12" byWhom="user #1 on domain #12" reviewDate="2009-08-17Z"/>
+				<drinkAlcohol quantity="6" frequency="1"/>
+				<stageOfChangeAlcohol>5</stageOfChangeAlcohol>
+				<drinkingImpact>drinking impact free text</drinkingImpact>
+			</domain>
+			<domain name="13-drugs">
+				<needRating staff="2" client="2"/>
+				<informalHelpRecvd staff="2"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #13" client="Ax. 1001: consumer comments on domain #13"/>
+				<domainActions actionText="Ax. 1001: action on domain #13" byWhom="user #1 on domain #13" reviewDate="2009-08-17Z"/>
+				<drugUseList injected="6">
+					<drugUse name="398705004" frequency="5"/>
+					<drugUse name="226044004" frequency="6"/>
+					<drugUse name="OTH" frequency="5"/>
+				</drugUseList>
+				<stageOfChangeDrugs>2</stageOfChangeDrugs>
+				<drugsImpact>drugs impact free text</drugsImpact>
+			</domain>
+			<domain name="14-other addictions">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #14" client="Ax. 1001: consumer comments on domain #14"/>
+				<domainActions actionText="Ax. 1001: action on domain #14" byWhom="user #1 on domain #14" reviewDate="2009-08-17Z"/>
+				<addictionTypeList otherAddictionType="other addiction text">
+					<addictionType>105523009</addictionType>
+					<addictionType>56294008</addictionType>
+					<addictionType>OTH</addictionType>
+				</addictionTypeList>
+				<stageOfChangeAddictions>3</stageOfChangeAddictions>
+				<addictionImpact>addiction impact free text</addictionImpact>
+			</domain>
+			<domain name="15-company">
+				<needRating staff="1" client="-1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="0"/>
+				<formalHelpNeed staff="2"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #15" client="Ax. 1001: consumer comments on domain #15"/>
+				<domainActions actionText="Ax. 1001: action on domain #15" byWhom="user #1 on domain #15" reviewDate="2009-08-17Z"/>
+				<changedSocialPatterns>CDA</changedSocialPatterns>
+			</domain>
+			<domain name="16-intimate relationships">
+				<needRating staff="9" client="-1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #16" client="Ax. 1001: consumer comments on domain #16"/>
+				<domainActions actionText="Ax. 1001: action on domain #16" byWhom="user #1 on domain #16" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="17-sexual expression">
+				<needRating staff="0" client="0"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #17" client="Ax. 1001: consumer comments on domain #17"/>
+				<domainActions actionText="Ax. 1001: action on domain #17" byWhom="user #1 on domain #17" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="18-childcare">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="0"/>
+				<formalHelpRecvd staff="2"/>
+				<formalHelpNeed staff="3"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #18" client="Ax. 1001: consumer comments on domain #18"/>
+				<domainActions actionText="Ax. 1001: action on domain #18" byWhom="user #1 on domain #18" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="19-other dependents">
+				<needRating staff="1" client="1"/>
+				<informalHelpRecvd staff="1"/>
+				<formalHelpRecvd staff="1"/>
+				<formalHelpNeed staff="1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #19" client="Ax. 1001: consumer comments on domain #19"/>
+				<domainActions actionText="Ax. 1001: action on domain #19" byWhom="user #1 on domain #19" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="20-basic education">
+				<needRating staff="9" client="1"/>
+				<informalHelpRecvd staff="-1"/>
+				<formalHelpRecvd staff="-1"/>
+				<formalHelpNeed staff="-1"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #20" client="Ax. 1001: consumer comments on domain #20"/>
+				<domainActions actionText="Ax. 1001: action on domain #20" byWhom="user #1 on domain #20" reviewDate="2009-08-17Z"/>
+				<highestEducationLevel>HLES-6</highestEducationLevel>
+			</domain>
+			<domain name="21-telephone">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #21" client="Ax. 1001: consumer comments on domain #21"/>
+				<domainActions actionText="Ax. 1001: action on domain #21" byWhom="user #1 on domain #21" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="22-transport">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #22" client="Ax. 1001: consumer comments on domain #22"/>
+				<domainActions actionText="Ax. 1001: action on domain #22" byWhom="user #1 on domain #22" reviewDate="2009-08-17Z"/>
+			</domain>
+			<domain name="23-money">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #23" client="Ax. 1001: consumer comments on domain #23"/>
+				<domainActions actionText="Ax. 1001: action on domain #23" byWhom="user #1 on domain #23" reviewDate="2009-08-17Z"/>
+				<sourceOfIncome value="OTH" other="other source of income free text"/>
+			</domain>
+			<domain name="24-benefits">
+				<needRating staff="9" client="9"/>
+				<informalHelpRecvd staff="9"/>
+				<formalHelpRecvd staff="9"/>
+				<formalHelpNeed staff="9"/>
+				<domainComments staff="Ax. 1001: staff comments on domain #24" client="Ax. 1001: consumer comments on domain #24"/>
+				<domainActions actionText="Ax. 1001: action on domain #24" byWhom="user #1 on domain #24" reviewDate="2009-08-17Z"/>
+			</domain>
+		</OCANDomains>
+		<additionalElements>
+			<clientHopesForFuture staff="Ax. 1001: HopesForFuture staff version" client="Ax. 1001: HopesForFuture consumer version"/>
+			<clientNeedToGetThere staff="Ax. 1001: NeedToGetThere staff version" client="Ax. 1001: NeedToGetThere consumer version"/>
+			<clientViewMentalHealth staff="Ax. 1001: ViewMentalHealth staff version" client="Ax. 1001: ViewMentalHealth consumer version"/>
+			<clientSpiritualityImportance staff="Ax. 1001: SpiritualityImportance staff version" client="Ax. 1001: SpiritualityImportance consumer version"/>
+			<clientCultureHeritageImportance staff="Ax. 1001: CultureHeritageImportance staff version" client="Ax. 1001: CultureHeritageImportance consumer version"/>
+			<presentingIssueList otherIssues="other issues free text">
+				<presentingIssue type="017-05"/>
+				<presentingIssue type="017-06"/>
+				<presentingIssue type="OTH"/>
+			</presentingIssueList>
+			<actionList>
+				<action priority="1" domain="01-accommodation" action="action free text #1"/>
+				<action priority="2" domain="02-food" action="action free text #2"/>
+				<action priority="3" domain="21-telephone" action="action free text #3"/>
+				<action priority="4" domain="22-transport" action="action free text #4"/>
+			</actionList>
+			<referralList>
+				<referral optimal="ADD" specifyOptimal="specify text for optimal referral #1" actual="CHI" specifyActual="specify text for actual referral #1" differenceReason="RD-1" status="RS-2"/>
+				<referral optimal="CHI" specifyOptimal="specify text for optimal referral #2" actual="ADD" specifyActual="specify text for actual referral #2" differenceReason="RD-3" status="RS-1"/>
+			</referralList>
+		</additionalElements>
+	</OCANv2SubmissionRecord>
+
+</OCANv2SubmissionFile>
