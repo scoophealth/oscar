@@ -470,7 +470,7 @@
 	</target>
 
 	<target name="ocan.xml.compile" description="Creates Java classes based on an XML Schema using Apache XMLBeans">
-		<xmlbeans classgendir="xmlbeans" classpathref="classpath.path" failonerror="true" includejavaruntime="yes" javasource="1.5" schema="../resources/ocan_v1.0.1.xsd" destfile="../web/WEB-INF/lib/ocan.jar" />
+		<xmlbeans classgendir="xmlbeans" classpathref="classpath.path" failonerror="true" includejavaruntime="yes" javasource="1.6" schema="../resources/full_ocan_2.0_v2.0.6.xsd" destfile="../web/WEB-INF/lib/ocan.jar" />
 	</target>
 
 
