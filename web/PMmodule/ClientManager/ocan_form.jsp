@@ -11,7 +11,12 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));	
 	int prepopulationLevel = OcanForm.PRE_POPULATION_LEVEL_ALL;
 	
-	OcanStaffForm ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel);		
+	OcanStaffForm ocanStaffForm = null;
+	if(request.getParameter("ocanStaffFormId")!=null && request.getParameter("ocanStaffFormId")!="") {
+		ocanStaffForm=OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
+	}else {
+		ocanStaffForm=OcanForm.getOcanStaffForm(currentDemographicId,prepopulationLevel);		
+	}
 	
 	boolean printOnly=request.getParameter("print")!=null;
 	if (printOnly) request.setAttribute("noMenus", true);
