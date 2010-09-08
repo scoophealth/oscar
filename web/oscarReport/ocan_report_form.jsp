@@ -42,7 +42,7 @@
 <form method="post" action="ocan_report_export.jsp">
 	<table class="borderedTableAndCells">
 		<tr>
-			<td>OCAN Report - v1.0.1</td>
+			<td>OCAN Report - v2.0.6</td>
 			<td></td>
 		</tr>
 		
