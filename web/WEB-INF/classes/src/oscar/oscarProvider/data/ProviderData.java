@@ -614,12 +614,12 @@ public class ProviderData {
         try {
             DBHandler db = new DBHandler();
             ArrayList result = new ArrayList();
-            String active = " status = '1' ";
+            String active = "where status = '1'";
             if (inactive){
                active = "";
             }
 
-            String sql = "select provider_no, first_name, last_name, ohip_no from provider where "+active+" order by last_name , first_name";
+            String sql = "select provider_no, first_name, last_name, ohip_no from provider "+active+" order by last_name , first_name";
             ResultSet rs = db.GetSQL(sql);
             while ( rs.next() ) {
                 Hashtable provider = new Hashtable();
