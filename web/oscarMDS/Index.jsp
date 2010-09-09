@@ -55,6 +55,8 @@ Integer totalHL7=(Integer)request.getAttribute("totalHL7");
 List<String> normals=(List<String>)request.getAttribute("normals");
 List<String> abnormals=(List<String>)request.getAttribute("abnormals");
 Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
+String curUser_no = (String) session.getAttribute("user");
+final String noAckStatus="N";
 %>
 
 
@@ -134,7 +136,18 @@ Integer totalNumDocs=(Integer)request.getAttribute("totalNumDocs");
                            console.log(docStatus);
                            console.log(normals);*/
 
-                            
+                            function popupPage(vheight,vwidth,varpage) { //open a new popup window
+                              var page = "" + varpage;
+                              windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
+                              var popup=window.open(page, "groupno", windowprops);
+                              if (popup != null) {
+                                if (popup.opener == null) {
+                                  popup.opener = self;
+                                }
+                                popup.focus();
+                              }
+                            }
+
 
 </script>
 </head>
@@ -483,7 +496,7 @@ if(totalDocs>0||totalHL7>0){%><br><%}
 
    <dt><img id="plus<%=patientId%>" alt="plus" src="../images/plus.png" onclick="showhideSubCat('plus','<%=patientId%>');"/>
        <img id="minus<%=patientId%>" alt="minus" style="display:none;" src="../images/minus.png" onclick="showhideSubCat('minus','<%=patientId%>');"/>
-       <a id="patient<%=patientId%>all" href="javascript:void(0);"  onclick="resetCurrentFirstDocLab();showThisPatientDocs('<%=patientId%>');un_bold(this);" title="<%=patientName%>"><% if ( patientId.equals("-1")) { %>Unmatched<% } else { %><%=patientName%><% } %>(<span id="patientNumDocs<%=patientId%>"><%=numDocs%></span>)</a>
+       <a id="patient<%=patientId%>all" href="javascript:void(0);"  onclick="resetCurrentFirstDocLab();showThisPatientDocs('<%=patientId%>');un_bold(this);" title="<%=patientName%>"><% if ( patientId.equals("-1")) { %>Unmatched<% } else { %><%=patientName%><% } %>(<span id="patientNumDocs<%=patientId%>"><%=numDocs%></span>)</a>&nbsp;<a href="javascript:void(0);" onclick="showPatientPreview('<%=patientId%>','<%=providerNo%>','<%=searchProviderNo%>','<%=noAckStatus%>'); return false;"  title="preview patient's document and lab." style="color:red;text-decoration: none;">*</a>
                          <dl id="labdoc<%=patientId%>showSublist" style="display:none" >
                         <%if(scanDocs>0){%>
                         <dt><a id="patient<%=patientId%>docs" href="javascript:void(0);" onclick="resetCurrentFirstDocLab();showSubType('<%=patientId%>','DOC');un_bold(this);" title="Documents">Documents(<span id="pDocNum_<%=patientId%>"><%=scanDocs%></span>)</a>
