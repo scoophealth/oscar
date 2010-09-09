@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -347,7 +348,110 @@ public class Hl7textResultsData {
         }
         return labResults;
     }
-    
+
+    public ArrayList<LabResultData> getNotAckLabsFromLabNos(List<String> labNos){
+        ArrayList<LabResultData> ret=new ArrayList();
+        LabResultData lrd=new LabResultData();
+        for(String labNo:labNos){
+            lrd=getNotAckLabResultDataFromLabNo(labNo);
+            ret.add(lrd);
+        }
+         return ret;      
+    }
+    public LabResultData getNotAckLabResultDataFromLabNo(String labNo){
+    LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
+        String sql = "";
+        try {
+            DBHandler db = new DBHandler();
+
+                // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
+                // for the provider number if unable to find correct provider
+
+                sql = "select info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, "
+                        + "info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
+                        "from hl7TextInfo info " +
+                        " where info.lab_no = "+labNo +" ORDER BY info.obr_date DESC";
+
+            logger.debug(sql);
+            ResultSet rs = db.GetSQL(sql);
+            if(rs.first()){
+
+            	if (logger.isDebugEnabled())
+            	{
+            		int columns=rs.getMetaData().getColumnCount();
+            		StringBuilder sb=new StringBuilder();
+            		for (int i=0; i<columns; i++)
+            		{
+            			sb.append(rs.getString(i+1));
+            			sb.append(", ");
+            		}
+            		logger.debug("Record found : "+sb.toString());
+            	}
+
+                
+                lbData.labType = LabResultData.HL7TEXT;
+                lbData.segmentID = db.getString(rs,"lab_no");
+                //check if any demographic is linked to this lab
+                if(lbData.isMatchedToPatient()){
+                    //get matched demographic no
+                    String sql2="select * from patientLabRouting plr where plr.lab_no="+Integer.parseInt(lbData.segmentID)+" and plr.lab_type='"+lbData.labType+"'";
+                    logger.debug("sql2="+sql2);
+                    ResultSet rs2=db.GetSQL(sql2);
+                    if(rs2.next())
+                        lbData.setLabPatientId(db.getString(rs2, "demographic_no"));
+                    else
+                        lbData.setLabPatientId("-1");
+                }else{
+                    lbData.setLabPatientId("-1");
+                }       
+                lbData.acknowledgedStatus ="U";
+                lbData.accessionNumber = db.getString(rs,"accessionNum");
+                lbData.healthNumber = db.getString(rs,"health_no");
+                lbData.patientName = db.getString(rs,"last_name")+", "+db.getString(rs,"first_name");
+                lbData.sex = db.getString(rs,"sex");
+
+                lbData.resultStatus = db.getString(rs,"result_status");
+                if (lbData.resultStatus.equals("A"))
+                    lbData.abn = true;
+
+                lbData.dateTime = db.getString(rs,"obr_date");
+
+                //priority
+                String priority = db.getString(rs,"priority");
+
+                if(priority != null && !priority.equals("")){
+                    switch ( priority.charAt(0) ) {
+                        case 'C' : lbData.priority = "Critical"; break;
+                        case 'S' : lbData.priority = "Stat/Urgent"; break;
+                        case 'U' : lbData.priority = "Unclaimed"; break;
+                        case 'A' : lbData.priority = "ASAP"; break;
+                        case 'L' : lbData.priority = "Alert"; break;
+                        default: lbData.priority = "Routine"; break;
+                    }
+                }else{
+                    lbData.priority = "----";
+                }
+
+                lbData.requestingClient = db.getString(rs,"requesting_client");
+                lbData.reportStatus =  db.getString(rs,"report_status");
+
+                // the "C" is for corrected excelleris labs
+                if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
+                    lbData.finalRes = true;
+                }else{
+                    lbData.finalRes = false;
+                }
+
+                lbData.discipline = db.getString(rs,"discipline");
+                lbData.finalResultsCount = rs.getInt("final_result_count");
+                
+            }
+            rs.close();
+        }catch(Exception e){
+            logger.error("exception in getNotAckLabResultDataFromLabNo:", e);
+        }
+        return lbData;
+    }
     public ArrayList<LabResultData> populateHl7ResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         
         if ( providerNo == null) { providerNo = ""; }
