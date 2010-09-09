@@ -2,7 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ page
-	import="java.util.*, oscar.oscarProvider.data.ProviderBillCenter"%>
+	import="java.util.*, oscar.oscarProvider.data.*"%>
 
 <%
   if(session.getAttribute("user") == null)
@@ -15,6 +15,22 @@
   //includeing the provider name and a month calendar
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
+
+  ArrayList<Hashtable> list = ProviderData.getProviderListOfAllTypes(true);
+  ArrayList<Integer> providerList = new ArrayList<Integer>();
+  for (Hashtable h : list) {
+      String pn = (String)h.get("providerNo");
+      providerList.add(Integer.valueOf(pn));
+  }
+
+  String suggestProviderNo = "";
+  for (Integer i=1; i<1000000; i++) {
+      if (!providerList.contains(i)) {
+          suggestProviderNo = i.toString();
+          break;
+      }
+  }
+  suggestProviderNo = "000000".substring(suggestProviderNo.length()) + suggestProviderNo;
 %>
 <!--
 /*
@@ -101,7 +117,8 @@ function upCaseCtrl(ctrl) {
 		<%if(OscarProperties.getInstance().isProviderNoAuto()){ %> <input
 			type="text" name="provider_no" maxlength="6" readonly="readonly"
 			value="-new-"> <%} else {%> <input type="text"
-			name="provider_no" maxlength="6"> <%}%>
+			name="provider_no" maxlength="6"> <input type="button" value="Suggest"
+                        onclick="provider_no.value='<%=suggestProviderNo%>'"<%}%>
 		</td>
 	</tr>
 	<tr>
