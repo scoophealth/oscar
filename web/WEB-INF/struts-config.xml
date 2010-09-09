@@ -843,11 +843,6 @@
         </action>
         <action name="FrmFormForm" path="/form/SetupForm" scope="request" type="oscar.form.pageUtil.FrmSetupFormAction" />
         <action name="FrmFormForm" path="/form/SubmitForm" scope="request" type="oscar.form.pageUtil.FrmFormAction" />
-        <action input="/StartCookie.jsp" path="/oscarEncounter/IncomingEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctIncomingEncounterAction">
-            <forward name="failure" path="/oscarEncounter/error.jsp" />
-            <forward name="success" path="/oscarEncounter/Index.jsp" />
-            <forward name="success2" path="/oscarEncounter/Index2.jsp" />
-        </action>
         <action path="/oscarEncounter/displayLabs" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayLabAction2"></action>
         <action path="/oscarEncounter/displayForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayFormAction"></action>
         <action path="/oscarEncounter/displayEForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayEFormAction"></action>
