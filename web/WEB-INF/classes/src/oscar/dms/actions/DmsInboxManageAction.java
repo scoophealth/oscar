@@ -34,7 +34,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
@@ -51,15 +50,19 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.model.ProviderInboxItem;
 import org.oscarehr.common.model.QueueDocumentLink;
-import org.oscarehr.document.DocumentResultsData;
 import org.oscarehr.util.SpringUtils;
 import oscar.dms.EDoc;
 import org.oscarehr.common.dao.QueueDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
+import oscar.dms.EDocUtil;
+import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.oscarProvider.data.ProviderData;
@@ -212,7 +215,63 @@ public class DmsInboxManageAction extends DispatchAction {
         }
         return unique;
     }
-     public ActionForward prepareForIndexPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    
+    public ActionForward previewPatientDocLab(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String demographicNo=request.getParameter("demog");
+        String docs=request.getParameter("docs");
+        String labs=request.getParameter("labs");
+        String providerNo=request.getParameter("providerNo");
+        String searchProviderNo=request.getParameter("searchProviderNo");
+        String ackStatus=request.getParameter("ackStatus");
+        ArrayList<EDoc> docPreview=new ArrayList();
+        ArrayList labPreview=new ArrayList();
+    
+        if(docs.length()==0){
+            //do nothing
+        }else{
+            String[] did=docs.split(",");
+            List<String> didList=new ArrayList();
+            for(int i=0;i<did.length;i++){
+                if(did[i].length()>0){
+                    didList.add(did[i]);
+                }
+            }
+            if(didList.size()>0)
+                docPreview=EDocUtil.listDocsPreviewInbox(didList);
+            
+        }
+        
+        if(labs.length()==0){
+            //do nothing
+        }else{
+            String[] labids=labs.split(",");
+            List<String> ls=new ArrayList();
+            for(int i=0;i<labids.length;i++){
+                if(labids.length>0)
+                    ls.add(labids[i]);
+            }
+            
+            Hl7textResultsData hrd=new Hl7textResultsData();
+            if(ls.size()>0)
+                labPreview=hrd.getNotAckLabsFromLabNos(ls);
+        }
+        
+        request.setAttribute("docPreview",docPreview);
+        request.setAttribute("labPreview",labPreview);
+        request.setAttribute("providerNo", providerNo);
+        request.setAttribute("searchProviderNo",searchProviderNo );
+        request.setAttribute("ackStatus",ackStatus);
+        DemographicDao demographicDao=(DemographicDao) SpringUtils.getBean("demographicDao");
+    	Demographic demographic=demographicDao.getDemographic(demographicNo);
+        String demoName="Not,Assigned";
+        if(demographic!=null)
+            demoName=demographic.getFirstName()+","+demographic.getLastName();
+        request.setAttribute("demoName", demoName);
+        return mapping.findForward("doclabPreview");
+    }
+
+
+    public ActionForward prepareForIndexPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session=request.getSession();
         try{if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");}
         catch(Exception e){MiscUtils.getLogger().error("Error", e);}
@@ -241,21 +300,17 @@ public class DmsInboxManageAction extends DispatchAction {
         docQueue.put(i.toString(), n.toString());
     }
     ArrayList labdocs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus,scannedDocStatus);
-    
+
     ArrayList validlabdocs=new ArrayList();
 
-    for(int i=0;i<labdocs.size();i++){
-        LabResultData data=(LabResultData)labdocs.get(i);
-
-    }
-    DocumentResultsData documentResult=new DocumentResultsData();
+    DocumentResultsDao documentResultsDao=(DocumentResultsDao)SpringUtils.getBean("documentResultsDao");
     //check privilege for documents only
     for(int i=0;i<labdocs.size();i++){
             LabResultData data=(LabResultData)labdocs.get(i);
             if(data.isDocument()){
                String docid=data.getSegmentID();
 
-                String queueid=docQueue.get(docid);
+                String queueid=docQueue.get(docid);                
                 if(queueid!=null){ 
                     queueid=queueid.trim();
                     if(queueid.equals("1") && isSegmentIDUnique(validlabdocs,data)){
@@ -265,7 +320,7 @@ public class DmsInboxManageAction extends DispatchAction {
                         String objectName="_queue."+queueid;
                         Vector vec=OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
                         if(OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties)vec.get(0), (Vector)vec.get(1))
-                                || documentResult.isSentToProvider(docid, providerNo)){
+                                || documentResultsDao.isSentToProvider(docid, providerNo)){
                             //labs is in provider's queue,do nothing                
                            if(isSegmentIDUnique(validlabdocs,data))
                            {validlabdocs.add(data);}
@@ -280,10 +335,6 @@ public class DmsInboxManageAction extends DispatchAction {
             }
     }
     labdocs=validlabdocs;
-    for(int i=0;i<labdocs.size();i++){
-        LabResultData data=(LabResultData)labdocs.get(i);
-
-    }
     Collections.sort(labdocs);
   
     HashMap labMap = new HashMap();
@@ -332,12 +383,6 @@ public class DmsInboxManageAction extends DispatchAction {
         }
     }
     ArrayList labArrays = new ArrayList(accessionMap.values());
-    Iterator iter=accessionMap.entrySet().iterator();
-
-    //while(iter.hasNext()){
-
-    //}
-
     labdocs.clear();
 
     for (int i=0; i < labArrays.size(); i++){
