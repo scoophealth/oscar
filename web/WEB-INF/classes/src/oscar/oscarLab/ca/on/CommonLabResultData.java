@@ -34,8 +34,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.oscarehr.document.DocumentResultsData;
+import org.oscarehr.common.dao.DocumentResultsDao;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.ArchiveDeletedRecords;
@@ -104,7 +105,7 @@ public class CommonLabResultData {
     public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
         return populateLabResultsData( providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber,status, "I");
     }
-
+    
     public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status,String scannedDocStatus) {
         ArrayList labs = new ArrayList();
         oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
@@ -139,9 +140,10 @@ public class CommonLabResultData {
             }
         }
 
-        if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){
-            DocumentResultsData docData = new DocumentResultsData();
-            ArrayList docs = docData.populateDocumentResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+        if(scannedDocStatus !=null && (scannedDocStatus.equals("O")  || scannedDocStatus.equals("I")  || scannedDocStatus.equals(""))){          
+
+            DocumentResultsDao documentResultsDao= (DocumentResultsDao) SpringUtils.getBean("documentResultsDao");
+            ArrayList docs = documentResultsDao.populateDocumentResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
             labs.addAll(docs);
         }
 
