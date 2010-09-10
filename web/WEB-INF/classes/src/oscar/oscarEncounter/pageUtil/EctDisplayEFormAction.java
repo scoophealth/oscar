@@ -74,7 +74,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 
         StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");        
         String js = ""; 
-        ArrayList eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
+        ArrayList eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT, roleName);
         String key;
         int hash;
         String BGCOLOUR = request.getParameter("hC");
@@ -91,7 +91,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         }
         
         eForms.clear();
-        eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, bean.demographicNo);
+        eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, bean.demographicNo, roleName);
         for( int i=0; i<eForms.size(); i++) {
             Hashtable curform = (Hashtable) eForms.get(i);
             NavBarDisplayDAO.Item item = Dao.Item();

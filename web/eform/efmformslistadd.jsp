@@ -158,9 +158,9 @@ function updateAjax() {
 <%
   ArrayList eForms;
   if (groupView.equals("") || groupView.equals("default")) {
-      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT);
+      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, roleName$);
   } else {
-      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);
+      eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView, roleName$);
   }
   if (eForms.size() > 0) {
       for (int i=0; i<eForms.size(); i++) {

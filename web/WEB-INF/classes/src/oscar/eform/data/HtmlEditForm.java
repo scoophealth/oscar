@@ -38,6 +38,7 @@ public class HtmlEditForm extends ActionForm {
     private String formFileName = "";
     private String formHtml = "";
     private Boolean patientIndependent = false;
+    private String roleType = "";
     
     public HtmlEditForm() {
     }
@@ -64,6 +65,14 @@ public class HtmlEditForm extends ActionForm {
     
     public void setFormName(String formName) {
         this.formName = formName;
+    }
+    
+    public String getRoleType() {
+        return roleType;
+    }
+    
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
     }
     
     public String getFormSubject() {

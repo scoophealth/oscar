@@ -47,29 +47,32 @@ public class EFormBase {
     protected String formDate;
     protected String formTime;
     protected Boolean patientIndependent;
+    protected String roleType;
     
     public EFormBase() {
         
     }
     
     public EFormBase(String fid, String formName, String formSubject, 
-            String formFileName, String formHtml) {
+            String formFileName, String formHtml, String roleType) {
         this.fid = fid;
         this.formName = formName;
         this.formSubject = formSubject;
         this.formHtml = formHtml;
         this.formFileName = formFileName;
+        this.roleType = roleType;
         dateTimeStamp();
     }
     
     public EFormBase(String fid, String formName, String formSubject,
-            String formFileName, String formHtml, Boolean patientIndependent) {
+            String formFileName, String formHtml, Boolean patientIndependent, String roleType) {
         this.fid = fid;
         this.formName = formName;
         this.formSubject = formSubject;
         this.formHtml = formHtml;
         this.formFileName = formFileName;
         this.patientIndependent = patientIndependent;
+        this.roleType = roleType;
         dateTimeStamp();
     }
 
@@ -110,6 +113,12 @@ public class EFormBase {
     }
     public void setFormName(String formName) {
         this.formName = formName;
+    }
+    public String getRoleType() {
+        return roleType;
+    }
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
     }
     public String getFormHtml() {
         return formHtml;

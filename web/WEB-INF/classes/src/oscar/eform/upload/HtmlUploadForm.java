@@ -42,6 +42,7 @@ public class HtmlUploadForm extends ActionForm {
     private String formName;
     private String subject;
     private Boolean patientIndependent = false;
+    private String roleType;
     
     public HtmlUploadForm() {
     }
@@ -60,6 +61,14 @@ public class HtmlUploadForm extends ActionForm {
     
     public void setFormName(String formName) {
         this.formName = formName;
+    }
+    
+    public String getRoleType() {
+        return roleType;
+    }
+    
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
     }
     
     public String getSubject() {
@@ -82,7 +91,7 @@ public class HtmlUploadForm extends ActionForm {
         ActionErrors errors = new ActionErrors();
         if ((formName == null) || (formName.length() == 0)) {
             errors.add("form", new ActionMessage("eform.errors.file_name.missing"));
-        }
+        }        
         if (formHtml.getFileSize() == 0) {
             errors.add("form", new ActionMessage("eform.errors.form_html.missing"));
         }

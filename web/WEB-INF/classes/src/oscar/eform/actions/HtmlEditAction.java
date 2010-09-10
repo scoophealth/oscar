@@ -57,6 +57,7 @@ public class HtmlEditAction extends Action {
             String formHtml = fm.getFormHtml();
             FormFile uploadFile = fm.getUploadFile();
             Boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
+            String roleType = fm.getRoleType();
             
             Hashtable errors = new Hashtable();
             if (request.getParameter("uploadMarker").equals("true")) {
@@ -68,13 +69,13 @@ public class HtmlEditAction extends Action {
                     formHtml = org.apache.commons.lang.StringEscapeUtils.escapeJava(readstream);
                     formFileName = uploadFile.getFileName();
                 }
-                Hashtable curht = createHashtable(fid, formName, formSubject, formFileName, formHtml, patientIndependent);
+                Hashtable curht = createHashtable(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType);
                 request.setAttribute("submitted", curht);
                 request.setAttribute("errors", errors);
                 return(mapping.findForward("success"));
             }
             formHtml = org.apache.commons.lang.StringEscapeUtils.escapeJava(formHtml);
-            EFormBase updatedform = new EFormBase(fid, formName, formSubject, formFileName, formHtml, patientIndependent); //property container (bean)
+            EFormBase updatedform = new EFormBase(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType); //property container (bean)
             //validation...
             if ((formName == null) || (formName.length() == 0)) {
                 errors.put("formNameMissing", "eform.errors.form_name.missing.regular");
@@ -83,14 +84,14 @@ public class HtmlEditAction extends Action {
                 errors.put("formNameExists", "eform.errors.form_name.exists.regular");
             }
             if ((fid.length() == 0) && (errors.size() == 0)) {
-                fid = EFormUtil.saveEForm(formName, formSubject, formFileName, formHtml, patientIndependent);
+                fid = EFormUtil.saveEForm(formName, formSubject, formFileName, formHtml, patientIndependent, roleType);
                 request.setAttribute("success", "true");
             } else if (errors.size() == 0) {
                 EFormUtil.updateEForm(updatedform);
                 request.setAttribute("success", "true");
             }
             
-            Hashtable curht = createHashtable(fid, formName, formSubject, formFileName, formHtml, patientIndependent);
+            Hashtable curht = createHashtable(fid, formName, formSubject, formFileName, formHtml, patientIndependent, roleType);
             request.setAttribute("submitted", curht);
             
             request.setAttribute("errors", errors);
@@ -100,13 +101,15 @@ public class HtmlEditAction extends Action {
         return(mapping.findForward("success"));
     }
     
-    private Hashtable createHashtable(String fid, String formName, String formSubject, String formFileName, String formHtml, Boolean patientIndependent) {
+    private Hashtable createHashtable(String fid, String formName, String formSubject, String formFileName, String formHtml, Boolean patientIndependent, String roleType) {
         Hashtable curht = new Hashtable();
         curht.put("fid", fid);  
         curht.put("formName", formName);
         curht.put("formSubject", formSubject);
         curht.put("formFileName", formFileName);
         curht.put("patientIndependent", patientIndependent);
+        curht.put("roleType", roleType);
+        
         if (fid.length() == 0) {
             curht.put("formDate", "--");
             curht.put("formTime", "--");

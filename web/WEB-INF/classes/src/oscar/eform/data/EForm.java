@@ -89,6 +89,7 @@ public class EForm extends EFormBase {
         this.formDate = (String) ht.get("formDate");
         this.formHtml = (String) ht.get("formHtml");
         this.patientIndependent = (Boolean) ht.get("patientIndependent");
+        this.roleType = (String) ht.get("roleType");
     }
     
     public void loadEForm(String fid, String demographicNo) {
@@ -102,6 +103,7 @@ public class EForm extends EFormBase {
         this.formCreator = (String) loaded.get("formCreator");
         this.demographicNo = demographicNo;
         this.patientIndependent = (Boolean) loaded.get("patientIndependent");
+        this.roleType = (String) loaded.get("roleType");
     }
 
     public void setAppointmentNo(String appointment_no) {

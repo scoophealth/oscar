@@ -188,11 +188,11 @@ function updateAjax() {
 						ArrayList eForms;
 							if (groupView.equals(""))
 							{
-								eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no);
+								eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$);
 							}
 							else
 							{
-								eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView);
+								eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, groupView, roleName$);
 							}
 							for (int i = 0; i < eForms.size(); i++)
 							{

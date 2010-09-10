@@ -47,7 +47,8 @@ if (request.getAttribute("submitted") != null) {
    if (curform.get("formName") == null) curform.put("formName", "");
    if (curform.get("formSubject") == null) curform.put("formSubject", "");
    if (curform.get("formFileName") == null) curform.put("formFileName", "");
- 
+   if (curform.get("roleType") == null) curform.put("roleType", "");
+   
    if (request.getParameter("formHtml") != null){
        //load html from hidden form from eformGenerator.jsp,the html is then injected into edit-eform
       curform.put("formHtml",request.getParameter("formHtml"));
@@ -122,6 +123,22 @@ function disablenupload() {
 			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} else if (errors.containsKey("formNameExists")) { %>
 			<font class="warning"><bean:message key="<%=formNameMissing%>" /></font> <%} %>
 			</td>
+			<th><bean:message key="eform.uploadhtml.btnRoleType"/></th>
+			<td><select name="roleType">
+				<option value="">- select one -</option>
+                <%  ArrayList roleList = EFormUtil.listSecRole(); 
+                	String selected = "";
+					for (int i=0; i<roleList.size(); i++) {  
+						selected = "";
+						if(roleList.get(i).equals(curform.get("roleType"))) {
+							selected = "selected";
+						}
+  				%>  			
+  					<option value="<%=roleList.get(i) %>" <%= selected%> %><%=roleList.get(i) %></option>
+                                        	
+                <%} %>
+                </select>
+            </td>
 			<th style="text-align: right;"><bean:message
 				key="eform.uploadhtml.patientIndependent" /><input type="checkbox" name="patientIndependent" value="true"
                                    <%= patientIndependent?"checked":"" %> /></th>

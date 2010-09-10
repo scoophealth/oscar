@@ -143,6 +143,18 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                                         <tr><td class="fieldLabel"><bean:message key="eform.uploadhtml.formName" /></td><td class="fieldLabel"><bean:message key="eform.uploadhtml.formSubject" /></td></tr>
                                         <tr><td><input type="text" name="formName" size="30"></td><td><input type="text" name="formSubject" size="30"></td></tr>
                                         <tr><td colspan="2" style="text-align: left;"><input type="file" name="formHtml" size="50"></td></tr>
+                                        
+                                        <tr><td align='left'>eForm role type :</td>
+                                        <td align='right'> <select name="roleType">
+                                        <option value="" >- select one -</option>
+                                       <%  ArrayList roleList = EFormUtil.listSecRole();
+  											for (int i=0; i<roleList.size(); i++) {    
+  										%>  											
+                                        	
+                                        		<option value="<%=roleList.get(i) %>"><%=roleList.get(i) %></option>
+                                        	
+                                        <%} %></select>
+                                        </td></tr>
                                         <tr>
                                             <td style="text-align: left; font-size: 12px"><input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/></td>
                                             <td style="text-align: right;"><input type="submit" name="subm" value="<bean:message key="eform.uploadhtml.btnUpload"/>"></td>
@@ -219,6 +231,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
         <th><a href="efmformmanager.jsp?"><bean:message
             key="eform.uploadhtml.btnDate" /></a></th>
         <th><bean:message key="eform.uploadhtml.btnTime" /></th>
+        <th><bean:message key="eform.uploadhtml.btnRoleType"/></th>
         <th><bean:message key="eform.uploadhtml.msgAction" /></th>
         <th><bean:message key="eform.uploadhtml.editform" /></th>
     </tr>
@@ -234,6 +247,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
         <td width="25%" style="padding-left: 4px"><%=curForm.get("formFileName")%></td>
         <td nowrap align='center' width="10%"><%=curForm.get("formDate")%></td>
         <td nowrap align='center' width="10%"><%=curForm.get("formTime")%></td>
+        <td nowrap align='center' width="10%"><%=curForm.get("roleType")%></td>
         <td nowrap align='center'>
                     <a href="javascript:void();" onclick="document.location.href='efmSendform.jsp?fid=<%=curForm.get("fid")%>'">Upload</a>
                     <a href="#" onclick="document.location.href='../eform/manageEForm.do?method=exportEForm&fid=<%=curForm.get("fid")%>'"><bean:message key="eform.uploadhtml.btnExport" /></a>
