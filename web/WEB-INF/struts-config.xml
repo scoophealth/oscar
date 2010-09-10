@@ -602,7 +602,7 @@
             <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
             <forward name="newRx" path="/oscarRx/prescribe.jsp" />
         </action>
-        <action input="/StartCookie.jsp" path="/oscarEncounter/IncomingEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctIncomingEncounterAction">
+        <action path="/oscarEncounter/IncomingEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctIncomingEncounterAction">
             <forward name="failure" path="/oscarEncounter/error.jsp" />
             <forward name="success" path="/oscarEncounter/Index.jsp" />
             <forward name="success2" path="/oscarEncounter/Index2.jsp" />
