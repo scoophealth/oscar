@@ -54,8 +54,9 @@ public final class PrescriptionQrCodeUIBean {
 						
 			OMP_O09 hl7PrescriptionMessage=OmpO09.makeOmpO09(clinic, provider, demographic, prescription, drugs);
 			String hl7PrescriptionString = OscarToOscarUtils.pipeParser.encode(hl7PrescriptionMessage);
+			logger.debug(hl7PrescriptionString);
 			
-			float qrCodeScale=Float.valueOf(OscarProperties.getInstance().getProperty("QR_CODE_IMAGE_SCALE_FACTOR"));
+			int qrCodeScale=Integer.valueOf(OscarProperties.getInstance().getProperty("QR_CODE_IMAGE_SCALE_FACTOR"));
 			
 			byte[] image=QrCodeUtils.toMultipleQrCodePngs(hl7PrescriptionString, getEcLevel(), QrCodesOrientation.VERTICAL, qrCodeScale);
 			
