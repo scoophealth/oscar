@@ -681,6 +681,7 @@ CREATE TABLE eform (
   status tinyint(1) NOT NULL default '1',
   form_html mediumtext,
   patient_independent boolean,
+  roleType varchar(50) default NULL,
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
 ) ;

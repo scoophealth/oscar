@@ -1302,6 +1302,7 @@ insert into `secObjectName` (`objectName`) values ('_newCasemgmt.calculators');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.templates');
 insert into `secObjectName` (`objectName`) values ('_newCasemgmt.cpp');
 insert into  secObjectName values('_queue.1','default',0);
+insert into `secObjectName` (`objectName`) values ('_eform.doctor');
 
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
@@ -1383,6 +1384,8 @@ insert into `secObjPrivilege` values('doctor','_newCasemgmt.medicalHistory','x',
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.calculators','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.templates','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_newCasemgmt.cpp','x',0,'999998');
+
+insert into `secObjPrivilege` values('doctor','_eform.doctor','x',0,'999998');
 
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
