@@ -31,7 +31,7 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@include file="dbDMS.jsp"%>
+<%@include file="dbDMS.jspf"%>
 <%
   String filename = "", filetype = "", doc_no = "";
   String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
