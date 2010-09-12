@@ -213,7 +213,7 @@ function setupNotes(){
     if(!NiftyCheck())
         return;
 
-    Rounded("div.note","all","transparent","#CCCCCC","big border #000000");
+    Rounded("div.noteRounded","all","transparent","#CCCCCC","big border #000000");
 
     //need to set focus after rounded is called
     adjustCaseNote();
