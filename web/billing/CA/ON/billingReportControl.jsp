@@ -174,7 +174,7 @@ if (reportAction.compareTo("") == 0 || reportAction == null) {
 <%
 } else if (reportAction.compareTo("billed") == 0) {
 %>
-<%@ include file="billingReport_billed.jsp"%>
+<%@ include file="billingReport_billed.jspf"%>
 <%
 } else if (reportAction.compareTo("unsettled") == 0) {
 %>
