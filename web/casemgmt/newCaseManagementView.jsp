@@ -54,7 +54,6 @@
 <%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
-
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
     CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
@@ -67,11 +66,8 @@
 		response.sendRedirect("error.jsp");
 		return;
 	}
-	long start = System.currentTimeMillis();
-	long beginning = start;
-	long current = 0;
+
 	String provNo = bean.providerNo;
-	//Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
 
 	String pId = (String)session.getAttribute("case_program_id");
 	if (pId == null) pId = "";
@@ -118,10 +114,6 @@
         passwordEnabled = true;
     </c:if>
 </script>
-<%
-	current = System.currentTimeMillis();
-	start = current;
-%>
 
 	<div
 		style="width: 100%; height: 75px; margin: 0px; background-color: #FFFFFF;">
@@ -414,7 +406,6 @@
 
 		dStaleDate = cal.getTime();
 
-		long time1, time2;
 		String noteStr;
 		int length;
 
@@ -515,7 +506,6 @@
 				noteStr = noteStr.substring(0, length);
 			}
 
-			time1 = System.currentTimeMillis();
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
 	%>
 		<div id="nc<%=idx+1%>" class="note<%=note.isDocument()||note.isCpp()?"":" noteRounded"%>">

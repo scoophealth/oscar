@@ -142,9 +142,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 			CaseManagementCPP cpp = caseForm.getCpp();
 			cpp.setUpdate_date(new Date());
-			// EncounterWindow ectWin = caseForm.getEctWin();
-			String providerNo = getProviderNo(request);
-			caseManagementMgr.saveCPP(cpp, providerNo);
+			
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			caseManagementMgr.saveCPP(cpp, loggedInInfo.loggedInProvider.getProviderNo());
 
 			// caseManagementMgr.saveEctWin(ectWin);
 		} else response.sendError(response.SC_FORBIDDEN);
@@ -159,8 +159,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		CaseManagementCPP cpp = caseForm.getCpp();
 		cpp.setUpdate_date(new Date());
 		cpp.setDemographic_no(caseForm.getDemographicNo());
-		String providerNo = getProviderNo(request);
-		caseManagementMgr.saveCPP(cpp, providerNo);
+		
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		caseManagementMgr.saveCPP(cpp, loggedInInfo.loggedInProvider.getProviderNo());
 		addMessage(request, "cpp.saved");
 
 		return view(mapping, form, request, response);
@@ -195,7 +196,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		HttpSession se = request.getSession();
 		if (se.getAttribute("userrole") == null) return mapping.findForward("expired");
 
-		String providerNo = getProviderNo(request);
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 		String demoNo = getDemographicNo(request);
 
@@ -205,7 +206,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		String roles = (String) se.getAttribute("userrole");
 		if (OscarProperties.getInstance().isOscarLearning() && roles != null && roles.indexOf("moderator") != -1) {
 			logger.info("skipping domain check..provider is a moderator");
-		} else if (!caseManagementMgr.isClientInProgramDomain(providerNo, demoNo)) {
+		} else if (!caseManagementMgr.isClientInProgramDomain(loggedInInfo.loggedInProvider.getProviderNo(), demoNo)) {
 			return mapping.findForward("domain-error");
 		}
 
@@ -239,7 +240,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		// check to see if there is an unsaved note
 		// if there is see if casemanagemententry has already handled it
 		// if it has, disregard unsaved note; if it has not then set attribute
-		CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demoNo, programId);
+		CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(loggedInInfo.loggedInProvider.getProviderNo(), demoNo, programId);
 		if (tmpsavenote != null) {
 			String restoring = (String) se.getAttribute("restoring");
 			if (restoring == null) request.setAttribute("can_restore", new Boolean(true));
@@ -249,14 +250,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		current = System.currentTimeMillis();
 		logger.debug("tmp note " + String.valueOf(current - start));
 		start = current;
-
-		// fetch and set cpp display dimensions
-		/*
-		 * EncounterWindow ectWin = this.caseManagementMgr.getEctWin(providerNo); if (ectWin == null) { ectWin = new EncounterWindow(); ectWin.setProviderNo(providerNo); ectWin.setRowOneSize(EncounterWindow.NORMAL);
-		 * ectWin.setRowTwoSize(EncounterWindow.NORMAL); }
-		 * 
-		 * caseForm.setEctWin(ectWin);
-		 */
 
 		logger.debug("Get admission");
 		String teamName = "";
@@ -317,7 +310,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(demoNo)));
 
 			// readonly access to define creat a new note button in jsp.
-			se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", providerNo, demoNo, (String) se.getAttribute("case_program_id"))));
+			se.setAttribute("readonly", new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only", "access", loggedInInfo.loggedInProvider.getProviderNo(), demoNo, (String) se.getAttribute("case_program_id"))));
 
 		}
 		/* Dx */
@@ -373,7 +366,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			// Setup RX bean start
 			RxSessionBean bean = new RxSessionBean();
-			bean.setProviderNo(providerNo);
+			bean.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 			bean.setDemographicNo(Integer.parseInt(demoNo));
 			request.getSession().setAttribute("RxSessionBean", bean);
 			// set up RX end
