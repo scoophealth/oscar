@@ -250,7 +250,7 @@
 
 </table>
 <% int bFlag = 0;	String billNo = request.getParameter("billing_no");         if (billNo.compareTo("") == 0 || billNo == null) {         bFlag = 0;         } else {         bFlag =1;         %>
-<%@ include file="billingTeleplanDataRetrieve.jsp"%>
+<%@ include file="billingTeleplanDataRetrieve.jspf"%>
 <% } %>
 
 <table width="100%" border="0" bgcolor="#FFFFFF">
