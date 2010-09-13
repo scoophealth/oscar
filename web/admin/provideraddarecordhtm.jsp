@@ -117,7 +117,7 @@ function upCaseCtrl(ctrl) {
 		<%if(OscarProperties.getInstance().isProviderNoAuto()){ %> <input
 			type="text" name="provider_no" maxlength="6" readonly="readonly"
 			value="-new-"> <%} else {%> <input type="text"
-			name="provider_no" maxlength="6"> <input type="button" value="Suggest"
+			name="provider_no" maxlength="6"> <input type="button" value=<bean:message key="admin.provideraddrecordhtm.suggest"/>
                         onclick="provider_no.value='<%=suggestProviderNo%>'"<%}%>
 		</td>
 	</tr>
