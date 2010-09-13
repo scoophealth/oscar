@@ -155,129 +155,134 @@
 	<input type="hidden" id="check_issue" name="check_issue">
 	<input type="hidden" id="serverDate" value="<%=strToday%>">
 	<input type="hidden" id="resetFilter" name="resetFilter" value="false">
-	<div id="topContent" style="float: left; width: 100%; margin-right: -2px; padding-bottom: 10px; background-color: #CCCCFF; font-size: 10px;"><nested:notEmpty name="caseManagementViewForm" property="filter_providers">
-		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.providers.title" />:</u><br>
-		<nested:iterate type="String" id="filter_provider" property="filter_providers">
-			<c:choose>
-				<c:when test="${filter_provider == 'a'}">All</c:when>
-				<c:otherwise>
-					<nested:iterate id="provider" name="providers">
-						<c:if test="${filter_provider==provider.providerNo}">
-							<nested:write name="provider" property="formattedName" />
-							<br>
-						</c:if>
-					</nested:iterate>
-				</c:otherwise>
-			</c:choose>
-		</nested:iterate></div>
-	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="filter_roles">
+	<div id="topContent" style="float: left; width: 100%; margin-right: -2px; padding-bottom: 10px; background-color: #CCCCFF; font-size: 10px;">
+		<nested:notEmpty name="caseManagementViewForm" property="filter_providers">
+			<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.providers.title" />:</u><br>
+				<nested:iterate type="String" id="filter_provider" property="filter_providers">
+					<c:choose>
+						<c:when test="${filter_provider == 'a'}">All</c:when>
+						<c:otherwise>
+							<nested:iterate id="provider" name="providers">
+								<c:if test="${filter_provider==provider.providerNo}">
+									<nested:write name="provider" property="formattedName" />
+									<br>
+								</c:if>
+							</nested:iterate>
+						</c:otherwise>
+					</c:choose>
+				</nested:iterate>
+			</div>
+		</nested:notEmpty>
+		
+		<nested:notEmpty name="caseManagementViewForm" property="filter_roles">
 		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.roles.title" />:</u><br>
-		<nested:iterate type="String" id="filter_role" property="filter_roles">
-			<c:choose>
-				<c:when test="${filter_role == 'a'}">All</c:when>
-				<c:otherwise>
-					<nested:iterate id="role" name="roles">
-						<c:if test="${filter_role==role.id}">
-							<nested:write name="role" property="name" />
-							<br>
-						</c:if>
-					</nested:iterate>
-				</c:otherwise>
-			</c:choose>
-		</nested:iterate></div>
-	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="note_sort">
-		<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.sort.title" />:</u><br>
-		<nested:write property="note_sort" /><br>
+			<nested:iterate type="String" id="filter_role" property="filter_roles">
+				<c:choose>
+					<c:when test="${filter_role == 'a'}">All</c:when>
+					<c:otherwise>
+						<nested:iterate id="role" name="roles">
+							<c:if test="${filter_role==role.id}">
+								<nested:write name="role" property="name" />
+								<br>
+							</c:if>
+						</nested:iterate>
+					</c:otherwise>
+				</c:choose>
+			</nested:iterate>
 		</div>
-	</nested:notEmpty>
 
-	<div id="filter" style="display: none;">
-	<div style="clear: both; height: 150px; width: auto; overflow: auto; float: left; position: relative"><bean:message key="oscarEncounter.providers.title" />:
-	<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
-		<li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
-		<%
-			@SuppressWarnings("unchecked")
-				Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");
+		</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="note_sort">
+			<div style="float: left; margin-left: 10px; margin-top: 0px;"><u><bean:message key="oscarEncounter.sort.title" />:</u><br>
+			<nested:write property="note_sort" /><br>
+			</div>
+		</nested:notEmpty>
 
-				String providerNo;
-				Provider prov;
-				Iterator<Provider> iter = providers.iterator();
-				while (iter.hasNext())
-				{
-					prov = iter.next();
-					providerNo = prov.getProviderNo();
-		%>
-		<li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
-		<%
-			}
-		%>
-	</ul>
-	</div>
-
-	<div style="height: 150px; width: auto; overflow: auto; float: left; position: relative;">Role:
-	<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
-		<li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
-		<%
-			@SuppressWarnings("unchecked")
-				List roles = (List)request.getAttribute("roles");
-				for (int num = 0; num < roles.size(); ++num)
-				{
-					Secrole role = (Secrole)roles.get(num);
-		%>
-		<li><html:multibox property="filter_roles" value="<%=String.valueOf(role.getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=role.getName()%></li>
-		<%
-			}
-		%>
-	</ul>
-	</div>
-
-	<div style="float: left; position: relative;"><bean:message key="oscarEncounter.sort.title" />:
-	<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
-		<li><html:radio property="note_sort" value="observation_date_asc">
-			<bean:message key="oscarEncounter.sortDateAsc.title" />
-		</html:radio></li>
-		<li><html:radio property="note_sort" value="observation_date_desc">
-			<bean:message key="oscarEncounter.sortDateDesc.title" />
-		</html:radio></li>
-		<li><html:radio property="note_sort" value="providerName">
-			<bean:message key="oscarEncounter.provider.title" />
-		</html:radio></li>
-		<li><html:radio property="note_sort" value="programName">
-			<bean:message key="oscarEncounter.program.title" />
-		</html:radio></li>
-		<li><html:radio property="note_sort" value="roleName">
-			<bean:message key="oscarEncounter.role.title" />
-		</html:radio></li>
-	</ul>
-	</div>
-
-	<div style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;" onclick="return filter(false);"><bean:message key="oscarEncounter.showView.title" /></div>
-	<div style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;" onclick="return filter(true);"><bean:message key="oscarEncounter.resetFilter.title" /></div>
-	</div>
-
-	<div style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
-		<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>"> 
-		<input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)">
-		
-		<div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index: 1; display: none">&nbsp;</div>
-		
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-		
-		<select id="channel">
-			<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
-			<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
-			<option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed" /></option>
-			<option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus" /></option>
-                        <option value="tripsearch.jsp?searchterm=">Trip Database</option>
-                </select>
+		<div id="filter" style="display: none;">
+			<div style="clear: both; height: 150px; width: auto; overflow: auto; float: left; position: relative"><bean:message key="oscarEncounter.providers.title" />:
+				<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
+					<li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
+					<%
+						@SuppressWarnings("unchecked")
+							Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");
+			
+							String providerNo;
+							Provider prov;
+							Iterator<Provider> iter = providers.iterator();
+							while (iter.hasNext())
+							{
+								prov = iter.next();
+								providerNo = prov.getProviderNo();
+					%>
+					<li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
+					<%
+						}
+					%>
+				</ul>
+			</div>
 	
-		<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)"> 
-		<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
-	</div>
+			<div style="height: 150px; width: auto; overflow: auto; float: left; position: relative;">Role:
+				<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
+					<li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
+					<%
+						@SuppressWarnings("unchecked")
+							List roles = (List)request.getAttribute("roles");
+							for (int num = 0; num < roles.size(); ++num)
+							{
+								Secrole role = (Secrole)roles.get(num);
+					%>
+					<li><html:multibox property="filter_roles" value="<%=String.valueOf(role.getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=role.getName()%></li>
+					<%
+						}
+					%>
+				</ul>
+			</div>
 	
-	<div style="clear: both; text-align: right">
-		<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.viewFilter.title"/>" alt="<bean:message key="oscarEncounter.viewFilter.title"/>" onclick="showFilter();"	src="<c:out value="${ctx}/oscarEncounter/graphics/folder-saved-search.png"/>">&nbsp;<bean:message key="oscarEncounter.Filter.title" />
-	</div>
+			<div style="float: left; position: relative;"><bean:message key="oscarEncounter.sort.title" />:
+				<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
+					<li><html:radio property="note_sort" value="observation_date_asc">
+						<bean:message key="oscarEncounter.sortDateAsc.title" />
+					</html:radio></li>
+					<li><html:radio property="note_sort" value="observation_date_desc">
+						<bean:message key="oscarEncounter.sortDateDesc.title" />
+					</html:radio></li>
+					<li><html:radio property="note_sort" value="providerName">
+						<bean:message key="oscarEncounter.provider.title" />
+					</html:radio></li>
+					<li><html:radio property="note_sort" value="programName">
+						<bean:message key="oscarEncounter.program.title" />
+					</html:radio></li>
+					<li><html:radio property="note_sort" value="roleName">
+						<bean:message key="oscarEncounter.role.title" />
+					</html:radio></li>
+				</ul>
+			</div>
+	
+			<div style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;" onclick="return filter(false);"><bean:message key="oscarEncounter.showView.title" /></div>
+			<div style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;" onclick="return filter(true);"><bean:message key="oscarEncounter.resetFilter.title" /></div>
+		</div>
+
+		<div style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
+			<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>"> 
+			<input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)">
+			
+			<div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index: 1; display: none">&nbsp;</div>
+			
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+			
+			<select id="channel">
+				<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
+				<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
+				<option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed" /></option>
+				<option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus" /></option>
+	                        <option value="tripsearch.jsp?searchterm=">Trip Database</option>
+	                </select>
+		
+			<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)"> 
+			<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
+			&nbsp;&nbsp;
+			<span style="cursor: pointer;" title="<bean:message key="oscarEncounter.viewFilter.title"/>" onclick="showFilter();"><bean:message key="oscarEncounter.Filter.title" /></span>
+		</div>
+	
 	</div>
 </html:form>
 
