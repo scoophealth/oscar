@@ -34,14 +34,15 @@ while(rs.next()){
     demographicID = db.getString(rs,"demographic_no");
 }
 rs.close();
+boolean isLinkedToDemographic=false;
 
-
-if(demographicID != null && !demographicID.equals("")){
+if(demographicID != null && !demographicID.equals("")&& !demographicID.equals("0")){
+    isLinkedToDemographic=true;
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),demographicID);
 }else{           
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
 }
-        
+
 
 
 boolean ackFlag = false;
@@ -50,8 +51,8 @@ ArrayList ackList = ackData.getAcknowledgements(segmentID);
 if (ackList != null){
     for (int i=0; i < ackList.size(); i++){
         ReportStatus reportStatus = (ReportStatus) ackList.get(i);
-        if ( reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
-            ackFlag = true;
+        if (reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
+            ackFlag = true;//lab has been ack by this provider.
             break;
         }
     }
@@ -80,11 +81,14 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         <title><%=handler.getPatientName()+" Lab Results"%></title>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <script language="javascript" type="text/javascript" src="../../../share/javascript/Oscar.js" ></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/scriptaculous.js"></script>
+        <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
         <script language="javascript" type="text/javascript">
             // alternately refer to this function in oscarMDSindex.js as labDisplayAjax.jsp does
 		function updateLabDemoStatus(labno){
                                     if(document.getElementById("DemoTable"+labno)){
-					alert("now I am here");
                                        document.getElementById("DemoTable"+labno).style.backgroundColor="#FFF";
                                     }
                                 }
@@ -229,7 +233,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         }
 
         function matchMe() {
-            <% if ( demographicID.equals("") || demographicID.equals("0") || demographicID.equals("-1")) { %>
+            <% if ( !isLinkedToDemographic) { %>
                	popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow');
             <% } %>
 	}
@@ -238,6 +242,52 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
         }
 
+        function handleLab(formid,labid,action){
+            var url='../../../dms/inboxManage.do';
+                                           var data='method=isLabLinkedToDemographic&labid='+labid;
+                                           new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+                                                                    var json=transport.responseText.evalJSON();
+                                                                    if(json!=null){
+                                                                        var success=json.isLinkedToDemographic;
+                                                                        var demoid='';
+                                                                        //check if lab is linked to a provider
+                                                                        if(success){
+                                                                            if(action=='ackLab'){
+                                                                                if(confirmAck()){
+                                                                                    updateStatus(formid,labid);
+                                                                                }
+                                                                            }else if(action=='msgLab'){
+                                                                                demoid=json.demoId;
+                                                                                if(demoid!=null && demoid.length>0)
+                                                                                    window.popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no='+demoid,'msg');
+                                                                            }else if(action=='ticklerLab'){
+                                                                                demoid=json.demoId;
+                                                                                if(demoid!=null && demoid.length>0)
+                                                                                    window.popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId='+labid+'&demographic_no='+demoid,'tickler')
+                                                                            }
+
+                                                                        }else{
+                                                                            alert("Please relate lab to a demographic.");
+                                                                        }
+                                                                    }
+                                                            }});
+        }
+        function  confirmAck() {
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        }
+        function updateStatus(formid,labid){
+            var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
+            var data=$(formid).serialize(true);
+
+            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                 if(labid){
+                     window.opener.updateDocLabData(labid);
+                     window.close();
+
+                }
+        }});
+
+        }
         </script>
 
     </head>
@@ -251,7 +301,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
             <input type="hidden" name="providerNo" value="<%= providerNo %>" />
         </form>    
-        <form name="acknowledgeForm" method="post" action="../../../oscarMDS/UpdateStatus.do">
+        <form name="acknowledgeForm" id="acknowledgeForm" method="post" onsubmit="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" method="post" action="javascript:void(0);" >
             
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -266,16 +316,17 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <% if ( !ackFlag ) { %>
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return confirmAck();">
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
+                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
+
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
-                                    <% if ( demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")){ %>
-                                    <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                    <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId=<%= segmentID %>&demographic_no=<%=demographicID%>','tickler')"/>
-                                    <% } %>
+                                   
+                                    <input type="button" value="Msg" onclick="handleLab('','<%=segmentID%>','msgLab');"/>
+                                    <input type="button" value="Tickler" onclick="handleLab('','<%=segmentID%>','ticklerLab');"/>
+                                 
                                     <% if ( searchProviderNo != null ) { // null if we were called from e-chart%>                            
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
@@ -331,7 +382,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <table valign="top" border="0" cellpadding="2" cellspacing="0" width="100%">
                                         <tr valign="top">
                                             <td valign="top" width="33%" align="left">
-                                                <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( demographicID.equals("") || demographicID.equals("0")){ %> bgcolor="orange" <% } %> id="DemoTable<%=segmentID%>" >                                                    <tr>
+                                                <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( !isLinkedToDemographic){ %> bgcolor="orange" <% } %> id="DemoTable<%=segmentID%>" >                                                    <tr>
                                                         <td valign="top" align="left">
                                                             <table valign="top" border="0" cellpadding="3" cellspacing="0" width="100%">
                                                                 <tr>
@@ -744,9 +795,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                         <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                             <tr>
                                 <td align="left" width="50%">
-                                    <% if ( providerNo != null /*&& ! mDSSegmentData.getAcknowledgedStatus(providerNo) */) { %>
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return confirmAck();">
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
+
+                                    <% if ( !ackFlag ) { %>
+                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
+
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
@@ -771,7 +824,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             </table>
             
         </form><%String s = ""+System.currentTimeMillis();%>
-        <!-- a style="color:white;" href="labDebug.jsp?segmentID=<%=segmentID%>" >debug</a -->
         <a style="color:white;" href="javascript: void();" onclick="showHideItem('rawhl7<%=s%>');" >show</a>
         <pre id="rawhl7<%=s%>" style="display:none;"><%=hl7%></pre>
     </body>
