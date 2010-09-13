@@ -95,7 +95,6 @@
 	{
 		request.setAttribute("caseManagementEntryForm", cform);
 	}
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 
 %>
 <script type="text/javascript">
@@ -278,13 +277,6 @@
 	
 	<div style="clear: both; text-align: right">
 		<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.viewFilter.title"/>" alt="<bean:message key="oscarEncounter.viewFilter.title"/>" onclick="showFilter();"	src="<c:out value="${ctx}/oscarEncounter/graphics/folder-saved-search.png"/>">&nbsp;<bean:message key="oscarEncounter.Filter.title" />
-		&nbsp;&nbsp; 
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.cpp" rights="r" reverse="false">
-		<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintCPP' alt="<bean:message key="oscarEncounter.togglePrintCPP.title"/>" onclick="return printInfo(this,'printCPP');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.cpp.title" />
-		&nbsp;&nbsp; 
-		</security:oscarSec>
-		<img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>" id='imgPrintRx' alt="<bean:message key="oscarEncounter.togglePrintRx.title"/>" onclick="return printInfo(this, 'printRx');" src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>&nbsp;<bean:message key="oscarEncounter.Rx.title" />
-		&nbsp;&nbsp;
 	</div>
 	</div>
 </html:form>
