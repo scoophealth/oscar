@@ -551,4 +551,34 @@ public class DmsInboxManageAction extends DispatchAction {
         return null;
     }
 
-            }
+    public ActionForward isLabLinkedToDemographic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
+        boolean success=false;
+        String demoId=null;
+       try{
+           String qn=request.getParameter("labid");
+           if(qn!=null) {
+               qn=qn.trim();
+               if(qn.length()>0){
+                   CommonLabResultData c=new CommonLabResultData();
+                   demoId= c.getDemographicNo(qn,"HL7");
+                   if(demoId!=null && !demoId.equals("0"))
+                       success=true;
+               }
+           }
+       }catch(Exception e){
+           MiscUtils.getLogger().error("Error", e);
+       }
+
+        HashMap hm = new HashMap();
+        hm.put("isLinkedToDemographic", success);
+        hm.put("demoId",demoId);
+        JSONObject jsonObject = JSONObject.fromObject(hm);
+        try{
+            response.getOutputStream().write(jsonObject.toString().getBytes());
+        }catch(java.io.IOException ioe){
+            MiscUtils.getLogger().error("Error", ioe);
+        }
+        return null;
+    }
+
+}
