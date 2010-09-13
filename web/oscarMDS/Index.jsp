@@ -79,9 +79,6 @@ final String noAckStatus="N";
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 
-        <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
-        <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-        <script type="text/javascript" src="../share/javascript/effects.js"></script>
         <script type="text/javascript" src="../share/javascript/controls.js"></script>
 
         <script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"></script>
@@ -198,7 +195,7 @@ final String noAckStatus="N";
                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
                                 <input type="button" id="topFRBtn" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
-                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%= providerNo %>'">
                                 <% } %>
                                 <% if (demographicNo == null && labdocs.size() > 0) { %>                                    
                                     <input id="topFBtn" type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
