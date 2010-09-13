@@ -185,7 +185,7 @@ function onUnbilled(url) {
 <% } else {  
 if (reportAction.compareTo("servicecode") == 0) {
 %>
-<%@ include file="manageBillingform_service.jsp"%>
+<%@ include file="manageBillingform_service.jspf"%>
 <%
 } else {
 %>
