@@ -385,21 +385,11 @@
 
 function init() {       
         
-    //console.log("Begin init");
-    //var start = new Date();
-    //var current;
     showIssueNotes();
-    
-    //current = new Date();
-    //var delta = current.getTime() - start.getTime();
-    //console.log("show Issues " + delta);
     
     var navBars = new navBarLoader();
     navBars.load();  
     
-    //current = new Date();
-    //var delta = current.getTime() - start.getTime();
-    //console.log("navbars " + delta);
     monitorNavBars(null);
     
     Element.observe(window, "resize", monitorNavBars);    

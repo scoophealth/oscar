@@ -66,20 +66,6 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
         String key;
         
         String BGCOLOUR = request.getParameter("hC");
-        /*
-        for( int i = 0; i < dsConsequences.size(); ++i ) {
-            DSConsequence dsConsequence = (DSConsequence) dsConsequences.get(i);
-            if (dsConsequence.getConsequenceType() == DSConsequence.ConsequenceType.warning) {
-                winName = (String) dsConsequence.getConsequenceType().toString() + bean.demographicNo;
-                hash = Math.abs(winName.hashCode());
-                url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "', 'FormA" + i + "');";
-                key = StringUtils.maxLenString(dsConsequence.getText(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES);
-                key = StringEscapeUtils.escapeJavaScript(key);
-            
-                js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
-                javascript.append(js);
-            }
-        }*/
 
         int index = 0;
         for(DSGuideline dsGuideline: dsGuidelines) {
