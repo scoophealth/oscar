@@ -187,14 +187,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
             var popup=window.open(varpage, windowname, windowprops);
         }
-         getComment=function() {
+         getComment=function(labid) {
             var ret = true;
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
 
             if( commentVal == null )
                 ret = false;
-            else
-                document.acknowledgeForm.comment.value = commentVal;
+            else{
+                document.forms['acknowledgeForm_'+labid].comment.value = commentVal;
+            }
 
             return ret;
         }
@@ -212,7 +213,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
          sendToPHR=function(labId, demographicNo) {
             popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
         }
-
+        popupStart=function(vheight,vwidth,varpage,windowname) {
+            var windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+            var popup=window.open(varpage, windowname, windowprops);
+        }
         handleLab=function(formid,labid,action){
             var url='../dms/inboxManage.do';
                                            var data='method=isLabLinkedToDemographic&labid='+labid;
@@ -239,6 +243,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             
                                                                         }else{
                                                                             alert("Please relate lab to a demographic.");
+                                                                            //pop up relate demo window
+                                                                            var pn=$("demoName"+labid).value;
+                                                                            if(pn) popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID='+labid+'&name='+pn, 'searchPatientWindow');
                                                                         }
                                                                     }
                                                             }});
@@ -288,9 +295,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <input type="hidden" name="ajaxcall" value="yes"/>
+                                    <input type="hidden" id="demoName<%=segmentID%>" value="<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>"/>
                                     <% if ( !ackFlag ) { %>
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>">
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('<%=segmentID%>');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProviderAltView.jsp?doc_no=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF('<%=segmentID%>')">
@@ -356,7 +364,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top">
                                                     <tr>
                                                         <td valign="top" align="left">
-                                                            <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( demographicID.equals("") || demographicID.equals("0")){ %> bgcolor="orange" <% } %> id="DemoTable<%=segmentID%>" >                                                                <tr>
+                                                            <table width="100%" border="0" cellpadding="2" cellspacing="0" valign="top"  <% if ( demographicID.equals("") || demographicID.equals("0")){ %> bgcolor="orange" <% } %> id="DemoTable<%=segmentID%>" >
+                                                                <tr>
                                                                     <td nowrap>
                                                                         <div class="FieldData">
                                                                             <strong><bean:message key="oscarMDS.segmentDisplay.formPatientName"/>: </strong>
