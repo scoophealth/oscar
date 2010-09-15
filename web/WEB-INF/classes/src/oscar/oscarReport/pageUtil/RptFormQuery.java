@@ -23,7 +23,7 @@ public class RptFormQuery {
 
     // sql: select formBCAR.pg1_ethOrig as Ethnic Origin, ...
     public String getQueryStr(String reportId, HttpServletRequest request) throws Exception {
-        
+        String ret = "";
         RptReportCreator reportCreator = new RptReportCreator();
 
         // sql:select
@@ -34,6 +34,7 @@ public class RptFormQuery {
         String tableName = reportCreator.getFromTableFirst(reportId);
         boolean bDemo = tableName.indexOf("demographic") >= 0 ? true : false;
         reportSql += tableName;
+        // System.out.println(reportId + "SQL: " + reportSql);
 
         // get value param string
         Vector vecValue = getValueParam(request)[0];
@@ -51,7 +52,10 @@ public class RptFormQuery {
         if (tableName.indexOf(",demographic") < 0 && bDemo) {
             subQuery += ",demographic ";
         }
-        subQuery += " where " + getQueryWhere(vecVarValue) + reportCreator.getWhereJoinClause(tableName, bDemo);
+        // test for vecVarValue
+        if ((getQueryWhere(vecVarValue).length()>0)||(reportCreator.getWhereJoinClause(tableName, bDemo).length()>0)) {
+            subQuery += " where " + getQueryWhere(vecVarValue) + reportCreator.getWhereJoinClause(tableName, bDemo);
+        }
         subQuery += " group by " + tableName + ".demographic_no," + tableName + ".formCreated ";
 
         // sql:from - add tablename demographic
@@ -62,8 +66,10 @@ public class RptFormQuery {
         // get subQuery result
         String rltSubQuery = reportCreator.getRltSubQuery(subQuery);
 
-        reportSql += " where " + tableName + ".ID in (" + rltSubQuery + ") and "
-                + reportCreator.getWhereJoinClause(tableName, bDemo);
+        reportSql += " where " + tableName + ".ID in (" + rltSubQuery + ")";
+        if (reportCreator.getWhereJoinClause(tableName, bDemo).length()>0) {
+                    reportSql += " and " + reportCreator.getWhereJoinClause(tableName, bDemo);
+	}
         return reportSql;
     }
 
@@ -84,7 +90,7 @@ public class RptFormQuery {
 
                 vecValue.add(request.getParameter(name));
                 vecDateFormat.add(request.getParameter(DATE_FORMAT + serialNo));
-
+                // System.out.println(" tempVal: " + name.substring(VALUE.length()) );
             }
         }
         ret[0] = vecValue;
@@ -109,8 +115,8 @@ public class RptFormQuery {
                 }
             }
             //bDemo = reportCreator.isIncludeDemo(tempVal) ? true : bDemo;
-
-
+            //System.out.println(i + tempVal + " tempVal: " + vecVarValue);
+            //System.out.println(i + tempVal + " tempVal: " + vecDateFormat);
             ret.add(RptReportCreator.getWhereValueClause(tempVal, vecVarValue));
         }
         return ret;
@@ -118,8 +124,11 @@ public class RptFormQuery {
 
     public String getQueryWhere(Vector vecVarValue) {
         String ret = "";
-        for (int i = 0; i < vecVarValue.size(); i++) {
-            ret += (String) vecVarValue.get(i) + " and ";
+        if (vecVarValue.size()>0) {
+            ret = (String) vecVarValue.get(0);
+        }
+        for (int i = 1; i < vecVarValue.size(); i++) {
+            ret +=  " and " + (String) vecVarValue.get(i);
         }
         return ret;
     }
