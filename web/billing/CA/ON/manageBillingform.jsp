@@ -191,7 +191,7 @@ while(rslocal.next()){
 if (clinicview.compareTo("000") == 0) { %>
 <%@ include file="manageBillingform_add.jsp"%>
 <%} else if (clinicview.compareTo("***") == 0) { %>
-<%@ include file="manageBillingform_premium.jsp"%>
+<%@ include file="manageBillingform_premium.jspf"%>
 <%} else if (reportAction.compareTo("") == 0 || reportAction == null){ %>
 <p>&nbsp;</p>
 <%} else if (reportAction.compareTo("servicecode") == 0) {  %>

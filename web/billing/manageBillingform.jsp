@@ -174,7 +174,7 @@ function onUnbilled(url) {
 
 <%} else{ %>
 <% if (clinicview.compareTo("***") == 0) { %>
-<%@ include file="manageBillingform_premium.jsp"%>
+<%@ include file="manageBillingform_premium.jspf"%>
 
 <%} else{ %>
 
