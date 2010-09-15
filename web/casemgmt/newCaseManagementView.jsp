@@ -51,7 +51,8 @@
 <%@page import="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO"%>
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%>
 
-<%@page import="org.oscarehr.util.MiscUtils"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="oscar.util.UtilDateUtilities"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
@@ -95,7 +96,6 @@
 	{
 		request.setAttribute("caseManagementEntryForm", cform);
 	}
-
 %>
 <script type="text/javascript">
     numNotes = <%=noteSize%>; //How many saved notes do we have?
@@ -281,6 +281,18 @@
 			<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
 			&nbsp;&nbsp;
 			<span style="cursor: pointer;" title="<bean:message key="oscarEncounter.viewFilter.title"/>" onclick="showFilter();"><bean:message key="oscarEncounter.Filter.title" /></span>
+			<%
+				String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+				String pAge = Integer.toString(UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
+			%>
+			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.calculators" rights="r" reverse="false">
+				&nbsp;&nbsp;
+				<a href="#" onClick="popupPage(150,200,'Calculators','<c:out value="${ctx}"/>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&amp;age=<%=pAge%>'); return false;" title="<bean:message key="oscarEncounter.Header.Calculators"/>"><bean:message key="oscarEncounter.Header.Calculators"/></a>
+			</security:oscarSec>
+			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
+				&nbsp;&nbsp;
+				<a href="#" onClick="popupPage(700,700,'Templates','<c:out value="${ctx}"/>/admin/providertemplate.jsp' ); return false; " title="<bean:message key="oscarEncounter.Header.Templates"/>"><bean:message key="oscarEncounter.Header.Templates"/></a>
+			</security:oscarSec>
 		</div>
 	
 	</div>

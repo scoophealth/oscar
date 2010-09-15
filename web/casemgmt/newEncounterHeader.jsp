@@ -32,7 +32,6 @@
         response.sendRedirect("error.jsp");
         return;
     }
-    oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
 
     String demoNo = bean.demographicNo;
     EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
@@ -67,11 +66,9 @@
     String patientName = pd.getFirstName()+" "+pd.getSurname();
     String patientAge = pd.getAge();
     String patientSex = pd.getSex();
-    String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
+    String pAge = Integer.toString(UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
 
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-
     %>
 
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
@@ -90,27 +87,13 @@
         %>
         <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a> <%=bean.patientSex%> <%=bean.patientAge%>  <%=bean.phone%>
 
-<a href="javascript:popupPage(400,850,'ApptHist','<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&amp;last_name=<%=bean.patientLastName%>&amp;first_name=<%=bean.patientFirstName%>&amp;orderby=appointment_date&amp;displaymode=appt_history&amp;dboperation=appt_history&amp;limit1=0&amp;limit2=25')" style="font-size: 11px;text-decoration:none;" title="<bean:message key="oscarEncounter.Header.nextApptMsg"/>"><span style="margin-left:20px;"><bean:message key="oscarEncounter.Header.nextAppt"/>: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
+		<a href="javascript:popupPage(400,850,'ApptHist','<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&amp;last_name=<%=bean.patientLastName%>&amp;first_name=<%=bean.patientFirstName%>&amp;orderby=appointment_date&amp;displaymode=appt_history&amp;dboperation=appt_history&amp;limit1=0&amp;limit2=25')" style="font-size: 11px;text-decoration:none;" title="<bean:message key="oscarEncounter.Header.nextApptMsg"/>"><span style="margin-left:20px;"><bean:message key="oscarEncounter.Header.nextAppt"/>: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
 
+        &nbsp;&nbsp;        
 
-        &nbsp;&nbsp;
-        <security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.calculators" rights="r" reverse="false">
-
-        <a href="#" onClick="popupPage(150,200,'Calculators','<c:out value="${ctx}"/>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&amp;age=<%=pAge%>'); return false;" title="<bean:message key="oscarEncounter.Header.Calculators"/>"><bean:message key="oscarEncounter.Header.Calculators"/></a>
-
-        </security:oscarSec>
-         &nbsp;&nbsp;
-        <!--insert add/edit template -->
-        <security:oscarSec roleName="<%=roleName$%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
-
-        <a href="#" onClick="popupPage(700,700,'Templates','<c:out value="${ctx}"/>/admin/providertemplate.jsp' ); return false; " title="<bean:message key="oscarEncounter.Header.Templates"/>"><bean:message key="oscarEncounter.Header.Templates"/></a>
-
-        </security:oscarSec>
-        <!-- end insert add/edit template> -->
-
-                 <% if(oscar.OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
-                    <a href="javascript:void(0)" onClick="popupPage(600,175,'Calculators','<c:out value="${ctx}"/>/common/omdDiseaseList.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Header.OntMD"/></a>
-                 <%}%>
+        <% if(oscar.OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
+           <a href="javascript:void(0)" onClick="popupPage(600,175,'Calculators','<c:out value="${ctx}"/>/common/omdDiseaseList.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Header.OntMD"/></a>
+        <%}%>
    </span>
 </div>
 
