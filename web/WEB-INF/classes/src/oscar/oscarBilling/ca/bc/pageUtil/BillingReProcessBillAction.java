@@ -27,6 +27,7 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -248,7 +249,7 @@ public class BillingReProcessBillAction extends Action {
       }
 
       double dblBillAmount = Double.parseDouble(codePrice);
-      BigDecimal bdFee = new BigDecimal(""+dblBillAmount);//.setScale(2,RoundingMode.HALF_UP);
+      BigDecimal bdFee = new BigDecimal(""+dblBillAmount).setScale(2,RoundingMode.HALF_UP);
 
 
 
