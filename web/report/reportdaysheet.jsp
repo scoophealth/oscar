@@ -228,8 +228,15 @@ td {
 		<td align="center">&nbsp;<%=dob==null?"":dob%></td>
 		<% }%>
 		<td>
-		<% if ( rsdemo.getString("doc_no") != null && ! daySheetBean.getString(rsdemo,"doc_no").equals("") && ! daySheetBean.getString(rsdemo,"doc_no").equals(daySheetBean.getString(rsdemo,"provider_no")) ) { %>
-		[<%=daySheetBean.getString(rsdemo,"doc_last_name")%>, <%=daySheetBean.getString(rsdemo,"doc_first_name").charAt(0)%>]
+		<% if ( rsdemo.getString("doc_no") != null && ! daySheetBean.getString(rsdemo,"doc_no").equals("") && ! daySheetBean.getString(rsdemo,"doc_no").equals(daySheetBean.getString(rsdemo,"provider_no")) ) {
+
+                    String doc_first_name = daySheetBean.getString(rsdemo,"doc_first_name");
+                    char initial = 0x20;
+                    if( doc_first_name.length() > 0 ) {
+                        initial = doc_first_name.charAt(0);
+                    }
+%>
+		[<%=daySheetBean.getString(rsdemo,"doc_last_name")%>, <%=initial%>]
 		&nbsp; <% } %> <% if ( bDob && daySheetBean.getString(rsdemo,"family_doctor") != null) {
               String rd = SxmlMisc.getXmlContent(daySheetBean.getString(rsdemo,"family_doctor"),"rd");
               rd = rd !=null ? rd : "" ;
