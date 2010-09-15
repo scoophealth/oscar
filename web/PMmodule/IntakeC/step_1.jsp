@@ -37,7 +37,8 @@
 	
 	pageContext.setAttribute("formBean", formBean);
 %>
-<script>
+
+<%@page import="org.oscarehr.common.model.Provider"%><script>
 	function go_to_top() {
 		var form = document.intakeCForm;
 		form.method.value='refresh';
