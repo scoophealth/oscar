@@ -331,7 +331,14 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         }
         return cacheDir;
     }
-
+    private File hasCacheVersion2(Document d,Integer pageNum){
+        File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
+        File outfile = new File(documentCacheDir,d.getDocfilename()+"_"+pageNum+".png");
+        if (!outfile.exists()){
+            outfile = null;
+        }
+        return outfile;
+    }
     private File hasCacheVersion(Document d){
         File documentCacheDir = getDocumentCacheDir(oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR"));
         File outfile = new File(documentCacheDir,d.getDocfilename()+".png");
@@ -341,6 +348,50 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         return outfile;
     }
 
+public File createCacheVersion2(Document d,Integer pageNum) throws Exception{
+
+        String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        File documentDir = new File(docdownload);
+        File documentCacheDir = getDocumentCacheDir(docdownload);
+        log.debug("Document Dir is a dir"+documentDir.isDirectory());
+
+        File file = new File(documentDir,d.getDocfilename());
+
+        RandomAccessFile raf = new RandomAccessFile(file, "r");
+        FileChannel channel = raf.getChannel();
+        ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+        PDFFile pdffile = new PDFFile(buf);
+        //long readfile = System.currentTimeMillis() - start;
+        // draw the first page to an image
+        PDFPage ppage = pdffile.getPage(pageNum);
+
+        log.debug("WIDTH " + (int) ppage.getBBox().getWidth() + " height " + (int) ppage.getBBox().getHeight());
+
+        //get the width and height for the doc at the default zoom
+        Rectangle rect = new Rectangle(0, 0,
+                (int) ppage.getBBox().getWidth(),
+                (int) ppage.getBBox().getHeight());
+
+        log.debug("generate the image");
+        Image img = ppage.getImage(
+                rect.width, rect.height, //width & height
+                rect, // clip rect
+                null, // null for the ImageObserver
+                true, // fill background with white
+                true // block until drawing is done
+                );
+
+        log.debug("about to Print to stream");
+        File outfile = new File(documentCacheDir,d.getDocfilename()+"_"+pageNum+".png");
+        OutputStream outs = new FileOutputStream(outfile);
+
+        RenderedImage rendImage = (RenderedImage) img;
+        ImageIO.write(rendImage, "png", outs);
+        outs.flush();
+        outs.close();
+        return outfile;
+
+    }
     public File createCacheVersion(Document d) throws Exception{
 
         String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
@@ -432,6 +483,57 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         return null;
     }
 
+public ActionForward viewDocPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    log.debug("in viewDocPage");
+       try{
+           String doc_no = request.getParameter("doc_no");
+           String pageNum=request.getParameter("curPage");
+           if(pageNum==null){
+               pageNum="0";
+           }
+           Integer pn=Integer.parseInt(pageNum);
+           log.debug("Document No :"+doc_no);
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
+
+        Document d = documentDAO.getDocument(doc_no);
+        log.debug("Document Name :"+d.getDocfilename());
+        String name=d.getDocfilename()+"_"+pn+".png";
+        log.debug("name "+name);
+
+        File outfile=null;
+
+            outfile = hasCacheVersion2(d,pn);
+            if(outfile!=null){
+                log.debug("got doc from local cache   ");
+            }
+            else{
+               outfile = createCacheVersion2(d,pn);
+               if(outfile!=null){
+                  log.debug("create new doc  ");
+               }
+            }
+        response.setContentType("image/png");
+        ServletOutputStream outs = response.getOutputStream();
+        response.setHeader("Content-Disposition", "attachment;filename=" + d.getDocfilename());
+        BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(outfile));
+        int data;
+        while ((data = bfis.read()) != -1) {
+            outs.write(data);
+            //outs.flush();
+        }
+
+        bfis.close();
+        outs.flush();
+        outs.close();
+       }
+       catch(java.net.SocketException se){
+            MiscUtils.getLogger().error("Error", se);
+       }
+       catch(Exception e){
+           MiscUtils.getLogger().error("Error", e);
+       }
+        return null;
+    }
     public ActionForward view2(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         //TODO: NEED TO CHECK FOR ACCESS
