@@ -23,7 +23,7 @@
             String demographicID = curdoc.getModuleId();
 
             String docId = curdoc.getDocId();
-            
+
             int slash = 0;
             String contentType = "";
             if ((slash = curdoc.getContentType().indexOf('/')) != -1) {
@@ -41,7 +41,7 @@
                 numOfPageStr="unknown";
             else
                 numOfPageStr=(new Integer(numOfPage)).toString();
-            String url = request.getContextPath()+"/dms/ManageDocument.do?method=view&doc_no=" + docId;
+            String url = request.getContextPath()+"/dms/ManageDocument.do?method=viewDocPage&doc_no=" + docId+"&curPage=1";
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
 
 %>
@@ -176,7 +176,12 @@
                 <tr>
 
 
-                    <td colspan="8"><a href="<%=url2%>"><img src="<%=url%>" /></a></td>
+                    <td colspan="8">
+                        <div style="text-align: right;font-weight: bold"> <a id="firstP_<%=docId%>" href="javascript:void(0);" onclick="firstPage('<%=docId%>');"><<</a>
+                        <a id="prevP_<%=docId%>" href="javascript:void(0);" onclick="prevPage('<%=docId%>');"><</a>
+                        <a id="nextP_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>');">></a>
+                        <a id="lastP_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">>></a></div>
+                        <a href="<%=url2%>"><img alt="document" id="docImg_<%=docId%>"  src="<%=url%>" /></a></td>
 
 
                     <td align="left" valign="top">
@@ -199,6 +204,8 @@
                             <form id="forms_<%=docId%>" onsubmit="return updateDocument('forms_<%=docId%>');">
                                 <input type="hidden" name="method" value="documentUpdateAjax" />
                                 <input type="hidden" name="documentId" value="<%=docId%>" />
+                                <input type="hidden" name="curPage_<%=docId%>" id="curPage_<%=docId%>" value="1"/>
+                                <input type="hidden" name="totalPage_<%=docId%>" id="totalPage_<%=docId%>" value="<%=numOfPage%>"/>
                                 <table border="0">
                                     <tr>
                                         <td><bean:message key="dms.documentReport.msgDocType" />:</td>
