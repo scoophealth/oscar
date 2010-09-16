@@ -10,11 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import oscar.login.DBHelp;
 import oscar.oscarReport.data.RptReportCreator;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
 
 /**
  * @author yilee18
  */
 public class RptFormQuery {
+    private static Logger logger = MiscUtils.getLogger();
+
     static String CHECK_BOX = "filter_";
     static String VALUE = "value_";
     static String DATE_FORMAT = "dateFormat_";
@@ -34,7 +38,7 @@ public class RptFormQuery {
         String tableName = reportCreator.getFromTableFirst(reportId);
         boolean bDemo = tableName.indexOf("demographic") >= 0 ? true : false;
         reportSql += tableName;
-        // System.out.println(reportId + "SQL: " + reportSql);
+        // logger.debug(reportId + "SQL: " + reportSql);
 
         // get value param string
         Vector vecValue = getValueParam(request)[0];
@@ -90,7 +94,7 @@ public class RptFormQuery {
 
                 vecValue.add(request.getParameter(name));
                 vecDateFormat.add(request.getParameter(DATE_FORMAT + serialNo));
-                // System.out.println(" tempVal: " + name.substring(VALUE.length()) );
+                // logger.debug(" tempVal: " + name.substring(VALUE.length()) );
             }
         }
         ret[0] = vecValue;
@@ -115,8 +119,8 @@ public class RptFormQuery {
                 }
             }
             //bDemo = reportCreator.isIncludeDemo(tempVal) ? true : bDemo;
-            //System.out.println(i + tempVal + " tempVal: " + vecVarValue);
-            //System.out.println(i + tempVal + " tempVal: " + vecDateFormat);
+            //logger.debug(i + tempVal + " tempVal: " + vecVarValue);
+            //logger.debug(i + tempVal + " tempVal: " + vecDateFormat);
             ret.add(RptReportCreator.getWhereValueClause(tempVal, vecVarValue));
         }
         return ret;
