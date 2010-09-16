@@ -181,7 +181,7 @@ final String noAckStatus="N";
                         </td>
                         </tr>
                         <tr>
-                            <td align="left" valign="center" > <%-- width="30%" --%>
+                            <td align="left" valign="center" > 
                                 <input type="hidden" name="providerNo" value="<%= providerNo %>">
                                 <input type="hidden" name="searchProviderNo" value="<%= searchProviderNo %>">
                                 <%= (request.getParameter("lname") == null ? "" : "<input type=\"hidden\" name=\"lname\" value=\""+request.getParameter("lname")+"\">") %>
@@ -325,7 +325,7 @@ final String noAckStatus="N";
                                     	}
                                     }
                                     else if (result.isDocument()){ %>
-                                    <a href="javascript:reportWindow('../dms/DocumentDisplay3.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ',660,1020)"><%=(String) result.getPatientName()%></a>
+                                    <a href="javascript:reportWindow('../dms/MultiPageDocDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>&demoName=<%=(String)result.getPatientName()%> ',660,1020)"><%=(String) result.getPatientName()%></a>
                                     <% }else {%>
                                     <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>                                   
                                     <% }%>
