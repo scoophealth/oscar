@@ -1168,7 +1168,7 @@ function updateDocLabData(doclabid){//remove doclabid from global variables
     removeNormal(doclabid);
     //remove from abnormals
     removeAbnormal(doclabid);
-    
+
 /*console.log(typeDocLab);
                            console.log(docType);
                            console.log(patientDocs);
@@ -1538,3 +1538,86 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                            if(w!=null)
                                                w.focus();
                                        }
+
+                                       function showPageImg(docid,pn){
+                                                    if(docid&&pn){
+                                                        var e=$('docImg_'+docid);
+                                                        var url='../dms/ManageDocument.do?method=viewDocPage&doc_no='+docid+'&curPage='+pn;
+                                                        e.setAttribute('src',url);
+                                                    }
+                                                }
+
+                                       function nextPage(docid){
+                                           var curPage=$('curPage_'+docid).value;
+                                           var totalPage=$('totalPage_'+docid).value;
+                                           curPage++;
+                                           if(curPage>totalPage){
+                                               curPage=totalPage;
+                                               hideNext(docid);
+                                               showPrev(docid);
+                                           }
+                                                  $('curPage_'+docid).value=curPage;
+
+                                                        showPageImg(docid,curPage);
+                                                        if(curPage+1>=totalPage){
+                                                            hideNext(docid);
+                                                            showPrev(docid);
+                                                        } else{
+                                                            showNext(docid);
+                                                            showPrev(docid);
+                                                        }
+                                                }
+                                                function prevPage(docid){
+                                                     var curPage=$('curPage_'+docid).value;
+                                                    curPage--;
+                                                    if(curPage<1){
+                                                        curPage=1;
+                                                        hidePrev(docid);
+                                                        showNext(docid);
+                                                    }
+                                                    $('curPage_'+docid).value=curPage;
+                                                        showPageImg(docid,curPage);
+                                                       if(curPage==1){
+                                                           hidePrev(docid);
+                                                           showNext(docid);
+                                                        }else{
+                                                            showPrev(docid);
+                                                            showNext(docid);
+                                                        }
+
+                                                }
+                                                function firstPage(docid){
+                                                   $('curPage_'+docid).value=1;
+                                                    showPageImg(docid,1);
+                                                    hidePrev(docid);
+                                                    showNext(docid);
+                                                }
+                                                function lastPage(docid){
+                                                    var totalPage=$('totalPage_'+docid).value;
+
+                                                    $('curPage_'+docid).value=totalPage;
+                                                    showPageImg(docid,totalPage);
+                                                    hideNext(docid);
+                                                    showPrev(docid);
+                                                }
+                                                function hidePrev(docid){
+                                                    //disable previous link
+                                                    $("prevP_"+docid).setStyle({display:'none'});
+                                                    $("firstP_"+docid).setStyle({display:'none'});
+                                                }
+                                                function hideNext(docid){
+                                                    //disable next link
+                                                    $("nextP_"+docid).setStyle({display:'none'});
+                                                    $("lastP_"+docid).setStyle({display:'none'});
+                                                }
+                                                function showPrev(docid){
+                                                    //disable previous link
+                                                    $("prevP_"+docid).setStyle({display:'inline'});
+                                                    $("firstP_"+docid).setStyle({display:'inline'});
+                                                }
+                                                function showNext(docid){
+
+                                                    //disable next link
+                                                    $("nextP_"+docid).setStyle({display:'inline'});
+                                                    $("lastP_"+docid).setStyle({display:'inline'});
+                                                }
