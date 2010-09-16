@@ -202,7 +202,7 @@ public class EFormUtil {
 		try {
 			while (rs.next()) {
 				//filter eform by role type
-				if(rsGetString(rs,"roleType")!=null) {
+				if(rsGetString(rs,"roleType")!=null && !rsGetString(rs,"roleType").equals("")) {
 					//ojectName: "_admin,_admin.eform"
 					//roleName: "doctor,admin"					
 					String objectName = "_eform." + rsGetString(rs,"roleType");
@@ -599,7 +599,7 @@ public class EFormUtil {
 		try {
 			while (rs.next()) {
 				//filter eform by role type
-				if(rsGetString(rs,"roleType")!=null) {
+				if(rsGetString(rs,"roleType")!=null && !rsGetString(rs,"roleType").equals("")) {
 					//ojectName: "_admin,_admin.eform"
 					//roleName: "doctor,admin"					
 					String objectName = "_eform." + rsGetString(rs,"roleType");
