@@ -77,7 +77,6 @@ import com.lowagie.text.pdf.PdfReader;
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
-
 /**
  *
  * @author jaygallagher
@@ -250,11 +249,7 @@ public ActionForward documentUpdateAjax(ActionMapping mapping, ActionForm form,
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
         }
-        if (flagproviders != null) {
-            for (String str : flagproviders) {
 
-            }
-        }
         if (ret != null && !ret.equals("")) {
             //response.getOutputStream().print(ret);
         }
