@@ -2019,7 +2019,7 @@
 
         <action path="/dms/ManageDocument" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
            <forward name="success" path="/dms/undocument.jsp"/>
-           <forward name="displaySingleDoc" path="/dms/DocumentDisplay3.jsp"/>
+           <forward name="displaySingleDoc" path="/dms/MultiPageDocDisplay.jsp"/>
         </action>
 
         <action path="/PhrRetrieve" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
