@@ -236,6 +236,7 @@ import oscar.util.StringUtils;
         List<String> logs = new ArrayList<String>();
         
         for(Provider student:students) {
+        	logger.info("importing patient for student " +  student.getFormattedName());
         	//need that student's personal program
         	Integer pid = programManager.getProgramIdByProgramName("program"+student.getProviderNo());
         	if(pid == null) {
@@ -463,8 +464,12 @@ import oscar.util.StringUtils;
 		DemographicAddResult demoRes = null;
 
 		//Check if Contact-only demographic exists
-		demographicNo = dd.getDemoNoByNamePhoneEmail(firstName, lastName, homePhone, workPhone, email);
-		DemographicData.Demographic demographic = dd.getDemographic(demographicNo);
+		DemographicData.Demographic demographic = null;
+		
+		if(courseId == 0) {
+			demographicNo = dd.getDemoNoByNamePhoneEmail(firstName, lastName, homePhone, workPhone, email);
+			demographic = dd.getDemographic(demographicNo);
+		}
 		if (demographic==null) { //demo not found, add patient
 			demoRes = dd.addDemographic(title, lastName, firstName, address, city, province, postalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, patient_status, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, end_date, eff_date, ""/*pcn_indicator*/, hc_type, roster_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
 			demographicNo = demoRes.getId();
@@ -1546,8 +1551,10 @@ import oscar.util.StringUtils;
 				}
 			}
 		}
-		err_demo.addAll(demoRes.getWarningsCollection());
-		Util.cleanFile(xmlFile);
+		if(demoRes != null) {
+			err_demo.addAll(demoRes.getWarningsCollection());
+		}
+	//	Util.cleanFile(xmlFile);
 
 		return packMsgs(err_demo, err_data, err_summ, err_othe, err_note, warnings);
 	}
