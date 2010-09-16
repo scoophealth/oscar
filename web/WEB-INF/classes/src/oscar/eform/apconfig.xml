@@ -23,6 +23,11 @@
         <ap-sql>SELECT provider.ohip_no FROM provider WHERE provider.provider_no=${provider} </ap-sql>
         <ap-output>${ohip_no}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>current_user_id</ap-name>
+        <ap-sql>SELECT '${provider}' AS id</ap-sql>
+        <ap-output>${id}</ap-output>
+    </databaseap>
 
 <!-- Patient demographic information -->
     <databaseap>
@@ -44,6 +49,11 @@
         <ap-name>patient_nameF</ap-name>
         <ap-sql>SELECT first_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>patient_id</ap-name>
+        <ap-sql>SELECT '${demographic}' AS id</ap-sql>
+        <ap-output>${id}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>label</ap-name>
@@ -289,7 +299,7 @@
     </databaseap>
     <databaseap>
         <ap-name>appt_provider_id</ap-name>
-        <ap-sql>SELECT IF(${appt_provider} IS NULL, '', '${appt_provider}') AS id</ap-sql>
+        <ap-sql>SELECT '${appt_provider}' AS id</ap-sql>
         <ap-output>${id}</ap-output>
     </databaseap>
 
