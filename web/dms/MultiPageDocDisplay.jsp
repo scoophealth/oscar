@@ -49,7 +49,7 @@
                 numOfPageStr="unknown";
             else
                 numOfPageStr=(new Integer(numOfPage)).toString();
-            String url = request.getContextPath()+"/dms/ManageDocument.do?method=view&doc_no=" + docId;
+            String url = request.getContextPath()+"/dms/ManageDocument.do?method=viewDocPage&doc_no=" + docId+"&curPage=1";
             String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
 %>
 
@@ -87,11 +87,11 @@
 
 
                     <td colspan="8">
-                        <div style="text-align: right;"> <a id="firstP" href="javascript:void(0);" onclick="firstPage('<%=docId%>');"><<</a>
+                        <div style="text-align: right; font-weight: bold"> <a id="firstP" href="javascript:void(0);" onclick="firstPage('<%=docId%>');"><<</a>
                         <a id="prevP" href="javascript:void(0);" onclick="prevPage('<%=docId%>');"><</a>
                         <a id="nextP" href="javascript:void(0);" onclick="nextPage('<%=docId%>');">></a>
                         <a id="lastP" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">>></a></div>
-                        <a href="<%=url2%>" ><img alt="doc" src="<%=url%>" id="docImg_<%=docId%>" /></a>
+                        <a href="<%=url2%>" ><img alt="document" src="<%=url%>" id="docImg_<%=docId%>" /></a>
               
                         
                    </td>
