@@ -181,7 +181,7 @@
                                                 }
                                                 nextPage=function(docid){
                                                     curPage++;
-                                                    console.log(docid+'--'+curPage+'--'+totalPage);
+                                                    
                                                         showPageImg(docid,curPage);
                                                         if(curPage+1==totalPage){
                                                             hideNext();
