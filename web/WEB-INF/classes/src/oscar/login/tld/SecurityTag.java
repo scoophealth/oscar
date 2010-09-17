@@ -85,14 +85,14 @@ public class SecurityTag implements Tag {
         }
         else
         {
-	        if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1))){
+	        if (OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1),rights)){
 	            ret = EVAL_BODY_INCLUDE;
 	        }else{
 	            ret = SKIP_BODY;
 	        }
         }
 
-        if (reverse) {
+        if (reverse) {           
             if (ret == EVAL_BODY_INCLUDE)
                 ret = SKIP_BODY;
             else
