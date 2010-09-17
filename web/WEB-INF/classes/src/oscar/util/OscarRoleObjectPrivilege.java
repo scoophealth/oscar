@@ -136,8 +136,10 @@ public class OscarRoleObjectPrivilege {
             return(false);
         }
     }
-    
     public static boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {
+        return checkPrivilege( roleName,  propPrivilege,  roleInObj,rights);
+    }
+    public static boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj,String rightCustom) {
         boolean ret = false;
         Properties propRoleName = getVecRole(roleName);
         for (int i = 0; i < roleInObj.size(); i++) {
@@ -150,7 +152,7 @@ public class OscarRoleObjectPrivilege {
 
             boolean[] check = { false, false };
             for (int j = 0; j < vecPrivilName.size(); j++) {
-                check = checkRights((String) vecPrivilName.get(j), rights);
+                check = checkRights((String) vecPrivilName.get(j), rightCustom);
 
                 if (check[0]) { // get the rights, stop comparing
                     return true;
