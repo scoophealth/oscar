@@ -796,10 +796,10 @@ function wrapUp() {
                                                        if($('msgPrevious'))    $('msgPrevious').hide();
                                                     }
                                                     //oscarLog("current_numberofpages "+current_numberofpages);
-                                                    $('current_individual_pages').innerHTML="";
+                                                    if($('current_individual_pages'))   $('current_individual_pages').innerHTML="";
                                                    if(current_numberofpages>1){
                                                        for(var i=1;i<=current_numberofpages;i++){
-                                                        $('current_individual_pages').innerHTML+='<a style="text-decoration:none;" href="javascript:void(0);" onclick="navigatePage('+i+')> [ '+i+' ] </a>';
+                                                        if($('current_individual_pages'))  $('current_individual_pages').innerHTML+='<a style="text-decoration:none;" href="javascript:void(0);" onclick="navigatePage('+i+')> [ '+i+' ] </a>';
                                                     }
                                                    }
                                             }
