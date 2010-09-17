@@ -298,40 +298,39 @@
 	</div>
 </html:form>
 
-<nested:form action="/CaseManagementEntry"
-	style="display:inline; margin-top:0; margin-bottom:0;">
+<nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0;">
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
 	<html:hidden property="includeIssue" value="off" />
 	<%
 		String apptNo = request.getParameter("appointmentNo");
-			if (apptNo == null || apptNo.equals(""))
-			{
-				apptNo = "0";
-			}
+		if (apptNo == null || apptNo.equals(""))
+		{
+			apptNo = "0";
+		}
 
-			String apptDate = request.getParameter("appointmentDate");
-			if (apptDate == null || apptDate.equals(""))
-			{
-				apptDate = oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd");
-			}
+		String apptDate = request.getParameter("appointmentDate");
+		if (apptDate == null || apptDate.equals(""))
+		{
+			apptDate = oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd");
+		}
 
-			String startTime = request.getParameter("start_time");
-			if (startTime == null || startTime.equals(""))
-			{
-				startTime = "0:00";
-			}
+		String startTime = request.getParameter("start_time");
+		if (startTime == null || startTime.equals(""))
+		{
+			startTime = "0:00";
+		}
 
-			String apptProv = request.getParameter("apptProvider");
-			if (apptProv == null || apptProv.equals("") || apptProv.equals("null"))
-			{
-				apptProv = "none";
-			}
+		String apptProv = request.getParameter("apptProvider");
+		if (apptProv == null || apptProv.equals("") || apptProv.equals("null"))
+		{
+			apptProv = "none";
+		}
 
-			String provView = request.getParameter("providerview");
-			if (provView == null || provView.equals("") || provView.equals("null"))
-			{
-				provView = "1";
-			}
+		String provView = request.getParameter("providerview");
+		if (provView == null || provView.equals("") || provView.equals("null"))
+		{
+			provView = "1";
+		}
 	%>
 	<html:hidden property="appointmentNo" value="<%=apptNo%>" />
 	<html:hidden property="appointmentDate" value="<%=apptDate%>" />

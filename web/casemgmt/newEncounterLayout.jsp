@@ -50,7 +50,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
   	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
-        <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
+    <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
     <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print">
     <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
     <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>    
@@ -437,7 +437,6 @@ function doscroll(){
   </head> 
   <body id="body" style="margin:0px;" onload="init()" onunload="onClosing()">
     
-              
           <div id="header">
               <tiles:insert attribute="header" />
           </div>
@@ -453,8 +452,7 @@ function doscroll(){
           <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
               <tiles:insert attribute="rightNavigation" />
           </div>            
-          
-          
+                
           <!-- hovering divs -->
           <div id="showEditNote" class="showEdContent">
               <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">

@@ -34,6 +34,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -90,6 +91,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.eform.EFormUtil;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 import oscar.util.OscarRoleObjectPrivilege;
 
@@ -682,14 +684,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		logger.debug("FETCHED " + notes.size() + " NOTES");
 
-		// copy cpp notes
-		/*
-		 * HashMap issueMap = getCPPIssues(request, providerNo); Iterator<Map.Entry> iterator = issueMap.entrySet().iterator(); while( iterator.hasNext() ) { Map.Entry mapEntry = iterator.next(); String key = (String)mapEntry.getKey(); Issue value =
-		 * (Issue)mapEntry.getValue(); List<CaseManagementNote>cppNotes = caseManagementMgr.getCPP(demoNo,value.getId(),userProp); String cppAdd = request.getContextPath() + "/CaseManagementEntry.do?hc=996633&method=issueNoteSave&providerNo=" + providerNo
-		 * + "&demographicNo=" + demoNo + "&issue_id=" + value.getId() + "&noteId="; request.setAttribute(key,cppNotes); request.setAttribute(key+"add",cppAdd); }
-		 */
-		// apply role based access
-		// if(request.getSession().getAttribute("archiveView")!="true")
 		startTime = System.currentTimeMillis();
 		String resetFilter = request.getParameter("resetFilter");
 		logger.debug("RESET FILTER " + resetFilter);
@@ -731,6 +725,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		this.caseManagementMgr.getEditors(notes);
 		logger.debug("Pop notes with editors " + (System.currentTimeMillis() - startTime));
 
+		// add eforms to notes list as single line items
+		String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+		ArrayList<Hashtable<String,Object>> eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
+		for (Hashtable<String,Object> eform : eForms)
+		{
+logger.error("--- UNFINISHED EFORM additions required here --- : "+eform);
+		}
+		
 		// add local and remote notes to the list
 		ArrayList<NoteDisplay> notesToDisplay = new ArrayList<NoteDisplay>();
 		for (CaseManagementNote noteTemp : notes)

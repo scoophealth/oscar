@@ -133,12 +133,12 @@ public class EFormUtil {
 		return(results);	
 	}
 	
-	public static ArrayList listEForms(String sortBy, String deleted, String userRoles) {
-		ArrayList results = new ArrayList();
-		ArrayList eForms = listEForms(sortBy,deleted);		
+	public static ArrayList<Hashtable<String,Object>> listEForms(String sortBy, String deleted, String userRoles) {
+		ArrayList<Hashtable<String,Object>> results = new ArrayList<Hashtable<String,Object>>();
+		ArrayList<Hashtable<String, Object>> eForms = listEForms(sortBy,deleted);		
 		if (eForms.size() > 0) {
 		      for (int i=0; i<eForms.size(); i++) {	
-		    	  Hashtable curForm = (Hashtable) eForms.get(i);
+		    	  Hashtable<String, Object> curForm = eForms.get(i);
 		    	  //filter eform by role type
 		    	  if(curForm.get("roleType")!=null && !curForm.get("roleType").equals("")) {
 					//ojectName: "_admin,_admin.eform"
@@ -187,7 +187,7 @@ public class EFormUtil {
 		return fileList;
 	}
 
-	public static ArrayList listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
+	public static ArrayList<Hashtable<String, Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
 		//sends back a list of forms added to the patient
 		String sql = "";
 		if (deleted.equals("deleted")) {
@@ -198,7 +198,7 @@ public class EFormUtil {
 			sql = "SELECT * FROM eform_data WHERE (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
 		}
 		ResultSet rs = getSQL(sql);
-		ArrayList results = new ArrayList();
+		ArrayList<Hashtable<String,Object>> results = new ArrayList<Hashtable<String, Object>>();
 		try {
 			while (rs.next()) {
 				//filter eform by role type

@@ -74,12 +74,12 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 
         StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");        
         String js = ""; 
-        ArrayList eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT, roleName);
+        ArrayList<Hashtable<String,Object>> eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT, roleName);
         String key;
         int hash;
         String BGCOLOUR = request.getParameter("hC");
         for( int i = 0; i < eForms.size(); ++i ) {
-            Hashtable curform = (Hashtable) eForms.get(i);
+            Hashtable<String,Object> curform = eForms.get(i);
             winName = (String)curform.get("formName") + bean.demographicNo;            
             hash = Math.abs(winName.hashCode());
             url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','FormA"+i+"');";
@@ -92,8 +92,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         
         eForms.clear();
         eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, bean.demographicNo, roleName);
-        for( int i=0; i<eForms.size(); i++) {
-            Hashtable curform = (Hashtable) eForms.get(i);
+        for(Hashtable<String,Object> curform : eForms) {
             NavBarDisplayDAO.Item item = Dao.Item();
             winName = (String)curform.get("formName") + bean.demographicNo;            
             hash = Math.abs(winName.hashCode());            

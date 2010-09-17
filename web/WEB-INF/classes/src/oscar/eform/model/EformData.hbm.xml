@@ -24,14 +24,14 @@
 		<id name="fdid" unsaved-value="0">
 			<generator class="native" />
 		</id>
-                <property name="fid" />
-                <property name="form_name" />
-                <property name="subject" />
-                <property name="demographic_no" />
-                <property name="status" />
-                <property name="form_date" />
-                <property name="form_time" />
-                <property name="form_provider" />
-                <property name="form_data" />
+        <property name="fid" />
+        <property name="form_name" />
+        <property name="subject" />
+        <property name="demographic_no" />
+        <property name="status" />
+        <property name="form_date" />
+        <property name="form_time" />
+        <property name="form_provider" />
+        <property name="form_data" />
     </class>
 </hibernate-mapping>

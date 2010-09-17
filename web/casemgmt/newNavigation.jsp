@@ -28,19 +28,19 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 
 
-<script type="text/javascript">            
-       
+<script type="text/javascript">
     //This object stores the key -> cmd value passed to action class and the id of the created div
     // and the value -> URL of the action class
-    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-        
+    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>        
 </script>
+
 <!--dummmy div to force browser to allocate space -->
 <div id="leftColLoader" class="leftBox" style="width: 100%">
-<h3 style="width: 100%; background-color: #CCCCFF;"><a href="#"
-	onclick="return false;"><bean:message key="oscarEncounter.LeftNavBar.msgLoading"/></a></h3>
+	<h3 style="width: 100%; background-color: #CCCCFF;">
+		<a href="#" onclick="return false;"><bean:message key="oscarEncounter.LeftNavBar.msgLoading"/></a>
+	</h3>
 </div>
 
-<form style="display: none;" name="dummyForm" action=""><input
-	type="hidden" id="reloadDiv" name="reloadDiv" value="none"
-	onchange="updateDiv();"></form>
+<form style="display: none;" name="dummyForm" action="">
+	<input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
+</form>
