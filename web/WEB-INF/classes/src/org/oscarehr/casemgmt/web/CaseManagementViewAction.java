@@ -144,8 +144,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 			CaseManagementCPP cpp = caseForm.getCpp();
 			cpp.setUpdate_date(new Date());
-			
-			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 			caseManagementMgr.saveCPP(cpp, loggedInInfo.loggedInProvider.getProviderNo());
 
 			// caseManagementMgr.saveEctWin(ectWin);
@@ -161,8 +161,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		CaseManagementCPP cpp = caseForm.getCpp();
 		cpp.setUpdate_date(new Date());
 		cpp.setDemographic_no(caseForm.getDemographicNo());
-		
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		caseManagementMgr.saveCPP(cpp, loggedInInfo.loggedInProvider.getProviderNo());
 		addMessage(request, "cpp.saved");
 
@@ -198,7 +198,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		HttpSession se = request.getSession();
 		if (se.getAttribute("userrole") == null) return mapping.findForward("expired");
 
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		String demoNo = getDemographicNo(request);
 
@@ -725,20 +725,20 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		this.caseManagementMgr.getEditors(notes);
 		logger.debug("Pop notes with editors " + (System.currentTimeMillis() - startTime));
 
-		// add eforms to notes list as single line items
-		String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-		ArrayList<Hashtable<String,Object>> eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
-		for (Hashtable<String,Object> eform : eForms)
-		{
-logger.error("--- UNFINISHED EFORM additions required here --- : "+eform);
-		}
-		
 		// add local and remote notes to the list
 		ArrayList<NoteDisplay> notesToDisplay = new ArrayList<NoteDisplay>();
-		for (CaseManagementNote noteTemp : notes)
+		for (CaseManagementNote noteTemp : notes) {
 			notesToDisplay.add(new NoteDisplayLocal(noteTemp));
+		}
 		addRemoteNotes(notesToDisplay, Integer.parseInt(demoNo), null, programId);
 		addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
+
+		// add eforms to notes list as single line items
+		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+		ArrayList<Hashtable<String, Object>> eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
+		for (Hashtable<String, Object> eform : eForms) {
+			notesToDisplay.add(new NoteDisplayNonNote(eform));
+		}
 
 		// sort the notes
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
@@ -1414,33 +1414,32 @@ logger.error("--- UNFINISHED EFORM additions required here --- : "+eform);
 		String bgColour = "color:#000000;background-color:#CCCCFF;";
 
 		if (noteDisplay.isCpp()) {
-			bgColour = "color:#FFFFFF;background-color:#"+getCppColour(noteDisplay)+";";
-		}
-
-		// set document note to blue but document annotation remains bkground colour.
-		if (noteDisplay.isDocument()) {
+			bgColour = "color:#FFFFFF;background-color:#" + getCppColour(noteDisplay) + ";";
+		} else if (noteDisplay.isDocument()) {
 			bgColour = documentColour;
 		} else if (noteDisplay.isRxAnnotation()) {
 			bgColour = rxColour;
+		} else if (noteDisplay.isEformData()) {
+			bgColour = eFormsColour;
 		}
 
 		return (bgColour);
 	}
 
 	private static String getCppColour(NoteDisplay noteDisplay) {
-		CaseManagementIssueNotesDao caseManagementIssueNotesDao=(CaseManagementIssueNotesDao)SpringUtils.getBean("caseManagementIssueNotesDao");
+		CaseManagementIssueNotesDao caseManagementIssueNotesDao = (CaseManagementIssueNotesDao) SpringUtils.getBean("caseManagementIssueNotesDao");
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueNotesDao.getNoteIssues(noteDisplay.getNoteId());
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
-			if ("OMeds".equals(caseManagementIssue.getIssue().getCode())) return(Colour.omed);
-			else if ("FamHistory".equals(caseManagementIssue.getIssue().getCode())) return(Colour.familyHistory);
-			else if ("RiskFactors".equals(caseManagementIssue.getIssue().getCode())) return(Colour.riskFactors);
-			else if ("SocHistory".equals(caseManagementIssue.getIssue().getCode())) return(Colour.socialHistory);
-			else if ("MedHistory".equals(caseManagementIssue.getIssue().getCode())) return(Colour.medicalHistory);
-			else if ("Concerns".equals(caseManagementIssue.getIssue().getCode())) return(Colour.ongoingConcerns);
-			else if ("Reminders".equals(caseManagementIssue.getIssue().getCode())) return(Colour.reminders);
+			if ("OMeds".equals(caseManagementIssue.getIssue().getCode())) return (Colour.omed);
+			else if ("FamHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.familyHistory);
+			else if ("RiskFactors".equals(caseManagementIssue.getIssue().getCode())) return (Colour.riskFactors);
+			else if ("SocHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.socialHistory);
+			else if ("MedHistory".equals(caseManagementIssue.getIssue().getCode())) return (Colour.medicalHistory);
+			else if ("Concerns".equals(caseManagementIssue.getIssue().getCode())) return (Colour.ongoingConcerns);
+			else if ("Reminders".equals(caseManagementIssue.getIssue().getCode())) return (Colour.reminders);
 		}
 
-		logger.error("Missing cpp colour : noteId="+noteDisplay.getNoteId());
+		logger.error("Missing cpp colour : noteId=" + noteDisplay.getNoteId());
 		return (null);
 	}
 }

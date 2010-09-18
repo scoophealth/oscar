@@ -56,6 +56,8 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
+try
+{
 	ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
     CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
       
@@ -518,7 +520,7 @@
 	%>
 		<!-- 
 		reverted until I can find out why there's a glitch in OSX - safari chrome
-		<div id="nc<%=idx+1%>" class="note<%=note.isDocument()||note.isCpp()?"":" noteRounded"%>">
+		<div id="nc<%=idx+1%>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()?"":" noteRounded"%>">
 		-->
 		<div id="nc<%=idx+1%>" class="note noteRounded">
 			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
@@ -559,7 +561,7 @@
 						String rev = note.getRevision();
 						if (note.getRemoteFacilityId()==null) // always display full note for remote notes
 						{
-							if (note.isDocument() || note.isCpp())
+							if (note.isDocument() || note.isCpp() || note.isEformData())
 							{
 								// blank if so it never displays min/max icon for documents
 							}
@@ -592,7 +594,7 @@
 						<%
 						}
 			
-						if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
+						if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp() && !note.isEformData()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
 						{
 					 	%> 
 						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> 
@@ -603,7 +605,7 @@
 					 	{
 					 		// only allow editing for local notes
 					 		// also disallow editing of cpp's inline (can be edited in the cpp area) 
-					 		if (note.getRemoteFacilityId()==null && !note.isCpp())
+					 		if (note.getRemoteFacilityId()==null && !note.isCpp() && !note.isEformData())
 							{
 					 			if(!note.isReadOnly()) 
 					 			{
@@ -705,6 +707,8 @@
 		
 							CaseManagementNoteLink noteLink = note.getNoteLink();
 							if (noteLink!=null) url += noteLink.getTableId();
+							else url+=note.getNoteId();
+							
 							url += "'); return false;";
 							%>
 								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
@@ -712,7 +716,7 @@
 						}	
 						
 						%>
-			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp())?(bgColour+";color:white;font-size:9px"):""%>">
+			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData())?(bgColour+";color:white;font-size:9px"):""%>">
 		  						<%=noteStr%>
 		  						<%
 		  							if (note.isCpp())
@@ -753,7 +757,7 @@
 						<%
 				 		}
 				
-						if (!note.isDocument() && !note.isCpp())
+						if (!note.isDocument() && !note.isCpp() && !note.isEformData())
 						{
 						%>
 							<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">
@@ -1020,6 +1024,14 @@
     reason = "<%=insertReason(request, bean)%>";    //function defined bottom of file
    </script>
 
+<%
+}
+catch (Exception e)
+{
+	MiscUtils.getLogger().error("Unexpected error.", e);
+}
+%>
+
 <%!/*
 																						 *Insert encounter reason for new note
 																						 */
@@ -1080,4 +1092,5 @@
 		}
 
 		return isLarge;
-	}%>
+	}
+%>

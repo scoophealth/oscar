@@ -219,6 +219,7 @@ public class EFormUtil {
 				curht.put("formDate", rsGetString(rs, "form_date"));
 				curht.put("formDateAsDate", rs.getDate("form_date"));
 				curht.put("roleType",rsGetString(rs,"roleType"));
+				curht.put("providerNo",rsGetString(rs,"form_provider"));
 				results.add(curht);
 			}
 			rs.close();
