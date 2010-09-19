@@ -876,7 +876,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                 cachedEformData.setFormName(eformData.getFormName());
                 cachedEformData.setFormData(eformData.getFormData());
                 cachedEformData.setSubject(eformData.getSubject());
-                cachedEformData.setStatus(eformData.isStatus());
+                cachedEformData.setStatus(eformData.isCurrent());
                 cachedEformData.setFormProvider(eformData.getProviderNo());
 
                 cachedEformDatas.add(cachedEformData);

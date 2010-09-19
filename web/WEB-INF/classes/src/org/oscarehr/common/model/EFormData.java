@@ -56,7 +56,8 @@ public class EFormData extends AbstractModel<Integer> implements Serializable {
 	@Column(name = "demographic_no")
 	private Integer demographicId;
 
-	private boolean status;
+	@Column(name = "status")
+	private boolean current;
 
 	@Column(name = "form_date")
 	@Temporal(TemporalType.DATE)
@@ -114,13 +115,13 @@ public class EFormData extends AbstractModel<Integer> implements Serializable {
 		this.demographicId = demographicId;
 	}
 
-	public boolean isStatus() {
-		return status;
-	}
+	public boolean isCurrent() {
+    	return current;
+    }
 
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
+	public void setCurrent(boolean current) {
+    	this.current = current;
+    }
 
 	public Date getFormDate() {
 		return formDate;
