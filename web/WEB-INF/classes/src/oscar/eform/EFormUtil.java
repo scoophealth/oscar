@@ -256,32 +256,6 @@ public class EFormUtil {
 		return(curht);
 	}
 
-	public static Hashtable loadPatientEForm(String fdid) {
-		//shows an eform that was added to the patient previously
-		String sql = "SELECT * FROM eform_data where fdid=" + fdid + " LIMIT 1";
-		ResultSet rs = getSQL(sql);
-		Hashtable curht = new Hashtable();
-		try {
-			rs.next();
-			curht.put("fid", rsGetString(rs, "fid"));
-			curht.put("demographic_no", rsGetString(rs, "demographic_no"));
-			curht.put("provider_no", rsGetString(rs, "form_provider"));
-			curht.put("formName", oscar.Misc.getString(rs,"form_name"));
-			curht.put("formSubject", oscar.Misc.getString(rs,"subject"));
-			//curht.put("formTime", rsGetString(rs, "form_time"));
-			//curht.put("formDate", rsGetString(rs, "form_date"));
-			curht.put("formHtml", rsGetString(rs, "form_data"));
-			curht.put("roleType",rsGetString(rs,"roleType"));
-			rs.close();
-		} catch (SQLException sqe) {
-			curht.put("formName", "");
-			curht.put("formSubject", "");
-			curht.put("formHtml", "No Such Form in Database");
-			MiscUtils.getLogger().error("Error", sqe);
-		}
-		return(curht);
-	}
-
 	public static void updateEForm(EFormBase updatedForm) {
 		//Updates the form - used by editForm
 		String formHtml = "\n" + org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormHtml());
