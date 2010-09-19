@@ -90,12 +90,14 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
+import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
@@ -114,7 +116,6 @@ import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 import oscar.appt.AppointmentDao;
 import oscar.eform.dao.EformDao;
-import oscar.eform.model.EformData;
 import oscar.eform.model.EformValue;
 import oscar.facility.IntegratorControlDao;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
@@ -160,6 +161,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
     private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
     private EformDao eformDao = (EformDao) SpringUtils.getBean("eformDao");
+    private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
     private GroupNoteDao groupNoteDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao");
     	
 	private static TimerTask timerTask = null;
@@ -855,27 +857,27 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
         private void pushEforms(Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
             logger.debug("pushing eforms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-            List<EformData> eformDatas = eformDao.getEformDatabyDemoNo(demographicId);
+            List<EFormData> eformDatas = eFormDataDao.findByDemographicId(demographicId);
             if (eformDatas.size()==0) return;
 
             ArrayList<CachedEformData> cachedEformDatas = new ArrayList<CachedEformData>();
-            for (EformData eformData : eformDatas) {
+            for (EFormData eformData : eformDatas) {
                 MiscUtils.checkShutdownSignaled();
 
                 CachedEformData cachedEformData = new CachedEformData();
                 FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
-                facilityIdIntegerCompositePk.setCaisiItemId(eformData.getFdid());
+                facilityIdIntegerCompositePk.setCaisiItemId(eformData.getId());
                 cachedEformData.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
                 cachedEformData.setCaisiDemographicId(demographicId);
-                cachedEformData.setFormDate(eformData.getForm_date());
-                cachedEformData.setFormTime(eformData.getForm_time());
-                cachedEformData.setFormId(eformData.getFid());
-                cachedEformData.setFormName(eformData.getForm_name());
-                cachedEformData.setFormData(eformData.getForm_data());
+                cachedEformData.setFormDate(eformData.getFormDate());
+                cachedEformData.setFormTime(eformData.getFormTime());
+                cachedEformData.setFormId(eformData.getFormId());
+                cachedEformData.setFormName(eformData.getFormName());
+                cachedEformData.setFormData(eformData.getFormData());
                 cachedEformData.setSubject(eformData.getSubject());
-                cachedEformData.setStatus(eformData.getStatus());
-                cachedEformData.setFormProvider(eformData.getForm_provider());
+                cachedEformData.setStatus(eformData.isStatus());
+                cachedEformData.setFormProvider(eformData.getProviderNo());
 
                 cachedEformDatas.add(cachedEformData);
             }
