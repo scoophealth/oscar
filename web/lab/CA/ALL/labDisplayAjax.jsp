@@ -191,11 +191,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             var ret = true;
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
 
-            if( commentVal == null )
+            if( commentVal == null ||commentVal.length==0)
                 ret = false;
             else{
                 document.forms['acknowledgeForm_'+labid].comment.value = commentVal;
             }
+            if(ret)
+                handleLab('acknowledgeForm_'+labid,labid,'ackLab');
 
             return ret;
         }
@@ -242,16 +244,28 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             }
                                                                             
                                                                         }else{
-                                                                            alert("Please relate lab to a demographic.");
-                                                                            //pop up relate demo window
-                                                                            var pn=$("demoName"+labid).value;
-                                                                            if(pn) popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID='+labid+'&name='+pn, 'searchPatientWindow');
+                                                                            if(action=='ackLab'){
+                                                                                if(confirmAckUnmatched())
+                                                                                    updateStatus(formid);
+                                                                                else{
+                                                                                    var pn=$("demoName"+labid).value;
+                                                                                    if(pn) popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID='+labid+'&name='+pn, 'searchPatientWindow');
+                                                                                }
+                                                                            }else{
+                                                                                alert("Please relate lab to a demographic.");
+                                                                                //pop up relate demo window
+                                                                                var pn=$("demoName"+labid).value;
+                                                                                if(pn) popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=HL7&segmentID='+labid+'&name='+pn, 'searchPatientWindow');
+                                                                            }
                                                                         }
                                                                     }
                                                             }});
         }
         confirmAck=function() {
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        }
+        confirmAckUnmatched=function(){
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
         }
         updateStatus=function(formid){
             var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
@@ -280,7 +294,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <input type="hidden" name="providerNo" value="<%= providerNo %>" />
             <input type="hidden" name="ajax" value="yes" />
         </form>
-        <form name="acknowledgeForm" id="acknowledgeForm_<%=segmentID%>" onsubmit="handleLab('acknowledgeForm_<%=segmentID%>','<%=segmentID%>','ackLab');" method="post" action="javascript:void(0);">
+        <form name="acknowledgeForm" id="acknowledgeForm_<%=segmentID%>" onsubmit="javascript:void(0);" method="post" action="javascript:void(0);">
             
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -297,7 +311,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="ajaxcall" value="yes"/>
                                     <input type="hidden" id="demoName<%=segmentID%>" value="<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>"/>
                                     <% if ( !ackFlag ) { %>
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm_<%=segmentID%>','<%=segmentID%>','ackLab');">
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('<%=segmentID%>');">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProviderAltView.jsp?doc_no=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>', 'providerselect')">
@@ -756,8 +770,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td align="left" width="50%">
                                     <% if ( !ackFlag ) { %>
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
-                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="getComment()">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm_<%=segmentID%>','<%=segmentID%>','ackLab');">
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="getComment('<%=segmentID%>')">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../oscarMDS/SelectProviderAltView.jsp?doc_no=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>', 'providerselect')">
 
