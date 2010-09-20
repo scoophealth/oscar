@@ -68,7 +68,7 @@ public final class LoginAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String ip = request.getRemoteAddr();
-
+        Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
         String nextPage=request.getParameter("nextPage");
         _logger.debug("nextPage: "+nextPage);
         if (nextPage!=null) {
@@ -150,7 +150,8 @@ public final class LoginAction extends DispatchAction {
             session.setAttribute("userrole", strAuth[4]);
             session.setAttribute("oscar_context_path", request.getContextPath());
             session.setAttribute("expired_days", strAuth[5]);
-            
+            // If a new session has been created, we must set the mobile attribute again
+            if (isMobileOptimized) session.setAttribute("mobileOptimized","true");
             // initiate security manager
             String default_pmm = null;
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
