@@ -86,12 +86,7 @@
             
     List medsList = (List) h.get("medsList");
     List allergyList = (List) h.get("allergyList");
-    List divList = (List) h.get("divList");
-    
-    String cppPref = GeneralProperties.getInstance().getUserProperty("CPP_PREF",provNo,null);
-    if (cppPref != null){
-       divList = CPPData.getListFromString(cppPref);    
-    }
+    List divList = (List) h.get("divList");    
 %>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
