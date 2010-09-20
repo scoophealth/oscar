@@ -39,6 +39,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.velocity.runtime.parser.node.MathUtils;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -1026,7 +1028,7 @@ public class EFormUtil {
         String[] sentList = sentListTxt.split(",");
         for (int i=0; i<sentList.length; i++) {
             sentList[i] = sentList[i].trim();
-            if (!numeric(sentList[i])) sentList[i] = "";
+            if (!NumberUtils.isNumber(sentList[i])) sentList[i] = "";
         }
         return sentList;
     }
@@ -1062,14 +1064,4 @@ public class EFormUtil {
 		return (s==null || s.trim().equals(""));
 	}
 
-    private static boolean numeric(String s) {
-        if (blank(s)) return false;
-
-        for (int i=0; i<s.length(); i++) {
-            if (!"-0123456789".contains(""+s.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
 }
