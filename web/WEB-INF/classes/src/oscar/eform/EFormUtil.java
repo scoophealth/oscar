@@ -942,7 +942,7 @@ public class EFormUtil {
         ArrayList<String> infos = getWithin(tag, template);
         if (infos.isEmpty()) return deflt;
 
-        String info = removeBlanks(infos.get(0));
+        String info = infos.get(0).replaceAll("\\s", "");
         return blank(info) ? deflt : info;
     }
 
@@ -1046,19 +1046,6 @@ public class EFormUtil {
         }
         return sentWho;
     }
-
-	private static String removeBlanks(String text) {
-		if (blank(text)) return "";
-
-		text = text.trim();
-		while (text.startsWith("\n") || text.startsWith("\r") || text.startsWith("\t")) { //remove all beginning blanks
-			text = text.substring(1).trim();
-		}
-		while (text.endsWith("\n") || text.endsWith("\r") || text.endsWith("\t")) { //remove all trailing blanks
-			text = text.substring(0, text.length()-1).trim();
-		}
-		return text;
-	}
 
 	private static boolean blank(String s) {
 		return (s==null || s.trim().equals(""));
