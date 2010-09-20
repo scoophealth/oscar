@@ -210,11 +210,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             var ret = true;
             var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
     
-            if( commentVal == null )
+            if( commentVal == null || commentVal.length==0)
                 ret = false;
             else 
-                document.acknowledgeForm.comment.value = commentVal;    
-       
+                document.acknowledgeForm.comment.value = commentVal;
+           if(ret) handleLab('acknowledgeForm','<%=segmentID%>','ackLab');
             return ret;
         }
         
@@ -238,9 +238,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <% } %>
 	}
 
-        function confirmAck() {
-            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
-        }
 
         function handleLab(formid,labid,action){
             var url='../../../dms/inboxManage.do';
@@ -267,14 +264,21 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             }
 
                                                                         }else{
-                                                                            alert("Please relate lab to a demographic.");
-                                                                            matchMe();
+                                                                            if(action=='ackLab'){
+                                                                                if(confirmAckUnmatched())
+                                                                                    updateStatus(formid,labid);                                                                                
+                                                                                else
+                                                                                    matchMe();
+                                                                            }
                                                                         }
                                                                     }
                                                             }});
         }
         function  confirmAck() {
             return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledge"/>');
+        }
+        function confirmAckUnmatched(){
+            return confirm('<bean:message key="oscarMDS.index.msgConfirmAcknowledgeUnmatched"/>');
         }
         function updateStatus(formid,labid){
             var url='<%=request.getContextPath()%>'+"/oscarMDS/UpdateStatus.do";
@@ -302,7 +306,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
             <input type="hidden" name="providerNo" value="<%= providerNo %>" />
         </form>    
-        <form name="acknowledgeForm" id="acknowledgeForm" method="post" onsubmit="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" method="post" action="javascript:void(0);" >
+        <form name="acknowledgeForm" id="acknowledgeForm" method="post" onsubmit="javascript:void(0);" method="post" action="javascript:void(0);" >
             
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -317,7 +321,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
                                     <% if ( !ackFlag ) { %>
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
@@ -796,7 +800,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td align="left" width="50%">
                                     <% if ( !ackFlag ) { %>
-                                    <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" >
+                                    <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge" />" onclick="handleLab('acknowledgeForm','<%=segmentID%>','ackLab');" >
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment();">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
