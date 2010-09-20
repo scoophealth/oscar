@@ -30,6 +30,7 @@
 package oscar.eform.actions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +41,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.model.EFormData;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormUtil;
 import oscar.eform.data.EForm;
@@ -96,9 +100,13 @@ public class AddEFormAction extends Action {
              }
          }
          if (!sameform) {
-             String fdid = EFormUtil.addEForm(curForm); //save eform with data
+        	 EFormDataDao eFormDataDao=(EFormDataDao)SpringUtils.getBean("EFormDataDao");
+        	 EFormData eFormData=toEFormData(curForm);
+        	 eFormDataDao.persist(eFormData);
+             String fdid = eFormData.getId().toString();
+             
              EFormUtil.addEFormValues(paramNames, paramValues, fdid, fid, demographic_no); //adds parsed values
-
+             
              //write template message to echart
              String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
              String path = request.getRequestURL().toString();
@@ -113,5 +121,22 @@ public class AddEFormAction extends Action {
          }
 
          return(mapping.findForward("close"));
+    }
+
+	private EFormData toEFormData(EForm eForm) {
+		EFormData eFormData=new EFormData();
+		eFormData.setFormId(Integer.parseInt(eForm.getFid()));
+		eFormData.setFormName(eForm.getFormName());
+		eFormData.setSubject(eForm.getFormSubject());
+		eFormData.setDemographicId(Integer.parseInt(eForm.getDemographicNo()));
+		eFormData.setCurrent(true);
+		eFormData.setFormDate(new Date());
+		eFormData.setFormTime(eFormData.getFormDate());
+		eFormData.setProviderNo(eForm.getProviderNo());
+		eFormData.setFormData(eForm.getFormHtml());
+		eFormData.setPatientIndependent(eForm.getPatientIndependent());
+		eFormData.setRoleType(eForm.getRoleType());
+		
+	    return(eFormData);
     }
 }
