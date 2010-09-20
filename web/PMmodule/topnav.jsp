@@ -87,9 +87,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
 				<oscar:oscarPropertiesCheck property="NOT_FOR_CAISI" value="no" defaultVal="true">
                                 <li>
-					<!--a HREF="#" ONCLICK ="popupPage2('<html:rewrite page="/oscarMDS/Index.jsp"/>?providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
-                                            <span id="oscar_new_lab"><bean:message key="global.lab"/></span>
-					</a-->
                                         <a HREF="#" ONCLICK ="popupInboxManager('<html:rewrite page="/dms/inboxManage.do?method=prepareForIndexPage"/>?providerNo=<%=curUser_no%>', 'Lab');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>">
                                             <span id="oscar_new_lab"><bean:message key="global.lab"/></span>
 					</a>

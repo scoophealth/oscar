@@ -55,6 +55,9 @@
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
+			
+			<!-- we will allow this exclusion because this is not our code and is just included code from another library, this will allow upgrades to be  easier if  we don't change other people's library code. -->
+			<exclude name="org/apache/jsp/jspspellcheck/**" />
 		</javac>
 	</target>
 
