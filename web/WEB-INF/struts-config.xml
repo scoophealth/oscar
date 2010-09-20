@@ -940,9 +940,6 @@
         <action input="/search/DemographicSearch.jsp" name="EctDemographicSearchForm" path="/oscarEncounter/SearchDemographic" scope="request" type="oscar.oscarEncounter.search.pageUtil.EctDemographicSearchAction">
             <forward name="success" path="/oscarEncounter/search/DemographicSearch.jsp" />
         </action>
-        <action input="/search/DemographicSearch.jsp" name="ProceedForm" path="/Proceed" scope="request" type="oscar.oscarEncounter.search.pageUtil.EctProceedAction">
-            <forward name="success" path="/search/PatientOptions.jsp" />
-        </action>
         <action input="/search/PatientOptions.jsp" name="PatientOptionsForm" path="/PatientOption" scope="request" type="oscar.oscarEncounter.search.pageUtil.EctPatientOptionsAction">
             <forward name="consult" path="/oscarConsultationRequest/ConsultationFormRequest.jsp" />
             <forward name="viewAllConsult" path="/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp" />
