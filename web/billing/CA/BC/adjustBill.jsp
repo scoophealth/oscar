@@ -12,7 +12,7 @@
 
 
 
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <%
   if(session.getValue("user") == null)
