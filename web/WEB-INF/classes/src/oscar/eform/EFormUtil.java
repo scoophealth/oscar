@@ -377,27 +377,6 @@ public class EFormUtil {
 		return(values);
 	}
 
-	public static String addEForm(EForm eForm) {
-		//Adds an eform to the patient
-		//open own connection - must be same connection for last_insert_id
-		String html = charEscape(eForm.getFormHtml(), '\'');
-		String sql = "INSERT INTO eform_data (fid, form_name, subject, demographic_no, status, form_date, form_time, form_provider, form_data, patient_independent, roleType)" +
-				"VALUES ('" + eForm.getFid() + "', '" + eForm.getFormName() + "', '" + StringEscapeUtils.escapeSql(eForm.getFormSubject()) +
-				"', '" + eForm.getDemographicNo() + "', 1, '" + eForm.getFormDate() + "', '" + eForm.getFormTime() + "', '" + eForm.getProviderNo() +
-				"', '" + html + "', " + eForm.getPatientIndependent() + ",'" + eForm.getRoleType() + "')";
-		try {
-			DBHandler db = new DBHandler();
-			db.RunSQL(sql);
-			sql = "SELECT LAST_INSERT_ID()";
-			ResultSet rs = db.GetSQL(sql);
-			rs.next();
-			String lastID = oscar.Misc.getString(rs,"LAST_INSERT_ID()");
-			rs.close();
-			return(lastID);
-		} catch (SQLException sqe) { MiscUtils.getLogger().error("Error", sqe); }
-		return "";
-	}
-
 	//used by addEForm for escaping characters
 	public static String charEscape(String S, char a) {
 		if (null == S) {
