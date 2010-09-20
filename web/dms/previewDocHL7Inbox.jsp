@@ -222,7 +222,7 @@ function checkAll(formId){
             %>
 				<tr>
 					
-					<td><a> <!--href="javascript:reportWindow('../dms/DocumentDisplay3.jsp?segmentID=<%=docId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%>&demoName=<%=demoName%> ',660,1020)"-->
+					<td><a> 
                                                <%=curdoc.getDescription()%></a></td>
 					<td><%=contentType%></td>
 					<td><%=curdoc.getType()%></td>
