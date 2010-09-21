@@ -518,11 +518,7 @@ try
 
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
 	%>
-		<!-- 
-		reverted until I can find out why there's a glitch in OSX - safari chrome
 		<div id="nc<%=idx+1%>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()?"":" noteRounded"%>">
-		-->
-		<div id="nc<%=idx+1%>" class="note noteRounded">
 			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
 			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> 
 			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">
