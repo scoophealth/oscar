@@ -740,6 +740,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			notesToDisplay.add(new NoteDisplayNonNote(eform));
 		}
 
+		// add forms to notes list as single line items
+		// HERE
+		
 		// sort the notes
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");

@@ -25,6 +25,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -39,6 +40,16 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "eform_data")
 public class EFormData extends AbstractModel<Integer> implements Serializable {
+
+	/**
+	 * This comparator sorts EFormData ascending based on the formDate
+	 */
+	public static final Comparator<EFormData> FORM_DATE_COMPARATOR=new Comparator<EFormData>()
+	{
+		public int compare(EFormData o1, EFormData o2) {
+			return(o1.formDate.compareTo(o2.formDate));
+		}	
+	};
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,11 +72,11 @@ public class EFormData extends AbstractModel<Integer> implements Serializable {
 
 	@Column(name = "form_date")
 	@Temporal(TemporalType.DATE)
-	private Date formDate;
+	private Date formDate=new Date();
 
 	@Column(name = "form_time")
 	@Temporal(TemporalType.TIME)
-	private Date formTime;
+	private Date formTime=formDate;
 
 	@Column(name = "form_provider")
 	private String providerNo;

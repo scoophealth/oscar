@@ -27,16 +27,21 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.model.EFormData;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormUtil;
 import oscar.util.DateUtils;
@@ -46,7 +51,7 @@ import oscar.util.StringUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayEFormAction extends EctDisplayAction {
-    private static Log log = LogFactory.getLog(EctDisplayEFormAction.class);
+    private static Logger logger = MiscUtils.getLogger();
     //private final static String BGCOLOUR = "11CC00";
     private String cmd = "eforms";
     
@@ -83,7 +88,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             winName = (String)curform.get("formName") + bean.demographicNo;            
             hash = Math.abs(winName.hashCode());
             url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','FormA"+i+"');";
-            log.debug("SETTING EFORM URL " + url);
+            logger.debug("SETTING EFORM URL " + url);
             key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
             key = StringEscapeUtils.escapeJavaScript(key);
             js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
@@ -91,30 +96,36 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         }
         
         eForms.clear();
-        eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, bean.demographicNo, roleName);
-        for(Hashtable<String,Object> curform : eForms) {
+
+		EFormDataDao eFormDataDao=(EFormDataDao)SpringUtils.getBean("EFormDataDao");
+		List<EFormData> eFormDatas=eFormDataDao.findByDemographicIdCurrentPatientIndependent(new Integer(bean.demographicNo), true, false);
+		filterRoles(eFormDatas, roleName);
+		Collections.sort(eFormDatas, EFormData.FORM_DATE_COMPARATOR);
+		Collections.reverse(eFormDatas);
+
+		for (EFormData eFormData : eFormDatas)
+		{
             NavBarDisplayDAO.Item item = Dao.Item();
-            winName = (String)curform.get("formName") + bean.demographicNo;            
+            winName = eFormData.getFormName() + bean.demographicNo;            
             hash = Math.abs(winName.hashCode());            
-            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + curform.get("fdid") + "&parentAjaxId=" + cmd + "');";            
-            Date date = (Date)curform.get("formDateAsDate");
-            String formattedDate = DateUtils.getDate(date,dateFormat,request.getLocale());
-            key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";
-            item.setLinkTitle((String)curform.get("formSubject"));
+            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + eFormData.getId() + "&parentAjaxId=" + cmd + "');";            
+            String formattedDate = DateUtils.getDate(eFormData.getFormDate(),dateFormat,request.getLocale());
+            key = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";
+            item.setLinkTitle(eFormData.getSubject());
             key = StringEscapeUtils.escapeJavaScript(key);
             js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
             javascript.append(js);                
             url += "return false;";
             item.setURL(url);
-            String strTitle = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+            String strTitle = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             item.setTitle(strTitle);  
-            item.setDate(date);
+            item.setDate(eFormData.getFormDate());
             Dao.addItem(item);
         }
                         
         javascript.append("</script>");
         Dao.setJavaScript(javascript.toString());
-        
+
         return true;
 	}                  
   }
@@ -122,4 +133,24 @@ public class EctDisplayEFormAction extends EctDisplayAction {
   public String getCmd() {
         return cmd;
   }
+  
+	public static List<EFormData> filterRoles(List<EFormData> eFormDatas, String roleName) {
+		ArrayList<EFormData> filteredResults = new ArrayList<EFormData>();
+
+		for (EFormData eFormData : eFormDatas) {
+			if (eFormData.getRoleType() != null && !eFormData.getRoleType().equals("")) {
+				// ojectName: "_admin,_admin.eform"
+				// roleName: "doctor,admin"
+				String objectName = "_eform." + eFormData.getRoleType();
+				Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
+				if (!OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1))) {
+					continue;
+				}
+			}
+			
+			filteredResults.add(eFormData);
+		}
+
+		return (filteredResults);
+	}
 }

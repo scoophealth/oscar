@@ -28,12 +28,16 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class EFormDataDao extends AbstractDao<EFormData> {
 
+	private static final Logger logger=MiscUtils.getLogger();
+	
 	public EFormDataDao() {
 		super(EFormData.class);
 	}
@@ -49,4 +53,59 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 		return(results);
 	}
 
+    /**
+     * @param demographicId can not be null
+     * @param current can be null for both
+     * @param patientIndependent can be null to be both
+     * @return
+     */
+    public List<EFormData> findByDemographicIdCurrentPatientIndependent(Integer demographicId, Boolean current, Boolean patientIndependent)
+	{
+    	StringBuilder sb=new StringBuilder();
+    	sb.append("select x from ");
+    	sb.append(modelClass.getSimpleName());
+    	sb.append(" x where x.demographicId=?1");
+    	
+    	int counter=2;
+    	
+    	if (current!=null)
+    	{
+    		sb.append(" and x.current=?");
+    		sb.append(counter);
+    		counter++;
+    	}
+
+    	if (patientIndependent!=null)
+    	{
+    		sb.append(" and x.patientIndependent=?");
+    		sb.append(counter);
+    		counter++;
+    	}
+
+    	String sqlCommand=sb.toString();
+    	
+    	logger.debug("SqlCommand="+sqlCommand);
+    	
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+
+    	counter=2;
+    	
+    	if (current!=null)
+    	{
+    		query.setParameter(counter, current);
+    		counter++;
+    	}
+
+    	if (patientIndependent!=null)
+    	{
+    		query.setParameter(counter, patientIndependent);
+    		counter++;
+    	}
+
+    	@SuppressWarnings("unchecked")
+		List<EFormData> results=query.getResultList();
+		
+		return(results);
+	}
 }

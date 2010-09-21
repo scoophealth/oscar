@@ -763,14 +763,6 @@ function loader(){
       window.setTimeout("popupPage(700,900,'<%=popUrl%>')", 2);
     <%}%>
 
-    <%-- Old navbar loader
-     for( var idx in URLs ) {
-        var div = document.createElement("div");
-        div.id = idx;
-        div.className = "leftBox";
-        $("leftNavbar").appendChild(div);
-        popLeftColumn(URLs[idx],idx,idx);
-    }--%>
     //new navbar loader
     var navBars = new navBarLoader();
     navBars.load();
