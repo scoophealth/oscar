@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping package="org.oscarehr.document.model"
-	auto-import="false">
+	auto-import="true">
 	<class name="CtlDocument" table="ctl_document">
 		<meta attribute="sync-DAO">false</meta>
 		<composite-id name="id" class="CtlDocumentPK">
