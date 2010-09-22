@@ -518,7 +518,7 @@ try
 
 			boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
 	%>
-		<div id="nc<%=idx+1%>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()?"":" noteRounded"%>">
+		<div id="nc<%=idx+1%>" class="note<%=note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm()?"":" noteRounded"%>">
 			<input type="hidden" id="signed<%=note.getNoteId()%>" value="<%=note.isSigned()%>"> 
 			<input type="hidden" id="full<%=note.getNoteId()%>" value="<%=fulltxt || (note.getNoteId() !=null && note.getNoteId().equals(savedId))%>"> 
 			<input type="hidden" id="bgColour<%=note.getNoteId()%>" value="<%=bgColour%>">
@@ -557,7 +557,7 @@ try
 						String rev = note.getRevision();
 						if (note.getRemoteFacilityId()==null) // always display full note for remote notes
 						{
-							if (note.isDocument() || note.isCpp() || note.isEformData())
+							if (note.isDocument() || note.isCpp() || note.isEformData() || note.isEncounterForm())
 							{
 								// blank if so it never displays min/max icon for documents
 							}
@@ -590,7 +590,7 @@ try
 						<%
 						}
 			
-						if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp() && !note.isEformData()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
+						if (note.getRemoteFacilityId()==null && !note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm()) // only allow printing for local notes and disallow for documents (was told they should open the document then print it that way)
 						{
 					 	%> 
 						 	<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>   , event)" style='float: right; margin-right: 5px; margin-top: 2px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'> 
@@ -601,7 +601,7 @@ try
 					 	{
 					 		// only allow editing for local notes
 					 		// also disallow editing of cpp's inline (can be edited in the cpp area) 
-					 		if (note.getRemoteFacilityId()==null && !note.isCpp() && !note.isEformData())
+					 		if (note.getRemoteFacilityId()==null && !note.isCpp() && !note.isEformData() && !note.isEncounterForm())
 							{
 					 			if(!note.isReadOnly()) 
 					 			{
@@ -712,7 +712,7 @@ try
 						}	
 						
 						%>
-			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData())?(bgColour+";color:white;font-size:9px"):""%>">
+			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm())?(bgColour+";color:white;font-size:9px"):""%>">
 		  						<%=noteStr%>
 		  						<%
 		  							if (note.isCpp())
@@ -753,7 +753,7 @@ try
 						<%
 				 		}
 				
-						if (!note.isDocument() && !note.isCpp() && !note.isEformData())
+						if (!note.isDocument() && !note.isCpp() && !note.isEformData() && !note.isEncounterForm())
 						{
 						%>
 							<div id="sig<%=note.getNoteId()%>" class="sig" style="clear:both;<%=bgColour%>">

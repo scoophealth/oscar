@@ -38,6 +38,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.model.EncounterForm;
@@ -51,6 +52,8 @@ import oscar.util.StringUtils;
 
 public class EctDisplayFormAction extends EctDisplayAction {
 
+	private static Logger logger=MiscUtils.getLogger();
+	
 	private String cmd = "forms";
 	private String menuId = "1";
 
@@ -109,7 +112,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 							try {
 								date = formatter.parse(dateStr);
 							} catch (ParseException ex) {
-								MiscUtils.getLogger().debug("EctDisplayFormAction: Error creating date " + ex.getMessage());
+								logger.debug("EctDisplayFormAction: Error creating date " + ex.getMessage());
 								// date = new Date(System.currentTimeMillis());
 								date = null;
 							}
@@ -165,8 +168,8 @@ public class EctDisplayFormAction extends EctDisplayAction {
 
 				// sort module items, i.e. forms, from most recently started to more distant
 				Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
-			} catch (SQLException e) {
-				MiscUtils.getLogger().debug("EctDisplayFormAction SQL ERROR: " + e.getMessage());
+			} catch (Exception e) {
+				logger.error("EctDisplayFormAction SQL ERROR:", e);
 				return false;
 			}
 

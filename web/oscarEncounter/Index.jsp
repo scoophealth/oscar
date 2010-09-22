@@ -950,7 +950,7 @@ function removeSaveFeedback()  {
                                 EctFormData.Form frm = forms[j];
                                 String table = frm.getFormTable();
                                 if(!table.equalsIgnoreCase("")){
-                                    EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
+                                    EctFormData.PatientForm[] pforms = EctFormData.getPatientForms(demoNo, table);
                                     if(pforms.length>0) {
                                         EctFormData.PatientForm pfrm = pforms[0];
                                 %>

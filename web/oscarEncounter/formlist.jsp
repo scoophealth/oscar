@@ -122,7 +122,7 @@ function popupPageK(page) {
                     pforms = new EctFormData.PatientForm[0];
                 }
                 else {
-                    pforms = new EctFormData().getPatientForms(demoNo, table);
+                    pforms = EctFormData.getPatientForms(demoNo, table);
                 }
 		int nItems = 0;
 

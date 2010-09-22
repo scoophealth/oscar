@@ -24,24 +24,37 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.data;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.hibernate.mapping.Array;
 import org.oscarehr.common.dao.EncounterFormDao;
+import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EncounterForm;
+import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import oscar.util.SqlUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EctFormData {
 
+	private static Logger logger=MiscUtils.getLogger();
     private static EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
 
+	
     public static Form[] getForms() {
 		List<EncounterForm> results = encounterFormDao.findAll();
 		Collections.sort(results, EncounterForm.BC_FIRST_COMPARATOR);
@@ -91,78 +104,120 @@ public class EctFormData {
 
 	}
 
-	public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
-
-		if (StringUtils.isEmpty(table)) {
-			PatientForm[] ret = {};
-			return ret;
+	public static ArrayList<PatientForm> getAllPatientFormsFromAllTables(Integer demographicId)
+	{
+		// grab all of the forms
+		EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+		List<EncounterForm> encounterForms = encounterFormDao.findAll();
+		Collections.sort(encounterForms, EncounterForm.BC_FIRST_COMPARATOR);
+		
+		// grab all patient forms for all the above form types
+		ArrayList<PatientForm> allResults=new ArrayList<PatientForm>();
+		for (EncounterForm encounterForm : encounterForms) {
+			String table = StringUtils.trimToNull(encounterForm.getFormTable());
+			if (table!=null) {
+				allResults.addAll(getPatientFormsAsArrayList(demographicId.toString(), encounterForm.getFormName(), table));
+			}
 		}
 
-		ArrayList forms = new ArrayList();
+		return(allResults);
+	}
+	
+	public static ArrayList<PatientForm> getPatientFormsAsArrayList(String demoNo, String formName, String table) {
+		table=StringUtils.trimToNull(table);
+		if (table==null) return(new ArrayList<PatientForm>());
+		
+		ArrayList<PatientForm> forms = new ArrayList<PatientForm>();
 
-		DBHandler db = new DBHandler();
-
+		Connection c=null;
 		try {
+			c=DbConnectionFilter.getThreadLocalDbConnection();
+			
 			if (!table.equals("form")) {
 				String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
 
-				ResultSet rs = db.GetSQL(sql);
+				Statement s=c.createStatement();
+				ResultSet rs = s.executeQuery(sql);
 
 				while (rs.next()) {
-					PatientForm frm = new PatientForm(db.getString(rs, "ID"), db.getString(rs, "demographic_no"), UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getTimestamp("formEdited"), "yy/MM/dd HH:mm:ss"));
+					PatientForm frm = new PatientForm(formName, rs.getInt("ID"), rs.getInt("demographic_no"), rs.getDate("formCreated"), rs.getTimestamp("formEdited"));
 					forms.add(frm);
 				}
-				rs.close();
 			} else {
 				String sql = "SELECT form_no, demographic_no, form_date from " + table + " where demographic_no=" + demoNo + " order by form_no desc";
-				ResultSet rs = db.GetSQL(sql);
+
+				Statement s=c.createStatement();
+				ResultSet rs = s.executeQuery(sql);
 
 				while (rs.next()) {
-					PatientForm frm = new PatientForm(db.getString(rs, "form_no"), db.getString(rs, "demographic_no"), UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"));
+					PatientForm frm = new PatientForm(formName, rs.getInt("form_no"), rs.getInt("demographic_no"), rs.getDate("form_date"), rs.getDate("form_date"));
 					forms.add(frm);
 				}
-				rs.close();
 			}
-		} catch (SQLException se) {
-			PatientForm[] ret = {};
-			return ret;
+		} catch (SQLException e) {
+			logger.error("Unexpected error.", e);
+			throw(new PersistenceException(e));
 		} finally {
+			SqlUtils.closeResources(c, null, null);
 		}
-
-		PatientForm[] ret = {};
-		ret = (PatientForm[]) forms.toArray(ret);
-		return ret;
+		
+		return(forms);
+	}
+	
+	public static PatientForm[] getPatientForms(String demoNo, String table) {
+		return(getPatientFormsAsArrayList(demoNo, null, table).toArray(new PatientForm[0]));
 	}
 
-	public class PatientForm {
-		private String formId;
-		private String demoNo;
-		private String created;
-		private String edited;
+	/**
+	 * Due to backwards compatability hack, leave all the getter methods as returning String,
+	 * direct field access can be used to get native types. 
+	 */
+	public static class PatientForm {
+		
+		/**
+		 * This comparator sorts PatientForm descending based on the created date
+		 */
+		public static final Comparator<PatientForm> CREATED_DATE_COMPARATOR=new Comparator<PatientForm>()
+		{
+			public int compare(PatientForm o1, PatientForm o2) {
+				return(o2.created.compareTo(o1.created));
+			}	
+		};
 
+		public Integer formId;
+		public Integer demographicId;
+		public Date created;
+		public Date edited;
+		public String formName;
+		
 		// Constructor
-		public PatientForm(String formId, String demoNo, String created, String edited) {
+		public PatientForm(String formName, Integer formId, Integer demographicId, Date created, Date edited) {
+			this.formName = formName;
 			this.formId = formId;
-			this.demoNo = demoNo;
+			this.demographicId = demographicId;
 			this.created = created;
 			this.edited = edited;
 		}
 
 		public String getFormId() {
-			return formId;
+			return formId.toString();
 		}
 
 		public String getDemoNo() {
-			return demoNo;
+			return demographicId.toString();
 		}
 
 		public String getCreated() {
-			return created;
+			return(UtilDateUtilities.DateToString(created, "yy/MM/dd"));
 		}
 
 		public String getEdited() {
-			return edited;
+			return(UtilDateUtilities.DateToString(edited, "yy/MM/dd HH:mm:ss"));
 		}
-	}
 
+		public String getFormName() {
+        	return formName;
+        }
+				
+	}
 }

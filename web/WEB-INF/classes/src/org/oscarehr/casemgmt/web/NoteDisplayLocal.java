@@ -187,4 +187,8 @@ public class NoteDisplayLocal implements NoteDisplay {
 	public boolean isCpp() {
 		return (isCpp);
 	}
+
+	public boolean isEncounterForm() {
+	    return false;
+    }
 }

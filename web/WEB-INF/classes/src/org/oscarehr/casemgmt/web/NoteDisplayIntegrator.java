@@ -175,4 +175,8 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	public boolean isCpp() {
 	    return false;
     }
+
+	public boolean isEncounterForm() {
+	    return false;
+    }
 }

@@ -84,6 +84,8 @@ public interface NoteDisplay {
 
 	public boolean isEformData();
 
+	public boolean isEncounterForm();
+
 	public CaseManagementNoteLink getNoteLink();
 
 	public RxPrescriptionData.Prescription getRxFromAnnotation(CaseManagementNoteLink cmnl);

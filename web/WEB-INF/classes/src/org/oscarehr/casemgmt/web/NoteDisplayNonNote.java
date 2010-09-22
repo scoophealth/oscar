@@ -6,10 +6,10 @@ import java.util.Hashtable;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
-import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.oscarEncounter.data.EctFormData.PatientForm;
 import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 
 /**
@@ -27,6 +27,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	private String note;
 	private Provider provider;
 	private boolean isEformData=false;
+	private boolean isEncounterForm=false;
 	
 	public NoteDisplayNonNote(Hashtable<String, Object> eform) {
 	    date=(Date) eform.get("formDateAsDate");
@@ -36,13 +37,14 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	    noteId=new Integer((String)eform.get("fdid"));
     }
 
-	public NoteDisplayNonNote(EncounterForm encounterForm) {
-//	    date=encounterForm.get(Date) eform.get("formDateAsDate");
-//	    note=eform.get("formName") +" : " + eform.get("formSubject");
-//	    provider=providerDao.getProvider((String)eform.get("providerNo"));
-//	    isEformData=true;
-//	    noteId=new Integer((String)eform.get("fdid"));
+
+	public NoteDisplayNonNote(PatientForm patientForm) {
+	    date=patientForm.created;
+	    note=patientForm.formName;
+	    noteId=patientForm.formId;
+	    isEncounterForm=true;
     }
+
 
 	public ArrayList<String> getEditorNames() {
 		return(new ArrayList<String>());
@@ -85,11 +87,13 @@ public class NoteDisplayNonNote implements NoteDisplay {
     }
 
 	public String getProviderName() {
-	    return(provider.getFormattedName());
+	    if (provider!=null) return(provider.getFormattedName());
+	    else return("");
     }
 
 	public String getProviderNo() {
-	    return(provider.getProviderNo());
+	    if (provider!=null) return(provider.getProviderNo());
+	    else return("");
     }
 
 	public Integer getRemoteFacilityId() {
@@ -154,5 +158,9 @@ public class NoteDisplayNonNote implements NoteDisplay {
 
 	public boolean isSigned() {
 	    return false;
+    }
+
+	public boolean isEncounterForm() {
+	    return isEncounterForm;
     }
 }

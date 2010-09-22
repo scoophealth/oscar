@@ -94,6 +94,8 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.eform.EFormUtil;
+import oscar.oscarEncounter.data.EctFormData;
+import oscar.oscarEncounter.data.EctFormData.PatientForm;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 import oscar.util.OscarRoleObjectPrivilege;
 
@@ -655,7 +657,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException, IllegalAccessException, Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		String providerNo = loggedInInfo.loggedInProvider.getProviderNo();
-
+		int demographicId=Integer.parseInt(demoNo);
+		
 		long startTime;
 
 		logger.debug("Get stale note date");
@@ -733,8 +736,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		for (CaseManagementNote noteTemp : notes) {
 			notesToDisplay.add(new NoteDisplayLocal(noteTemp));
 		}
-		addRemoteNotes(notesToDisplay, Integer.parseInt(demoNo), null, programId);
-		addGroupNotes(notesToDisplay, Integer.parseInt(demoNo), null);
+		addRemoteNotes(notesToDisplay, demographicId, null, programId);
+		addGroupNotes(notesToDisplay, demographicId, null);
 
 		// add eforms to notes list as single line items
 		String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
@@ -744,7 +747,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		// add forms to notes list as single line items
-		// HERE SPOT
+		ArrayList<PatientForm> allPatientForms=EctFormData.getAllPatientFormsFromAllTables(demographicId);
+		for (PatientForm patientForm : allPatientForms) {
+			notesToDisplay.add(new NoteDisplayNonNote(patientForm));
+		}
 		
 		// sort the notes
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
@@ -1427,6 +1433,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			bgColour = rxColour;
 		} else if (noteDisplay.isEformData()) {
 			bgColour = eFormsColour;
+		} else if (noteDisplay.isEncounterForm()) {
+			bgColour = formsColour;
 		}
 
 		return (bgColour);
