@@ -6,6 +6,7 @@ import java.util.Hashtable;
 
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 
@@ -33,6 +34,14 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	    provider=providerDao.getProvider((String)eform.get("providerNo"));
 	    isEformData=true;
 	    noteId=new Integer((String)eform.get("fdid"));
+    }
+
+	public NoteDisplayNonNote(EncounterForm encounterForm) {
+//	    date=encounterForm.get(Date) eform.get("formDateAsDate");
+//	    note=eform.get("formName") +" : " + eform.get("formSubject");
+//	    provider=providerDao.getProvider((String)eform.get("providerNo"));
+//	    isEformData=true;
+//	    noteId=new Integer((String)eform.get("fdid"));
     }
 
 	public ArrayList<String> getEditorNames() {

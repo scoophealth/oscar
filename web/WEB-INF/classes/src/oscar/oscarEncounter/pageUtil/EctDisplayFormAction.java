@@ -29,7 +29,9 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -37,7 +39,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.EncounterFormDao;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.data.EctFormData;
 import oscar.util.DateUtils;
@@ -82,14 +87,15 @@ public class EctDisplayFormAction extends EctDisplayAction {
 				String key;
 				int hash;
 				// grab all of the forms
-				EctFormData.Form[] forms = EctFormData.getForms();
-
+				EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+				List<EncounterForm> encounterForms = encounterFormDao.findAll();
+				Collections.sort(encounterForms, EncounterForm.BC_FIRST_COMPARATOR);
+				
 				String BGCOLOUR = request.getParameter("hC");
-				for (int j = 0; j < forms.length; j++) {
-					EctFormData.Form frm = forms[j];
-					winName = frm.getFormName() + bean.demographicNo;
+				for (EncounterForm encounterForm : encounterForms) {
+					winName = encounterForm.getFormName() + bean.demographicNo;
 
-					String table = frm.getFormTable();
+					String table = encounterForm.getFormTable();
 					if (!table.equalsIgnoreCase("")) {
 						EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(bean.demographicNo, table);
 						// if a form has been started for the patient, create a module item for it
@@ -113,11 +119,11 @@ public class EctDisplayFormAction extends EctDisplayAction {
 
 							item.setDate(date);
 
-							fullTitle = frm.getFormName();
+							fullTitle = encounterForm.getFormName();
 							strTitle = new StringBuffer(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
 
 							hash = Math.abs(winName.hashCode());
-							url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + frm.getFormName() + "&demographic_no=" + bean.demographicNo + "');");
+							url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname=" + encounterForm.getFormName() + "&demographic_no=" + bean.demographicNo + "');");
 							key = StringUtils.maxLenString(fullTitle, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
 							key = StringEscapeUtils.escapeJavaScript(key);
 
@@ -138,12 +144,12 @@ public class EctDisplayFormAction extends EctDisplayAction {
 					}
 
 					// we add all unhidden forms to the pop up menu
-					if (!frm.isHidden()) {
+					if (!encounterForm.isHidden()) {
 						hash = Math.abs(winName.hashCode());
-						url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + frm.getFormPage() + bean.demographicNo + "&formId=0&provNo=" + bean.providerNo + "&parentAjaxId=" + cmd + "')");
+						url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + encounterForm.getFormValue() + bean.demographicNo + "&formId=0&provNo=" + bean.providerNo + "&parentAjaxId=" + cmd + "')");
 						Dao.addPopUpUrl(url.toString());
-						key = StringUtils.maxLenString(frm.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
-						Dao.addPopUpText(frm.getFormName());
+						key = StringUtils.maxLenString(encounterForm.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
+						Dao.addPopUpText(encounterForm.getFormName());
 						key = StringEscapeUtils.escapeJavaScript(key);
 
 						// auto completion arrays and colour code are set

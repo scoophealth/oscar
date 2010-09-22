@@ -84,6 +84,7 @@ import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
@@ -743,7 +744,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 
 		// add forms to notes list as single line items
-		// HERE
+		// HERE SPOT
 		
 		// sort the notes
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
