@@ -14,6 +14,271 @@ $("document").ready(function() {
 		$("input[name='immigration_issues'][value='3']").attr('readonly','readonly');
 		$("input[name='immigration_issues'][value='3']").attr('disabled','disabled');
 	}
+	
+	$("input[name='presenting_issues'][value='OTH']").change(function() {
+		if($("input[name='presenting_issues'][value='OTH']").attr('checked') == true) {
+			$("#presenting_issues_other").attr('disabled','');
+			$("#presenting_issues_other").val("");
+		} else {
+			$("#presenting_issues_other").attr('disabled','disabled');
+			$("#presenting_issues_other").val("");
+		}		
+	});
+	
+	$("input[name='presenting_issues'][value='OTH']").each(function() {
+		if($("input[name='presenting_issues'][value='OTH']").attr('checked') == true) {
+			$("#presenting_issues_other").attr('disabled','');			
+		} else {
+			$("#presenting_issues_other").attr('disabled','disabled');
+			$("#presenting_issues_other").val("");
+		}		
+	});
+	
+	$("#reasonForAssessment").change(function() {
+		if($("#reasonForAssessment").val() == 'OTH') {
+			$("#reason_for_assessment_other").attr('disabled','');
+			$("#reason_for_assessment_other").val("");
+		} else {		
+			$("#reason_for_assessment_other").attr('disabled','disabled');
+			$("#reason_for_assessment_other").val("");
+		}
+	});
+	
+	$("#reasonForAssessment").each(function() {
+		if($("#reasonForAssessment").val() == 'OTH') {
+			$("#reason_for_assessment_other").attr('disabled','');			
+		} else {		
+			$("#reason_for_assessment_other").attr('disabled','disabled');
+			$("#reason_for_assessment_other").val("");
+		}
+	});
+	
+	$("#consumerSelfAxCompleted").change(function() {
+		if($("#consumerSelfAxCompleted").val()=='TRUE' || $("#consumerSelfAxCompleted").val()=='') { 
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('disabled','disabled');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('disabled','disabled');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('disabled','disabled');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('disabled','disabled');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('disabled','disabled');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('disabled','disabled');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('disabled','disabled');
+			
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('checked',false);
+			
+			$("#otherReason").attr('disabled','disabled');
+			$("#otherReason").val("");
+			
+		} else {
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('disabled','');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('disabled','');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('disabled','');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('disabled','');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('disabled','');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('disabled','');
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('disabled','');
+			
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('checked',false);
+			$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('checked',false);
+			
+			$("#otherReason").attr('disabled','disabled');
+			$("#otherReason").val("");
+		}
+	});
+	
+	$("#consumerSelfAxCompleted").each(function() {
+	if($("#consumerSelfAxCompleted").val()=='TRUE' || $("#consumerSelfAxCompleted").val()=='') { 
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('disabled','disabled');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('disabled','disabled');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('disabled','disabled');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('disabled','disabled');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('disabled','disabled');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('disabled','disabled');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('disabled','disabled');
+		
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('checked',false);
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('checked',false);
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('checked',false);
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('checked',false);
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('checked',false);
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('checked',false);
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('checked',false);
+		
+		$("#otherReason").attr('disabled','disabled');
+		$("#otherReason").val("");
+		
+	} else {
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('disabled','');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('disabled','');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('disabled','');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('disabled','');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('disabled','');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('disabled','');
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('disabled','');
+			
+		if($("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('checked') == true) {
+			$("#otherReason").attr('disabled','');
+			
+		}else{
+			$("#otherReason").attr('disabled','disabled');
+			$("#otherReason").val("");
+		}
+	}
+	
+	});
+	
+	$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").change(function() {
+		if($("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('checked') == true) {
+			$("#otherReason").attr('disabled','');
+			$("#otherReason").val("");
+		}else{
+			$("#otherReason").attr('disabled','disabled');
+			$("#otherReason").val("");
+		}
+	
+	});
+	
+	$("#6_physical_health_concerns").change(function() { 
+		if($("#6_physical_health_concerns").val()=='TRUE'){ 
+			$("input[name='6_physical_health_details'][value='118254002']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='279084009']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='119415007']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='302293008']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='300479008']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='106076001']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='118952005']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='365092005']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='102957003']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='118230007']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='118235002']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='410515003']").attr('disabled','');
+			
+			$("input[name='6_physical_health_details'][value='118254002']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='279084009']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='119415007']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='302293008']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='300479008']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='106076001']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118952005']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='365092005']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='102957003']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118230007']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118235002']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='410515003']").attr('checked',false);
+			
+			$("#6_physical_health_details_other").attr('disabled','disabled');
+			$("#6_physical_health_details_other").val("");
+			
+		} else {
+			$("input[name='6_physical_health_details'][value='118254002']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='279084009']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='119415007']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='302293008']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='300479008']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='106076001']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='118952005']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='365092005']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='102957003']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='118230007']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='118235002']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='410515003']").attr('disabled','disabled');
+			
+			$("input[name='6_physical_health_details'][value='118254002']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='279084009']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='119415007']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='302293008']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='300479008']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='106076001']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118952005']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='365092005']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='102957003']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118230007']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118235002']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='410515003']").attr('checked',false);
+			
+			$("#6_physical_health_details_other").attr('disabled','disabled');
+			$("#6_physical_health_details_other").val("");			
+		}
+	});
+	
+	
+	$("#6_physical_health_concerns").each(function() { 
+		if($("#6_physical_health_concerns").val()=='TRUE'){ 
+			$("input[name='6_physical_health_details'][value='118254002']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='279084009']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='119415007']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='302293008']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='300479008']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='106076001']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='118952005']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='365092005']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='102957003']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='118230007']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='118235002']").attr('disabled','');
+			$("input[name='6_physical_health_details'][value='410515003']").attr('disabled','');
+			
+			if($("input[name='6_physical_health_details'][value='410515003']").attr('checked') == true) {
+				$("#6_physical_health_details_other").attr('disabled','');
+				
+			}else{
+				$("#6_physical_health_details_other").attr('disabled','disabled');
+				$("#6_physical_health_details_other").val("");
+			}						
+		} else {
+			$("input[name='6_physical_health_details'][value='118254002']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='279084009']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='119415007']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='302293008']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='300479008']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='106076001']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='118952005']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='365092005']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='102957003']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='118230007']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='118235002']").attr('disabled','disabled');
+			$("input[name='6_physical_health_details'][value='410515003']").attr('disabled','disabled');
+			
+			$("input[name='6_physical_health_details'][value='118254002']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='279084009']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='119415007']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='302293008']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='300479008']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='106076001']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118952005']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='365092005']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='102957003']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118230007']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='118235002']").attr('checked',false);
+			$("input[name='6_physical_health_details'][value='410515003']").attr('checked',false);
+			
+			$("#6_physical_health_details_other").attr('disabled','disabled');
+			$("#6_physical_health_details_other").val("");				
+		}
+	});
+	
+	$("input[name='6_physical_health_details'][value='410515003']").change(function() {
+		if($("input[name='6_physical_health_details'][value='410515003']").attr('checked') == true) {
+			$("#6_physical_health_details_other").attr('disabled','');
+			$("#6_physical_health_details_other").val("");
+		}else{
+			$("#6_physical_health_details_other").attr('disabled','disabled');
+			$("#6_physical_health_details_other").val("");
+		}
+	
+	});
+	
+	
+	//$("#serviceUseRecord_orgLHIN")
 });
 
 $("document").ready(function() {
@@ -196,7 +461,10 @@ $("document").ready(function() {
 				$("#"+x+"_otherAgencyLastSeen").attr('disabled','');
 			}
 		}
-		});
+		});	
+	
+	
+	
 	
 	
 });
@@ -250,7 +518,49 @@ function submitOcanForm() {
 		}
 	}
 	
-	if($("#reasonForAssessment").val() == 'OTHR') {		
+	if($("#completedByOCANLead").val() == 'FALSE') { 
+		if($("#reasonForAssessment").val() != 'REV' && $("#reasonForAssessment").val() != 'REK') {
+			alert('Reason for OCAN -- You can only choose Re-view or Rekey');
+			$("#reasonForAssessment").focus();
+			return false;
+		}
+		
+	}	
+	
+	if($("#reasonForAssessment").val() == 'OTHR') {
+			if($("#reason_for_assessment_other").val().length == 0) {
+				alert('Reason for Reason for OCAN -- please specify other');
+				$("#reason_for_assessment_other").focus();
+				return false;
+			}			
+	}
+		
+		
+	if($("#consumerSelfAxCompleted").val() == 'FALSE') {
+		if($("input[name='reasonConsumerSelfAxNotCompletedList'][value='CMFLVL']").attr('checked') == false &&
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LOA']").attr('checked') == false &&
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LIT']").attr('checked') == false &&
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='MHC']").attr('checked') == false &&
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='PYSCON']").attr('checked') == false &&
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='LANG']").attr('checked') == false &&
+		$("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('checked') == false 
+		) {
+			alert('Reason for the Consumer Self-Assessment not completed -- please select one');
+			$("#consumerSelfAxCompleted").focus();
+			return false;
+		}
+	}
+	
+	if($("input[name='reasonConsumerSelfAxNotCompletedList'][value='OTH']").attr('checked') == true) {
+			if($("#otherReason").val().length==0) {
+				alert('Other reason for the Consumer Self-Assessment not completed -- please provide other reason');
+				$("#otherReason").focus();
+				return false;
+			}
+		
+	}	
+	
+	if($("#reasonForAssessment").val() == 'OTH') {		
 		if($("#reason_for_assessment_other").val().length==0) {			
 			alert('Reason for assessment - Please specify other');
 			$("#reason_for_assessment_other").focus();

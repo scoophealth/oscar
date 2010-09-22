@@ -79,6 +79,29 @@ $('document').ready(function() {
 </script>
 
 <script>
+function changeOrgLHIN(selectBox) {
+	//annie
+		var newCount = $("#center_count").val(); 
+
+		var selectBoxId = selectBox.id;
+		var priority = selectBoxId.charAt(selectBoxId.length-1);
+		var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
+		
+		var demographicId='<%=currentDemographicId%>';
+
+		//do we need to add..loop through existing blocks, and see if we need more...create on the way.
+			
+			if(document.getElementById("serviceUseRecord_orgName" + priority) == null) {
+				$.get('ocan_form_getOrgName.jsp?demographicId='+demographicId+'&center_num='+priority+'&lhin_num='+selectBoxValue, function(data) {
+					  $("#center_block_orgName"+priority).append(data);					 
+					});														
+			}
+
+		//do we need to remove. If there's any blocks > newCount..we need to delete them.
+			if(document.getElementById("serviceUseRecord_orgName" + priority) != null) {
+				$("#center_block_orgName"+priority).remove();
+			}
+}
 
 function changeNumberOfMedications() {
 	var newCount = $("#medications_count").val(); 
@@ -125,6 +148,9 @@ function changeNumberOfcentres() {
 		}
 	}
 }
+
+
+
 </script>
 
 <script>
@@ -212,6 +238,10 @@ function changeNumberOfReferrals() {
 		}
 	}
 }
+
+
+
+
 </script>
 
 <script>
@@ -319,7 +349,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Was this OCAN completed by OCAN Lead?</td>
 			<td class="genericTableData">
-				<select name="completedByOCANLead">
+				<select name="completedByOCANLead" id="completedByOCANLead">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "completedByOCANLead", OcanForm.getOcanFormOptions("OCAN Lead Assessment"),prepopulationLevel)%>
 				</select>					
 			</td>			
@@ -715,8 +745,8 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Other Contact</td>
 			<td class="genericTableData">
-				<select name="1_otherContact">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "1_otherContact", OcanForm.getOcanFormOptions("Other Contacts Agency"),prepopulationLevel)%>
+				<select name="otherContact" id="otherContact" class="{validate: {required:true}}">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "otherContact", OcanForm.getOcanFormOptions("Other Contacts Agency"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
@@ -799,7 +829,7 @@ $("document").ready(function(){
 		<tr>
 			<td colspan="2"></td>
 		</tr>
-				
+		
 		<tr>
 			<td class="genericTableHeader">Contact Type</td>
 			<td class="genericTableData">
@@ -1991,7 +2021,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Do you have any concerns about your physical health?</td>
 			<td class="genericTableData">
-				<select name="6_3b" id="6_3b" class="{validate: {required:function(element){return checkForRequired(element.id);}}}">
+				<select name="6_physical_health_concerns" id="6_physical_health_concerns" class="{validate: {required:true}}">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "6_physical_health_concerns", OcanForm.getOcanFormOptions("Physical Health Concerns"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -2669,33 +2699,16 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Which of the following drugs have you used? (Select all that apply)</td>
 			<td class="genericTableData">
-				<%=OcanForm.renderAsDrugUseCheckBoxOptions(ocanStaffForm.getId(), "drug_list", OcanForm.getOcanFormOptions("Drug List"),prepopulationLevel)%>						
+				<%=OcanForm.renderAsDrugUseRadioBoxOptions(ocanStaffForm.getId(), "drug_list", OcanForm.getOcanFormOptions("Drug List"),prepopulationLevel)%>						
 			</td>
 		</tr>	
 					
-		<tr>
-			<td class="genericTableHeader">Which of the following drugs have you used? - Frequency</td>
-			<td class="genericTableData">
-				<select name="drugUse_frequency">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "drugUse_frequency", OcanForm.getOcanFormOptions("Frequency of Drug Use"),prepopulationLevel)%>
-				</select>					
-			</td>
-		</tr>	
-		
-		<tr>
-			<td class="genericTableHeader">Has the substance been injected?</td>
-			<td class="genericTableData">
-				<select name="drugUse_rejected">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "drugUse_rejected", OcanForm.getOcanFormOptions("Frequency of Drug Use"),prepopulationLevel)%>
-				</select>					
-			</td>
-		</tr>	
 		
 		<tr>
 			<td class="genericTableHeader">Indicate the stage of change client is at - Optional</td>
 			<td class="genericTableData">
-				<select name="state_of_change_addiction">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_addiction", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
+				<select name="state_of_change_drug" id="state_of_change_drug">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "state_of_change_drug", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>			
@@ -2789,7 +2802,7 @@ This information is collected from a variety of sources, including self-report, 
 		<tr>
 			<td class="genericTableHeader">Indicate the stage of change client is at - Optional</td>
 			<td class="genericTableData">
-				<select name="state_of_change_addiction">
+				<select name="14_state_of_change" id="14_state_of_change">
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "14_state_of_change", OcanForm.getOcanFormOptions("Stage of Change - Alcohol"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -3562,6 +3575,13 @@ This information is collected from a variety of sources, including self-report, 
 		</tr>
 			
 		<tr>
+			<td class="genericTableHeader">Presenting Issues - Other</td>
+			<td class="genericTableData">
+						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),"presenting_issues_other",5,30,prepopulationLevel)%>
+			</td>
+		</tr>
+			
+		<tr>
 			<td colspan="2" vheight="4"></td>
 		</tr>
 		<tr>
@@ -3620,7 +3640,7 @@ This information is collected from a variety of sources, including self-report, 
 				<%
 					}
 				%>
-				<input type="button" value="Cancel" onclick="history.go(-1)" />
+				<input type="button" name="cancel" value="Cancel" onclick="history.go(-1)" />
 				<%
 					if (printOnly)
 					{
@@ -3644,9 +3664,8 @@ This information is collected from a variety of sources, including self-report, 
 					document.getElementsByName('print')[0].disabled=false;
 				</script>
 			<%
-		}
-	%>
-
+		} 
+	%>		
 </form>
 
 

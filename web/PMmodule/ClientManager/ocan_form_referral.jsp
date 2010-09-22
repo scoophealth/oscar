@@ -40,7 +40,7 @@
 		</tr>
 		
 		<tr>
-			<td class="genericTableHeader">Specify</td>
+			<td class="genericTableHeader">Actual Specify</td>
 			<td class="genericTableData">
 						<%=OcanForm.renderAsTextArea(ocanStaffForm.getId(),referralNumber+"_summary_of_referral_actual_spec",5,30,prepopulationLevel)%>
 			</td>
