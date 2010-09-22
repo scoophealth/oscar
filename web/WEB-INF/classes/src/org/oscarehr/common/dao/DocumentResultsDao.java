@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.ProviderInboxItem;
+import org.oscarehr.document.dao.DocumentDAO;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.stereotype.Repository;
@@ -106,8 +107,8 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 //BAD!!!! CODING APROACHING
                 //DBHandler dbh = new DBHandler();
                 //String sqlcd = "select * from ctl_document cd, demographic d where cd.module = 'demographic' and cd.module_id != '-1' and cd.module_id = d.demographic_no and cd.document_no = '"+lbData.segmentID+"'";
-                CtlDocumentDao ctlDocumentDao=(CtlDocumentDao) SpringUtils.getBean("ctlDocumentDao");
-                Demographic demo =ctlDocumentDao.getDemographicFromDocumentNo(lbData.segmentID);
+                DocumentDAO documentDAO=(DocumentDAO) SpringUtils.getBean("documentDAO");
+                Demographic demo =documentDAO.getDemoFromDocNo(lbData.segmentID);
                 //ResultSet rscd= dbh.GetSQL(sqlcd);
                 lbData.isMatchedToPatient = false;
                 if(demo!=null){
