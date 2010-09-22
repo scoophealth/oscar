@@ -27,144 +27,142 @@ package oscar.oscarEncounter.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.oscarehr.util.MiscUtils;
+import org.oscarehr.common.dao.EncounterFormDao;
+import org.oscarehr.common.model.EncounterForm;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class EctFormData {
 
-    public Form[] getForms() throws java.sql.SQLException {
-        ArrayList forms = new ArrayList();
+    private static EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
 
-        DBHandler db = new DBHandler();
-        // Quick hack to display BC forms before other forms... probably should make this a little less BC-specific at some time in the future...
-        String sql = "select * from encounterForm where form_name like 'BC%' order by form_name";
-        ResultSet rs = db.GetSQL(sql);
-        while(rs.next()) {
-            Form frm = new Form(db.getString(rs,"form_name"), db.getString(rs,"form_value"), db.getString(rs,"form_table"), (!db.getString(rs,"hidden").equals("0")?false:true));
+    public static Form[] getForms() {
+		List<EncounterForm> results = encounterFormDao.findAll();
+		Collections.sort(results, EncounterForm.BC_FIRST_COMPARATOR);
+		
+		ArrayList<Form> forms = new ArrayList<Form>();
+		for (EncounterForm encounterForm : results) {
+			Form frm = new Form(encounterForm.getFormName(), encounterForm.getFormValue(), encounterForm.getFormTable(), encounterForm.isHidden());
             forms.add(frm);
-        }
-        rs.close();
-        sql = "select * from encounterForm where form_name not like 'BC%' order by hidden, form_name";
-        rs = db.GetSQL(sql);
-        while(rs.next()) {
-            Form frm = new Form(db.getString(rs,"form_name"), db.getString(rs,"form_value"), db.getString(rs,"form_table"), (!db.getString(rs,"hidden").equals("0")?false:true));
-            forms.add(frm);
-        }
-        rs.close();
-        Form[] ret = {};
-        ret = (Form[])forms.toArray(ret);
-        return ret;
-    }
+		}
 
-    public class Form {
-        private String formName;
-        private String formPage;
-        private String formTable;
-        private boolean hidden;
+		return (forms.toArray(new Form[0]));
 
-        //Constructor
-        public Form(String formName, String formPage, String formTable, boolean hidden) {
-            this.formName = formName;
-            this.formPage = formPage;
-            this.formTable = formTable;
-            this.hidden = hidden;
-        }
+	}
 
-        public Form(){}
-        
-        public String getFormName() {
-            return formName;
-        }
-        public String getFormPage() {
-            return formPage;
-        }
-        public String getFormTable() {
-            return formTable;
-        }
-        
-        public boolean isHidden() {
-            return hidden;
-        }
-                
-    }
+	public static class Form {
+		private String formName;
+		private String formPage;
+		private String formTable;
+		private boolean hidden;
 
-    public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
-    	
-    	if(StringUtils.isEmpty(table)){
-    		PatientForm[] ret = {};
-            return ret; 
-    	}
-    		
-    	
-        ArrayList forms = new ArrayList();
+		// Constructor
+		public Form(String formName, String formPage, String formTable, boolean hidden) {
+			this.formName = formName;
+			this.formPage = formPage;
+			this.formTable = formTable;
+			this.hidden = hidden;
+		}
 
-        DBHandler db = new DBHandler();
-        
-        try{
-        if ( !table.equals("form") ) {
-            String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
-                        + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
+		public Form() {
+		}
 
-            ResultSet rs = db.GetSQL(sql);
+		public String getFormName() {
+			return formName;
+		}
 
-            while(rs.next()) {
-                PatientForm frm = new PatientForm(db.getString(rs,"ID"), db.getString(rs,"demographic_no"),
-                                    UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getTimestamp("formEdited"), "yy/MM/dd HH:mm:ss"));
-                forms.add(frm);
-            }
-            rs.close();
-        } else {
-            String sql = "SELECT form_no, demographic_no, form_date from " + table + " where demographic_no=" + demoNo + " order by form_no desc";
-            ResultSet rs = db.GetSQL(sql);
+		public String getFormPage() {
+			return formPage;
+		}
 
-            while(rs.next()) {
-                PatientForm frm = new PatientForm(db.getString(rs,"form_no"), db.getString(rs,"demographic_no"),
-                                    UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"));
-                forms.add(frm);
-            }
-            rs.close();
-        }}catch(SQLException se){
-        	PatientForm[] ret = {};
-            return ret; 
-        }finally{
-        }
-        
+		public String getFormTable() {
+			return formTable;
+		}
 
-        PatientForm[] ret = {};
-        ret = (PatientForm[])forms.toArray(ret);
-        return ret;
-    }
+		public boolean isHidden() {
+			return hidden;
+		}
 
-    public class PatientForm {
-        private String formId;
-        private String demoNo;
-        private String created;
-        private String edited;
+	}
 
-        //Constructor
-        public PatientForm(String formId, String demoNo, String created, String edited) {
-            this.formId = formId;
-            this.demoNo = demoNo;
-            this.created = created;
-            this.edited = edited;
-        }
+	public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
 
-        public String getFormId() {
-            return formId;
-        }
-        public String getDemoNo() {
-            return demoNo;
-        }
-        public String getCreated() {
-            return created;
-        }
-        public String getEdited() {
-            return edited;
-        }
-    }
+		if (StringUtils.isEmpty(table)) {
+			PatientForm[] ret = {};
+			return ret;
+		}
+
+		ArrayList forms = new ArrayList();
+
+		DBHandler db = new DBHandler();
+
+		try {
+			if (!table.equals("form")) {
+				String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
+
+				ResultSet rs = db.GetSQL(sql);
+
+				while (rs.next()) {
+					PatientForm frm = new PatientForm(db.getString(rs, "ID"), db.getString(rs, "demographic_no"), UtilDateUtilities.DateToString(rs.getDate("formCreated"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getTimestamp("formEdited"), "yy/MM/dd HH:mm:ss"));
+					forms.add(frm);
+				}
+				rs.close();
+			} else {
+				String sql = "SELECT form_no, demographic_no, form_date from " + table + " where demographic_no=" + demoNo + " order by form_no desc";
+				ResultSet rs = db.GetSQL(sql);
+
+				while (rs.next()) {
+					PatientForm frm = new PatientForm(db.getString(rs, "form_no"), db.getString(rs, "demographic_no"), UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"), UtilDateUtilities.DateToString(rs.getDate("form_date"), "yy/MM/dd"));
+					forms.add(frm);
+				}
+				rs.close();
+			}
+		} catch (SQLException se) {
+			PatientForm[] ret = {};
+			return ret;
+		} finally {
+		}
+
+		PatientForm[] ret = {};
+		ret = (PatientForm[]) forms.toArray(ret);
+		return ret;
+	}
+
+	public class PatientForm {
+		private String formId;
+		private String demoNo;
+		private String created;
+		private String edited;
+
+		// Constructor
+		public PatientForm(String formId, String demoNo, String created, String edited) {
+			this.formId = formId;
+			this.demoNo = demoNo;
+			this.created = created;
+			this.edited = edited;
+		}
+
+		public String getFormId() {
+			return formId;
+		}
+
+		public String getDemoNo() {
+			return demoNo;
+		}
+
+		public String getCreated() {
+			return created;
+		}
+
+		public String getEdited() {
+			return edited;
+		}
+	}
 
 }

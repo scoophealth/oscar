@@ -293,7 +293,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
         <select name="selectNewForms" class="ControlSelect" onChange="javascript:selectBox(this)" onMouseOver="javascript:window.status='View <%=bean.patientLastName+","+bean.patientFirstName%>\'s new forms list.';return true;">
             <option value="null" selected>-add new form-</option>
             <nested:iterate id="cf" name="casemgmt_newFormBeans" type="org.oscarehr.common.model.EncounterForm">
-                <% if (((Integer)cf.getHidden()).intValue()!=0) {
+                <% if (cf.isHidden()) {
                     String value = session.getAttribute("casemgmt_oscar_baseurl")+"/appointment/"
                             +cf.getFormValue()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo;
                     String label = cf.getFormName();

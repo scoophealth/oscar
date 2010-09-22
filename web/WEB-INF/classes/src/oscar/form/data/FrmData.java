@@ -26,17 +26,22 @@ package oscar.form.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.common.dao.EncounterFormDao;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 public class FrmData {
     private static final Log _log = LogFactory.getLog(FrmData.class);
-
+    private static EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+    
     public class Form {
         private String formName;
         private String formPage;
@@ -53,21 +58,18 @@ public class FrmData {
         public String getFormTable() {      return formTable;       }
     }
 
-    public Form[] getForms() throws java.sql.SQLException {
-        ArrayList forms = new ArrayList();
+    public Form[] getForms() {
+    	
+    	List<EncounterForm> results=encounterFormDao.findAll();
 
-        DBHandler db = new DBHandler();
-        String sql = "SELECT * from encounterForm";
-        ResultSet rs = db.GetSQL(sql);
-        while(rs.next()) {
-            Form frm = new Form(db.getString(rs,"form_name"), db.getString(rs,"form_value"), db.getString(rs,"form_table"));
+    	ArrayList<Form> forms = new ArrayList<Form>();
+    	for (EncounterForm encounterForm : results)
+    	{
+            Form frm = new Form(encounterForm.getFormName(), encounterForm.getFormValue(), encounterForm.getFormTable());
             forms.add(frm);
-        }
-
-        rs.close();
-        Form[] ret = {};
-        ret = (Form[])forms.toArray(ret);
-        return ret;
+    	}
+    	
+    	return(forms.toArray(new Form[0]));
     }
 
     public class PatientForm {

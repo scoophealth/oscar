@@ -18,7 +18,7 @@
 %>
 
 <%
-	EctFormData.Form[] forms = new EctFormData().getForms();
+	EctFormData.Form[] forms = EctFormData.getForms();
 	oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
 %>
 <!--  
@@ -116,7 +116,6 @@ function popupPageK(page) {
 		EctFormData.Form frm = forms[j];
 		String table = frm.getFormTable();
                 table = org.apache.commons.lang.StringEscapeUtils.escapeSql(table);
-		//EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table, Integer.parseInt(strLimit1),Integer.parseInt(strLimit2));
                                 
 		EctFormData.PatientForm[] pforms;
                 if( table.length() == 0 ) {

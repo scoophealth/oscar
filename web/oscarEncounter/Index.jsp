@@ -126,7 +126,7 @@ if (request.getParameter("casetoEncounter")==null)
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
   String provNo = bean.providerNo;
-  EctFormData.Form[] forms = new EctFormData().getForms();
+  EctFormData.Form[] forms = EctFormData.getForms();
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
   EctProviderData.Provider prov = new EctProviderData().getProvider(provNo);
   String patientName = pd.getFirstName()+" "+pd.getSurname();
@@ -969,7 +969,6 @@ function removeSaveFeedback()  {
 					onMouseOver="javascript:window.status='<bean:message key="oscarEncounter.Index.createForm"/> <%=patientName%>.'; return true;">
 					<option value="null" selected>-<bean:message
 						key="oscarEncounter.Index.addForm" />- <%
-                        //EctFormData.Form[] forms = new EctFormData().getForms();
                         for(int j=0; j<forms.length; j++) {
                             EctFormData.Form frm = forms[j];
                             if (!frm.isHidden()) {

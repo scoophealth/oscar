@@ -25,6 +25,7 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +36,19 @@ import javax.persistence.Table;
 @Table(name = "encounterForm")
 public class EncounterForm extends AbstractModel<String> implements Serializable {
 
+	/**
+	 * This comparator sorts By FormName but puts BC form names first
+	 */
+	public static final Comparator<EncounterForm> BC_FIRST_COMPARATOR=new Comparator<EncounterForm>()
+	{
+		public int compare(EncounterForm o1, EncounterForm o2) {
+			if (o1.formName.startsWith("BC") && o2.formName.startsWith("BC")) return(o1.formName.compareTo(o2.formName));
+			else if (o1.formName.startsWith("BC")) return(-1);
+			else if (o2.formName.startsWith("BC")) return(1);
+			else return(o1.formName.compareTo(o2.formName));
+		}	
+	};
+	
 	@Id
 	@Column(name = "form_value")
 	private String formValue;
@@ -45,7 +59,7 @@ public class EncounterForm extends AbstractModel<String> implements Serializable
 	@Column(name = "form_table")
 	private String formTable;
 	
-	private int hidden;
+	private boolean hidden;
 	
 	@Override
     public String getId() {
@@ -68,11 +82,12 @@ public class EncounterForm extends AbstractModel<String> implements Serializable
     	this.formTable = formTable;
     }
 
-	public int getHidden() {
+
+	public boolean isHidden() {
     	return hidden;
     }
 
-	public void setHidden(int hidden) {
+	public void setHidden(boolean hidden) {
     	this.hidden = hidden;
     }
 

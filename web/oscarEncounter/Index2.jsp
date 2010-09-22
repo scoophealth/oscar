@@ -164,7 +164,7 @@ if (request.getParameter("casetoEncounter")==null)
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
   String provNo = bean.providerNo;
-  EctFormData.Form[] forms = new EctFormData().getForms();
+  EctFormData.Form[] forms = EctFormData.getForms();
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
   String famDocName, famDocSurname;
   if(bean.familyDoctorNo.equals("")) {

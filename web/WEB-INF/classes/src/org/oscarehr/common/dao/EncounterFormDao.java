@@ -29,7 +29,6 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.EncounterForm;
-import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -51,4 +50,5 @@ public class EncounterFormDao extends AbstractDao<EncounterForm> {
 		
 		return(results);
 	}
+
 }

@@ -82,7 +82,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
 				String key;
 				int hash;
 				// grab all of the forms
-				EctFormData.Form[] forms = new EctFormData().getForms();
+				EctFormData.Form[] forms = EctFormData.getForms();
 
 				String BGCOLOUR = request.getParameter("hC");
 				for (int j = 0; j < forms.length; j++) {
