@@ -167,34 +167,14 @@ public final class EDocUtil extends SqlUtilBaseS {
         
         runPreparedSql(preparedSQL, param);
         String document_no = getLastDocumentNo();
-        Integer id=Integer.parseInt(getMaxCtlDocId())+1;
-        String ctlDocumentSql = "INSERT INTO ctl_document VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "' ,"+id.toString()+" )";
+        String ctlDocumentSql = "INSERT INTO ctl_document (module,module_id,document_no,status) VALUES ('" + newDocument.getModule() + "', " + newDocument.getModuleId() + ", " + document_no + ", '" + newDocument.getStatus() + "'  )";
        
         MiscUtils.getLogger().debug("in addDocumentSQL ,add ctl_document: " + ctlDocumentSql);
         runSQL(ctlDocumentSql);
         return document_no;
     }
 
-    public static String getMaxCtlDocId(){
-        String id = null;
-        try {
-            DBHandler db = new DBHandler();
-            String sql = "select max(id) from ctl_document";
-            ResultSet rs = db.GetSQL(sql);
-            if (rs.next()) {
-                id = oscar.Misc.getString(rs, 1);
-            }
-            rs.close();
-        } catch (SQLException e) {
-            MiscUtils.getLogger().error("Error", e);
-        }
-        if(id==null)
-            return "0";
-        else{
-            return id;
-        }
-    }
-
+   
     public static void detachDocConsult(String docNo, String consultId) {
         String sql = "UPDATE consultdocs SET deleted = 'Y' WHERE requestId = " + consultId + " AND document_no = " + docNo + " AND doctype = 'D'";
         MiscUtils.getLogger().debug("detachDoc: " + sql);
