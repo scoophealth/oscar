@@ -167,20 +167,4 @@ public class EctFormData {
         }
     }
 
-    public String getFormNameByFormTable(String value){
-        String formName = "";
-        try{
-            DBHandler db = new DBHandler();
-            String sql = "SELECT form_name from encounterForm where form_value='" + value + "'";
-            ResultSet rs = db.GetSQL(sql);
-            if (rs.next())
-                formName = db.getString(rs,"form_name");
-            rs.close();
-        }
-        catch(SQLException e){
-            MiscUtils.getLogger().error("Error", e);
-        }
-        return formName;
-    }
-
 }
