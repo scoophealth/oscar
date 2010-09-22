@@ -30,6 +30,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
 import org.oscarehr.util.MiscUtils;
@@ -49,7 +50,18 @@ public class DocumentDAO extends HibernateDaoSupport {
     public void save(Document document){
         getHibernateTemplate().saveOrUpdate(document);
     }
-    
+
+    public Demographic getDemoFromDocNo(String docNo){//return null if no demographic linked to this document
+        Demographic d=null;
+        Integer i=Integer.parseInt(docNo);
+        String q="select d from Demographic d, CtlDocument c where c.id.module='demographic'"
+                         + " and c.moduleId!='-1' and c.moduleId=d.DemographicNo and c.id.documentNo=? ";
+        List rs=(List)getHibernateTemplate().find(q,i);
+        if(rs.size()>0){
+            d=(Demographic)rs.get(0);
+        }
+        return d;
+    }
     
     public CtlDocument getCtrlDocument(Integer docId) {
         List cList = null;
