@@ -167,21 +167,6 @@ public class EctFormData {
         }
     }
 
-    public String getResource() throws java.sql.SQLException {
-        String ret = "";
-
-        DBHandler db = new DBHandler();
-        String sql = "SELECT value FROM property WHERE name='resource'";
-        ResultSet rs = db.GetSQL(sql);
-
-        while(rs.next()) {
-            ret = db.getString(rs,"value");
-        }
-
-        rs.close();
-        return ret;
-    }
-    
     public String getFormNameByFormTable(String value){
         String formName = "";
         try{
