@@ -269,6 +269,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                                     updateStatus(formid,labid);                                                                                
                                                                                 else
                                                                                     matchMe();
+                                                                            }else{
+                                                                                alert("Please relate lab to a patient");
+                                                                                matchMe();
                                                                             }
                                                                         }
                                                                     }
