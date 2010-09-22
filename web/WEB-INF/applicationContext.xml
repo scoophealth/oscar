@@ -61,7 +61,6 @@
 	<bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.AllergyDAO" autowire="byName" />
 	<bean id="prescriptionDAO" class="org.oscarehr.casemgmt.dao.PrescriptionDAO" autowire="byName" />
 	<bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName" />
-	<bean id="EncounterFormDAO" class="org.oscarehr.casemgmt.dao.EncounterFormDAO" autowire="byName" />
 	<bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName" />
 	<bean id="secroleDao" class="com.quatro.dao.security.SecroleDao" autowire="byName"/>
 	<bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.ApptDAO" autowire="byName" />
@@ -215,7 +214,6 @@
 		<property name="allergyDAO" ref="AllergyDAO" />
 		<property name="prescriptionDAO" ref="prescriptionDAO" />
 		<property name="issueDAO" ref="IssueDAO" />
-		<property name="encounterFormDAO" ref="EncounterFormDAO" />
 		<property name="messagetblDAO" ref="MessagetblDAO" />
 		<property name="echartDAO" ref="EchartDAO" />
 		<property name="apptDAO" ref="ApptDAO" />

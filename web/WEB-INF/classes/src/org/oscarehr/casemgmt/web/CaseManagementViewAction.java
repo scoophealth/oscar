@@ -80,6 +80,7 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
@@ -306,7 +307,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			request.setAttribute("teamMembers", teamMembers);
 
 			/* prepare new form list for patient */
-			se.setAttribute("casemgmt_newFormBeans", this.caseManagementMgr.getEncounterFormBeans());
+			EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+			se.setAttribute("casemgmt_newFormBeans", encounterFormDao.findAll());
 
 			/* prepare messenger list */
 			se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(demoNo)));

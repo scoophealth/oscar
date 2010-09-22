@@ -268,7 +268,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 
         <select name="selectCurrentForms" class="ControlSelect" onChange="javascript:selectBox(this)" onMouseOver="javascript:window.status='View any of <%=bean.patientLastName+","+bean.patientFirstName%>\'s current forms.';return true;">
             <option value="null" selected>-current forms-</option>
-            <nested:iterate id="cf" name="casemgmt_newFormBeans" type="org.oscarehr.casemgmt.model.Encounterform">
+            <nested:iterate id="cf" name="casemgmt_newFormBeans" type="org.oscarehr.common.model.EncounterForm">
                 <%
                     String table = cf.getFormTable();
                     if(!table.equalsIgnoreCase("")){
@@ -292,7 +292,7 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
     <tr><td>
         <select name="selectNewForms" class="ControlSelect" onChange="javascript:selectBox(this)" onMouseOver="javascript:window.status='View <%=bean.patientLastName+","+bean.patientFirstName%>\'s new forms list.';return true;">
             <option value="null" selected>-add new form-</option>
-            <nested:iterate id="cf" name="casemgmt_newFormBeans" type="org.oscarehr.casemgmt.model.Encounterform">
+            <nested:iterate id="cf" name="casemgmt_newFormBeans" type="org.oscarehr.common.model.EncounterForm">
                 <% if (((Integer)cf.getHidden()).intValue()!=0) {
                     String value = session.getAttribute("casemgmt_oscar_baseurl")+"/appointment/"
                             +cf.getFormValue()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo;

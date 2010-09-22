@@ -65,7 +65,6 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
 import org.oscarehr.casemgmt.dao.EchartDAO;
-import org.oscarehr.casemgmt.dao.EncounterFormDAO;
 import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
 import org.oscarehr.casemgmt.dao.HashAuditDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -119,7 +118,6 @@ public class CaseManagementManager {
 	private CaseManagementCPPDAO caseManagementCPPDAO;
 	private AllergyDAO allergyDAO;
 	private PrescriptionDAO prescriptionDAO;
-	private EncounterFormDAO encounterFormDAO;
 	private MessagetblDAO messagetblDAO;
 	private EchartDAO echartDAO;
 	private ApptDAO apptDAO;
@@ -520,10 +518,6 @@ public class CaseManagementManager {
 		}
 
 		return (null);
-	}
-
-	public List getEncounterFormBeans() {
-		return encounterFormDAO.getAllForms();
 	}
 
 	public List getMsgBeans(Integer demographicNo) {
@@ -1381,10 +1375,6 @@ public class CaseManagementManager {
 
 	public void setApptDAO(ApptDAO apptDAO) {
 		this.apptDAO = apptDAO;
-	}
-
-	public void setEncounterFormDAO(EncounterFormDAO dao) {
-		this.encounterFormDAO = dao;
 	}
 
 	public void setMessagetblDAO(MessagetblDAO dao) {
