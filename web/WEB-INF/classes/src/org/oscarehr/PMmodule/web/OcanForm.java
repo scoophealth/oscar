@@ -2,6 +2,7 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -552,4 +553,62 @@ public class OcanForm {
 		
 		return(sb.toString());
 	}
+	
+	
+	public static String renderAsDrugUseRadioBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel)
+	{
+		return renderAsDrugUseRadioBoxOptions(ocanStaffFormId, question,options,prepopulationLevel, false);
+	}
+	
+	public static String renderAsDrugUseRadioBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
+	{
+		 
+		StringBuilder sb=new StringBuilder();
+		sb.append("<table width=\"100%\">");
+		sb.append("<tr><td></td><td>Past 6 Months</td><td>Ever</td></tr>");
+		for (OcanFormOption option : options)
+		{
+			String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getOcanDataCategoryName());
+			String value = option.getOcanDataCategoryValue(); //drug id
+			
+			String checked2 = null;
+			String checked3 = null;
+			
+			List<OcanStaffFormData> freqAnswer = getStaffAnswers(ocanStaffFormId, value+"_DrugUseFreq", prepopulationLevel);
+			Iterator it = freqAnswer.iterator();
+			while(it.hasNext()) {
+				OcanStaffFormData data = (OcanStaffFormData)it.next();
+				checked2=((data.getAnswer().equals("5"))?"checked":"");
+				checked3=((data.getAnswer().equals("6"))?"checked":"");
+			}	
+			sb.append("<tr><td>"+htmlEscapedName+"</td><td><input type=\"radio\" "+checked2+" name=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_DrugUseFreq\" value=\"5\" /></td><td><input type=\"radio\" "+checked3+" name=\""+StringEscapeUtils.escapeHtml(option.getOcanDataCategoryValue())+"_DrugUseFreq\" value=\"6\" /></td></tr>");
+		}
+		
+		sb.append(renderAsDrugInjectionRadioBoxOptions(ocanStaffFormId,question,options,prepopulationLevel,clientForm));
+		sb.append("</table>");
+		return(sb.toString());
+	}
+
+	
+	public static String renderAsDrugInjectionRadioBoxOptions(Integer ocanStaffFormId, String question, List<OcanFormOption> options, int prepopulationLevel, boolean clientForm)
+	{
+		 
+		StringBuilder sb=new StringBuilder();
+		String checked2 = null;
+		String checked3 = null;
+		
+		List<OcanStaffFormData> freqAnswer = getStaffAnswers(ocanStaffFormId, "drug_injection_freq", prepopulationLevel);
+		Iterator it = freqAnswer.iterator();
+		while(it.hasNext()) {
+			OcanStaffFormData data = (OcanStaffFormData) it.next();
+			checked2=((data.getAnswer().equals("5"))?"checked":"");
+			checked3=((data.getAnswer().equals("6"))?"checked":"");
+		}		
+		sb.append("<tr><td>Has the substance been injected?</td><td><input type=\"radio\" "+checked2+" name=\"drug_injection_freq\" value=\"5\" /></td><td><input type=\"radio\" "+checked3+" name=\"drug_injection_freq\" value=\"6\" /></td></tr>");
+	
+		
+		return(sb.toString());
+	}
+
+
 }
