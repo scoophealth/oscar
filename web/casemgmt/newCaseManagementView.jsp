@@ -712,29 +712,37 @@ try
 						}	
 						
 						%>
+							<%-- render the note contents here --%>
 			  				<div id="txt<%=note.getNoteId()%>" style="<%=(note.isDocument()||note.isCpp()||note.isEformData()||note.isEncounterForm())?(bgColour+";color:white;font-size:9px"):""%>">
 		  						<%=noteStr%>
 		  						<%
-		  							if (note.isCpp())
+		  							if (note.isCpp()||note.isEformData()||note.isEncounterForm())
 		  							{
 		  								%>
 											<div id="observation<%=note.getNoteId()%>" style="float: right; margin-right: 3px;">
 												<i>
 													Date:&nbsp;
-													<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>&nbsp;
-													<bean:message key="oscarEncounter.noteRev.title" />
+													<span id="obs<%=note.getNoteId()%>"><%=DateUtils.getDate(note.getObservationDate(), dateFormat, request.getLocale())%></span>
 													<%
-														if (rev!=null)
+														if (note.isCpp())
 														{
 															%>
-																<a style="color:#ddddff" href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
+																&nbsp;
+																<bean:message key="oscarEncounter.noteRev.title" />
 															<%
-														}
-														else
-														{
-															%>
-																N/A
-															<%
+
+															if (rev!=null)
+															{
+																%>
+																	<a style="color:#ddddff" href="#" onclick="return showHistory('<%=note.getNoteId()%>', event);"><%=rev%></a>		
+																<%
+															}
+															else
+															{
+																%>
+																	N/A
+																<%
+															}
 														}
 													%>
 												</i>
