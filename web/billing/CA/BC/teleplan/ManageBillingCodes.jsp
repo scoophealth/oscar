@@ -348,7 +348,7 @@ tr.up{
                             }
                             
                         }
-                        String lin = Misc.forwardSpace(""+h.get("code"), 5)+Misc.forwardSpace(""+h.get("fee"),8)+Misc.forwardSpace(""+h.get("desc"),46);
+                        String lin = Misc.forwardSpace(""+h.get("code"), 5)+Misc.forwardSpace(""+h.get("fee"),8)+Misc.forwardSpace(""+h.get("desc"),50);
                     %>
                    
                     <tr class="<%=classStyle%>">
