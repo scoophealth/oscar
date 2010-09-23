@@ -60,6 +60,7 @@ public final class BillingCodeData implements Comparable      {
    | specialty             | varchar(15) | YES  |     | NULL    |                |
    | region                | varchar(5)  | YES  |     | NULL    |                |
    | anaesthesia           | char(2)     | YES  |     | NULL    |                |
+   | gstFlag               | tinyint(1)  | NO   |     | 0       |                |
    +-----------------------+-------------+------+-----+---------+----------------+
    */
 
@@ -121,7 +122,7 @@ public final class BillingCodeData implements Comparable      {
     billingService.setBillingserviceDate(new Date());
     billingService.setRegion("BC");
     billingService.setAnaesthesia("00");
-
+    billingservice.SetGstFlag(false);
     billingServiceDao.persist(billingService);
     return retval;
   }
