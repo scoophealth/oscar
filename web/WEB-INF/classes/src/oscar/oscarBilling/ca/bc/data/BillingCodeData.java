@@ -122,7 +122,7 @@ public final class BillingCodeData implements Comparable      {
     billingService.setBillingserviceDate(new Date());
     billingService.setRegion("BC");
     billingService.setAnaesthesia("00");
-    billingservice.SetGstFlag(false);
+    billingService.setGstFlag(false);
     billingServiceDao.persist(billingService);
     return retval;
   }
