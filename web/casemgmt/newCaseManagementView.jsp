@@ -52,7 +52,8 @@
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao"%>
 
 <%@page import="org.oscarehr.util.MiscUtils"%>
-<%@page import="oscar.util.UtilDateUtilities"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@page import="oscar.util.UtilDateUtilities"%>
+<%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
@@ -706,6 +707,14 @@ try
 							else url+=note.getNoteId();
 							
 							url += "'); return false;";
+							%>
+								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
+							<%
+						} else if (note.isEncounterForm())
+						{
+							String winName = "encounterforms"+demographicNo;
+							int hash = Math.abs(winName.hashCode());
+							String url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/form/forwardshortcutname.jsp?demographic_no="+demographicNo+"&amp;formname="+StringEscapeUtils.escapeHtml(((NoteDisplayNonNote)note).getLinkInfo())+"'); return false;";
 							%>
 								<a class="links" title="<bean:message key="oscarEncounter.view.eformView"/>" id="view<%=note.getNoteId()%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 8px;"> <bean:message key="oscarEncounter.view" /> </a> 
 							<%
