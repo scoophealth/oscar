@@ -702,6 +702,7 @@ CREATE TABLE eform_data (
   form_provider varchar(255) default NULL,
   form_data mediumtext,
   patient_independent boolean,
+  roleType varchar(50) default NULL,
   PRIMARY KEY  (fdid),
   UNIQUE KEY id (fdid),
   KEY `idx_eform_data_demographic_no` (`demographic_no`),
