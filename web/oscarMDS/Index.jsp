@@ -375,8 +375,8 @@ final String noAckStatus="N";
                                                 <% } %>
                                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
                                                 <input type="button" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
-                                                <% if (request.getParameter("fname") != null) { %>
-                                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
+                                                <% if (demographicNo == null && request.getParameter("fname") != null) { %>
+                                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='../dms/inboxManage.do?method=prepareForIndexPage&providerNo=<%= providerNo %>'">
                                                 <% } %>
                                                 <% if (demographicNo == null && labdocs.size() > 0) { %>                                                    
                                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
