@@ -39,63 +39,68 @@ public class EncounterForm extends AbstractModel<String> implements Serializable
 	/**
 	 * This comparator sorts By FormName but puts BC form names first
 	 */
-	public static final Comparator<EncounterForm> BC_FIRST_COMPARATOR=new Comparator<EncounterForm>()
-	{
+	public static final Comparator<EncounterForm> BC_FIRST_COMPARATOR = new Comparator<EncounterForm>() {
 		public int compare(EncounterForm o1, EncounterForm o2) {
-			if (o1.formName.startsWith("BC") && o2.formName.startsWith("BC")) return(o1.formName.compareTo(o2.formName));
-			else if (o1.formName.startsWith("BC")) return(-1);
-			else if (o2.formName.startsWith("BC")) return(1);
-			else return(o1.formName.compareTo(o2.formName));
-		}	
+			if (o1.formName.startsWith("BC") && o2.formName.startsWith("BC")) return (o1.formName.compareTo(o2.formName));
+			else if (o1.formName.startsWith("BC")) return (-1);
+			else if (o2.formName.startsWith("BC")) return (1);
+			else return (o1.formName.compareTo(o2.formName));
+		}
 	};
-	
+
 	@Id
 	@Column(name = "form_value")
 	private String formValue;
-	
+
 	@Column(name = "form_name")
 	private String formName;
-	
+
 	@Column(name = "form_table")
 	private String formTable;
-	
-	private boolean hidden;
-	
+
+	// yes the column name is wrong, if hidden=0 it means do not display, if hidden>0 it means to show it and it is the order in which they should be displayed
+	@Column(name = "hidden")
+	private int displayOrder;
+
 	@Override
-    public String getId() {
-	    return(formValue);
-    }
+	public String getId() {
+		return (formValue);
+	}
 
 	public String getFormName() {
-    	return formName;
-    }
+		return formName;
+	}
 
 	public void setFormName(String formName) {
-    	this.formName = formName;
-    }
+		this.formName = formName;
+	}
 
 	public String getFormTable() {
-    	return formTable;
-    }
+		return formTable;
+	}
 
 	public void setFormTable(String formTable) {
-    	this.formTable = formTable;
-    }
-
-
-	public boolean isHidden() {
-    	return hidden;
-    }
-
-	public void setHidden(boolean hidden) {
-    	this.hidden = hidden;
-    }
+		this.formTable = formTable;
+	}
 
 	public String getFormValue() {
-    	return formValue;
-    }
+		return formValue;
+	}
 
 	public void setFormValue(String formValue) {
-    	this.formValue = formValue;
+		this.formValue = formValue;
+	}
+
+	public int getDisplayOrder() {
+    	return displayOrder;
     }
+
+	public void setDisplayOrder(int displayOrder) {
+    	this.displayOrder = displayOrder;
+    }
+	
+	public boolean isHidden()
+	{
+		return(displayOrder==0);
+	}
 }
