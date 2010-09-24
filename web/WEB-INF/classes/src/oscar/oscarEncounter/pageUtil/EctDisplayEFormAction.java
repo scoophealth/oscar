@@ -25,7 +25,6 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -56,78 +55,85 @@ public class EctDisplayEFormAction extends EctDisplayAction {
     private String cmd = "eforms";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                                                                                  
-
-	boolean a = true;
-	Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.eForms");
-	String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-	a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
-	if(!a) {
-		 return true; //eforms link won't show up on new CME screen.
-	} else {
-	      
-        //set lefthand module heading and link
-        String winName = "eForm" + bean.demographicNo;
-        String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId=" + cmd + "')";
-        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.eForms"));
-        Dao.setLeftURL(url);
-        
-        //set the right hand heading link
-        winName = "AddeForm" + bean.demographicNo;
-        url = "popupPage(500,950,'"+winName+"','"+request.getContextPath()+"/eform/efmformslistadd.jsp?demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"'); return false;";
-        Dao.setRightURL(url);        
-        Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action      
-
-        StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");        
-        String js = ""; 
-        ArrayList<Hashtable<String,Object>> eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT, roleName);
-        String key;
-        int hash;
-        String BGCOLOUR = request.getParameter("hC");
-        for( int i = 0; i < eForms.size(); ++i ) {
-            Hashtable<String,Object> curform = eForms.get(i);
-            winName = (String)curform.get("formName") + bean.demographicNo;            
-            hash = Math.abs(winName.hashCode());
-            url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','FormA"+i+"');";
-            logger.debug("SETTING EFORM URL " + url);
-            key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
-            key = StringEscapeUtils.escapeJavaScript(key);
-            js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
-            javascript.append(js);
-        }
-        
-        eForms.clear();
-
-		EFormDataDao eFormDataDao=(EFormDataDao)SpringUtils.getBean("EFormDataDao");
-		List<EFormData> eFormDatas=eFormDataDao.findByDemographicIdCurrentPatientIndependent(new Integer(bean.demographicNo), true, false);
-		filterRoles(eFormDatas, roleName);
-		Collections.sort(eFormDatas, EFormData.FORM_DATE_COMPARATOR);
-		Collections.reverse(eFormDatas);
-
-		for (EFormData eFormData : eFormDatas)
-		{
-            NavBarDisplayDAO.Item item = Dao.Item();
-            winName = eFormData.getFormName() + bean.demographicNo;            
-            hash = Math.abs(winName.hashCode());            
-            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + eFormData.getId() + "&parentAjaxId=" + cmd + "');";            
-            String formattedDate = DateUtils.getDate(eFormData.getFormDate(),dateFormat,request.getLocale());
-            key = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";
-            item.setLinkTitle(eFormData.getSubject());
-            key = StringEscapeUtils.escapeJavaScript(key);
-            js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
-            javascript.append(js);                
-            url += "return false;";
-            item.setURL(url);
-            String strTitle = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-            item.setTitle(strTitle);  
-            item.setDate(eFormData.getFormDate());
-            Dao.addItem(item);
-        }
-                        
-        javascript.append("</script>");
-        Dao.setJavaScript(javascript.toString());
-
-        return true;
-	}                  
+	try
+	{
+		boolean a = true;
+		Vector v = OscarRoleObjectPrivilege.getPrivilegeProp("_newCasemgmt.eForms");
+		String roleName = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+		a = OscarRoleObjectPrivilege.checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1));
+		if(!a) {
+			 return true; //eforms link won't show up on new CME screen.
+		} else {
+		      
+	        //set lefthand module heading and link
+	        String winName = "eForm" + bean.demographicNo;
+	        String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId=" + cmd + "')";
+	        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.eForms"));
+	        Dao.setLeftURL(url);
+	        
+	        //set the right hand heading link
+	        winName = "AddeForm" + bean.demographicNo;
+	        url = "popupPage(500,950,'"+winName+"','"+request.getContextPath()+"/eform/efmformslistadd.jsp?demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"'); return false;";
+	        Dao.setRightURL(url);        
+	        Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action      
+	
+	        StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");        
+	        String js = ""; 
+	        ArrayList<Hashtable<String,Object>> eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT, roleName);
+	        String key;
+	        int hash;
+	        String BGCOLOUR = request.getParameter("hC");
+	        for( int i = 0; i < eForms.size(); ++i ) {
+	            Hashtable<String,Object> curform = eForms.get(i);
+	            winName = (String)curform.get("formName") + bean.demographicNo;            
+	            hash = Math.abs(winName.hashCode());
+	            url = "popupPage(700,800,'"+hash+"','"+request.getContextPath()+"/eform/efmformadd_data.jsp?fid="+curform.get("fid")+"&demographic_no="+bean.demographicNo+"&apptProvider="+bean.getCurProviderNo()+"&appointment="+bean.appointmentNo+"&parentAjaxId="+cmd+"','FormA"+i+"');";
+	            logger.debug("SETTING EFORM URL " + url);
+	            key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
+	            key = StringEscapeUtils.escapeJavaScript(key);
+	            js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
+	            javascript.append(js);
+	        }
+	        
+	        eForms.clear();
+	
+			EFormDataDao eFormDataDao=(EFormDataDao)SpringUtils.getBean("EFormDataDao");
+			List<EFormData> eFormDatas=eFormDataDao.findByDemographicIdCurrentPatientIndependent(new Integer(bean.demographicNo), true, false);
+			filterRoles(eFormDatas, roleName);
+			Collections.sort(eFormDatas, EFormData.FORM_DATE_COMPARATOR);
+			Collections.reverse(eFormDatas);
+	
+			for (EFormData eFormData : eFormDatas)
+			{
+	            NavBarDisplayDAO.Item item = Dao.Item();
+	            winName = eFormData.getFormName() + bean.demographicNo;            
+	            hash = Math.abs(winName.hashCode());            
+	            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + eFormData.getId() + "&parentAjaxId=" + cmd + "');";            
+	            String formattedDate = DateUtils.getDate(eFormData.getFormDate(),dateFormat,request.getLocale());
+	            key = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";
+	            item.setLinkTitle(eFormData.getSubject());
+	            key = StringEscapeUtils.escapeJavaScript(key);
+	            js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
+	            javascript.append(js);                
+	            url += "return false;";
+	            item.setURL(url);
+	            String strTitle = StringUtils.maxLenString(eFormData.getFormName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+	            item.setTitle(strTitle);  
+	            item.setDate(eFormData.getFormDate());
+	            Dao.addItem(item);
+	        }
+	                        
+	        javascript.append("</script>");
+	        Dao.setJavaScript(javascript.toString());
+	
+	        return true;
+		}
+	}
+	catch (Exception e)
+	{
+		logger.error("Unexpected error", e);
+		throw(new RuntimeException(e));
+	}
   }
   
   public String getCmd() {
