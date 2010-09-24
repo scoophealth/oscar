@@ -907,6 +907,19 @@ try
 	&nbsp;<br />
 
 	</div>
+	<script type="text/javascript">
+		if (parseInt(navigator.appVersion)>3) {
+			if (navigator.appName=="Netscape") {
+				windowHeight = window.innerHeight;
+			}
+			if (navigator.appName.indexOf("Microsoft")!=-1) {
+				windowHeight = document.body.offsetHeight;
+			}
+
+			var divHeight=windowHeight-280;
+			$("encMainDiv").style.height = divHeight+'px'; 
+		}
+	</script>
 	
 	<div id='save' style="width: 99%; background-color: #CCCCFF; padding-top: 5px; margin-left: 2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">
 		<span style="float: right; margin-right: 5px;">
