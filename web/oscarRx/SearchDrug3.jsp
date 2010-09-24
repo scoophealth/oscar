@@ -802,6 +802,7 @@ body {
         <input type="hidden" name="disDrugId" id="disDrugId"/>
         <bean:message key="oscarRx.discontinuedReason.msgReason"/>
         <select name="disReason" id="disReason">
+            <option value="notSelected"><bean:message key="oscarRx.discontinuedReason.NotSelected"/></option>
             <option value="doseChange"><bean:message key="oscarRx.discontinuedReason.DoseChange"/></option>
             <option value="adverseReaction"><bean:message key="oscarRx.discontinuedReason.AdverseReaction"/></option>
             <option value="allergy"><bean:message key="oscarRx.discontinuedReason.Allergy"/></option>
@@ -816,6 +817,7 @@ body {
             <option value="cost"><bean:message key="oscarRx.discontinuedReason.Cost"/></option>
             <option value="drugInteraction"><bean:message key="oscarRx.discontinuedReason.DrugInteraction"/></option>
             <option value="other"><bean:message key="oscarRx.discontinuedReason.Other"/></option>
+            <option value="unknown"><bean:message key="oscarRx.discontinuedReason.Unknown"/></option>
         </select>
 
 
