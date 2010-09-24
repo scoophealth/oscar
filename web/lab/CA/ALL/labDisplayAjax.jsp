@@ -797,6 +797,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             </table>
 
         </form>
-        <a style="color:white;" href="javascript: void();" onclick="showHideItem('rawhl7');" >show</a>
-        <pre id="rawhl7" style="display:none;"><%=hl7%></pre>
+        <a style="color:white;" href="javascript:void(0);" onclick="showHideItem('rawhl7_<%=segmentID%>');" >show/hide</a>
+        <pre id="rawhl7_<%=segmentID%>" style="display:none;"><%=hl7%></pre>
     </div>
