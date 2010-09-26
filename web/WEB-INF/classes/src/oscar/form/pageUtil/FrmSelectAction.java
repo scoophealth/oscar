@@ -48,6 +48,7 @@ public class FrmSelectAction extends Action {
     {
         FrmSelectForm frm = (FrmSelectForm) form;                
         request.getSession().setAttribute("FrmSelectForm", frm);
+        
                                 
         if(frm.getForward()!=null){
             try{

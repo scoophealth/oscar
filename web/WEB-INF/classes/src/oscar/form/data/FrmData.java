@@ -153,16 +153,20 @@ public class FrmData {
         String[] ret = new String[2];
 		String table = null;
 
-        DBHandler db = new DBHandler();
-        String sql = "SELECT form_value, form_table FROM encounterForm WHERE form_name='" + formName + "'";
-        _log.debug(sql);
-        ResultSet rs = db.GetSQL(sql);
-        while(rs.next()) {
-            ret[0] = db.getString(rs,"form_value");
-            table = db.getString(rs,"form_table");
-        }
+		EncounterFormDao encounterFormDao=(EncounterFormDao) SpringUtils.getBean("encounterFormDao");
+		List<EncounterForm> forms=encounterFormDao.findByFormName(formName);
+		
+		for (EncounterForm encounterForm : forms)
+		{
+            ret[0] = encounterForm.getFormValue();
+            table = encounterForm.getFormTable();
+		}
 
-	ret[1] = "0";
+        DBHandler db = new DBHandler();
+        String sql;
+        ResultSet rs;
+        
+		ret[1] = "0";
         if (table.equals("form")) {
             String searchFormName = formName;
             if (searchFormName.equals("AR1")) searchFormName = "ar1_99_12"; // quick hack for ease of migration from old forms to new
