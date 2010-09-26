@@ -909,6 +909,7 @@ try
 	</div>
 	<script type="text/javascript">
 		if (parseInt(navigator.appVersion)>3) {
+			var windowHeight=750;
 			if (navigator.appName=="Netscape") {
 				windowHeight = window.innerHeight;
 			}
