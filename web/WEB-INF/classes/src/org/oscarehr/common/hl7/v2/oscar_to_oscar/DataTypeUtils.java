@@ -35,7 +35,8 @@ import ca.uhn.hl7v2.model.v26.segment.SFT;
 
 public final class DataTypeUtils {
 	private static final Logger logger = MiscUtils.getLogger();
-
+	public static final String HEALTH_NUMBER = "HEALTH_NUMBER";
+	public static final String CHART_NUMBER = "CHART_NUMBER";
 	public static final String HL7_VERSION_ID = "2.6";
 	public static final int NTE_COMMENT_MAX_SIZE = 65536;
 	public static final String ACTION_ROLE_SENDER = "SENDER";
@@ -298,6 +299,7 @@ public final class DataTypeUtils {
 		CX cx = pid.getPatientIdentifierList(0);
 		// health card string, excluding version code
 		cx.getIDNumber().setValue(demographic.getHin());
+		cx.getIdentifierTypeCode().setValue(HEALTH_NUMBER);
 		// blank for everyone but ontario use version code
 		cx.getIdentifierCheckDigit().setValue(demographic.getVer());
 		// province

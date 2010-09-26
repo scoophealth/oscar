@@ -46,6 +46,7 @@ public class OscarToOscarHl7V2Handler implements MessageHandler {
 	        logger.debug("Incoming HL7 Message : \n"+dataString);
 	        
 			AbstractMessage message=OscarToOscarUtils.pipeParserParse(dataString);
+
 			if (message instanceof ADT_A09) 
 			{
 				AdtA09Handler.handle((ADT_A09) message);
