@@ -64,8 +64,6 @@
     String formClass = "RhImmuneGlobulin";
     String formLink = "formRhImmuneGlobulin.jsp";
     
-//insert into encounterForm values ('RH Form', '../form/formRhImmuneGlobulin.jsp?demographic_no=', 'formRhImmuneGlobulin',0);
-
     String demographicNo = request.getParameter("demographic_no");
     if (demographicNo == null){
         demographicNo = (String) request.getAttribute("demographic_no");
