@@ -624,10 +624,6 @@
             <forward name="addAnother" path="/oscarRx/SearchDrug.jsp" />
             <forward name="viewScript" path="/oscarRx/ViewScript.jsp" />
         </action>
-        <action input="/oscarRx/prescribe.jsp" name="RxPrescribeForm" path="/oscarRx/prescribe" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
-            <forward name="refresh" path="/oscarRx/SearchDrug2.jsp" />
-            <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
-        </action>
         <action input="/oscarRx/WriteScript.jsp" name="RxStashForm" path="/oscarRx/stash" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxStashAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
         </action>
