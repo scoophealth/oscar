@@ -142,6 +142,10 @@ function closeit() {
 <p>
 <h1>Successful Addition of a billing Record.</h1>
 </p>
+<%
+// not sure what this variable is suppose to be, this page has never compiled since 2004 when some one did a faulty merge
+int nBillNo=0;
+%>
 <script LANGUAGE="JavaScript">
     if (self.opener.document.inputForm)
 		self.opener.document.inputForm.elements["caseNote.billing_code"].value="<%=nBillNo%>";
