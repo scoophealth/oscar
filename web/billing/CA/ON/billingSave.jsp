@@ -41,7 +41,7 @@ session.setAttribute("content", "");
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <html>
 <head>

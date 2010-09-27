@@ -48,7 +48,7 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 	scope="session" />
 <jsp:useBean id="documentBean" class="oscar.DocumentBean"
 	scope="request" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <%
 JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();

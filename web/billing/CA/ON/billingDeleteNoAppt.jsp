@@ -37,7 +37,7 @@ String curUser_no = (String) session.getAttribute("user");String userfirstname =
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <html>
 <head>

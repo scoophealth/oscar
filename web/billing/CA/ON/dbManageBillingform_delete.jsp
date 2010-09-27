@@ -32,7 +32,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <%
 String typeid = request.getParameter("servicetype");

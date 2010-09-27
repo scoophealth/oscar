@@ -41,7 +41,7 @@ String providerview = request.getParameter("providerview")==null?"all":request.g
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <%
 GregorianCalendar now=new GregorianCalendar();

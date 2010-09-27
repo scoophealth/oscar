@@ -31,7 +31,7 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="../billing/CA/BC/dbBilling.jsp"%>
+<%@ include file="../billing/CA/BC/dbBilling.jspf"%>
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));

@@ -32,7 +32,7 @@
 <jsp:useBean id="documentBean" class="oscar.DocumentBean"
 	scope="request" />
 
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <%  
 GregorianCalendar now=new GregorianCalendar();

@@ -26,7 +26,7 @@
 <%@page import="java.util.*, java.sql.*, oscar.*, java.net.*"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" /><%@include file="dbBilling.jsp"%>
+	scope="session" /><%@include file="dbBilling.jspf"%>
 <%
 
   String search = "", search2 = "";

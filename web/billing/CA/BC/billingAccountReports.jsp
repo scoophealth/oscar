@@ -37,7 +37,7 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@include file="dbBilling.jsp"%>
+<%@include file="dbBilling.jspf"%>
 <%
   String user_no;
   user_no = (String) session.getAttribute("user");

@@ -33,7 +33,7 @@
 	import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@include file="dbBilling.jsp"%>
+<%@include file="dbBilling.jspf"%>
 <%
   String search = "", search2 = "";
   search = request.getParameter("search");

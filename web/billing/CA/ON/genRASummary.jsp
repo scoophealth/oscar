@@ -35,7 +35,7 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 	scope="session" />
 <jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties"
 	scope="page" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 
 <%@page import="org.oscarehr.util.MiscUtils"%><html>

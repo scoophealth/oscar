@@ -33,7 +33,7 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 <% String search = "search_service_price";      
    String formName = request.getParameter("formName");
    String formElementCode = request.getParameter("formElementCode");

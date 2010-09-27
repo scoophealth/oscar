@@ -33,7 +33,7 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 <%
 String clinicview = oscarVariables.getProperty("clinic_view", "");
 String clinicNo = oscarVariables.getProperty("clinic_no", "");

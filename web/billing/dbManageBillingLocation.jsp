@@ -29,7 +29,7 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 <%
 	String location1 = "", location1desc = "";
 	for (int i = 1; i < 6; i++) {

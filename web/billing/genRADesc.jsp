@@ -37,7 +37,7 @@ user_no = (String) session.getAttribute("user");
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 <% String raNo = "", note="", htmlContent="", transaction="", messages="";
 raNo = request.getParameter("rano");
 //note = request.getParameter("note");

@@ -21,7 +21,7 @@
 <%@ include file="../admin/dbconnection.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 <%
 	String clinicview = oscarVariables.getProperty("clinic_view");
 	String clinicNo = oscarVariables.getProperty("clinic_no");

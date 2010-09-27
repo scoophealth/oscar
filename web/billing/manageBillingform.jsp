@@ -14,7 +14,7 @@ String service_form="", service_name="";
 <%@ include file="../admin/dbconnection.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 <%
   String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
    String reportAction=request.getParameter("reportAction")==null?"":request.getParameter("reportAction");

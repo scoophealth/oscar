@@ -1,6 +1,10 @@
 <%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-  if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
+  	if (session.getAttribute("userrole") == null)
+	{
+	  response.sendRedirect("../logout.jsp");
+	  return;
+	}
   String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>"
@@ -38,7 +42,7 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@include file="dbBilling.jsp"%>
+<%@include file="dbBilling.jspf"%>
 <%
   TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.queryResults(request.getParameter("billing_no"), "select_user_bill_report_wcb"));
   Properties codes = new MspErrorCodes();

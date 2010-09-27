@@ -36,7 +36,7 @@
 	scope="session" />
 <jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties"
 	scope="page" />
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 
 <html>
 <head>

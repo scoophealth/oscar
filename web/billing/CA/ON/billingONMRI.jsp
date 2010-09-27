@@ -43,7 +43,7 @@
 			String user_no = (String) session.getAttribute("user");
 
 			%>
-<%@ include file="dbBilling.jsp"%>
+<%@ include file="dbBilling.jspf"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
