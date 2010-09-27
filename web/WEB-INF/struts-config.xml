@@ -639,9 +639,6 @@
         <!--action input="/oscarRx/WriteScript.jsp" name="RxStashForm" path="/oscarRx/stash" scope="request" type="oscar.oscarRx.pageUtil.RxStashAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
         </action-->
-        <action input="/oscarRx/SearchDrug2.jsp"  path="/oscarRx/stash2" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxStashAction">
-            <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
-        </action>
 
         <action name="RxUseFavoriteForm" path="/oscarRx/useFavorite" scope="request" parameter="parameterValue" type="oscar.oscarRx.pageUtil.RxUseFavoriteAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
