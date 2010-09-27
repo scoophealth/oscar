@@ -197,7 +197,7 @@ if (clinicview.compareTo("000") == 0) { %>
 <%} else if (reportAction.compareTo("servicecode") == 0) {  %>
 <%@ include file="manageBillingform_service.jspf"%>
 <%} else if (reportAction.compareTo("dxcode") == 0) { %>
-<%@ include file="manageBillingform_dx.jsp"%>
+<%@ include file="manageBillingform_dx.jspf"%>
 <%
 }
 %>

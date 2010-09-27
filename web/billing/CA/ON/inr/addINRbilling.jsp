@@ -32,7 +32,7 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbINR.jsp"%>
+<%@ include file="dbINR.jspf"%>
 
 <%
 GregorianCalendar now=new GregorianCalendar();

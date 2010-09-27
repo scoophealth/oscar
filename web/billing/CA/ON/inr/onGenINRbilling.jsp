@@ -29,7 +29,7 @@
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbINR.jsp"%>
+<%@ include file="dbINR.jspf"%>
 <%//
 			JdbcBillingClaimImpl dbObj = new JdbcBillingClaimImpl();
 			String temp = "";

@@ -37,7 +37,7 @@ userlastname = (String) session.getAttribute("userlastname");
 <%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="../../errorpage.jsp"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbINR.jsp" %>
+<%@ include file="dbINR.jspf" %>
 <html>
 <head>
 <script LANGUAGE="JavaScript">

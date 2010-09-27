@@ -37,7 +37,7 @@ user_no = (String) session.getAttribute("user");
 	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 
-<%@ include file="dbINR.jsp"%>
+<%@ include file="dbINR.jspf"%>
 <% 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);

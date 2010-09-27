@@ -37,7 +37,7 @@ userlastname = (String) session.getAttribute("userlastname");
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbINR.jsp"%>
+<%@ include file="dbINR.jspf"%>
 
 <html>
 <head>
