@@ -829,7 +829,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             </table>
             
         </form><%String s = ""+System.currentTimeMillis();%>
-        <a style="color:white;" href="javascript: void();" onclick="showHideItem('rawhl7<%=s%>');" >show</a>
+        <a style="color:white;" href="javascript: void(0);" onclick="showHideItem('rawhl7<%=s%>');" >show</a>
         <pre id="rawhl7<%=s%>" style="display:none;"><%=hl7%></pre>
     </body>
 </html>
