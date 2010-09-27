@@ -33,7 +33,7 @@ if(session.getAttribute("user") == null ) response.sendRedirect("../../../../../
 <%@ include file="../../../../../admin/dbconnection.jsp"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
-<%@ include file="dbFLU.jsp"%>
+<%@ include file="dbFLU.jspf"%>
 <%
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);
