@@ -21,6 +21,11 @@
  * Hamilton 
  * Ontario, Canada 
  */
+body td {
+     font-weight:bold;
+     font-family:"Arial";
+}
+
 A.orange {
 	text-decoration: none;
 	font-weight: bold;
@@ -120,6 +125,12 @@ p {
 	font-size: 12px;
 }
 
+.dateAppointment {
+        font-weight:bold;
+        font-family: "Times New Roman";
+        font-size: 14px;
+}
+
 .datephour {
 	font-family: "Times New Roman";
 	font-size: 12px;
@@ -134,4 +145,43 @@ p {
 
 .tabalert {
 	color: red;
+}
+
+#navlist{
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+
+#navlist li {
+    padding-top: 0.5px;
+    padding-bottom: 0.5px;
+    padding-left: 2.5px;
+    padding-right: 2.5px;
+    display: inline;
+}
+
+#navlist li:hover { color: #fff; background-color: #486ebd; }
+#navlist li a:hover { color: #fff; background-color: #486ebd; }
+#navlist #logoutMobile { display:none; }
+
+.reason {
+    margin-left: 2px;
+    font-style: italic;
+}
+
+#providerSchedule, #providerSchedule td {
+    border-collapse: collapse;
+    border: 2px ridge #777777;
+}
+#providerSchedule td.noGrid { border:none; }
+
+.scheduleTime00, .scheduleTimeNot00{
+    width:5%;
+}
+.scheduleTime00 { background-color: #3EA4E1; }
+.scheduleTimeNot00 { background-color: #00A488; }
+
+#ivoryBar td {
+    border-top: 1px solid #c0c0c0;
 }
