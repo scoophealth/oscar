@@ -40,6 +40,7 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%@ page
 	import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*"
 	errorPage="errorpage.jsp"%>
