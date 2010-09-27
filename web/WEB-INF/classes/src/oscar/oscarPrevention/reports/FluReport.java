@@ -213,7 +213,7 @@ public class FluReport implements PreventionReport {
                 }
              }
              
-             if (asofDate.before(endOfYear)){
+             if (asofDate.before(endOfYear) && asofDate.after(beginingOfYear)){
                 letterProcessing( prd, cutoffDate);
              }else{
                 EctMeasurementsDataBeanHandler measurementData = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
@@ -318,9 +318,9 @@ public class FluReport implements PreventionReport {
                //    cal = new GregorianCalendar(2007, Calendar.AUGUST, 31);
                //    beginingOfYear = cal.getTime();   
                // }else{
-                   Calendar cal = new GregorianCalendar(year, Calendar.JANUARY, 1);
+                   Calendar cal = new GregorianCalendar(year+1, Calendar.JANUARY, 1);
                    endOfYear = cal.getTime();   
-                   cal = new GregorianCalendar(year-1, Calendar.AUGUST, 31);
+                   cal = new GregorianCalendar(year, Calendar.AUGUST, 31);
                    beginingOfYear = cal.getTime();   
                // }
                 log.debug("FLU REPORT FOR start: " +beginingOfYear+ " end: "+endOfYear);
