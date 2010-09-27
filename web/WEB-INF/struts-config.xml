@@ -599,7 +599,6 @@
         </action>
 
         <action input="/oscarRx/SearchDrug3.jsp" path="/oscarRx/WriteScript" parameter="parameterValue" scope="request" type="oscar.oscarRx.pageUtil.RxWriteScriptAction">
-            <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
             <forward name="newRx" path="/oscarRx/prescribe.jsp" />
         </action>
         <action path="/oscarEncounter/IncomingEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctIncomingEncounterAction">
