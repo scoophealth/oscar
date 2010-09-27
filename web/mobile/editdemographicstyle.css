@@ -1,0 +1,242 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
+
+html {
+     -webkit-text-size-adjust: none;
+}
+
+body {
+     background: #c8c8c8 url(../mobile/pinstripes.png);
+     font-family:"Helvetica";
+     margin: 45px 0 0; /* to leave room for header */
+     padding: 0px;
+}
+
+form {
+    margin:0px;
+}
+
+A {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+input[type="submit"], input[type="button"], input[type="reset"] {
+    font-size:12px;
+    width:auto;
+    -webkit-appearance:button; /* for iPhone */
+}
+
+td, table {
+    font-size: inherit;
+    width:100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-spacing: 0;
+}
+
+/*input:not(#cancelButton), .topStatusBar, #editBtn, #searchTable,*/
+input, .topStatusBar, #editBtn, #searchTable,
+.MainTableTopRow, .MainTableLeftColumn, .MainTableBottomRowLeftColumn,
+.MainTableBottomRowRightColumn
+{
+    display: none;
+}
+
+input#cancelButton { display: block; }
+
+li {
+    min-height: 18px;
+    line-height: 18px;
+    margin:0;
+    border-bottom: 1px solid #c0c0c0;
+    padding: 10px 5px;
+    font-size:14px;
+    font-weight:bold;
+    list-style:none;
+}
+
+.rec {
+    position:absolute;
+    width:100%;
+    text-align:center;
+    padding: 0;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0;
+    text-align: center;
+    font-size:17px;
+    z-index:1;
+    top:10px;
+    background-color: transparent; /*#eeeeff;*/
+    left:0px;
+}
+
+.rightButton { right:10px; }
+.leftButton { left: 10px; }
+.top { position:absolute !important; }
+
+.leftButton, .rightButton {
+    position: relative;
+    overflow: hidden;
+    /*-webkit-appearance:button;*/
+    margin: 0;
+    border-width: 0 5px;
+    padding: 0 3px;
+    width: auto;
+    min-width:30px;
+    min-height: 30px;
+    line-height: 30px;
+    font-family: inherit;
+    font-family:"Helvetica";
+    font-size: 12px;
+    font-weight: bold;
+    top:8px;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    text-align:center;
+    white-space: nowrap;
+    z-index:1;
+    -webkit-border-image: url(../mobile/toolButton.png) 0 5 0 5;
+    -moz-border-image: url(../mobile/toolButton.png) 0 5 0 5;
+}
+
+.blueButton {
+    -webkit-border-image: url(../mobile/blueButton.png) 0 5 0 5;
+    -moz-border-image: url(../mobile/blueButton.png) 0 5 0 5;
+}
+
+.redButton {
+    -webkit-border-image: url(../mobile/redButton.png) 0 5 0 5;
+    -moz-border-image: url(../mobile/redButton.png) 0 5 0 5;
+}
+
+.label {
+    width:100px;
+    display: table-cell;
+    color: #6d84a2;
+    text-align:right;
+    font-weight:bold;
+    padding-right: 6px;
+    font-size:13px;
+}
+
+.info {
+    text-align:left;
+    display: table-cell;
+    font-weight:bold;
+    font-size: 13px;
+}
+
+.RowTop {
+    position:absolute;
+    top:0px;
+    left:0px;
+    background: #6d84a2 repeat-x;
+    font-size: medium;
+    font-weight: bold;
+    -webkit-box-sizing:border-box;
+    height: 45px;
+    width:100%;
+    padding:0;
+    border-bottom: 1px black solid;
+}
+
+div.demographicSection > h3 {
+    font-size: 16px;
+    margin: 4px 0 4px 8px;
+    color: #34343F;/* #4D4D70; */
+    text-shadow: white 0px 1px 0;
+    width:100%;
+
+}
+
+div.demographicSection {
+    padding: 0 10px;
+    display:none;
+}
+
+.demographicWrapper, .leftSection, .rightSection {
+    width:100%;
+}
+
+#mobileDetailSections {
+    width:100%;
+    position:absolute;
+    background-color:white;
+    height:100%;
+    background:white;
+    display:none;
+}
+
+#otherContacts a {
+    color: #218359;
+}
+
+ul {
+    position: relative;
+    margin: 0; padding: 0;
+    width:100%;
+    background: #FFFFFF;
+    -webkit-border-radius: 10px;
+    border: 1px solid #c0c0c0;
+    font-size: 16px;
+}
+
+ul.wideList {
+    position: relative;
+    margin: 0 0 0px 0;
+    padding: 0;
+    width:100%;
+    background: #FFFFFF;
+    -webkit-border-radius: 0px;
+    border: 1px solid #c0c0c0;
+    font-size: 16px;
+}
+
+#mobileDetailSections ul li a {
+    display:block;
+    background: url("listArrow.png") no-repeat scroll right center transparent;
+    font-size: 15px;
+    overflow:hidden;
+    text-decoration:none;
+}
+
+ul li {
+    position: relative;
+    padding-left:5px;
+    padding-right:5px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    text-align: left;
+}
+
+ul li:last-child,
+fieldset > .row:last-child {
+    border-bottom: none !important;
+}

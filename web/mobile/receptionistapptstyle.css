@@ -1,0 +1,209 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+html {
+    -webkit-text-size-adjust:none; /* doesn't allow text-changing on orientation */
+}
+body {
+    padding:0; margin:0;
+    background: #c8c8c8;
+}
+
+body, body > div {
+     font-family:"Helvetica";
+     height:100%;
+}
+
+form { margin:0px; }
+
+li { padding:0px; margin:0; list-style: none; }
+
+A {
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+}
+
+td { font-size: 15px; }
+
+.adhour { text-align:center; }
+
+span.dateAppointment {
+	font-family: "Arial";
+	font-size: 15px;
+	color: black;
+        font-weight: bold;
+}
+/* Adjustments made to prevent further additions to jsp's from being displayed in the mobile version */
+#navlist > *:not(#today):not(#menu),
+table#firstTable td:not(#firstMenu),
+#navlistcontents > *:not(#search):not(#logoutMobile),
+table#providerSchedule td:not(.scheduleTime00):not(.scheduleTimeNot00):not(.appt):not(.noGrid),
+.appt a:not(.apptLink):not(.encounterBtn):not(.masterBtn):not(.apptStatus),
+.infirmaryView, #calendarLinkBottom, #group, #expandReason
+{
+    display:none;
+}
+
+a.encounterBtn, a.masterBtn { margin-left:15px; }
+
+#calendarLink {
+    float:left;
+    margin-left: 10px;
+}
+
+.title {
+    position:absolute;
+    width:100%;
+    text-align:center;
+    padding: 0;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0;
+    text-align: center;
+    font-size:17px;
+    top:10px;
+    background-color: transparent;
+    left:0px;
+}
+
+.scheduleTime00 {
+    width:25%;
+    height:23px;
+    background-color: #E5E3E3;
+    color: black;
+    border-right: 1px solid #CCC;
+}
+
+.scheduleTimeNot00 {
+    width:25%;
+    height:23px;
+    background-color: #F3F3F3;
+    border-right: 1px solid #CCC;
+}
+
+.scheduleTimeNot00 a, .scheduleTime00 a {
+    display:block;
+}
+
+#firstMenu, #navlist {
+    margin:0px;
+    padding:0px;
+}
+
+#navlist {
+    background: #6d84a2 repeat-x;
+    font-size: medium;
+    font-weight: bold;
+    -webkit-box-sizing:border-box;
+    height: 45px;
+    border-bottom: 1px black solid;
+}
+
+.rightButton { right:10px; }
+.leftButton { left:10px; }
+.top { position:absolute !important; }
+
+.button, .leftButton, .rightButton {
+    position: relative;
+    overflow: hidden;
+    /*-webkit-appearance:button;*/
+    margin: 0;
+    border-width: 0 5px;
+    padding: 0 3px;
+    width: auto;
+    min-width:30px;
+    min-height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    font-weight: bold;
+    top:8px;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    text-align:center;
+    white-space: nowrap;
+    z-index:1;
+    -webkit-border-image: url(../mobile/toolButton.png) 0 5 0 5;
+    -moz-border-image: url(../mobile/toolButton.png) 0 5 0 5;
+}
+
+.blueButton {
+    -webkit-border-image: url(../mobile/blueButton.png) 0 5 0 5;
+    -moz-border-image: url(../mobile/blueButton.png) 0 5 0 5;
+}
+
+.redButton {
+    -webkit-border-image: url(../mobile/redButton.png) 0 5 0 5;
+    -moz-border-image: url(../mobile/redButton.png) 0 5 0 5;
+}
+
+.redArrow {
+    position:relative;
+    top:1px;
+}
+
+#navlist li {
+    height:25px;
+    line-height:25px;
+    list-style:none;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+#navlist ul li {
+    border-bottom: 1px solid silver;
+}
+
+#navlist ul li:hover {
+    background: #3ea4e1;
+}
+
+#navlistcontents {
+    position:absolute;
+    left:55px;
+    top:5px;
+    border:1px silver solid;
+    background-color:#eeeeff;
+    padding: 0px;
+    margin: 0px;
+    z-index:1;
+}
+
+#dateAndCalendar {
+    width: 100%;
+    vertical-align: middle;
+    text-align:right;
+}
+
+#providerSchedule {
+    background-color: #fff;
+    padding:0px;
+    width:100%;
+}
+
+#providerSchedule td {
+    border-bottom: 1px solid #ccc;
+}

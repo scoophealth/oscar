@@ -1,0 +1,236 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+html {
+     -webkit-text-size-adjust:none;
+}
+
+body {
+     font-family:"Helvetica";
+     background-color:white;
+     width:100%;
+     padding:0;
+     margin:0;
+}
+
+body > div {
+    width:100%;
+    position:absolute;
+    top:0px;
+}
+
+form {
+    margin-bottom: 0px;
+}
+
+a {
+    text-decoration: none;
+    color: brown;
+}
+
+.header {
+    background: #6d84a2 repeat-x;
+    font-size: medium;
+    font-weight: bold;
+    -webkit-box-sizing:border-box;
+    height: 45px;
+    border-bottom: 1px black solid;
+}
+
+ul { margin: 0; padding: 0px; }
+
+li {
+    min-height: 40px;
+    margin:0;
+    border-bottom: 1px solid #E0E0E0;
+    padding:8px 5px 2px 0px; /* 8 5 2 10 */
+    font-size:18px;
+    font-weight:bold;
+    list-style:none;
+}
+
+input[type="submit"], input[type="button"], input[type="reset"] {
+    font-size:12px;
+    width:auto;
+    -webkit-appearance:button; /* for iPhone */
+}
+
+.wideInput {
+    font-size: 15px;
+    background-color: #E8E8E8;
+    border: 1px solid #999999;
+    -moz-border-radius: 3px;
+    width:70%;
+}
+
+.demoId, .demoIdSearch {
+    width: 40px;
+    padding-left: 5px;
+    padding-top: 9px;
+    text-align:left;
+}
+
+.demoIdSearch a {
+    font-size: 12px;
+    padding-left: 10px;
+    display: block;
+}
+
+.demoId input {
+    /* Make it look like text */
+    background-color: transparent;
+    font-weight: bold;
+    border: 0;
+    padding: 0;
+    font-size: 11px;
+}
+
+.searchBox, #demographicSearch {
+    z-index: 2;
+    background: #e8e8e8;
+    width:100%;
+    border-bottom:1px solid #c0c0c0;
+}
+
+.searchBox ul li:last-child {
+    height:0; /* get rid of extra padding at the end */
+    min-height:0;
+}
+
+#legend, .tableHeadings, #sortingMessages, .createNew, #demographicSearch,
+#searchResults li div:not(.demoId):not(.demoIdSearch):not(.name):not(.firstName):not(.lastName):not(.sex):not(.dob):not(.doctor)
+{
+    display:none;
+}
+input[type="submit"]:not(.leftButton):not(.rightButton):not(.mbttn),
+input[type="button"]:not(.leftButton):not(.rightButton),
+input[type="reset"]:not(.leftButton):not(.rightButton)
+{
+    display: none;
+}
+
+.sex, .dob, .doctor {
+    font-size: small;
+    padding-right:3px;
+    margin-top: -3px;
+    font-weight:normal;
+}
+
+.firstName, .lastName, .name {
+    padding-right: 5px;
+    display: block;
+}
+
+.sex {
+    padding-left: 45px;
+    clear:both;
+}
+
+li div {
+    display: block;
+    float:left;
+    vertical-align:text-bottom;
+}
+
+.title {
+    position:absolute;
+    width:100%;
+    text-align:center;
+    padding: 0;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0;
+    text-align: center;
+    font-size:17px;
+    top:10px;
+    background-color: transparent; /*#eeeeff;*/
+    left:0px;
+}
+
+.searchBox .label {
+    float:left;
+    margin-left:2%;
+    font-size: 15px;
+    width:18%;
+    height:30px;
+}
+
+.leftButton { left:10px; }
+.rightButton { right:10px; }
+.top { position:absolute !important; }
+
+.leftButton, .rightButton {
+    position: relative;
+    overflow: hidden;
+    /*-webkit-appearance:button;*/
+    margin: 0;
+    border-width: 0 5px;
+    padding: 0 3px;
+    width: auto;
+    min-width:30px;
+    min-height: 30px;
+    line-height: 30px;
+    font-family: inherit;
+    font-family:"Helvetica";
+    font-size: 12px;
+    font-weight: bold;
+    top:8px;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    text-align:center;
+    white-space: nowrap;
+    z-index:1;
+    -webkit-border-image: url(toolButton.png) 0 5 0 5;
+    -moz-border-image: url(toolButton.png) 0 5 0 5;
+}
+
+.blueButton {
+    -webkit-border-image: url(blueButton.png) 0 5 0 5;
+    -moz-border-image: url(blueButton.png) 0 5 0 5;
+}
+
+#nextPageButton, #prevPageButton {
+    position: absolute;
+    font-size: 12px;
+    font-family: inherit;
+    overflow: hidden;
+    -webkit-appearance:button;
+    margin: 0;
+    padding: 0 3px;
+    width: auto;
+    min-width:30px;
+    height: 25px;
+    line-height: 18px;
+    font-family: inherit;
+    font-family:"Helvetica";
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align:center;
+    white-space: nowrap;
+}
+
+#nextPageButton { right:5px; }
+#prevPageButton { left: 5px; }

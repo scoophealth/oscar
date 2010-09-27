@@ -1,0 +1,397 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ *
+ */
+HTML {
+    height:100%;
+    -webkit-text-size-adjust:none; /* doesn't allow text-changing on orientation */
+}
+
+BODY {
+    FONT-SIZE: Normal;
+    FONT-FAMILY: Helvetica, Tahoma, Arial, sans-serif;
+    background: white;
+    height:100%;
+    overflow-x:hidden;
+    margin:0; padding:0;
+}
+
+form {
+    margin: 0px;
+    padding: 0px;
+}
+
+input, textarea {
+    -webkit-appearance: none; /* removes text shadow on input elements */
+}
+
+.Title {
+	font-weight: bold;
+	font-size: 110%;
+	color: white;
+	background-color: #6699cc;
+}
+
+.note, .newNote {
+    font-size: 14px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    padding-bottom:45px; /* Height of the mobile bottom bar */
+}
+
+/* Deals with note text (the txt id's)' */
+.nbody > span, .nbody > textarea, .txtArea, #noteEditTxt {
+    margin-top: 0;
+    padding: 20px 10px;
+    background-color: white;
+    font-family:"Helvetica";
+    display: block;
+    font-size: 14px;
+    border: none;
+}
+#noteEditTxt {
+    padding: 10px 2%;
+    width:96%;
+}
+
+div.leftBox {
+    clear: both;
+    width: 100%;
+    margin-top: 0px;
+    vertical-align: middle;
+    background-color: #FFFFFF;
+}
+
+div.leftBox h3 a {
+    color: white;
+    text-decoration: none;
+    background: url("../mobile/listArrowWhite.png") no-repeat scroll right center transparent;
+    display:block;
+}
+
+div.leftBox div#menuTitle h3 a {
+    background: none;
+}
+
+div.leftBox h3 {
+    background-color: #6699cc;
+    font-size: 15px;
+    height:20px;
+    font-variant:small-caps;
+    color: white;
+    font-weight: bold;
+    margin-top: 0px;
+    padding-top: 10px;
+    margin-bottom: 0px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    border-bottom: 1px solid black;
+}
+
+div.leftBox ul { 
+    font-size: 9px;
+    list-style: none;
+    list-style-type: none;
+    list-style-position: outside;
+    margin:0;
+    padding:0;
+}
+
+div.leftBox li { 
+    min-height: 18px;
+    margin:0;
+    border-bottom: 1px solid #c0c0c0;
+    padding: 10px 5px;
+    font-size:14px;
+    font-weight:bold;
+    list-style:none;
+}
+
+.topLinks, .topLinkhover  {
+    color: black;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:normal;
+    width:100%;
+}
+
+.mobileTopBar {
+    background: #6d84a2 repeat-x;
+    font-size: medium;
+    font-weight: bold;
+    width:100%;
+    -webkit-box-sizing:border-box;
+    height: 45px;
+    border-bottom: 1px black solid;
+    padding: 0 10px;
+}
+.mobileBottomBar {
+    background: #dbdbdd repeat-x;
+    background: -webkit-gradient(linear, left top, left bottom, from(#dbdbdd), to(#b4b4b8), color-stop(1, #fff));
+    position:absolute;
+    width:100%;
+    bottom:0;
+    height:45px;
+    left:0;
+    padding:0;
+    border-top: 1px black solid;
+}
+#winTitle {
+    background: #6d84a2 repeat-x;
+    -webkit-box-sizing:border-box;
+    border-bottom:1px black solid;
+    color: #FFFFFF;
+    height:auto;
+    padding:13px;
+    text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0;
+    text-align: center;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.mobileBottomBar > .mobileScrollBtns {
+    padding-top:7px;
+}
+.mobileScrollBtns > img {
+    padding: 8px 15px; /* To increase hit area of buttons */
+}
+
+.editBtn {
+    float:right;
+    color: brown;
+    margin: 5px 10px 0px 0px;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#save {
+    text-align: center;
+}
+
+#saveButtons, #showEditButtons {
+    position: absolute;
+    bottom: 3px;
+    left: 0;
+    width: 80%;
+    margin-left: 10%; /* to account for the mobile scroll buttons */
+    margin-right: 10%;
+    text-align:center;
+    z-index: 1;
+}
+#globalButtons, #showEditLogout {
+    position: absolute;
+    top: 7px;
+    right: 5px;
+}
+
+.showEditDate { float: right; margin-right: 5px; }
+
+#save input, .showEdFooter input[type="image"] {
+    -webkit-box-sizing: border-box;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255, 0.35), inset 0 1px 1px rgba(0,0,0, 0.25);
+    -webkit-border-radius: 5px;
+    padding: 4px 6px;
+}
+#globalButtons > input, #showEditLogout {
+    background: -webkit-gradient(linear, left top, left bottom, from(#9fb3cc), to(#5b80ab), color-stop(0.5, #6b8bb2), color-stop(0.51, #597eaa));
+    border: 1px solid rgba(0,0,0, 0.6);
+}
+#saveButtons > input, #showEditButtons > input {
+    background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#888888), color-stop(1, #fff));
+    border: 1px solid rgba(0,0,0, 0.4);
+    margin: 0 3px;
+}
+
+
+/* Adjustments made to prevent further additions from being displayed in the mobile version */
+#rightNavBar, #showEditNote, #printOps, #header,
+#topContent, .revision, .note, #saveButtons, #issueSelect,
+#saveButtons, #saveButtons input:not(#saveImg):not(#signSaveImg):not(#signImg),
+#content > div:not(#notCPP):not(.mobileTopBar),
+.nbody > *:not(.editBtn):not(span):not(.txtArea):not(.sig):not(.passwd):not(.passwdErr),
+.leftBox ul, .leftBox > *:not(.headerTitle):not(.expandedBox):not(.cppBox)
+{
+    display:none;
+}
+
+div.addItem {
+    min-width:15px;
+    font-size: 20px;
+}
+
+div.leftBox div.addItem h3 a {
+    text-decoration:none !important;
+    background:none;
+    font-size: 20px;
+}
+
+div.addItem h3 {
+    background: none !important;
+    border: none;
+}
+
+.mobileTitle {
+    position:absolute;
+    width:100%;
+    padding: 0;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0;
+    text-align: center;
+    font-size:17px;
+    top:10px;
+    background-color: transparent; /*#eeeeff;*/
+    left:0px;
+}
+.rightButton { right: 10px; }
+.leftButton { left: 10px; }
+.top { position:absolute !important; }
+
+.leftButton, .rightButton {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    border-width: 0 5px;
+    padding: 0 3px;
+    width: auto;
+    min-width:30px;
+    min-height: 30px;
+    line-height: 30px;
+    font-family: inherit;
+    font-family:"Helvetica";
+    font-size: 12px;
+    font-weight: bold;
+    top:8px;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    text-align:center;
+    white-space: nowrap;
+    z-index:1;
+    -webkit-border-image: url(../mobile/toolButton.png) 0 5 0 5;
+    -moz-border-image: url(../mobile/toolButton.png) 0 5 0 5;
+}
+
+a.links {
+    display:inline;
+    font-size: 13px;
+    color: black;
+    text-decoration:none;
+}
+
+.linkhover {
+    color: black;
+    text-decoration: none;
+}
+
+#content, #leftNavBar, .showEdContent
+{
+    min-height:100%;
+    width:100%;
+    position:relative;
+}
+
+.txtArea {
+    width: 92%; /*BUG: textareas extend the page horizontally when 100% */
+    padding-right: 0;
+    min-height: 150px;
+}
+
+.sig {
+    background-color:#CCCCFF;
+    width:100%;
+    font-size:12px;
+    font-weight: normal;
+    position:absolute;
+    bottom:45px;
+}
+
+.showEdFooter {
+    font-size: 12px;
+    background-color: #CCCCFF;
+    padding: 5px 5px 50px;
+}
+.showEdFooter table {
+    font-size: 12px;
+    border-spacing: 0;
+    padding:0;
+}
+
+.observation {
+    position:absolute;
+    width:80%;
+    margin-left:10%; /* margin is to account for the mobile scroll buttons */
+    margin-right:10%;
+    text-align: center;
+    color:black;
+    font-weight:bold;
+    z-index:1;
+    font-size: 15px;
+    bottom:-32px;
+}
+
+#autosaveTime {
+    text-align:left;
+    font-size: 10px;
+    bottom:0;
+}
+
+input[type="submit"], input[type="button"], input[type="reset"] {
+    font-size:12px;
+    width:auto;
+    -webkit-appearance:button; /* Used as a fix for iPhone */
+}
+
+.showEdContent {
+    background-color: white;
+    font-size:14px;
+}
+
+#issueIdList {
+    margin:0px;
+    padding:0px;
+}
+
+.enTemplate_name_auto_complete ul {
+    list-style: none;
+    border: 1px solid #CCCCCC;
+    border-bottom: none;
+    margin:0;
+    padding:0;
+    list-style-position:inside;
+}
+.enTemplate_name_auto_complete ul li {
+    margin:0;
+    font-size: 10px;
+    border-bottom: 1px solid #CCCCCC;
+    padding: 5px;
+    font-weight: bold;
+}
+
+#issueNoteAssignLabel { width:85px; float:left; padding-top: 2px;}
+#issueListCPP { background-color:#FFF0C3; }
+
+p.passwd, p.passwdErr { margin: 0px 10px; }
+p.passwdErr { color:brown; }
