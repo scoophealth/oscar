@@ -147,7 +147,7 @@ function updateAjax() {
 			</tr>
 			<%
     ArrayList forms = null;
-    forms = EFormUtil.listPatientEForms(orderBy, EFormUtil.DELETED, demographic_no);
+    forms = EFormUtil.listPatientEForms(orderBy, EFormUtil.DELETED, demographic_no, null);
     for (int i=0; i< forms.size(); i++) {
         Hashtable curform = (Hashtable) forms.get(i);
 %>
