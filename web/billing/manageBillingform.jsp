@@ -193,7 +193,7 @@ if (reportAction.compareTo("servicecode") == 0) {
 <%
 if (reportAction.compareTo("dxcode") == 0) {
 %>
-<%@ include file="manageBillingform_dx.jsp"%>
+<%@ include file="manageBillingform_dx.jspf"%>
 <%
 }}}}}
 %>
