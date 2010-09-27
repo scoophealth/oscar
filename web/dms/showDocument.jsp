@@ -393,7 +393,7 @@
                         </fieldset>
                     </td>
                 </tr>
-                <tr><td colspan="9" ><hr width="100%" color="blue"></td></tr>
+                <tr><td colspan="9" ><hr width="100%" color="red"></td></tr>
             </table>
         </div>
 
