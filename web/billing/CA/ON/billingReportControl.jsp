@@ -186,7 +186,7 @@ if (reportAction.compareTo("") == 0 || reportAction == null) {
 <%
 } else if (reportAction.compareTo("flu") == 0) {
 %>
-<%@ include file="billingReport_flu.jsp"%>
+<%@ include file="billingReport_flu.jspf"%>
 <%
 }
 %>
