@@ -72,7 +72,7 @@ final String noAckStatus="N";
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <!-- calendar style sheet -->
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/scriptaculous.js"></script>
@@ -101,6 +101,20 @@ final String noAckStatus="N";
 <html:base/>
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
+        <style type="text/css">
+            .Cell{
+                background-color:#9999CC;
+border-color:#CCCCFF #6666CC #6666CC #CCCCFF;
+border-left:thin solid #CCCCFF;
+border-right:thin solid #6666CC;
+border-style:solid;
+border-width:thin;
+height:0px;
+            }
+            .NormalRes{
+                height:0px;
+}
+        </style>
 <script type="text/javascript" >
                            var tabindex=0;
                            var current_first_doclab=0;
