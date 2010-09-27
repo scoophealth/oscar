@@ -298,11 +298,6 @@ function gotoAccs() {
 		<td align="right"><a href=#
 			onclick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=request.getParameter("demographic_no")%>&creator=<%=user_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>
 		<font color="yellow">Add Document</font></a> <%
-     if(request.getParameter("status").indexOf('B')==-1) {
-   %> <!--a href=# onClick='popupPage(600,800, "billingobstetric.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=apptProvider_no%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" )'><font color="yellow">
-    Billing</font></a><br--> <!--a href=# onClick='popupPage(700,720, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=apptProvider_no%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1")'><font color="yellow">
-    Billing</font></a><br--> <%       
-     }
    %> <a href=# onClick='popupPage(500,700, "providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=user_no%>&username=<%= username %>&apptProvider_no=<%=apptProvider_no%>&displaymode=prescribe&dboperation=search_demograph&template=" );return false;'><font color="yellow">
     Prescribe</font></a></td>
 		<td align="right"><select name="formmenu" size="1"
