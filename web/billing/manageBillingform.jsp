@@ -170,7 +170,7 @@ function onUnbilled(url) {
 	</form>
 </table>
 <% if (clinicview.compareTo("000") == 0) { %>
-<%@ include file="manageBillingform_add.jsp"%>
+<%@ include file="manageBillingform_add.jspf"%>
 
 <%} else{ %>
 <% if (clinicview.compareTo("***") == 0) { %>
