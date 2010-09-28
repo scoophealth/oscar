@@ -14,7 +14,8 @@
 		the expectation is that oscar/build/tmp/oscar.war was built and exists.
 		This script requires the environment variable CATALINA_HOME to be set,
 		this was tested against tomcat 6.0.18 and requires a version that
-		has the jasper compiler in it (5.0 / 5.5 versions did not).
+		has the jasper compiler in it (5.0 versions did not, look for comments
+		in the code below for changes required to support 5.5).
 	-->
 
 	<property environment="env" />
@@ -38,6 +39,7 @@
 		<antcall target="jspc.clean" />
 		<unwar src="tmp/oscar.war" dest="${jspc.expandedWarDir}" />
 		
+		<!-- For tomcat 5.5, change the below from "jasper" to "jasper2" -->
 		<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
 
 		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5">
@@ -46,7 +48,8 @@
 				<fileset dir="${jspc.expandedWarDir}/WEB-INF/lib">
 					<include name="*.jar" />
 				</fileset>
-				<fileset dir="${catalina.home}/lib">
+				<!-- for tomcat 5.5 change the below from "}/lib" to "}/common/lib" -->
+				<fileset dir="${catalina.home}/common/lib">
 					<include name="*.jar" />
 				</fileset>
 				<fileset dir="${catalina.home}/bin">
