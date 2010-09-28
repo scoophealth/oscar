@@ -19,6 +19,7 @@
 
 	<property environment="env" />
 	<property name="catalina.home" location="${env.CATALINA_HOME}" />
+	<echo message="Using CATALINA_HOME=${catalina.home}" />
 	<import file="${catalina.home}/bin/catalina-tasks.xml" />
 
 	<property name="jspcDir" location="tmp/jspc" />
