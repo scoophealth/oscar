@@ -39,10 +39,7 @@
 		
 		<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
 
-		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5" nowarn="yes">
-			<compilerarg value="-Xmaxerrs" />
-			<compilerarg value="1000" />
-			
+		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5">
 			<classpath>
 				<pathelement location="${jspc.expandedWarDir}/WEB-INF/classes" />
 				<fileset dir="${jspc.expandedWarDir}/WEB-INF/lib">
