@@ -77,13 +77,6 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 ff(750,10,50,20,'<span class="title"><a href="javascript: window.print();">Print</a></span>' );
 //<!--ff(750,40,50,20,'<span class="title"><a href="formAR.jsp?demographic_no=&formId=&provNo=">Cancel</a></span>' );-->
 ff(750,40,50,20,'<span class="title"><a href=# onClick="window.close()">Cancel</a></span>' );
-<%
-	if (request.getParameter("historyet") != null) {
-%>
-		ff(750,70,50,20,'<span class="title"><a href="formarpg1sendoc.jsp?formId=<%=request.getParameter("formId")%>&demographic_no=<%=request.getParameter("demographic_no") %>" >Send</a></span>' );
-<%
-	}
-%>
 
 ff(192,0,300,20,'<span class="title">Antenatal Record 1</span>' );
 ff(8,68,100,20,'<span class="tdname">Name</span>' );
