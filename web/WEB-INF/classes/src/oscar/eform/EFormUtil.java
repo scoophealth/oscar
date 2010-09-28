@@ -343,12 +343,6 @@ public class EFormUtil {
 		runSQL(sql);
 	}
 
-	public static void removeEForm(String fdid) {
-		//deletes the form from the patient's records (sets status to deleted)
-		String sql = "UPDATE eform_data SET status=0 WHERE fdid=" + fdid;
-		runSQL(sql);
-	}
-
 	public static void unRemoveEForm(String fdid) {
 		//undeletes the patient record form
 		String sql = "UPDATE eform_data SET status=1 WHERE fdid=" + fdid;
