@@ -33,6 +33,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -182,4 +183,8 @@ public class EFormData extends AbstractModel<Integer> implements Serializable {
 		this.roleType = roleType;
 	}
 
+	@PreRemove
+	protected void jpa_preventDelete() {
+		throw (new UnsupportedOperationException("Remove is not allowed for this type of item."));
+	}
 }
