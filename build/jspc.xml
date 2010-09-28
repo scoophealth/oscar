@@ -14,8 +14,7 @@
 		the expectation is that oscar/build/tmp/oscar.war was built and exists.
 		This script requires the environment variable CATALINA_HOME to be set,
 		this was tested against tomcat 6.0.18 and requires a version that
-		has the jasper compiler in it (5.0 versions did not, look for comments
-		in the code below for changes required to support 5.5).
+		has the jasper compiler in it (5.0 versions did not).
 	-->
 
 	<property environment="env" />
