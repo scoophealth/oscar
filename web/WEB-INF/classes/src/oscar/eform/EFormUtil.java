@@ -343,12 +343,6 @@ public class EFormUtil {
 		runSQL(sql);
 	}
 
-	public static void unRemoveEForm(String fdid) {
-		//undeletes the patient record form
-		String sql = "UPDATE eform_data SET status=1 WHERE fdid=" + fdid;
-		runSQL(sql);
-	}
-
 	public static ArrayList getValues(ArrayList names, String sql) {
 		//gets the values for each column name in the sql (used by DatabaseAP)
 		ResultSet rs = getSQL(sql);
