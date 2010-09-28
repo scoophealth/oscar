@@ -39,27 +39,25 @@
 		<antcall target="jspc.clean" />
 		<unwar src="tmp/oscar.war" dest="${jspc.expandedWarDir}" />
 
-                <condition property="tomcat.lib" value="${catalina}/lib">
-                        <available file="${catalina}/lib" type="dir" />
-                </condition>
-                <condition property="tomcat.lib" value="${catalina}/common/lib">
-                        <available file="${catalina}/common/lib" type="dir" />
-                </condition>
-                <property name="tomcat.lib.dir" location="${tomcat.lib}" />
+		<condition property="tomcat.lib" value="${catalina}/lib">
+			<available file="${catalina}/lib" type="dir" />
+		</condition>
+		<condition property="tomcat.lib" value="${catalina}/common/lib">
+			<available file="${catalina}/common/lib" type="dir" />
+		</condition>
+		<property name="tomcat.lib.dir" location="${tomcat.lib}" />
 
 
 		<if>
-                  <equals arg1="${tomcat.lib.dir}" arg2="${catalina}/lib" />
-                  <then>
-                        <jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
-                  </then>
-                  <else>
-                        <jasper2 uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
-                  </else>
-                </if>
-
-		<!-- For tomcat 5.5, change the below from "jasper" to "jasper2" -->
-		<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
+			<!-- tomcat 5.5 uses jasper2 where as tomcat 6 uses jasper -->
+			<equals arg1="${tomcat.lib.dir}" arg2="${catalina}/lib" />
+			<then>
+				<jasper uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
+			</then>
+			<else>
+				<jasper2 uriroot="${jspcDir}/web" webXmlFragment="${jspcDir}/generated_web.xml" outputDir="${jspc.generatedDir}" validateXml="false" failOnError="false" />
+			</else>
+		</if>
 
 		<javac srcdir="${jspc.generatedDir}" source="1.5" target="1.5">
 			<classpath>
@@ -75,7 +73,7 @@
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
-			
+
 			<!-- we will allow this exclusion because this is not our code and is just included code from another library, this will allow upgrades to be  easier if  we don't change other people's library code. -->
 			<exclude name="org/apache/jsp/jspspellcheck/**" />
 		</javac>
