@@ -41,8 +41,9 @@
                 numOfPageStr="unknown";
             else
                 numOfPageStr=(new Integer(numOfPage)).toString();
-            String url = request.getContextPath()+"/dms/ManageDocument.do?method=viewDocPage&doc_no=" + docId+"&curPage=1";
-            String url2 = request.getContextPath()+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
+            String cp=request.getContextPath() ;
+            String url = cp+"/dms/ManageDocument.do?method=viewDocPage&doc_no=" + docId+"&curPage=1";
+            String url2 = cp+"/dms/ManageDocument.do?method=display&doc_no=" + docId;
 
 %>
          <script type="text/javascript">
@@ -177,10 +178,12 @@
 
 
                     <td colspan="8">
-                        <div style="text-align: right;font-weight: bold"> <a id="firstP_<%=docId%>" href="javascript:void(0);" onclick="firstPage('<%=docId%>');"><<</a>
-                        <a id="prevP_<%=docId%>" href="javascript:void(0);" onclick="prevPage('<%=docId%>');"><</a>
-                        <a id="nextP_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>');">></a>
-                        <a id="lastP_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>');">>></a></div>
+                        <div style="text-align: right;font-weight: bold"> 
+                            <a id="firstP_<%=docId%>" href="javascript:void(0);" onclick="firstPage('<%=docId%>','<%=cp%>');"><<</a>
+                            <a id="prevP_<%=docId%>" href="javascript:void(0);" onclick="prevPage('<%=docId%>','<%=cp%>');"><</a>
+                            <a id="nextP_<%=docId%>" href="javascript:void(0);" onclick="nextPage('<%=docId%>','<%=cp%>');">></a>
+                            <a id="lastP_<%=docId%>" href="javascript:void(0);" onclick="lastPage('<%=docId%>','<%=cp%>');">>></a>
+                        </div>
                         <a href="<%=url2%>"><img alt="document" id="docImg_<%=docId%>"  src="<%=url%>" /></a></td>
 
 

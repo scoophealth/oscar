@@ -1539,15 +1539,15 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                w.focus();
                                        }
 
-                                       function showPageImg(docid,pn){
-                                                    if(docid&&pn){
+                                       function showPageImg(docid,pn,cp){
+                                                    if(docid&&pn&&cp){
                                                         var e=$('docImg_'+docid);
-                                                        var url='../dms/ManageDocument.do?method=viewDocPage&doc_no='+docid+'&curPage='+pn;
+                                                        var url=cp+'/dms/ManageDocument.do?method=viewDocPage&doc_no='+docid+'&curPage='+pn;
                                                         e.setAttribute('src',url);
                                                     }
                                                 }
 
-                                       function nextPage(docid){
+                                       function nextPage(docid,cp){
                                            var curPage=$('curPage_'+docid).value;
                                            var totalPage=$('totalPage_'+docid).value;
                                            curPage++;
@@ -1558,7 +1558,7 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                            }
                                                   $('curPage_'+docid).value=curPage;
 
-                                                        showPageImg(docid,curPage);
+                                                        showPageImg(docid,curPage,cp);
                                                         if(curPage+1>=totalPage){
                                                             hideNext(docid);
                                                             showPrev(docid);
@@ -1567,7 +1567,7 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                             showPrev(docid);
                                                         }
                                                 }
-                                                function prevPage(docid){
+                                                function prevPage(docid,cp){
                                                      var curPage=$('curPage_'+docid).value;
                                                     curPage--;
                                                     if(curPage<1){
@@ -1576,7 +1576,7 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                         showNext(docid);
                                                     }
                                                     $('curPage_'+docid).value=curPage;
-                                                        showPageImg(docid,curPage);
+                                                        showPageImg(docid,curPage,cp);
                                                        if(curPage==1){
                                                            hidePrev(docid);
                                                            showNext(docid);
@@ -1586,17 +1586,17 @@ function updateGlobalDataAndSideNav(doclabid,patientId){
                                                         }
 
                                                 }
-                                                function firstPage(docid){
+                                                function firstPage(docid,cp){
                                                    $('curPage_'+docid).value=1;
-                                                    showPageImg(docid,1);
+                                                    showPageImg(docid,1,cp);
                                                     hidePrev(docid);
                                                     showNext(docid);
                                                 }
-                                                function lastPage(docid){
+                                                function lastPage(docid,cp){
                                                     var totalPage=$('totalPage_'+docid).value;
 
                                                     $('curPage_'+docid).value=totalPage;
-                                                    showPageImg(docid,totalPage);
+                                                    showPageImg(docid,totalPage,cp);
                                                     hideNext(docid);
                                                     showPrev(docid);
                                                 }
