@@ -67,7 +67,7 @@ public class EFormExportZip {
             if (eForm.getFormCreator()!=null && !eForm.getFormCreator().equals("")) properties.setProperty("form.creator", eForm.getFormCreator());
             else properties.setProperty("form.creator", "Paul");
             if (eForm.getFormDate()!=null && !eForm.getFormDate().equals("")) properties.setProperty("form.date", eForm.getFormDate());
-			if (eForm.getPatientIndependent().equals(true)) properties.setProperty("form.patientIndependent", eForm.getPatientIndependent().toString());
+			if (eForm.getPatientIndependent()==true) properties.setProperty("form.patientIndependent", String.valueOf(eForm.getPatientIndependent()));
 
             //write properties file
             ZipEntry propertiesZipEntry = new ZipEntry(directoryName + "eform.properties");

@@ -46,7 +46,7 @@ public class EFormBase {
     protected String providerNo;
     protected String formDate;
     protected String formTime;
-    protected Boolean patientIndependent;
+    protected boolean patientIndependent=false;;
     protected String roleType;
     
     public EFormBase() {
@@ -65,7 +65,7 @@ public class EFormBase {
     }
     
     public EFormBase(String fid, String formName, String formSubject,
-            String formFileName, String formHtml, Boolean patientIndependent, String roleType) {
+            String formFileName, String formHtml, boolean patientIndependent, String roleType) {
         this.fid = fid;
         this.formName = formName;
         this.formSubject = formSubject;
@@ -171,11 +171,11 @@ public class EFormBase {
         return this.formCreator;
     }
 
-    public Boolean getPatientIndependent() {
+    public boolean getPatientIndependent() {
         return this.patientIndependent;
     }
 
-    public void setPatientIndependent(Boolean patientIndependent) {
+    public void setPatientIndependent(boolean patientIndependent) {
         this.patientIndependent = patientIndependent;
     }
 }

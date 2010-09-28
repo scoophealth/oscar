@@ -28,9 +28,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -38,15 +40,16 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.velocity.runtime.parser.node.MathUtils;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.model.EFormData;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -81,12 +84,12 @@ public class EFormUtil {
 		return saveEForm(eForm.getFormName(), eForm.getFormSubject(), eForm.getFormFileName(), eForm.getFormHtml(), eForm.getFormCreator(), eForm.getPatientIndependent(), eForm.getRoleType());
 	}
 	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr) {
-		return saveEForm(formName, formSubject, fileName, htmlStr, null, null);
+		return saveEForm(formName, formSubject, fileName, htmlStr, false, null);
 	}
-	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, Boolean patientIndependent, String roleType) {
+	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, boolean patientIndependent, String roleType) {
 		return saveEForm(formName, formSubject, fileName, htmlStr, null, patientIndependent,roleType);
 	}
-	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, Boolean patientIndependent, String roleType) {
+	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, boolean patientIndependent, String roleType) {
 		//called by the upload action, puts the uploaded form into DB
 		String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
 		String nowTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
@@ -190,41 +193,43 @@ public class EFormUtil {
 	}
 
 	public static ArrayList<Hashtable<String, Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles) {
-		//sends back a list of forms added to the patient
-		String sql = "";
-		if (deleted.equals("deleted")) {
-			sql = "SELECT * FROM eform_data where status=0 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
-		} else if (deleted.equals("current")) {
-			sql = "SELECT * FROM eform_data where status=1 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
-		} else if (deleted.equals("all")) {
-			sql = "SELECT * FROM eform_data WHERE (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND demographic_no=" + demographic_no + " ORDER BY " + sortBy;
-		}
-		ResultSet rs = getSQL(sql);
+
+		Boolean current=null;
+		if (deleted.equals("deleted")) current=false;
+		else if (deleted.equals("current")) current=true;
+		
+		EFormDataDao eFormDataDao=(EFormDataDao) SpringUtils.getBean("EFormDataDao");
+		List<EFormData> allEformDatas=eFormDataDao.findByDemographicIdCurrentPatientIndependent(Integer.parseInt(demographic_no), current, false);
+		
+		if (NAME.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_NAME_COMPARATOR);
+		else if (SUBJECT.equals(sortBy)) Collections.sort(allEformDatas, EFormData.FORM_SUBJECT_COMPARATOR);
+		else Collections.sort(allEformDatas, EFormData.FORM_DATE_COMPARATOR);
+		
 		ArrayList<Hashtable<String,Object>> results = new ArrayList<Hashtable<String, Object>>();
 		try {
-			while (rs.next()) {
+			for (EFormData eFormData : allEformDatas) {
 				//filter eform by role type
-				if(userRoles!=null && rsGetString(rs,"roleType")!=null && !rsGetString(rs,"roleType").equals("")) {
+				String tempRole=StringUtils.trimToNull(eFormData.getRoleType());
+				if(userRoles!=null && tempRole!=null) {
 					//ojectName: "_admin,_admin.eform"
 					//roleName: "doctor,admin"					
-					String objectName = "_eform." + rsGetString(rs,"roleType");
+					String objectName = "_eform." + tempRole;
 					Vector v = OscarRoleObjectPrivilege.getPrivilegeProp(objectName);
 					if (!OscarRoleObjectPrivilege.checkPrivilege(userRoles, (Properties) v.get(0), (Vector) v.get(1))){
 			            continue;
 					}
 				}			
-				Hashtable curht = new Hashtable();
-				curht.put("fdid", oscar.Misc.getString(rs,"fdid"));
-				curht.put("fid", rsGetString(rs, "fid"));
-				curht.put("formName", rsGetString(rs, "form_name"));
-				curht.put("formSubject", rsGetString(rs, "subject"));
-				curht.put("formDate", rsGetString(rs, "form_date"));
-				curht.put("formDateAsDate", rs.getDate("form_date"));
-				curht.put("roleType",rsGetString(rs,"roleType"));
-				curht.put("providerNo",rsGetString(rs,"form_provider"));
+				Hashtable<String,Object> curht = new Hashtable<String,Object>();
+				curht.put("fdid", eFormData.getId().toString());
+				curht.put("fid", eFormData.getFormId().toString());
+				curht.put("formName", eFormData.getFormName());
+				curht.put("formSubject", eFormData.getSubject());
+				curht.put("formDate", eFormData.getFormDate().toString());
+				curht.put("formDateAsDate", eFormData.getFormDate());
+				curht.put("roleType",eFormData.getRoleType());
+				curht.put("providerNo",eFormData.getProviderNo());
 				results.add(curht);
 			}
-			rs.close();
 		} catch (Exception sqe) {
 			MiscUtils.getLogger().error("Error", sqe);
 		}
@@ -529,13 +534,13 @@ public class EFormUtil {
 		//sends back a list of forms added to the patient
 		String sql = "";
 		if (deleted.equals("deleted")) {
-			sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=0 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND eform_data.demographic_no=" + demographic_no +
+			sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=0 AND eform_data.patient_independent=0 AND eform_data.demographic_no=" + demographic_no +
 					" AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
 		} else if (deleted.equals("current")) {
-			sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=1 AND (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND eform_data.demographic_no=" + demographic_no +
+			sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.status=1 AND eform_data.patient_independent=0 AND eform_data.demographic_no=" + demographic_no +
 					" AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
 		} else if (deleted.equals("all")) {
-			sql = "SELECT * FROM eform_data, eform_groups WHERE (eform_data.patient_independent is null OR eform_data.patient_independent=0) AND eform_data.demographic_no=" + demographic_no +
+			sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.patient_independent=0 AND eform_data.demographic_no=" + demographic_no +
 					" AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
 		}
 		ResultSet rs = getSQL(sql);

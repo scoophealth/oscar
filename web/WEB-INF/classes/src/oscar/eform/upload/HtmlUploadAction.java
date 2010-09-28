@@ -51,7 +51,7 @@ public class HtmlUploadAction extends Action {
             String formName = fm.getFormName();
             String roleType = fm.getRoleType();
             String subject = fm.getSubject();
-            Boolean patientIndependent = fm.getPatientIndependent();
+            boolean patientIndependent = fm.getPatientIndependent();
             String fileName = formHtml.getFileName();
             String lastfid = EFormUtil.saveEForm(formName, subject, fileName, formHtmlStr, patientIndependent, roleType);
         } catch (Exception e) {

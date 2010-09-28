@@ -37,7 +37,7 @@ public class HtmlEditForm extends ActionForm {
     private String formSubject = "";
     private String formFileName = "";
     private String formHtml = "";
-    private Boolean patientIndependent = false;
+    private boolean patientIndependent = false;
     private String roleType = "";
     
     public HtmlEditForm() {
@@ -99,11 +99,11 @@ public class HtmlEditForm extends ActionForm {
         this.formHtml = formHtml;
     }
     
-    public Boolean getPatientIndependent() {
+    public boolean getPatientIndependent() {
         return patientIndependent;
     }
 
-    public void setPatientIndependent(Boolean patientIndependent) {
+    public void setPatientIndependent(boolean patientIndependent) {
         this.patientIndependent = patientIndependent;
     }
 }

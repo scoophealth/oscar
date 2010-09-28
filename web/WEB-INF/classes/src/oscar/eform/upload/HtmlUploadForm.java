@@ -41,7 +41,7 @@ public class HtmlUploadForm extends ActionForm {
     private FormFile formHtml = null;
     private String formName;
     private String subject;
-    private Boolean patientIndependent = false;
+    private boolean patientIndependent = false;
     private String roleType;
     
     public HtmlUploadForm() {
@@ -79,11 +79,11 @@ public class HtmlUploadForm extends ActionForm {
         this.subject = subject;
     }
 
-    public Boolean getPatientIndependent() {
+    public boolean getPatientIndependent() {
         return patientIndependent;
     }
 
-    public void setPatientIndependent(Boolean patientIndependent) {
+    public void setPatientIndependent(boolean patientIndependent) {
         this.patientIndependent = patientIndependent;
     }
     

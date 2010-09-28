@@ -56,7 +56,7 @@ if (request.getAttribute("submitted") != null) {
    if (curform.get("formDate") == null) curform.put("formDate", "--");
    if (curform.get("formTime") == null) curform.put("formTime", "--");
    if (curform.get("patientIndependent") ==null) curform.put("patientIndependent", false);
-   Boolean patientIndependent = (Boolean) curform.get("patientIndependent");
+   boolean patientIndependent = (Boolean) curform.get("patientIndependent");
    
    String formHtmlRaw = (String) curform.get("formHtml");
    String formHtml = "";

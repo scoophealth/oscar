@@ -52,6 +52,26 @@ public class EFormData extends AbstractModel<Integer> implements Serializable {
 		}	
 	};
 
+	/**
+	 * This comparator sorts EFormData ascending based on the formName
+	 */
+	public static final Comparator<EFormData> FORM_NAME_COMPARATOR=new Comparator<EFormData>()
+	{
+		public int compare(EFormData o1, EFormData o2) {
+			return(o1.formName.compareTo(o2.formName));
+		}	
+	};
+
+	/**
+	 * This comparator sorts EFormData ascending based on the formName
+	 */
+	public static final Comparator<EFormData> FORM_SUBJECT_COMPARATOR=new Comparator<EFormData>()
+	{
+		public int compare(EFormData o1, EFormData o2) {
+			return(o1.subject.compareTo(o2.subject));
+		}	
+	};
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "fdid")
@@ -86,7 +106,7 @@ public class EFormData extends AbstractModel<Integer> implements Serializable {
 	private String formData;
 
 	@Column(name = "patient_independent")
-	private Boolean patientIndependent;
+	private boolean patientIndependent;
 
 	private String roleType;
 
@@ -167,11 +187,11 @@ public class EFormData extends AbstractModel<Integer> implements Serializable {
 		this.formData = formData;
 	}
 
-	public Boolean getPatientIndependent() {
+	public boolean getPatientIndependent() {
 		return patientIndependent;
 	}
 
-	public void setPatientIndependent(Boolean patientIndependent) {
+	public void setPatientIndependent(boolean patientIndependent) {
 		this.patientIndependent = patientIndependent;
 	}
 

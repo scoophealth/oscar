@@ -56,7 +56,7 @@ public class HtmlEditAction extends Action {
             String formFileName = fm.getFormFileName();
             String formHtml = fm.getFormHtml();
             FormFile uploadFile = fm.getUploadFile();
-            Boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
+            boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
             String roleType = fm.getRoleType();
             
             Hashtable errors = new Hashtable();
@@ -101,7 +101,7 @@ public class HtmlEditAction extends Action {
         return(mapping.findForward("success"));
     }
     
-    private Hashtable createHashtable(String fid, String formName, String formSubject, String formFileName, String formHtml, Boolean patientIndependent, String roleType) {
+    private Hashtable createHashtable(String fid, String formName, String formSubject, String formFileName, String formHtml, boolean patientIndependent, String roleType) {
         Hashtable curht = new Hashtable();
         curht.put("fid", fid);  
         curht.put("formName", formName);
