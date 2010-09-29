@@ -248,13 +248,9 @@ NO : <%=apptMainBean.getString(rs,"demographic_no")%></font></b></div>
 			type="submit" name="subbutton" value="Update Record"> <a
 			href='admincontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=Demographic_Delete&dboperation=demographic_delete'>
 		<img src="../images/buttondelete.gif" width="73" height="28"
-			border="0" align="absmiddle" alt="Delete the Record"></a> <!--input type="button" name="Button" value="Cancel" onclick=self.close();-->
+			border="0" align="absmiddle" alt="Delete the Record"></a>
 
-		<%--
-	     if (apptMainBean.getString(rs,"sex").compareTo("F") == 0) {
-         out.println("<input type=\"button\" name=\"Button2\" value=\"Antenatal Care Planner\" onClick=\"window.location='../ob/risks.jsp?demographic_no="+apptMainBean.getString(rs,"demographic_no")+"'\">");
-	     }
-	  --%></div>
+		</div>
 		</td>
 	</tr>
 	</form>

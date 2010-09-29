@@ -10,7 +10,7 @@
   
 <select>
 	<option><bean:message key="oscarEncounter.Header.Calculators"/></option>
-	<option>-----------</option>
+	<option>----------------------</option>
 	
 	<option onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49982.htm','BodyMassIndex');">
 		<bean:message key="oscarEncounter.Index.bodyMass" />
