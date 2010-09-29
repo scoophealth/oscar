@@ -283,7 +283,7 @@ try
 			<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)"> 
 			<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
 			&nbsp;&nbsp;
-			<span style="cursor: pointer;" title="<bean:message key="oscarEncounter.viewFilter.title"/>" onclick="showFilter();"><bean:message key="oscarEncounter.Filter.title" /></span>
+			<input type="button" value="<bean:message key="oscarEncounter.Filter.title"/>" onclick="showFilter();" />
 			<%
 				String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 				String pAge = Integer.toString(UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
