@@ -1,0 +1,46 @@
+<script type="text/javascript" language=javascript>
+   function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
+     var page = varpage;
+     windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
+     var popup=window.open(varpage, pageName, windowprops);
+     popup.pastewin = opener;     
+     popup.focus();
+   }
+</script>
+  
+<select>
+	<option><bean:message key="oscarEncounter.Header.Calculators"/></option>
+	<option>-----------</option>
+	
+	<option onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49982.htm','BodyMassIndex');">
+		<bean:message key="oscarEncounter.Index.bodyMass" />
+	</option>
+	
+	<option onclick="popperup(525,775,'../oscarEncounter/calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>','CoronaryArteryDiseaseRisk');">
+		<bean:message key="oscarEncounter.Index.coronary" />
+	</option>
+	
+	<option onclick="popperup(525,775,'../oscarEncounter/calculators/riskcalc/index.html?sex=<%=bean.patientSex%>&age=<%=pAge%>','Framingham');">
+		Framingham/UKPDS Risk Calculator
+	</option>
+	
+	<option onclick="popperup(525,775,'http://cvrisk.mvm.ed.ac.uk/calculator/calc.asp','CVRisk');">
+		CV Risk
+	</option>
+	
+	<option onclick="popperup(525,775,'../oscarEncounter/calculators/OsteoporoticFracture.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>','OsteoporoticFracture');">
+		<bean:message key="oscarEncounter.Index.msgOsteoporotic" />
+	</option>
+	
+	<option onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49976.htm','PregancyCalculator');">
+		<bean:message key="oscarEncounter.Index.pregnancy" />
+	</option>
+	
+	<option onclick="popperup(400,500,'../oscarEncounter/calculators/SimpleCalculator.jsp','SimpleCalc');">
+		<bean:message key="oscarEncounter.Index.simpleCalculator" />
+	</option>
+	
+	<option onclick="popperup(650,775,'../oscarEncounter/calculators/GeneralCalculators.jsp','GeneralConversions'); ">
+		<bean:message key="oscarEncounter.Index.generalConversions" />
+	</option>
+</select>

@@ -289,11 +289,9 @@ try
 				String pAge = Integer.toString(UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
 			%>
 			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.calculators" rights="r" reverse="false">
-				&nbsp;&nbsp;
-				<a href="#" onClick="popupPage(150,200,'Calculators','<c:out value="${ctx}"/>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&amp;age=<%=pAge%>'); return false;" title="<bean:message key="oscarEncounter.Header.Calculators"/>"><bean:message key="oscarEncounter.Header.Calculators"/></a>
+				<%@include file="calculatorsSelectList.jspf" %>
 			</security:oscarSec>
 			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
-				&nbsp;&nbsp;
 				<a href="#" onClick="popupPage(700,700,'Templates','<c:out value="${ctx}"/>/admin/providertemplate.jsp' ); return false; " title="<bean:message key="oscarEncounter.Header.Templates"/>"><bean:message key="oscarEncounter.Header.Templates"/></a>
 			</security:oscarSec>
 		</div>
