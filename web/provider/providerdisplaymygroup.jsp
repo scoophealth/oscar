@@ -41,26 +41,29 @@
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 
-<script language="javascript">
-<!-- start javascript ---- check to see if it is really empty in database
-
-//function upCaseCtrl(ctrl) {
-//	ctrl.value = ctrl.value.toUpperCase();
-//}
-
-// stop javascript -->
-</script>
 </head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <FORM NAME="UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp">
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
-	<tr bgcolor="#486ebd">
-		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
-			key="provider.providerdisplaymygroup.msgTitle" /></font></th>
-	</tr>
-</table>
+
+<div id="topMenuDiv" style="position:fixed;width:100%">
+	<div style="background-color:#486ebd;text-align:center;font-family:Helvetica,sans-serif;color:#ffffff;font-weight:bold;padding:1px">
+		<bean:message key="provider.providerdisplaymygroup.msgTitle" />
+	</div>
+	<div style="background-color:#486ebd;text-align:center;border-top:solid white 1px;padding:1px">
+		<input type="hidden" name="submit_form"	value="">
+		<INPUT TYPE="submit" VALUE="<bean:message key="provider.providerdisplaymygroup.btnDelete"/>" onclick="document.forms['UPDATEPRE'].submit_form.value='Delete'; document.forms['UPDATEPRE'].submit();">
+		<INPUT TYPE="submit" VALUE="<bean:message key="provider.providerdisplaymygroup.btnNew"/>" onclick="document.forms['UPDATEPRE'].submit_form.value='New Group/Add a Member'; document.forms['UPDATEPRE'].submit();">
+		<INPUT TYPE="RESET" VALUE="<bean:message key="provider.providerdisplaymygroup.btnClose"/>" onClick="window.close();">
+	</div>
+</div>
+<br />
+<%-- This DIV and following javascript spaces out the content properly below the fixed position menu  --%>
+<div id="topMenuSpacerDiv">&nbsp;</div>
+<script type="text/javascript">
+	document.getElementById('topMenuSpacerDiv').style.height=document.getElementById('topMenuDiv').offsetHeight+'px';
+</script>
 
 <center>
 <table border="0" cellpadding="0" cellspacing="0" width="80%">
@@ -104,23 +107,6 @@
 	</tr>
 </table>
 </center>
-
-<table width="100%" BGCOLOR="#486ebd">
-	<tr>
-		<TD align="center"><input type="hidden" name="submit_form"
-			value=""> <INPUT TYPE="submit"
-			VALUE="<bean:message key="provider.providerdisplaymygroup.btnDelete"/>"
-			SIZE="7"
-			onclick="document.forms['UPDATEPRE'].submit_form.value='Delete'; document.forms['UPDATEPRE'].submit();">
-		<INPUT TYPE="submit"
-			VALUE="<bean:message key="provider.providerdisplaymygroup.btnNew"/>"
-			SIZE="7"
-			onclick="document.forms['UPDATEPRE'].submit_form.value='New Group/Add a Member'; document.forms['UPDATEPRE'].submit();">
-		<INPUT TYPE="RESET"
-			VALUE="<bean:message key="provider.providerdisplaymygroup.btnClose"/>"
-			onClick="window.close();"></TD>
-	</tr>
-</TABLE>
 
 </FORM>
 
