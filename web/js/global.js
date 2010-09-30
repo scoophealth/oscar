@@ -8,6 +8,20 @@ function setfocus() {
 function refresh() {
 	  history.go(0);
 }
+function showHideItem(id){
+    if(document.getElementById(id).style.display == 'none')
+        document.getElementById(id).style.display = 'block';
+    else
+        document.getElementById(id).style.display = 'none';
+}
+var currentWidth;
+// This function is useful to simulate min-width for the body in IE6 (for popup windows)
+function setMinWidth(width){
+    if (currentWidth != document.documentElement.clientWidth) {
+        document.body.style.width = (document.documentElement.clientWidth < (width+10))? width+"px" : "auto";
+    }
+    currentWidth = document.documentElement.clientWidth;
+}
 
 // open a new popup window
 function popupPage(vheight,vwidth,varpage) { 
