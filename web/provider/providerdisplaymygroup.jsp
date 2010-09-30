@@ -60,7 +60,7 @@
 </div>
 <br />
 <%-- This DIV and following javascript spaces out the content properly below the fixed position menu  --%>
-<div id="topMenuSpacerDiv">&nbsp;</div>
+<div id="topMenuSpacerDiv" style="height:3em">&nbsp;</div>
 <script type="text/javascript">
 	document.getElementById('topMenuSpacerDiv').style.height=document.getElementById('topMenuDiv').offsetHeight+'px';
 </script>
