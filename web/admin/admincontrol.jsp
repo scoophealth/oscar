@@ -170,7 +170,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_update_record_ptbr", "update demographic_ptbr set cpf=?,rg=?,chart_address=?,marriage_certificate=?,birth_certificate=?,marital_state=?,partner_name=?,father_name=?,mother_name=?,district=?,address_no=?,complementary_address=? where  demographic_no=?"},
     {"demographic_add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values (?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?)" }, //26-1 demographic_no auto_increment
     {"demographic_add_record_ptbr","insert into demographic_ptbr (demographic_no,cpf,rg,chart_address,marriage_certificate,birth_certificate,marital_state,partner_name,father_name,mother_name,district,address_no,complementary_address) values (?,?,?,?,?,?,?,?,?,?,?,?,?)" },
-    {"demographic_delete", "delete from demographic where demographic_no=?"},
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " },
@@ -211,7 +210,6 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Demographic_Edit" , "demographiceditdemographic.jsp"},
     {"Demographic_Edit2" , "../demographic/demographiceditdemographic.jsp"},
     {"Demographic_Update" , "demographicupdatearecord.jsp"},
-    {"Demographic_Delete" , "demographicdeletearecord.jsp"},
     {"Demographic_Merge" , "demographicmergerecord.jsp"},
     {"Security_Add_Record" , "securityaddsecurity.jsp"},
     {"Security_Search" , "securitysearchresults.jsp"},
