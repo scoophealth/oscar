@@ -404,7 +404,6 @@ try
 		if (cform.getCaseNote().getId() != null)
 		{
 			savedId = cform.getCaseNote().getId();
-			System.out.println("savedId="+savedId);
 		}
 
 		//Check user property for stale date and show appropriately
@@ -545,7 +544,6 @@ try
 
 	  		<div id="n<%=note.getNoteId()%>">
 			<%
-				System.out.println("noteId=" + note.getNoteId());
 				//display last saved note for editing
 				if (note.getNoteId().intValue() == savedId )
 				{
