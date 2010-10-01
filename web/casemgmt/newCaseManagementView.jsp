@@ -53,7 +53,8 @@
 
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="oscar.util.UtilDateUtilities"%>
-<%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@page import="org.oscarehr.casemgmt.web.NoteDisplayNonNote"%>
+<%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 
 <%
@@ -292,7 +293,24 @@ try
 				<%@include file="calculatorsSelectList.jspf" %>
 			</security:oscarSec>
 			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
-				<input type="button" value="<bean:message key="oscarEncounter.Header.Templates"/>" onClick="popupPage(700,700,'Templates','<c:out value="${ctx}"/>/admin/providertemplate.jsp' ); return false; " />
+				<select>
+					<option><bean:message key="oscarEncounter.Header.Templates"/></option>
+					<option>------------------</option>
+					<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()%>/admin/providertemplate.jsp');">New Template</option>
+					<option>------------------</option>
+					<%
+						EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
+						List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
+			  
+						for (EncounterTemplate encounterTemplate : allTemplates) 
+						{
+							String templateName=StringEscapeUtils.escapeHtml(encounterTemplate.getEncounterTemplateName());
+							%>
+								<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()+"/admin/providertemplate.jsp?dboperation=Edit&name="+templateName%>');"><%=templateName%></option>
+							<%
+						}
+					%>
+				</select>
 			</security:oscarSec>
 		</div>
 	

@@ -122,8 +122,8 @@ function setfocus() {
 				}
 			%>
 			</select>
-			<input type="hidden" value=" Edit " name="dboperation">
-			<input type="button" value="<bean:message key="admin.providertemplate.btnEdit"/>" name="dboperation" onclick="document.forms['edittemplate'].dboperation.value=' Edit '; document.forms['edittemplate'].submit();">
+			<input type="hidden" value="Edit" name="dboperation">
+			<input type="button" value="<bean:message key="admin.providertemplate.btnEdit"/>" name="dboperation" onclick="document.forms['edittemplate'].dboperation.value='Edit'; document.forms['edittemplate'].submit();">
 		</td>
 		<td>&nbsp;</td>
 	</tr>
@@ -131,7 +131,7 @@ function setfocus() {
 </table>
 
 <%
-  boolean bEdit=request.getParameter("dboperation")!=null&&request.getParameter("dboperation").equals(" Edit ")?true:false;
+  boolean bEdit=request.getParameter("dboperation")!=null&&request.getParameter("dboperation").equals("Edit")?true:false;
   String tName = null;
   String tValue = null;
   if(bEdit) {
