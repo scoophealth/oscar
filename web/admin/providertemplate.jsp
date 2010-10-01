@@ -73,7 +73,11 @@
  * Ontario, Canada
  */
 -->
-<html:html locale="true">
+
+<%@page import="org.oscarehr.common.dao.EncounterTemplateDao"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.EncounterTemplate"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="admin.providertemplate.title" /></title>
@@ -102,22 +106,24 @@ function setfocus() {
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<form name="edittemplate" method="post" action="providertemplate.jsp">
 	<tr bgcolor=<%=weakcolor%>>
-		<td width="95%" align='right'><bean:message
-			key="admin.providertemplate.formEdit" />: <select name="name">
+		<td width="95%" align='right'>
+			<bean:message key="admin.providertemplate.formEdit" /> : 
+			<select name="name">
 			<%
-  ResultSet rsdemo = null;
-  rsdemo = apptMainBean.queryResults("%", "search_templatename");
-  while (rsdemo.next()) {
-%>
-			<option value="<%=rsdemo.getString("encountertemplate_name")%>"><%=rsdemo.getString("encountertemplate_name")%></option>
-			<%
-  }
-%>
-		</select> <input type="hidden" value=" Edit " name="dboperation"> <input
-			type="button"
-			value="<bean:message key="admin.providertemplate.btnEdit"/>"
-			name="dboperation"
-			onclick="document.forms['edittemplate'].dboperation.value=' Edit '; document.forms['edittemplate'].submit();">
+				EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
+				List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
+	  
+				for (EncounterTemplate encounterTemplate : allTemplates) 
+				{
+					String templateName=StringEscapeUtils.escapeHtml(encounterTemplate.getEncounterTemplateName());
+					%>
+						<option value="<%=templateName%>"><%=templateName%></option>
+					<%
+				}
+			%>
+			</select>
+			<input type="hidden" value=" Edit " name="dboperation">
+			<input type="button" value="<bean:message key="admin.providertemplate.btnEdit"/>" name="dboperation" onclick="document.forms['edittemplate'].dboperation.value=' Edit '; document.forms['edittemplate'].submit();">
 		</td>
 		<td>&nbsp;</td>
 	</tr>
@@ -129,7 +135,7 @@ function setfocus() {
   String tName = null;
   String tValue = null;
   if(bEdit) {
-    rsdemo = apptMainBean.queryResults(request.getParameter("name"), "search_template");
+    ResultSet rsdemo = apptMainBean.queryResults(request.getParameter("name"), "search_template");
     while (rsdemo.next()) {
       tName = UtilMisc.charEscape(rsdemo.getString("encountertemplate_name"), '"');
       tValue = rsdemo.getString("encountertemplate_value");
