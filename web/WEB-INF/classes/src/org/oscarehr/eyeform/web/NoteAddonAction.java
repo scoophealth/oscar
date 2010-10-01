@@ -36,8 +36,7 @@ public class NoteAddonAction extends DispatchAction {
 	 * 
 	 * procedure/test
 	 */
-	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		System.out.println(request.getParameter("followNo"));
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {		
 		return null;
 	}
 }
