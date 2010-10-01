@@ -267,52 +267,56 @@ try
 		</div>
 
 		<div style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
-			<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>"> 
-			<input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)">
-			
-			<div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index: 1; display: none">&nbsp;</div>
-			
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-			
-			<select id="channel">
-				<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
-				<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
-				<option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed" /></option>
-				<option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus" /></option>
-	                        <option value="tripsearch.jsp?searchterm=">Trip Database</option>
-	                </select>
-		
-			<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)"> 
-			<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
+			<div style="display:inline-block">
+				<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>"> 
+				<input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)">
+				
+				<div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index: 1; display: none">&nbsp;</div>
+				
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				
+				<select id="channel">
+					<option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch" /></option>
+					<option value="http://www.google.com/search?q="><bean:message key="global.google" /></option>
+					<option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed" /></option>
+					<option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus" /></option>
+                    <option value="tripsearch.jsp?searchterm=">Trip Database</option>
+    	        </select>
+				
+				<input type="text" id="keyword" name="keyword" value="" onkeypress="return grabEnter('searchButton',event)"> 
+				<input type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
+			</div>
 			&nbsp;&nbsp;
-			<input type="button" value="<bean:message key="oscarEncounter.Filter.title"/>" onclick="showFilter();" />
-			<%
-				String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-				String pAge = Integer.toString(UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
-			%>
-			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.calculators" rights="r" reverse="false">
-				<%@include file="calculatorsSelectList.jspf" %>
-			</security:oscarSec>
-			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
-				<select>
-					<option><bean:message key="oscarEncounter.Header.Templates"/></option>
-					<option>------------------</option>
-					<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()%>/admin/providertemplate.jsp');">New Template</option>
-					<option>------------------</option>
-					<%
-						EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
-						List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
-			  
-						for (EncounterTemplate encounterTemplate : allTemplates) 
-						{
-							String templateName=StringEscapeUtils.escapeHtml(encounterTemplate.getEncounterTemplateName());
-							%>
-								<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()+"/admin/providertemplate.jsp?dboperation=Edit&name="+templateName%>');"><%=templateName%></option>
-							<%
-						}
-					%>
-				</select>
-			</security:oscarSec>
+			<div style="display:inline-block">
+				<input type="button" value="<bean:message key="oscarEncounter.Filter.title"/>" onclick="showFilter();" />
+				<%
+					String roleName = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+					String pAge = Integer.toString(UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
+				%>
+				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.calculators" rights="r" reverse="false">
+					<%@include file="calculatorsSelectList.jspf" %>
+				</security:oscarSec>
+				<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
+					<select>
+						<option><bean:message key="oscarEncounter.Header.Templates"/></option>
+						<option>------------------</option>
+						<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()%>/admin/providertemplate.jsp');">New Template</option>
+						<option>------------------</option>
+						<%
+							EncounterTemplateDao encounterTemplateDao=(EncounterTemplateDao)SpringUtils.getBean("encounterTemplateDao");
+							List<EncounterTemplate> allTemplates=encounterTemplateDao.findAll();
+				  
+							for (EncounterTemplate encounterTemplate : allTemplates) 
+							{
+								String templateName=StringEscapeUtils.escapeHtml(encounterTemplate.getEncounterTemplateName());
+								%>
+									<option onClick="popupPage(700,700,'Templates','<%=request.getContextPath()+"/admin/providertemplate.jsp?dboperation=Edit&name="+templateName%>');"><%=templateName%></option>
+								<%
+							}
+						%>
+					</select>
+				</security:oscarSec>
+			</div>
 		</div>
 	
 	</div>
