@@ -292,7 +292,7 @@ try
 				<%@include file="calculatorsSelectList.jspf" %>
 			</security:oscarSec>
 			<security:oscarSec roleName="<%=roleName%>" objectName="_newCasemgmt.templates" rights="r" reverse="false"> 
-				<a href="#" onClick="popupPage(700,700,'Templates','<c:out value="${ctx}"/>/admin/providertemplate.jsp' ); return false; " title="<bean:message key="oscarEncounter.Header.Templates"/>"><bean:message key="oscarEncounter.Header.Templates"/></a>
+				<input type="button" value="<bean:message key="oscarEncounter.Header.Templates"/>" onClick="popupPage(700,700,'Templates','<c:out value="${ctx}"/>/admin/providertemplate.jsp' ); return false; " />
 			</security:oscarSec>
 		</div>
 	
