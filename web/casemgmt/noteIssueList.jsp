@@ -114,6 +114,9 @@
 </nested:equal> <nested:equal name="newNote" value="true">
 	<div style="margin: 0px;">&nbsp;</div>
 </nested:equal></div>
+
+<div id="current_note_addon"></div>
+
 <%
 	encSelect += noteIndex;
 %>

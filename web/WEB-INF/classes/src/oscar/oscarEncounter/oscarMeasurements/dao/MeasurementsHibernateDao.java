@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
@@ -117,5 +118,29 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
             List<Measurements> rs = getHibernateTemplate().find(queryStr);
 
             return rs;
+        }
+        
+        public HashMap<String,Measurements> getMeasurements(String demo, String[] types) {
+        	HashMap<String,Measurements> map = new HashMap<String,Measurements>();
+        
+        	StringBuilder sb = new StringBuilder();
+        	for(String type:types) {
+        		if(sb.length()>0) {
+        			sb.append(",");
+        		}
+        		sb.append("'");
+        		sb.append(StringEscapeUtils.escapeSql(type));
+        		sb.append("'");
+        	}
+        	
+        	String queryStr = "From Measurements m WHERE m.demographicNo = " + demo +" AND type IN (" + sb.toString() +") ORDER BY type,m.dateObserved";
+        	logger.info(queryStr);
+
+        	List<Measurements> rs = getHibernateTemplate().find(queryStr);
+
+        	for(Measurements m:rs) {
+        		map.put(m.getType(), m);
+        	}
+        	return map;
         }
 }

@@ -18,6 +18,7 @@
 				<value>classpath:/org/oscarehr/casemgmt/model</value>
 				<value>classpath:/org/oscarehr/phr/model</value>
 				<value>classpath:/org/oscarehr/common/model</value>
+				<value>classpath:/org/oscarehr/eyeform/model</value>
 				<value>classpath:/com/quatro/model</value>
 				<value>classpath:/oscar/appt/status/model</value>
 				<value>classpath:/org/oscarehr/document/model</value>

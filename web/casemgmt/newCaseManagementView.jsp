@@ -112,39 +112,40 @@ try
     <caisi:isModuleLoad moduleName="caisi">
         caisiEnabled = true;
     </caisi:isModuleLoad>
-
     <c:if test="${sessionScope.passwordEnabled=='true'}">
+
         passwordEnabled = true;
     </c:if>
+
+    var savedNoteId=0;
 </script>
 
-	<div
-		style="width: 100%; height: 75px; margin: 0px; background-color: #FFFFFF;">
-	<div id="divR1I1" class="topBox"
-		style="float: left; width: 49%; margin-left: 3px;">
+	<div id="cppBoxes">
+		<div id="divR1" style="width: 100%; height: 75px; margin: 0px; background-color: #FFFFFF;">		
+			<div id="divR1I1" class="topBox"
+				style="float: left; width: 49%; margin-left: 3px;">
+			</div>
+		
+			<!-- This is the Medical History cell ...mh...-->
+			<div id="divR1I2" class="topBox"
+				style="float: right; width: 49%; margin-right: 3px;">
+			</div>
+		</div>
+	
+		<div id="divR2" style="width: 100%; height: 75px; margin-top: 0px; background-color: #FFFFFF;">		
+			<!--Ongoing Concerns cell -->
+			<div id="divR2I1" class="topBox"
+				style="clear: left; float: left; width: 49%; margin-left: 3px;">	
+			</div>	
+			<!--Reminders cell -->
+			<div id="divR2I2" class="topBox"
+				style="clear: right; float: right; width: 49%; margin-right: 3px;">
+		
+			</div>
+		</div>
 	</div>
-
-	<!-- This is the Medical History cell ...mh...-->
-	<div id="divR1I2" class="topBox"
-		style="float: right; width: 49%; margin-right: 3px;">
-	</div>
-	</div>
-
-	<div
-		style="width: 100%; height: 75px; margin-top: 0px; background-color: #FFFFFF;">
-	<!--Ongoing Concerns cell -->
-	<div id="divR2I1" class="topBox"
-		style="clear: left; float: left; width: 49%; margin-left: 3px;">
-
-	</div>
-
-	<!--Reminders cell -->
-	<div id="divR2I2" class="topBox"
-		style="clear: right; float: right; width: 49%; margin-right: 3px;">
-
-	</div>
-	</div>
-
+	
+	
 	<div id="notCPP"
 		style="height: 70%; margin-left: 2px; background-color: #FFFFFF;">
   <html:form action="/CaseManagementView" method="post">
@@ -403,6 +404,7 @@ try
 		if (cform.getCaseNote().getId() != null)
 		{
 			savedId = cform.getCaseNote().getId();
+			System.out.println("savedId="+savedId);
 		}
 
 		//Check user property for stale date and show appropriately
@@ -543,15 +545,17 @@ try
 
 	  		<div id="n<%=note.getNoteId()%>">
 			<%
+				System.out.println("noteId=" + note.getNoteId());
 				//display last saved note for editing
-				if (note.getNoteId() !=null && note.getNoteId().equals(savedId))
+				if (note.getNoteId().intValue() == savedId )
 				{
 					found = true;
-					%> 
+					%>
+						<script>
+							savedNoteId=<%=note.getNoteId()%>;							
+						</script> 
 						<img title="<bean:message key="oscarEncounter.print.title"/>" id='print<%=note.getNoteId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>" onclick="togglePrint(<%=note.getNoteId()%>, event)" style='float: right; margin-right: 5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'>
-						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">			 <textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>">
-							<nested:write property="caseNote.note" />
-						</textarea>
+						<textarea tabindex="7" cols="84" rows="10" class="txtArea" wrap="hard" style="line-height: 1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note" /></textarea>
 						<div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getNoteId()%>"><%@ include file="noteIssueList.jsp"%></div>
 	
 						<c:if test="${sessionScope.passwordEnabled=='true'}">
@@ -898,6 +902,9 @@ try
  		{
  			savedId = 0;
  %>
+ 						<script>
+							savedNoteId=<%=savedId%>;							
+						</script> 
 	<div id="nc<%=savedId%>" class="note noteRounded">
 		<input type="hidden" id="signed<%=savedId%>" value="false"> 
 		<input type="hidden" id="full<%=savedId%>" value="true"> 

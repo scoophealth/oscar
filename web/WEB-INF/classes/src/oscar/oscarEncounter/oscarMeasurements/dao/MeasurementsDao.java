@@ -18,4 +18,7 @@ public interface MeasurementsDao {
 			String demo);
 	
 	public SortedMap<String,String> getPatientMeasurementTypeDescriptions(String demo);
+	
+	public HashMap<String,Measurements> getMeasurements(String demo, String[] types);
+	
 }

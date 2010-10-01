@@ -91,6 +91,106 @@
   <!--js code for newCaseManagementView.jsp -->
   <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js.jsp"/>"></script>
   
+   <script src="<c:out value="${ctx}/js/jquery.js"/>"></script>
+   <script>
+     jQuery.noConflict();
+   </script>
+   
+   <script>
+
+   function makeElement(type, attributes) {
+	   var element = document.createElement(type);
+	   if (attributes != null) {
+	     for (var i in attributes) {
+	       element.setAttribute(i, attributes[i]);
+	     }
+	   }	   
+	   return element;
+	 }
+
+   function insertAfter( referenceNode, newNode )
+   {
+       referenceNode.parentNode.insertBefore( newNode, referenceNode.nextSibling );
+   }
+   
+   
+   function addCppRow(rowNumber) {	   	
+		if(!document.getElementById("divR" + rowNumber)) {
+			var newDiv = makeElement('div',{'style':'width: 100%; height: 75px; margin-top: 0px; background-color: #FFFFFF;','id':'divR'+rowNumber});
+
+			var i1 = makeElement('div',{'id':'divR' + rowNumber + 'I1','class':'topBox','style':'clear: left; float: left; width: 49%; margin-left: 3px;'});
+			var i2 = makeElement('div',{'id':'divR' + rowNumber + 'I2','class':'topBox','style':'clear: right; float: right; width: 49%; margin-right: 3px;'});
+			newDiv.appendChild(i1);
+			newDiv.appendChild(i2);
+			var prevRow = document.getElementById("divR"+(rowNumber-1));
+			insertAfter(prevRow,newDiv);
+		}	
+   }
+
+   function popColumn(url,div,params, navBar, navBarObj) {
+	   params = "reloadURL=" + url + "&numToDisplay=6&cmd=" + params;
+
+       var objAjax = new Ajax.Request (
+                           url,
+                           {
+                               method: 'post',
+                               postBody: params,
+                               evalScripts: true,
+                               /*onLoading: function() {
+                                               $(div).update("<p>Loading ...<\/p>");
+                                           }, */
+                               onSuccess: function(request) {
+                                             //  alert(request.responseText);
+                                               //while( $(div).firstChild )
+                                               //    $(div).removeChild($(div).firstChild);
+                                               //alert("success " + div);
+                                               $(div).update(request.responseText);
+
+                                               if( $("leftColLoader") != null )
+                                                   Element.remove("leftColLoader");
+
+                                               if( $("rightColLoader") != null )
+                                                   Element.remove("rightColLoader");
+
+
+                                               //track ajax completions and display divs when last ajax call completes
+                                               //navBarObj.display(navBar,div);
+                                          },
+                               onFailure: function(request) {
+                                               $(div).innerHTML = "<h3>" + div + "</h3>Error: " + request.status;
+                                           }
+                           }
+
+                     );
+       };
+   
+
+       function addLeftNavDiv(name) {
+    	   var div = document.createElement("div");
+           div.className = "leftBox";
+           div.style.display = "block";
+           div.style.visiblity = "hidden";
+           div.id = name;                
+           $("leftNavBar").appendChild(div);
+           
+       }
+
+          
+   </script>
+ 
+   
+   <%
+   
+ 	String customScript = (String)request.getAttribute("cme_js");
+   if(customScript != null && customScript.length()>0) {
+	%>
+		<script src="<c:out value="${ctx}"/>/js/custom/<%=customScript%>-cme.js"></script>
+	
+	<%   	   
+   }      
+   %>
+ 
+  
     <style type="text/css">
         
         /*CPP Format */
@@ -344,7 +444,12 @@
         remindersLabel = "oscarEncounter.reminders.title";
         oMedsLabel = "oscarEncounter.oMeds.title";
         famHistoryLabel = "oscarEncounter.famHistory.title";
-        riskFactorsLabel = "oscarEncounter.riskFactors.title";    
+        riskFactorsLabel = "oscarEncounter.riskFactors.title";  
+
+        diagnosticNotesLabel = "oscarEncounter.eyeform.diagnosticNotes.title";
+        pastOcularHistoryLabel = "oscarEncounter.eyeform.pastOcularHistory.title";
+        patientLogLabel = "oscarEncounter.eyeform.patientLog.title";
+        ocularMedicationsLabel = "oscarEncounter.eyeform.ocularMedications.title";          
             
         insertTemplateError = "<bean:message key="oscarEncounter.templateError.msg"/>";
         unsavedNoteWarning = "<bean:message key="oscarEncounter.unsavedNoteWarning.msg"/>";
@@ -384,7 +489,7 @@
         month[11] = "<bean:message key="share.CalendarPopUp.msgDec"/>";
 
 function init() {       
-        
+
     showIssueNotes();
     
     var navBars = new navBarLoader();
@@ -435,7 +540,7 @@ function doscroll(){
 
 </script>
   </head> 
-  <body id="body" style="margin:0px;" onload="init()" onunload="onClosing()">
+  <body id="body" style="margin:0px;" onunload="onClosing()">
     
           <div id="header">
               <tiles:insert attribute="header" />

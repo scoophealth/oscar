@@ -411,7 +411,23 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			se.removeAttribute(varName);
 		}
 		current = System.currentTimeMillis();
+		
+		//load up custom JavaScript
+		
+		//1. try from Properties
+		String customCmeJs = OscarProperties.getInstance().getProperty("cme_js");
+		if(customCmeJs == null || customCmeJs.length()==0) {
+			request.setAttribute("cme_js", "default");
+		} else {
+			request.setAttribute("cme_js", customCmeJs);
+		}
+		
+		//2. Override from provider preferences?
+		
+		//3. Override based on appointment type?
+		
 		logger.debug("VIEW Exiting " + String.valueOf(current - beginning));
+
 
 		String printPreview = (String) request.getAttribute("patientCppPrintPreview");
 		if ("true".equals(printPreview)) {

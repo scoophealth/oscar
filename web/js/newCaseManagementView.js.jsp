@@ -256,12 +256,14 @@ var famHistoryLabel;
 var riskFactorsLabel;
 
 function showIssueNotes() {
+/*
     var issueNoteUrls = {
         divR1I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=SocHistory&title=" + socHistoryLabel + "&cmd=divR1I1",
         divR1I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=MedHistory&title=" + medHistoryLabel + "&cmd=divR1I2",
         divR2I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Concerns&title=" + onGoingLabel + "&cmd=divR2I1",
         divR2I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Reminders&title=" + remindersLabel + "&cmd=divR2I2"
     };
+*/
     var limit = 5;
 
     for( idx in issueNoteUrls ) {
@@ -1920,7 +1922,7 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 }
 
 function savePage(method, chain) {
-    var noteStr;
+	var noteStr;
     noteStr = $F(caseNote);
     if( noteStr.replace(/^\s+|\s+$/g,"").length == 0 ) {
         alert("Please enter a note before saving");
@@ -1960,6 +1962,11 @@ function savePage(method, chain) {
 
     caseMgtEntryfrm.submit();
 
+	jQuery("span[note_addon]").each(function(i){
+		var func = jQuery(this).attr('note_addon');
+		eval(func + "()");
+	});
+	
     /*var frm = document.forms["caseManagementViewForm"];
     var url = ctx + "/CaseManagementView.do";
     var objAjax = new Ajax.Request (

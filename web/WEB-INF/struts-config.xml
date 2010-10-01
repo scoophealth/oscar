@@ -460,6 +460,26 @@
 		<form-property name="name" type="java.lang.String" />
 	</form-bean>
 	
+	<form-bean name="ocularProcForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="proc" type="org.oscarehr.eyeform.model.OcularProc" />
+	</form-bean>
+	
+	<form-bean name="specsHistoryForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="specs" type="org.oscarehr.eyeform.model.SpecsHistory" />
+	</form-bean>
+	
+	<form-bean name="macroForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="macro" type="org.oscarehr.eyeform.model.Macro" />
+	</form-bean>
+	
+	<form-bean name="procedureBookForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="data" type="org.oscarehr.eyeform.model.ProcedureBook" />
+	</form-bean>
+	
+	<form-bean name="testBookForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="data" type="org.oscarehr.eyeform.model.TestBookRecord" />
+	</form-bean>
+	
     </form-beans>
 
     <global-forwards>
@@ -845,6 +865,9 @@
         <action path="/oscarEncounter/displayTickler" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayTicklerAction"></action>
         <action path="/oscarEncounter/displayDisease" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDxAction"></action>
         <action path="/oscarEncounter/displayPrevention" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayPreventionAction"></action>
+        <action path="/oscarEncounter/displayOcularProcedure" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayOcularProcedureAction"></action>        
+        <action path="/oscarEncounter/displaySpecsHistory" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplaySpecsHistoryAction"></action>                
+        <action path="/oscarEncounter/displayMacro" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMacroAction"></action>                        
         <action path="/oscarEncounter/displayConsultation" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayConsultAction"></action>
         <action path="/oscarEncounter/displayAllergy" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAllergyAction"></action>
         <action path="/oscarEncounter/displayRx" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayRxAction"></action>
@@ -1014,6 +1037,8 @@
             <forward name="continue" path="/oscarEncounter/oscarMeasurements/Measurements.jsp" />
         </action>
         <action name="EctStreamStyleSheet" path="/oscarEncounter/oscarMeasurements/StreamStyleSheet" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctStreamStyleSheet">
+        </action>
+        <action path="/oscarEncounter/MeasurementData" parameter="action" scope="request" type="org.oscarehr.measurements.web.MeasurementDataAction">           
         </action>
         <action path="/oscarEncounter/oscarMeasurements/SetupDisplayHistory" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupDisplayHistoryAction">
             <forward name="continue" path="/oscarEncounter/oscarMeasurements/DisplayHistory.jsp" />
@@ -1924,6 +1949,45 @@
         <action input="/oscarReport/reportByTemplate/addEditTemplate.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/uploadTemplates" scope="request" type="oscar.oscarReport.reportByTemplate.actions.UploadTemplates">
             <forward name="success" path="/oscarReport/reportByTemplate/addEditTemplate.jsp"></forward>
         </action>
+        
+        <action path="/eyeform/OcularProc" type="org.oscarehr.eyeform.web.OcularProcAction" parameter="method"
+                scope="request" validate="false" input="/eyeform/ocular_proc.jsp" name="ocularProcForm">
+            <forward name="form" path="/eyeform/ocular_proc.jsp" />
+            <forward name="success" path="/eyeform/success.jsp" />
+        </action>
+        
+        <action path="/eyeform/SpecsHistory" type="org.oscarehr.eyeform.web.SpecsHistoryAction" parameter="method"
+                scope="request" validate="false" input="/eyeform/specs_history.jsp" name="specsHistoryForm">
+            <forward name="form" path="/eyeform/specs_history.jsp" />
+            <forward name="success" path="/eyeform/success.jsp" />
+        </action>
+        
+        <action path="/eyeform/Macro" type="org.oscarehr.eyeform.web.MacroAction" parameter="method"
+                scope="request" validate="false" input="/eyeform/macro.jsp" name="macroForm">
+                <forward name="list" path="/eyeform/macro_list.jsp" />
+            <forward name="form" path="/eyeform/macro.jsp" />
+            <forward name="success" path="/eyeform/success.jsp" />
+        </action>
+        
+        <action path="/eyeform/NoteData" type="org.oscarehr.eyeform.web.NoteAddonAction" parameter="method"
+                scope="request" validate="false">
+            <forward name="current_note" path="/eyeform/current_note.jsp" /> 
+        </action>
+        
+        <action path="/eyeform/ProcedureBook" type="org.oscarehr.eyeform.web.ProcedureBookAction" parameter="method"
+                scope="request" validate="false" input="/eyeform/procedure_book.jsp" name="procedureBookForm">
+            <forward name="form" path="/eyeform/procedure_book.jsp" />
+            <forward name="success" path="/eyeform/success.jsp" />
+        </action>
+        
+        <action path="/eyeform/TestBook" type="org.oscarehr.eyeform.web.TestBookAction" parameter="method"
+                scope="request" validate="false" input="/eyeform/test_book.jsp" name="testBookForm">
+            <forward name="form" path="/eyeform/test_book.jsp" />
+            <forward name="success" path="/eyeform/success.jsp" />
+        </action>
+        
+        
+        
         <!-- END OSCAR Report By Template -->
 
         <action path="/ArchiveView" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="method">
