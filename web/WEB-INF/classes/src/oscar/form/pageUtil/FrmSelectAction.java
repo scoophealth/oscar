@@ -27,6 +27,7 @@ package oscar.form.pageUtil;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.EncounterFormDao;
+import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
 
@@ -52,20 +56,32 @@ public class FrmSelectAction extends Action {
                                 
         if(frm.getForward()!=null){
             try{
-                DBHandler db = new DBHandler();                                                                        
+                DBHandler db = new DBHandler();                        
+
+                EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
+                List<EncounterForm> encounterForms=encounterFormDao.findAll();
+                int maxCurrentDisplayCount=0;
+                // find the largest current display number
+                for (EncounterForm encounterForm : encounterForms)
+                {
+                	maxCurrentDisplayCount=Math.max(maxCurrentDisplayCount, encounterForm.getDisplayOrder());
+                }
                 
                 if (frm.getForward().compareTo("add")==0) {
                     MiscUtils.getLogger().debug("the add button is pressed");
                     String[] selectedAddTypes = frm.getSelectedAddTypes();                    
                     if(selectedAddTypes != null){
+                    	// for every item selected to add, find it in the form list, then change the display number to the next highest number
                         for(int i=0; i<selectedAddTypes.length; i++){
-                            String sql = "SELECT * FROM encounterForm WHERE hidden<>'0'";
-                            ResultSet rs = db.GetSQL(sql);
-                            rs.last();
-                            int newOrder = rs.getRow() + 1;                            
-                            sql = "UPDATE encounterForm SET hidden ='" + newOrder + "' WHERE form_name='" + selectedAddTypes[i] + "'";
-                            MiscUtils.getLogger().debug(" sql statement "+sql);
-                            db.RunSQL(sql);                                
+                        	for (EncounterForm encounterForm : encounterForms)
+                        	{
+                        		if (encounterForm.getFormName().equals(selectedAddTypes[i]))
+                        		{
+                        			maxCurrentDisplayCount++;
+                        			encounterForm.setDisplayOrder(maxCurrentDisplayCount);
+                        			encounterFormDao.merge(encounterForm);
+                        		}
+                        	}                        	
                         }
                     }
                 }
