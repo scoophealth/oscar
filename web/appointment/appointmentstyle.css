@@ -1,0 +1,113 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
+
+body {
+    font-family:"Arial";
+    font-size:17px;
+    margin:0;
+    padding:0;
+    background-image: url("../images/gray_bg.jpg");
+}
+
+.title {
+    font-family:"Helvetica";
+    font-weight:bold;
+    text-align:center;
+}
+
+a {
+    text-decoration:none;
+}
+
+.panel li div {
+    display:table-cell;
+    border-bottom: 1px solid #c0c0c0;
+    border-right: 1px solid #c0c0c0;
+    vertical-align:middle;
+    height:inherit;
+    background-color: inherit;
+}
+/* Only add appointment screen has a border on its cells */
+div#editAppointment .panel li div {
+    border:none;
+}
+
+.row {
+    display: table-row;
+}
+
+
+.header {
+    border-bottom: 1px solid #c0c0c0;
+}
+
+div.label {
+    text-align:right;
+    width:25%;
+}
+
+div.input {
+    text-align:left;
+    width:25%;
+}
+
+.panel input {
+    font-size:12px;
+}
+
+input.submit {
+    width:auto;
+}
+
+input[readonly] {
+    background-color: #e8e8e8;
+}
+
+textarea {
+    height: 55px;
+}
+
+#bottomInfo {
+    float:left;
+    width:100%;
+}
+
+.buttonBar {
+    width:100%;
+}
+
+.panel {
+    display:block;
+    width:100%;
+}
+
+.panel ul {
+    display:table;
+    list-style: none;
+    padding: 0; margin: 0;
+}
+
+#viewButton {
+    display:none;
+}

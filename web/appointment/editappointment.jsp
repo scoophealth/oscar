@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
   if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
@@ -32,6 +33,8 @@
 
   AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)webApplicationContext.getBean("AppointmentStatusMgr");
   List allStatus = apptStatusMgr.getAllActiveStatus();
+
+  Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 %>
 <!--  
 /*
@@ -64,11 +67,46 @@
 <head>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
+<% if (isMobileOptimized) { %>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+    <link rel="stylesheet" href="../mobile/appointmentstyle.css" type="text/css">
+<% } else { %>
+    <link rel="stylesheet" href="appointmentstyle.css" type="text/css">
+    <style type="text/css">
+        .deep { background-color: <%= deepcolor %>; }
+        .weak { background-color: <%= weakcolor %>; }
+    </style>
+    <!-- Must change styles for browsers that do not understand display:table properties -->
+    <!--[if lt IE 8]>
+        <style type="text/css">
+            body { min-width: 760px; }
+            .row { clear: both; }
+            li.deep { background-color: <%= weakcolor %>; }
+            .label, .space { float:left; width: 100px !important; }
+            .panel li div { border:none; }
+            .input, .space { text-align: right; float:left; }
+            .panel { background-color: #EEEEFF; }
+        </style>
+    <![endif]-->
+    <!-- Min-width doesn't work properly in IE6, so we simulate it using JavaScript.
+    It's important to set a min-width since many elements will be floating, and
+    resizing may otherwise cause elements to collapse in strange ways
+    -->
+    <!--[if lt IE 7]>
+        <script language="JavaScript">
+            window.onresize = function() { setMinWidth(860); }
+        </script>
+    <![endif]-->
+<% } %>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="appointment.editappointment.title" /></title>
 
 <script language="javascript">
 <!-- // start javascript 
+function toggleView() {
+    showHideItem('editAppointment');
+    showHideItem('viewAppointment');
+}
 function demographicdetail(vheight,vwidth) {
   if(document.forms['EDITAPPT'].demographic_no.value=="") return;
   self.close();
@@ -206,17 +244,25 @@ function onCut() {
 // stop javascript -->
 </script>
 </head>
-<body onload="setfocus()" background="../images/gray_bg.jpg"
-	bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body onload="setfocus()" bgproperties="fixed"
+      topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0">
+<!-- The mobile optimized page is split into two sections: viewing and editing an appointment
+     In the mobile version, we only display the edit section first if we are returning from a search -->
+<div id="editAppointment" style="display:<%= (isMobileOptimized && bFirstDisp) ? "none":"block"%>;">
 <FORM NAME="EDITAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"
 	onSubmit="return(onSub())"><INPUT TYPE="hidden"
 	NAME="displaymode" value="">
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
-	<tr bgcolor="<%=deepcolor%>">
-		<th><font face="Helvetica"><bean:message
-			key="appointment.editappointment.msgMainLabel" /></font></th>
-	</tr>
-</table>
+    <div class="header deep">
+        <div class="title">
+            <!-- We display a shortened title for the mobile version -->
+            <% if (isMobileOptimized) { %><bean:message key="appointment.editappointment.msgMainLabelMobile" />
+            <% } else { %><bean:message key="appointment.editappointment.msgMainLabel" />
+            <% } %>
+        </div>
+        <a href="javascript:toggleView();" id="viewButton" class="leftButton top">
+            <bean:message key="appointment.editappointment.btnView" />
+        </a>
+    </div>
 
 <%
 	Map appt = null;
@@ -270,27 +316,21 @@ function onCut() {
         doctorNo = request.getParameter("doctor_no");
     }
 %>
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-		<td width="100%">
-
-		<table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%"
-			BGCOLOR="<%=weakcolor%>">
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"> <bean:message
-					key="Appointment.formDate" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT"
+<div class="panel">
+    <ul>
+        <li class="row weak">
+            <div class="label">
+                <bean:message key="Appointment.formDate" />:
+            </div>
+            <div class="input">
+		<INPUT TYPE="TEXT"
 					NAME="appointment_date"
 					VALUE="<%=bFirstDisp?appt.get("appointment_date"):strApptDate%>"
-					WIDTH="25" HEIGHT="20" border="0"></td>
-				<td width="5%"></td>
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"> <bean:message
-					key="Appointment.formStatus" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT">
+                    WIDTH="25" HEIGHT="20" border="0">
+            </div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formStatus" />:</div>
+            <div class="input">
 <%     
               String statusCode = request.getParameter("status");
               if (bFirstDisp){
@@ -313,33 +353,27 @@ function onCut() {
                 <INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>" WIDTH="25"> <%
               }
 %>
-				</td>
-			</tr>
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"><font
-					face="arial"> <bean:message key="Appointment.formStartTime" />
-				:</font></font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT"
+            </div>
+        </li>
+        <li class="row weak">
+            <div class="label"><bean:message key="Appointment.formStartTime" />:</div>
+            <div class="input">
+                <INPUT TYPE="TEXT"
 					NAME="start_time"
 					VALUE="<%=bFirstDisp?String.valueOf(appt.get("start_time")).substring(0,5):request.getParameter("start_time")%>"
-					WIDTH="25"></td>
-				<td width="5%"></td>
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"> <bean:message
-					key="Appointment.formType" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT" NAME="type"
+                    WIDTH="25">
+            </div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formType" />:</div>
+            <div class="input">
+                <INPUT TYPE="TEXT" NAME="type"
 					VALUE="<%=bFirstDisp?appt.get("type"):request.getParameter("type")%>"
-					WIDTH="25"></td>
-			</tr>
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"> <bean:message
-					key="Appointment.formDuration" />:</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT">
+                    WIDTH="25">
+            </div>
+        </li>
+        <li class="row weak">
+            <div class="label"><bean:message key="Appointment.formDuration" />:</div>
+            <div class="input">
 				<%
   int everyMin = 1;
   if(bFirstDisp) {
@@ -353,94 +387,89 @@ function onCut() {
 				<%--              <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">--%>
 				<INPUT TYPE="TEXT" NAME="duration"
 					VALUE="<%=request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin)%>"
-					WIDTH="25"></td>
-				<td width="5%"></td>
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="Arial, Helvetica, sans-serif"><bean:message
-					key="Appointment.formChartNo" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><input type="TEXT" name="chart_no"
-					readonly
-					value="<%=bFirstDisp?chartno:request.getParameter("chart_no")%>"
-					width="25"></td>
-			</tr>
+                    WIDTH="25">
+            </div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formChartNo" />:</div>
+            <div class="input">
+                <input type="TEXT" name="chart_no"
+                    readonly value="<%=bFirstDisp?chartno:request.getParameter("chart_no")%>"
+                    width="25">
+            </div>
+        </li>
 			<% if(providerBean.getProperty(doctorNo)!=null) {%>
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right">&nbsp;</div>
-				</td>
-				<td width="20%" ALIGN="LEFT">&nbsp;</td>
-				<td width="5%"></td>
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><bean:message key="Appointment.formDoctor" />:</div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><%=providerBean.getProperty(doctorNo)%>
-				</td>
-			</tr>
+        <li class="row weak">
+            <div class="label"></div>
+            <div class="input"></div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formDoctor" />:</div>
+            <div class="input">
+                <INPUT type="TEXT" name="doctorNo" readonly
+                   value="<%=providerBean.getProperty(doctorNo)%>"
+                   width="25">
+            </div>
+        </li>
 			<% } %>
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"> <a href="#"
-					onclick="demographicdetail(550,700)"><bean:message
-					key="Appointment.formName" /></a> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT" NAME="keyword"
+        <li class="row weak">
+            <div class="label"><a href="#"onclick="demographicdetail(550,700)">
+                    <bean:message key="Appointment.formName" /></a>:
+            </div>
+            <div class="input">
+                <INPUT TYPE="TEXT" NAME="keyword"
 					tabindex="1"
 					VALUE="<%=bFirstDisp?appt.get("name"):request.getParameter("name")%>"
-					width="25"></td>
-				<td width="5%"></td>
-				<td width="20%" ALIGN="LEFT"><INPUT TYPE="hidden"
-					NAME="orderby" VALUE="last_name, first_name"> <INPUT
-					TYPE="hidden" NAME="search_mode" VALUE="search_name"> <INPUT
-					TYPE="hidden" NAME="originalpage"
-					VALUE="../appointment/editappointment.jsp"> <INPUT
-					TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
-					TYPE="hidden" NAME="limit2" VALUE="5"> <INPUT
-					TYPE="hidden" NAME="ptstatus" VALUE="active"> <!--input type="hidden" name="displaymode" value="Search " -->
-				<div align="right"><input type="submit"
+                    width="25">
+            </div>
+            <div class="space">&nbsp;</div>
+            <div class="label">
+		<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
+                <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name">
+                <INPUT TYPE="hidden" NAME="originalpage" VALUE="../appointment/editappointment.jsp">
+                <INPUT TYPE="hidden" NAME="limit1" VALUE="0">
+                <INPUT TYPE="hidden" NAME="limit2" VALUE="5">
+                <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
+                <!--input type="hidden" name="displaymode" value="Search " -->
+                <input type="submit" style="width:auto;"
 					onclick="document.forms['EDITAPPT'].displaymode.value='Search '"
-					value="<bean:message key="appointment.editappointment.btnSearch"/>"></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><input type="TEXT"
+                    value="<bean:message key="appointment.editappointment.btnSearch"/>">
+            </div>
+            <div class="input">
+                <input type="TEXT"
 					name="demographic_no" onFocus="onBlockFieldFocus(this)" readonly
 					value="<%=bFirstDisp?( ((Integer)appt.get("demographic_no"))==0?"":(""+appt.get("demographic_no")) ):request.getParameter("demographic_no")%>"
-					width="25"></td>
-			</tr>
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"> <bean:message
-					key="Appointment.formReason" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><font face="Times New Roman">
+                    width="25">
+            </div>
+        </li>
+        <li class="row weak">
+            <div class="label"><bean:message key="Appointment.formReason" />:</div>
+            <div class="input">
 				<textarea name="reason" tabindex="2" rows="2" wrap="virtual"
 					cols="18"><%=bFirstDisp?appt.get("reason"):request.getParameter("reason")%></textarea>
-				</font></td>
-				<td width="5%"><font face="Times New Roman"> </font></td>
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"><bean:message
-					key="Appointment.formNotes" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><font face="Times New Roman">
+            </div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formNotes" />:</div>
+            <div class="input">
 				<textarea name="notes" tabindex="3" rows="2" wrap="virtual"
 					cols="18"><%=bFirstDisp?appt.get("notes"):request.getParameter("notes")%></textarea>
-				</font></td>
-			</tr>
+            </div>
+        </li>
 			<% if (pros.isPropertyActive("mc_number")) {
 		String mcNumber = OtherIdManager.getApptOtherId(appointment_no, "appt_mc_number");
 %>
-			<tr valign="middle">
-				<td align="right">M/C number :</td>
-				<td><input type="text" name="appt_mc_number" tabindex="4"
-						value="<%=bFirstDisp?mcNumber:request.getParameter("appt_mc_number")%>" /></td>
-				<td colspan="3">&nbsp;</td>
-			</tr>
+        <li class="row weak">
+            <div class="label">M/C number :</div>
+            <div class="input">
+                <input type="text" name="appt_mc_number" tabindex="4"
+                    value="<%=bFirstDisp?mcNumber:request.getParameter("appt_mc_number")%>" />
+            </div
+            <div class="space">&nbsp;</div>
+            <div class="label"></div>
+            <div class="input"></div>
+        </li>
 <% } %>
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"><bean:message
-					key="Appointment.formLocation" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT">
+        <li class="row weak">
+            <div class="label"><bean:message key="Appointment.formLocation" />:</div>
+            <div class="input">
 				<% 
 			// multisites start ==================
 			boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable();
@@ -466,83 +495,68 @@ if (bMultisites) { %>
 	// multisites end ==================
 %>				           
             <INPUT TYPE="TEXT" NAME="location" tabindex="4"
-					style="background-color: <%=colo%>"
 					VALUE="<%=bFirstDisp?appt.get("location"):request.getParameter("location")%>"
 					WIDTH="25">
 <% } %>
-				</td>
-				<td width="5%"></td>
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"><bean:message
-					key="Appointment.formResources" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT"><input type="TEXT"
+            </div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formResources" />:</div>
+            <div class="input">
+                <input type="TEXT"
 					name="resources" tabindex="5"
 					value="<%=bFirstDisp?appt.get("resources"):request.getParameter("resources")%>"
-					width="25"></td>
-			</tr>
-			<tr valign="middle">
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"><bean:message
-					key="Appointment.formLastCreator" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT">
+                    width="25">
+            </div>
+        </li>
+        <li class="weak row">
+            <div class="label"><bean:message key="Appointment.formLastCreator" />:</div>
+            <div class="input">
+<% String lastCreatorNo = bFirstDisp?((String)appt.get("creator")):request.getParameter("user_id"); %>
+                <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly WIDTH="25">
+            </div>
+            <div class="space">&nbsp;</div>
+            <div class="label"><bean:message key="Appointment.formLastTime" />:</div>
+            <div class="input">
 				<%
-  String lastCreatorNo = bFirstDisp?((String)appt.get("creator")):request.getParameter("user_id");
-%> <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly
-					WIDTH="25"></td>
-				<td width="5%"></td>
-				<td width="20%" ALIGN="LEFT">
-				<div align="right"><font face="arial"><bean:message
-					key="Appointment.formLastTime" /> :</font></div>
-				</td>
-				<td width="20%" ALIGN="LEFT">
-				<%                 
                  origDate =  bFirstDisp ? String.valueOf(appt.get("createdatetime")) : request.getParameter("createDate");
                  String lastDateTime = bFirstDisp?String.valueOf(appt.get("updatedatetime")):request.getParameter("updatedatetime");
                  if (lastDateTime == null){ lastDateTime = bFirstDisp?String.valueOf(appt.get("createdatetime")):request.getParameter("createdatetime"); }
-		%> <INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly
-					VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>"
-					WIDTH="25"> <%
  
 				GregorianCalendar now=new GregorianCalendar();
 				String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
 					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
-                                
-%> <INPUT TYPE="hidden" NAME="createdatetime" VALUE="<%=strDateTime%>">
+%>
+                <INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly
+                    VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>"
+                    WIDTH="25">
+                <INPUT TYPE="hidden" NAME="createdatetime" VALUE="<%=strDateTime%>">
 				<INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="update_apptrecord">
-				<INPUT TYPE="hidden" NAME="creator"
-					VALUE="<%=userlastname+", "+userfirstname%>"> <INPUT
-					TYPE="hidden" NAME="remarks" VALUE=""> <INPUT TYPE="hidden"
-					NAME="appointment_no"
-					VALUE="<%=appointment_no%>"></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td align="left">
-				<div align="right"><font face="arial">Create Date :</font></div>
-				</td>
-				<td><INPUT TYPE="TEXT" NAME="createDate" readonly
+                <INPUT TYPE="hidden" NAME="creator" VALUE="<%=userlastname+", "+userfirstname%>">
+                <INPUT TYPE="hidden" NAME="remarks" VALUE="">
+                <INPUT TYPE="hidden" NAME="appointment_no" VALUE="<%=appointment_no%>">
+            </div>
+        </li>
+        <li class="row weak">
+            <div class="label"></div>
+            <div class="input"></div>
+            <div class="space">&nbsp;</div>
+            <div class="label">Create Date:</div>
+            <div class="input">
+                <INPUT TYPE="TEXT" NAME="createDate" readonly
 					VALUE="<%=origDate%>" WIDTH="25">
-				</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-</table>
-
-<table width="100%" BGCOLOR="<%=deepcolor%>">
+            </div>
+        </li>
+    </ul>
+<table class="buttonBar deep">
 	<tr>
-		<td align="left"><input type="submit"
+        <td align="left"><input type="submit" class="rightButton blueButton top" id="updateButton"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Update Appt'; onButUpdate();"
 			value="<bean:message key="appointment.editappointment.btnUpdateAppointment"/>">
 		<input type="submit"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Group Action'; onButUpdate();"
 			value="<bean:message key="appointment.editappointment.btnGroupAction"/>">
-		<input type="submit"
+		<input type="submit" class="redButton button" id="deleteButton"
 			onclick="document.forms['EDITAPPT'].displaymode.value='Delete Appt'; onButDelete();"
 			value="<bean:message key="appointment.editappointment.btnDeleteAppointment"/>">
 		<input type="button" name="buttoncancel"
@@ -561,7 +575,8 @@ if (bMultisites) { %>
 			onclick="onButRepeat()"></td>
 	</tr>
 </table>
-
+</div>
+<div id="bottomInfo">
 <table width="95%" align="center">
 	<tr>
 		<td><bean:message key="Appointment.msgTelephone" />: <%= phone%><br>
@@ -585,7 +600,93 @@ if (bMultisites) { %>
 		</td>
 	</tr>
 </table>
-</FORM>
 
+
+</div>
+</FORM>
+</div> <!-- end of edit appointment screen -->
+
+<!-- View Appointment: Screen that summarizes appointment data.
+Currently this is only used in the mobile version -->
+<div id="viewAppointment" style="display:<%=(bFirstDisp && isMobileOptimized) ? "block":"none"%>;">
+    <%
+        // Format date to be more readable
+        java.text.SimpleDateFormat inform = new java.text.SimpleDateFormat ("yyyy-MM-dd");
+        String strDate = bFirstDisp ? appt.get("appointment_date").toString() : request.getParameter("appointment_date");
+        java.util.Date d = inform.parse(strDate);
+        String formatDate = "";
+        try { // attempt to change string format
+        java.util.ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
+        formatDate = oscar.util.UtilDateUtilities.DateToString(d, prop.getString("date.EEEyyyyMMdd"));
+        } catch (Exception e) {
+            org.oscarehr.util.MiscUtils.getLogger().error("Error", e);
+            formatDate = oscar.util.UtilDateUtilities.DateToString(inform.parse(strDate), "EEE, yyyy-MM-dd");
+        }
+    %>
+    <div class="header">
+        <div class="title" id="appointmentTitle">
+            <bean:message key="appointment.editappointment.btnView" />
+        </div>
+        <a href=# onclick="window.close();" id="backButton" class="leftButton top"><%= strDate%></a>
+        <a href="javascript:toggleView();" id="editButton" class="rightButton top">Edit</a>
+    </div>
+    <div id="info" class="panel">
+        <ul>
+            <li class="mainInfo"><a href="#" onclick="demographicdetail(550,700)">
+                <%
+                    String apptName = (bFirstDisp ? appt.get("name") : request.getParameter("name")).toString();
+                    //If a comma exists, need to split name into first and last to prevent overflow
+                    int comma = apptName.indexOf(",");
+                    if (comma != -1)
+                        apptName = apptName.substring(0, comma) + ", " + apptName.substring(comma+1);
+                %>
+                <%=apptName%>
+            </a></li>
+            <li><div class="label"><bean:message key="Appointment.formDate" />: </div>
+                <div class="info"><%=formatDate%></div>
+            </li>
+            <% // Determine appointment status from code so we can access
+   // the description, colour, image, etc.
+      AppointmentStatus apptStatus = (AppointmentStatus)allStatus.get(0);
+      for (int i = 0; i < allStatus.size(); i++) {
+            AppointmentStatus st = (AppointmentStatus) allStatus.get(i);
+            if (st.getStatus().equals(statusCode)) {
+                apptStatus = st;
+                break;
+            }
+      }
+%>
+            <li><div class="label"><bean:message key="Appointment.formStatus" />: </div>
+                <div class="info">
+                <font style="background-color:<%=apptStatus.getColor()%>; font-weight:bold;">
+                    <img src="../images/<%=apptStatus.getIcon()%>" />
+                    <%=apptStatus.getDescription()%>
+                </font>
+                </div>
+            </li>
+            <li><div class="label"><bean:message key="appointment.editappointment.msgTime" />: </div>
+                <div class="info">From <%=bFirstDisp ? String.valueOf(appt.get("start_time")).substring(0, 5) : request.getParameter("start_time")%>
+                to <%=bFirstDisp ? String.valueOf(appt.get("end_time")).substring(0, 5) : request.getParameter("end_time")%></div>
+            </li>
+            <li><div class="label"><bean:message key="Appointment.formType" />: </div>
+                <div class="info"><%=bFirstDisp ? appt.get("type") : request.getParameter("type")%></div>
+            </li>
+            <li><div class="label"><bean:message key="Appointment.formReason" />: </div>
+                <div class="info"><%=bFirstDisp ? appt.get("reason") : request.getParameter("reason")%></div>
+            </li>
+            <li><div class="label"><bean:message key="Appointment.formLocation" />: </div>
+                <div class="info"><%=bFirstDisp ? appt.get("location") : request.getParameter("location")%></div>
+            </li>
+            <li><div class="label"><bean:message key="Appointment.formResources" />: </div>
+                <div class="info"><%=bFirstDisp ? appt.get("resources") : request.getParameter("resources")%></div>
+            </li>
+            <li>&nbsp;</li>
+            <li class="notes">
+                <div class="label"><bean:message key="Appointment.formNotes" />: </div>
+                <div class="info"><%=bFirstDisp ? appt.get("notes") : request.getParameter("notes")%></div>
+            </li>
+        </ul>
+    </div>
+</div> <!-- end of screen to view appointment -->
 </body>
 </html:html>
