@@ -3,7 +3,6 @@
 
 <!--
 /*
- *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  *  This software is published under the GPL GNU General Public License.
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -17,24 +16,18 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- *  modified by amos raphenya
- *
- *  This software was written for the
- *  Department of Family Medicine
- *  McMaster University
- *  Hamilton
- *  Ontario, Canada
+ *  Shelter Lee's eForm Generator v4 modified after Amos Raphenya by Peter Hutten-Czapski
  *
  *  eformGenerator.jsp
- *  
- *  Created on June 24, 2010, 3:45 PM
+ *
+ *  Created on October 1st, 2010
  *
  */
 -->
 
-<%@page import="org.oscarehr.util.MiscUtils"%><html>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<html>
 <head>
-
 <title>OSCAR e-Form Generator</title>
 
 <style type="text/css" media="print">
@@ -60,11 +53,12 @@
 }
 </style>
 <style>
-h1	{font-family: sans-serif; font-size: 14px; font-weight: bolder;}
-h2	{font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: underline;}
-h3	{font-family: sans-serif; font-size: 12px; font-weight: bold;}
-h4	{font-family: sans-serif; font-size: 12px; font-weight: normal; text-decoration: underline;}
-p, li	{font-family: sans-serif; font-size: 12px; font-weight: normal;}
+span.h1		{font-family: sans-serif; font-size: 14px; font-weight: bolder;}
+span.h2		{font-family: sans-serif; font-size: 12px; font-weight: bold; text-decoration: underline;}
+span.h3		{font-family: sans-serif; font-size: 12px; font-weight: bold;}
+span.h4		{font-family: sans-serif; font-size: 12px; font-weight: normal; text-decoration: underline;}
+p, li, span	{font-family: sans-serif; font-size: 12px; font-weight: normal;}
+a			{font-family: sans-serif; font-size: 12px; font-weight: normal; color: blue; cursor:pointer;}
 </style>
 
 <script type="text/javascript">
@@ -89,10 +83,10 @@ var BGWidth = 0;
 var BGHeight = 0;
 
 function loadImage(){
-var img = document.getElementById('imageName' );
+
+var img = document.getElementById('imageName');
 var myCnv = document.getElementById('myCanvas');
 var bg = document.getElementById('BGImage');
-
 //set the path for image function
 bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+img.value);
 
@@ -110,6 +104,7 @@ bg.src = ("<%=request.getContextPath()%>"+"/eform/displayImage.do?imagefile="+im
 	jg.clear();
 	drawPageOutline();
 }
+
 function drawPageOutline(){
 	if (BGWidth <= 800){
 		drawPortraitOutline();
@@ -117,6 +112,307 @@ function drawPageOutline(){
 		drawLandscapeOutline();
 	}
 }
+
+function show(x){
+//expands section
+	document.getElementById(x).style.display = 'block';
+}
+function hide(x){
+//collapses section
+	document.getElementById(x).style.display = 'none';
+}
+function toggleView(checked,x){
+	if (checked){
+		document.getElementById(x).style.display = 'block'
+	} else if (!checked){
+		document.getElementById(x).style.display = 'none';
+	}
+}
+
+function loadInputList(){
+	//load checklist of all eform input fields
+
+	var InputList = document.getElementById('InputList');
+	//empty InputList
+	while (InputList.childNodes.length>0){
+		InputList.removeChild(InputList.lastChild);
+	}
+	//assign input name into variable 'InputName'
+	TempData = DrawData;
+	for (var j=0; (j < (TempData.length) ); j++){
+		var RedrawParameter = TempData[j].split("|");
+		var InputType = RedrawParameter[0]
+		if (InputType == ('Text'||'Textbox')){
+			var InputName = new String(RedrawParameter[5]);
+		}else if (InputType == 'Checkbox'){
+			var InputName = new String(RedrawParameter[3]);
+		}
+		//adds InputName as list item in InputList
+		ListItem = document.createElement("li");
+		var txt = "<input name='InputChecklist' type='checkbox' id='" + InputName + "' value ='" + InputName+ "'>" + InputName;
+		ListItem.innerHTML = txt;
+		InputList.appendChild(ListItem);
+	}
+	if (document.getElementById('preCheckGender').checked){
+		ListItem = document.createElement("li");
+		ListItem.innerHTML = "<input name='InputChecklist' type='checkbox' id='Male' value ='Male'>Male";
+		InputList.appendChild(ListItem);
+
+		ListItem = document.createElement("li");
+		ListItem.innerHTML = "<input name='InputChecklist' type='checkbox' id='Female' value ='Female'>Female";
+		InputList.appendChild(ListItem);
+	}
+}
+
+function uncheckInputList(){
+	var InputList = document.getElementsByName('InputChecklist');
+	for (i=0; i < InputList.length; i++){
+		InputList[i].checked = false;
+	}
+}
+
+function shiftInput(d,p){
+var InputChecklist = document.getElementsByName('InputChecklist');
+	for (i=0; i < InputChecklist.length; i++){
+		if (InputChecklist[i].checked){
+			var n = InputChecklist[i].value;
+			moveInput(n,d,p);
+		}
+	}
+}
+
+
+function moveInput(n, d, p){
+//parses DrawData and find InputName = n, then shift the inputbox p pixels in direction d (up, down, left, right)
+	TempData = DrawData;
+	var InputName = ""	//hold InputName
+	var	DataNumber	= parseInt(0)	//holds the number that correspond to the order in which the Input is entered into the array
+	p = parseInt(p);
+
+	//shift Text, Textbox, Checkboxes
+	for (var j=0; (j < (TempData.length)); j++){
+		var RedrawParameter = TempData[j].split("|");
+		var InputType = RedrawParameter[0]
+		if (InputType == ('Text' || 'Textbox')){
+			InputName = new String(RedrawParameter[5]);
+			DataNumber = j;
+		}else if (InputType == 'Checkbox'){
+			InputName = new String(RedrawParameter[3]);
+			DataNumber = j;
+		}
+		if (InputName == n){		//if InputName matches n
+			var TargetParameter = TempData[DataNumber].split("|");
+			var Xcoord = parseInt(TargetParameter[1]);
+			var Ycoord = parseInt(TargetParameter[2]);
+			if (d == 'up'){
+				Ycoord = Ycoord - p;
+				TargetParameter[2] = Ycoord;
+			} else if (d == 'down'){
+				Ycoord = Ycoord + p;
+				TargetParameter[2] = Ycoord;
+			} else if (d == 'left'){
+				Xcoord = Xcoord - p;
+				TargetParameter[1] = Xcoord;
+			} else if (d == 'right'){
+				Xcoord = Xcoord + p;
+				TargetParameter[1] = Xcoord;
+			}
+		DrawData[j] = TargetParameter.join("|");
+		}
+	}
+	//shift gender boxes
+	if (document.getElementById('preCheckGender').checked){
+		if (n == 'Male'){
+			if (d == 'up'){
+				MTopLeftY = MTopLeftY - p;
+			} else if (d == 'down'){
+				MTopLeftY = MTopLeftY + p;
+			} else if (d == 'left'){
+				MTopLeftX = MTopLeftX - p;
+			} else if (d == 'right'){
+				MTopLeftX = MTopLeftX + p;
+			}
+			//DrawMale(jg,MTopLeftX,MTopLeftY);
+		}else if (n == 'Female'){
+			if (d == 'up'){
+				FTopLeftY = FTopLeftY - p;
+			} else if (d == 'down'){
+				FTopLeftY = FTopLeftY + p;
+			} else if (d == 'left'){
+				FTopLeftX = FTopLeftX - p;
+			} else if (d == 'right'){
+				FTopLeftX = FTopLeftX + p;
+			}
+			//DrawFemale(jg,FTopLeftX,FTopLeftY);
+		}
+	}
+	//Redraw boxes after updating coordinates
+	RedrawAll();
+}
+
+
+var TopEdge = parseInt(0);
+var BottomEdge = parseInt(0);
+var LeftEdge = parseInt(0);
+var RightEdge = parseInt(0);
+
+
+function alignInput(edge){
+//finds checked InputName, then aligns checked input boxes to top/bottom/left/right edge
+	TempData = DrawData;
+	var InputChecklist = document.getElementsByName('InputChecklist');
+	var InputName = ""	//hold InputName
+	var	DataNumber	= parseInt(0)	//holds the number that correspond to the order in which the Input is entered into the array
+	var Initialized = false;
+
+	//find the inputs with the most top/bottom/left/right coordinates
+	for (i=0; i < InputChecklist.length; i++){
+
+		if (InputChecklist[i].checked){
+			var n = InputChecklist[i].value;	//finds name of checked input, assigns it to n
+
+			for (var j=0; (j < (TempData.length)); j++){
+				var RedrawParameter = TempData[j].split("|");
+				var InputType = RedrawParameter[0]
+
+				if (InputType == ('Text' || 'Textbox')){
+					InputName = new String(RedrawParameter[5]);
+					DataNumber = j;
+				}else if (InputType == 'Checkbox'){
+					InputName = new String(RedrawParameter[3]);
+					DataNumber = j;
+				}
+				if (InputName == n){
+					var TargetParameter = TempData[DataNumber].split("|");
+					var Xcoord = parseInt(TargetParameter[1]);
+					var Ycoord = parseInt(TargetParameter[2]);
+					if (!Initialized){
+						TopEdge = Ycoord;
+						BottomEdge = Ycoord;
+						LeftEdge = Xcoord;
+						RightEdge = Xcoord;
+						Initialized = true;
+					}
+
+					if (Xcoord < LeftEdge){
+						LeftEdge = Xcoord;
+					}else if (Xcoord > RightEdge){
+						RightEdge = Xcoord;
+					}
+					if (Ycoord < TopEdge){
+						TopEdge = Ycoord;
+					}else if (Ycoord > BottomEdge){
+						BottomEdge = Ycoord;
+					}
+				}
+			}
+			if (document.getElementById('preCheckGender').checked){
+				if (n == 'Male'){
+					if (!Initialized){
+						TopEdge = MTopLeftY;
+						BottomEdge = MTopLeftY;
+						LeftEdge = MTopLeftX;
+						RightEdge = MTopLeftX;
+						Initialized = true;
+					}
+					if (MTopLeftY > BottomEdge){
+						BottomEdge = MTopLeftY;
+					}else if (MTopLeftY < TopEdge){
+						TopEdge = MTopLeftY;
+					}
+					if (MTopLeftX < LeftEdge){
+						LeftEdge = MTopLeftX;
+					}else if (MTopLeftX > RightEdge){
+						RightEdge = MTopLeftX;
+					}
+				}else if (n == 'Female'){
+					if (!Initialized){
+						TopEdge = FTopLeftY;
+						BottomEdge = FTopLeftY;
+						LeftEdge = FTopLeftX;
+						RightEdge = FTopLeftX;
+						Initialized = true;
+					}
+					if (FTopLeftY > BottomEdge){
+						BottomEdge = FTopLeftY;
+					}else if (FTopLeftY < TopEdge){
+						TopEdge = FTopLeftY;
+					}
+					if (FTopLeftX < LeftEdge){
+						LeftEdge = FTopLeftX;
+					}else if (FTopLeftX > RightEdge){
+						RightEdge = FTopLeftX;
+					}
+				}
+			}
+		}
+
+	}
+
+	//change selected inputs' coordinates to top/bottom/left/right edges
+	for (i=0; i < InputChecklist.length; i++){
+		if (InputChecklist[i].checked){
+			var n = InputChecklist[i].value;	//finds name of checked input, assigns it to n
+			for (var j=0; (j < (TempData.length)); j++){
+				var RedrawParameter = TempData[j].split("|");
+				var InputType = RedrawParameter[0]
+				if (InputType == ('Text' || 'Textbox')){
+					InputName = new String(RedrawParameter[5]);
+					DataNumber = j;
+				}else if (InputType == 'Checkbox'){
+					InputName = new String(RedrawParameter[3]);
+					DataNumber = j;
+				}
+				if (InputName == n){		//if InputName matches n
+					var TargetParameter = TempData[DataNumber].split("|");
+					var Xcoord = parseInt(TargetParameter[1]);
+					var Ycoord = parseInt(TargetParameter[2]);
+					if (edge == 'top'){
+						TargetParameter[2] = TopEdge;
+					}else if (edge == 'bottom'){
+						TargetParameter[2] = BottomEdge;
+					}else if (edge == 'left'){
+						TargetParameter[1] = LeftEdge;
+					}else if (edge == 'right'){
+						TargetParameter[1] = RightEdge;
+					}
+					DrawData[j] = TargetParameter.join("|");
+				}
+			}
+			if (document.getElementById('preCheckGender').checked){
+				if (n == 'Male'){
+					if (edge == 'bottom'){
+						MTopLeftY = BottomEdge;
+					}else if (edge == 'top'){
+						MTopLeftY = TopEdge;
+					}else if (edge == 'left'){
+						MTopLeftX = LeftEdge;
+					}else if (edge == 'right'){
+						MTopLeftX = RightEdge;
+					}
+				}else if (n == 'Female'){
+					if (edge == 'bottom'){
+						FTopLeftY = BottomEdge;
+					}else if (edge == 'top'){
+						FTopLeftY = TopEdge;
+					}else if (edge == 'left'){
+						FTopLeftX = LeftEdge;
+					}else if (edge == 'right'){
+						FTopLeftX = RightEdge;
+					}
+				}
+			}
+		}
+
+	}
+
+	//Redraw boxes after updating coordinates
+	RedrawAll();
+}
+</script>
+
+<script type="text/javascript">
+//output html code for eform
 
 var text = "";
 var textTop = "";
@@ -154,9 +450,6 @@ function resetAll(){
 	loadImage();
 }
 
-
-
-
 function GetTextTop(){
 	textTop = "&lt;html&gt;\n&lt;head&gt;\n&lt;title&gt;"
 	textTop += document.getElementById('eFormName').value;
@@ -172,20 +465,29 @@ function GetTextTop(){
 		textTop += "&lt;/script&gt;\n\n"
 	}
 
-	textTop += "&lt;!-- js graphics scripts --&gt;\n"
-	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_image_path}jsgraphics.js&quot;&gt;&lt;/script&gt;\n"
+	if(document.getElementById('DefaultCheckmark').checked){
+		textTop += "&lt;!-- js graphics scripts --&gt;\n"
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_image_path}jsgraphics.js&quot;&gt;&lt;/script&gt;\n"
+	}
+
 	textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
 	textTop += "function formPrint(){\n"
-	textTop += "\t if (document.getElementById('DrawCheckmark').checked){ \n"
-	textTop += "\t\t	printCheckboxes();\n"
-	textTop += "\t }else{\n"
+	if(document.getElementById('DefaultCheckmark').checked){
+		textTop += "\t if (document.getElementById('DrawCheckmark').checked){ \n"
+		textTop += "\t\t	printCheckboxes();\n"
+		textTop += "\t }else{\n"
+	}
 	textTop += "\t\t	window.print();\n"
-	textTop += "\t } \n"
+	if(document.getElementById('DefaultCheckmark').checked){
+		textTop += "\t } \n"
+	}
+
 	textTop += "} \n"
+
 	textTop += "&lt;/script&gt;\n\n"
 
 
-	textTop += "&lt;!-- scripts to confirm closing of window if haven't saved yet --&gt;\n"
+	textTop += "&lt;!-- scripts to confirm closing of window if it hadn't saved yet --&gt;\n"
 	textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
 	textTop += "//keypress events trigger dirty flag\n"
 	textTop += "var needToConfirm = false;\n"
@@ -218,6 +520,33 @@ function GetTextTop(){
 		textTop += "\t\t top.window.outerWidth = screen.availWidth;\n"
 		textTop += "\t}\n}\n &lt;/script&gt;\n\n"
 	}
+
+	if (document.getElementById('ScaleCheckmark').checked){
+		textTop += "&lt;style type=&quot;Text/css&quot;&gt;\n"
+		textTop += "input.largerCheckbox {\n"
+		textTop += "\t-moz-transform:scale(1.3);         /*scale up image 1.3x - Firefox specific */ \n"
+		textTop += "\t-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ \n"
+		textTop += "\t-o-transform:scale(1.3);           /*Opera browser */ \n"
+		textTop += "}\n"
+		textTop += "&lt;/style&gt;\n"
+		textTop += "&lt;style type=&quot;text/css&quot; media=&quot;print&quot;&gt;\n"
+		textTop += "input.largerCheckbox { \n"
+		textTop += "\t-moz-transform:scale(1.8);         /*scale up image 1.8x - Firefox specific */ \n"
+		textTop += "\t-webkit-transform:scale(1.3);      /*Webkit based browser eg Chrome, Safari */ \n"
+		textTop += "\t-o-transform:scale(1.3);           /*Opera browser */ \n"
+		textTop += "} \n"
+		textTop += "&lt;/style&gt;\n"
+		textTop += "&lt;!--[if IE]&gt;\n"
+		textTop += "&lt;style type=&quot;text/css&quot;&gt;\n"
+		textTop += "input.largerCheckbox { \n"
+		textTop += "\theight: 30px;                     /*30px checkboxes for IE 5 to IE 7 */ \n"
+		textTop += "\twidth: 30px; \n"
+		textTop += "} \n"
+		textTop += "&lt;/style&gt; \n"
+		textTop += "&lt;![endif]--&gt; \n\n"
+	}
+
+
 	textTop += "&lt;/head&gt;\n\n"
 	textTop += "&lt;body"
 	if (document.getElementById('preCheckGender').checked){
@@ -225,23 +554,21 @@ function GetTextTop(){
 	}
 	textTop += "&gt;\n"
 
-	textTop += "&lt;div  &gt;\n\t &lt;img src=&quot;${oscar_image_path}";
-
+	textTop += "&lt;img src=&quot;${oscar_image_path}";
 	textTop += document.getElementById('imageName').value;
 	textTop += "&quot; style=&quot;position: absolute; left: 0px; top: 0px; width:"
 	textTop += BGWidth;
-	textTop += "&quot;&gt;\n\n"
+	textTop += "&quot;&gt;\n"
 
 	textTop += "&lt;div id=&quot;myCanvas&quot; style=&quot;position:absolute; left:0px; top:0px; width:"
 	textTop += BGWidth
 	textTop += "; height:"
 	textTop += BGHeight
 	textTop += ";&quot; onmouseover=&quot;putInBack();&quot;&gt;&lt;/div&gt;\n\n"
-	textTop +=" &lt;form method=&quot;post&quot; action=&quot;efmformmanageredit.jsp&quot; name=&quot;FormName&quot; id=&quot;FormName&quot; &gt;\n";
+	textTop +="&lt;form method=&quot;post&quot; action=&quot;&quot; name=&quot;FormName&quot; id=&quot;FormName&quot; &gt;\n";
 
 
 }
-
 
 function GetTextMiddle(P){
 var InputType = P[0];
@@ -355,7 +682,11 @@ var InputType = P[0];
 		m += inputName
 		m += "&quot; id=&quot;"
 		m += inputName
-		m += "&quot; type=&quot;checkbox&quot; style=&quot;position:absolute; left:"
+		m += "&quot; type=&quot;checkbox&quot;"
+		if (document.getElementById('ScaleCheckmark').checked){
+			m += " class=&quot;largerCheckbox&quot;"
+		}
+		m += " style=&quot;position:absolute; left:"
 		var a = parseInt(x - CheckboxOffset);
 		m += a
 		m += "px; top:"
@@ -390,74 +721,71 @@ function GetTextBottom(){
 	textBottom += document.getElementById('BGImage').height;
 	textBottom += "px; left:0px;&quot;&gt;\n"
 	textBottom += "\t &lt;table&gt;&lt;tr&gt;&lt;td&gt;\n"
-	textBottom += "\t\t Subject: &lt;input name=&quot;subject&quot; size=&quot;40&quot; type=&quot;text&quot;&gt;\n"
-	textBottom += "\t\t	&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;releaseDirtyFlag();setTimeout('document.FormName.submit()',1000);&quot;&gt; \n"
-        textBottom += "\t\t     &lt;input value=&quot;Reset&quot; name=&quot;ResetButton&quot; id=&quot;ResetButton&quot; type=&quot;button&quot; onclick=&quot;document.FormName.reset();&quot;&gt; \n"
+	textBottom += "\t\t Subject: &lt;input name=&quot;subject&quot; size=&quot;40&quot; type=&quot;text&quot;&gt; \n"
+	textBottom += "\t\t	&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;releaseDirtyFlag();&quot;&gt; \n"
+	textBottom += "\t\t\t&lt;input value=&quot;Reset&quot; name=&quot;ResetButton&quot; id=&quot;ResetButton&quot; type=&quot;reset&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print&quot; name=&quot;PrintButton&quot; id=&quot;PrintButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();&quot;&gt; \n"
-	textBottom += "\t\t	&lt;input value=&quot;Print &amp; Submit&quot; name=&quot;PrintSubmitButton&quot; id=&quot;PrintSubmitButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();releaseDirtyFlag();setTimeout('document.FormName.submit()',1000);&quot;&gt; \n"
-	textBottom += "\t\t	&lt;input name=&quot;DrawCheckmark&quot; id=&quot;DrawCheckmark&quot; type=&quot;checkbox&quot;"
+	textBottom += "\t\t	&lt;input value=&quot;Print &amp; Submit&quot; name=&quot;PrintSubmitButton&quot; id=&quot;PrintSubmitButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);&quot;&gt; \n"
 	if(document.getElementById('DefaultCheckmark').checked){
-		textBottom += ' checked'
+		textBottom += "\t\t	&lt;input name=&quot;DrawCheckmark&quot; id=&quot;DrawCheckmark&quot; type=&quot;checkbox&quot; checked&gt;"
+		textBottom += "&lt;span style=&quot;font-family:sans-serif; font-size:12px;&quot;&gt;Draw Checkmarks&lt;/span&gt; \n"
 	}
-	textBottom += "&gt;"
-	textBottom += "&lt;span style=&quot;font-family:sans-serif; font-size:12px;&quot;&gt;Draw Checkmarks&lt;/span&gt; \n"
 	textBottom += "\t &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;\n"
 	textBottom += " &lt;/div&gt;\n &lt;/form&gt;\n\n"
 
+	if(document.getElementById('DefaultCheckmark').checked){
+		textBottom += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
+		textBottom += "var cnv = document.getElementById(&quot;myCanvas&quot;); \n"
+		textBottom += "var jg = new jsGraphics(cnv);\n"
+		textBottom += "var cnvLeft = parseInt(cnv.style.left); 	\n"
+		textBottom += "var cnvTop = parseInt(cnv.style.top);\n"
+		textBottom += "jg.setPrintable(true);\n"
+		textBottom += "var StrokeColor = &quot;black&quot;;\n"
+		textBottom += "var StrokeThickness = 3;\n"
+		textBottom += "var x0 = 0;\n"
+		textBottom += "var y0 = 0;\n"
+		textBottom += "function drawCheckmark(x,y){\n"
+		textBottom += "var offset = 6;\n"
+		textBottom += "var x = parseInt(x) + offset;\n"
+		textBottom += "var y = parseInt(y) + offset;\n"
+		textBottom += "jg.setColor(StrokeColor);\n"
+		textBottom += "jg.setStroke(StrokeThickness);\n"
+		textBottom += "\t	// draws checkmark\n"
+		textBottom += "\t	var x1 = x;\n"
+		textBottom += "\t	var y1 = y+4;\n"
+		textBottom += "\t	var x2 = x1 + 3;\n"
+		textBottom += "\t	var y2 = y1 + 4;\n"
+		textBottom += "\t	var x3 = x2 + 4;\n"
+		textBottom += "\t	var y3 = y2 - 12;\n"
+		textBottom += "\t	jg.drawLine(x1,y1,x2,y2);\n"
+		textBottom += "\t	jg.drawLine(x2,y2,x3,y3);\n"
+		textBottom += "\t	jg.paint();\n"
+		textBottom += "}\n"
+		textBottom += "function replaceCheckmarks(){\n"
+		textBottom += "var f = document.getElementById(&quot;FormName&quot;);\n"
+		textBottom += "	\t for (var i=0;i&lt;f.length;i++){\n"
+		textBottom += "	\t\t	if ((f.elements[i].type == 'checkbox') &amp;&amp; (f.elements[i].checked)){\n"
+		textBottom += "	\t\t		var a = f.elements[i].style.left;\n"
+		textBottom += "	\t\t		var b = f.elements[i].style.top;\n"
+		textBottom += "	\t\t		drawCheckmark(a,b);\n"
+		textBottom += "	\t\t	}\n"
+		textBottom += "	\t }\n"
+		textBottom += "}\n"
+		textBottom += "function printCheckboxes(){\n"
+		textBottom += "\t	putInFront();\n"
+		textBottom += "\t	replaceCheckmarks();\n"
+		textBottom += "\t	window.print();\n"
+		textBottom += "}\n"
+		textBottom += "function putInFront(){\n"
+		textBottom += "\t	cnv.style.zIndex = &quot;999999&quot;;	\n"
+		textBottom += "}\n"
+		textBottom += "function putInBack(){\n"
+		textBottom += "\t	cnv.style.zIndex = &quot;-999999&quot;;	\n"
+		textBottom += "}\n"
+		textBottom += "&lt;/script&gt;\n"
+	}
 
-
-	textBottom += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
-	textBottom += "var cnv = document.getElementById(&quot;myCanvas&quot;); \n"
-	textBottom += "var jg = new jsGraphics(cnv);\n"
-	textBottom += "var cnvLeft = parseInt(cnv.style.left); 	\n"
-	textBottom += "var cnvTop = parseInt(cnv.style.top);\n"
-	textBottom += "jg.setPrintable(true);\n"
-	textBottom += "var StrokeColor = &quot;black&quot;;\n"
-	textBottom += "var StrokeThickness = 3;\n"
-	textBottom += "var x0 = 0;\n"
-	textBottom += "var y0 = 0;\n"
-	textBottom += "function drawCheckmark(x,y){\n"
-	textBottom += "var offset = 6;\n"
-	textBottom += "var x = parseInt(x) + offset;\n"
-	textBottom += "var y = parseInt(y) + offset;\n"
-	textBottom += "jg.setColor(StrokeColor);\n"
-	textBottom += "jg.setStroke(StrokeThickness);\n"
-	textBottom += "\t	// draws checkmark\n"
-	textBottom += "\t	var x1 = x;\n"
-	textBottom += "\t	var y1 = y+4;\n"
-	textBottom += "\t	var x2 = x1 + 3;\n"
-	textBottom += "\t	var y2 = y1 + 4;\n"
-	textBottom += "\t	var x3 = x2 + 4;\n"
-	textBottom += "\t	var y3 = y2 - 12;\n"
-	textBottom += "\t	jg.drawLine(x1,y1,x2,y2);\n"
-	textBottom += "\t	jg.drawLine(x2,y2,x3,y3);\n"
-	textBottom += "\t	jg.paint();\n"
-	textBottom += "}\n"
-	textBottom += "function replaceCheckmarks(){\n"
-	textBottom += "var f = document.getElementById(&quot;FormName&quot;);\n"
-	textBottom += "	\t for (var i=0;i&lt;f.length;i++){\n"
-	textBottom += "	\t\t	if ((f.elements[i].type == 'checkbox') &amp;&amp; (f.elements[i].checked)){\n"
-	textBottom += "	\t\t		var a = f.elements[i].style.left;\n"
-	textBottom += "	\t\t		var b = f.elements[i].style.top;\n"
-	textBottom += "	\t\t		drawCheckmark(a,b);\n"
-	textBottom += "	\t\t	}\n"
-	textBottom += "	\t }\n"
-	textBottom += "}\n"
-	textBottom += "function printCheckboxes(){\n"
-	textBottom += "\t	putInFront();\n"
-	textBottom += "\t	replaceCheckmarks();\n"
-	textBottom += "\t	window.print();\n"
-	textBottom += "}\n"
-	textBottom += "function putInFront(){\n"
-	textBottom += "\t	cnv.style.zIndex = &quot;999999&quot;;	\n"
-	textBottom += "}\n"
-	textBottom += "function putInBack(){\n"
-	textBottom += "\t	cnv.style.zIndex = &quot;-999999&quot;;	\n"
-	textBottom += "}\n"
-	textBottom += "&lt;/script&gt;\n"
-
-
-	textBottom += "&lt;/body&gt;\n &lt;/html&gt;\n";
+		textBottom += "&lt;/body&gt;\n&lt;/html&gt;\n";
 }
 
 function popUp(){
@@ -475,11 +803,10 @@ for (j=0; (j < (DrawData.length) ); j++){
 textBottom = "";
 GetTextBottom();
 
-//saves all generated html into variable 'text''
 text = textTop  + textMiddle + textBottom;
 
+//popup modified at this point PHC
 return text;
-
 }
 
 //this function used for injecting html in to Edit E-Form in efmformmanageredit.jsp w/ variable formHtml
@@ -492,7 +819,6 @@ function injectHtml2(){
 window.open('efmformmanageredit.jsp?formHtml=','happyWindow');
 happyWindow.document.getElementById('formHtml').value = popUp();
 }
-
 
 </script>
 
@@ -595,8 +921,6 @@ function update(e)
 }
 
 </script>
-
-
 
 <!-- js graphics scripts -->
 <script type="text/javascript">
@@ -1704,20 +2028,18 @@ function _CompInt(x, y)
 	return(x - y);
 }
 
-
 </script>
 
 </head>
-
-
-<body onload="init();">
+<!-- resetAll() -->
+<body onload="init(); resetAll();">
 
 <img name="BGImage" id="BGImage" style="position: absolute; left: 0px; top: 0px;"
 	onmouseover="SetDrawOn();"
 	onmouseout="SetDrawOff();"
 	onmousedown="if (event.preventDefault) event.preventDefault(); SetMouseDown();SetStart();"
 	onmousemove=""
-	onmouseup="SetMouseUp(); DrawMarker();">
+	onmouseup="SetMouseUp(); DrawMarker();loadInputList();">
 
 
 <h1>E-form Generator</h1>
@@ -1728,13 +2050,14 @@ function _CompInt(x, y)
 </form>
 
 <form method="post" action="" name="FormName" id="FormName">
-<div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; leftoscar_image_path:750px; top: 0px; width: 500px;" >
+<div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; left:750px; top: 0px; width: 500px; padding:5px" >
+<!-- <div name="Wizard" id="Wizard" class="DoNotPrint" style="position: absolute; leftoscar_image_path:750px; top: 0px; width: 500px;" > -->
+
 
 <hr>
-<h2>1. Load Image:</h2>
-       <script type="text/javascript">
-        </script>
-        <p><select name="imageName" id="imageName">
+<span class="h2">1. Load Image:</span> <a onclick="show('Section1');">Expand</a>/<a onclick="hide('Section1');">Collapse</a>
+<div id="Section1">
+ <p><select name="imageName" id="imageName">
                  <option value=""                    >choose an image...</option>
                     <%
                     /**
@@ -1755,39 +2078,48 @@ function _CompInt(x, y)
                        output=test.visitAllFiles(dir)[i]; %>
                        <option value="<%= output %>"  ><%= output %></option>
 
-                       <% 
+                       <%
                       }
                      %>
             </select>
         </p>
 
-	<p>	- Please select image file with the following file extensions(.gif's, .jpg's, .jpeg's, or .png's)<br>
-		- Make sure you uploaded the image file into oscar,if the picture does not <br> appear in the list please upload it.</p>
+	<!-- <p><b>Image Name:</b><input type="text" name="imageName" id="imageName"></p> -->
+	<p>	- If the picture does not appear on the list upload it.</p>
 	<p><b>Orientation of form:</b><br>
 			<input type="radio" name="Orientation" id="OrientPortrait" value="750" checked>Portrait (image width should be 1500 pixels, resized to 750 pixels on screen)<br>
 			<input type="radio" name="Orientation" id="OrientLandscape" value="1000">Landscape (image width should be 2000 pixels, resized to 1000 pixels on screen)<br>
-			<input type="radio" name="Orientation" id="OrientCustom" value="CustomWidth">Custom <input type="text" name="OrientCustomValue" id="OrientCustomValue" width="100"> (enter an integer)
-		<br>
-                <input type="button" value="Load Image" onClick="loadImage();">
+			<input type="radio" name="Orientation" id="OrientCustom" value="CustomWidth">Custom <input type="text" name="OrientCustomValue" id="OrientCustomValue" width="100"> (enter an integer)<br>
+			<input type="button" value="Load Image" onClick="loadImage();">
 	</p>
 	<p>If the eform image extends past the red outline, you've cropped the image too long and it won't fit on a letter-sized printout.  Try typing a number smaller than 750 in the "Custom" field.</p>
+
+</div>
+
 <hr>
-<h2>2. eForm Name:</h2>
+
+<span class='h2'>2. eForm Name:</span> <a onclick="show('Section2');">Expand</a>/<a onclick="hide('Section2');">Collapse</a>
+<div id="Section2">
 	<p>Enter a name for the form here:<input type="text" name="eFormName" id="eFormName"></p>
+</div>
+
 <hr>
-<h2>3. Add in form input fields (one-by-one)</h2>
-	<h3>a) Select an input type</h3>
+
+<span class='h2'>3. Add in form input fields (one-by-one)</span> <a onclick="show('Section3');">Expand</a>/<a onclick="hide('Section3');">Collapse</a></span>
+<div id="Section3">
+	<span class='h3'>a) Select an input type</span>
 		<p>
 		<input type="radio" name="inputType" id="Text" value="text" onclick="SetSwitchOn(this.id);" checked>Single-line text input
 		<input type="radio" name="inputType" id="Textbox" value="textarea" onclick="SetSwitchOn(this.id);">Multi-line text input
 		<input type="radio" name="inputType" id="Checkbox" value="checkbox" onclick="SetSwitchOn(this.id);">Checkbox
 		</p>
 
-	<h3>b) Auto-populating Input Box</h3>
-		<p>Custom text:<input type="text" name="inputValue" id="inputValue" value="">
-			<br>, or <br>
-			From Oscar Database:
-                       <p><select name="oscarDB" id="oscarDB">
+	<span class='h3'>b) Auto-populating Input Box</span>
+		<p>
+		i) pre-check the checkbox<input name="preCheck" id="preCheck" type="checkbox">, or <br>
+		ii) Custom text:<input type="text" name="inputValue" id="inputValue" value="">, or <br>
+		iii) From Oscar Database:
+			 <select name="oscarDB" id="oscarDB">
                                  <option value=""          >----None----</option>
                                 <%
                                   EFormLoader names = EFormLoader.getInstance();
@@ -1798,12 +2130,50 @@ function _CompInt(x, y)
                                    <%
                                   }
                                  %>
-                        </select>
-			<br>, or<br>
-			Pre-check the checkbox<input name="preCheck" id="preCheck" type="checkbox">
+                        </select>, or <br>
+			iv) Importing from Measurements:<br>
+			<table>
+				<tr>
+					<td><p>Measurement Type:</p></td>
+					<td><p>
+						<select name="MeasurementList" id="MeasurementList">
+							<option value="" selected="selected">--NONE--</option>
+							<option value="HT">HT</option>
+							<option value="WT">WT</option>
+							<option value="BP">BP</option>
+							<option value="BMI">BMI</option>
+							<option value="WAIS">WAIS (waist)</option>
+							<option value="WC">WC (waist circ.)</option>
+							<option value="HbAi">HbAi</option>
+							<option value="A1C">A1C</option>
+							<option value="FBS">FBS</option>
+							<option value="TG">TG</option>
+							<option value="LDL">LDL</option>
+							<option value="HDL">HDL</option>
+							<option value="TCHD">TCHD</option>
+							<option value="TCHL">TCHL</option>
+							<option value="EGFR">EGFR</option>
+							<option value="SCR">SCR (Cr)</option>
+							<option value="ACR">ACR</option>
+						</select>
+						<br>
+				, or custom <input type="text" name="MeasurementCustom" id="MeasurementCustom" style="width:50px;">
+					</p>
+					</td>
+					<td>
+						<p>Field:
+							<select name="MeasurementField" id="MeasurementField">
+								<option value="value">Value</option>
+								<option value="dateObserved">Date Observed</option>
+								<option value="comments">Comments</option>
+							</select>
+						</p>
+					</td>
+				</tr>
+			</table>
 		</p>
 
-	<h3>c) Input Box Parameters</h3>
+	<span class='h3'>c) Input Box Parameters</span>
 			<p>
 			Font Family:
 				<select id="fontFamily">
@@ -1840,24 +2210,69 @@ function _CompInt(x, y)
 				</select><br>
 				- Useful to have a white background to cover-up lines within the input field
 			</p>
-	<h3>c) Naming the input field:</h3>
-		<p>i) <input type="radio" name="InputNameType" id="InputNameAuto" value="Auto" checked>Automatic Sequential Naming (Use this quicker method for most cases)
-				<br>
+
+
+
+	<span class='h3'>c) Naming the input field:</span>
+		<p>i)<input type="radio" name="InputNameType" id="InputNameAuto" value="Auto" checked>Automatic Sequential Naming (quicker method for most cases).<br>
+				- automatic name prefix:<input type="text" name="AutoNamePrefix" id="AutoNamePrefix" style="width:100px" value="AutoName">(One Continuous Word)<br>
 			ii)<input type="radio" name="InputNameType" id="InputNameCustom" value="Custom">Custom <font style="color:red;">UNIQUE</font> Name:
 				<input type="text" name="inputName" id="inputName">
 				<br>
 				- the data won't be saved properly if the name is repeated in another input field<br>
 				- Must be <i>one continuous word</i> with letters/numbers only (<i>no spaces/symbols</i>)<br>
 				- Use custom naming to easily identify the corresponding html code if you're going to be modifying the code later on
+			<br>
+			iii)<input type="radio" name="InputNameType" id="InputNameMeasurement" value="Measurement">If you would like to export the value of this input field to <b>Measurements</b>, select the Measurement Type and Field here:<br>
+			<table>
+				<tr>
+					<td><p>Measurement Type:</p></td>
+					<td><p>
+						<select name="ExportMeasurementList" id="ExportMeasurementList">
+							<option value="" selected="selected">--NONE--</option>
+							<option value="HT">HT</option>
+							<option value="WT">WT</option>
+							<option value="BP">BP</option>
+							<option value="BMI">BMI</option>
+							<option value="WAIS">WAIS (waist)</option>
+							<option value="WC">WC (waist circ.)</option>
+							<option value="HbAi">HbAi</option>
+							<option value="A1C">A1C</option>
+							<option value="FBS">FBS</option>
+							<option value="TG">TG</option>
+							<option value="LDL">LDL</option>
+							<option value="HDL">HDL</option>
+							<option value="TCHD">TCHD</option>
+							<option value="TCHL">TCHL</option>
+							<option value="EGFR">EGFR</option>
+							<option value="SCR">SCR (Cr)</option>
+							<option value="ACR">ACR</option>
+						</select>
+						<br>
+				, or custom <input type="text" name="ExportMeasurementCustom" id="ExportMeasurementCustom" style="width:50px;">
+					</p>
+					</td>
+					<td>
+						<p>Field:
+							<select name="ExportMeasurementField" id="ExportMeasurementField">
+								<option value="value">Value</option>
+								<option value="dateObserved">Date Observed</option>
+								<option value="comments">Comments</option>
+							</select>
+						</p>
+					</td>
+				</tr>
+			</table>
+
 		</p>
-	<h3>d) Drawing the input fields</h3>
-		<h4>For one- and multi-lined textboxes:</h4>
+	<span class='h3'>d) Drawing the input fields</span>
+		<span class='h4'>For one- and multi-lined textboxes:</span>
 			<p>
 			- Click the top left corner of the intended box<br>
 			- DRAG the mouse to the bottom right corner of the intended box, and let go of mouse button<br>
 			- That's it!  You should see a box where the textbox will appear.
 			</p>
-		<h4>For checkboxes</h4>
+		<span class='h4'>For checkboxes</span>
 			<p>
 			- Click on the outside top left corner of the intended checkbox<br>
 			- That's it!
@@ -1865,32 +2280,93 @@ function _CompInt(x, y)
 	<p><input type="button" onclick="Undo();" value="Undo"></p>
 	<p>Repeat step # 3 until all input boxes are done.  Please leave the gender selection boxes out for now.</p>
 
+</div>
 <hr>
-<h2>4. Special Case With Gender Checkboxes:</h2>
-			<p>Gender checkboxes used in this form?<input name="preCheckGender" id="preCheckGender" type="checkbox">
-			<br>
-			<b>Male</b>:
-				<input name="Male" id="Male" type="button" value="Click this, then click top left corner of male checkbox" onclick="SetSwitchOn(this.id);">
 
+<span class='h2'>4. Special Case With Gender Checkboxes:</span><a onclick="show('Section4');">Expand</a>/<a onclick="hide('Section4');">Collapse</a>
+<div id="Section4">
+			<p>Gender checkboxes used in this form? If yes, click here <input name="preCheckGender" id="preCheckGender" type="checkbox" onclick="toggleView(this.checked,'Section4a');"></p>
 			<br>
-			<b>Female</b>:
-				<input name="Female" id="Female" type="button" value="Click this, then click top left corner of female checkbox" onclick="SetSwitchOn(this.id);">
-			</p>
+			<div id="Section4a" style="display:none">
+				<span><b>Male</b>: </span>
+					<input name="Male" id="Male" type="button" value="Click this, then click top left corner of male checkbox" onclick="SetSwitchOn(this.id);">
+				<br>
+				<span><b>Female</b>:</span>
+					<input name="Female" id="Female" type="button" value="Click this, then click top left corner of female checkbox" onclick="SetSwitchOn(this.id);">
+			</div>
+</div>
 <hr>
-<h2>4. Check this if you want to maximize the window when this eForm loads.<input name="maximizeWindow" id="maximizeWindow" type="checkbox"></h2>
-		<p>- Useful if your monitor is set at a lower resolution</p>
+<span class='h2'>5. Aligning Input Fields</span><a onclick="show('Section5');">Expand</a>/<a onclick="hide('Section5');">Collapse</a>
+<div id="Section5">
+<input type="button" value="Show/Hide Input Names" onclick="ToggleInputName();">
+<input type="button" value="Uncheck all" onclick="uncheckInputList();">
+
+<table style="text-align:center; border: 1px solid black;">
+	<tr>
+		<td></td>
+		<td >
+			<span>UP</span><br>
+			<input type="button" value="Align" style="width:100px;" onclick="alignInput('top');"><br>
+			<input type="button" value="Shift" style="width:100px;" onclick="shiftInput('up',10);"><br>
+			<input type="button" value="Nudge" style="width:100px;" onclick="shiftInput('up',1);">
+		</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>
+			<span>LEFT</span><br>
+			<input type="button" value="Align" style="width:50px;" onclick="alignInput('left');">
+			<input type="button" value="Shift" style="width:50px;" onclick="shiftInput('left',10);">
+			<input type="button" value="Nudge" style="width:50px;" onclick="shiftInput('left',1);">
+		</td>
+		<td style="text-align:left;">
+			<ul id="InputList" style="list-style-type:none; list-style: none; margin-left: 0; padding-left: 1em; text-indent: -1em"></ul>
+		</td>
+		<td>
+			<span>RIGHT</span><br>
+			<input type="button" value="Nudge" style="width:50px;" onclick="shiftInput('right',1);">
+			<input type="button" value="Shift" style="width:50px;" onclick="shiftInput('right',10);">
+			<input type="button" value="Align" style="width:50px;" onclick="alignInput('right');">
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+
+			<input type="button" value="Nudge" style="width:100px;" onclick="shiftInput('down',1);"><br>
+			<input type="button" value="Shift" style="width:100px;" onclick="shiftInput('down',10);"><br>
+			<input type="button" value="Align" style="width:100px;" onclick="alignInput('bottom');"><br>
+			<span>DOWN</span>
+			</td>
+		<td></td>
+	</tr>
+</table>
+
+</div>
 <hr>
-<h2>5.Check this if you want to draw in checkmarks for the printouts by default.<input name="DefaultCheckmark" id="DefaultCheckmark" type="checkbox"></h2>
+<span class='h2'>6. Miscellaneous Options</span><a onclick="show('Section6');">Expand</a>/<a onclick="hide('Section6');">Collapse</a>
+<div id="Section6">
+<p><span class="h2">Maximize window when eForm loads.</span><br>
+	<input name="maximizeWindow" id="maximizeWindow" type="checkbox">Useful for lower resolution monitors.
+</p>
+<p><span class='h2'>Emphasize Checkmarks:</span><br>
+	<input name="DefaultCheckmark" id="DefaultCheckmark" type="checkbox">"Drawing" in checkmarks during printing. Longer code, and may not work for IE.<br>
+	<input name="ScaleCheckmark" id="ScaleCheckmark" type="checkbox">Scaling up checkbox.  (Works for Firefox 3.5+, Safari 3.1+ (or similar WebKit), IE 5-7 or IE 8 running compatibility mode, Opera 10.5+)
+</p>
+</div>
 <hr>
-<h2>6. Generate eForm</h2>
-	<input name="loadHTMLButton" id="loadHTMLButton" type="button" value="Load HTML code in new window" onClick="injectHtml();">
+<span class='h2'>8. Generate eForm</span><a onclick="show('Section8');">Expand</a>/<a onclick="hide('Section8');">Collapse</a>
+<div id='Section8'>
+<!-- Inject the html to the eForm window -->
+		<input name="loadHTMLButton" id="loadHTMLButton" type="button" value="Load HTML code in new window" onClick="injectHtml();">
 	<input name="reset" id="reset" type="button" value="Reset form and start again" onclick="resetAll();">
 	<p>- The html code should open up in Edit E-Form window.
                 <br>- Now you need to fill the fields shown (<i><b>form name,Additional Information,etc</b></i>):
 		<br>- Save the form by clicking <i><b>Save</b></i> button
                 <br>- DONE!!
 	</p>
-	
+
+</div>
 
 </div>
 </form>
@@ -1902,8 +2378,6 @@ function _CompInt(x, y)
 <div id="myCanvas" name="myCanvas" style="position: absolute; left: 0px; top: 0px;"></div>
 
 <script type="text/javascript">
-
-
 var DrawData = new Array();
 var TempData = new Array();
 
@@ -1914,10 +2388,11 @@ var pvcnv = document.getElementById("preview");
 var pv = new jsGraphics(pvcnv);
 
 jg.setPrintable(true);
-var StrokeColor = "black";
+var StrokeColor = "red";
 var StrokeThickness = 2;
 var x0 = 0;
 var y0 = 0;
+var ShowInputName = false;
 
 function clearGraphics(canvas){
 	canvas.clear();
@@ -1992,6 +2467,10 @@ function DrawText(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontW
 	canvas.setColor(StrokeColor);
 	canvas.setStroke(StrokeThickness);
 	canvas.drawRect(x0,y0,width,height);
+	if (ShowInputName){
+		canvas.setFont("sans-serif","10px",Font.BOLD);
+		canvas.drawString(inputName,x0,y0);
+	}
 	canvas.paint();
 
 	//store parameters in an array (using separator "|")
@@ -2010,6 +2489,10 @@ function DrawTextbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fo
 	canvas.setColor(StrokeColor);
 	canvas.setStroke(StrokeThickness);
 	canvas.drawRect(x0,y0,width,height);
+	if (ShowInputName){
+		canvas.setFont("sans-serif","10px",Font.BOLD);
+		canvas.drawString(inputName,x0,y0);
+	}
 	canvas.paint();
 
 	//store parameters in an array (using separator "|")
@@ -2019,46 +2502,58 @@ function DrawTextbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fo
 	}
 }
 
-function DrawCheckbox(canvas,x,y,inputName,preCheck){
+function DrawCheckbox(canvas,x0,y0,inputName,preCheck){
 	// draws Checkbox
 	var x = parseInt(x);
 	var y = parseInt(y);
 	canvas.setColor(StrokeColor);
 	canvas.setStroke(StrokeThickness);
 	var s = 10; 	//square with side of 10
-	canvas.drawRect(x,y,s,s);
+	canvas.drawRect(x0,y0,s,s);
+	if (ShowInputName){
+		canvas.setFont("sans-serif","10px",Font.BOLD);
+		canvas.drawString(inputName,x0,y0);
+	}
 	canvas.paint();
 	//store parameters in an array (using separator "|")
 	if (canvas == jg){
-		var Parameter = "Checkbox" + "|" + x + "|" + y + "|" + inputName + "|" + preCheck;
+		var Parameter = "Checkbox" + "|" + x0 + "|" + y0 + "|" + inputName + "|" + preCheck;
 		DrawData.push(Parameter);
 	}
 }
 
-function DrawMale(canvas,x,y){
+function DrawMale(canvas,x0,y0){
 	// draws Checkbox
 	canvas.setColor(StrokeColor);
 	canvas.setStroke(StrokeThickness);
-	var s = 10;
-	canvas.drawRect(x,y,s,s);
+	var s = 10;  //s = lenght of side of square
+	canvas.drawRect(x0,y0,s,s);
+	if (ShowInputName){
+		canvas.setFont("sans-serif","10px",Font.BOLD);
+		canvas.drawString("Male",x0,y0);
+	}
 	canvas.paint();
 
 	//assigns coordinates of top left corner of checkbox
-	MTopLeftX = x;
-	MTopLeftY = y;
+	MTopLeftX = x0;
+	MTopLeftY = y0;
 }
 
-function DrawFemale(canvas,x,y){
+function DrawFemale(canvas,x0,y0){
 	// draws Checkbox
 	canvas.setColor(StrokeColor);
 	canvas.setStroke(StrokeThickness);
 	var s = 10;
-	canvas.drawRect(x,y,s,s);
+	canvas.drawRect(x0,y0,s,s);
+	if (ShowInputName){
+		canvas.setFont("sans-serif","10px",Font.BOLD);
+		canvas.drawString("Female",x0,y0);
+	}
 	canvas.paint();
 
 	//assigns coordinates of top left corner of checkbox
-	FTopLeftX = x;
-	FTopLeftY = y;
+	FTopLeftX = x0;
+	FTopLeftY = y0;
 
 }
 
@@ -2079,9 +2574,19 @@ function DrawMarker(){
 	var fontSize = document.getElementById('fontSize').value;
 	var textAlign = document.getElementById('textAlign').value;
 	var bgColor = document.getElementById('bgColor').value;
-	var oscarDB = document.getElementById('oscarDB').value;
 	var inputValue = document.getElementById('inputValue').value;
 	var preCheck = document.getElementById('preCheck').checked
+	var oscarDB = ""
+
+	if (document.getElementById('oscarDB').value){			//standard OscarDB tags
+		oscarDB = document.getElementById('oscarDB').value;
+	}else if (document.getElementById('MeasurementList').value){	// Common Standard MeasurementTypes
+		oscarDB = "m$" + document.getElementById('MeasurementList').value + "#" + document.getElementById('MeasurementField').value;
+	}else if (document.getElementById('MeasurementCustom').value){	//Custom Measurement Types
+		oscarDB = "m$" + document.getElementById('MeasurementCustom').value + "#" + document.getElementById('MeasurementField').value;
+	}
+
+
 
 	//get name of input field
 	var inputNameType = getCheckedValue(document.getElementsByName('InputNameType'));  // inputNameType = Auto/Custom
@@ -2093,8 +2598,14 @@ function DrawMarker(){
 			alert('Please enter in a value for the custom input name field');	//reminds user to put in mandatory name for input field
 			return false;
 		}
-	} else if (inputNameType == "Auto") {
-		inputName = 'AutoName' + inputCounter;
+	} else if(inputNameType == "Measurement"){
+		if (document.getElementById('ExportMeasurementList').value){
+			inputName = "m$" + document.getElementById('ExportMeasurementList').value + "#" + document.getElementById('ExportMeasurementField').value;
+		}else if (document.getElementById('ExportMeasurementCustom').value){
+			inputName = "m$" + document.getElementById('ExportMeasurementCustom').value + "#" + document.getElementById('ExportMeasurementField').value;
+		}
+	}else if (inputNameType == "Auto") {
+		inputName = document.getElementById('AutoNamePrefix').value + inputCounter;
 		++inputCounter;
 	}
 
@@ -2105,11 +2616,11 @@ function DrawMarker(){
 		}else if (TextboxSwitch){
 			DrawTextbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
 		}else if (CheckboxSwitch){
-			DrawCheckbox(jg,x,y,inputName,preCheck);
+			DrawCheckbox(jg,x0,y0,inputName,preCheck);
 		}else if(MaleSwitch){
-			DrawMale(jg,x,y);
+			DrawMale(jg,x0,y0);
 		}else if(FemaleSwitch){
-			DrawFemale(jg,x,y);
+			DrawFemale(jg,x0,y0);
 		}
 	}
 
@@ -2117,8 +2628,48 @@ function DrawMarker(){
 	document.getElementById('inputValue').value = "";
 	document.getElementById('inputName').value = "";
 	document.getElementById('preCheck').checked = false;
-	var l = document.getElementById('oscarDB');
-		l[0].selected = true;
+	document.getElementById('oscarDB')[0].selected = true;
+	document.getElementById('MeasurementList')[0].selected = true;
+	document.getElementById('ExportMeasurementList')[0].selected = true;
+	document.getElementById('MeasurementCustom').value = "";
+	document.getElementById('ExportMeasurementCustom').value = "";
+}
+
+function ToggleInputName(){
+	jg.clear();
+	if (ShowInputName){
+		ShowInputName = false;
+	} else if (!ShowInputName){
+		ShowInputName = true;
+	}
+	drawPageOutline();
+	TempData = DrawData;
+	DrawData = new Array();
+	for (j=0; (j < (TempData.length) ); j++){
+		var RedrawParameter = TempData[j].split("|");
+		RedrawImage(RedrawParameter);
+	}
+	if (document.getElementById('preCheckGender').checked){
+		DrawMale(jg,MTopLeftX,MTopLeftY);
+		DrawFemale(jg,FTopLeftX,FTopLeftY);
+	}
+}
+
+function RedrawAll(){
+	jg.clear();
+
+	drawPageOutline();
+	TempData = DrawData;
+	DrawData = new Array();
+	for (j=0; (j < (TempData.length) ); j++){
+		var RedrawParameter = TempData[j].split("|");
+		RedrawImage(RedrawParameter);
+	}
+	if (document.getElementById('preCheckGender').checked){
+		DrawMale(jg,MTopLeftX,MTopLeftY);
+		DrawFemale(jg,FTopLeftX,FTopLeftY);
+	}
+
 }
 
 function Undo(){
@@ -2136,6 +2687,7 @@ function Undo(){
 		--inputCounter;
 	}
 }
+
 function RedrawImage(RedrawParameter){
 	var InputType = RedrawParameter[0];
 	if(InputType == "Text"){
@@ -2169,11 +2721,11 @@ function RedrawImage(RedrawParameter){
 		var inputValue = RedrawParameter[13];
 		DrawTextbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue);
 	}else if (InputType == "Checkbox"){
-		var x = parseInt(RedrawParameter[1]);
-		var y = parseInt(RedrawParameter[2]);
+		var x0 = parseInt(RedrawParameter[1]);
+		var y0 = parseInt(RedrawParameter[2]);
 		var inputName = RedrawParameter[3];
 		var preCheck = RedrawParameter[4];
-		DrawCheckbox(jg,x,y,inputName,preCheck);
+		DrawCheckbox(jg,x0,y0,inputName,preCheck);
 	}
 }
 
