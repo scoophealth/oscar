@@ -333,7 +333,7 @@ function showHideBillPref() {
 		for (Map bill : resultList) {
 %>
 				<option value="<%=bill.get("servicetype")%>"
-					<%=def.equals(bill.get("servicetype"))?"selected":""%>>
+					<%=bill.get("servicetype").equals(def)?"selected":""%>>
 					<%=bill.get("servicetype_name")%></option>
 <%
 		}
