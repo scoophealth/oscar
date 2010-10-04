@@ -43,165 +43,158 @@ import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.oscarDB.DBHandler;
+import com.crystaldecisions.sdk.occa.report.formatteddefinition.model.Ole;
 
+import oscar.oscarDB.DBHandler;
 
 public class FrmSelectAction extends Action {
 
-	private static Logger logger=MiscUtils.getLogger();
-	
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
-        FrmSelectForm frm = (FrmSelectForm) form;                
-        request.getSession().setAttribute("FrmSelectForm", frm);
-        
-                                
-        if(frm.getForward()!=null){
-            try{
-                DBHandler db = new DBHandler();                        
+	private static Logger logger = MiscUtils.getLogger();
 
-                EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
-                List<EncounterForm> encounterForms=encounterFormDao.findAll();
-                
-                if (frm.getForward().compareTo("add")==0) {
-                    logger.debug("the add button is pressed");
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		FrmSelectForm frm = (FrmSelectForm) form;
+		request.getSession().setAttribute("FrmSelectForm", frm);
 
-                    int maxCurrentDisplayCount=0;
-                    // find the largest current display number
-                    for (EncounterForm encounterForm : encounterForms)
-                    {
-                    	maxCurrentDisplayCount=Math.max(maxCurrentDisplayCount, encounterForm.getDisplayOrder());
-                    }
+		if (frm.getForward() != null) {
+			try {
+				DBHandler db = new DBHandler();
 
-                    String[] selectedAddTypes = frm.getSelectedAddTypes();                    
-                    if(selectedAddTypes != null){
-                    	// for every item selected to add, find it in the form list, then change the display number to the next highest number
-                        for(int i=0; i<selectedAddTypes.length; i++){
-                        	for (EncounterForm encounterForm : encounterForms)
-                        	{
-                        		if (encounterForm.getFormName().equals(selectedAddTypes[i]))
-                        		{
-                        			maxCurrentDisplayCount++;
-                        			encounterForm.setDisplayOrder(maxCurrentDisplayCount);
-                        			encounterFormDao.merge(encounterForm);
-                        		}
-                        	}                        	
-                        }
-                    }
-                }
-                else if (frm.getForward().compareTo("delete")==0){
-                    logger.debug("the delete button is pressed");
-                    String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();  
-                    if(selectedDeleteTypes != null){
-                    	
-                    	// for every item selected to delete,
-                    	// go through the forms list and set this form display to 0
-                    	// and any other form with a greater number should be decremented by 1
-                        for(int i=0; i<selectedDeleteTypes.length; i++){
-                        	List<EncounterForm> tempForms=encounterFormDao.findByFormName(selectedDeleteTypes[i]);
-                        	for(EncounterForm tempForm : tempForms)
-                        	{
-                        		int oldDisplayOrder=tempForm.getDisplayOrder();
-	                        	for(EncounterForm encounterForm : encounterForms)
-	                        	{
-	                        		if (encounterForm.getDisplayOrder()>oldDisplayOrder)
-	                        		{
-	                        			encounterForm.setDisplayOrder(encounterForm.getDisplayOrder()-1);
-	                        			encounterFormDao.merge(encounterForm);
-	                        		}
-	                        		else if (encounterForm.getDisplayOrder()==oldDisplayOrder)
-	                        		{
-	                        			encounterForm.setDisplayOrder(0);
-	                        			encounterFormDao.merge(encounterForm);
-	                        		}
-	                        	}
-                        	}
-                        	
-                        	
-                        }                        
-                    }
-                    
-                    //need to update the order number under the hidden column!!!!!
-                }
-                else if (frm.getForward().compareTo("up")==0){
-                    logger.debug("The Move UP button is pressed!");
-                    String[] selectedMoveUpTypes = frm.getSelectedDeleteTypes();
-                    if(selectedMoveUpTypes != null){
-                        for(int i=0; i<selectedMoveUpTypes.length; i++){
-                            String sql = "Select hidden from encounterForm where form_name ='"+selectedMoveUpTypes[i] + "'";                            
-                            ResultSet rs = db.GetSQL(sql);
-                            if(rs.next()){
-                                int form_order = rs.getInt("hidden");
-                                String upperOrder = Integer.toString(form_order - 1);
-                                rs.close();
-                                
-                                if (form_order>1){
-                                    sql = "Select form_name from encounterForm where hidden ='"+ upperOrder + "'";
-                                    rs = db.GetSQL(sql);
-                                    while (!rs.next()){
-                                        upperOrder= Integer.toString(Integer.parseInt(upperOrder) - 1);
-                                        if(form_order>1){
-                                            sql = "Select form_name from encounterForm where hidden ='"+ upperOrder + "'";
-                                            rs = db.GetSQL(sql);
-                                        }
-                                    }                                    
-                                        String upperItem = db.getString(rs,"form_name");
-                                        sql = "UPDATE encounterForm SET hidden ='" + form_order + "' WHERE form_name='" + upperItem + "'";
-                                        db.RunSQL(sql);
-                                        sql = "UPDATE encounterForm SET hidden ='" + upperOrder + "' WHERE form_name='" + selectedMoveUpTypes[i] + "'";
-                                        db.RunSQL(sql);
-                                        rs.close();                                    
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                else if (frm.getForward().compareTo("down")==0){
-                    logger.debug("The Move DOWN button is pressed!");
-                    String[] selectedMoveDownTypes = frm.getSelectedDeleteTypes();
-                    if(selectedMoveDownTypes != null){
-                        for(int i=selectedMoveDownTypes.length-1; i>=0; i--){
-                            String sql = "Select hidden from encounterForm where form_name ='"+selectedMoveDownTypes[i] + "'";                            
-                            ResultSet rs = db.GetSQL(sql);                            
-                            if(rs.next()){
-                                int form_order = rs.getInt("hidden");
-                                String lowerOrder = Integer.toString(form_order + 1);
-                                rs.close();
-                                sql = "Select * from encounterForm where hidden <> '0'";
-                                rs = db.GetSQL(sql);
-                                rs.last();
-                                int nbRows = rs.getRow();
-                                rs.close();
-                                
-                                if (form_order<nbRows && form_order>0){
-                                    logger.debug("form_order: " + form_order);                                    
-                                    sql = "Select form_name from encounterForm where hidden ='"+ lowerOrder + "'";
-                                    rs = db.GetSQL(sql);
-                                    if(rs.next()){
-                                        String lowerItem = db.getString(rs,"form_name");
-                                        sql = "UPDATE encounterForm SET hidden ='" + form_order + "' WHERE form_name='" + lowerItem + "'";
-                                        db.RunSQL(sql);
-                                        sql = "UPDATE encounterForm SET hidden ='" + lowerOrder + "' WHERE form_name='" + selectedMoveDownTypes[i] + "'";
-                                        db.RunSQL(sql);
-                                    }
-                                    rs.close();                                    
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-           
-            catch(SQLException e)
-            {
-                logger.error("Error", e);
-            }
-     
-        }                          
-        
-        return mapping.findForward("success");
-    }
-     
+				if (frm.getForward().compareTo("add") == 0) {
+					logger.debug("the add button is pressed");
+
+					String[] selectedAddTypes = frm.getSelectedAddTypes();
+					if (selectedAddTypes != null) {
+						for (int i = 0; i < selectedAddTypes.length; i++) {
+							addForm(selectedAddTypes[i]);
+						}
+					}
+				} else if (frm.getForward().compareTo("delete") == 0) {
+					logger.debug("the delete button is pressed");
+					String[] selectedDeleteTypes = frm.getSelectedDeleteTypes();
+					if (selectedDeleteTypes != null) {
+						for (int i = 0; i < selectedDeleteTypes.length; i++) {
+							deleteForm(selectedDeleteTypes[i]);
+						}
+					}
+				} else if (frm.getForward().compareTo("up") == 0) {
+					logger.debug("The Move UP button is pressed!");
+					String[] selectedMoveUpTypes = frm.getSelectedDeleteTypes();
+					if (selectedMoveUpTypes != null) {
+						for (int i = 0; i < selectedMoveUpTypes.length; i++) {
+							moveUpOne(selectedMoveUpTypes[i]);
+						}
+					}
+				}
+
+				else if (frm.getForward().compareTo("down") == 0) {
+					logger.debug("The Move DOWN button is pressed!");
+					String[] selectedMoveDownTypes = frm.getSelectedDeleteTypes();
+					if (selectedMoveDownTypes != null) {
+						for (int i = selectedMoveDownTypes.length - 1; i >= 0; i--) {
+							String sql = "Select hidden from encounterForm where form_name ='" + selectedMoveDownTypes[i] + "'";
+							ResultSet rs = db.GetSQL(sql);
+							if (rs.next()) {
+								int form_order = rs.getInt("hidden");
+								String lowerOrder = Integer.toString(form_order + 1);
+								rs.close();
+								sql = "Select * from encounterForm where hidden <> '0'";
+								rs = db.GetSQL(sql);
+								rs.last();
+								int nbRows = rs.getRow();
+								rs.close();
+
+								if (form_order < nbRows && form_order > 0) {
+									logger.debug("form_order: " + form_order);
+									sql = "Select form_name from encounterForm where hidden ='" + lowerOrder + "'";
+									rs = db.GetSQL(sql);
+									if (rs.next()) {
+										String lowerItem = db.getString(rs, "form_name");
+										sql = "UPDATE encounterForm SET hidden ='" + form_order + "' WHERE form_name='" + lowerItem + "'";
+										db.RunSQL(sql);
+										sql = "UPDATE encounterForm SET hidden ='" + lowerOrder + "' WHERE form_name='" + selectedMoveDownTypes[i] + "'";
+										db.RunSQL(sql);
+									}
+									rs.close();
+								}
+							}
+						}
+					}
+				}
+			}
+
+			catch (SQLException e) {
+				logger.error("Error", e);
+			}
+
+		}
+
+		return mapping.findForward("success");
+	}
+
+	private void addForm(String formName) {
+		EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
+		List<EncounterForm> encounterForms = encounterFormDao.findAll();
+
+		int maxCurrentDisplayCount = 0;
+		// find the largest current display number
+		for (EncounterForm encounterForm : encounterForms) {
+			maxCurrentDisplayCount = Math.max(maxCurrentDisplayCount, encounterForm.getDisplayOrder());
+		}
+		// ++ to get the next number
+		maxCurrentDisplayCount++;
+
+		for (EncounterForm encounterForm : encounterForms) {
+			if (encounterForm.getFormName().equals(formName)) {
+				encounterForm.setDisplayOrder(maxCurrentDisplayCount);
+				encounterFormDao.merge(encounterForm);
+				return;
+			}
+		}
+	}
+
+	private void deleteForm(String formName) {
+		EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
+		List<EncounterForm> encounterForms = encounterFormDao.findAll();
+
+		// go through the forms list and set this form display to 0
+		// and any other form with a greater number should be decremented by 1
+		List<EncounterForm> tempForms = encounterFormDao.findByFormName(formName);
+		for (EncounterForm tempForm : tempForms) {
+			int oldDisplayOrder = tempForm.getDisplayOrder();
+			for (EncounterForm encounterForm : encounterForms) {
+				if (encounterForm.getDisplayOrder() > oldDisplayOrder) {
+					encounterForm.setDisplayOrder(encounterForm.getDisplayOrder() - 1);
+					encounterFormDao.merge(encounterForm);
+				} else if (encounterForm.getDisplayOrder() == oldDisplayOrder) {
+					encounterForm.setDisplayOrder(0);
+					encounterFormDao.merge(encounterForm);
+				}
+			}
+		}
+	}
+
+	private void moveUpOne(String formName) {
+		EncounterFormDao encounterFormDao = (EncounterFormDao) SpringUtils.getBean("encounterFormDao");
+		List<EncounterForm> encounterForms = encounterFormDao.findAll();
+
+		int oldPosition = -1;
+		for (EncounterForm encounterForm : encounterForms) {
+			if (encounterForm.getFormName().equals(formName)) {
+				oldPosition = encounterForm.getDisplayOrder();
+			}
+		}
+
+		// ignore if can't find (-1), ignore if hidden (0), and ignore if already at top (1)
+		if (oldPosition > 1) {
+			for (EncounterForm encounterForm : encounterForms) {
+				if (encounterForm.getDisplayOrder() == oldPosition - 1) {
+					encounterForm.setDisplayOrder(oldPosition);
+					encounterFormDao.merge(encounterForm);
+				} else if (encounterForm.getDisplayOrder() == oldPosition) {
+					encounterForm.setDisplayOrder(oldPosition - 1);
+					encounterFormDao.merge(encounterForm);
+				}
+			}
+		}
+	}
 }
