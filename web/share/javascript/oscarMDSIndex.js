@@ -776,9 +776,9 @@ function wrapUp() {
                                                     for(var i=0;i<total_rows.length;i++){
                                                         var rowid=total_rows[i];
                                                         if(a_contain_b(current_rows,rowid)){
-                                                            $(rowid).show();
+                                                            if($(rowid)) $(rowid).show();
                                                         }else
-                                                            $(rowid).hide();
+                                                            if($(rowid)) $(rowid).hide();
                                                     }
                                             }
 
