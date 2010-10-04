@@ -27,6 +27,7 @@ package oscar.form.pageUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -49,17 +50,17 @@ public class FrmSetupSelectAction extends Action {
     	EncounterFormDao encounterFormDao=(EncounterFormDao)SpringUtils.getBean("encounterFormDao");
     	List<EncounterForm> forms=encounterFormDao.findAll();
          
-    	ArrayList<EncounterForm> formShownVector=new ArrayList<EncounterForm>();
+    	TreeMap<Integer, EncounterForm> formShownVector=new TreeMap<Integer, EncounterForm>();
     	ArrayList<EncounterForm> formHiddenVector=new ArrayList<EncounterForm>();
     	
     	for (EncounterForm encounterForm : forms)
     	{
     		if (encounterForm.isHidden()) formHiddenVector.add(encounterForm);
-    		else formShownVector.add(encounterForm);
+    		else formShownVector.put(encounterForm.getDisplayOrder(),encounterForm);
     	}
     	
         HttpSession session = request.getSession();
-        session.setAttribute( "formShownVector", formShownVector );   
+        session.setAttribute( "formShownVector", formShownVector.values() );   
         session.setAttribute( "formHiddenVector", formHiddenVector ); 
         
         return mapping.findForward("continue");
