@@ -635,6 +635,11 @@ phrAsyncActivate();
 
 </script>
 
+<style type="text/css">
+.reason {
+    display: <%=showPersonal ? "inline" : "none"%>;
+}
+</style>
 </head>
 <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){%>
 <body bgcolor="#EEEEFF" onload="load();" topmargin="0" leftmargin="0" rightmargin="0">
@@ -1426,7 +1431,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
  %>
 <%=htmlWarning%>
 </oscar:oscarPropertiesCheck>
-<a href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
+<a class="apptLink" href=# onClick ="popupPage(535,860,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
 &nbsp; reason: <%=UtilMisc.htmlEscape(reason)%>
 &nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
