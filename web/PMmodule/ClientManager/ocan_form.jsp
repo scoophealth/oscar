@@ -501,7 +501,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Date of Birth</td>
 			<td class="genericTableData">
-				<select name="clientDOBType" id="clientDOBType" class="{validate: {required:true}}">
+				<select name="clientDOBType" id="clientDOBType" >
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "clientDOBType", OcanForm.getOcanFormOptions("client DOB Type"),prepopulationLevel)%>
 				</select>	
 			</td>
@@ -745,7 +745,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Other Contact</td>
 			<td class="genericTableData">
-				<select name="otherContact" id="otherContact" class="{validate: {required:true}}">
+				<select name="otherContact" id="otherContact" >
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "otherContact", OcanForm.getOcanFormOptions("Other Contacts Agency"),prepopulationLevel)%>
 				</select>					
 			</td>
@@ -987,7 +987,7 @@ $("document").ready(function(){
 		<tr>
 			<td class="genericTableHeader">Other Agency</td>
 			<td class="genericTableData">
-				<select name="otherAgency" id="otherAgency" class="{validate: {required:true}}">
+				<select name="otherAgency" id="otherAgency" >
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "otherAgency", OcanForm.getOcanFormOptions("Other Contacts Agency"),prepopulationLevel)%>
 				</select>					
 			</td>

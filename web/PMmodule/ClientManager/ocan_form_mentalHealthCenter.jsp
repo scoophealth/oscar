@@ -20,7 +20,7 @@
 		<tr>
 			<td class="genericTableHeader">OCAN Lead</td>
 			<td class="genericTableData">
-				<select name="serviceUseRecord_OCANLead<%=centerNumber %>" class="{validate: {required:true}}">					
+				<select name="serviceUseRecord_OCANLead<%=centerNumber %>" id="serviceUseRecord_OCANLead<%=centerNumber %>" class="{validate: {required:true}}">					
 					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "serviceUseRecord_OCANLead"+centerNumber, OcanForm.getOcanFormOptions("OCAN Lead Assessment"), prepopulationLevel)%>
 				</select>					
 			</td>

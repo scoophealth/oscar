@@ -45,13 +45,14 @@
 				if (manageConsent.disableEdit() && !manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)) tempColour="grey";
 			%>
 			<td style="color:<%=tempColour%>">
-				I understand the purpose of CAISI, and the benefits and risks associated with consenting to integrate my personal information, including personal health information, among the participating CAISI integrating agencies. I consent to the integration of my information for the purposes described above.
+				I understand the purpose of CAISI, and the benefits and risks associated with consenting to integrate my personal information, including personal health information, among the participating CAISI integrating agencies, and I have been given a list of participating agencies. I consent to the integration of my information for the purposes described above.
 				<%-- removed until further notice
 					<br /><br />
 					<input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> /><span style="font-weight:bold">I choose to exclude my mental health record from the integration of my information.</span>
 					<br /><br />
 				--%>
 				
+					<br />
 					<br />
 					Check to indicate which agencies to exclude from consent :
 					<br />
@@ -110,18 +111,20 @@
 			%>
 			<td style="color:<%=tempColour%>">Refused to sign : client is not interested in integration.</td>
 		</tr>
-	</table>
-	<%--
-	<br />
-		<div style="font-weight:bold">Consent expiry : </div>
-		<select name="consentExpiry" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%>>
+	
+	<tr><td></td><td></td></tr>
+	
+	<tr>
+		<td colspan="2"><b>Expiry of consent at a predefined time</b>
+		<select id="consentExpiry" name="consentExpiry" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%>>
 			<option <%=manageConsent.displayAsSelectedExpiry(-1)?"selected=\"selected\"":""%> value="-1">I do not wish this consent to expire at a predefined time</option>
 			<option <%=manageConsent.displayAsSelectedExpiry(6)?"selected=\"selected\"":""%> value="6">I wish this consent to expire and require a new consent in 6 months.</option>
 			<option <%=manageConsent.displayAsSelectedExpiry(12)?"selected=\"selected\"":""%> value="12">I wish this consent to expire and require a new consent in 12 months.</option>
 			<option <%=manageConsent.displayAsSelectedExpiry(60)?"selected=\"selected\"":""%> value="60">I wish this consent to expire and require a new consent in 60 months.</option>
 		</select>
-	<br />
-	--%>
+		</td>
+	</tr>	
+</table>	
 	<%
 		if (manageConsent.useDigitalSignatures())
 		{

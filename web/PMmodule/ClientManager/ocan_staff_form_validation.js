@@ -35,7 +35,7 @@ $("document").ready(function() {
 	});
 	
 	$("#reasonForAssessment").change(function() {
-		if($("#reasonForAssessment").val() == 'OTH') {
+		if($("#reasonForAssessment").val() == 'OTHR') {
 			$("#reason_for_assessment_other").attr('disabled','');
 			$("#reason_for_assessment_other").val("");
 		} else {		
@@ -45,7 +45,7 @@ $("document").ready(function() {
 	});
 	
 	$("#reasonForAssessment").each(function() {
-		if($("#reasonForAssessment").val() == 'OTH') {
+		if($("#reasonForAssessment").val() == 'OTHR') {
 			$("#reason_for_assessment_other").attr('disabled','');			
 		} else {		
 			$("#reason_for_assessment_other").attr('disabled','disabled');
@@ -508,6 +508,7 @@ function submitOcanForm() {
 	*/
 	
 	var newCount = $("#center_count").val(); 
+	var ocanLeadNumber = 0;
 	for(var x=1;x<=newCount;x++) { 
 		if($("#exitDate"+x).val().length != 0) {		
 			if($("#serviceUseRecord_exitDisposition"+x).val().length==0) {			
@@ -516,8 +517,17 @@ function submitOcanForm() {
 				return false;
 			}		
 		}
+		
+		if($("#serviceUseRecord_OCANLead"+x).val() == 'TRUE') { 
+			ocanLeadNumber ++;
+		}
 	}
-	
+	if (ocanLeadNumber > 1) {
+		alert('OCAN Lead can only have one answered Yes');
+		$("#serviceUseRecord_OCANLead1").focus();
+		return false;
+	}	
+		
 	if($("#completedByOCANLead").val() == 'FALSE') { 
 		if($("#reasonForAssessment").val() != 'REV' && $("#reasonForAssessment").val() != 'REK') {
 			alert('Reason for OCAN -- You can only choose Re-view or Rekey');
@@ -560,7 +570,7 @@ function submitOcanForm() {
 		
 	}	
 	
-	if($("#reasonForAssessment").val() == 'OTH') {		
+	if($("#reasonForAssessment").val() == 'OTHR') {		
 		if($("#reason_for_assessment_other").val().length==0) {			
 			alert('Reason for assessment - Please specify other');
 			$("#reason_for_assessment_other").focus();
