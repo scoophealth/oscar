@@ -110,7 +110,7 @@ public class FrmSelectAction extends Action {
 	                        			encounterForm.setDisplayOrder(encounterForm.getDisplayOrder()-1);
 	                        			encounterFormDao.merge(encounterForm);
 	                        		}
-	                        		else if (encounterForm.getDisplayOrder()>oldDisplayOrder)
+	                        		else if (encounterForm.getDisplayOrder()==oldDisplayOrder)
 	                        		{
 	                        			encounterForm.setDisplayOrder(0);
 	                        			encounterFormDao.merge(encounterForm);
@@ -119,20 +119,7 @@ public class FrmSelectAction extends Action {
                         	}
                         	
                         	
-//                            logger.debug(selectedDeleteTypes[i]);
-//                            String sql = "UPDATE encounterForm SET hidden ='0' WHERE form_name='" + selectedDeleteTypes[i] + "'";
-//                            logger.debug(" sql statement "+sql);
-//                            db.RunSQL(sql);                                
-                        }
-//                        String sql = "SELECT hidden FROM encounterForm WHERE hidden <> '0' ORDER BY hidden";
-//                        ResultSet rs = db.GetSQL(sql);
-//                        int i=1;
-//                        while(rs.next()){
-//                            sql = "UPDATE encounterForm SET hidden='"+i+"' WHERE hidden='"+db.getString(rs,"hidden")+"'";
-//                            db.RunSQL(sql);
-//                            i++;
-//                        }
-                        
+                        }                        
                     }
                     
                     //need to update the order number under the hidden column!!!!!
