@@ -106,6 +106,15 @@ insert into access_type (name, type) values("write Recreation Therapist issues",
 insert into access_type (name, type) values("read Recreation Therapist issues","access");
 insert into access_type (name, type) values("read Recreation Therapist notes","access");
 
+insert into access_type (name, type) values("read ticklers assigned to a property staff","access");
+insert into access_type (name, type) values("write property staff issues","access");
+insert into access_type (name, type) values("read property staff issues","access");
+insert into access_type (name, type) values("read property staff notes","access");
+
+insert into access_type (name, type) values("read ticklers assigned to a Support Counsellor","access");
+insert into access_type (name, type) values("write Support Counsellor issues","access");
+insert into access_type (name, type) values("read Support Counsellor issues","access");
+insert into access_type (name, type) values("read Support Counsellor notes","access");
 
 -- access types for quatro shelter
 insert into access_type (name, type) values("Sex restriction override on referral","access");
@@ -204,6 +213,8 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='doctor'),(select access_id from access_type where name='read Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='doctor'),(select access_id from access_type where name='write Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='doctor'),(select access_id from access_type where name='read Recreation Therapist notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='doctor'),(select access_id from access_type where name='read Support Counsellor notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='doctor'),(select access_id from access_type where name='read property staff notes'));
 
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='doctor'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='doctor'),(select access_id from access_type where name='prescription Write'));
@@ -313,6 +324,8 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='psychiatrist'),(select access_id from access_type where name='read Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='psychiatrist'),(select access_id from access_type where name='write Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='psychiatrist'),(select access_id from access_type where name='read Recreation Therapist notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='psychiatrist'),(select access_id from access_type where name='read Support Counsellor notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='psychiatrist'),(select access_id from access_type where name='read property staff notes'));
 
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='psychiatrist'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='psychiatrist'),(select access_id from access_type where name='prescription Write'));
@@ -418,6 +431,8 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RN'),(select access_id from access_type where name='read Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RN'),(select access_id from access_type where name='write Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RN'),(select access_id from access_type where name='read Recreation Therapist notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RN'),(select access_id from access_type where name='read Support Counsellor notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RN'),(select access_id from access_type where name='read property staff notes'));
 
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RN'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RN'),(select access_id from access_type where name='immunization'));
@@ -519,6 +534,8 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RPN'),(select access_id from access_type where name='read Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RPN'),(select access_id from access_type where name='write Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RPN'),(select access_id from access_type where name='read Recreation Therapist notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RPN'),(select access_id from access_type where name='read Support Counsellor notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RPN'),(select access_id from access_type where name='read property staff notes'));
 
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RPN'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='RPN'),(select access_id from access_type where name='immunization'));
@@ -620,7 +637,8 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Nurse Manager'),(select access_id from access_type where name='read Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Nurse Manager'),(select access_id from access_type where name='write Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Nurse Manager'),(select access_id from access_type where name='read Recreation Therapist notes'));
-
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Nurse Manager'),(select access_id from access_type where name='read Support Counsellor notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Nurse Manager'),(select access_id from access_type where name='read property staff notes'));
 
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Nurse Manager'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Nurse Manager'),(select access_id from access_type where name='immunization'));
@@ -712,6 +730,8 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Clinical Social Worker'),(select access_id from access_type where name='read Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Clinical Social Worker'),(select access_id from access_type where name='write Recreation Therapist issues'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Clinical Social Worker'),(select access_id from access_type where name='read Recreation Therapist notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Clinical Social Worker'),(select access_id from access_type where name='read Support Counsellor notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Clinical Social Worker'),(select access_id from access_type where name='read property staff notes'));
 
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Clinical Social Worker'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Clinical Social Worker'),(select access_id from access_type where name='immunization'));
@@ -1075,6 +1095,7 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Worker'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Worker'),(select access_id from access_type where name='oscarcomm'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Worker'),(select access_id from access_type where name='measurements'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Worker'),(select access_id from access_type where name='eform'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Worker'),(select access_id from access_type where name='master file'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Worker'),(select access_id from access_type where name='read ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Worker'),(select access_id from access_type where name='Perform program registration intake'));
@@ -1102,6 +1123,7 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='Write Ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='oscarcomm'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='measurements'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='eform'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='master file'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='read ticklers'));
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Client Service Worker'),(select access_id from access_type where name='Perform program registration intake'));
@@ -1201,6 +1223,50 @@ insert into default_role_access (role_id,access_id) values ((select role_no from
 insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Recreation Therapist'),(select access_id from access_type where name='print bed rosters and reports'));
 
 
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='read ticklers assigned to a property staff'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='read property staff issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='write property staff issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='read property staff notes'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='Write Ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='oscarcomm'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='eform'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='master file'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='read ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name='property staff'),(select access_id from access_type where name='print bed rosters and reports'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read ticklers assigned to a Support Counsellor'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read Support Counsellor issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='write Support Counsellor issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read Support Counsellor notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read ticklers assigned to a Support Worker'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read Support Worker issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='write Support Worker issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read Support Worker notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read ticklers assigned to a Client Service Worker'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read Client Service Worker issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='write Client Service Worker issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read Client Service Worker notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read ticklers assigned to a secretary'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='write secretary issues'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read secretary notes'));
+
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='Write Ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='oscarcomm'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='measurements'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='eform'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='master file'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='read ticklers'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='Perform program registration intake'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='perform registration intake'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='perform admissions'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='perform discharges'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='perform bed assignments'));
+insert into default_role_access (role_id,access_id) values ((select role_no from secRole where role_name ='Support Counsellor'),(select access_id from access_type where name='print bed rosters and reports'));
+
 
 
 
@@ -1237,11 +1303,35 @@ INSERT INTO issue (code,description,role,update_date,type) values('CTCMM27000','
 INSERT INTO issue (code,description,role,update_date,type) values('CTCMM28000','Incident Report','counsellor',Now(),'userDefined');
 INSERT INTO issue (code,description,role,update_date,type) values('CTCMM29000','Immigration','counsellor',Now(),'userDefined');
 
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM9500','Intimate Relationships','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM11500','Sexual Expression','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM14500','Client Capacity','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM21500','Self Care','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM22500','Looking After the Home','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM23500','Transportation','counsellor',Now(),'userDefined');
+
+
 -- CSW issues
 INSERT INTO issue (code,description,role,update_date,type) values('ICSW100','program-client conflict','CSW',Now(),'userDefined');
 INSERT INTO issue (code,description,role,update_date,type) values('ICSW200','difficulties with hygeine','CSW',Now(),'userDefined');
 INSERT INTO issue (code,description,role,update_date,type) values('ICSW300','difficulties with eating','CSW',Now(),'userDefined');
 INSERT INTO issue (code,description,role,update_date,type) values('ICSW301','anorexia, loss of apetite','CSW',Now(),'userDefined');
+
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW210','requires assistance with grooming/personal hygiene','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW310','requires assistance with eating','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW410','requires assistance of reading (vision problem)','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW420','requires assistance of hearing (hearing aids) ','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW430','requires assistance with seizures','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW440','language barriers','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW450','requires assistance with medical care advocacy','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW460','problems related to sleep pattern','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW400','Requires assistance with bathing','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW500','requires assistance with getting dressed','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW600','requires assistance with getting around floor e.g. dining room','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW700','requires assistance with cleaning of living space','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW800','requires assistance with laundry','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW1000','Care provided in Managed Alcohol Program','CSW',Now(),'userDefined');
+
 
 -- community programs
 INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus,userDefined) VALUES (10001,1,'Subsidized Housing','Subsidized Housing','','','','','','','community','',99999,0,0,0,0,'active',1);
@@ -1375,74 +1465,10 @@ VALUES ('remote-access-policy', 0, null, 1, 0, 0, 0, 0, null, 'remote_access', 1
 INSERT INTO cr_policy (policy_id, static_ip, ip, remote_access, generate_super_certs, administrate_policies, administrate_questions, remove_bans, user_id, role_id, priority, usage_times_before_reverify, max_time_between_usage, expire_cookie, ip_filter, certs_max, certs_current, default_answer)
 VALUES ('default', 0, null, 1, 0, 0, 0, 0, null, null, 10, 10000000, 2592000, 315360000, null, 1000000, 1, null);
 
-INSERT INTO secRole (role_name) 
-VALUES ('remote_access');
-
-
-
 --
 -- Sherbourne Summary Discharge Form
 --
 insert into encounterForm values("Discharge Summary","../form/formDischargeSummary.jsp?demographic_no=","formDischargeSummary",1);
-
-
-
--- RFQ: secObjectName
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.clientSearch', 'Client - Search', 0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.newClient', 'Client - New Client',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.mergeRecords', 'Client - Merge Records',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.caseManagement','PMM - Case Management',0);
-
--- PMM administration part
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.provider', 'Administration - Provider',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.security', 'Administration - Security',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.securityLogReport', 'Administration - Security Log Report',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.unlockAccount', 'Administration - Unlock Account',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.cookieRevolver', 'Administration - Cookie Revolver',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.caisi', 'Administration - Caisi',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.lookupFieldEditor', 'Administration - Lookup Field Editor',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.issueEditor', 'Administration - Issue Editor',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.caisiRoles', 'Administration - Manage Caisi Roles',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.userCreatedForms', 'Administration - User Created Forms',0);
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.facilityMessage', 'Administration - Facility Message',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_admin.systemMessage', 'Administration - System Message',0);
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.agencyInformation','Program - Agency Information',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.manageFacilities','Program - Manage Facilities',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.staffList','Program - Staff List',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.programList','Program - Program List',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.addProgram','Program - Add Program',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.globalRoleAccess','Program - Global Role Access',0);
--- insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm.caisiRoles','Program - Caisi Roles',0);
-
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.general','Program - General',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.staff','Program - Staff',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.functionUser','Program - User',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.teams', 'Program - Team', 0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.clients', 'Program - Clients',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.queue', 'Program - Queue',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.access', 'Program - Access',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.bedCheck', 'Program - Bed Check',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.clientStatus', 'Program - Client Status',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.serviceRestrictions', 'Program - Service Restrictions',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values ('_pmm.eidtor','Caisi Intake Editor',0);
-
--- Quatro Group Report
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_reportRunner', 'Report Runner', 0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_reportWriter', 'Report Writer', 0);
-
-
-
-INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-	VALUES ('admin', '_reportRunner', 'x', 0, '999998');
-INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-	VALUES ('admin', '_reportWriter', 'x', 0, '999998');
-INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-	VALUES ('doctor', '_reportRunner', 'x', 0, '999998');
-INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
-	VALUES ('doctor', '_reportWriter', 'x', 0, '999998');
 
 
 -- quatro group's report runner
