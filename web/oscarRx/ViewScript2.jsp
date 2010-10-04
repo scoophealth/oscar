@@ -179,7 +179,7 @@ if (pharmacy != null) {
     function resetStash(){
                var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearStash";
                var data = "";
-               new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
+               new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
                             updateCurrentInteractions();
                 }});
                parent.document.getElementById('rxText').innerHTML="";//make pending prescriptions disappear.
@@ -188,7 +188,7 @@ if (pharmacy != null) {
     function resetReRxDrugList(){
         var url="<c:out value="${ctx}"/>" + "/oscarRx/deleteRx.do?parameterValue=clearReRxDrugList";
                var data = "";
-               new Ajax.Request(url, {method: 'post',parameters:data,asynchronous:false,onSuccess:function(transport){
+               new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
                 }});
     }
     function updateCurrentInteractions(){
