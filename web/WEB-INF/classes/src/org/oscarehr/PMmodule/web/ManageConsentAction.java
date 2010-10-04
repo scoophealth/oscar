@@ -78,9 +78,11 @@ public class ManageConsentAction {
 
 	public void setExpiry(String s) {
 		int months = -1;
-		if (s!= null) Integer.parseInt(s);
+		if (s!= null) 
+			months = Integer.parseInt(s);
 
-		if (months == -1) consent.setExpiry(null);
+		if (months == -1) 
+			consent.setExpiry(null);
 		else {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(consent.getCreatedDate());
