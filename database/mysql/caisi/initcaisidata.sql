@@ -1468,7 +1468,7 @@ VALUES ('default', 0, null, 1, 0, 0, 0, 0, null, null, 10, 10000000, 2592000, 31
 --
 -- Sherbourne Summary Discharge Form
 --
-insert into encounterForm values("Discharge Summary","../form/formDischargeSummary.jsp?demographic_no=","formDischargeSummary",1);
+insert into encounterForm values("Discharge Summary","../form/formDischargeSummary.jsp?demographic_no=","formDischargeSummary",0);
 
 
 -- quatro group's report runner
