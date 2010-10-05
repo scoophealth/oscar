@@ -105,7 +105,7 @@ public class RptByExamplesFavoriteAction extends Action {
                 MiscUtils.getLogger().debug("Fav "+favoriteName+" query "+query);
                 
                 
-                String sql = "SELECT * from reportByExamplesFavorite WHERE provider_no = '"+providerNo+"' and name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
+                String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo = '"+providerNo+"' and name LIKE '" + favoriteName + "' OR query LIKE '" + query + "'";
                 ResultSet rs = db.GetSQL(sql);
                 if(!rs.next()){
                     sql = "INSERT INTO reportByExamplesFavorite(providerNo, name, query) VALUES('" + providerNo + "','" 
