@@ -202,70 +202,89 @@ try
 			</div>
 		</nested:notEmpty>
 
-		<div id="filter" style="display: none;">
-			<div style="clear: both; height: 150px; width: auto; overflow: auto; float: left; position: relative"><bean:message key="oscarEncounter.providers.title" />:
-				<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
-					<li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
-					<%
-						@SuppressWarnings("unchecked")
-							Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");
-			
-							String providerNo;
-							Provider prov;
-							Iterator<Provider> iter = providers.iterator();
-							while (iter.hasNext())
-							{
-								prov = iter.next();
-								providerNo = prov.getProviderNo();
-					%>
-					<li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
-					<%
-						}
-					%>
-				</ul>
-			</div>
-	
-			<div style="height: 150px; width: auto; overflow: auto; float: left; position: relative;">Role:
-				<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
-					<li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
-					<%
-						@SuppressWarnings("unchecked")
-							List roles = (List)request.getAttribute("roles");
-							for (int num = 0; num < roles.size(); ++num)
-							{
-								Secrole role = (Secrole)roles.get(num);
-					%>
-					<li><html:multibox property="filter_roles" value="<%=String.valueOf(role.getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=role.getName()%></li>
-					<%
-						}
-					%>
-				</ul>
-			</div>
-	
-			<div style="float: left; position: relative;"><bean:message key="oscarEncounter.sort.title" />:
-				<ul style="margin-left: 0px; padding-left: 0px; margin-top: 5px; list-style: none inside none;">
-					<li><html:radio property="note_sort" value="observation_date_asc">
-						<bean:message key="oscarEncounter.sortDateAsc.title" />
-					</html:radio></li>
-					<li><html:radio property="note_sort" value="observation_date_desc">
-						<bean:message key="oscarEncounter.sortDateDesc.title" />
-					</html:radio></li>
-					<li><html:radio property="note_sort" value="providerName">
-						<bean:message key="oscarEncounter.provider.title" />
-					</html:radio></li>
-					<li><html:radio property="note_sort" value="programName">
-						<bean:message key="oscarEncounter.program.title" />
-					</html:radio></li>
-					<li><html:radio property="note_sort" value="roleName">
-						<bean:message key="oscarEncounter.role.title" />
-					</html:radio></li>
-				</ul>
-			</div>
-	
-			<div style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;" onclick="return filter(false);"><bean:message key="oscarEncounter.showView.title" /></div>
-			<div style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 5px;" onclick="return filter(true);"><bean:message key="oscarEncounter.resetFilter.title" /></div>
-		</div>
+		<div id="filter" style="display:none;background-color:#ddddff;padding:10px">
+			<input type="button" value="<bean:message key="oscarEncounter.showView.title" />" onclick="return filter(false);" />
+			<input type="button" value="<bean:message key="oscarEncounter.resetFilter.title" />" onclick="return filter(true);" />
 
+			<table style="border-collapse:collapse;width:100%;margin-left:auto;margin-right:auto">
+				<tr>
+					<td style="font-size:inherit;background-color:#bbbbff">
+						<bean:message key="oscarEncounter.providers.title" />
+					</td>
+					<td style="font-size:inherit;background-color:#bbbbff;border-left:solid #ddddff 4px;border-right:solid #ddddff 4px">
+						Role
+					</td>
+					<td style="font-size:inherit;background-color:#bbbbff">
+						<bean:message key="oscarEncounter.sort.title" />
+					</td>
+				</tr>
+				<tr>
+					<td style="font-size:inherit;background-color:#ccccff">
+						<div style="height: 150px; overflow: auto">
+							<ul style="padding-left:0px;list-style:none inside none">
+								<li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
+								<%
+									@SuppressWarnings("unchecked")
+										Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");
+						
+										String providerNo;
+										Provider prov;
+										Iterator<Provider> iter = providers.iterator();
+										while (iter.hasNext())
+										{
+											prov = iter.next();
+											providerNo = prov.getProviderNo();
+								%>
+								<li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
+								<%
+									}
+								%>
+							</ul>
+						</div>
+					</td>
+					<td style="font-size:inherit;background-color:#ccccff;border-left:solid #ddddff 4px;border-right:solid #ddddff 4px">
+						<div style="height:150px;overflow:auto">
+							<ul style="padding-left: 0px;list-style:none inside none;">
+								<li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
+								<%
+									@SuppressWarnings("unchecked")
+										List roles = (List)request.getAttribute("roles");
+										for (int num = 0; num < roles.size(); ++num)
+										{
+											Secrole role = (Secrole)roles.get(num);
+								%>
+								<li><html:multibox property="filter_roles" value="<%=String.valueOf(role.getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=role.getName()%></li>
+								<%
+									}
+								%>
+							</ul>
+						</div>
+					</td>
+					<td style="font-size:inherit;background-color:#ccccff">
+						<div style="height:150px;overflow:auto">
+							<ul style="padding-left:0px;list-style:none inside none">
+								<li><html:radio property="note_sort" value="observation_date_asc">
+									<bean:message key="oscarEncounter.sortDateAsc.title" />
+								</html:radio></li>
+								<li><html:radio property="note_sort" value="observation_date_desc">
+									<bean:message key="oscarEncounter.sortDateDesc.title" />
+								</html:radio></li>
+								<li><html:radio property="note_sort" value="providerName">
+									<bean:message key="oscarEncounter.provider.title" />
+								</html:radio></li>
+								<li><html:radio property="note_sort" value="programName">
+									<bean:message key="oscarEncounter.program.title" />
+								</html:radio></li>
+								<li><html:radio property="note_sort" value="roleName">
+									<bean:message key="oscarEncounter.role.title" />
+								</html:radio></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	
 		<div style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
 			<div style="display:inline-block">
 				<img alt="<bean:message key="oscarEncounter.msgFind"/>" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>"> 
@@ -319,7 +338,7 @@ try
 			</div>
 		</div>
 	
-	</div>
+	--</div>
 </html:form>
 
 <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0;">
