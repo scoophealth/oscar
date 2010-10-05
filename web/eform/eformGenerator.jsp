@@ -560,13 +560,14 @@ function GetTextTop(){
 	textTop += BGWidth;
 	textTop += "&quot;&gt;\n"
 
-	textTop += "&lt;div id=&quot;myCanvas&quot; style=&quot;position:absolute; left:0px; top:0px; width:"
-	textTop += BGWidth
-	textTop += "; height:"
-	textTop += BGHeight
-	textTop += ";&quot; onmouseover=&quot;putInBack();&quot;&gt;&lt;/div&gt;\n\n"
-	textTop +="&lt;form method=&quot;post&quot; action=&quot;&quot; name=&quot;FormName&quot; id=&quot;FormName&quot; &gt;\n";
-
+        if(document.getElementById('DefaultCheckmark').checked){
+            textTop += "&lt;div id=&quot;myCanvas&quot; style=&quot;position:absolute; left:0px; top:0px; width:"
+            textTop += BGWidth
+            textTop += "; height:"
+            textTop += BGHeight
+            textTop += ";&quot; onmouseover=&quot;putInBack();&quot;&gt;&lt;/div&gt;\n\n"
+            textTop +="&lt;form method=&quot;post&quot; action=&quot;&quot; name=&quot;FormName&quot; id=&quot;FormName&quot; &gt;\n";
+        }
 
 }
 
@@ -2137,7 +2138,7 @@ function _CompInt(x, y)
 					<td><p>Measurement Type:</p></td>
 					<td><p>
 						<select name="MeasurementList" id="MeasurementList">
-							<option value="" selected="selected">--NONE--</option>
+							<option value="" selected="selected">--None--</option>
 							<option value="HT">HT</option>
 							<option value="WT">WT</option>
 							<option value="BP">BP</option>
@@ -2229,7 +2230,7 @@ function _CompInt(x, y)
 					<td><p>Measurement Type:</p></td>
 					<td><p>
 						<select name="ExportMeasurementList" id="ExportMeasurementList">
-							<option value="" selected="selected">--NONE--</option>
+							<option value="" selected="selected">--None--</option>
 							<option value="HT">HT</option>
 							<option value="WT">WT</option>
 							<option value="BP">BP</option>
