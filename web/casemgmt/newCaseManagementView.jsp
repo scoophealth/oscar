@@ -208,13 +208,13 @@ try
 
 			<table style="border-collapse:collapse;width:100%;margin-left:auto;margin-right:auto">
 				<tr>
-					<td style="font-size:inherit;background-color:#bbbbff">
+					<td style="font-size:inherit;background-color:#bbbbff;font-weight:bold">
 						<bean:message key="oscarEncounter.providers.title" />
 					</td>
-					<td style="font-size:inherit;background-color:#bbbbff;border-left:solid #ddddff 4px;border-right:solid #ddddff 4px">
+					<td style="font-size:inherit;background-color:#bbbbff;border-left:solid #ddddff 4px;border-right:solid #ddddff 4px;font-weight:bold">
 						Role
 					</td>
-					<td style="font-size:inherit;background-color:#bbbbff">
+					<td style="font-size:inherit;background-color:#bbbbff;font-weight:bold">
 						<bean:message key="oscarEncounter.sort.title" />
 					</td>
 				</tr>
