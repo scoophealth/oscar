@@ -91,6 +91,7 @@ import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.EFormDataDao;
+import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.GroupNoteDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
@@ -98,6 +99,7 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.EFormData;
+import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
@@ -115,8 +117,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.appt.AppointmentDao;
-import oscar.eform.dao.EformDao;
-import oscar.eform.model.EformValue;
 import oscar.facility.IntegratorControlDao;
 import oscar.oscarBilling.ca.on.dao.BillingOnItemDao;
 import oscar.oscarBilling.ca.on.model.BillingOnCHeader1;
@@ -160,7 +160,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
     private MeasurementMapDao measurementMapDao = (MeasurementMapDao) SpringUtils.getBean("measurementMapDao");
     private DxResearchDAO dxresearchDao = (DxResearchDAO) SpringUtils.getBean("dxResearchDao");
     private BillingOnItemDao billingOnItemDao = (BillingOnItemDao) SpringUtils.getBean("billingOnItemDao");
-    private EformDao eformDao = (EformDao) SpringUtils.getBean("eformDao");
+    private EFormValueDao eFormValueDao = (EFormValueDao) SpringUtils.getBean("EFormValueDao");
     private EFormDataDao eFormDataDao = (EFormDataDao) SpringUtils.getBean("EFormDataDao");
     private GroupNoteDao groupNoteDao = (GroupNoteDao)SpringUtils.getBean("groupNoteDao");
     	
@@ -882,23 +882,23 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
                 cachedEformDatas.add(cachedEformData);
             }
 
-            List<EformValue> eformValues = eformDao.getEformValuebyDemoNo(demographicId);
-            if (eformValues.size()==0) return;
+            List<EFormValue> eFormValues = eFormValueDao.findByDemographicId(demographicId);
+            if (eFormValues.size()==0) return;
 
             ArrayList<CachedEformValue> cachedEformValues = new ArrayList<CachedEformValue>();
-            for (EformValue eformValue : eformValues) {
+            for (EFormValue eFormValue : eFormValues) {
                 MiscUtils.checkShutdownSignaled();
 
                 CachedEformValue cachedEformValue = new CachedEformValue();
                 FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
-                facilityIdIntegerCompositePk.setCaisiItemId(eformValue.getId());
+                facilityIdIntegerCompositePk.setCaisiItemId(eFormValue.getId());
                 cachedEformValue.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
                 cachedEformValue.setCaisiDemographicId(demographicId);
-                cachedEformValue.setFormId(eformValue.getFid());
-                cachedEformValue.setFormDataId(eformValue.getFdid());
-                cachedEformValue.setVarName(eformValue.getVar_name());
-                cachedEformValue.setVarValue(eformValue.getVar_value());
+                cachedEformValue.setFormId(eFormValue.getFormId());
+                cachedEformValue.setFormDataId(eFormValue.getFormDataId());
+                cachedEformValue.setVarName(eFormValue.getVarName());
+                cachedEformValue.setVarValue(eFormValue.getVarValue());
 
                 cachedEformValues.add(cachedEformValue);
             }

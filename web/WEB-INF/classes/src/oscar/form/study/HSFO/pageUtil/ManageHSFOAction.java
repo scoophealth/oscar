@@ -55,8 +55,6 @@ import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.UtilDateUtilities;
 
 /**
- * insert into encounterForm (form_name,form_value,form_table,hidden ) values ( 'HSFP form','../form/HSFOform.do?demographic_no=','form_hsfo_visit',0);
- *
  * Class used to fill data for the HSFO form Study
  */
 public class ManageHSFOAction extends Action{

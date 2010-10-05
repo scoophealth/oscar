@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -53,9 +54,11 @@ import oscar.util.StringUtils;
 
 public class AddEFormAction extends Action {
     
+	private static final Logger logger=MiscUtils.getLogger();
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                 HttpServletRequest request, HttpServletResponse response) {
-         MiscUtils.getLogger().debug("==================SAVING ==============");
+         logger.debug("==================SAVING ==============");
          
          Enumeration paramNamesE = request.getParameterNames();
          //for each name="fieldname" value="myval"
@@ -105,7 +108,7 @@ public class AddEFormAction extends Action {
         	 eFormDataDao.persist(eFormData);
              String fdid = eFormData.getId().toString();
              
-             EFormUtil.addEFormValues(paramNames, paramValues, fdid, fid, demographic_no); //adds parsed values
+             EFormUtil.addEFormValues(paramNames, paramValues, new Integer(fdid), new Integer(fid), new Integer(demographic_no)); //adds parsed values
              
              //write template message to echart
              String program_no = new EctProgram(request.getSession()).getProgram(provider_no);
@@ -117,7 +120,7 @@ public class AddEFormAction extends Action {
              EFormUtil.writeEformTemplate(paramNames, paramValues, curForm, fdid, program_no, path);
          }
          else {
-             MiscUtils.getLogger().debug("Warning! Form HTML exactly the same, new form data not saved.");
+             logger.debug("Warning! Form HTML exactly the same, new form data not saved.");
          }
 
          return(mapping.findForward("close"));
