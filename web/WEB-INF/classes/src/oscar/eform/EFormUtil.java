@@ -386,7 +386,6 @@ public class EFormUtil {
 	public static void addEFormValues(ArrayList<String> names, ArrayList<String> values, Integer fdid, Integer fid, Integer demographic_no) {
 		// adds parsed values and names to DB
 		// names.size and values.size must equal!
-System.err.println("----------- FOOO!");
 		try {
 			for (int i = 0; i < names.size(); i++) {
 				EFormValue eFormValue = new EFormValue();
