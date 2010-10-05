@@ -202,7 +202,7 @@ try
 			</div>
 		</nested:notEmpty>
 
-		<div id="filter" style="display:none;background-color:#ddddff;padding:10px">
+		<div id="filter" style="display:none;background-color:#ddddff;padding:8px">
 			<input type="button" value="<bean:message key="oscarEncounter.showView.title" />" onclick="return filter(false);" />
 			<input type="button" value="<bean:message key="oscarEncounter.resetFilter.title" />" onclick="return filter(true);" />
 
@@ -220,8 +220,8 @@ try
 				</tr>
 				<tr>
 					<td style="font-size:inherit;background-color:#ccccff">
-						<div style="height: 150px; overflow: auto">
-							<ul style="padding-left:0px;list-style:none inside none">
+						<div style="height:150px;overflow:auto">
+							<ul style="padding:0px;margin:0px;list-style:none inside none">
 								<li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
 								<%
 									@SuppressWarnings("unchecked")
@@ -244,7 +244,7 @@ try
 					</td>
 					<td style="font-size:inherit;background-color:#ccccff;border-left:solid #ddddff 4px;border-right:solid #ddddff 4px">
 						<div style="height:150px;overflow:auto">
-							<ul style="padding-left: 0px;list-style:none inside none;">
+							<ul style="padding:0px;margin:0px;list-style:none inside none">
 								<li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
 								<%
 									@SuppressWarnings("unchecked")
@@ -262,7 +262,7 @@ try
 					</td>
 					<td style="font-size:inherit;background-color:#ccccff">
 						<div style="height:150px;overflow:auto">
-							<ul style="padding-left:0px;list-style:none inside none">
+							<ul style="padding:0px;margin:0px;list-style:none inside none">
 								<li><html:radio property="note_sort" value="observation_date_asc">
 									<bean:message key="oscarEncounter.sortDateAsc.title" />
 								</html:radio></li>
