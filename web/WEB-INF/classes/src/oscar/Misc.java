@@ -30,6 +30,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.MiscUtils;
 
 public final class Misc {
@@ -504,21 +505,24 @@ public final class Misc {
 		return moneyStr;
 	}
 
-	// /
 	public static String getString(ResultSet rs, String columnName) throws SQLException {
-		String text = rs.getString(columnName);
-		if (rs.wasNull()) {
-			text = "";
-		}
-		return text;
+		return(StringUtils.trimToEmpty(rs.getString(columnName)));
+		
+//		String text = rs.getString(columnName);
+//		if (rs.wasNull()) {
+//			text = "";
+//		}
+//		return text;
 	}
 
 	public static String getString(ResultSet rs, int columnIndex) throws SQLException {
-		String text = rs.getString(columnIndex);
-		if (rs.wasNull()) {
-			text = "";
-		}
-		return text;
+		return(StringUtils.trimToEmpty(rs.getString(columnIndex)));
+
+//		String text = rs.getString(columnIndex);
+//		if (rs.wasNull()) {
+//			text = "";
+//		}
+//		return text;
 	}
 
 	public static String getString(Object s) {
