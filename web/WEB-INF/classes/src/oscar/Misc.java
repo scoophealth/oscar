@@ -90,7 +90,7 @@ public final class Misc {
 	}
 
 	public static String htmlJsEscape(String s) {
-		return(StringEscapeUtils.escapeJavaScript(s));
+		return(StringEscapeUtils.escapeHtml(s).replaceAll("\\n", "<br/>"));
 		
 //		if (null == S) return S;
 //		int N = S.length();
