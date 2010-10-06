@@ -89,21 +89,23 @@ public final class Misc {
 		return sb.toString();
 	}
 
-	public static String htmlJsEscape(String S) {
-		if (null == S) return S;
-		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
-		for (int i = 0; i < N; i++) {
-			char c = S.charAt(i);
-			if (c == '&') sb.append("&amp;");
-			else if (c == '"') sb.append("&quot;");
-			else if (c == '<') sb.append("&lt;");
-			else if (c == '>') sb.append("&gt;");
-			else if (c == '\'') sb.append("&#39;");
-			else if (c == '\n') sb.append("<br>");
-			else sb.append(c);
-		}
-		return sb.toString();
+	public static String htmlJsEscape(String s) {
+		return(StringEscapeUtils.escapeJavaScript(s));
+		
+//		if (null == S) return S;
+//		int N = S.length();
+//		StringBuffer sb = new StringBuffer(N);
+//		for (int i = 0; i < N; i++) {
+//			char c = S.charAt(i);
+//			if (c == '&') sb.append("&amp;");
+//			else if (c == '"') sb.append("&quot;");
+//			else if (c == '<') sb.append("&lt;");
+//			else if (c == '>') sb.append("&gt;");
+//			else if (c == '\'') sb.append("&#39;");
+//			else if (c == '\n') sb.append("<br>");
+//			else sb.append(c);
+//		}
+//		return sb.toString();
 	}
 
 	public static String phoneNumber(String num) {
