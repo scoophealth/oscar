@@ -98,7 +98,6 @@ public class WcbSb {
    formNeeded;
    
    String newLine ="\r\n";
-   Misc misc = new Misc();
    
    public WcbSb(String billingNo){
        try{
@@ -229,7 +228,7 @@ public class WcbSb {
        
         String ret = "<tr bgcolor='red'><td colspan='11'>"
                 + "<a href='#' onClick=\"openBrWindow('billingTeleplanCorrectionWCB.jsp?billing_no="
-                + misc.forwardZero(this.billing_no, 7) 
+                + Misc.forwardZero(this.billing_no, 7) 
                 + "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"
                 + m.toString() + "</a>" + "</td></tr>";
         if ("".equals(m.toString())){
@@ -328,52 +327,52 @@ public class WcbSb {
       
       return this.Note(
       logNo,
-      (misc.forwardZero("D1", 4)
-      + misc.backwardSpace(this.w_rphysician, 1)
-      + misc.space(8)
-      + misc.backwardSpace(this.w_capability, 1)
-      + misc.backwardSpace(this.w_rehabtype, 1)
-      + misc.backwardSpace(this.w_estimate, 1)
-      + misc.backwardSpace(this.w_work, 1)
-      + misc.backwardSpace(this.w_tofollow, 1)
+      (Misc.forwardZero("D1", 4)
+      + Misc.backwardSpace(this.w_rphysician, 1)
+      + Misc.space(8)
+      + Misc.backwardSpace(this.w_capability, 1)
+      + Misc.backwardSpace(this.w_rehabtype, 1)
+      + Misc.backwardSpace(this.w_estimate, 1)
+      + Misc.backwardSpace(this.w_work, 1)
+      + Misc.backwardSpace(this.w_tofollow, 1)
       + dateFormat(this.w_estimatedate)
       + dateFormat(this.w_workdate)
-      + misc.backwardSpace(this.w_duration, 1)
-      + misc.backwardSpace(this.w_ftreatment, 25)
-      + misc.backwardSpace(this.w_diagnosis, 120)
-      + misc.backwardSpace(this.w_wcbadvisor, 1)
-      + misc.backwardSpace(this.w_rehab, 1)
-      + misc.forwardZero(Misc.cleanNumber(this.w_area), 3)
-      + misc.forwardZero(Misc.cleanNumber(this.w_phone), 7)
-      + misc.backwardSpace(this.w_address, 25)
-      + misc.backwardSpace(this.w_city, 20)
-      + misc.backwardSpace(this.w_postalcode, 6)
-      + misc.forwardZero(Misc.cleanNumber(this.w_emparea), 3)
-      + misc.forwardZero(Misc.cleanNumber(this.w_empphone), 7)
-      + misc.backwardSpace(this.w_empname, 25)
-      + misc.backwardSpace(this.w_opaddress, 25)
-      + misc.backwardSpace(this.w_opcity, 25)
-      + ((this.w_reporttype.compareTo("F") == 0) ? misc.backwardSpace("Y", 2) : misc.forwardSpace("Y", 2)) + misc.space(70)));
+      + Misc.backwardSpace(this.w_duration, 1)
+      + Misc.backwardSpace(this.w_ftreatment, 25)
+      + Misc.backwardSpace(this.w_diagnosis, 120)
+      + Misc.backwardSpace(this.w_wcbadvisor, 1)
+      + Misc.backwardSpace(this.w_rehab, 1)
+      + Misc.forwardZero(Misc.cleanNumber(this.w_area), 3)
+      + Misc.forwardZero(Misc.cleanNumber(this.w_phone), 7)
+      + Misc.backwardSpace(this.w_address, 25)
+      + Misc.backwardSpace(this.w_city, 20)
+      + Misc.backwardSpace(this.w_postalcode, 6)
+      + Misc.forwardZero(Misc.cleanNumber(this.w_emparea), 3)
+      + Misc.forwardZero(Misc.cleanNumber(this.w_empphone), 7)
+      + Misc.backwardSpace(this.w_empname, 25)
+      + Misc.backwardSpace(this.w_opaddress, 25)
+      + Misc.backwardSpace(this.w_opcity, 25)
+      + ((this.w_reporttype.compareTo("F") == 0) ? Misc.backwardSpace("Y", 2) : Misc.forwardSpace("Y", 2)) + Misc.space(70)));
    }
    private String Claim2(String logNo) {
       return this.Claim(logNo, "0", "19333", "N");
    }
    private String Note2(String logNo) {
       return this.Note(logNo,
-            misc.backwardSpace( ((this.w_problem.compareTo("") == 0) ? "Intentionally left blank" : this.w_problem),160),misc.backwardSpace(this.w_capreason, 240));
+            Misc.backwardSpace( ((this.w_problem.compareTo("") == 0) ? "Intentionally left blank" : this.w_problem),160),Misc.backwardSpace(this.w_capreason, 240));
    }
    private String Claim3(String logNo) {
       return this.Claim(logNo, "0", "19334", "N");
    }
    private String Note3(String logNo) {
-      return this.Note(logNo, misc.backwardSpace(this.w_clinicinfo, 400));
+      return this.Note(logNo, Misc.backwardSpace(this.w_clinicinfo, 400));
    }
    private String Claim4(String logNo) {
       return this.Claim(logNo, "0", "19335", "N");
    }
    private String Note4(String logNo) {
       int length = this.w_clinicinfo.length();
-      return this.Note(logNo,misc.backwardSpace(((length >= 400)? this.w_clinicinfo.substring(400, length): "Clinical Information Complete"),400));
+      return this.Note(logNo,Misc.backwardSpace(((length >= 400)? this.w_clinicinfo.substring(400, length): "Clinical Information Complete"),400));
    }
    private String Claim5(String logNo) {      
       return this.Claim(logNo, this.billamountforfeeitem1, this.w_feeitem, "0");
@@ -392,53 +391,53 @@ public class WcbSb {
    private String Claim(String logNo, String billedAmount, String feeitem,String correspondenceCode) {
       return "C02"
       + this.ClaimNote1Head(logNo)
-      + misc.forwardZero("",10)
-      //+ misc.zero(10)      //phn
-      + "0" //misc.backwardSpace("", 1).toUpperCase()
-      + "0" //misc.space(1)
-      + "00"//misc.backwardSpace("", 2).toUpperCase()
-      + misc.zero(2)
-      + misc.forwardZero("1", 3)
-      + misc.zero(2 + 2 + 1 + 2)  //clarification
-      + misc.forwardZero(feeitem, 5)
-      + misc.moneyFormatPaddedZeroNoDecimal(billedAmount, 7)
-      + misc.zero(1)
+      + Misc.forwardZero("",10)
+      //+ Misc.zero(10)      //phn
+      + "0" //Misc.backwardSpace("", 1).toUpperCase()
+      + "0" //Misc.space(1)
+      + "00"//Misc.backwardSpace("", 2).toUpperCase()
+      + Misc.zero(2)
+      + Misc.forwardZero("1", 3)
+      + Misc.zero(2 + 2 + 1 + 2)  //clarification
+      + Misc.forwardZero(feeitem, 5)
+      + Misc.moneyFormatPaddedZeroNoDecimal(billedAmount, 7)
+      + Misc.zero(1)
       + dateFormat(this.w_servicedate)
-      + misc.zero(2)
-      + "W"//misc.zero(1) //Submission Code
-      + misc.space(1)
-      + misc.forwardZero(this.w_icd9, 5)
-      + misc.space(5 + 5 + 15)
-      + misc.backwardSpace(this.visit_type, 1)
-      + misc.zero(1 + 5 + 1 + 5 + 4 + 4 + 4 + 8)
-      + misc.forwardZero(this.billing_no, 7)
-      + misc.forwardZero(correspondenceCode, 1) //correspondence code//+ misc.zero(1)
-      + misc.space(20)
+      + Misc.zero(2)
+      + "W"//Misc.zero(1) //Submission Code
+      + Misc.space(1)
+      + Misc.forwardZero(this.w_icd9, 5)
+      + Misc.space(5 + 5 + 15)
+      + Misc.backwardSpace(this.visit_type, 1)
+      + Misc.zero(1 + 5 + 1 + 5 + 4 + 4 + 4 + 8)
+      + Misc.forwardZero(this.billing_no, 7)
+      + Misc.forwardZero(correspondenceCode, 1) //correspondence code//+ Misc.zero(1)
+      + Misc.space(20)
       + "N"
-      + misc.zero(8 + 20 + 5 + 5)
-      + misc.space(58) //Part II of Claim 1
+      + Misc.zero(8 + 20 + 5 + 5)
+      + Misc.space(58) //Part II of Claim 1
       +"WC"
-      + misc.backwardZero(this.w_phn, 12)
+      + Misc.backwardZero(this.w_phn, 12)
       + dateFormat(this.w_dob)
-      + misc.backwardSpace(this.w_fname, 12)
-      + misc.backwardSpace(this.w_mname, 1)
-      + misc.backwardSpace(this.w_lname, 18)
-      + misc.backwardSpace(this.w_gender, 1)
-      + misc.backwardSpace(dateFormat(this.w_doi), 25)
-      + misc.backwardSpace(misc.backwardSpace(w_bp, 5) + misc.backwardSpace(w_side, 2),25)
-      + misc.backwardSpace(this.w_noi, 25)
-      + misc.backwardSpace(this.w_wcbno, 25)
-      + misc.space(6);
+      + Misc.backwardSpace(this.w_fname, 12)
+      + Misc.backwardSpace(this.w_mname, 1)
+      + Misc.backwardSpace(this.w_lname, 18)
+      + Misc.backwardSpace(this.w_gender, 1)
+      + Misc.backwardSpace(dateFormat(this.w_doi), 25)
+      + Misc.backwardSpace(Misc.backwardSpace(w_bp, 5) + Misc.backwardSpace(w_side, 2),25)
+      + Misc.backwardSpace(this.w_noi, 25)
+      + Misc.backwardSpace(this.w_wcbno, 25)
+      + Misc.space(6);
    }
    private String ClaimNote1Head(String logNo) {
-      return misc.forwardZero(OscarProperties.getInstance().getProperty("dataCenterId"),5)
-      + misc.forwardZero(String.valueOf(logNo), 7)
-      + misc.forwardZero(this.w_payeeno, 5)
-      + misc.forwardZero(this.w_pracno, 5);
+      return Misc.forwardZero(OscarProperties.getInstance().getProperty("dataCenterId"),5)
+      + Misc.forwardZero(String.valueOf(logNo), 7)
+      + Misc.forwardZero(this.w_payeeno, 5)
+      + Misc.forwardZero(this.w_pracno, 5);
    }
    
    public  String dateFormat(String date){
-      return misc.forwardZero(oscar.Misc.cleanNumber(date), 8);
+      return Misc.forwardZero(oscar.Misc.cleanNumber(date), 8);
    }
    
    public String getHtmlLine(){
@@ -451,7 +450,7 @@ public class WcbSb {
        "<tr>" +
           "<td class='bodytext'>" +
              "<a href='#' onClick=\"openBrWindow('billingTeleplanCorrectionWCB.jsp?billing_no=" +
-                misc.forwardZero(billingMasterNo, 7) +
+                Misc.forwardZero(billingMasterNo, 7) +
                  "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"  +
                invNo + 
              "</a>" + 
@@ -461,10 +460,10 @@ public class WcbSb {
           "<td class='bodytext'>" + dateFormat(serviceDate) + "</td>" +
           "<td class='bodytext'>" + billingCode + "</td>" +
           "<td align='right' class='bodytext'>"+ billAmount +"</td>" +
-          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx1, 5) + "</td>" +
-          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx2, 5) + "</td>" +
-          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx3, 5) + "</td>" +
-          "<td class='bodytext'>" + misc.forwardZero(billingMasterNo, 7)+"</td>" +
+          "<td align='right' class='bodytext'>"+ Misc.backwardSpace(dx1, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ Misc.backwardSpace(dx2, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ Misc.backwardSpace(dx3, 5) + "</td>" +
+          "<td class='bodytext'>" + Misc.forwardZero(billingMasterNo, 7)+"</td>" +
           "<td class='bodytext'>&nbsp;</td>" +
        "</tr>";              
        return htmlContent;

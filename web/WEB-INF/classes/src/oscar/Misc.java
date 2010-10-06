@@ -32,7 +32,11 @@ import java.util.Vector;
 
 import org.oscarehr.util.MiscUtils;
 
-public class Misc {
+public final class Misc {
+
+	private Misc() {
+		// prevent instantiation
+	}
 
 	public static Hashtable hashDefs(String[] names, String[] values) {
 		Hashtable H = new Hashtable();

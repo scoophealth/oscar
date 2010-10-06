@@ -139,13 +139,12 @@ public void addNoteFromBillingNo(String billingNo, String provider,String note) 
    Seventh - NOTE-DATA-LINE (400)
    */
    public static String getN01(String dataCenterNum,String dataCenterSeqNum,String payeeNum,String practitionerNum,String noteType,String note){
-      Misc misc = new Misc();
-      String s = "N01" + misc.forwardZero(dataCenterNum,5)
-                       + misc.forwardZero(dataCenterSeqNum, 7)
-                       + misc.forwardZero(payeeNum, 5)
-                       + misc.forwardZero(practitionerNum, 5)
-                       + misc.forwardSpace(noteType,1)
-                       + misc.forwardSpace(note,400);
+      String s = "N01" + Misc.forwardZero(dataCenterNum,5)
+                       + Misc.forwardZero(dataCenterSeqNum, 7)
+                       + Misc.forwardZero(payeeNum, 5)
+                       + Misc.forwardZero(practitionerNum, 5)
+                       + Misc.forwardSpace(noteType,1)
+                       + Misc.forwardSpace(note,400);
       return s;
    }
 

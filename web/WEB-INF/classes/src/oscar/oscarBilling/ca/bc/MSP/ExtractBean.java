@@ -85,7 +85,6 @@ public class ExtractBean extends Object implements Serializable {
     public String errorMsg;
 
     public CheckBillingData checkData = new CheckBillingData();
-    Misc misc = new Misc();
 
     public ExtractBean() {
         formatter = new SimpleDateFormat("yyyyMMddHmm");
@@ -541,7 +540,7 @@ public class ExtractBean extends Object implements Serializable {
        "<tr>" +
           "<td class='bodytext'>" +
              "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no=" +
-                misc.forwardZero(billingMasterNo, 7) +
+                Misc.forwardZero(billingMasterNo, 7) +
                  "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"  +
                invNo +
              "</a>" +
@@ -551,10 +550,10 @@ public class ExtractBean extends Object implements Serializable {
           "<td class='bodytext'>" + serviceDate + "</td>" +
           "<td class='bodytext'>" + billingCode + "</td>" +
           "<td align='right' class='bodytext'>"+ billAmount +"</td>" +
-          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx1, 5) + "</td>" +
-          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx2, 5) + "</td>" +
-          "<td align='right' class='bodytext'>"+ misc.backwardSpace(dx3, 5) + "</td>" +
-          "<td class='bodytext'>" + misc.forwardZero(billingMasterNo, 7)+"</td>" +
+          "<td align='right' class='bodytext'>"+ Misc.backwardSpace(dx1, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ Misc.backwardSpace(dx2, 5) + "</td>" +
+          "<td align='right' class='bodytext'>"+ Misc.backwardSpace(dx3, 5) + "</td>" +
+          "<td class='bodytext'>" + Misc.forwardZero(billingMasterNo, 7)+"</td>" +
           "<td class='bodytext'>&nbsp;</td>" +
        "</tr>";
        return htmlContent;

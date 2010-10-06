@@ -73,7 +73,6 @@ public class TeleplanFileWriter {
     private DemographicDao demographicDAO = null;
     
     public CheckBillingData checkData = new CheckBillingData();
-    Misc misc = new Misc();
     
     /** Creates a new instance of TeleplanFileWriter */
     public TeleplanFileWriter() {
@@ -141,8 +140,8 @@ public class TeleplanFileWriter {
         
         String logNo =  getNextSequenceNumber() ;
         log.debug("LogNo :"+logNo);
-        String headerLine = "VS1" + dataCenterId + misc.forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + misc.space(25) + misc.space(57) + "\r";
-        String errorMsg = checkData.checkVS1("VS1" , dataCenterId , misc.forwardZero(logNo,7) , "V6242" , "OSCAR_MCMASTER           " , "V1.1      " , "20030930" , "OSCAR MCMASTER                          " , "(905) 575-1300 " , misc.space(25) , misc.space(57));
+        String headerLine = "VS1" + dataCenterId + Misc.forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + Misc.space(25) + Misc.space(57) + "\r";
+        String errorMsg = checkData.checkVS1("VS1" , dataCenterId , Misc.forwardZero(logNo,7) , "V6242" , "OSCAR_MCMASTER           " , "V1.1      " , "20030930" , "OSCAR MCMASTER                          " , "(905) 575-1300 " , Misc.space(25) , Misc.space(57));
         setLog(logNo, headerLine);
         
         appendToHTML(HtmlTeleplanHelper.htmlHeaderGen(errorMsg));

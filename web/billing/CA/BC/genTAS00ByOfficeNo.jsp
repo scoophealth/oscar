@@ -113,9 +113,8 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 		<td width="10%" height="16">Status</td>
 	</tr>
 	<% 
-          Misc misc = new Misc();
               String[] param = new String[1];          
-              param[0] = misc.forwardZero(officeNo,7);
+              param[0] = Misc.forwardZero(officeNo,7);
               
               String[] param0 = new String[2];
               
