@@ -53,16 +53,16 @@ function PopupLab(pid)
 		boolean other = false;
 		while(rs.next()){
 			format = new java.text.SimpleDateFormat("yyyy-MM-d HH:mm:ss");
-			date = (format.parse(DBHandler.getString(rs,"requested_date_time")));
+			date = (format.parse(oscar.Misc.getString(rs,"requested_date_time")));
 			format.applyPattern("MMM d, yyyy");
-			if(dpid.equals(DBHandler.getString(rs,"pid_id"))){
-				diagnostic += ", " + DBHandler.getString(rs,"diagnostic_service_sect_id");
+			if(dpid.equals(oscar.Misc.getString(rs,"pid_id"))){
+				diagnostic += ", " + oscar.Misc.getString(rs,"diagnostic_service_sect_id");
 			}else{
 				if(!dpid.equals("")){
 					out.println("<tr bgcolor='" + (other? "F6F6F6" : "WHITE") + "'><td class=\"Text\"><a href=\"#\" onclick=\"return PopupLab('" + dpid + "');\">" + format.format(date) + " (" + diagnostic + ")</a></td><td class=\"Text\"><a onclick=\"return confirm('Are you sure you want to unlink this lab report?');\" href=\"viewreports.jsp?unlink=true&demo_no=" + demo_no + "&pid=" + dpid + "\">unlink</a></td></tr>");
 				}
-				dpid = DBHandler.getString(rs,"pid_id");
-				diagnostic = DBHandler.getString(rs,"diagnostic_service_sect_id");
+				dpid = oscar.Misc.getString(rs,"pid_id");
+				diagnostic = oscar.Misc.getString(rs,"diagnostic_service_sect_id");
 				other = !other;
 			}
 		}

@@ -45,7 +45,7 @@ class AddressBook {
         if(rs.next()) {
             String newAddressBook = UtilXML.toXML(addressBook);
 
-            if((DBHandler.getString(rs,"addressBook")==null) || (DBHandler.getString(rs,"addressBook").equals(newAddressBook)==false)) {
+            if((oscar.Misc.getString(rs, "addressBook")==null) || (oscar.Misc.getString(rs, "addressBook").equals(newAddressBook)==false)) {
             	DBHandler.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + newAddressBook + "' WHERE current1 = 1");
             } else {
                 addressBook = null;
@@ -74,7 +74,7 @@ class AddressBook {
         String sql = "SELECT * FROM groups_tbl WHERE parentID = " + groupId;
         ResultSet rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-            group.appendChild(getChildren(doc, rs.getInt("groupID"), DBHandler.getString(rs,"groupDesc")));
+            group.appendChild(getChildren(doc, rs.getInt("groupID"), oscar.Misc.getString(rs, "groupDesc")));
         }
         rs.close();
 
@@ -84,8 +84,8 @@ class AddressBook {
         rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
             Element address = UtilXML.addNode(group, "address");
-            address.setAttribute("id", DBHandler.getString(rs,"provider_no"));
-            address.setAttribute("desc", new String(DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name")));
+            address.setAttribute("id", oscar.Misc.getString(rs, "provider_no"));
+            address.setAttribute("desc", new String(oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name")));
         }
         rs.close();
 

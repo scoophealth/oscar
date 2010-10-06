@@ -98,7 +98,7 @@ public class DemographicExt {
             rs = pstmt.executeQuery();
             
             if(rs.next()){
-               retval = DBHandler.getString(rs,"value");
+               retval = oscar.Misc.getString(rs, "value");
             }
                                       
             pstmt.close();
@@ -128,8 +128,8 @@ public class DemographicExt {
             rs = pstmt.executeQuery();
             
             while(rs.next()){
-               String key = DBHandler.getString(rs,"key_val");
-               String val = DBHandler.getString(rs,"value");
+               String key = oscar.Misc.getString(rs, "key_val");
+               String val = oscar.Misc.getString(rs, "value");
                
                MiscUtils.getLogger().debug("for hash Key "+key+" value "+val);
                if(key != null && val != null){

@@ -112,7 +112,7 @@ public class CadProcedimentoDAO extends DAO {
                 while (rs.next()) {
                     CadProcedimentos bean = new CadProcedimentos();
                     bean.setCoProcedimento(rs.getLong("co_procedimento"));
-                    bean.setDsProcedimento(DBHandler.getString(rs,"ds_procedimento"));
+                    bean.setDsProcedimento(oscar.Misc.getString(rs, "ds_procedimento"));
                     beans.add(bean);
                 }
             }
@@ -136,7 +136,7 @@ public class CadProcedimentoDAO extends DAO {
 
             if (rs.next()) {
                 bean.setCoProcedimento(rs.getLong("co_procedimento"));
-                bean.setDsProcedimento(DBHandler.getString(rs,"ds_procedimento"));
+                bean.setDsProcedimento(oscar.Misc.getString(rs, "ds_procedimento"));
             }
         } catch (Exception err) {
         	MiscUtils.getLogger().error("Error", err);

@@ -119,7 +119,7 @@ public class CMLLabTest {
             ResultSet rs = DBHandler.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             log.debug("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");
             if (rs.next()){
-                String d = DBHandler.getString(rs,"demographic_no");
+                String d = oscar.Misc.getString(rs, "demographic_no");
                 log.debug("dd "+d);
                 if ( !"0".equals(d)){
                     this.demographicNo = d;
@@ -146,28 +146,28 @@ public class CMLLabTest {
             
             
             if (rs.next()){
-                this.labReportInfoId = DBHandler.getString(rs,"labReportInfo_id");
-                this.accessionNum = DBHandler.getString(rs,"accession_num");
-                this.physicianAccountNum = DBHandler.getString(rs,"physician_account_num");
-                this.serviceDate = DBHandler.getString(rs,"service_date");
-                this.pFirstName = DBHandler.getString(rs,"patient_first_name");
-                this.pLastName = DBHandler.getString(rs,"patient_last_name");
-                this.pSex = DBHandler.getString(rs,"patient_sex");
-                this.pHealthNum = DBHandler.getString(rs,"patient_health_num");
-                this.pDOB = DBHandler.getString(rs,"patient_dob");
-                this.status = DBHandler.getString(rs,"lab_status");
-                this.docNum = DBHandler.getString(rs,"doc_num");
-                this.docName = DBHandler.getString(rs,"doc_name");
-                this.docAddr1 = DBHandler.getString(rs,"doc_addr1");
-                this.docAddr2 = DBHandler.getString(rs,"doc_addr2");
-                this.docAddr3 = DBHandler.getString(rs,"doc_addr3");
-                this.docPostal = DBHandler.getString(rs,"doc_postal");
-                this.docRoute = DBHandler.getString(rs,"doc_route");
-                this.comment1 = DBHandler.getString(rs,"comment1");
-                this.comment2 = DBHandler.getString(rs,"comment2");
-                this.pPhone = DBHandler.getString(rs,"patient_phone");
-                this.docPhone = DBHandler.getString(rs,"doc_phone");
-                this.collectionDate = DBHandler.getString(rs,"collection_date");
+                this.labReportInfoId = oscar.Misc.getString(rs, "labReportInfo_id");
+                this.accessionNum = oscar.Misc.getString(rs, "accession_num");
+                this.physicianAccountNum = oscar.Misc.getString(rs, "physician_account_num");
+                this.serviceDate = oscar.Misc.getString(rs, "service_date");
+                this.pFirstName = oscar.Misc.getString(rs, "patient_first_name");
+                this.pLastName = oscar.Misc.getString(rs, "patient_last_name");
+                this.pSex = oscar.Misc.getString(rs, "patient_sex");
+                this.pHealthNum = oscar.Misc.getString(rs, "patient_health_num");
+                this.pDOB = oscar.Misc.getString(rs, "patient_dob");
+                this.status = oscar.Misc.getString(rs, "lab_status");
+                this.docNum = oscar.Misc.getString(rs, "doc_num");
+                this.docName = oscar.Misc.getString(rs, "doc_name");
+                this.docAddr1 = oscar.Misc.getString(rs, "doc_addr1");
+                this.docAddr2 = oscar.Misc.getString(rs, "doc_addr2");
+                this.docAddr3 = oscar.Misc.getString(rs, "doc_addr3");
+                this.docPostal = oscar.Misc.getString(rs, "doc_postal");
+                this.docRoute = oscar.Misc.getString(rs, "doc_route");
+                this.comment1 = oscar.Misc.getString(rs, "comment1");
+                this.comment2 = oscar.Misc.getString(rs, "comment2");
+                this.pPhone = oscar.Misc.getString(rs, "patient_phone");
+                this.docPhone = oscar.Misc.getString(rs, "doc_phone");
+                this.collectionDate = oscar.Misc.getString(rs, "collection_date");
                 log.debug(" lab id "+labReportInfoId);
             }
             
@@ -203,7 +203,7 @@ public class CMLLabTest {
             ArrayList alist = new ArrayList();
             int count = 0;
             while (rs.next()){
-                String title = DBHandler.getString(rs,"title");
+                String title = oscar.Misc.getString(rs, "title");
                 count += title.length();
                 alist.add(title);
                 log.debug("line "+title);
@@ -255,12 +255,12 @@ public class CMLLabTest {
             
             ResultSet rs = DBHandler.GetSQL("select * from labReportInformation where id = '"+labid+"'");
             if (rs.next()){
-                this.locationId = DBHandler.getString(rs,"location_id");
-                this.printDate = DBHandler.getString(rs,"print_date");
-                this.printTime = DBHandler.getString(rs,"print_time");
-                this.totalBType = DBHandler.getString(rs,"total_BType");
-                this.totalCType = DBHandler.getString(rs,"total_CType");
-                this.totalDType = DBHandler.getString(rs,"total_DType");
+                this.locationId = oscar.Misc.getString(rs, "location_id");
+                this.printDate = oscar.Misc.getString(rs, "print_date");
+                this.printTime = oscar.Misc.getString(rs, "print_time");
+                this.totalBType = oscar.Misc.getString(rs, "total_BType");
+                this.totalCType = oscar.Misc.getString(rs, "total_CType");
+                this.totalDType = oscar.Misc.getString(rs, "total_DType");
             }
             rs.close();
         }catch(Exception e){
@@ -276,30 +276,30 @@ public class CMLLabTest {
             ResultSet rs = DBHandler.GetSQL("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             log.debug("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
             while (rs.next()){
-                String lineType = DBHandler.getString(rs,"line_type");
+                String lineType = oscar.Misc.getString(rs, "line_type");
                 log.debug("line "+lineType);
                 if (lineType != null){
                     LabResult labRes = new LabResult();
                     
-                    labRes.title = DBHandler.getString(rs,"title");
+                    labRes.title = oscar.Misc.getString(rs, "title");
                     if (labRes.title == null){ labRes.title = "" ;}
-                    labRes.notUsed1 = DBHandler.getString(rs,"notUsed1");
-                    labRes.locationId = DBHandler.getString(rs,"location_id");
-                    labRes.last = DBHandler.getString(rs,"last");
+                    labRes.notUsed1 = oscar.Misc.getString(rs, "notUsed1");
+                    labRes.locationId = oscar.Misc.getString(rs, "location_id");
+                    labRes.last = oscar.Misc.getString(rs, "last");
                     
                     if(lineType.equals("C")){
-                        labRes.notUsed2 = DBHandler.getString(rs,"notUsed2");
-                        labRes.testName = DBHandler.getString(rs,"test_name");
-                        labRes.abn = DBHandler.getString(rs,"abn");
+                        labRes.notUsed2 = oscar.Misc.getString(rs, "notUsed2");
+                        labRes.testName = oscar.Misc.getString(rs, "test_name");
+                        labRes.abn = oscar.Misc.getString(rs, "abn");
                         if(labRes.abn != null && labRes.abn.equals("N")){
                             labRes.abn = "";
                         }
-                        labRes.minimum = DBHandler.getString(rs,"minimum");
-                        labRes.maximum = DBHandler.getString(rs,"maximum");
-                        labRes.units = DBHandler.getString(rs,"units");
-                        labRes.result = DBHandler.getString(rs,"result");
+                        labRes.minimum = oscar.Misc.getString(rs, "minimum");
+                        labRes.maximum = oscar.Misc.getString(rs, "maximum");
+                        labRes.units = oscar.Misc.getString(rs, "units");
+                        labRes.result = oscar.Misc.getString(rs, "result");
                     }else if (lineType.equals("D")){
-                        labRes.description = DBHandler.getString(rs,"description");
+                        labRes.description = oscar.Misc.getString(rs, "description");
                         labRes.labResult = false;
                     }
                     alist.add(labRes);

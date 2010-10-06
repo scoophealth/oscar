@@ -50,8 +50,8 @@ public class RptConsultReportData {
               rs = DBHandler.GetSQL(sql);
               while (rs.next()) {
                  ArrayList a = new ArrayList (); 
-                 a.add( DBHandler.getString(rs,"provider_no") );
-                 a.add( DBHandler.getString(rs,"last_name") +", "+ DBHandler.getString(rs,"first_name") );
+                 a.add( oscar.Misc.getString(rs, "provider_no") );
+                 a.add( oscar.Misc.getString(rs, "last_name") +", "+ oscar.Misc.getString(rs, "first_name") );
                  arrayList.add(a);
               }
               rs.close();
@@ -91,7 +91,7 @@ public class RptConsultReportData {
               DemoConsultDataStruct d;
               while (rs.next()) {
                 d = new DemoConsultDataStruct();
-                d.demoNo = DBHandler.getString(rs,"demographicNo");
+                d.demoNo = oscar.Misc.getString(rs, "demographicNo");
                 demoList.add(d);
               }
 
@@ -121,11 +121,11 @@ public class DemoConsultDataStruct{
           consultList = new ArrayList();
           while (rs.next()){
              con = new Consult(); 
-             con.requestId   = DBHandler.getString(rs,"requestId");
-             con.referalDate = DBHandler.getString(rs,"referalDate");
-             con.serviceId   = DBHandler.getString(rs,"serviceId");
-             con.specialist  = DBHandler.getString(rs,"specId");
-             con.appDate     = DBHandler.getString(rs,"appointmentDate");
+             con.requestId   = oscar.Misc.getString(rs, "requestId");
+             con.referalDate = oscar.Misc.getString(rs, "referalDate");
+             con.serviceId   = oscar.Misc.getString(rs, "serviceId");
+             con.specialist  = oscar.Misc.getString(rs, "specId");
+             con.appDate     = oscar.Misc.getString(rs, "appointmentDate");
              consultList.add(con);
           }
           rs.close();
@@ -143,11 +143,11 @@ public class DemoConsultDataStruct{
           conReplyList = new ArrayList();
           while( rs.next()){
              conLetter = new ConLetter();
-             conLetter.document_no = DBHandler.getString(rs,"document_no"); 
-             conLetter.docdesc     = DBHandler.getString(rs,"docdesc");
-             conLetter.docfileName = DBHandler.getString(rs,"docfilename");
+             conLetter.document_no = oscar.Misc.getString(rs, "document_no"); 
+             conLetter.docdesc     = oscar.Misc.getString(rs, "docdesc");
+             conLetter.docfileName = oscar.Misc.getString(rs, "docfilename");
              conLetter.docDate     = rs.getDate("updatedatetime");     
-             conLetter.docStatus   = DBHandler.getString(rs,"status");
+             conLetter.docStatus   = oscar.Misc.getString(rs, "status");
              conReplyList.add(conLetter);
           }         
           rs.close(); 
@@ -163,7 +163,7 @@ public class DemoConsultDataStruct{
            String sql = "Select last_name, first_name from demographic where demographic_no = '"+demoNo+"' ";
            rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name");
+              retval = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -178,7 +178,7 @@ public class DemoConsultDataStruct{
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
            rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name");
+              retval = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -193,7 +193,7 @@ public class DemoConsultDataStruct{
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
            rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = DBHandler.getString(rs,"lname")+", "+DBHandler.getString(rs,"fname");
+              retval = oscar.Misc.getString(rs, "lname")+", "+oscar.Misc.getString(rs, "fname");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -216,7 +216,7 @@ public class DemoConsultDataStruct{
            String sql = "Select serviceDesc from consultationServices where serviceId = '"+serId+"' ";
            rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = DBHandler.getString(rs,"serviceDesc");
+              retval = oscar.Misc.getString(rs, "serviceDesc");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }
@@ -231,7 +231,7 @@ public class DemoConsultDataStruct{
            String sql = "Select lname, fname from professionalSpecialists where specId = '"+specId+"' ";
            rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = DBHandler.getString(rs,"lname")+", "+DBHandler.getString(rs,"fname");
+              retval = oscar.Misc.getString(rs, "lname")+", "+oscar.Misc.getString(rs, "fname");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }

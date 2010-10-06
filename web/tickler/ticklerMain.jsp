@@ -659,21 +659,21 @@ function changeSite(sel) {
                             while (rs.next()) {
                             nItems = nItems +1;
                             
-                            if (DBHandler.getString(rs,"provider_last")==null || DBHandler.getString(rs,"provider_first")==null){
+                            if (oscar.Misc.getString(rs,"provider_last")==null || oscar.Misc.getString(rs,"provider_first")==null){
                             provider = "";
                             }
                             else{
-                            provider = DBHandler.getString(rs,"provider_last") + ", " + DBHandler.getString(rs,"provider_first");
+                            provider = oscar.Misc.getString(rs,"provider_last") + ", " + oscar.Misc.getString(rs,"provider_first");
                             }
                             
-                            if (DBHandler.getString(rs,"assignedLast")==null || DBHandler.getString(rs,"assignedFirst")==null){
+                            if (oscar.Misc.getString(rs,"assignedLast")==null || oscar.Misc.getString(rs,"assignedFirst")==null){
                             taskAssignedTo = "";
                             }
                             else{
-                            taskAssignedTo = DBHandler.getString(rs,"assignedLast") + ", " + DBHandler.getString(rs,"assignedFirst");
+                            taskAssignedTo = oscar.Misc.getString(rs,"assignedLast") + ", " + oscar.Misc.getString(rs,"assignedFirst");
                             }
                             bodd=bodd?false:true;
-                            vGrantdate = DBHandler.getString(rs,"service_date")+ ".0";
+                            vGrantdate = oscar.Misc.getString(rs,"service_date")+ ".0";
                             java.util.Date grantdate = dateFormat.parse(vGrantdate);
                             java.util.Date toDate = new java.util.Date();
                             long millisDifference = toDate.getTime() - grantdate.getTime();

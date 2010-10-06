@@ -61,7 +61,7 @@ public class ProSignatureData {
              String sql = "select signature from providerExt where provider_no = '"+providerNo+"' ";
              ResultSet rs = DBHandler.GetSQL(sql);
              if(rs.next())
-                retval = DBHandler.getString(rs,"signature");
+                retval = oscar.Misc.getString(rs, "signature");
              rs.close();
           }
           catch(SQLException e){

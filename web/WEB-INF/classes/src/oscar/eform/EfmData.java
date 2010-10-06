@@ -66,11 +66,11 @@ public class EfmData {
          ResultSet rs = DBHandler.GetSQL(sql);                                                
          if (rs.next()){
             ret = new Hashtable();
-            ret.put("formName", DBHandler.getString(rs,"form_name"));
-            ret.put("subject", DBHandler.getString(rs,"subject"));
-            ret.put("date", DBHandler.getString(rs,"form_date"));
-            ret.put("time", DBHandler.getString(rs,"form_time"));
-            ret.put("provider", DBHandler.getString(rs,"form_provider"));                          
+            ret.put("formName", oscar.Misc.getString(rs, "form_name"));
+            ret.put("subject", oscar.Misc.getString(rs, "subject"));
+            ret.put("date", oscar.Misc.getString(rs, "form_date"));
+            ret.put("time", oscar.Misc.getString(rs, "form_time"));
+            ret.put("provider", oscar.Misc.getString(rs, "form_provider"));                          
          }            
       } catch (SQLException e) {
          MiscUtils.getLogger().error("Error", e);

@@ -98,16 +98,16 @@ public class MeasurementTypes {
 
                ResultSet rs = DBHandler.GetSQL(sql);        
                while(rs.next()){                
-                  //log.debug("validation "+DBHandler.getString(rs,("validation"));  
+                  //log.debug("validation "+oscar.Misc.getString(rs,("validation"));  
                   EctMeasurementTypesBean ret = null;
-                  ret = new EctMeasurementTypesBean(rs.getInt("id"), DBHandler.getString(rs,"type"), 
-                                                     DBHandler.getString(rs,"typeDisplayName"), 
-                                                     DBHandler.getString(rs,"typeDescription"), 
-                                                     DBHandler.getString(rs,"measuringInstruction"),  
-                                                     DBHandler.getString(rs,"validation")); 
-                  ret.setValidationName(getValidation(DBHandler.getString(rs,"validation")));
+                  ret = new EctMeasurementTypesBean(rs.getInt("id"), oscar.Misc.getString(rs, "type"), 
+                                                     oscar.Misc.getString(rs, "typeDisplayName"), 
+                                                     oscar.Misc.getString(rs, "typeDescription"), 
+                                                     oscar.Misc.getString(rs, "measuringInstruction"),  
+                                                     oscar.Misc.getString(rs, "validation")); 
+                  ret.setValidationName(getValidation(oscar.Misc.getString(rs, "validation")));
                   byId.put(""+rs.getInt("id"),ret);
-                  byType.put(DBHandler.getString(rs,"type"),ret);
+                  byType.put(oscar.Misc.getString(rs, "type"),ret);
 
 
                 }
@@ -129,7 +129,7 @@ public class MeasurementTypes {
             String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
             ResultSet rs = DBHandler.GetSQL(sqlValidation);
             if (rs.next()){ 
-                validation = DBHandler.getString(rs,"name");
+                validation = oscar.Misc.getString(rs, "name");
                 //log.debug("setting validation to "+validation);
             }
             rs.close();

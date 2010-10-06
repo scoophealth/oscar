@@ -55,10 +55,10 @@ public class EctWindowSizes {
             
             rs.next(); // we WANT this to throw an exception if there is no corresponding row in the DB
             
-            props.setProperty("rowOneSize", DBHandler.getString(rs,"rowOneSize"));
-            props.setProperty("rowTwoSize", DBHandler.getString(rs,"rowTwoSize"));
-            props.setProperty("rowThreeSize", DBHandler.getString(rs,"rowThreeSize"));
-            props.setProperty("presBoxSize", DBHandler.getString(rs,"presBoxSize"));                                       
+            props.setProperty("rowOneSize", oscar.Misc.getString(rs, "rowOneSize"));
+            props.setProperty("rowTwoSize", oscar.Misc.getString(rs, "rowTwoSize"));
+            props.setProperty("rowThreeSize", oscar.Misc.getString(rs, "rowThreeSize"));
+            props.setProperty("presBoxSize", oscar.Misc.getString(rs, "presBoxSize"));                                       
             rs.close();
         } catch (Exception e) {
             //MiscUtils.getLogger().error("Error", e);

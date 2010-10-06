@@ -64,16 +64,16 @@ public class RptDemographicQueryLoader {
                   rs = DBHandler.GetSQL("select * from demographicQueryFavourites where favId = '"+qId+"'");                  
 
                   if (rs.next()){
-                        mSelect         = DBHandler.getString(rs,"selects");
-                        mAge            = DBHandler.getString(rs,"age");
-                        mStartYear      = DBHandler.getString(rs,"startYear");
-                        mEndYear        = DBHandler.getString(rs,"endYear");
-                        mFirstName      = DBHandler.getString(rs,"firstName");
-                        mLastName       = DBHandler.getString(rs,"lastName");
-                        mRosterStatus   = DBHandler.getString(rs,"rosterStatus");
-                        mSex            = DBHandler.getString(rs,"sex");
-                        mProviderNo     = DBHandler.getString(rs,"providerNo");
-                        mPatientStatus  = DBHandler.getString(rs,"patientStatus");
+                        mSelect         = oscar.Misc.getString(rs, "selects");
+                        mAge            = oscar.Misc.getString(rs, "age");
+                        mStartYear      = oscar.Misc.getString(rs, "startYear");
+                        mEndYear        = oscar.Misc.getString(rs, "endYear");
+                        mFirstName      = oscar.Misc.getString(rs, "firstName");
+                        mLastName       = oscar.Misc.getString(rs, "lastName");
+                        mRosterStatus   = oscar.Misc.getString(rs, "rosterStatus");
+                        mSex            = oscar.Misc.getString(rs, "sex");
+                        mProviderNo     = oscar.Misc.getString(rs, "providerNo");
+                        mPatientStatus  = oscar.Misc.getString(rs, "patientStatus");
                   }
 
                   if (mSelect != null && mSelect.length() != 0){

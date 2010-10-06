@@ -269,15 +269,15 @@ function checkTypeIn() {
       bodd=bodd?false:true; //for the color of rows
       nItems++; //to calculate if it is the end of records
 
-     if(!(DBHandler.getString(rs,"month_of_birth").equals(""))) {//   ||DBHandler.getString(rs,"year_of_birth")||DBHandler.getString(rs,"date_of_birth")) {
-    	if(curMonth>Integer.parseInt(DBHandler.getString(rs,"month_of_birth"))) {
-    		age=curYear-Integer.parseInt(DBHandler.getString(rs,"year_of_birth"));
+     if(!(oscar.Misc.getString(rs,"month_of_birth").equals(""))) {//   ||oscar.Misc.getString(rs,"year_of_birth")||oscar.Misc.getString(rs,"date_of_birth")) {
+    	if(curMonth>Integer.parseInt(oscar.Misc.getString(rs,"month_of_birth"))) {
+    		age=curYear-Integer.parseInt(oscar.Misc.getString(rs,"year_of_birth"));
     	} else {
-    		if(curMonth==Integer.parseInt(DBHandler.getString(rs,"month_of_birth")) &&
-    			curDay>Integer.parseInt(DBHandler.getString(rs,"date_of_birth"))) {
-    			age=curYear-Integer.parseInt(DBHandler.getString(rs,"year_of_birth"));
+    		if(curMonth==Integer.parseInt(oscar.Misc.getString(rs,"month_of_birth")) &&
+    			curDay>Integer.parseInt(oscar.Misc.getString(rs,"date_of_birth"))) {
+    			age=curYear-Integer.parseInt(oscar.Misc.getString(rs,"year_of_birth"));
     		} else {
-    			age=curYear-Integer.parseInt(DBHandler.getString(rs,"year_of_birth"))-1; 
+    			age=curYear-Integer.parseInt(oscar.Misc.getString(rs,"year_of_birth"))-1; 
     		}
     	}	
      }	     
@@ -285,20 +285,20 @@ function checkTypeIn() {
 
 	<tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
 		<td><input type="submit" name="demographicNo"
-			value="<%=DBHandler.getString(rs,"demographic_no")%>" onclick="window.opener.updateLabDemoStatus('<%=request.getParameter("labNo")%>');"></td>
-		<td><%=nbsp( Misc.toUpperLowerCase(DBHandler.getString(rs,"last_name")) )%></td>
-		<td><%=nbsp( Misc.toUpperLowerCase(DBHandler.getString(rs,"first_name")) )%></td>
+			value="<%=oscar.Misc.getString(rs,"demographic_no")%>" onclick="window.opener.updateLabDemoStatus('<%=request.getParameter("labNo")%>');"></td>
+		<td><%=nbsp( Misc.toUpperLowerCase(oscar.Misc.getString(rs,"last_name")) )%></td>
+		<td><%=nbsp( Misc.toUpperLowerCase(oscar.Misc.getString(rs,"first_name")) )%></td>
 		<td><%= age %></td>
-		<td><%=nbsp( DBHandler.getString(rs,"roster_status") )%></td>
-		<td><%=nbsp( DBHandler.getString(rs,"sex") )%></td>
-		<td><%=nbsp( DBHandler.getString(rs,"year_of_birth")+"-"+DBHandler.getString(rs,"month_of_birth")+"-"+DBHandler.getString(rs,"date_of_birth") )%></td>
-		<td><%=providerBean.getProperty(DBHandler.getString(rs,"provider_no"))==null?"&nbsp;":providerBean.getProperty(DBHandler.getString(rs,"provider_no")) %></td>
+		<td><%=nbsp( oscar.Misc.getString(rs,"roster_status") )%></td>
+		<td><%=nbsp( oscar.Misc.getString(rs,"sex") )%></td>
+		<td><%=nbsp( oscar.Misc.getString(rs,"year_of_birth")+"-"+oscar.Misc.getString(rs,"month_of_birth")+"-"+oscar.Misc.getString(rs,"date_of_birth") )%></td>
+		<td><%=providerBean.getProperty(oscar.Misc.getString(rs,"provider_no"))==null?"&nbsp;":providerBean.getProperty(oscar.Misc.getString(rs,"provider_no")) %></td>
 
 	</tr>
 	<%
-      bufName = new StringBuffer( (DBHandler.getString(rs,"last_name")+ ","+ DBHandler.getString(rs,"first_name")) );
-      bufNo = new StringBuffer( (DBHandler.getString(rs,"demographic_no")) );
-      bufChart = new StringBuffer( (DBHandler.getString(rs,"chart_no"))   );
+      bufName = new StringBuffer( (oscar.Misc.getString(rs,"last_name")+ ","+ oscar.Misc.getString(rs,"first_name")) );
+      bufNo = new StringBuffer( (oscar.Misc.getString(rs,"demographic_no")) );
+      bufChart = new StringBuffer( (oscar.Misc.getString(rs,"chart_no"))   );
     }
   }
 %>

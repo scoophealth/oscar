@@ -63,14 +63,14 @@ public class WLWaitingListBeanHandler {
             String onListSinceDateOnly = "";
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {                
-            	onListSinceDateOnly = DBHandler.getString(rs,"onListSince").substring(0, 10);//2007-01-01
+            	onListSinceDateOnly = oscar.Misc.getString(rs, "onListSince").substring(0, 10);//2007-01-01
             	
-                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( DBHandler.getString(rs,"demographic_no"),
-                                                                                DBHandler.getString(rs,"listID"),
-                                                                                DBHandler.getString(rs,"position"),
-                                                                                DBHandler.getString(rs,"patientName"), 
-                                                                                DBHandler.getString(rs,"phone"),
-                                                                                DBHandler.getString(rs,"note"),
+                WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( oscar.Misc.getString(rs, "demographic_no"),
+                                                                                oscar.Misc.getString(rs, "listID"),
+                                                                                oscar.Misc.getString(rs, "position"),
+                                                                                oscar.Misc.getString(rs, "patientName"), 
+                                                                                oscar.Misc.getString(rs, "phone"),
+                                                                                oscar.Misc.getString(rs, "note"),
                                                                                 onListSinceDateOnly);   
                 waitingListArrayList.add(wLBean);
             }                            
@@ -79,7 +79,7 @@ public class WLWaitingListBeanHandler {
             log.debug(sql);
             rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                waitingListName = DBHandler.getString(rs,"name");
+                waitingListName = oscar.Misc.getString(rs, "name");
             }
             rs.close();
         }
@@ -104,7 +104,7 @@ public class WLWaitingListBeanHandler {
                 
                 //check if the patient has an appointment already
                 sql = "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no="
-                      + DBHandler.getString(rs,"demographic_no") + "";
+                      + oscar.Misc.getString(rs, "demographic_no") + "";
                 log.debug(sql);
                 ResultSet rsCheck = DBHandler.GetSQL(sql);        
                 
@@ -112,7 +112,7 @@ public class WLWaitingListBeanHandler {
                 {                
                     //delete patient from the waitingList
 
-                	WLWaitingListUtil.removeFromWaitingList(waitingListID, DBHandler.getString(rs,"demographic_no"));
+                	WLWaitingListUtil.removeFromWaitingList(waitingListID, oscar.Misc.getString(rs, "demographic_no"));
                     needUpdate = true;
                 }
                 rsCheck.close();
@@ -126,7 +126,7 @@ public class WLWaitingListBeanHandler {
                 for(rs = DBHandler.GetSQL(sql); rs.next();){                    
                     sql =   " UPDATE waitingList SET position="+ i + 
                     		" WHERE listID=" + waitingListID + 
-                            " AND demographic_no=" + DBHandler.getString(rs,"demographic_no") +
+                            " AND demographic_no=" + oscar.Misc.getString(rs, "demographic_no") +
                             " AND is_history = 'N' ";
 
                     log.debug(sql);

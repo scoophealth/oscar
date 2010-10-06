@@ -48,15 +48,15 @@
                 ResultSet rs = DBHandler.GetSQL(sql);                            
                 
                 while(rs.next()) {
-                    String provNo = DBHandler.getString(rs,"provider_no");
+                    String provNo = oscar.Misc.getString(rs,"provider_no");
                     if( newDocArr.contains(provNo)) {
-%> <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=DBHandler.getString(rs,"last_name")%>,
-<%=DBHandler.getString(rs,"first_name")%><br>
+%> <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=oscar.Misc.getString(rs,"last_name")%>,
+<%=oscar.Misc.getString(rs,"first_name")%><br>
 <%
                     }
                     else {
-%> <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=DBHandler.getString(rs,"last_name")%>,
-<%=DBHandler.getString(rs,"first_name")%><br>
+%> <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=oscar.Misc.getString(rs,"last_name")%>,
+<%=oscar.Misc.getString(rs,"first_name")%><br>
 <%                   
                     }                
                 }

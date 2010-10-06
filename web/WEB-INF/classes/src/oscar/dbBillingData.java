@@ -101,10 +101,10 @@ public class dbBillingData {
 		try {
 			rs = accessDB.queryResults(dbSQL);
 			while (rs.next()) {
-				temp[0] = accessDB.getString(rs, str1);
-				temp[1] = accessDB.getString(rs, str2);
-				temp[2] = accessDB.getString(rs, str3);
-				temp[3] = accessDB.getString(rs, str4);
+				temp[0] = oscar.Misc.getString(rs, str1);
+				temp[1] = oscar.Misc.getString(rs, str2);
+				temp[2] = oscar.Misc.getString(rs, str3);
+				temp[3] = oscar.Misc.getString(rs, str4);
 			}
 			return temp;
 		} catch (SQLException e) {

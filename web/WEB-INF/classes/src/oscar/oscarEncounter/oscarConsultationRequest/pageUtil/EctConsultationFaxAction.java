@@ -242,7 +242,7 @@ public class EctConsultationFaxAction extends Action {
          String sql = "select locationId from oscarcommlocations where current1 = '1' ";
          ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next())
-            retval = DBHandler.getString(rs,"locationId");
+            retval = oscar.Misc.getString(rs, "locationId");
       }
       catch(SQLException e) {
          MiscUtils.getLogger().error("Error", e);

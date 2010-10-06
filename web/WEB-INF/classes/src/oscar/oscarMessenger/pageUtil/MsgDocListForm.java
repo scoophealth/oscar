@@ -108,9 +108,9 @@ public class MsgDocListForm {
          String sql = "select * from provider order by first_name asc";
          rs = DBHandler.GetSQL(sql);
          while (rs.next()) {
-            providerNoVector.add(DBHandler.getString(rs,"provider_no"));
-            providerFirstName.add(DBHandler.getString(rs,"first_name"));
-            providerLastName.add(DBHandler.getString(rs,"last_name"));
+            providerNoVector.add(oscar.Misc.getString(rs, "provider_no"));
+            providerFirstName.add(oscar.Misc.getString(rs, "first_name"));
+            providerLastName.add(oscar.Misc.getString(rs, "last_name"));
          }
 
        rs.close();

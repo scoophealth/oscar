@@ -372,7 +372,7 @@ public class FrmToXMLUtil{
                 ResultSet rs = DBHandler.GetSQL(s1);
 
                 if (rs.next())
-                        s = DBHandler.getString(rs,"billing_date");
+                        s = oscar.Misc.getString(rs, "billing_date");
                 rs.close();
             } catch (SQLException sqlexception) {
                 MiscUtils.getLogger().debug(sqlexception.getMessage());

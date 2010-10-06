@@ -31,7 +31,7 @@ ResultSet rs = DBHandler.GetSQL(sql);
 String demographicID = "";
 
 while(rs.next()){
-    demographicID = DBHandler.getString(rs,"demographic_no");
+    demographicID = oscar.Misc.getString(rs,"demographic_no");
 }
 rs.close();
 boolean isLinkedToDemographic=false;

@@ -149,14 +149,14 @@ public class LoginCheckLoginBean {
         ResultSet rs =  DBHandler.GetSQL(sql);
         while (rs.next()) {
             secBean = new LoginSecurityBean();
-            secBean.setUser_name(DBHandler.getString(rs,"user_name"));
-            secBean.setPassword(DBHandler.getString(rs,"password"));
-            secBean.setProviderNo(DBHandler.getString(rs,"provider_no"));
-            secBean.setPin(DBHandler.getString(rs,"pin"));
+            secBean.setUser_name(oscar.Misc.getString(rs, "user_name"));
+            secBean.setPassword(oscar.Misc.getString(rs, "password"));
+            secBean.setProviderNo(oscar.Misc.getString(rs, "provider_no"));
+            secBean.setPin(oscar.Misc.getString(rs, "pin"));
             secBean.setB_ExpireSet(new Integer(rs.getInt("b_ExpireSet")));
             secBean.setDate_ExpireDate(rs.getDate("date_ExpireDate"));
-            secBean.setB_LocalLockSet(new Integer(DBHandler.getString(rs,"b_LocalLockSet")));
-            secBean.setB_RemoteLockSet(new Integer(DBHandler.getString(rs,"b_RemoteLockSet")));
+            secBean.setB_LocalLockSet(new Integer(oscar.Misc.getString(rs, "b_LocalLockSet")));
+            secBean.setB_RemoteLockSet(new Integer(oscar.Misc.getString(rs, "b_RemoteLockSet")));
         }
         rs.close();
 

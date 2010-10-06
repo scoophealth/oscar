@@ -75,8 +75,8 @@ public class VisitReportData {
              MiscUtils.getLogger().debug(sql);
              ResultSet rs = DBHandler.GetSQL(sql);
              while (rs.next()){
-                retval = DBHandler.getString(rs,"visit");
-                retcount =DBHandler.getString(rs,"n");
+                retval = oscar.Misc.getString(rs, "visit");
+                retcount =oscar.Misc.getString(rs, "n");
                 retVisit[Integer.parseInt(retval)] = retcount;
 
 			}
@@ -111,8 +111,8 @@ public class VisitReportData {
                      MiscUtils.getLogger().debug(sql);
                      ResultSet rs = DBHandler.GetSQL(sql);
 	             while (rs.next()){
-	                retval = DBHandler.getString(rs,"visit");
-	                retcount =DBHandler.getString(rs,"n");
+	                retval = oscar.Misc.getString(rs, "visit");
+	                retcount =oscar.Misc.getString(rs, "n");
 	                retVisit[Integer.parseInt(retval)] = retcount;
 
 				}

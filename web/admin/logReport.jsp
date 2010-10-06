@@ -58,15 +58,16 @@ String curUser_no = (String)session.getAttribute("user");
   ResultSet rs = dbObj.queryResults(sql);
 
   while (rs.next()) {
-    propName.setProperty(dbObj.getString(rs,"provider_no"), dbObj.getString(rs,"first_name") + " " + dbObj.getString(rs,"last_name"));
+    propName.setProperty(Misc.getString(rs,"provider_no"), Misc.getString(rs,"first_name") + " " + Misc.getString(rs,"last_name"));
     prop = new Properties();
 
-    prop.setProperty("providerNo", dbObj.getString(rs,"provider_no"));
-    prop.setProperty("name", dbObj.getString(rs,"first_name") + " " + dbObj.getString(rs,"last_name"));
+    prop.setProperty("providerNo", Misc.getString(rs,"provider_no"));
+    prop.setProperty("name", Misc.getString(rs,"first_name") + " " + Misc.getString(rs,"last_name"));
     vecProvider.add(prop);
   }
 %>
-<html:html locale="true">
+
+<%@page import="oscar.Misc"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Log Report</title>
@@ -184,12 +185,12 @@ function onSub() {
       while (rs.next()) {
         prop = new Properties();
         prop.setProperty("dateTime", "" + rs.getTimestamp("dateTime"));
-        prop.setProperty("action", dbObj.getString(rs,"action"));
-        prop.setProperty("content", dbObj.getString(rs,"content"));
-        prop.setProperty("contentId", dbObj.getString(rs,"contentId"));
-        prop.setProperty("ip", dbObj.getString(rs,"ip"));
-        prop.setProperty("provider_no", dbObj.getString(rs,"provider_no"));
-        prop.setProperty("demographic_no",dbObj.getString(rs,"demographic_no"));
+        prop.setProperty("action", Misc.getString(rs,"action"));
+        prop.setProperty("content", Misc.getString(rs,"content"));
+        prop.setProperty("contentId", Misc.getString(rs,"contentId"));
+        prop.setProperty("ip", Misc.getString(rs,"ip"));
+        prop.setProperty("provider_no", Misc.getString(rs,"provider_no"));
+        prop.setProperty("demographic_no",Misc.getString(rs,"demographic_no"));
         vec.add(prop);
       }
 

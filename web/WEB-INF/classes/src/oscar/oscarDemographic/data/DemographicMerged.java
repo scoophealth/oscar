@@ -78,9 +78,9 @@ public class DemographicMerged {
         String priority = "";
         String provider_no = "";
         while (rs.next()) {
-            privilege = DBHandler.getString(rs,"privilege");
-            priority = DBHandler.getString(rs,"priority");
-            provider_no = DBHandler.getString(rs,"provider_no");
+            privilege = oscar.Misc.getString(rs, "privilege");
+            priority = oscar.Misc.getString(rs, "priority");
+            provider_no = oscar.Misc.getString(rs, "provider_no");
         }
         pstmt.close();
         
@@ -118,7 +118,7 @@ public class DemographicMerged {
         pstmt.setInt(1, Integer.parseInt(demographic_no));
         rs = pstmt.executeQuery();
         if(rs.next())
-            head = DBHandler.getString(rs,"merged_to");
+            head = oscar.Misc.getString(rs, "merged_to");
         
         pstmt.close();
         if (head != null)
@@ -143,7 +143,7 @@ public class DemographicMerged {
         pstmt.setInt(1, Integer.parseInt(demographic_no));
         rs = pstmt.executeQuery();
         while(rs.next()){
-            tailArray.add(DBHandler.getString(rs,"demographic_no"));
+            tailArray.add(oscar.Misc.getString(rs, "demographic_no"));
         }
         
         pstmt.close();

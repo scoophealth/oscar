@@ -134,7 +134,7 @@ public class ProviderData {
 
                 rs = DBHandler.GetSQL(sql);
                 while  (rs.next()) {
-                   list.add(DBHandler.getString(rs,"provider_no"));
+                   list.add(oscar.Misc.getString(rs, "provider_no"));
                 }
 
                 rs.close();
@@ -156,32 +156,32 @@ public class ProviderData {
                 rs = DBHandler.GetSQL(sql);
 
                 if (rs.next()) {
-                   this.provider_no = DBHandler.getString(rs, "provider_no");
-                   this.last_name = DBHandler.getString(rs, "last_name");
-                   this.first_name = DBHandler.getString(rs, "first_name");
-                   this.provider_type = DBHandler.getString(rs, "provider_type");
-                   this.specialty = DBHandler.getString(rs, "specialty");
-                   this.team = DBHandler.getString(rs, "team");
-                   this.sex= DBHandler.getString(rs, "sex");
-                   this.dob= DBHandler.getString(rs, "dob");
-                   this.address= DBHandler.getString(rs, "address");
-                   this.phone= DBHandler.getString(rs, "phone");
-                   this.work_phone= DBHandler.getString(rs, "work_phone");
-                   this.ohip_no= DBHandler.getString(rs, "ohip_no");
-                   this.rma_no= DBHandler.getString(rs, "rma_no");
-                   this.billing_no= DBHandler.getString(rs, "billing_no");
-                   this.hso_no= DBHandler.getString(rs, "hso_no");
-                   this.status= DBHandler.getString(rs, "status");
-                   this.comments= DBHandler.getString(rs, "comments");
-                   this.provider_activity= DBHandler.getString(rs, "provider_activity");
-                   this.practitionerNo= DBHandler.getString(rs, "practitionerNo");
-                   this.init= DBHandler.getString(rs, "init");
-                   this.job_title= DBHandler.getString(rs, "job_title");
-                   this.email= DBHandler.getString(rs, "email");
-                   this.title= DBHandler.getString(rs, "title");
-                   this.lastUpdateUser= DBHandler.getString(rs, "lastUpdateUser");
-                   this.lastUpdateDate= DBHandler.getString(rs, "lastUpdateDate");
-                   this.signed_confidentiality= DBHandler.getString(rs, "signed_confidentiality");
+                   this.provider_no = oscar.Misc.getString(rs, "provider_no");
+                   this.last_name = oscar.Misc.getString(rs, "last_name");
+                   this.first_name = oscar.Misc.getString(rs, "first_name");
+                   this.provider_type = oscar.Misc.getString(rs, "provider_type");
+                   this.specialty = oscar.Misc.getString(rs, "specialty");
+                   this.team = oscar.Misc.getString(rs, "team");
+                   this.sex= oscar.Misc.getString(rs, "sex");
+                   this.dob= oscar.Misc.getString(rs, "dob");
+                   this.address= oscar.Misc.getString(rs, "address");
+                   this.phone= oscar.Misc.getString(rs, "phone");
+                   this.work_phone= oscar.Misc.getString(rs, "work_phone");
+                   this.ohip_no= oscar.Misc.getString(rs, "ohip_no");
+                   this.rma_no= oscar.Misc.getString(rs, "rma_no");
+                   this.billing_no= oscar.Misc.getString(rs, "billing_no");
+                   this.hso_no= oscar.Misc.getString(rs, "hso_no");
+                   this.status= oscar.Misc.getString(rs, "status");
+                   this.comments= oscar.Misc.getString(rs, "comments");
+                   this.provider_activity= oscar.Misc.getString(rs, "provider_activity");
+                   this.practitionerNo= oscar.Misc.getString(rs, "practitionerNo");
+                   this.init= oscar.Misc.getString(rs, "init");
+                   this.job_title= oscar.Misc.getString(rs, "job_title");
+                   this.email= oscar.Misc.getString(rs, "email");
+                   this.title= oscar.Misc.getString(rs, "title");
+                   this.lastUpdateUser= oscar.Misc.getString(rs, "lastUpdateUser");
+                   this.lastUpdateDate= oscar.Misc.getString(rs, "lastUpdateDate");
+                   this.signed_confidentiality= oscar.Misc.getString(rs, "signed_confidentiality");
                 }
 
                 rs.close();
@@ -564,10 +564,10 @@ public class ProviderData {
             ResultSet rs = DBHandler.GetSQL(sql);            
             while ( rs.next() ) {
                 Hashtable provider = new Hashtable();
-                provider.put("providerNo",DBHandler.getString(rs,"provider_no"));
-                provider.put("firstName",DBHandler.getString(rs,"first_name"));
-                provider.put("lastName",DBHandler.getString(rs,"last_name"));
-		provider.put("ohipNo",DBHandler.getString(rs,"ohip_no"));
+                provider.put("providerNo",oscar.Misc.getString(rs, "provider_no"));
+                provider.put("firstName",oscar.Misc.getString(rs, "first_name"));
+                provider.put("lastName",oscar.Misc.getString(rs, "last_name"));
+		provider.put("ohipNo",oscar.Misc.getString(rs, "ohip_no"));
                 result.add(provider);
             }
             return result;
@@ -597,9 +597,9 @@ public class ProviderData {
            ResultSet rs=DBHandler.GetSQL(sql);
            while(rs.next()){
                Hashtable provider=new Hashtable();
-               provider.put("providerNo", DBHandler.getString(rs, "provider_no"));
-               provider.put("firstName", DBHandler.getString(rs, "first_name"));
-               provider.put("lastName", DBHandler.getString(rs, "last_name"));
+               provider.put("providerNo", oscar.Misc.getString(rs, "provider_no"));
+               provider.put("firstName", oscar.Misc.getString(rs, "first_name"));
+               provider.put("lastName", oscar.Misc.getString(rs, "last_name"));
                retList.add(provider);
            }
            return retList;
@@ -623,10 +623,10 @@ public class ProviderData {
             ResultSet rs = DBHandler.GetSQL(sql);
             while ( rs.next() ) {
                 Hashtable provider = new Hashtable();
-                provider.put("providerNo",DBHandler.getString(rs,"provider_no"));
-                provider.put("firstName",DBHandler.getString(rs,"first_name"));
-                provider.put("lastName",DBHandler.getString(rs,"last_name"));
-		provider.put("ohipNo",DBHandler.getString(rs,"ohip_no"));
+                provider.put("providerNo",oscar.Misc.getString(rs, "provider_no"));
+                provider.put("firstName",oscar.Misc.getString(rs, "first_name"));
+                provider.put("lastName",oscar.Misc.getString(rs, "last_name"));
+		provider.put("ohipNo",oscar.Misc.getString(rs, "ohip_no"));
                 result.add(provider);
             }
             return result;
@@ -653,7 +653,7 @@ public class ProviderData {
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
             ResultSet rs = DBHandler.GetSQL(sql);            
             if ( rs.next() ) {            
-                return ( DBHandler.getString(rs,"first_name") + " " + DBHandler.getString(rs,"last_name") );            
+                return ( oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name") );            
             } else {                            
                 return "";
             }
@@ -757,7 +757,7 @@ public class ProviderData {
             
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                providerNo = DBHandler.getString(rs, 1);
+                providerNo = oscar.Misc.getString(rs, 1);
             }
             rs.close();
         } catch (SQLException ex) {MiscUtils.getLogger().error("Error", ex);

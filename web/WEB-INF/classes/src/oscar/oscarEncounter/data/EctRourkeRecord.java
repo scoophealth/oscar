@@ -55,14 +55,14 @@ public class EctRourkeRecord {
             rs = DBHandler.GetSQL(sql);
 
             if(rs.next())  {
-                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("c_pName", DBHandler.getString(rs,"pName"));
-                if(DBHandler.getString(rs,"sex").equalsIgnoreCase("M")) {
+                props.setProperty("c_pName", oscar.Misc.getString(rs, "pName"));
+                if(oscar.Misc.getString(rs, "sex").equalsIgnoreCase("M")) {
                     props.setProperty("c_male", "checked='checked'");
                 } else {
                     props.setProperty("c_female", "checked='checked'");
@@ -91,7 +91,7 @@ public class EctRourkeRecord {
                         if(md.getColumnTypeName(i).equalsIgnoreCase("date")) {
                             value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                         } else {
-                            value = DBHandler.getString(rs,i);
+                            value = oscar.Misc.getString(rs, i);
                         }
                     }
 
@@ -229,7 +229,7 @@ public class EctRourkeRecord {
                     if(md.getColumnTypeName(i).equalsIgnoreCase("date"))               {
                         value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                     } else {
-                        value = DBHandler.getString(rs,i);
+                        value = oscar.Misc.getString(rs, i);
                     }
 
                     if(i<=6) {
@@ -279,7 +279,7 @@ public class EctRourkeRecord {
                 
                 rs = DBHandler.GetSQL("select sex from demographic where demographic_no = "+demo);
                 if(rs.next()){
-                        str = DBHandler.getString(rs,"sex");
+                        str = oscar.Misc.getString(rs, "sex");
                         if (str.equalsIgnoreCase("F")){
                                 retval = true;
                         }

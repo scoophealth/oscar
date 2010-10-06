@@ -61,7 +61,7 @@ public class SqlUtilBaseS {
 			   String sql = "SELECT LAST_INSERT_ID()";
 			   ResultSet rs = DBHandler.GetSQL(sql);
 			   rs.next();
-			   lastID = DBHandler.getString(rs,"LAST_INSERT_ID()");
+			   lastID = oscar.Misc.getString(rs, "LAST_INSERT_ID()");
 			   rs.close();
 		   }
            return(lastID);

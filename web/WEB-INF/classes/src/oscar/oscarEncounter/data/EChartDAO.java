@@ -89,15 +89,15 @@ public class EChartDAO {
       if (rs.next()) {
         echart = new Echart();
         echart.setTimeStamp(rs.getTimestamp("timeStamp"));
-        echart.setSocialHistory(DBHandler.getString(rs,"socialHistory"));
-        echart.setFamilyHistory(DBHandler.getString(rs,"familyHistory"));
-        echart.setMedicalHistory(DBHandler.getString(rs,"medicalHistory"));
-        echart.setOngoingConcerns(DBHandler.getString(rs,"ongoingConcerns"));
-        echart.setReminders(DBHandler.getString(rs,"reminders"));
-        echart.setEncounter(DBHandler.getString(rs,"encounter"));
-        echart.setSubject(DBHandler.getString(rs,"subject"));
+        echart.setSocialHistory(oscar.Misc.getString(rs, "socialHistory"));
+        echart.setFamilyHistory(oscar.Misc.getString(rs, "familyHistory"));
+        echart.setMedicalHistory(oscar.Misc.getString(rs, "medicalHistory"));
+        echart.setOngoingConcerns(oscar.Misc.getString(rs, "ongoingConcerns"));
+        echart.setReminders(oscar.Misc.getString(rs, "reminders"));
+        echart.setEncounter(oscar.Misc.getString(rs, "encounter"));
+        echart.setSubject(oscar.Misc.getString(rs, "subject"));
         echart.setDemographicNo(String.valueOf(demographicNo));
-        echart.setProviderNo(DBHandler.getString(rs,"providerNo"));
+        echart.setProviderNo(oscar.Misc.getString(rs, "providerNo"));
       }
       rs.close();
     }

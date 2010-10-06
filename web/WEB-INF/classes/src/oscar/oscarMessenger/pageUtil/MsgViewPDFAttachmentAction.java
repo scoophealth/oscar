@@ -59,7 +59,7 @@ public class MsgViewPDFAttachmentAction extends Action {
         String sql = new String("select pdfattachment from messagetbl where messageid ="+attachId);
         rs = DBHandler.GetSQL(sql);
         while (rs.next()) {
-              pdfAtt = DBHandler.getString(rs,"pdfattachment");
+              pdfAtt = oscar.Misc.getString(rs, "pdfattachment");
         }//while
         rs.close();
     }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

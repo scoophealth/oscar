@@ -54,7 +54,7 @@ public class EctValidation{
                 String sql = "SELECT validation FROM measurementType WHERE type = '"+ inputType + "'AND measuringInstruction='" + mInstrc + "'"; 
                 rs = DBHandler.GetSQL(sql);
                 if (rs.next()){
-                    String validation = DBHandler.getString(rs,"validation");                
+                    String validation = oscar.Misc.getString(rs, "validation");                
                     rs.close();
 
                     sql = "SELECT * FROM validations where id=" + validation;
@@ -210,7 +210,7 @@ public class EctValidation{
             ResultSet rs;
             rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                String cssId = DBHandler.getString(rs,"cssID");
+                String cssId = oscar.Misc.getString(rs, "cssID");
                 rs.close();   
                 
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
@@ -234,7 +234,7 @@ public class EctValidation{
                      * }
                      */
 
-                    cssLocation = place+DBHandler.getString(rs,"location");
+                    cssLocation = place+oscar.Misc.getString(rs, "location");
                 }
             }
         }
@@ -259,13 +259,13 @@ public class EctValidation{
             ResultSet rs;
             rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                String cssId = DBHandler.getString(rs,"cssID");
+                String cssId = oscar.Misc.getString(rs, "cssID");
                 rs.close();   
                 
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
                 rs = DBHandler.GetSQL(sql);
                 if(rs.next()){                    
-                    cssName = DBHandler.getString(rs,"location");
+                    cssName = oscar.Misc.getString(rs, "location");
                 }
             }
         }

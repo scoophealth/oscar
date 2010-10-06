@@ -96,10 +96,10 @@ public class FileUploadCheck {
          String sql = "select * from fileUploadCheck where md5sum = '"+md5sum+"' ";
          ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            fileInfo.put("providerNo",DBHandler.getString(rs,"provider_no"));
-            fileInfo.put("filename", DBHandler.getString(rs,"filename"));
-            fileInfo.put("md5sum", DBHandler.getString(rs,"md5sum"));
-            fileInfo.put("dateTime",DBHandler.getString(rs,"date_time"));
+            fileInfo.put("providerNo",oscar.Misc.getString(rs, "provider_no"));
+            fileInfo.put("filename", oscar.Misc.getString(rs, "filename"));
+            fileInfo.put("md5sum", oscar.Misc.getString(rs, "md5sum"));
+            fileInfo.put("dateTime",oscar.Misc.getString(rs, "date_time"));
          }         
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);

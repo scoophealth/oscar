@@ -121,13 +121,13 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                 if(lbData.getPatientName().equalsIgnoreCase("Not, Assigned"))
                     lbData.setLabPatientId("-1");
                 logger.debug("DOCU<ENT "+lbData.isMatchedToPatient());
-                lbData.accessionNumber = "";//DBHandler.getString(rs,"accessionNum");
+                lbData.accessionNumber = "";//oscar.Misc.getString(rs,"accessionNum");
 
-                lbData.resultStatus = "N";//;DBHandler.getString(rs,"result_status");
+                lbData.resultStatus = "N";//;oscar.Misc.getString(rs,"result_status");
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
 
-                lbData.dateTime = d.getObservationdate().toString();//DBHandler.getString(rs,"observationdate");
+                lbData.dateTime = d.getObservationdate().toString();//oscar.Misc.getString(rs,"observationdate");
                 lbData.setDateObj(d.getObservationdate());
 
                 //priority
@@ -146,8 +146,8 @@ public class DocumentResultsDao extends AbstractDao<Document>{
                     lbData.priority = "----";
                 }
 
-                lbData.requestingClient = "";//DBHandler.getString(rs,"requesting_client");
-                lbData.reportStatus =  "F";//DBHandler.getString(rs,"report_status");
+                lbData.requestingClient = "";//oscar.Misc.getString(rs,"requesting_client");
+                lbData.reportStatus =  "F";//oscar.Misc.getString(rs,"report_status");
 
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){

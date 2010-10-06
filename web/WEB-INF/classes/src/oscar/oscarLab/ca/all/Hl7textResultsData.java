@@ -75,14 +75,14 @@ public class Hl7textResultsData {
                     String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
                     sql = "INSERT INTO measurementsDeleted"
                             +" (type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
-                            +" VALUES ('"+DBHandler.getString(rs,"type")+"','"+DBHandler.getString(rs,"demographicNo")+"','"+DBHandler.getString(rs,"providerNo")+"','"
-                            + DBHandler.getString(rs,"dataField")+"','" + DBHandler.getString(rs,"measuringInstruction")+"','"+DBHandler.getString(rs,"comments")+"','"
-                            + DBHandler.getString(rs,"dateObserved")+"','"+DBHandler.getString(rs,"dateEntered")+"','"+dateDeleted+"')";
+                            +" VALUES ('"+oscar.Misc.getString(rs, "type")+"','"+oscar.Misc.getString(rs, "demographicNo")+"','"+oscar.Misc.getString(rs, "providerNo")+"','"
+                            + oscar.Misc.getString(rs, "dataField")+"','" + oscar.Misc.getString(rs, "measuringInstruction")+"','"+oscar.Misc.getString(rs, "comments")+"','"
+                            + oscar.Misc.getString(rs, "dateObserved")+"','"+oscar.Misc.getString(rs, "dateEntered")+"','"+dateDeleted+"')";
                     DBHandler.RunSQL(sql);
                     
-                    sql = "DELETE FROM measurements WHERE id='"+DBHandler.getString(rs,"id")+"'";
+                    sql = "DELETE FROM measurements WHERE id='"+oscar.Misc.getString(rs, "id")+"'";
                     DBHandler.RunSQL(sql);
-                    //sql = "DELETE FROM measurementsExt WHERE measurement_id='"+DBHandler.getString(rs,"measurement_id")+"'";
+                    //sql = "DELETE FROM measurementsExt WHERE measurement_id='"+oscar.Misc.getString(rs,"measurement_id")+"'";
                     //DBHandler.RunSQL(sql);
                     
                 }
@@ -126,8 +126,8 @@ public class Hl7textResultsData {
                     String measInst="";
                     ResultSet rs = pstmt.executeQuery();
                     if(rs.next()){
-                        measType = DBHandler.getString(rs,"ident_code");
-                        measInst = DBHandler.getString(rs,"measuringInstruction");
+                        measType = oscar.Misc.getString(rs, "ident_code");
+                        measInst = oscar.Misc.getString(rs, "measuringInstruction");
                     }else{
                        logger.debug("CODE:"+identifier+ " needs to be mapped"); 
                     }
@@ -146,7 +146,7 @@ public class Hl7textResultsData {
                     rs = pstmt.getGeneratedKeys();
                     String insertID = null;
                     if(rs.next())
-                        insertID = DBHandler.getString(rs,1);
+                        insertID = oscar.Misc.getString(rs, 1);
                     
                     String measurementExt = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES (?,?,?)";
                     
@@ -271,20 +271,20 @@ public class Hl7textResultsData {
                 //Accession numbers may be recycled, accession
                 //numbers for a lab should have lab dates within less than 4
                 //months of eachother even this is a large timespan
-                Date dateA = UtilDateUtilities.StringToDate(DBHandler.getString(rs,"obr_date"), "yyyy-MM-dd hh:mm:ss");
-                Date dateB = UtilDateUtilities.StringToDate(DBHandler.getString(rs,"labDate"), "yyyy-MM-dd hh:mm:ss");
+                Date dateA = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "obr_date"), "yyyy-MM-dd hh:mm:ss");
+                Date dateB = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "labDate"), "yyyy-MM-dd hh:mm:ss");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
                 }else{
                     monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
                 }
                 logger.debug("monthsBetween: "+monthsBetween);
-                logger.debug("lab_no: "+DBHandler.getString(rs,"lab_no")+" lab: "+lab_no);
+                logger.debug("lab_no: "+oscar.Misc.getString(rs, "lab_no")+" lab: "+lab_no);
                 if (monthsBetween < 4){
                     if(ret.equals(""))
-                        ret = DBHandler.getString(rs,"lab_no");
+                        ret = oscar.Misc.getString(rs, "lab_no");
                     else
-                        ret = ret+","+DBHandler.getString(rs,"lab_no");
+                        ret = ret+","+oscar.Misc.getString(rs, "lab_no");
                 }
             }
             rs.close();
@@ -318,7 +318,7 @@ public class Hl7textResultsData {
             ResultSet rs = DBHandler.GetSQL(attachQuery);
             while(rs.next()) {
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
-                lbData.labPatientId = DBHandler.getString(rs,"document_no");
+                lbData.labPatientId = oscar.Misc.getString(rs, "document_no");
                 attachedLabs.add(lbData);
             }
             rs.close();
@@ -329,11 +329,11 @@ public class Hl7textResultsData {
             
             while(rs.next()){
                 
-                lbData.segmentID = DBHandler.getString(rs,"lab_no");
-                lbData.labPatientId = DBHandler.getString(rs,"id");
-                lbData.dateTime = DBHandler.getString(rs,"obr_date");
-                lbData.discipline = DBHandler.getString(rs,"discipline");
-                lbData.accessionNumber = DBHandler.getString(rs,"accessionNum");
+                lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
+                lbData.labPatientId = oscar.Misc.getString(rs, "id");
+                lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
+                lbData.discipline = oscar.Misc.getString(rs, "discipline");
+                lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 
                 if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
@@ -391,7 +391,7 @@ public class Hl7textResultsData {
 
                 
                 lbData.labType = LabResultData.HL7TEXT;
-                lbData.segmentID = DBHandler.getString(rs,"lab_no");
+                lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
                 //check if any demographic is linked to this lab
                 if(lbData.isMatchedToPatient()){
                     //get matched demographic no
@@ -399,26 +399,26 @@ public class Hl7textResultsData {
                     logger.debug("sql2="+sql2);
                     ResultSet rs2=DBHandler.GetSQL(sql2);
                     if(rs2.next())
-                        lbData.setLabPatientId(DBHandler.getString(rs2, "demographic_no"));
+                        lbData.setLabPatientId(oscar.Misc.getString(rs2, "demographic_no"));
                     else
                         lbData.setLabPatientId("-1");
                 }else{
                     lbData.setLabPatientId("-1");
                 }       
                 lbData.acknowledgedStatus ="U";
-                lbData.accessionNumber = DBHandler.getString(rs,"accessionNum");
-                lbData.healthNumber = DBHandler.getString(rs,"health_no");
-                lbData.patientName = DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name");
-                lbData.sex = DBHandler.getString(rs,"sex");
+                lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
+                lbData.healthNumber = oscar.Misc.getString(rs, "health_no");
+                lbData.patientName = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
+                lbData.sex = oscar.Misc.getString(rs, "sex");
 
-                lbData.resultStatus = DBHandler.getString(rs,"result_status");
+                lbData.resultStatus = oscar.Misc.getString(rs, "result_status");
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
 
-                lbData.dateTime = DBHandler.getString(rs,"obr_date");
+                lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
 
                 //priority
-                String priority = DBHandler.getString(rs,"priority");
+                String priority = oscar.Misc.getString(rs, "priority");
 
                 if(priority != null && !priority.equals("")){
                     switch ( priority.charAt(0) ) {
@@ -433,8 +433,8 @@ public class Hl7textResultsData {
                     lbData.priority = "----";
                 }
 
-                lbData.requestingClient = DBHandler.getString(rs,"requesting_client");
-                lbData.reportStatus =  DBHandler.getString(rs,"report_status");
+                lbData.requestingClient = oscar.Misc.getString(rs, "requesting_client");
+                lbData.reportStatus =  oscar.Misc.getString(rs, "report_status");
 
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
@@ -443,7 +443,7 @@ public class Hl7textResultsData {
                     lbData.finalRes = false;
                 }
 
-                lbData.discipline = DBHandler.getString(rs,"discipline");
+                lbData.discipline = oscar.Misc.getString(rs, "discipline");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 
             }
@@ -507,7 +507,7 @@ public class Hl7textResultsData {
             	
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
                 lbData.labType = LabResultData.HL7TEXT;
-                lbData.segmentID = DBHandler.getString(rs,"lab_no");
+                lbData.segmentID = oscar.Misc.getString(rs, "lab_no");
                 //check if any demographic is linked to this lab
                 if(lbData.isMatchedToPatient()){
                     //get matched demographic no
@@ -515,7 +515,7 @@ public class Hl7textResultsData {
                     logger.debug("sql2="+sql2);
                     ResultSet rs2=DBHandler.GetSQL(sql2);
                     if(rs2.next())
-                        lbData.setLabPatientId(DBHandler.getString(rs2, "demographic_no"));
+                        lbData.setLabPatientId(oscar.Misc.getString(rs2, "demographic_no"));
                     else
                         lbData.setLabPatientId("-1");
                 }else{
@@ -523,24 +523,24 @@ public class Hl7textResultsData {
                 }
                 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = DBHandler.getString(rs,"status");
+                    lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
                 
-                lbData.accessionNumber = DBHandler.getString(rs,"accessionNum");
-                lbData.healthNumber = DBHandler.getString(rs,"health_no");
-                lbData.patientName = DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name");
-                lbData.sex = DBHandler.getString(rs,"sex");
+                lbData.accessionNumber = oscar.Misc.getString(rs, "accessionNum");
+                lbData.healthNumber = oscar.Misc.getString(rs, "health_no");
+                lbData.patientName = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
+                lbData.sex = oscar.Misc.getString(rs, "sex");
                 
-                lbData.resultStatus = DBHandler.getString(rs,"result_status");
+                lbData.resultStatus = oscar.Misc.getString(rs, "result_status");
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
                 
-                lbData.dateTime = DBHandler.getString(rs,"obr_date");
+                lbData.dateTime = oscar.Misc.getString(rs, "obr_date");
                 
                 //priority
-                String priority = DBHandler.getString(rs,"priority");
+                String priority = oscar.Misc.getString(rs, "priority");
                 
                 if(priority != null && !priority.equals("")){
                     switch ( priority.charAt(0) ) {
@@ -555,8 +555,8 @@ public class Hl7textResultsData {
                     lbData.priority = "----";
                 }
                 
-                lbData.requestingClient = DBHandler.getString(rs,"requesting_client");
-                lbData.reportStatus =  DBHandler.getString(rs,"report_status");
+                lbData.requestingClient = oscar.Misc.getString(rs, "requesting_client");
+                lbData.reportStatus =  oscar.Misc.getString(rs, "report_status");
                 
                 // the "C" is for corrected excelleris labs
                 if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
@@ -565,7 +565,7 @@ public class Hl7textResultsData {
                     lbData.finalRes = false;
                 }
                 
-                lbData.discipline = DBHandler.getString(rs,"discipline");
+                lbData.discipline = oscar.Misc.getString(rs, "discipline");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 labResults.add(lbData);
             }

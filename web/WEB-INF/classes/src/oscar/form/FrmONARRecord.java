@@ -34,26 +34,26 @@ public class FrmONARRecord extends FrmRecord {
                     + demographicNo;
             ResultSet rs = db.searchDBRecord(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), rs
+                        .getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities
                         .DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 // props.setProperty("formEdited",
                 // UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
-                props.setProperty("c_lastName", DBHandler.getString(rs,"last_name"));
-                props.setProperty("c_firstName", DBHandler.getString(rs,"first_name"));
-                props.setProperty("c_address", DBHandler.getString(rs,"address"));
-                props.setProperty("c_city", DBHandler.getString(rs,"city"));
-                props.setProperty("c_province", DBHandler.getString(rs,"province"));
-                props.setProperty("c_postal", DBHandler.getString(rs,"postal"));
-                props.setProperty("c_hin", DBHandler.getString(rs,"hin"));
-                props.setProperty("c_fileNo", DBHandler.getString(rs,"chart_no"));
+                props.setProperty("c_lastName", oscar.Misc.getString(rs, "last_name"));
+                props.setProperty("c_firstName", oscar.Misc.getString(rs, "first_name"));
+                props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
+                props.setProperty("c_city", oscar.Misc.getString(rs, "city"));
+                props.setProperty("c_province", oscar.Misc.getString(rs, "province"));
+                props.setProperty("c_postal", oscar.Misc.getString(rs, "postal"));
+                props.setProperty("c_hin", oscar.Misc.getString(rs, "hin"));
+                props.setProperty("c_fileNo", oscar.Misc.getString(rs, "chart_no"));
                 props.setProperty("pg1_dateOfBirth", UtilDateUtilities.DateToString(date, "yyyy/MM/dd"));
-                props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(DBHandler.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"))));
-                props.setProperty("pg1_homePhone", DBHandler.getString(rs,"phone"));
-                props.setProperty("pg1_workPhone", DBHandler.getString(rs,"phone2"));
+                props.setProperty("pg1_age", String.valueOf(UtilDateUtilities.calcAge(oscar.Misc.getString(rs, "year_of_birth"), rs
+                        .getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"))));
+                props.setProperty("pg1_homePhone", oscar.Misc.getString(rs, "phone"));
+                props.setProperty("pg1_workPhone", oscar.Misc.getString(rs, "phone2"));
                 props.setProperty("pg1_formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
             }
@@ -95,8 +95,8 @@ public class FrmONARRecord extends FrmRecord {
             String sql = "select email from demographic where demographic_no=" + demographic_no;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                if (DBHandler.getString(rs,"email") != null && DBHandler.getString(rs,"email").length() > 5
-                        && DBHandler.getString(rs,"email").matches(".*@.*"))
+                if (oscar.Misc.getString(rs, "email") != null && oscar.Misc.getString(rs, "email").length() > 5
+                        && oscar.Misc.getString(rs, "email").matches(".*@.*"))
                     ret = true;
             }
 

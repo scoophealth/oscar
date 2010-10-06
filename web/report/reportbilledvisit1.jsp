@@ -75,15 +75,15 @@ params[1] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(edate));
 String sql = "select provider_no, last_name, first_name from provider where provider_type like 'nurse%'";
 ResultSet rs = db.queryResults(sql); 
 while (rs.next()) { 
-	vNurse.add(DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name"));
-	vNurseNo.add(DBHandler.getString(rs,"provider_no"));
+	vNurse.add(oscar.Misc.getString(rs,"last_name") + ", " + oscar.Misc.getString(rs,"first_name"));
+	vNurseNo.add(oscar.Misc.getString(rs,"provider_no"));
 }
 
 // get total patPhys
 sql = "select count(distinct(b.demographic_no)) from billing b, provider p where b.creator=p.provider_no  and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and p.provider_type='doctor'";
 rs = db.queryResults(sql); 
 while (rs.next()) { 
-	props.setProperty("patPhys", DBHandler.getString(rs,1));
+	props.setProperty("patPhys", oscar.Misc.getString(rs,1));
 }
 /*
 out.println("<hr>");
@@ -95,7 +95,7 @@ out.flush();
 sql = "select count(distinct(b.demographic_no)) from billing b, provider p where b.creator=p.provider_no  and b.billing_date>=? and b.billing_date<=? and b.status!='D' and p.provider_type='resident'";
 rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("patRes", DBHandler.getString(rs,1));
+	props.setProperty("patRes", oscar.Misc.getString(rs,1));
 }
 
 /*
@@ -110,7 +110,7 @@ for (int i = 0; i < vNurseNo.size(); i++) {
 	sql = "select count(distinct(b.demographic_no)) from billing b  where b.creator='" + vNurseNo.get(i) + "' and b.billing_date>=? and b.billing_date<=? and b.status!='D'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty("patNurse" + i, DBHandler.getString(rs,1));
+		props.setProperty("patNurse" + i, oscar.Misc.getString(rs,1));
 	}
 
 /*
@@ -126,7 +126,7 @@ for (int i = 0; i < vNurseNo.size(); i++) {
 sql = "select count(distinct(b.billing_no)) from billing b, provider p where b.creator=p.provider_no  and b.billing_date>=? and b.billing_date<=? and b.status!='D' and p.provider_type='doctor'";
 rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("visPhys", DBHandler.getString(rs,1));
+	props.setProperty("visPhys", oscar.Misc.getString(rs,1));
 }
 
 /*
@@ -140,7 +140,7 @@ out.flush();
 sql = "select count(distinct(b.billing_no)) from billing b, provider p where b.creator=p.provider_no  and b.billing_date>=? and b.billing_date<=? and b.status!='D' and p.provider_type='resident'";
 rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	props.setProperty("visRes", DBHandler.getString(rs,1));
+	props.setProperty("visRes", oscar.Misc.getString(rs,1));
 }
 
 /*
@@ -155,7 +155,7 @@ for (int i = 0; i < vNurseNo.size(); i++) {
 	sql = "select count(distinct(b.billing_no)) from billing b  where b.creator='" + vNurseNo.get(i) + "' and b.billing_date>=? and b.billing_date<=? and b.status!='D'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty("visNurse" + i, DBHandler.getString(rs,1));
+		props.setProperty("visNurse" + i, oscar.Misc.getString(rs,1));
 	}
 
 /*

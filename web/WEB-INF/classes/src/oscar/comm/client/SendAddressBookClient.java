@@ -44,7 +44,7 @@ public class SendAddressBookClient {
             String sql = "SELECT remoteServerURL FROM oscarcommlocations WHERE current1 = 1";
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                wsURL = DBHandler.getString(rs,"remoteServerURL");
+                wsURL = oscar.Misc.getString(rs, "remoteServerURL");
             }
             rs.close();
         } catch (Exception ex) {

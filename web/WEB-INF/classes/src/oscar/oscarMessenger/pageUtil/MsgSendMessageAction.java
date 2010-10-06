@@ -129,9 +129,9 @@ public class MsgSendMessageAction extends Action {
               rs = DBHandler.GetSQL(sql);
               while (rs.next()) {
 
-              sentToWho.append(" "+DBHandler.getString(rs,"first_name") +" " +DBHandler.getString(rs,"last_name")+". ");
-              //providerFirstName.add(DBHandler.getString(rs,"first_name"));
-              //providerLastName.add(DBHandler.getString(rs,"last_name"));
+              sentToWho.append(" "+oscar.Misc.getString(rs, "first_name") +" " +oscar.Misc.getString(rs, "last_name")+". ");
+              //providerFirstName.add(oscar.Misc.getString(rs,"first_name"));
+              //providerLastName.add(oscar.Misc.getString(rs,"last_name"));
               }
         rs.close();
 
@@ -160,7 +160,7 @@ public class MsgSendMessageAction extends Action {
 	      } else
 	      throw new java.sql.SQLException("ERROR: Database " + db_type + " unrecognized");
 
-              String messageid = DBHandler.getString(rs,1);
+              String messageid = oscar.Misc.getString(rs, 1);
 
               for (int i =0 ; i < providers.length ; i++)
               {

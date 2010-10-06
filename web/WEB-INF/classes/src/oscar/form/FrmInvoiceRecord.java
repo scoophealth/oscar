@@ -22,23 +22,23 @@ public class FrmInvoiceRecord extends FrmRecord {
                     + demographicNo;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                java.util.Date date = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
-                        .getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), rs
+                        .getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         _dateFormat));
-                props.setProperty("patientName", DBHandler.getString(rs,"first_name") + " " + DBHandler.getString(rs,"last_name"));
-                props.setProperty("patientSex", DBHandler.getString(rs,"sex"));
+                props.setProperty("patientName", oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"));
+                props.setProperty("patientSex", oscar.Misc.getString(rs, "sex"));
                 props.setProperty("dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
-                //props.setProperty("c_surname", DBHandler.getString(rs,"last_name"));
-                props.setProperty("c_address", DBHandler.getString(rs,"address"));
-                props.setProperty("c_address2", DBHandler.getString(rs,"city") + "," + DBHandler.getString(rs,"province") + "   "
-                        + DBHandler.getString(rs,"postal"));
-                //props.setProperty("c_province", DBHandler.getString(rs,"province"));
-                //props.setProperty("c_postal", DBHandler.getString(rs,"postal"));
-                props.setProperty("c_phn", DBHandler.getString(rs,"hin") + DBHandler.getString(rs,"ver") + "(" + DBHandler.getString(rs,"hc_type")
+                //props.setProperty("c_surname", oscar.Misc.getString(rs,"last_name"));
+                props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
+                props.setProperty("c_address2", oscar.Misc.getString(rs, "city") + "," + oscar.Misc.getString(rs, "province") + "   "
+                        + oscar.Misc.getString(rs, "postal"));
+                //props.setProperty("c_province", oscar.Misc.getString(rs,"province"));
+                //props.setProperty("c_postal", oscar.Misc.getString(rs,"postal"));
+                props.setProperty("c_phn", oscar.Misc.getString(rs, "hin") + oscar.Misc.getString(rs, "ver") + "(" + oscar.Misc.getString(rs, "hc_type")
                         + ")");
-                props.setProperty("c_phone", DBHandler.getString(rs,"phone") + "  " + DBHandler.getString(rs,"phone2"));
+                props.setProperty("c_phone", oscar.Misc.getString(rs, "phone") + "  " + oscar.Misc.getString(rs, "phone2"));
                 props.setProperty("date_invoice", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         _dateFormat));
                 props.setProperty("date_signature", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),

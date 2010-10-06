@@ -58,7 +58,7 @@ public class MsgDemoMap {
                                 
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                demoMap.put(DBHandler.getString(rs,"d.demographic_no"), DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name") );
+                demoMap.put(oscar.Misc.getString(rs, "d.demographic_no"), oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name") );
             }
         }
         catch (java.sql.SQLException e){ 
@@ -79,7 +79,7 @@ public class MsgDemoMap {
             
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                msgVector.add(DBHandler.getString(rs,"messageID"));
+                msgVector.add(oscar.Misc.getString(rs, "messageID"));
             }
         }
         catch (java.sql.SQLException e){ 

@@ -46,24 +46,24 @@ public class EctConsultationFormRequestUtil {
             ResultSet rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
-                patientFirstName = DBHandler.getString(rs, "first_name");
-                patientLastName = DBHandler.getString(rs, "last_name");
+                patientFirstName = oscar.Misc.getString(rs, "first_name");
+                patientLastName = oscar.Misc.getString(rs, "last_name");
                 patientName = patientLastName + "," +patientFirstName;
 
-                patientAddress = DBHandler.getString(rs, "address") + "<br>" + DBHandler.getString(rs, "city") +
-                        "," + DBHandler.getString(rs, "province") + "," + DBHandler.getString(rs, "postal");
-                patientPhone = DBHandler.getString(rs, "phone");
-                patientWPhone = DBHandler.getString(rs, "phone2");
-                patientDOB = DBHandler.getString(rs, "year_of_birth") + "-" +
-                        DBHandler.getString(rs, "month_of_birth") + "-" + DBHandler.getString(rs, "date_of_birth");
-                patientHealthNum = DBHandler.getString(rs, "hin");
-                patientSex = DBHandler.getString(rs, "sex");
-                patientHealthCardType = DBHandler.getString(rs, "hc_type");
-                patientHealthCardVersionCode = DBHandler.getString(rs, "ver");
-                patientChartNo = DBHandler.getString(rs, "chart_no");
-                patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), DBHandler.getString(rs, "month_of_birth"),
-                        DBHandler.getString(rs, "date_of_birth")));
-                mrp = DBHandler.getString(rs, "provider_no");
+                patientAddress = oscar.Misc.getString(rs, "address") + "<br>" + oscar.Misc.getString(rs, "city") +
+                        "," + oscar.Misc.getString(rs, "province") + "," + oscar.Misc.getString(rs, "postal");
+                patientPhone = oscar.Misc.getString(rs, "phone");
+                patientWPhone = oscar.Misc.getString(rs, "phone2");
+                patientDOB = oscar.Misc.getString(rs, "year_of_birth") + "-" +
+                        oscar.Misc.getString(rs, "month_of_birth") + "-" + oscar.Misc.getString(rs, "date_of_birth");
+                patientHealthNum = oscar.Misc.getString(rs, "hin");
+                patientSex = oscar.Misc.getString(rs, "sex");
+                patientHealthCardType = oscar.Misc.getString(rs, "hc_type");
+                patientHealthCardVersionCode = oscar.Misc.getString(rs, "ver");
+                patientChartNo = oscar.Misc.getString(rs, "chart_no");
+                patientAge = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"),
+                        oscar.Misc.getString(rs, "date_of_birth")));
+                mrp = oscar.Misc.getString(rs, "provider_no");
             }
             rs.close();
         } catch (SQLException e) {
@@ -82,7 +82,7 @@ public class EctConsultationFormRequestUtil {
             ResultSet rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
-                String teamName = DBHandler.getString(rs, "team");
+                String teamName = oscar.Misc.getString(rs, "team");
                 if (!teamName.equals("")) {
                     teamVec.add(teamName);
                 }
@@ -105,7 +105,7 @@ public class EctConsultationFormRequestUtil {
             ResultSet rs = DBHandler.GetSQL(sql);
 
             while (rs.next()) {
-                String teamName = DBHandler.getString(rs, "team");
+                String teamName = oscar.Misc.getString(rs, "team");
                 if (!teamName.equals("")) {
                     teamVec.add(teamName);
                 }
@@ -128,26 +128,26 @@ public class EctConsultationFormRequestUtil {
 
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                pwb = DBHandler.getString(rs, "patientWillBook");
-                urgency = DBHandler.getString(rs, "urgency");
-                providerNo = DBHandler.getString(rs, "providerNo");
-                referalDate = DBHandler.getString(rs, "referalDate");
-                service = DBHandler.getString(rs, "serviceId");
-                specialist = DBHandler.getString(rs, "specId");
-                String appointmentTime = DBHandler.getString(rs, "appointmentTime");
-                reasonForConsultation = DBHandler.getString(rs, "reason");
-                clinicalInformation = DBHandler.getString(rs, "clinicalInfo");
-                concurrentProblems = DBHandler.getString(rs, "concurrentProblems");
-                currentMedications = DBHandler.getString(rs, "currentMeds");
-                allergies = DBHandler.getString(rs, "allergies");
-                sendTo = DBHandler.getString(rs, "sendTo");
-                status = DBHandler.getString(rs, "status");
-                appointmentNotes = DBHandler.getString(rs, "statusText");
+                pwb = oscar.Misc.getString(rs, "patientWillBook");
+                urgency = oscar.Misc.getString(rs, "urgency");
+                providerNo = oscar.Misc.getString(rs, "providerNo");
+                referalDate = oscar.Misc.getString(rs, "referalDate");
+                service = oscar.Misc.getString(rs, "serviceId");
+                specialist = oscar.Misc.getString(rs, "specId");
+                String appointmentTime = oscar.Misc.getString(rs, "appointmentTime");
+                reasonForConsultation = oscar.Misc.getString(rs, "reason");
+                clinicalInformation = oscar.Misc.getString(rs, "clinicalInfo");
+                concurrentProblems = oscar.Misc.getString(rs, "concurrentProblems");
+                currentMedications = oscar.Misc.getString(rs, "currentMeds");
+                allergies = oscar.Misc.getString(rs, "allergies");
+                sendTo = oscar.Misc.getString(rs, "sendTo");
+                status = oscar.Misc.getString(rs, "status");
+                appointmentNotes = oscar.Misc.getString(rs, "statusText");
                 if (appointmentNotes == null || appointmentNotes.equals("null")) {
                     appointmentNotes = new String();
                 }
-                estPatient(DBHandler.getString(rs, "demographicNo"));
-                String date = DBHandler.getString(rs, "appointmentDate");
+                estPatient(oscar.Misc.getString(rs, "demographicNo"));
+                String date = oscar.Misc.getString(rs, "appointmentDate");
                 int fir = date.indexOf('-');
                 int las = date.lastIndexOf('-');
                 appointmentYear = date.substring(0, fir);
@@ -186,11 +186,11 @@ public class EctConsultationFormRequestUtil {
             String sql = "select * from professionalSpecialists where specId  = " +id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = DBHandler.getString(rs, "lName") + ", " + DBHandler.getString(rs, "fName") + " " +DBHandler.getString(rs, "proLetters");
-                specPhone = DBHandler.getString(rs, "phone");
-                specFax = DBHandler.getString(rs, "fax");
-                specAddr = DBHandler.getString(rs, "address");
-                specEmail = DBHandler.getString(rs, "email");
+                retval = oscar.Misc.getString(rs, "lName") + ", " + oscar.Misc.getString(rs, "fName") + " " +oscar.Misc.getString(rs, "proLetters");
+                specPhone = oscar.Misc.getString(rs, "phone");
+                specFax = oscar.Misc.getString(rs, "fax");
+                specAddr = oscar.Misc.getString(rs, "address");
+                specEmail = oscar.Misc.getString(rs, "email");
                 MiscUtils.getLogger().debug("getting Null" + specEmail + "<");
 
                 if (specPhone == null || specPhone.equals("null")) {
@@ -222,7 +222,7 @@ public class EctConsultationFormRequestUtil {
             String sql = "select email from professionalSpecialists where specId  = '" + id + "'";
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                specEmail = DBHandler.getString(rs, "email");
+                specEmail = oscar.Misc.getString(rs, "email");
                 MiscUtils.getLogger().debug("meial" + specEmail + "<");
                 if (specEmail == null || specEmail.equalsIgnoreCase("null")) {
                     specEmail = new String();
@@ -243,7 +243,7 @@ public class EctConsultationFormRequestUtil {
             String sql = "select team from provider where provider_no  = " + id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = DBHandler.getString(rs, "team");
+                retval = oscar.Misc.getString(rs, "team");
             }
             rs.close();
         } catch (SQLException e) {
@@ -259,7 +259,7 @@ public class EctConsultationFormRequestUtil {
             String sql = "select * from provider where provider_no  = " + id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = DBHandler.getString(rs, "last_name") + ", " + DBHandler.getString(rs, "first_name");
+                retval = oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name");
             }
             rs.close();
         } catch (SQLException e) {
@@ -275,7 +275,7 @@ public class EctConsultationFormRequestUtil {
             String sql = "select p.last_name, p.first_name from provider p, demographic d where d.provider_no  = p.provider_no and  d.demographic_no = " +demoNo;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = DBHandler.getString(rs, "last_name") + ", " + DBHandler.getString(rs, "first_name");
+                retval = oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name");
             }
             rs.close();
         } catch (SQLException e) {
@@ -291,7 +291,7 @@ public class EctConsultationFormRequestUtil {
             String sql = "select * from consultationServices where serviceId  = " +id;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = DBHandler.getString(rs, "serviceDesc");
+                retval = oscar.Misc.getString(rs, "serviceDesc");
             }
             rs.close();
         } catch (SQLException e) {
@@ -307,7 +307,7 @@ public class EctConsultationFormRequestUtil {
             String sql = "select clinic_name from clinic";
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                retval = DBHandler.getString(rs, "clinic_name");
+                retval = oscar.Misc.getString(rs, "clinic_name");
             }
             rs.close();
         } catch (SQLException e) {

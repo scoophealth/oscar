@@ -83,14 +83,14 @@ public class PatientListByAppt extends HttpServlet {
             PrintStream ps = new PrintStream(response.getOutputStream());
 
               while(rs.next()){
-               ps.print(DBHandler.getString(rs,1)+",");
-               ps.print(DBHandler.getString(rs,2)+",");
-               ps.print(DBHandler.getString(rs,3)+",");
-               ps.print(DBHandler.getString(rs,4)+",");
-               ps.print(DBHandler.getString(rs,6)+",");
-               ps.print(DBHandler.getString(rs,5)+",");
-               ps.print(DBHandler.getString(rs,7).replaceAll("\r\n","")+",");
-               ps.print(DBHandler.getString(rs,9)+" ");
+               ps.print(oscar.Misc.getString(rs, 1)+",");
+               ps.print(oscar.Misc.getString(rs, 2)+",");
+               ps.print(oscar.Misc.getString(rs, 3)+",");
+               ps.print(oscar.Misc.getString(rs, 4)+",");
+               ps.print(oscar.Misc.getString(rs, 6)+",");
+               ps.print(oscar.Misc.getString(rs, 5)+",");
+               ps.print(oscar.Misc.getString(rs, 7).replaceAll("\r\n","")+",");
+               ps.print(oscar.Misc.getString(rs, 9)+" ");
                ps.print(rs.getString(8)+",");
                ps.print(rs.getString(10));
                ps.print("\n");

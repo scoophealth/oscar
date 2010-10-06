@@ -72,13 +72,13 @@ public final class EctViewAttachmentAction extends Action {
                      +"FROM messagetbl m, oscarcommlocations ocl where m.sentByLocation = ocl.locationId and "
                      +" messageid = '"+mesId+"'");
        if(rs.next()){
-          remoteName = DBHandler.getString(rs,"locationDesc");
-          themessage = DBHandler.getString(rs,"themessage");
-          theime     = DBHandler.getString(rs,"theime");
-          thedate    = DBHandler.getString(rs,"thedate");
-          attachment = DBHandler.getString(rs,"attachment");
-          thesubject = DBHandler.getString(rs,"thesubject");
-          sentBy     = DBHandler.getString(rs,"sentBy");
+          remoteName = oscar.Misc.getString(rs, "locationDesc");
+          themessage = oscar.Misc.getString(rs, "themessage");
+          theime     = oscar.Misc.getString(rs, "theime");
+          thedate    = oscar.Misc.getString(rs, "thedate");
+          attachment = oscar.Misc.getString(rs, "attachment");
+          thesubject = oscar.Misc.getString(rs, "thesubject");
+          sentBy     = oscar.Misc.getString(rs, "sentBy");
        }
        rs.close();
     }catch(SQLException e){MiscUtils.getLogger().debug("CrAsH"); MiscUtils.getLogger().error("Error", e);}

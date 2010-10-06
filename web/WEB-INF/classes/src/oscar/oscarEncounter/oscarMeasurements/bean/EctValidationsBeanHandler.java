@@ -51,7 +51,7 @@ public class EctValidationsBeanHandler {
             ResultSet rs;
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                EctValidationsBean validation = new EctValidationsBean(DBHandler.getString(rs,"name"), rs.getInt("id"));
+                EctValidationsBean validation = new EctValidationsBean(oscar.Misc.getString(rs, "name"), rs.getInt("id"));
                 validationsVector.add(validation);
             }
 
@@ -195,13 +195,13 @@ public class EctValidationsBeanHandler {
             
             if (rs.next()){
                 validation.setName(val);
-                validation.setRegularExp(DBHandler.getString(rs,"regularExp")); 
-                validation.setMinValue(DBHandler.getString(rs,"minValue"));
-                validation.setMaxValue(DBHandler.getString(rs,"maxValue"));
-                validation.setMinLength(DBHandler.getString(rs,"minLength"));
-                validation.setMaxLength(DBHandler.getString(rs,"maxLength"));
-                validation.setIsNumeric(DBHandler.getString(rs,"isNumeric"));
-                validation.setIsDate(DBHandler.getString(rs,"isDate"));
+                validation.setRegularExp(oscar.Misc.getString(rs, "regularExp")); 
+                validation.setMinValue(oscar.Misc.getString(rs, "minValue"));
+                validation.setMaxValue(oscar.Misc.getString(rs, "maxValue"));
+                validation.setMinLength(oscar.Misc.getString(rs, "minLength"));
+                validation.setMaxLength(oscar.Misc.getString(rs, "maxLength"));
+                validation.setIsNumeric(oscar.Misc.getString(rs, "isNumeric"));
+                validation.setIsDate(oscar.Misc.getString(rs, "isDate"));
             }
         }catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);

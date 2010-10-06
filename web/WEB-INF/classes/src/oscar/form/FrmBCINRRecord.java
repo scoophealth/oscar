@@ -21,24 +21,24 @@ public class FrmBCINRRecord extends FrmRecord {
 					+ demographicNo;
 			ResultSet rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				java.util.Date date = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), rs
-						.getString("month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
-				props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+				java.util.Date date = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), rs
+						.getString("month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
+				props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
 				props
 						.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
 								_dateFormat));
 				// props.setProperty("formEdited",
 				// UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
-				props.setProperty("c_surname", DBHandler.getString(rs,"last_name"));
-				props.setProperty("c_givenName", DBHandler.getString(rs,"first_name"));
-				props.setProperty("c_address", DBHandler.getString(rs,"address"));
-				props.setProperty("c_city", DBHandler.getString(rs,"city"));
-				props.setProperty("c_province", DBHandler.getString(rs,"province"));
-				props.setProperty("c_postal", DBHandler.getString(rs,"postal"));
-				props.setProperty("c_phn", DBHandler.getString(rs,"hin"));
+				props.setProperty("c_surname", oscar.Misc.getString(rs, "last_name"));
+				props.setProperty("c_givenName", oscar.Misc.getString(rs, "first_name"));
+				props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
+				props.setProperty("c_city", oscar.Misc.getString(rs, "city"));
+				props.setProperty("c_province", oscar.Misc.getString(rs, "province"));
+				props.setProperty("c_postal", oscar.Misc.getString(rs, "postal"));
+				props.setProperty("c_phn", oscar.Misc.getString(rs, "hin"));
 				props.setProperty("c_dateOfBirth", UtilDateUtilities.DateToString(date, _dateFormat));
-				props.setProperty("c_phone1", DBHandler.getString(rs,"phone"));
-				props.setProperty("c_phone2", DBHandler.getString(rs,"phone2"));
+				props.setProperty("c_phone1", oscar.Misc.getString(rs, "phone"));
+				props.setProperty("c_phone2", oscar.Misc.getString(rs, "phone2"));
 			}
 			rs.close();
 		} else {
@@ -52,15 +52,15 @@ public class FrmBCINRRecord extends FrmRecord {
 			DBHelp db = new DBHelp();
 			ResultSet rs = db.searchDBRecord(sql);
 			if (rs.next()) {
-				props.setProperty("c_surname_cur", DBHandler.getString(rs,"last_name"));
-				props.setProperty("c_givenName_cur", DBHandler.getString(rs,"first_name"));
-				props.setProperty("c_address_cur", DBHandler.getString(rs,"address"));
-				props.setProperty("c_city_cur", DBHandler.getString(rs,"city"));
-				props.setProperty("c_province_cur", DBHandler.getString(rs,"province"));
-				props.setProperty("c_postal_cur", DBHandler.getString(rs,"postal"));
-				props.setProperty("c_phn_cur", DBHandler.getString(rs,"hin"));
-				props.setProperty("c_phone1_cur", DBHandler.getString(rs,"phone"));
-				props.setProperty("c_phone2_cur", DBHandler.getString(rs,"phone2"));
+				props.setProperty("c_surname_cur", oscar.Misc.getString(rs, "last_name"));
+				props.setProperty("c_givenName_cur", oscar.Misc.getString(rs, "first_name"));
+				props.setProperty("c_address_cur", oscar.Misc.getString(rs, "address"));
+				props.setProperty("c_city_cur", oscar.Misc.getString(rs, "city"));
+				props.setProperty("c_province_cur", oscar.Misc.getString(rs, "province"));
+				props.setProperty("c_postal_cur", oscar.Misc.getString(rs, "postal"));
+				props.setProperty("c_phn_cur", oscar.Misc.getString(rs, "hin"));
+				props.setProperty("c_phone1_cur", oscar.Misc.getString(rs, "phone"));
+				props.setProperty("c_phone2_cur", oscar.Misc.getString(rs, "phone2"));
 			}
 		}
 		return props;

@@ -46,7 +46,7 @@ public class MeasurementMapConfig {
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                ret.add(DBHandler.getString(rs, "lab_type"));
+                ret.add(oscar.Misc.getString(rs, "lab_type"));
             }
             pstmt.close();
         } catch (SQLException e) {
@@ -70,11 +70,11 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable<String, String> ht = new Hashtable();
-                ht.put("id", getString(DBHandler.getString(rs, "id")));
-                ht.put("loinc_code", getString(DBHandler.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(DBHandler.getString(rs, "ident_code")));
-                ht.put("name", getString(DBHandler.getString(rs, "name")));
-                ht.put("lab_type", getString(DBHandler.getString(rs, "lab_type")));
+                ht.put("id", getString(oscar.Misc.getString(rs, "id")));
+                ht.put("loinc_code", getString(oscar.Misc.getString(rs, "loinc_code")));
+                ht.put("ident_code", getString(oscar.Misc.getString(rs, "ident_code")));
+                ht.put("name", getString(oscar.Misc.getString(rs, "name")));
+                ht.put("lab_type", getString(oscar.Misc.getString(rs, "lab_type")));
                 ret.add(ht);
             }
 
@@ -99,12 +99,12 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable<String, String> ht = new Hashtable();
-                ht.put("id", getString(DBHandler.getString(rs, "id")));
-                ht.put("loinc_code", getString(DBHandler.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(DBHandler.getString(rs, "ident_code")));
-                ht.put("name", getString(DBHandler.getString(rs, "name")));
-                ht.put("lab_type", getString(DBHandler.getString(rs, "lab_type")));
-                ret.put(getString(DBHandler.getString(rs, "lab_type")), ht);
+                ht.put("id", getString(oscar.Misc.getString(rs, "id")));
+                ht.put("loinc_code", getString(oscar.Misc.getString(rs, "loinc_code")));
+                ht.put("ident_code", getString(oscar.Misc.getString(rs, "ident_code")));
+                ht.put("name", getString(oscar.Misc.getString(rs, "name")));
+                ht.put("lab_type", getString(oscar.Misc.getString(rs, "lab_type")));
+                ret.put(getString(oscar.Misc.getString(rs, "lab_type")), ht);
             }
 
             pstmt.close();
@@ -125,7 +125,7 @@ public class MeasurementMapConfig {
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                ret.add(DBHandler.getString(rs, "loinc_code"));
+                ret.add(oscar.Misc.getString(rs, "loinc_code"));
             }
             pstmt.close();
         } catch (SQLException e) {
@@ -201,8 +201,8 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable ht = new Hashtable();
-                ht.put("code", DBHandler.getString(rs, "loinc_code"));
-                ht.put("name", DBHandler.getString(rs, "name"));
+                ht.put("code", oscar.Misc.getString(rs, "loinc_code"));
+                ht.put("name", oscar.Misc.getString(rs, "name"));
                 ret.add(ht);
             }
 
@@ -229,11 +229,11 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable ht = new Hashtable();
-                ht.put("id", getString(DBHandler.getString(rs, "id")));
-                ht.put("loinc_code", getString(DBHandler.getString(rs, "loinc_code")));
-                ht.put("ident_code", getString(DBHandler.getString(rs, "ident_code")));
-                ht.put("name", getString(DBHandler.getString(rs, "name")));
-                ht.put("lab_type", getString(DBHandler.getString(rs, "lab_type")));
+                ht.put("id", getString(oscar.Misc.getString(rs, "id")));
+                ht.put("loinc_code", getString(oscar.Misc.getString(rs, "loinc_code")));
+                ht.put("ident_code", getString(oscar.Misc.getString(rs, "ident_code")));
+                ht.put("name", getString(oscar.Misc.getString(rs, "name")));
+                ht.put("lab_type", getString(oscar.Misc.getString(rs, "lab_type")));
                 ret.add(ht);
             }
 
@@ -264,9 +264,9 @@ public class MeasurementMapConfig {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Hashtable ht = new Hashtable();
-                ht.put("type", getString(DBHandler.getString(rs, "type")));
-                ht.put("identifier", getString(DBHandler.getString(rs, "identifier")));
-                ht.put("name", getString(DBHandler.getString(rs, "name")));
+                ht.put("type", getString(oscar.Misc.getString(rs, "type")));
+                ht.put("identifier", getString(oscar.Misc.getString(rs, "identifier")));
+                ht.put("name", getString(oscar.Misc.getString(rs, "name")));
                 ret.add(ht);
             }
 
@@ -306,10 +306,10 @@ public class MeasurementMapConfig {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
-            ident_code = getString(DBHandler.getString(rs, "ident_code"));
-            loinc_code = getString(DBHandler.getString(rs, "loinc_code"));
-            name = getString(DBHandler.getString(rs, "name"));
-            lab_type = getString(DBHandler.getString(rs, "lab_type"));
+            ident_code = getString(oscar.Misc.getString(rs, "ident_code"));
+            loinc_code = getString(oscar.Misc.getString(rs, "loinc_code"));
+            name = getString(oscar.Misc.getString(rs, "name"));
+            lab_type = getString(oscar.Misc.getString(rs, "lab_type"));
         }
 
         sql = "DELETE FROM measurementMap WHERE id='" + id + "'";

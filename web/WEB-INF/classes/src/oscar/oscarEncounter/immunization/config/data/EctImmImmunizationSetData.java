@@ -76,9 +76,9 @@ public class EctImmImmunizationSetData {
 			ResultSet rs;
 			for (rs = DBHandler.GetSQL(sql);
 				rs.next();
-				createDateVec.add(DBHandler.getString(rs,"createDate"))) {
-				setNameVec.add(DBHandler.getString(rs,"setName"));
-				setIdVec.add(DBHandler.getString(rs,"setId"));
+				createDateVec.add(oscar.Misc.getString(rs, "createDate"))) {
+				setNameVec.add(oscar.Misc.getString(rs, "setName"));
+				setIdVec.add(oscar.Misc.getString(rs, "setId"));
 			}
 
 			rs.close();
@@ -99,9 +99,9 @@ public class EctImmImmunizationSetData {
 			ResultSet rs;
 			for (rs = DBHandler.GetSQL(sql);
 				rs.next();
-				createDateVec.add(DBHandler.getString(rs,"createDate"))) {
-				setNameVec.add(DBHandler.getString(rs,"setName"));
-				setIdVec.add(DBHandler.getString(rs,"setId"));
+				createDateVec.add(oscar.Misc.getString(rs, "createDate"))) {
+				setNameVec.add(oscar.Misc.getString(rs, "setName"));
+				setIdVec.add(oscar.Misc.getString(rs, "setId"));
 			}
 
 			rs.close();
@@ -125,7 +125,7 @@ public class EctImmImmunizationSetData {
 							.append("'")));
 			ResultSet rs = DBHandler.GetSQL(sql);
 			if (rs.next())
-				xmlDoc = DBHandler.getString(rs,"setXmlDoc");
+				xmlDoc = oscar.Misc.getString(rs, "setXmlDoc");
 			rs.close();
 		} catch (SQLException e) {
 			MiscUtils.getLogger().error("Error", e);

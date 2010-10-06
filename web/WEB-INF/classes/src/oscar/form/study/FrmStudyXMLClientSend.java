@@ -121,8 +121,8 @@ public class FrmStudyXMLClientSend {
         sql = "SELECT studydata_no, content from studydata where timestamp > '" + dateYesterday + "' and timestamp < '" + dateTomorrow + "' and status='ready' order by studydata_no";
         rs = DBHandler.GetSQL(sql);
         while(rs.next()) {
-			studyContent.add(DBHandler.getString(rs,"content")); 
-			studyNo.add(DBHandler.getString(rs,"studydata_no")); 
+			studyContent.add(oscar.Misc.getString(rs, "content")); 
+			studyNo.add(oscar.Misc.getString(rs, "studydata_no")); 
 		}
         rs.close();
 	}

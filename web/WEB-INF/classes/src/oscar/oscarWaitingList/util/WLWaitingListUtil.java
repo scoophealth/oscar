@@ -198,7 +198,7 @@ public class WLWaitingListUtil {
 
 			while (rs.next()) {
 
-				sql = " UPDATE waitingList SET position=" + i + " WHERE listID=" + waitingListID + " AND demographic_no=" + DBHandler.getString(rs, "demographic_no") + " AND is_history = 'N' ";
+				sql = " UPDATE waitingList SET position=" + i + " WHERE listID=" + waitingListID + " AND demographic_no=" + oscar.Misc.getString(rs, "demographic_no") + " AND is_history = 'N' ";
 				MiscUtils.getLogger().debug("WLWaitingListUtil.rePositionWaitingList(2): " + sql);
 				DBHandler.RunSQL(sql);
 				i++;

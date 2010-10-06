@@ -165,19 +165,19 @@ public class EctSearchDemographicData
                 for(rs = DBHandler.GetSQL(sql); rs.next(); vector.add(demographicData))
                 {
                     demographicData = new EctDemographicData();
-                    demographicData.demographicNo = DBHandler.getString(rs,"demographic_no");
-                    demographicData.firstName = DBHandler.getString(rs,"first_name");
-                    demographicData.lastName = DBHandler.getString(rs,"last_name");
-                    demographicData.address = DBHandler.getString(rs,"address");
-                    demographicData.city = DBHandler.getString(rs,"city");
-                    demographicData.province = DBHandler.getString(rs,"province");
-                    demographicData.phone = DBHandler.getString(rs,"phone");
-                    demographicData.phone2 = DBHandler.getString(rs,"phone2");
-                    demographicData.hin = DBHandler.getString(rs,"hin");
-                    demographicData.sex = DBHandler.getString(rs,"sex");
-                    demographicData.yearOfBirth = DBHandler.getString(rs,"year_of_birth");
-                    demographicData.monthOfBirth = DBHandler.getString(rs,"month_of_birth");
-                    demographicData.dayOfBirth = DBHandler.getString(rs,"date_of_birth");
+                    demographicData.demographicNo = oscar.Misc.getString(rs, "demographic_no");
+                    demographicData.firstName = oscar.Misc.getString(rs, "first_name");
+                    demographicData.lastName = oscar.Misc.getString(rs, "last_name");
+                    demographicData.address = oscar.Misc.getString(rs, "address");
+                    demographicData.city = oscar.Misc.getString(rs, "city");
+                    demographicData.province = oscar.Misc.getString(rs, "province");
+                    demographicData.phone = oscar.Misc.getString(rs, "phone");
+                    demographicData.phone2 = oscar.Misc.getString(rs, "phone2");
+                    demographicData.hin = oscar.Misc.getString(rs, "hin");
+                    demographicData.sex = oscar.Misc.getString(rs, "sex");
+                    demographicData.yearOfBirth = oscar.Misc.getString(rs, "year_of_birth");
+                    demographicData.monthOfBirth = oscar.Misc.getString(rs, "month_of_birth");
+                    demographicData.dayOfBirth = oscar.Misc.getString(rs, "date_of_birth");
                 }
 
                 rs.close();

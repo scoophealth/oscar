@@ -59,7 +59,7 @@ public class MsgViewAttachmentAction extends Action {
         String sql = new String("select attachment from messagetbl where messageid ="+attachId);
         rs = DBHandler.GetSQL(sql);
         while (rs.next()) {
-              att = DBHandler.getString(rs,"attachment");
+              att = oscar.Misc.getString(rs, "attachment");
         }//while
         rs.close();
     }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

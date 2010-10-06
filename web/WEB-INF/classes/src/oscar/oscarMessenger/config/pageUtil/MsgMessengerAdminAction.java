@@ -85,7 +85,7 @@ public class MsgMessengerAdminAction extends Action {
                  String sql = new String("select parentID from groups_tbl where groupID = '"+grpNo+"'");
                  rs = DBHandler.GetSQL(sql);
                  if (rs.next()){
-                     parent =  DBHandler.getString(rs,"parentID");
+                     parent =  oscar.Misc.getString(rs, "parentID");
                  }
 
 

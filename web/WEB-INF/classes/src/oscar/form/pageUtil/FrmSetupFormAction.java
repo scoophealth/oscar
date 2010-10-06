@@ -297,7 +297,7 @@ public final class FrmSetupFormAction extends Action {
                 ResultSet rs = DBHandler.GetSQL(s1);
 
                 if (rs.next())
-                        s = DBHandler.getString(rs,"billing_date");
+                        s = oscar.Misc.getString(rs, "billing_date");
                 rs.close();
             } catch (SQLException sqlexception) {
                 MiscUtils.getLogger().debug(sqlexception.getMessage());
@@ -318,7 +318,7 @@ public final class FrmSetupFormAction extends Action {
                         ResultSetMetaData md = rs.getMetaData();
                         for(int i = 1; i <= md.getColumnCount(); i++)  {
                                 String name = md.getColumnName(i);
-                                String value = DBHandler.getString(rs,i);
+                                String value = oscar.Misc.getString(rs, i);
                                 if(value != null)	
                                     props.setProperty(name, value);
                         }
@@ -422,8 +422,8 @@ public final class FrmSetupFormAction extends Action {
 
             ResultSet rs = DBHandler.GetSQL(sqlData);
             if(rs.next()){
-                mt.setLastData(DBHandler.getString(rs,"dataField"));
-                mt.setLastDateEntered(DBHandler.getString(rs,"dateEntered"));                
+                mt.setLastData(oscar.Misc.getString(rs, "dataField"));
+                mt.setLastDateEntered(oscar.Misc.getString(rs, "dateEntered"));                
             }
                             
             rs.close();

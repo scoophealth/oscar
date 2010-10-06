@@ -61,15 +61,15 @@
 				int idx = 0;
 				while (rs.next() && idx < Integer.parseInt(strLimit2)) {
 					prop = new Properties();
-					prop.setProperty("id", dbObj.getString(rs,"id"));
-					prop.setProperty("attention", dbObj.getString(rs,"attention"));
-					prop.setProperty("company_name", dbObj.getString(rs,"company_name"));
-					prop.setProperty("address", dbObj.getString(rs,"address"));
-					prop.setProperty("city", dbObj.getString(rs,"city"));
-					prop.setProperty("province", dbObj.getString(rs,"province"));
-					prop.setProperty("postcode", dbObj.getString(rs,"postcode"));
-					prop.setProperty("telephone", dbObj.getString(rs,"telephone"));
-					prop.setProperty("fax", dbObj.getString(rs,"fax"));
+					prop.setProperty("id", Misc.getString(rs,"id"));
+					prop.setProperty("attention", Misc.getString(rs,"attention"));
+					prop.setProperty("company_name", Misc.getString(rs,"company_name"));
+					prop.setProperty("address", Misc.getString(rs,"address"));
+					prop.setProperty("city", Misc.getString(rs,"city"));
+					prop.setProperty("province", Misc.getString(rs,"province"));
+					prop.setProperty("postcode", Misc.getString(rs,"postcode"));
+					prop.setProperty("telephone", Misc.getString(rs,"telephone"));
+					prop.setProperty("fax", Misc.getString(rs,"fax"));
 					vec.add(prop);
 					idx ++;
 				}
@@ -82,7 +82,8 @@
 <%@ page import="org.apache.commons.lang.WordUtils"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<html:html locale="true">
+
+<%@page import="oscar.Misc"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Add/Edit 3rd Bill Address</title>

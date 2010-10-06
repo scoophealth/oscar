@@ -49,14 +49,14 @@ public class FrmCESDRecord extends FrmRecord {
                               + demographicNo;
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {                                
-				props.setProperty("demographic_no",DBHandler.getString(rs,"demographic_no"));
+				props.setProperty("demographic_no",oscar.Misc.getString(rs, "demographic_no"));
 				props.setProperty("formCreated",UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
 			}
 			rs.close();
                         sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
                         rs = DBHandler.GetSQL(sql);
                         if (rs.next()){
-                            props.setProperty("studyID", DBHandler.getString(rs,"studyID"));
+                            props.setProperty("studyID", oscar.Misc.getString(rs, "studyID"));
                         }
                         else{
                             props.setProperty("studyID", "N/A");
@@ -102,7 +102,7 @@ public class FrmCESDRecord extends FrmRecord {
                                     }
                                     else
                                     {
-                                        value = DBHandler.getString(rs,i);
+                                        value = oscar.Misc.getString(rs, i);
                                     }
                                 }
 

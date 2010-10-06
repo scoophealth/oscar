@@ -75,8 +75,8 @@ public class MsgAddressBook {
             String sql = new String("select locationDesc, addressBook from oscarcommlocations where current1 = 1");
             rs = DBHandler.GetSQL(sql);
             if (rs.next()){
-               retval = DBHandler.getString(rs,"addressBook");
-               CurrentLocationName = DBHandler.getString(rs,"locationDesc");
+               retval = oscar.Misc.getString(rs, "addressBook");
+               CurrentLocationName = oscar.Misc.getString(rs, "locationDesc");
             }
             rs.close();
          }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
@@ -100,9 +100,9 @@ public class MsgAddressBook {
             String sql = new String("select locationDesc, locationId, addressBook from oscarcommlocations where current1 = 0");
             rs = DBHandler.GetSQL(sql);
             while (rs.next()){
-               vector.add(DBHandler.getString(rs,"addressBook"));
-               remoteLocationDesc.add(DBHandler.getString(rs,"locationDesc"));
-               remoteLocationId.add(DBHandler.getString(rs,"locationId"));
+               vector.add(oscar.Misc.getString(rs, "addressBook"));
+               remoteLocationDesc.add(oscar.Misc.getString(rs, "locationDesc"));
+               remoteLocationId.add(oscar.Misc.getString(rs, "locationId"));
             }
             rs.close();
       }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

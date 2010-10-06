@@ -40,15 +40,15 @@ public class FrmOvulationRecord  extends FrmRecord {
             ResultSet rs = DBHandler.GetSQL(sql);
 
             if(rs.next()) {
-                    java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                    java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 
-                    props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
-                    props.setProperty("clientFirstName", DBHandler.getString(rs,"first_name"));
-                    props.setProperty("clientLastName", DBHandler.getString(rs,"last_name"));
+                    props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
+                    props.setProperty("clientFirstName", oscar.Misc.getString(rs, "first_name"));
+                    props.setProperty("clientLastName", oscar.Misc.getString(rs, "last_name"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("dob", String.valueOf(UtilDateUtilities.calcAge(dob)));
-                    props.setProperty("healthNum", DBHandler.getString(rs,"hin") + DBHandler.getString(rs,"ver"));
+                    props.setProperty("healthNum", oscar.Misc.getString(rs, "hin") + oscar.Misc.getString(rs, "ver"));
             }
             rs.close();
 

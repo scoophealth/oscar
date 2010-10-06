@@ -83,10 +83,10 @@ function posttoText(index){
 		<td class="SmallerText"><a href=#
 			onClick="posttoText('<%=rs.getString("code")%>');"><%=rs.getString("code")%></a>
 		</td>
-		<td class="SmallerText"><%=DBHandler.getString(rs,"level1")%></td>
-		<td class="SmallerText"><%=DBHandler.getString(rs,"level2")%></td>
-		<td class="SmallerText"><%=DBHandler.getString(rs,"level3")%></td>
-		<td class="SmallerText"><%=DBHandler.getString(rs,"usagenote")%></td>
+		<td class="SmallerText"><%=oscar.Misc.getString(rs,"level1")%></td>
+		<td class="SmallerText"><%=oscar.Misc.getString(rs,"level2")%></td>
+		<td class="SmallerText"><%=oscar.Misc.getString(rs,"level3")%></td>
+		<td class="SmallerText"><%=oscar.Misc.getString(rs,"usagenote")%></td>
 	</tr>
 	<%
 		color = !(color);

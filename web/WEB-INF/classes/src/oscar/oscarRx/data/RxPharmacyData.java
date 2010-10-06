@@ -226,7 +226,7 @@ public class RxPharmacyData {
             String sql = "select max(recordID) as maxrec from pharmacyInfo where status = 1 group by ID order by name";            
             rs = DBHandler.GetSQL(sql);            
             while ( rs.next()){
-               pharmacyList.add(getPharmacyByRecordID(DBHandler.getString(rs,"maxrec")));
+               pharmacyList.add(getPharmacyByRecordID(oscar.Misc.getString(rs, "maxrec")));
             }                                                
             rs.close();
         } catch (SQLException e) {
@@ -274,7 +274,7 @@ public class RxPharmacyData {
             
             rs = DBHandler.GetSQL(sql);            
             if ( rs.next()){
-               pharmacy = getPharmacy(DBHandler.getString(rs,"pharmacyID"));
+               pharmacy = getPharmacy(oscar.Misc.getString(rs, "pharmacyID"));
             }                                                
             rs.close();
         } catch (SQLException e) {

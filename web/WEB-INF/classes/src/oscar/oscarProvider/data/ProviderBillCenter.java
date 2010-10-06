@@ -94,7 +94,7 @@ public class ProviderBillCenter {
             String sql = "select billcenter_code from providerbillcenter where provider_no = '"+provider_no+"' ";
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next())
-                billCenterCode = DBHandler.getString(rs,"billcenter_code");
+                billCenterCode = oscar.Misc.getString(rs, "billcenter_code");
             rs.close();
         } catch(SQLException e){
             MiscUtils.getLogger().debug("There has been an error while retrieving a provider's bill center");
@@ -127,7 +127,7 @@ public class ProviderBillCenter {
             String sql = "select * from billcenter" ;
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next())
-                allBillCenter.setProperty(DBHandler.getString(rs,"billcenter_code"),DBHandler.getString(rs,"billcenter_desc")) ;
+                allBillCenter.setProperty(oscar.Misc.getString(rs, "billcenter_code"),oscar.Misc.getString(rs, "billcenter_desc")) ;
             rs.close();
         } catch(SQLException e){
             MiscUtils.getLogger().debug("There has been an error while retrieving info from table billcenter");

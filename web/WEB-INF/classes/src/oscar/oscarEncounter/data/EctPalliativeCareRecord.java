@@ -52,11 +52,11 @@ public class EctPalliativeCareRecord
 
             if(rs.next())
             {
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                props.setProperty("pName", DBHandler.getString(rs,"pName"));
+                props.setProperty("pName", oscar.Misc.getString(rs, "pName"));
             }
 
             rs.close();
@@ -96,7 +96,7 @@ public class EctPalliativeCareRecord
                         }
                         else
                         {
-                            value = DBHandler.getString(rs,i);
+                            value = oscar.Misc.getString(rs, i);
                         }
                     }
 

@@ -127,16 +127,16 @@ public class EctViewConsultationRequestsUtil {
          
          ResultSet rs= DBHandler.GetSQL(sql.toString());
          while(rs.next()) {
-            demographicNo.add(DBHandler.getString(rs,"demographic_no"));
-            date.add(DBHandler.getString(rs,"referalDate"));               
-            ids.add(DBHandler.getString(rs,"requestId"));               
-            status.add(DBHandler.getString(rs,"status"));
-            patient.add(DBHandler.getString(rs,"last_name") +", "+ DBHandler.getString(rs,"first_name")) ;
-            provider.add(DBHandler.getString(rs,"lName") +", "+ DBHandler.getString(rs,"fName"));
-            service.add(DBHandler.getString(rs,"serviceDesc"));
-            urgency.add(DBHandler.getString(rs,"urgency"));
-            apptDate.add(DBHandler.getString(rs,"appointmentDate")+" "+DBHandler.getString(rs,"appointmentTime"));
-            this.patientWillBook.add(DBHandler.getString(rs,"patientWillBook"));
+            demographicNo.add(oscar.Misc.getString(rs, "demographic_no"));
+            date.add(oscar.Misc.getString(rs, "referalDate"));               
+            ids.add(oscar.Misc.getString(rs, "requestId"));               
+            status.add(oscar.Misc.getString(rs, "status"));
+            patient.add(oscar.Misc.getString(rs, "last_name") +", "+ oscar.Misc.getString(rs, "first_name")) ;
+            provider.add(oscar.Misc.getString(rs, "lName") +", "+ oscar.Misc.getString(rs, "fName"));
+            service.add(oscar.Misc.getString(rs, "serviceDesc"));
+            urgency.add(oscar.Misc.getString(rs, "urgency"));
+            apptDate.add(oscar.Misc.getString(rs, "appointmentDate")+" "+oscar.Misc.getString(rs, "appointmentTime"));
+            this.patientWillBook.add(oscar.Misc.getString(rs, "patientWillBook"));
          }            
          rs.close();            
       } catch(SQLException e) {            
@@ -162,15 +162,15 @@ public class EctViewConsultationRequestsUtil {
                   
          String sql = " select cr.status, cr.referalDate, cr.requestId, cr.patientWillBook, cr.urgency, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and demographicNo ='"+demoNo+"' order by cr.referalDate ";         
          ResultSet rs;         
-         for(rs = DBHandler.GetSQL(sql); rs.next(); date.add(DBHandler.getString(rs,"referalDate"))){            
-            ids.add(DBHandler.getString(rs,"requestId"));            
-            status.add(DBHandler.getString(rs,"status"));            
-            patient.add(DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name"));            
-            provider.add(DBHandler.getString(rs,"lName")+", "+DBHandler.getString(rs,"fName"));            
-            service.add(DBHandler.getString(rs,"serviceDesc"));
-            urgency.add(DBHandler.getString(rs,"urgency"));
+         for(rs = DBHandler.GetSQL(sql); rs.next(); date.add(oscar.Misc.getString(rs, "referalDate"))){            
+            ids.add(oscar.Misc.getString(rs, "requestId"));            
+            status.add(oscar.Misc.getString(rs, "status"));            
+            patient.add(oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name"));            
+            provider.add(oscar.Misc.getString(rs, "lName")+", "+oscar.Misc.getString(rs, "fName"));            
+            service.add(oscar.Misc.getString(rs, "serviceDesc"));
+            urgency.add(oscar.Misc.getString(rs, "urgency"));
             
-            patientWillBook.add(DBHandler.getString(rs,"patientWillBook"));            
+            patientWillBook.add(oscar.Misc.getString(rs, "patientWillBook"));            
          }                  
          rs.close();         
       } catch(SQLException e) {         

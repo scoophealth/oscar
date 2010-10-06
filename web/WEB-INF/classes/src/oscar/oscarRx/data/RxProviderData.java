@@ -44,35 +44,35 @@ public class RxProviderData {
 
             String providerClinicPhone=null, surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null, clinicProvince=null, practitionerNo=null;
             if (rs.next()) {
-                surname = DBHandler.getString(rs,"last_name");
-                firstName = DBHandler.getString(rs,"first_name");
-                practitionerNo = DBHandler.getString(rs,"practitionerNo");
+                surname = oscar.Misc.getString(rs, "last_name");
+                firstName = oscar.Misc.getString(rs, "first_name");
+                practitionerNo = oscar.Misc.getString(rs, "practitionerNo");
                 if(firstName.indexOf("Dr.")<0) {
                     firstName = "Dr. " + firstName;
                 }
-                providerClinicPhone = DBHandler.getString(rs,"work_phone");
+                providerClinicPhone = oscar.Misc.getString(rs, "work_phone");
             }
 
             sql = "SELECT value FROM property WHERE name = 'faxnumber' AND provider_no = '" + providerNo + "'";
             rs = DBHandler.GetSQL(sql);
             
             if( rs.next() ) {
-                clinicFax = DBHandler.getString(rs,"value");
+                clinicFax = oscar.Misc.getString(rs, "value");
             }
             
             sql = "SELECT * FROM clinic";
             rs = DBHandler.GetSQL(sql);
 
             if (rs.next()) {
-                clinicName = DBHandler.getString(rs,"clinic_name");
-                clinicAddress = DBHandler.getString(rs,"clinic_address");
-                clinicCity = DBHandler.getString(rs,"clinic_city");
-                clinicPostal = DBHandler.getString(rs,"clinic_postal");
-                clinicPhone = DBHandler.getString(rs,"clinic_phone");
-                clinicProvince = DBHandler.getString(rs,"clinic_province");
+                clinicName = oscar.Misc.getString(rs, "clinic_name");
+                clinicAddress = oscar.Misc.getString(rs, "clinic_address");
+                clinicCity = oscar.Misc.getString(rs, "clinic_city");
+                clinicPostal = oscar.Misc.getString(rs, "clinic_postal");
+                clinicPhone = oscar.Misc.getString(rs, "clinic_phone");
+                clinicProvince = oscar.Misc.getString(rs, "clinic_province");
                 
                 if( clinicFax == null )
-                    clinicFax = DBHandler.getString(rs,"clinic_fax");
+                    clinicFax = oscar.Misc.getString(rs, "clinic_fax");
             }
 
             if((clinicPhone.length()>15) && (providerClinicPhone != null && !providerClinicPhone.equals(""))) clinicPhone = providerClinicPhone;

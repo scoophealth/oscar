@@ -76,9 +76,9 @@ public class ProviderData {
             ResultSet rs = DBHandler.GetSQL(sql);            
             while ( rs.next() ) {
                 ArrayList provider = new ArrayList();
-                provider.add(DBHandler.getString(rs,"provider_no"));
-                provider.add(DBHandler.getString(rs,"first_name"));
-                provider.add(DBHandler.getString(rs,"last_name"));
+                provider.add(oscar.Misc.getString(rs, "provider_no"));
+                provider.add(oscar.Misc.getString(rs, "first_name"));
+                provider.add(oscar.Misc.getString(rs, "last_name"));
                 result.add(provider);
             }
             return result;
@@ -98,9 +98,9 @@ public class ProviderData {
             ResultSet rs = DBHandler.GetSQL(sql);            
             while ( rs.next() ) {
                 ArrayList provider = new ArrayList();
-                provider.add(DBHandler.getString(rs,"provider_no"));
-                provider.add(DBHandler.getString(rs,"first_name"));
-                provider.add(DBHandler.getString(rs,"last_name"));
+                provider.add(oscar.Misc.getString(rs, "provider_no"));
+                provider.add(oscar.Misc.getString(rs, "first_name"));
+                provider.add(oscar.Misc.getString(rs, "last_name"));
                 result.add(provider);
             }
             return result;
@@ -118,7 +118,7 @@ public class ProviderData {
             String sql = "select first_name, last_name from provider where provider_no='"+providerNo+"'";
             ResultSet rs = DBHandler.GetSQL(sql);            
             if ( rs.next() ) {            
-                return ( DBHandler.getString(rs,"first_name") + " " + DBHandler.getString(rs,"last_name") );            
+                return ( oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name") );            
             } else {                            
                 return "";
             }

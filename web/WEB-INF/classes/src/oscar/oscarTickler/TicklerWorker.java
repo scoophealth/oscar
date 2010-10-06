@@ -65,8 +65,8 @@ public class TicklerWorker extends Thread {
 
             ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                String demo = DBHandler.getString(rs,"demographicNo");
-                String date = DBHandler.getString(rs,"referalDate");
+                String demo = oscar.Misc.getString(rs, "demographicNo");
+                String date = oscar.Misc.getString(rs, "referalDate");
 
                 ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(demo) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
                 if (!td.hasTickler(demo, provider, ticklerMessage)) {

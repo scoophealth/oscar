@@ -128,9 +128,9 @@ public class EctProviderData {
             String sql = "SELECT * FROM provider WHERE provider_no = '" +providerNo+ "'";
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                String surname = DBHandler.getString(rs,"last_name");
-                String firstName = DBHandler.getString(rs,"first_name");
-                String comments = DBHandler.getString(rs,"comments");                                           
+                String surname = oscar.Misc.getString(rs, "last_name");
+                String firstName = oscar.Misc.getString(rs, "first_name");
+                String comments = oscar.Misc.getString(rs, "comments");                                           
                 String selfLearningPasswd = SxmlMisc.getXmlContent(comments,"xml_p_slppassword");
                 
                 if(firstName.indexOf("Dr.") < 0)

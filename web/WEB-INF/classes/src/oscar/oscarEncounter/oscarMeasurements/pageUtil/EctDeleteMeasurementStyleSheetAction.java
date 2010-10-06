@@ -69,7 +69,7 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
                         if(rs.next()){
                             ActionMessages errors = new ActionMessages();  
                             errors.add(deleteCheckbox[i],
-                            new ActionMessage("error.oscarEncounter.Measurements.cannotDeleteStyleSheet", DBHandler.getString(rs,"location")));
+                            new ActionMessage("error.oscarEncounter.Measurements.cannotDeleteStyleSheet", oscar.Misc.getString(rs, "location")));
                             saveErrors(request, errors);
                             return (new ActionForward(mapping.getInput()));
                         }

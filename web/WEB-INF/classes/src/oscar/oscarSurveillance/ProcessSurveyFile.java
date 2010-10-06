@@ -127,7 +127,7 @@ public class ProcessSurveyFile{
                try{
                   BufferedWriter out = new BufferedWriter(new FileWriter(fileDir+filename));                
                   while(rs.next()){ 
-                     String surveyDataId = DBHandler.getString(rs,"surveyDataId");
+                     String surveyDataId = oscar.Misc.getString(rs, "surveyDataId");
                      String writeString = replaceAllValues(exp, rs);                     
                      out.write(writeString+'\n');                                    
                      setProcessed(surveyDataId,processedId);

@@ -60,21 +60,21 @@ public class EctLabReqRecord
 
                 if(rs.next())
                 {
-                    java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                    java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 
-                    props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
-                    props.setProperty("patientName", DBHandler.getString(rs,"patientName"));
-                    props.setProperty("healthNumber", DBHandler.getString(rs,"hin"));
-                    props.setProperty("version", DBHandler.getString(rs,"ver"));
+                    props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
+                    props.setProperty("patientName", oscar.Misc.getString(rs, "patientName"));
+                    props.setProperty("healthNumber", oscar.Misc.getString(rs, "hin"));
+                    props.setProperty("version", oscar.Misc.getString(rs, "ver"));
                     props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                     props.setProperty("birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                    props.setProperty("homePhone", DBHandler.getString(rs,"phone"));
-                    props.setProperty("patientAddress", DBHandler.getString(rs,"address"));
-                    props.setProperty("patientCity", DBHandler.getString(rs,"city"));
-                    props.setProperty("patientPC", DBHandler.getString(rs,"postal"));
-                    props.setProperty("province", DBHandler.getString(rs,"province"));
-                    props.setProperty("sex", DBHandler.getString(rs,"sex"));
+                    props.setProperty("homePhone", oscar.Misc.getString(rs, "phone"));
+                    props.setProperty("patientAddress", oscar.Misc.getString(rs, "address"));
+                    props.setProperty("patientCity", oscar.Misc.getString(rs, "city"));
+                    props.setProperty("patientPC", oscar.Misc.getString(rs, "postal"));
+                    props.setProperty("province", oscar.Misc.getString(rs, "province"));
+                    props.setProperty("sex", oscar.Misc.getString(rs, "sex"));
                 }
                 rs.close();
 
@@ -86,8 +86,8 @@ public class EctLabReqRecord
 
                 if(rs.next())
                 {
-                    String num = DBHandler.getString(rs,"ohip_no");
-                    props.setProperty("provName", DBHandler.getString(rs,"provName"));
+                    String num = oscar.Misc.getString(rs, "ohip_no");
+                    props.setProperty("provName", oscar.Misc.getString(rs, "provName"));
                     props.setProperty("practitionerNo", "0000-"+num+"-00");
                 }
                 rs.close();
@@ -129,7 +129,7 @@ public class EctLabReqRecord
                         }
                         else
                         {
-                            value = DBHandler.getString(rs,i);
+                            value = oscar.Misc.getString(rs, i);
                         }
                     }
 

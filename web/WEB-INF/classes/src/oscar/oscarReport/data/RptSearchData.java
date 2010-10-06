@@ -50,7 +50,7 @@ public class RptSearchData {
               rs = DBHandler.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");
 
               while (rs.next()) {
-                retval.add( DBHandler.getString(rs,"roster_status") );
+                retval.add( oscar.Misc.getString(rs, "roster_status") );
 
               }
               rs.close();
@@ -68,7 +68,7 @@ public class RptSearchData {
               rs = DBHandler.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");
 
               while (rs.next()) {
-                retval.add( DBHandler.getString(rs,"patient_status") );
+                retval.add( oscar.Misc.getString(rs, "patient_status") );
 
               }
               rs.close();
@@ -84,7 +84,7 @@ public class RptSearchData {
               rs = DBHandler.GetSQL("select distinct provider_no from demographic order by provider_no");
 
               while (rs.next()) {
-                retval.add( DBHandler.getString(rs,"provider_no") );
+                retval.add( oscar.Misc.getString(rs, "provider_no") );
 
               }
               rs.close();
@@ -101,8 +101,8 @@ public class RptSearchData {
 
               while (rs.next()) {
                 SearchCriteria sc = new SearchCriteria();
-                sc.id = DBHandler.getString(rs,"favId");
-                sc.queryName = DBHandler.getString(rs,"queryName");
+                sc.id = oscar.Misc.getString(rs, "favId");
+                sc.queryName = oscar.Misc.getString(rs, "queryName");
 
                 retval.add( sc );
 

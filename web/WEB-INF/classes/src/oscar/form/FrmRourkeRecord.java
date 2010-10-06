@@ -50,12 +50,12 @@ public class FrmRourkeRecord extends FrmRecord {
                 + "FROM demographic WHERE demographic_no = " + demographicNo;
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
-                props.setProperty("c_pName", DBHandler.getString(rs,"pName"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
+                props.setProperty("c_pName", oscar.Misc.getString(rs, "pName"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
-                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
                 props.setProperty("c_birthDate", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 //props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
@@ -83,7 +83,7 @@ public class FrmRourkeRecord extends FrmRecord {
 	try{
 		rs = DBHandler.GetSQL("select sex from demographic where demographic_no = "+demo);
 		if(rs.next()){
-			str = DBHandler.getString(rs,"sex");	
+			str = oscar.Misc.getString(rs, "sex");	
 			if (str.equalsIgnoreCase("F")){
 				retval = true;
 			}
@@ -128,7 +128,7 @@ public class FrmRourkeRecord extends FrmRecord {
                     if(md.getColumnTypeName(i).equalsIgnoreCase("date"))               {
                         value = UtilDateUtilities.DateToString(rs.getDate(i), "yyyy/MM/dd");
                     } else {
-                        value = DBHandler.getString(rs,i);
+                        value = oscar.Misc.getString(rs, i);
                     }
 
                     if(i<=6) {

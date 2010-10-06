@@ -51,7 +51,7 @@ public class EctStyleSheetBeanHandler {
             ResultSet rs;
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                EctStyleSheetBean location = new EctStyleSheetBean(DBHandler.getString(rs,"location"), rs.getInt("cssID"));
+                EctStyleSheetBean location = new EctStyleSheetBean(oscar.Misc.getString(rs, "location"), rs.getInt("cssID"));
                 styleSheetNameVector.add(location);
             }
 

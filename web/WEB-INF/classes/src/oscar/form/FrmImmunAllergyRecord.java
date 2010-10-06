@@ -42,9 +42,9 @@ public class FrmImmunAllergyRecord extends FrmRecord {
             String sql = "SELECT demographic_no, last_name, first_name FROM demographic WHERE demographic_no = " +demographicNo ;
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
-                props.setProperty("c_surname", DBHandler.getString(rs,"last_name"));
-                props.setProperty("c_givenName", DBHandler.getString(rs,"first_name"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
+                props.setProperty("c_surname", oscar.Misc.getString(rs, "last_name"));
+                props.setProperty("c_givenName", oscar.Misc.getString(rs, "first_name"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));

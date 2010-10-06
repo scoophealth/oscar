@@ -62,7 +62,7 @@ public class EctSaveEncounterAction
       String latestID = null;
       
       if (rs.next()) {
-          latestID = DBHandler.getString(rs,"maxID");
+          latestID = oscar.Misc.getString(rs, "maxID");
       }
       rs.close();
 

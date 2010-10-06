@@ -37,7 +37,7 @@ public class AcknowledgementData {
             String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='HL7'";
             ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                acknowledgements.add(new ReportStatus(DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "status"), DBHandler.getString(rs, "comment"), DBHandler.getString(rs, "timestamp"), segmentID));
+                acknowledgements.add(new ReportStatus(oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "status"), oscar.Misc.getString(rs, "comment"), oscar.Misc.getString(rs, "timestamp"), segmentID));
             }
             rs.close();
         } catch (Exception e) {
@@ -55,7 +55,7 @@ public class AcknowledgementData {
             String sql = "select provider.first_name, provider.last_name, provider.provider_no, providerLabRouting.status, providerLabRouting.comment, providerLabRouting.timestamp from provider, providerLabRouting where provider.provider_no = providerLabRouting.provider_no and providerLabRouting.lab_no='" + segmentID + "' and providerLabRouting.lab_type='" + docType + "'";
             ResultSet rs = DBHandler.GetSQL(sql);
             while (rs.next()) {
-                acknowledgements.add(new ReportStatus(DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "status"), DBHandler.getString(rs, "comment"), DBHandler.getString(rs, "timestamp"), segmentID));
+                acknowledgements.add(new ReportStatus(oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "status"), oscar.Misc.getString(rs, "comment"), oscar.Misc.getString(rs, "timestamp"), segmentID));
             }
             rs.close();
         } catch (Exception e) {

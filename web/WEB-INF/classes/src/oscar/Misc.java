@@ -47,14 +47,6 @@ public final class Misc {
 		return H;
 	}
 
-	public static String[] lookupHash(String[] names, Hashtable H) {
-		if (H == null) return new String[0];
-		String[] R = new String[names.length];
-		for (int i = 0; i < names.length; i++)
-			R[i] = (String) H.get(names[i]);
-		return R;
-	}
-
 	public static String getApplicationName(String sAppRootPath) {
 		int idx = sAppRootPath.lastIndexOf('/');
 		sAppRootPath = sAppRootPath.substring(0, idx);

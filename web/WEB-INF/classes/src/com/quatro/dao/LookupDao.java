@@ -176,22 +176,22 @@ public class LookupDao extends HibernateDaoSupport {
 			   LookupCodeValue lv = new LookupCodeValue();
 			   lv.setPrefix(tableId);
 			   lv.setCode(rs.getString(1));
-			   lv.setDescription(db.getString(rs, 2));
-			   lv.setActive(Integer.valueOf("0" + db.getString(rs, 3)).intValue()==1);
-			   lv.setOrderByIndex(Integer.valueOf("0" + db.getString(rs,4)).intValue());
-			   lv.setParentCode(db.getString(rs, 5));
-			   lv.setBuf1(db.getString(rs,6));
-			   lv.setCodeTree(db.getString(rs, 7));
-			   lv.setLastUpdateUser(db.getString(rs,8));
-			   lv.setLastUpdateDate(MyDateFormat.getCalendar(db.getString(rs, 9)));
-			   lv.setBuf3(db.getString(rs,10));
-			   lv.setBuf4(db.getString(rs,11));
-			   lv.setBuf5(db.getString(rs,12));
-			   lv.setBuf6(db.getString(rs,13));
-			   lv.setBuf7(db.getString(rs,14));
-			   lv.setBuf8(db.getString(rs,15));
-			   lv.setBuf9(db.getString(rs,16));
-			   lv.setCodecsv(db.getString(rs, 17));
+			   lv.setDescription(oscar.Misc.getString(rs, 2));
+			   lv.setActive(Integer.valueOf("0" + oscar.Misc.getString(rs, 3)).intValue()==1);
+			   lv.setOrderByIndex(Integer.valueOf("0" + oscar.Misc.getString(rs, 4)).intValue());
+			   lv.setParentCode(oscar.Misc.getString(rs, 5));
+			   lv.setBuf1(oscar.Misc.getString(rs, 6));
+			   lv.setCodeTree(oscar.Misc.getString(rs, 7));
+			   lv.setLastUpdateUser(oscar.Misc.getString(rs, 8));
+			   lv.setLastUpdateDate(MyDateFormat.getCalendar(oscar.Misc.getString(rs, 9)));
+			   lv.setBuf3(oscar.Misc.getString(rs, 10));
+			   lv.setBuf4(oscar.Misc.getString(rs, 11));
+			   lv.setBuf5(oscar.Misc.getString(rs, 12));
+			   lv.setBuf6(oscar.Misc.getString(rs, 13));
+			   lv.setBuf7(oscar.Misc.getString(rs, 14));
+			   lv.setBuf8(oscar.Misc.getString(rs, 15));
+			   lv.setBuf9(oscar.Misc.getString(rs, 16));
+			   lv.setCodecsv(oscar.Misc.getString(rs, 17));
 			   list.add(lv);
 			}
 			rs.close();
@@ -266,7 +266,7 @@ public class LookupDao extends HibernateDaoSupport {
 				for(int i=0; i< fs.size(); i++) 
 				{
 					FieldDefValue fdv = (FieldDefValue) fs.get(i);
-					String val = db.getString(rs, i+1);
+					String val = oscar.Misc.getString(rs, (i+1));
 					if("D".equals(fdv.getFieldType()))
 						if(fdv.isEditable()) {
 							val = MyDateFormat.getStandardDate(MyDateFormat.getCalendarwithTime(val));
@@ -319,7 +319,7 @@ public class LookupDao extends HibernateDaoSupport {
 				for(int i=0; i< fs.size(); i++) 
 				{
 					FieldDefValue fdv = (FieldDefValue) fs.get(i);
-					String val = db.getString(rs, i+1);
+					String val = oscar.Misc.getString(rs, (i+1));
 					if("D".equals(fdv.getFieldType()))
 						val = MyDateFormat.getStandardDateTime(MyDateFormat.getCalendarwithTime(val));
 					fdv.setVal(val);

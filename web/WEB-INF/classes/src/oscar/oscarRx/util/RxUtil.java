@@ -1463,7 +1463,7 @@ public class RxUtil {
                     Date archivedDate = rs.getDate("archived_date");
                     // String archDate = rs.getString("archived_date");
                     String archDate = RxUtil.DateToString(archivedDate);
-                    String archReason = DBHandler.getString(rs, "archived_reason");
+                    String archReason = oscar.Misc.getString(rs, "archived_reason");
 
 
                     rx.setLastArchDate(archDate);

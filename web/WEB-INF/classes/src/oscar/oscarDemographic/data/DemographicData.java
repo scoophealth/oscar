@@ -60,8 +60,8 @@ public class DemographicData {
 			MiscUtils.getLogger().debug("sql: " + sql);
 
 			if (rs.next()) {
-				MiscUtils.getLogger().debug(DBHandler.getString(rs, "first_name"));
-				fullName = DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "last_name");
+				MiscUtils.getLogger().debug(oscar.Misc.getString(rs, "first_name"));
+				fullName = oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "last_name");
 			}
 			rs.close();
 
@@ -82,7 +82,7 @@ public class DemographicData {
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				try {
-					date = (Date) formatter.parse(DBHandler.getString(rs, "year_of_birth") + "-" + DBHandler.getString(rs, "month_of_birth") + "-" + DBHandler.getString(rs, "date_of_birth"));
+					date = (Date) formatter.parse(oscar.Misc.getString(rs, "year_of_birth") + "-" + oscar.Misc.getString(rs, "month_of_birth") + "-" + oscar.Misc.getString(rs, "date_of_birth"));
 				} catch (Exception eg) {
 				}
 			}
@@ -104,7 +104,7 @@ public class DemographicData {
 			String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				demographicNo = DBHandler.getString(rs, "demographic_no");
+				demographicNo = oscar.Misc.getString(rs, "demographic_no");
 			}
 			rs.close();
 			return demographicNo;
@@ -131,7 +131,7 @@ public class DemographicData {
 
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				demographicNo = DBHandler.getString(rs, "demographic_no");
+				demographicNo = oscar.Misc.getString(rs, "demographic_no");
 			}
 			rs.close();
 			return demographicNo;
@@ -172,7 +172,7 @@ public class DemographicData {
 
 			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
-				String demoNo = DBHandler.getString(rs, "demographic_no");
+				String demoNo = oscar.Misc.getString(rs, "demographic_no");
 
 				list.add(getDemographic(demoNo));
 			}
@@ -211,7 +211,7 @@ public class DemographicData {
 			
 			rs = DBHandler.GetSQL(sql);
 			while (rs.next()) {
-				String demoNo = DBHandler.getString(rs, "demographic_no");
+				String demoNo = oscar.Misc.getString(rs, "demographic_no");
 
 				list.add(getDemographic(demoNo));
 			}
@@ -230,11 +230,11 @@ public class DemographicData {
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(DBHandler.getString(rs, "year_of_birth"), DBHandler.getString(rs, "month_of_birth"), DBHandler.getString(rs, "date_of_birth")));
+				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth")));
 				if (age == null) {
 					age = "";
 				}
-				nameage = DBHandler.getString(rs, "last_name") + ", " + DBHandler.getString(rs, "first_name") + " " + DBHandler.getString(rs, "sex") + " " + age;
+				nameage = oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name") + " " + oscar.Misc.getString(rs, "sex") + " " + age;
 			}
 
 			rs.close();
@@ -253,11 +253,11 @@ public class DemographicData {
 			String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(DBHandler.getString(rs, "year_of_birth"), DBHandler.getString(rs, "month_of_birth"), DBHandler.getString(rs, "date_of_birth")));
+				String age = UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth")));
 				if (age == null) {
 					age = "";
 				}
-				nameage = new String[] { DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "first_name"), DBHandler.getString(rs, "sex"), age };
+				nameage = new String[] { oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "sex"), age };
 			}
 
 			rs.close();
@@ -277,7 +277,7 @@ public class DemographicData {
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
 				try {
-					retval = DBHandler.getString(rs, "sex");
+					retval = oscar.Misc.getString(rs, "sex");
 				} catch (Exception eg) {
 				}
 			}
@@ -311,9 +311,7 @@ public class DemographicData {
 			rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
-				demographic = new Demographic(DemographicNo, DBHandler.getString(rs, "title"), DBHandler.getString(rs, "last_name"), DBHandler.getString(rs, "first_name"), DBHandler.getString(rs, "address"), DBHandler.getString(rs, "city"), DBHandler.getString(rs, "province"), DBHandler.getString(rs, "postal"), DBHandler.getString(rs, "phone"), DBHandler.getString(rs, "phone2"), DBHandler.getString(rs, "email"), DBHandler.getString(rs, "pin"), DBHandler.getString(rs, "year_of_birth"), DBHandler.getString(rs, "month_of_birth"), DBHandler.getString(rs, "date_of_birth"), DBHandler.getString(rs, "hin"), DBHandler
-				        .getString(rs, "ver"), DBHandler.getString(rs, "roster_status"), DBHandler.getString(rs, "patient_status"), DBHandler.getString(rs, "date_joined"), DBHandler.getString(rs, "chart_no"), DBHandler.getString(rs, "official_lang"), DBHandler.getString(rs, "spoken_lang"), DBHandler.getString(rs, "provider_no"), DBHandler.getString(rs, "sex"), DBHandler.getString(rs, "end_date"), DBHandler.getString(rs, "eff_date"), DBHandler.getString(rs, "pcn_indicator"), DBHandler.getString(rs, "hc_type"), DBHandler.getString(rs, "hc_renew_date"), DBHandler.getString(rs, "family_doctor"), DBHandler
-				        .getString(rs, "alias"), DBHandler.getString(rs, "previousAddress"), DBHandler.getString(rs, "children"), DBHandler.getString(rs, "sourceOfIncome"), DBHandler.getString(rs, "citizenship"), DBHandler.getString(rs, "sin"));
+				demographic = new Demographic(DemographicNo, oscar.Misc.getString(rs, "title"), oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "address"), oscar.Misc.getString(rs, "city"), oscar.Misc.getString(rs, "province"), oscar.Misc.getString(rs, "postal"), oscar.Misc.getString(rs, "phone"), oscar.Misc.getString(rs, "phone2"), oscar.Misc.getString(rs, "email"), oscar.Misc.getString(rs, "pin"), oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"), oscar.Misc.getString(rs, "hin"), oscar.Misc.getString(rs, "ver"), oscar.Misc.getString(rs, "roster_status"), oscar.Misc.getString(rs, "patient_status"), oscar.Misc.getString(rs, "date_joined"), oscar.Misc.getString(rs, "chart_no"), oscar.Misc.getString(rs, "official_lang"), oscar.Misc.getString(rs, "spoken_lang"), oscar.Misc.getString(rs, "provider_no"), oscar.Misc.getString(rs, "sex"), oscar.Misc.getString(rs, "end_date"), oscar.Misc.getString(rs, "eff_date"), oscar.Misc.getString(rs, "pcn_indicator"), oscar.Misc.getString(rs, "hc_type"), oscar.Misc.getString(rs, "hc_renew_date"), oscar.Misc.getString(rs, "family_doctor"), oscar.Misc.getString(rs, "alias"), oscar.Misc.getString(rs, "previousAddress"), oscar.Misc.getString(rs, "children"), oscar.Misc.getString(rs, "sourceOfIncome"), oscar.Misc.getString(rs, "citizenship"), oscar.Misc.getString(rs, "sin"));
 			}
 
 			rs.close();
@@ -334,7 +332,7 @@ public class DemographicData {
 			String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin + "'";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				demographicNo = DBHandler.getString(rs, "demographic_no");
+				demographicNo = oscar.Misc.getString(rs, "demographic_no");
 			}
 			rs.close();
 			return demographicNo;
@@ -354,7 +352,7 @@ public class DemographicData {
 			rs = DBHandler.GetSQL(sql);
 
 			if (rs.next()) {
-				date = DBHandler.getString(rs, "date_joined");// getString("date_joined");
+				date = oscar.Misc.getString(rs, "date_joined");// getString("date_joined");
 			}
 
 			rs.close();
@@ -518,42 +516,42 @@ public class DemographicData {
 
 				if (rs.next()) {
 					this.demographic_no = DemographicNo;
-					this.title = DBHandler.getString(rs, "title");
-					this.last_name = DBHandler.getString(rs, "last_name");
-					this.first_name = DBHandler.getString(rs, "first_name");
-					this.address = DBHandler.getString(rs, "address");
-					this.city = DBHandler.getString(rs, "city");
-					this.province = DBHandler.getString(rs, "province");
-					this.postal = DBHandler.getString(rs, "postal");
-					this.phone = DBHandler.getString(rs, "phone");
-					this.phone2 = DBHandler.getString(rs, "phone2");
-					this.email = DBHandler.getString(rs, "email");
-					this.pin = DBHandler.getString(rs, "pin");
-					this.year_of_birth = DBHandler.getString(rs, "year_of_birth");
-					this.month_of_birth = DBHandler.getString(rs, "month_of_birth");
-					this.date_of_birth = DBHandler.getString(rs, "date_of_birth");
-					this.hin = DBHandler.getString(rs, "hin");
-					this.ver = DBHandler.getString(rs, "ver");
-					this.roster_status = DBHandler.getString(rs, "roster_status");
-					this.patient_status = DBHandler.getString(rs, "patient_status");
-					this.date_joined = DBHandler.getString(rs, "date_joined");
-					this.chart_no = DBHandler.getString(rs, "chart_no");
-					this.official_lang = DBHandler.getString(rs, "official_lang");
-					this.spoken_lang = DBHandler.getString(rs, "spoken_lang");
-					this.provider_no = DBHandler.getString(rs, "provider_no");
-					this.sex = DBHandler.getString(rs, "sex");
-					this.end_date = DBHandler.getString(rs, "end_date");
-					this.eff_date = DBHandler.getString(rs, "eff_date");
-					this.pcn_indicator = DBHandler.getString(rs, "pcn_indicator");
-					this.hc_type = DBHandler.getString(rs, "hc_type");
-					this.hc_renew_date = DBHandler.getString(rs, "hc_renew_date");
-					this.family_doctor = DBHandler.getString(rs, "family_doctor");
-					this.alias = DBHandler.getString(rs, "alias");
-					this.previousAddress = DBHandler.getString(rs, "previousAddress");
-					this.children = DBHandler.getString(rs, "children");
-					this.sourceOfIncome = DBHandler.getString(rs, "sourceOfIncome");
-					this.citizenship = DBHandler.getString(rs, "citizenship");
-					this.sin = DBHandler.getString(rs, "sin");
+					this.title = oscar.Misc.getString(rs, "title");
+					this.last_name = oscar.Misc.getString(rs, "last_name");
+					this.first_name = oscar.Misc.getString(rs, "first_name");
+					this.address = oscar.Misc.getString(rs, "address");
+					this.city = oscar.Misc.getString(rs, "city");
+					this.province = oscar.Misc.getString(rs, "province");
+					this.postal = oscar.Misc.getString(rs, "postal");
+					this.phone = oscar.Misc.getString(rs, "phone");
+					this.phone2 = oscar.Misc.getString(rs, "phone2");
+					this.email = oscar.Misc.getString(rs, "email");
+					this.pin = oscar.Misc.getString(rs, "pin");
+					this.year_of_birth = oscar.Misc.getString(rs, "year_of_birth");
+					this.month_of_birth = oscar.Misc.getString(rs, "month_of_birth");
+					this.date_of_birth = oscar.Misc.getString(rs, "date_of_birth");
+					this.hin = oscar.Misc.getString(rs, "hin");
+					this.ver = oscar.Misc.getString(rs, "ver");
+					this.roster_status = oscar.Misc.getString(rs, "roster_status");
+					this.patient_status = oscar.Misc.getString(rs, "patient_status");
+					this.date_joined = oscar.Misc.getString(rs, "date_joined");
+					this.chart_no = oscar.Misc.getString(rs, "chart_no");
+					this.official_lang = oscar.Misc.getString(rs, "official_lang");
+					this.spoken_lang = oscar.Misc.getString(rs, "spoken_lang");
+					this.provider_no = oscar.Misc.getString(rs, "provider_no");
+					this.sex = oscar.Misc.getString(rs, "sex");
+					this.end_date = oscar.Misc.getString(rs, "end_date");
+					this.eff_date = oscar.Misc.getString(rs, "eff_date");
+					this.pcn_indicator = oscar.Misc.getString(rs, "pcn_indicator");
+					this.hc_type = oscar.Misc.getString(rs, "hc_type");
+					this.hc_renew_date = oscar.Misc.getString(rs, "hc_renew_date");
+					this.family_doctor = oscar.Misc.getString(rs, "family_doctor");
+					this.alias = oscar.Misc.getString(rs, "alias");
+					this.previousAddress = oscar.Misc.getString(rs, "previousAddress");
+					this.children = oscar.Misc.getString(rs, "children");
+					this.sourceOfIncome = oscar.Misc.getString(rs, "sourceOfIncome");
+					this.citizenship = oscar.Misc.getString(rs, "citizenship");
+					this.sin = oscar.Misc.getString(rs, "sin");
 				}
 
 				rs.close();

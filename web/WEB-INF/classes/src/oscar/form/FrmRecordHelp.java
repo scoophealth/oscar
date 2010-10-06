@@ -57,7 +57,7 @@ public class FrmRecordHelp {
                 else if (md.getColumnTypeName(i).equalsIgnoreCase("timestamp"))
                     value = UtilDateUtilities.DateToString(rs.getTimestamp(i), "yyyy/MM/dd HH:mm:ss");
                 else
-                    value = DBHandler.getString(rs,i);
+                    value = oscar.Misc.getString(rs, i);
 
                 if (value != null)
                     props.setProperty(name, value);
@@ -220,7 +220,7 @@ public class FrmRecordHelp {
                 } else if (md.getColumnTypeName(i).equalsIgnoreCase("date"))
                     value = UtilDateUtilities.DateToString(rs.getDate(i), _dateFormat);
                 else
-                    value = DBHandler.getString(rs,i);
+                    value = oscar.Misc.getString(rs, i);
 
                 if (value != null)
                     props.setProperty(name, value);

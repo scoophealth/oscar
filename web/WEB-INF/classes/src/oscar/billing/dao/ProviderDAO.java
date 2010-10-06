@@ -65,9 +65,9 @@ public class ProviderDAO extends DAO {
 
             while (rs.next()) {
                 provider = new Provider();
-                provider.setProviderNo(DBHandler.getString(rs,1));
-                provider.setLastName(DBHandler.getString(rs,2));
-                provider.setFirstName(DBHandler.getString(rs,3));
+                provider.setProviderNo(oscar.Misc.getString(rs, 1));
+                provider.setLastName(oscar.Misc.getString(rs, 2));
+                provider.setFirstName(oscar.Misc.getString(rs, 3));
                 list.add(provider);
             }
         } finally {

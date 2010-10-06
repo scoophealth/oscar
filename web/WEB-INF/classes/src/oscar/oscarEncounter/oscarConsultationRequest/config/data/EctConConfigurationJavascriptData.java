@@ -54,7 +54,7 @@ public class EctConConfigurationJavascriptData {
             String sql = "select javascriptString from specialistsJavascript where setId = '1'";
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next())
-                retval = DBHandler.getString(rs,"javascriptString");
+                retval = oscar.Misc.getString(rs, "javascriptString");
         } catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);
         }

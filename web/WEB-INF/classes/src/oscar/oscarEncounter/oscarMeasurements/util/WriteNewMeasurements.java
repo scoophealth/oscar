@@ -105,7 +105,7 @@ public class WriteNewMeasurements {
                     sql = "SELECT measuringInstruction FROM measurementType WHERE type='" + type + "'";
                     rs = DBHandler.GetSQL(sql);
                     if (rs.next()) {
-                        measuringInst = DBHandler.getString(rs,"measuringInstruction");
+                        measuringInst = oscar.Misc.getString(rs, "measuringInstruction");
                         curmeasure.put("measuringInstruction", measuringInst);
                         rs.close();
                     } else {

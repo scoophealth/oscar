@@ -36,26 +36,26 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 						.DateToString(UtilDateUtilities.Today(), _dateFormat));
 				props.setProperty("formEdited", UtilDateUtilities.DateToString(
 						UtilDateUtilities.Today(), _dateFormat));
-				props.setProperty("c_surname", DBHandler.getString(rs,"last_name"));
-				props.setProperty("c_givenName", DBHandler.getString(rs,"first_name"));
-				props.setProperty("c_address", DBHandler.getString(rs,"address"));
-				props.setProperty("c_city", DBHandler.getString(rs,"city"));
-				props.setProperty("c_province", DBHandler.getString(rs,"province"));
-				props.setProperty("c_postal", DBHandler.getString(rs,"postal"));
-				props.setProperty("c_phn", DBHandler.getString(rs,"hin"));
+				props.setProperty("c_surname", oscar.Misc.getString(rs, "last_name"));
+				props.setProperty("c_givenName", oscar.Misc.getString(rs, "first_name"));
+				props.setProperty("c_address", oscar.Misc.getString(rs, "address"));
+				props.setProperty("c_city", oscar.Misc.getString(rs, "city"));
+				props.setProperty("c_province", oscar.Misc.getString(rs, "province"));
+				props.setProperty("c_postal", oscar.Misc.getString(rs, "postal"));
+				props.setProperty("c_phn", oscar.Misc.getString(rs, "hin"));
 				props.setProperty("pg1_dateOfBirth", UtilDateUtilities
 						.DateToString(date, _dateFormat));
 				props.setProperty("pg1_age", String.valueOf(UtilDateUtilities
 						.calcAge(date)));
-				props.setProperty("c_phone", DBHandler.getString(rs,"phone") + "  "
-						+ DBHandler.getString(rs,"phone2"));
+				props.setProperty("c_phone", oscar.Misc.getString(rs, "phone") + "  "
+						+ oscar.Misc.getString(rs, "phone2"));
 				props.setProperty("pg1_formDate", UtilDateUtilities
 						.DateToString(UtilDateUtilities.Today(), _dateFormat));
 			}
 			sql = "select clinic_name from clinic";
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-				props.setProperty("c_clinicName", DBHandler.getString(rs,"clinic_name"));
+				props.setProperty("c_clinicName", oscar.Misc.getString(rs, "clinic_name"));
 			}
 			rs.close();
 		} else {
@@ -69,17 +69,17 @@ public class FrmBCClientChartChecklistRecord extends FrmRecord {
 			DBHelp db = new DBHelp();
 			ResultSet rs = db.searchDBRecord(sql);
 			if (rs.next()) {
-				props.setProperty("c_surname_cur", DBHandler.getString(rs,"last_name"));
+				props.setProperty("c_surname_cur", oscar.Misc.getString(rs, "last_name"));
 				props
 						.setProperty("c_givenName_cur", rs
 								.getString("first_name"));
-				props.setProperty("c_address_cur", DBHandler.getString(rs,"address"));
-				props.setProperty("c_city_cur", DBHandler.getString(rs,"city"));
-				props.setProperty("c_province_cur", DBHandler.getString(rs,"province"));
-				props.setProperty("c_postal_cur", DBHandler.getString(rs,"postal"));
-				props.setProperty("c_phn_cur", DBHandler.getString(rs,"hin"));
-				props.setProperty("c_phone_cur", DBHandler.getString(rs,"phone") + "  "
-						+ DBHandler.getString(rs,"phone2"));
+				props.setProperty("c_address_cur", oscar.Misc.getString(rs, "address"));
+				props.setProperty("c_city_cur", oscar.Misc.getString(rs, "city"));
+				props.setProperty("c_province_cur", oscar.Misc.getString(rs, "province"));
+				props.setProperty("c_postal_cur", oscar.Misc.getString(rs, "postal"));
+				props.setProperty("c_phn_cur", oscar.Misc.getString(rs, "hin"));
+				props.setProperty("c_phone_cur", oscar.Misc.getString(rs, "phone") + "  "
+						+ oscar.Misc.getString(rs, "phone2"));
 			}
 		}
 		return props;

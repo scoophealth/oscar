@@ -292,7 +292,7 @@ public class LabResultData implements Comparable{
                 
                 ResultSet rs = DBHandler.GetSQL(sql);
                 if(rs.next()){
-                    date=DBHandler.getString(rs,"print_date")+DBHandler.getString(rs,"print_time");
+                    date=oscar.Misc.getString(rs, "print_date")+oscar.Misc.getString(rs, "print_time");
                 }
                 rs.close();
             }catch(Exception e){

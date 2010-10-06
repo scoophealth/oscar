@@ -70,9 +70,9 @@ function posttoText(index){
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left"
 		valign="top">
 		<td class="SmallerText"><a href=#
-			onClick="posttoText('<%=DBHandler.getString(rs,"ohip_no")%>');"><%=DBHandler.getString(rs,"ohip_no")%></a>
+			onClick="posttoText('<%=oscar.Misc.getString(rs,"ohip_no")%>');"><%=oscar.Misc.getString(rs,"ohip_no")%></a>
 		</td>
-		<td class="SmallerText">Dr. <%=DBHandler.getString(rs,"first_name")%> <%=DBHandler.getString(rs,"last_name")%>
+		<td class="SmallerText">Dr. <%=oscar.Misc.getString(rs,"first_name")%> <%=oscar.Misc.getString(rs,"last_name")%>
 		</td>
 	</tr>
 	<%

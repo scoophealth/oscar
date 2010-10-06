@@ -76,16 +76,16 @@ params[1] = new DBPreparedHandlerParam(MyDateFormat.getSysDate(edate));
 String sql = "select provider_no, last_name, first_name from provider where provider_type like 'nurse%'";
 ResultSet rs = db.queryResults(sql);
 while (rs.next()) { 
-	vNurse.add(DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name"));
-	vNurseNo.add(DBHandler.getString(rs,"provider_no"));
+	vNurse.add(oscar.Misc.getString(rs,"last_name") + ", " + oscar.Misc.getString(rs,"first_name"));
+	vNurseNo.add(oscar.Misc.getString(rs,"provider_no"));
 }
 
 // get service code list
 sql = "select distinct(service_code), service_desc from billingdetail bd where bd.status!='D' and bd.appointment_date>=? and bd.appointment_date<=? order by service_code";
 rs = db.queryResults(sql,params); 
 while (rs.next()) { 
-	vServiceCode.add(DBHandler.getString(rs,"service_code"));
-	vServiceDesc.add(DBHandler.getString(rs,"service_desc"));
+	vServiceCode.add(oscar.Misc.getString(rs,"service_code"));
+	vServiceDesc.add(oscar.Misc.getString(rs,"service_desc"));
 }
 
 for (int i = 0; i < vServiceCode.size(); i++) {
@@ -93,7 +93,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd where b.billing_no=bd.billing_no  and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), DBHandler.getString(rs,"count(distinct(b.demographic_no))"));
+		props.setProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.demographic_no))"));
 	}
 
 /*
@@ -107,7 +107,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd where b.billing_no=bd.billing_no  and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and bd.service_desc='" + vServiceDesc.get(i) + "'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i), DBHandler.getString(rs,"count(distinct(b.billing_no))"));
+		props.setProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.billing_no))"));
 	}
 
 /*
@@ -121,7 +121,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, provider p where b.billing_no=bd.billing_no and b.creator=p.provider_no and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and  p.provider_type='doctor'" + " and bd.service_desc='" + vServiceDesc.get(i) + "'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "patPhy" + vServiceDesc.get(i), DBHandler.getString(rs,"count(distinct(b.demographic_no))"));
+		props.setProperty(vServiceCode.get(i) + "patPhy" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.demographic_no))"));
 	}
 
 /*
@@ -135,7 +135,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, provider p where b.billing_no=bd.billing_no and b.creator=p.provider_no and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and  p.provider_type='doctor'" + " and bd.service_desc='" + vServiceDesc.get(i) + "'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "visPhy" + vServiceDesc.get(i), DBHandler.getString(rs,"count(distinct(b.billing_no))"));
+		props.setProperty(vServiceCode.get(i) + "visPhy" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.billing_no))"));
 	}
 
 /*
@@ -149,7 +149,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 	sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd, provider p where b.billing_no=bd.billing_no and b.creator=p.provider_no and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and  p.provider_type='resident'" + " and bd.service_desc='" + vServiceDesc.get(i) + "'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "patRes" + vServiceDesc.get(i), DBHandler.getString(rs,"count(distinct(b.demographic_no))"));
+		props.setProperty(vServiceCode.get(i) + "patRes" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.demographic_no))"));
 	}
 
 /*
@@ -163,7 +163,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 	sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd, provider p where b.billing_no=bd.billing_no and b.creator=p.provider_no and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D' and bd.service_code='" + vServiceCode.get(i) + "' and  p.provider_type='resident'" + " and bd.service_desc='" + vServiceDesc.get(i) + "'";
 	rs = db.queryResults(sql,params); 
 	while (rs.next()) { 
-		props.setProperty(vServiceCode.get(i) + "visRes" + vServiceDesc.get(i), DBHandler.getString(rs,"count(distinct(b.billing_no))"));
+		props.setProperty(vServiceCode.get(i) + "visRes" + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.billing_no))"));
 	}
 
 /*
@@ -178,7 +178,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 		sql = "select count(distinct(b.demographic_no)) from billing b, billingdetail bd  where b.billing_no=bd.billing_no and bd.service_code='" + vServiceCode.get(i) + "' and b.creator='" + vNurseNo.get(j) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'" + " and bd.service_desc='" + vServiceDesc.get(i) + "'";
 		rs = db.queryResults(sql,params); 
 		while (rs.next()) { 
-			props.setProperty(vServiceCode.get(i) + "patNurse" + j + vServiceDesc.get(i), DBHandler.getString(rs,"count(distinct(b.demographic_no))"));
+			props.setProperty(vServiceCode.get(i) + "patNurse" + j + vServiceDesc.get(i), oscar.Misc.getString(rs,"count(distinct(b.demographic_no))"));
 		}
 /*
 		out.println("<hr>");
@@ -190,7 +190,7 @@ for (int i = 0; i < vServiceCode.size(); i++) {
 		sql = "select count(distinct(b.billing_no)) from billing b, billingdetail bd  where b.billing_no=bd.billing_no and bd.service_code='" + vServiceCode.get(i) + "' and b.creator='" + vNurseNo.get(j) + "' and b.billing_date>='" + sdate + "' and b.billing_date<='" + edate + "' and b.status!='D' and bd.status!='D'" + " and bd.service_desc='" + vServiceDesc.get(i) + "'";
 		rs = db.queryResults(sql,params); 
 		while (rs.next()) { 
-			props.setProperty(vServiceCode.get(i) + "visNurse" + j + vServiceDesc.get(i), DBHandler.getString(rs,1));
+			props.setProperty(vServiceCode.get(i) + "visNurse" + j + vServiceDesc.get(i), oscar.Misc.getString(rs,1));
 		}
 /*
 		out.println("<hr>");

@@ -99,7 +99,7 @@ public class ConsultationAttachDocs {
                                 
                 ResultSet rs = DBHandler.GetSQL(sql);
                 if( rs.next() ) {
-                    demo = DBHandler.getString(rs,"demographicNo");
+                    demo = oscar.Misc.getString(rs, "demographicNo");
                     demoNo = demo;
                 }
                 else

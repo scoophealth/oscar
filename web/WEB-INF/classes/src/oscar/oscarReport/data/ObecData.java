@@ -72,9 +72,9 @@ public class ObecData {
 			while (rs.next()) {
 				count = count + 1;
 				if (count == 1) {
-					retval = retval + "OBEC01" + space(DBHandler.getString(rs, "hin"), 10) + space(DBHandler.getString(rs, "ver"), 2) + "\r";
+					retval = retval + "OBEC01" + space(oscar.Misc.getString(rs, "hin"), 10) + space(oscar.Misc.getString(rs, "ver"), 2) + "\r";
 				} else {
-					retval = retval + "\n" + "OBEC01" + space(DBHandler.getString(rs, "hin"), 10) + space(DBHandler.getString(rs, "ver"), 2) + "\r";
+					retval = retval + "\n" + "OBEC01" + space(oscar.Misc.getString(rs, "hin"), 10) + space(oscar.Misc.getString(rs, "ver"), 2) + "\r";
 				}
 			}
 			rs.close();

@@ -52,9 +52,9 @@ public class PatientData
 
             if(rs.next())
             {
-                p = new Patient(DBHandler.getString(rs,"patientName"), DBHandler.getString(rs,"dOB"),
-                    DBHandler.getString(rs,"healthNumber"), DBHandler.getString(rs,"sex"),
-                    DBHandler.getString(rs,"homePhone"), DBHandler.getString(rs,"altPatientID"));
+                p = new Patient(oscar.Misc.getString(rs, "patientName"), oscar.Misc.getString(rs, "dOB"),
+                    oscar.Misc.getString(rs, "healthNumber"), oscar.Misc.getString(rs, "sex"),
+                    oscar.Misc.getString(rs, "homePhone"), oscar.Misc.getString(rs, "altPatientID"));
             }
 
             rs.close();

@@ -63,7 +63,7 @@ public class ProviderColourUpdater {
         rs = DBHandler.GetSQL(sql);
             
         if( rs.next() ) {
-            colour = DBHandler.getString(rs,"value");
+            colour = oscar.Misc.getString(rs, "value");
         }
                 
         

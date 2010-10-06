@@ -163,9 +163,9 @@ public class CommonLabResultData {
 
             if(rs.next()){  //
 
-                String id = DBHandler.getString(rs,"id");
+                String id = oscar.Misc.getString(rs, "id");
                 sql = "update providerLabRouting set status='"+status+"', comment=? where id = '"+id+"'";
-                if (!DBHandler.getString(rs,"status").equals("A")){
+                if (!oscar.Misc.getString(rs, "status").equals("A")){
 
                     db.queryExecute(sql, new String[] { comment });
 
@@ -204,8 +204,8 @@ public class CommonLabResultData {
             ResultSet rs = DBHandler.GetSQL(sql);
             logger.info(sql);
             while(rs.next()){
-                statusArray.add( new ReportStatus(DBHandler.getString(rs,"first_name")+" "+DBHandler.getString(rs,"last_name"), DBHandler.getString(rs,"provider_no"), descriptiveStatus(DBHandler.getString(rs,"status")), DBHandler.getString(rs,"comment"), DBHandler.getString(rs,"timestamp"), labId ) );
-                //statusArray.add( new ReportStatus(DBHandler.getString(rs,"first_name")+" "+DBHandler.getString(rs,"last_name"), DBHandler.getString(rs,"provider_no"), descriptiveStatus(DBHandler.getString(rs,"status")), DBHandler.getString(rs,"comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
+                statusArray.add( new ReportStatus(oscar.Misc.getString(rs, "first_name")+" "+oscar.Misc.getString(rs, "last_name"), oscar.Misc.getString(rs, "provider_no"), descriptiveStatus(oscar.Misc.getString(rs, "status")), oscar.Misc.getString(rs, "comment"), oscar.Misc.getString(rs, "timestamp"), labId ) );
+                //statusArray.add( new ReportStatus(oscar.Misc.getString(rs,"first_name")+" "+oscar.Misc.getString(rs,"last_name"), oscar.Misc.getString(rs,"provider_no"), descriptiveStatus(oscar.Misc.getString(rs,"status")), oscar.Misc.getString(rs,"comment"), rs.getTimestamp("timestamp").getTime(), labId ) );
             }
             rs.close();
         }catch(Exception e){
@@ -231,7 +231,7 @@ public class CommonLabResultData {
             String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"' and lab_type = '"+labType+"'";
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                retval = DBHandler.getString(rs,"demographic_no");
+                retval = oscar.Misc.getString(rs, "demographic_no");
             }
         }catch(Exception e){
             Logger l = Logger.getLogger(CommonLabResultData.class);
@@ -381,7 +381,7 @@ public class CommonLabResultData {
             
             ResultSet rs = DBHandler.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = '"+labType+"'");
             if (rs.next()){
-                String d = DBHandler.getString(rs,"demographic_no");
+                String d = oscar.Misc.getString(rs, "demographic_no");
                 if ( !"0".equals(d)){
                     demoNo = d;
                 }
@@ -400,7 +400,7 @@ public class CommonLabResultData {
             String sql="select module_id from ctl_document where document_no="+labId+" and module='demographic'";
             ResultSet rs=DBHandler.GetSQL(sql);
             if(rs.next()){
-                String mi=DBHandler.getString(rs, "module_id");
+                String mi=oscar.Misc.getString(rs, "module_id");
                 if(mi!=null && !mi.trim().equals("-1")){
                     ret=true;
                 }
@@ -419,7 +419,7 @@ public class CommonLabResultData {
 
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                String demo =  DBHandler.getString(rs,"demographic_no");
+                String demo =  oscar.Misc.getString(rs, "demographic_no");
                 if(demo != null && !demo.trim().equals("0") ){
                     ret = true;
                 }

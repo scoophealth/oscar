@@ -51,7 +51,7 @@ public class EctGroupNameBeanHandler {
             ResultSet rs;
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                EctGroupNameBean groupName = new EctGroupNameBean(DBHandler.getString(rs,"groupName"));
+                EctGroupNameBean groupName = new EctGroupNameBean(oscar.Misc.getString(rs, "groupName"));
                 groupNameVector.add(groupName);
             }
 

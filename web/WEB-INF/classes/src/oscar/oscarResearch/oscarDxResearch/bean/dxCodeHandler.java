@@ -21,7 +21,7 @@ public class dxCodeHandler {
             String sql = "SELECT " + codingSystem +",description FROM " + codingSystem + " WHERE " + codingSystem + " = '" + code + "'";
             rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-            	result = DBHandler.getString(rs,"description"); 
+            	result = oscar.Misc.getString(rs, "description"); 
             }
             rs.close();
         }

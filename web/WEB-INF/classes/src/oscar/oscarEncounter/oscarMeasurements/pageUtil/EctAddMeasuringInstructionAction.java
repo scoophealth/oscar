@@ -105,8 +105,8 @@ public class EctAddMeasuringInstructionAction extends Action {
             rs = DBHandler.GetSQL(sql);
             rs.next();
             
-            String type = DBHandler.getString(rs,"type");
-            String typeDesc = DBHandler.getString(rs,"typeDescription");            
+            String type = oscar.Misc.getString(rs, "type");
+            String typeDesc = oscar.Misc.getString(rs, "typeDescription");            
             
             //Write to database
             sql = "INSERT INTO measurementType"

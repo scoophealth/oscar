@@ -109,19 +109,19 @@ public class GDMLHandler implements MessageHandler {
                 //Accession numbers may be recycled, accession
                 //numbers for a lab should have lab dates within less than 4
                 //months of eachother even this is a large timespan
-                Date dateA = UtilDateUtilities.StringToDate(DBHandler.getString(rs,"obr_date"), "yyyy-MM-dd hh:mm:ss");
-                Date dateB = UtilDateUtilities.StringToDate(DBHandler.getString(rs,"labDate"), "yyyy-MM-dd hh:mm:ss");
+                Date dateA = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "obr_date"), "yyyy-MM-dd hh:mm:ss");
+                Date dateB = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "labDate"), "yyyy-MM-dd hh:mm:ss");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
                 }else{
                     monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
                 }
                 if (monthsBetween < 4){
-                    ret.add(new String(base64.decode(DBHandler.getString(rs,"message").getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
+                    ret.add(new String(base64.decode(oscar.Misc.getString(rs, "message").getBytes(MiscUtils.ENCODING)), MiscUtils.ENCODING));
                 }
                 
                 // only return labs up to the one being initialized
-                if (DBHandler.getString(rs,"lab_no_A").equals(DBHandler.getString(rs,"lab_no_B")))
+                if (oscar.Misc.getString(rs, "lab_no_A").equals(oscar.Misc.getString(rs, "lab_no_B")))
                     break;
             }
             rs.close();

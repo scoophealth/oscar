@@ -67,7 +67,7 @@ public class ProviderMyOscarIdData {
         rs = DBHandler.GetSQL(sql);
             
         if( rs.next() ) {
-            myOscarId = DBHandler.getString(rs,"value");
+            myOscarId = oscar.Misc.getString(rs, "value");
         }
                 
         
@@ -134,7 +134,7 @@ public class ProviderMyOscarIdData {
           rs = DBHandler.GetSQL(sql);
           
           if( rs.next() ) {
-              providerNo = DBHandler.getString(rs,"provider_no");
+              providerNo = oscar.Misc.getString(rs, "provider_no");
           }
       } catch( SQLException ex ) {
           MiscUtils.getLogger().error("Error", ex);

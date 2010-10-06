@@ -58,8 +58,8 @@ public class GDMLHandler implements MessageHandler {
 		while (rs.next() && n > 0) {
 
 			// only recheck the result status if it is not already set to abnormal
-			if (!DBHandler.getString(rs, "result_status").equals("A")) {
-				oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler(DBHandler.getString(rs, "lab_no"));
+			if (!oscar.Misc.getString(rs, "result_status").equals("A")) {
+				oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getHandler(oscar.Misc.getString(rs, "lab_no"));
 				int i = 0;
 				int j = 0;
 				String resultStatus = "";
@@ -69,7 +69,7 @@ public class GDMLHandler implements MessageHandler {
 						logger.info("obr(" + i + ") obx(" + j + ") abnormal ? : " + h.getOBXAbnormalFlag(i, j));
 						if (h.isOBXAbnormal(i, j)) {
 							resultStatus = "A";
-							sql = "UPDATE hl7TextInfo SET result_status='A' WHERE lab_no='" + DBHandler.getString(rs, "lab_no") + "'";
+							sql = "UPDATE hl7TextInfo SET result_status='A' WHERE lab_no='" + oscar.Misc.getString(rs, "lab_no") + "'";
 							DBHandler.RunSQL(sql);
 						}
 						j++;

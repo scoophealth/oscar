@@ -44,7 +44,7 @@ public class EctImmImmunizationData
         String sql = String.valueOf(String.valueOf((new StringBuffer("SELECT * FROM immunizations WHERE demographic_no = ")).append(demographicNo).append(" AND archived=0")));
         ResultSet rs = DBHandler.GetSQL(sql);
         if(rs.next())
-            sRet = DBHandler.getString(rs,"immunizations");
+            sRet = oscar.Misc.getString(rs, "immunizations");
         rs.close();
         return sRet;
     }
@@ -93,7 +93,7 @@ public class EctImmImmunizationData
         String s;
         for(rs = DBHandler.GetSQL(sql); rs.next(); vRet.add(s))
         {
-            s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(DBHandler.getString(rs,"provider_no"))))).append("/").append(DBHandler.getString(rs,"namer"))));
+            s = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(oscar.Misc.getString(rs, "provider_no"))))).append("/").append(oscar.Misc.getString(rs, "namer"))));
             MiscUtils.getLogger().debug(s);
         }
 

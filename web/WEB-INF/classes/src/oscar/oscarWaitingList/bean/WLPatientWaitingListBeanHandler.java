@@ -54,11 +54,11 @@ public class WLPatientWaitingListBeanHandler {
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {                
                 WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( demographicNo,
-                                                                                DBHandler.getString(rs,"ID"),
-                                                                                DBHandler.getString(rs,"name"),
-                                                                                DBHandler.getString(rs,"position"), 
-                                                                                DBHandler.getString(rs,"note"),
-                                                                                DBHandler.getString(rs,"onListSince"));   
+                                                                                oscar.Misc.getString(rs, "ID"),
+                                                                                oscar.Misc.getString(rs, "name"),
+                                                                                oscar.Misc.getString(rs, "position"), 
+                                                                                oscar.Misc.getString(rs, "note"),
+                                                                                oscar.Misc.getString(rs, "onListSince"));   
                 patientWaitingListVector.add(wLBean);
             }
                             

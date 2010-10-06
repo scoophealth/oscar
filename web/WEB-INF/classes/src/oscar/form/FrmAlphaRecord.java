@@ -42,8 +42,8 @@ public class FrmAlphaRecord extends FrmRecord {
             String sql = "SELECT demographic_no, CONCAT(last_name, ', ', first_name) AS pName FROM demographic WHERE demographic_no = " +demographicNo ;
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()) {
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
-                props.setProperty("pName", DBHandler.getString(rs,"pName"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
+                props.setProperty("pName", oscar.Misc.getString(rs, "pName"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
                 //props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));

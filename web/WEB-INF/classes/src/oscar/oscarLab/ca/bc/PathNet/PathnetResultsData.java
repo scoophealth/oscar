@@ -71,7 +71,7 @@ public class PathnetResultsData {
             ResultSet rs = DBHandler.GetSQL(attachQuery);
             while(rs.next()) {
                 LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
-                lbData.labPatientId = DBHandler.getString(rs,"document_no");
+                lbData.labPatientId = oscar.Misc.getString(rs, "document_no");
                 attachedLabs.add(lbData);
             }
             rs.close();
@@ -83,8 +83,8 @@ public class PathnetResultsData {
             while(rs.next()){
                 
                 lbData.labType = LabResultData.EXCELLERIS;
-                lbData.segmentID = DBHandler.getString(rs,"message_id");
-                lbData.labPatientId = DBHandler.getString(rs,"id");
+                lbData.segmentID = oscar.Misc.getString(rs, "message_id");
+                lbData.labPatientId = oscar.Misc.getString(rs, "id");
                 lbData.dateTime = findPathnetObservationDate(lbData.segmentID);
                 lbData.discipline = findPathnetDisipline(lbData.segmentID);
                 
@@ -139,10 +139,10 @@ public class PathnetResultsData {
             while(rs.next()){
                 LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
                 lbData.labType = LabResultData.EXCELLERIS;
-                lbData.segmentID = DBHandler.getString(rs,"message_id");
+                lbData.segmentID = oscar.Misc.getString(rs, "message_id");
                 
                 if (demographicNo == null && !providerNo.equals("0")) {
-                    lbData.acknowledgedStatus = DBHandler.getString(rs,"status");
+                    lbData.acknowledgedStatus = oscar.Misc.getString(rs, "status");
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
@@ -151,23 +151,23 @@ public class PathnetResultsData {
                 ///   lbData.abn= true;
                 ///}
                 
-                lbData.accessionNumber = justGetAccessionNumber(DBHandler.getString(rs,"accessionNum"));
+                lbData.accessionNumber = justGetAccessionNumber(oscar.Misc.getString(rs, "accessionNum"));
                 
-                lbData.healthNumber = DBHandler.getString(rs,"patient_health_num");
-                lbData.patientName = DBHandler.getString(rs,"patientName");
+                lbData.healthNumber = oscar.Misc.getString(rs, "patient_health_num");
+                lbData.patientName = oscar.Misc.getString(rs, "patientName");
                 if(lbData.patientName != null){
                     lbData.patientName = lbData.patientName.replaceAll("\\^", " ");
                 }
-                lbData.sex = DBHandler.getString(rs,"patient_sex");
+                lbData.sex = oscar.Misc.getString(rs, "patient_sex");
                 lbData.resultStatus = "0"; //TODO
-                // solve lbData.resultStatus.add(DBHandler.getString(rs,"abnormalFlag"));
+                // solve lbData.resultStatus.add(oscar.Misc.getString(rs,"abnormalFlag"));
                 
-                lbData.dateTime = DBHandler.getString(rs,"date");
+                lbData.dateTime = oscar.Misc.getString(rs, "date");
                 
                 //priority
                 lbData.priority = "----";
-                lbData.requestingClient = justGetDocName(DBHandler.getString(rs,"ordering_provider"));
-                lbData.reportStatus =  DBHandler.getString(rs,"stat");
+                lbData.requestingClient = justGetDocName(oscar.Misc.getString(rs, "ordering_provider"));
+                lbData.reportStatus =  oscar.Misc.getString(rs, "stat");
                 
                 if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
                     lbData.finalRes = true;
@@ -194,7 +194,7 @@ public class PathnetResultsData {
             String sql = "select max(obr.results_report_status_change) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                ret = DBHandler.getString(rs,"d");
+                ret = oscar.Misc.getString(rs, "d");
             }
             rs.close();
         }catch(Exception e){
@@ -227,7 +227,7 @@ public class PathnetResultsData {
             String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = 'BCP' ";
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                String demo =  DBHandler.getString(rs,"demographic_no");
+                String demo =  oscar.Misc.getString(rs, "demographic_no");
                 if(demo != null && !demo.trim().equals("0") ){
                     ret = true;
                 }
@@ -265,15 +265,15 @@ public class PathnetResultsData {
             String sql = "select orc.filler_order_number, max(results_report_status_change) as date from hl7_orc orc, hl7_pid pid, hl7_obr obr where obr.pid_id=pid.pid_id and orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"' GROUP BY pid.message_id";
             ResultSet rs = DBHandler.GetSQL(sql);
             if(rs.next()){
-                accessionNum = justGetAccessionNumber(DBHandler.getString(rs,"filler_order_number"));
-                labDate = DBHandler.getString(rs,"date");
+                accessionNum = justGetAccessionNumber(oscar.Misc.getString(rs, "filler_order_number"));
+                labDate = oscar.Misc.getString(rs, "date");
             }
             
             //String sql = "select filler_order_number from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             sql = "SELECT DISTINCT pid.message_id, max(results_report_status_change) as date FROM  hl7_pid pid, hl7_orc orc, hl7_obr obr WHERE orc.filler_order_number like '%"+accessionNum+"%' AND orc.pid_id = pid.pid_id AND obr.pid_id = pid.pid_id GROUP BY pid.message_id ORDER BY obr.results_report_status_change";
             rs = DBHandler.GetSQL(sql);
             while (rs.next()){
-                Date dateA = UtilDateUtilities.StringToDate(DBHandler.getString(rs,"date"), "yyyy-MM-dd HH:mm:ss");
+                Date dateA = UtilDateUtilities.StringToDate(oscar.Misc.getString(rs, "date"), "yyyy-MM-dd HH:mm:ss");
                 Date dateB = UtilDateUtilities.StringToDate(labDate, "yyyy-MM-dd HH:mm:ss");
                 if (dateA.before(dateB)){
                     monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
@@ -284,9 +284,9 @@ public class PathnetResultsData {
                 if (monthsBetween < 4){
                     
                     if (ret.equals(""))
-                        ret = DBHandler.getString(rs,"message_id");
+                        ret = oscar.Misc.getString(rs, "message_id");
                     else
-                        ret = ret+","+DBHandler.getString(rs,"message_id");
+                        ret = ret+","+oscar.Misc.getString(rs, "message_id");
                     
                 }
             }
@@ -315,7 +315,7 @@ public class PathnetResultsData {
             String sql = "select ordering_provider from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                ret = justGetDocName(DBHandler.getString(rs,"ordering_provider"));
+                ret = justGetDocName(oscar.Misc.getString(rs, "ordering_provider"));
             }
             rs.close();
         }catch(Exception e){
@@ -330,7 +330,7 @@ public class PathnetResultsData {
             String sql = "select min(obr.result_status) as stat from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                ret = DBHandler.getString(rs,"stat");
+                ret = oscar.Misc.getString(rs, "stat");
             }
             rs.close();
         }catch(Exception e){
@@ -349,7 +349,7 @@ public class PathnetResultsData {
             boolean first = true;
             while(rs.next()){
                 if (!first){ ret.append("/"); }
-                ret.append(DBHandler.getString(rs,"diagnostic_service_sect_id"));
+                ret.append(oscar.Misc.getString(rs, "diagnostic_service_sect_id"));
                 first = false;
             }
             rs.close();

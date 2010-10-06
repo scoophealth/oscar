@@ -74,7 +74,7 @@ public class ReportStatusUpdateAction extends Action {
                 ResultSet rs = DBHandler.GetSQL(sql);
 
                 while(rs.next()){
-                    demographicID = DBHandler.getString(rs,"demographic_no");
+                    demographicID = oscar.Misc.getString(rs, "demographic_no");
                 }
                 rs.close();
 

@@ -32,17 +32,17 @@ public class FrmMentalHealthForm42Record extends FrmRecord {
                     + demographicNo;
             ResultSet rs = DBHandler.GetSQL(sql);
             if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"),
-                        DBHandler.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"),
+                        oscar.Misc.getString(rs, "date_of_birth"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
                         "yyyy/MM/dd"));
                 props.setProperty("formEdited",UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd HH:mm:ss"));
                 props.setProperty("clientDOB", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("clientName", DBHandler.getString(rs,"clientName"));
-                props.setProperty("demoProvider", DBHandler.getString(rs,"provider_no"));
+                props.setProperty("clientName", oscar.Misc.getString(rs, "clientName"));
+                props.setProperty("demoProvider", oscar.Misc.getString(rs, "provider_no"));
                 
-                demoProvider = DBHandler.getString(rs,"provider_no");
+                demoProvider = oscar.Misc.getString(rs, "provider_no");
                 
             }
             rs.close();
@@ -71,9 +71,9 @@ public class FrmMentalHealthForm42Record extends FrmRecord {
                 rs = DBHandler.GetSQL(sql);
 
                 if (rs.next()) {
-                    String num = DBHandler.getString(rs,"ohip_no");
-                    props.setProperty("reqProvName", DBHandler.getString(rs,"provName"));
-                    props.setProperty("provName", DBHandler.getString(rs,"provName"));
+                    String num = oscar.Misc.getString(rs, "ohip_no");
+                    props.setProperty("reqProvName", oscar.Misc.getString(rs, "provName"));
+                    props.setProperty("provName", oscar.Misc.getString(rs, "provName"));
                     props.setProperty("practitionerNo", "0000-" + num + "-00");
                 }
                 rs.close();
@@ -85,8 +85,8 @@ public class FrmMentalHealthForm42Record extends FrmRecord {
                 
                 String num = "";
                 if (rs.next()) {
-                    num = DBHandler.getString(rs,"ohip_no");
-                    props.setProperty("reqProvName", DBHandler.getString(rs,"provName"));                    
+                    num = oscar.Misc.getString(rs, "ohip_no");
+                    props.setProperty("reqProvName", oscar.Misc.getString(rs, "provName"));                    
                     props.setProperty("practitionerNo", "0000-" + num + "-00");
                 }
                 rs.close();
@@ -98,10 +98,10 @@ public class FrmMentalHealthForm42Record extends FrmRecord {
 
                 if (rs.next()) {
                     if( num.equals("") ) {
-                        num = DBHandler.getString(rs,"ohip_no");
+                        num = oscar.Misc.getString(rs, "ohip_no");
                         props.setProperty("practitionerNo", "0000-"+num+"-00");
                     }
-                    props.setProperty("provName", DBHandler.getString(rs,"provName"));
+                    props.setProperty("provName", oscar.Misc.getString(rs, "provName"));
                     
                 }
                 rs.close();

@@ -63,7 +63,7 @@ public class EctMeasurementTypeBeanHandler {
             String sqlValidation = "SELECT name FROM validations WHERE id='"+val+"'";
             ResultSet rs = DBHandler.GetSQL(sqlValidation);
             if (rs.next()){ 
-                validation = DBHandler.getString(rs,"name");
+                validation = oscar.Misc.getString(rs, "name");
 
             }
             rs.close();

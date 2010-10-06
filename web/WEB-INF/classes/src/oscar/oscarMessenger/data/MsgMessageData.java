@@ -58,9 +58,9 @@ public class MsgMessageData {
             
             ResultSet rs = db.queryResults(sql);
             if(rs.next()){
-                this.messageSubject = db.getString(rs,"thesubject");
-                this.messageDate = db.getString(rs,"thedate");
-                this.messageTime = db.getString(rs,"theime");
+                this.messageSubject = oscar.Misc.getString(rs, "thesubject");
+                this.messageDate = oscar.Misc.getString(rs, "thedate");
+                this.messageTime = oscar.Misc.getString(rs, "theime");
             }
         }
         catch (java.sql.SQLException e){ 
@@ -75,7 +75,7 @@ public class MsgMessageData {
               rs = db.queryResults("select locationId from oscarcommlocations where current1 = '1'");
 
               if (rs.next()) {
-                currentLocationId = db.getString(rs,"locationId");
+                currentLocationId = oscar.Misc.getString(rs, "locationId");
               }
               rs.close();
             }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
@@ -147,7 +147,7 @@ public class MsgMessageData {
                   } else {
                       first = false;
                   }
-                  sentToWho.append(" "+db.getString(rs,"first_name") +" " +db.getString(rs,"last_name"));
+                  sentToWho.append(" "+oscar.Misc.getString(rs, "first_name") +" " +oscar.Misc.getString(rs, "last_name"));
               }
               sentToWho.append(".");
 
@@ -200,7 +200,7 @@ public class MsgMessageData {
                   } else {
                       first = false;
                   }
-                  sentToWho.append(" "+db.getString(rs,"first_name") +" " +db.getString(rs,"last_name"));
+                  sentToWho.append(" "+oscar.Misc.getString(rs, "first_name") +" " +oscar.Misc.getString(rs, "last_name"));
               }
               sentToWho.append(".");
 
@@ -427,8 +427,8 @@ public class MsgMessageData {
             String sql = new String("select  locationDesc, addressBook from oscarcommlocations where locationId = "+(sortedArrayOfLocations[i])     );
             rs = db.queryResults(sql);
             if (rs.next()){
-               theLocationDesc = db.getString(rs,"locationDesc");
-               theAddressBook = db.getString(rs,"addressBook");
+               theLocationDesc = oscar.Misc.getString(rs, "locationDesc");
+               theAddressBook = oscar.Misc.getString(rs, "addressBook");
             }
             rs.close();
         }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }
@@ -481,7 +481,7 @@ public class MsgMessageData {
             
             ResultSet rs = db.queryResults(sql);
             if(rs.next()){
-                subject = db.getString(rs,"thesubject");
+                subject = oscar.Misc.getString(rs, "thesubject");
             }
         }
         catch (java.sql.SQLException e){ 

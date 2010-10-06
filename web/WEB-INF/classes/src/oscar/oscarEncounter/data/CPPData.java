@@ -151,19 +151,19 @@ public class CPPData {
          ResultSet rs =  DBHandler.GetSQL(sql);
          if(rs.next()){
    
-            String providerNo = DBHandler.getString(rs,"provider_no");
-            String socialFam = DBHandler.getString(rs,"socialFam");
-            String ongoingCon = DBHandler.getString(rs,"ongoingCon");
-            String medHist = DBHandler.getString(rs,"medHist");
-            String reminder = DBHandler.getString(rs,"reminder");
-            String riskfactor = DBHandler.getString(rs,"riskfactor"); 
-            String otherMed = DBHandler.getString(rs,"otherMed");
-            String otherAller = DBHandler.getString(rs,"otherAller");
+            String providerNo = oscar.Misc.getString(rs, "provider_no");
+            String socialFam = oscar.Misc.getString(rs, "socialFam");
+            String ongoingCon = oscar.Misc.getString(rs, "ongoingCon");
+            String medHist = oscar.Misc.getString(rs, "medHist");
+            String reminder = oscar.Misc.getString(rs, "reminder");
+            String riskfactor = oscar.Misc.getString(rs, "riskfactor"); 
+            String otherMed = oscar.Misc.getString(rs, "otherMed");
+            String otherAller = oscar.Misc.getString(rs, "otherAller");
             
-            String medsList = DBHandler.getString(rs,"medsList");  
-            String allegryList = DBHandler.getString(rs,"allergyList");              
-            String divArr = DBHandler.getString(rs,"divArr");
-            String created= DBHandler.getString(rs,"created");                                                               
+            String medsList = oscar.Misc.getString(rs, "medsList");  
+            String allegryList = oscar.Misc.getString(rs, "allergyList");              
+            String divArr = oscar.Misc.getString(rs, "divArr");
+            String created= oscar.Misc.getString(rs, "created");                                                               
             
             hm.put("providerNo",providerNo);
             hm.put("socialFam",socialFam);

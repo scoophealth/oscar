@@ -63,7 +63,7 @@ public class ProviderFaxUpdater {
         rs = DBHandler.GetSQL(sql);
             
         if( rs.next() ) {
-            faxNum = DBHandler.getString(rs,"value");
+            faxNum = oscar.Misc.getString(rs, "value");
         }
         
         if( faxNum.equals("") ) {
@@ -71,7 +71,7 @@ public class ProviderFaxUpdater {
             rs = DBHandler.GetSQL(sql);
             
             if( rs.next() ) {
-                faxNum = DBHandler.getString(rs,"clinic_fax");
+                faxNum = oscar.Misc.getString(rs, "clinic_fax");
             }
         }
         

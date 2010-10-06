@@ -89,13 +89,13 @@ public class EctFindMeasurementTypeUtil {
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){                                      
                 EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rs.getInt("typeId"), 
-                                                                                        DBHandler.getString(rs,("type"), 
-                                                                                        DBHandler.getString(rs,("typeDisplayName"), 
-                                                                                        DBHandler.getString(rs,("typeDescription"), 
-                                                                                        DBHandler.getString(rs,("measuringInstruction"), 
-                                                                                        DBHandler.getString(rs,("validation")); 
+                                                                                        oscar.Misc.getString(rs,("type"), 
+                                                                                        oscar.Misc.getString(rs,("typeDisplayName"), 
+                                                                                        oscar.Misc.getString(rs,("typeDescription"), 
+                                                                                        oscar.Misc.getString(rs,("measuringInstruction"), 
+                                                                                        oscar.Misc.getString(rs,("validation")); 
                 measurementTypeVector.add(measurementTypes);                                                       
-                MiscUtils.getLogger().debug("getMeasurementType() type: " + DBHandler.getString(rs,("typeId"));
+                MiscUtils.getLogger().debug("getMeasurementType() type: " + oscar.Misc.getString(rs,("typeId"));
             }
             
             rs.close();            
@@ -142,8 +142,8 @@ public class EctFindMeasurementTypeUtil {
                 verdict = false;
             }
             /*else{
-                if(!measurementFrmIsAdded(formName, DBHandler.getString(rs,("id")))
-                    add2MeasurementForm(formName, DBHandler.getString(rs,("id"));
+                if(!measurementFrmIsAdded(formName, oscar.Misc.getString(rs,("id")))
+                    add2MeasurementForm(formName, oscar.Misc.getString(rs,("id"));
             }*/
             rs.close();
         }
@@ -212,8 +212,8 @@ public class EctFindMeasurementTypeUtil {
                 /*sql = "SELECT * FROM measurementType ORDER BY id DESC LIMIT 1";
                 ResultSet rs = DBHandler.GetSQL(sql);             
                 if(rs.next()){
-                    if(!measurementFrmIsAdded(formName, DBHandler.getString(rs,("id")))
-                        add2MeasurementForm(formName, DBHandler.getString(rs,("id"));
+                    if(!measurementFrmIsAdded(formName, oscar.Misc.getString(rs,("id")))
+                        add2MeasurementForm(formName, oscar.Misc.getString(rs,("id"));
                 }*/
             }
         }

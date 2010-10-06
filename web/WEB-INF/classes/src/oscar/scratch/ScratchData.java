@@ -65,9 +65,9 @@ public class ScratchData {
    
             if (rs.next()){
                 retval = new Hashtable();
-                retval.put("id",DBHandler.getString(rs,"id"));
-                retval.put("text",DBHandler.getString(rs,"scratch_text"));
-                retval.put("date",DBHandler.getString(rs,"date_time"));
+                retval.put("id",oscar.Misc.getString(rs, "id"));
+                retval.put("text",oscar.Misc.getString(rs, "scratch_text"));
+                retval.put("date",oscar.Misc.getString(rs, "date_time"));
             }
             rs.close();
         } catch (SQLException e) {

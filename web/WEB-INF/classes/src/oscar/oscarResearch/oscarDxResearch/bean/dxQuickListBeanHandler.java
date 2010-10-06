@@ -78,7 +78,7 @@ public class dxQuickListBeanHandler {
                 sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName LIMIT 1";
                 rs = DBHandler.GetSQL(sql);
                 if(rs.next()) 
-                    lastUsed = DBHandler.getString(rs,"quickListName");                                           
+                    lastUsed = oscar.Misc.getString(rs, "quickListName");                                           
 
                 rs.close();
             }
@@ -86,14 +86,14 @@ public class dxQuickListBeanHandler {
             sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";            
             rs = DBHandler.GetSQL(sql);
             while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(DBHandler.getString(rs,"quickListName"),
-                                                           DBHandler.getString(rs,"createdByProvider"));
-                quickListName = DBHandler.getString(rs,"quickListName");
+                dxQuickListBean bean = new dxQuickListBean(oscar.Misc.getString(rs, "quickListName"),
+                                                           oscar.Misc.getString(rs, "createdByProvider"));
+                quickListName = oscar.Misc.getString(rs, "quickListName");
                                     
                 if(lastUsed.equals(quickListName)){
 
                     bean.setLastUsed("Selected");
-                    lastUsedQuickList = DBHandler.getString(rs,"quickListName");
+                    lastUsedQuickList = oscar.Misc.getString(rs, "quickListName");
                 }                
                 dxQuickListBeanVector.add(bean);
             }
@@ -119,7 +119,7 @@ public class dxQuickListBeanHandler {
 
             rs = DBHandler.GetSQL(sql);
             while(rs.next()){                
-                dxQuickListBean bean = new dxQuickListBean(DBHandler.getString(rs,"quickListName"));                              
+                dxQuickListBean bean = new dxQuickListBean(oscar.Misc.getString(rs, "quickListName"));                              
                 dxQuickListBeanVector.add(bean);
             }
             rs.close();

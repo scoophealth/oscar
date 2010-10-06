@@ -42,7 +42,7 @@ public class EctConProviderData
             
             String sql = "select team from provider where provider_no = '" +proNo+ "'";
             ResultSet rs = DBHandler.GetSQL(sql);
-            if(rs.next()) team = DBHandler.getString(rs,"team");
+            if(rs.next()) team = oscar.Misc.getString(rs, "team");
             rs.close();
         } catch(SQLException e) {
             MiscUtils.getLogger().error("Error", e);

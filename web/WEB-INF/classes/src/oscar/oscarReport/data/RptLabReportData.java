@@ -60,8 +60,8 @@ public class RptLabReportData {
               rs = DBHandler.GetSQL(sql);
               while (rs.next()) {
                  ArrayList a = new ArrayList (); 
-                 a.add( DBHandler.getString(rs,"provider_no") );
-                 a.add( DBHandler.getString(rs,"last_name") +", "+ DBHandler.getString(rs,"first_name") );
+                 a.add( oscar.Misc.getString(rs, "provider_no") );
+                 a.add( oscar.Misc.getString(rs, "last_name") +", "+ oscar.Misc.getString(rs, "first_name") );
                  arrayList.add(a);
               }
               rs.close();
@@ -90,7 +90,7 @@ public class RptLabReportData {
               DemoLabDataStruct d;
               while (rs.next()) {
                 d = new DemoLabDataStruct();
-                d.demoNo = DBHandler.getString(rs,"demographic_no");
+                d.demoNo = oscar.Misc.getString(rs, "demographic_no");
                 demoList.add(d);
               }
 
@@ -119,9 +119,9 @@ public class DemoLabDataStruct{
           consultList = new ArrayList();
           while (rs.next()){
              con = new Consult(); 
-             con.requestId   = DBHandler.getString(rs,"ID");
-             con.referalDate = DBHandler.getString(rs,"formCreated");
-             con.proNo       = DBHandler.getString(rs,"provider_no");
+             con.requestId   = oscar.Misc.getString(rs, "ID");
+             con.referalDate = oscar.Misc.getString(rs, "formCreated");
+             con.proNo       = oscar.Misc.getString(rs, "provider_no");
              consultList.add(con);
           }
           rs.close();
@@ -139,11 +139,11 @@ public class DemoLabDataStruct{
           conReplyList = new ArrayList();
           while( rs.next()){
              conLetter = new ConLetter();
-             conLetter.document_no = DBHandler.getString(rs,"document_no"); 
-             conLetter.docdesc     = DBHandler.getString(rs,"docdesc");
-             conLetter.docfileName = DBHandler.getString(rs,"docfilename");
+             conLetter.document_no = oscar.Misc.getString(rs, "document_no"); 
+             conLetter.docdesc     = oscar.Misc.getString(rs, "docdesc");
+             conLetter.docfileName = oscar.Misc.getString(rs, "docfilename");
              conLetter.docDate     = rs.getDate("updatedatetime");     
-             conLetter.docStatus   = DBHandler.getString(rs,"status");
+             conLetter.docStatus   = oscar.Misc.getString(rs, "status");
              conReplyList.add(conLetter);
           }         
           rs.close(); 
@@ -163,13 +163,13 @@ public class DemoLabDataStruct{
           
           list = new ArrayList();         
           while( rs.next()){
-             java.util.Date lab = getDateFromCML(DBHandler.getString(rs,"collection_date"));
+             java.util.Date lab = getDateFromCML(oscar.Misc.getString(rs, "collection_date"));
              MiscUtils.getLogger().debug(lab+" "+startDate+" "+lab.after(startDate));
              if (startDate != null && lab != null && lab.after(startDate) ){
                 Hashtable h = new Hashtable();              
                 h.put("collectionDate",getCommonDate(lab));
-                h.put("id",DBHandler.getString(rs,"lab_no"));
-                h.put("labType",DBHandler.getString(rs,"lab_type"));
+                h.put("id",oscar.Misc.getString(rs, "lab_no"));
+                h.put("labType",oscar.Misc.getString(rs, "lab_type"));
                 list.add(h);
              }
           }                  
@@ -180,13 +180,13 @@ public class DemoLabDataStruct{
           rs = DBHandler.GetSQL(sql);
                     
           while( rs.next()){
-             java.util.Date lab = getDateFromMDS(DBHandler.getString(rs,"dateTime"));
+             java.util.Date lab = getDateFromMDS(oscar.Misc.getString(rs, "dateTime"));
              MiscUtils.getLogger().debug(lab+" "+startDate+" "+lab.after(startDate));
              if (startDate != null && lab != null && lab.after(startDate) ){
                Hashtable h = new Hashtable(); 
                h.put("collectionDate",getCommonDate(lab));
-               h.put("id",DBHandler.getString(rs,"lab_no"));
-               h.put("labType",DBHandler.getString(rs,"lab_type"));
+               h.put("id",oscar.Misc.getString(rs, "lab_no"));
+               h.put("labType",oscar.Misc.getString(rs, "lab_type"));
                list.add(h);
              }
           }                  
@@ -231,7 +231,7 @@ public class DemoLabDataStruct{
            String sql = "Select last_name, first_name from demographic where demographic_no = '"+demoNo+"' ";
            rs = DBHandler.GetSQL(sql);
            if (rs.next()){
-              retval = DBHandler.getString(rs,"last_name")+", "+DBHandler.getString(rs,"first_name");
+              retval = oscar.Misc.getString(rs, "last_name")+", "+oscar.Misc.getString(rs, "first_name");
            }
            rs.close();
        }catch ( java.sql.SQLException e4) { MiscUtils.getLogger().debug(e4.getMessage()); }

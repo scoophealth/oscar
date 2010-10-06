@@ -68,13 +68,13 @@ public class EctDeleteMeasurementTypesAction extends Action {
                     rs = DBHandler.GetSQL(sql);
                     if(rs.next()){
                         sql = "INSERT INTO measurementTypeDeleted(type, typeDisplayName,  typeDescription, measuringInstruction, validation, dateDeleted)" +
-                              "VALUES('"+ DBHandler.getString(rs,"type") + "','" + DBHandler.getString(rs,"typeDisplayName")+ "','" +DBHandler.getString(rs,"typeDescription")+ "','" +
-                              DBHandler.getString(rs,"measuringInstruction")+ "','" + DBHandler.getString(rs,"validation") + "','" + dateDeleted +"')";
+                              "VALUES('"+ oscar.Misc.getString(rs, "type") + "','" + oscar.Misc.getString(rs, "typeDisplayName")+ "','" +oscar.Misc.getString(rs, "typeDescription")+ "','" +
+                              oscar.Misc.getString(rs, "measuringInstruction")+ "','" + oscar.Misc.getString(rs, "validation") + "','" + dateDeleted +"')";
                         DBHandler.RunSQL(sql);
                         sql = "DELETE  FROM measurementType WHERE id='"+ deleteCheckbox[i] +"'";                                        
                         MiscUtils.getLogger().debug(" sql statement "+sql);
                         DBHandler.RunSQL(sql);
-                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + DBHandler.getString(rs,"typeDisplayName") + "'";
+                        sql = "DELETE FROM measurementGroup WHERE typeDisplayName = '" + oscar.Misc.getString(rs, "typeDisplayName") + "'";
                         MiscUtils.getLogger().debug("sql Statement " + sql);
                         DBHandler.RunSQL(sql);
                     }

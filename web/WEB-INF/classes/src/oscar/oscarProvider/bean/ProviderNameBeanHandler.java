@@ -57,10 +57,10 @@ public class ProviderNameBeanHandler {
             ResultSet rs;
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                ProviderData pData = new ProviderData(DBHandler.getString(rs,"provider_no"));
-                ProviderNameBean pNameBean = new ProviderNameBean(pData.getLast_name() + ", " + pData.getFirst_name(), DBHandler.getString(rs,"provider_no"));
+                ProviderData pData = new ProviderData(oscar.Misc.getString(rs, "provider_no"));
+                ProviderNameBean pNameBean = new ProviderNameBean(pData.getLast_name() + ", " + pData.getFirst_name(), oscar.Misc.getString(rs, "provider_no"));
                 providerNameVector.add(pNameBean);
-                if(DBHandler.getString(rs,"provider_type").equalsIgnoreCase("doctor")){
+                if(oscar.Misc.getString(rs, "provider_type").equalsIgnoreCase("doctor")){
                     doctorNameVector.add(pNameBean);
 
                 }
@@ -91,7 +91,7 @@ public class ProviderNameBeanHandler {
             ResultSet rs;
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {                
-                ProviderNameBean pNameBean = new ProviderNameBean(DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name"), DBHandler.getString(rs,"provider_no"));
+                ProviderNameBean pNameBean = new ProviderNameBean(oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name"), oscar.Misc.getString(rs, "provider_no"));
                 thisGroupProviderVector.add(pNameBean);
             }
         }

@@ -59,12 +59,12 @@ public class dxResearchBeanHandler {
                         +" order by d.start_date desc, d.update_date desc";
                 for(rs = DBHandler.GetSQL(sql); rs.next(); )
                 {                
-                    dxResearchBean bean = new dxResearchBean(   DBHandler.getString(rs,"description"), 
-                                                            DBHandler.getString(rs,"dxresearch_no"),
-                                                            DBHandler.getString(rs,codingSystem),
-                                                            DBHandler.getString(rs,"update_date"),
-                                                            DBHandler.getString(rs,"start_date"),
-                                                            DBHandler.getString(rs,"status"),
+                    dxResearchBean bean = new dxResearchBean(   oscar.Misc.getString(rs, "description"), 
+                                                            oscar.Misc.getString(rs, "dxresearch_no"),
+                                                            oscar.Misc.getString(rs, codingSystem),
+                                                            oscar.Misc.getString(rs, "update_date"),
+                                                            oscar.Misc.getString(rs, "start_date"),
+                                                            oscar.Misc.getString(rs, "status"),
                                                             codingSystem);
                     dxResearchBeanVector.add(bean);
 

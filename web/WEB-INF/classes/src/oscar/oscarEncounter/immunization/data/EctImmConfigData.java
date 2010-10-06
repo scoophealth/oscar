@@ -50,7 +50,7 @@ public class EctImmConfigData {
 		Element root = UtilXML.addNode(doc, "immunization");
 		Node newSet;
 		for (; rs.next(); root.appendChild(newSet)) {
-			Document setDoc = UtilXML.parseXML(DBHandler.getString(rs,"setXmlDoc"));
+			Document setDoc = UtilXML.parseXML(oscar.Misc.getString(rs, "setXmlDoc"));
 			Element setRoot = setDoc.getDocumentElement();
 			newSet = doc.importNode(setRoot, true);
 		}
@@ -68,7 +68,7 @@ public class EctImmConfigData {
 		ResultSet rs = DBHandler.GetSQL(sql);
 		
 		while (rs.next()){
-			ret.add(DBHandler.getString(rs,"setName"));
+			ret.add(oscar.Misc.getString(rs, "setName"));
 		}
 		rs.close();
 		return ret;

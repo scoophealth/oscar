@@ -62,17 +62,17 @@
                 ResultSet rs = DBHandler.GetSQL(sql);                            
                 
                 while(rs.next()) {
-                    String provNo = DBHandler.getString(rs,"provider_no");
+                    String provNo = oscar.Misc.getString(rs,"provider_no");
                     if(!userNo.equals(provNo)) 
                     	continue;
                     if( newDocArr.contains("all") || newDocArr.contains(provNo)) {
-%> <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=DBHandler.getString(rs,"last_name")%>,
-<%=DBHandler.getString(rs,"first_name")%><br>
+%> <input type="checkbox" name="encTesters" value="<%=provNo%>" checked><%=oscar.Misc.getString(rs,"last_name")%>,
+<%=oscar.Misc.getString(rs,"first_name")%><br>
 <%
                     }
                     else {
-%> <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=DBHandler.getString(rs,"last_name")%>,
-<%=DBHandler.getString(rs,"first_name")%><br>
+%> <input type="checkbox" name="encTesters" value="<%=provNo%>"><%=oscar.Misc.getString(rs,"last_name")%>,
+<%=oscar.Misc.getString(rs,"first_name")%><br>
 <%                   
                     }                
                 }
@@ -94,7 +94,7 @@
                     String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
                     ResultSet rs = DBHandler.GetSQL(sql); 
                     while(rs.next()) {
-                        String provNo = DBHandler.getString(rs,"provider_no");
+                        String provNo = oscar.Misc.getString(rs,"provider_no");
                         if( userNo.equals(provNo) ) 
                             continue;
                             

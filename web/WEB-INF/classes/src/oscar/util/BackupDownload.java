@@ -93,8 +93,8 @@ public class BackupDownload extends GenericDownload {
             rs = DBHandler.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
-                prop.setProperty(DBHandler.getString(rs,"roleUserGroup"), DBHandler.getString(rs,"privilege"));
-                roleInObj.add(DBHandler.getString(rs,"roleUserGroup"));
+                prop.setProperty(oscar.Misc.getString(rs, "roleUserGroup"), oscar.Misc.getString(rs, "privilege"));
+                roleInObj.add(oscar.Misc.getString(rs, "roleUserGroup"));
             }
             ret.add(prop);
             ret.add(roleInObj);

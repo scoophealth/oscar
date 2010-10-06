@@ -46,12 +46,12 @@ public class FrmAdfV2Record extends FrmRecord {
 			if (rs.next()) {
 				java.util.Date date =
 					UtilDateUtilities.calcDate(
-							DBHandler.getString(rs,"year_of_birth"),
-							DBHandler.getString(rs,"month_of_birth"),
-							DBHandler.getString(rs,"date_of_birth"));
+							oscar.Misc.getString(rs, "year_of_birth"),
+							oscar.Misc.getString(rs, "month_of_birth"),
+							oscar.Misc.getString(rs, "date_of_birth"));
 				props.setProperty(
 						"demographic_no",
-						DBHandler.getString(rs,"demographic_no"));
+						oscar.Misc.getString(rs, "demographic_no"));
 				props.setProperty(
 						"formCreated",
 						UtilDateUtilities.DateToString(
@@ -59,24 +59,24 @@ public class FrmAdfV2Record extends FrmRecord {
 								_dateFormat));
 				//props.setProperty("formEdited",
 				// UtilDateUtilities.DateToString(UtilDateUtilities.Today(),_dateFormat));
-				props.setProperty("c_patientname", DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name"));
+				props.setProperty("c_patientname", oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name"));
 				props.setProperty(
 						"c_address",
-						DBHandler.getString(rs,"address")
+						oscar.Misc.getString(rs, "address")
 						+ ", "
-						+ DBHandler.getString(rs,"city")
+						+ oscar.Misc.getString(rs, "city")
 						+ ", "
-						+ DBHandler.getString(rs,"province")
+						+ oscar.Misc.getString(rs, "province")
 						+ " "
-						+ DBHandler.getString(rs,"postal"));
-				props.setProperty("c_phn", DBHandler.getString(rs,"hin"));
+						+ oscar.Misc.getString(rs, "postal"));
+				props.setProperty("c_phn", oscar.Misc.getString(rs, "hin"));
 				props.setProperty(
 						"pg1_dateOfBirth",
 						UtilDateUtilities.DateToString(date, _dateFormat));
 				props.setProperty(
 						"pg1_age",
 						String.valueOf(UtilDateUtilities.calcAge(date)));
-				props.setProperty("c_phone", DBHandler.getString(rs,"phone"));
+				props.setProperty("c_phone", oscar.Misc.getString(rs, "phone"));
 				props.setProperty(
 						"sigDate",
 						UtilDateUtilities.DateToString(

@@ -87,14 +87,14 @@ public class MsgViewMessageAction extends Action {
 
               if (rs.next()) {
                  String attach, pdfAttach;
-                 String message = (DBHandler.getString(rs,"themessage"));
-                 String subject = (DBHandler.getString(rs,"thesubject"));
-                 String sentby  = (DBHandler.getString(rs,"sentby"));
-                 String sentto  = (DBHandler.getString(rs,"sentto"));
-                 String thetime = (DBHandler.getString(rs,"theime"));
-                 String thedate = (DBHandler.getString(rs,"thedate"));
-                 String att     = DBHandler.getString(rs,"attachment");
-                 String pdfAtt     = DBHandler.getString(rs,"pdfattachment");
+                 String message = (oscar.Misc.getString(rs, "themessage"));
+                 String subject = (oscar.Misc.getString(rs, "thesubject"));
+                 String sentby  = (oscar.Misc.getString(rs, "sentby"));
+                 String sentto  = (oscar.Misc.getString(rs, "sentto"));
+                 String thetime = (oscar.Misc.getString(rs, "theime"));
+                 String thedate = (oscar.Misc.getString(rs, "thedate"));
+                 String att     = oscar.Misc.getString(rs, "attachment");
+                 String pdfAtt     = oscar.Misc.getString(rs, "pdfattachment");
 
                  if (att == null || att.equals("null") ){
                     attach ="0";

@@ -65,7 +65,7 @@ public class ProcedimentoRealizadoDAO extends DAO {
             while (rs.next()) {
                 ProcedimentoRealizado pr = new ProcedimentoRealizado();
                 pr.getCadProcedimentos().setCoProcedimento(rs.getLong(1));
-                pr.getCadProcedimentos().setDsProcedimento(DBHandler.getString(rs,2));
+                pr.getCadProcedimentos().setDsProcedimento(oscar.Misc.getString(rs, 2));
                 pr.setDtRealizacao(rs.getDate(3,
                         DateUtils.getDateFormatter().getCalendar()));
                 pr.getTpAtendimento().setCoTipoatendimento(rs.getLong(4));

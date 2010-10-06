@@ -116,7 +116,7 @@ public class MsgGenerate {
                     String fldData = "";
                     try {
                         
-                        fldData = DBHandler.getString(rs,i);
+                        fldData = oscar.Misc.getString(rs, i);
                         
                         if(fldData==null) fldData = "";
                         
@@ -143,7 +143,7 @@ public class MsgGenerate {
             }
             
             {
-                String value = DBHandler.getString(rs,"fldItem");
+                String value = oscar.Misc.getString(rs, "fldItem");
                 if(value==null) value="";
                 item.setAttribute("value", value);
             }
@@ -154,7 +154,7 @@ public class MsgGenerate {
                 
                 fld.setAttribute("name", cfgFld.getAttribute("name"));
                 fld.setAttribute("sql", cfgFld.getAttribute("sql"));
-                String value = DBHandler.getString(rs,"fld" + i);
+                String value = oscar.Misc.getString(rs, ("fld" + i));
                 if(value==null) value="";
                 fld.setAttribute("value", value);
             }

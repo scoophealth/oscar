@@ -60,7 +60,7 @@ public class EctSplitChart {
          ResultSet rs = DBHandler.GetSQL(sql);
          while(rs.next()) {
             String[] s = new String[2];
-             s[0] = DBHandler.getString(rs,"eChartId");            
+             s[0] = oscar.Misc.getString(rs, "eChartId");            
              Timestamp timestamp = rs.getTimestamp("timeStamp");             
              java.util.Date d = new java.util.Date(timestamp.getTime());
              

@@ -52,7 +52,7 @@ public class MsgAddressBookMaker
         {
             String newAddressBook = MsgCommxml.toXML(addressBook);
 
-            //if((DBHandler.getString(rs,"addressBook")==null) /*|| (DBHandler.getString(rs,"addressBook").equals(newAddressBook)==false)*/)
+            //if((oscar.Misc.getString(rs,"addressBook")==null) /*|| (oscar.Misc.getString(rs,"addressBook").equals(newAddressBook)==false)*/)
             //{
                 DBHandler.RunSQL("UPDATE oscarcommlocations SET addressBook = '" + MsgUtil.replaceQuote(newAddressBook) + "' WHERE current1 = 1");
             //}
@@ -82,7 +82,7 @@ public class MsgAddressBookMaker
 
         while(rs.next())
         {
-            Element subGrp = getChildren(doc, rs.getInt("groupID"), DBHandler.getString(rs,"groupDesc"));
+            Element subGrp = getChildren(doc, rs.getInt("groupID"), oscar.Misc.getString(rs, "groupDesc"));
 
             if(subGrp.hasChildNodes())
             {
@@ -100,8 +100,8 @@ public class MsgAddressBookMaker
         while(rs.next())
         {
             Element address = MsgCommxml.addNode(group, "address");
-            address.setAttribute("id", DBHandler.getString(rs,"provider_no"));
-            address.setAttribute("desc", new String(DBHandler.getString(rs,"last_name") + ", " + DBHandler.getString(rs,"first_name")));
+            address.setAttribute("id", oscar.Misc.getString(rs, "provider_no"));
+            address.setAttribute("desc", new String(oscar.Misc.getString(rs, "last_name") + ", " + oscar.Misc.getString(rs, "first_name")));
         }
         rs.close();
 

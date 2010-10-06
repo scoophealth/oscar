@@ -134,10 +134,10 @@ public  class MsgHandleMessagesAction extends Action {
              rs = DBHandler.GetSQL(sql);
 
              if ( rs.next()){
-                vector.add(DBHandler.getString(rs,"sentbyNo"));
-                subject.append(DBHandler.getString(rs,"thesubject"));
-                themessage= DBHandler.getString(rs,"themessage");
-                sentByLocation = DBHandler.getString(rs,"sentByLocation");
+                vector.add(oscar.Misc.getString(rs, "sentbyNo"));
+                subject.append(oscar.Misc.getString(rs, "thesubject"));
+                themessage= oscar.Misc.getString(rs, "themessage");
+                sentByLocation = oscar.Misc.getString(rs, "sentByLocation");
                 themessage = themessage.replace('\n','>');        //puts > at the beginning
                 theSendMessage = new StringBuffer(themessage);    //of each line
                 theSendMessage.insert(0,"\n\n\n>");
@@ -151,9 +151,9 @@ public  class MsgHandleMessagesAction extends Action {
               if(replyAll.compareToIgnoreCase("reply All") == 0){  // add every one that got the message
                  rs = DBHandler.GetSQL("select provider_no, remoteLocation from messagelisttbl where message = '"+messageNo+"'");
                  while (rs.next()){
-                     MiscUtils.getLogger().debug("LOOK4ME pro no "+DBHandler.getString(rs,"provider_no")+" remo Loco "+DBHandler.getString(rs,"remoteLocation"));
-                     vector.add(DBHandler.getString(rs,"provider_no"));
-                     replyMessageData.add(DBHandler.getString(rs,"provider_no"),DBHandler.getString(rs,"remoteLocation"));
+                     MiscUtils.getLogger().debug("LOOK4ME pro no "+oscar.Misc.getString(rs, "provider_no")+" remo Loco "+oscar.Misc.getString(rs, "remoteLocation"));
+                     vector.add(oscar.Misc.getString(rs, "provider_no"));
+                     replyMessageData.add(oscar.Misc.getString(rs, "provider_no"),oscar.Misc.getString(rs, "remoteLocation"));
                  }
                  replyval = new String[vector.size()];  //no need for the old replyval
                  for (int k =0; k < vector.size(); k++){
@@ -185,10 +185,10 @@ public  class MsgHandleMessagesAction extends Action {
               rs = DBHandler.GetSQL(sql);
 
               if ( rs.next()){
-//                 vector.add(DBHandler.getString(rs,"sentbyNo"));
-                 subject.append(DBHandler.getString(rs,"thesubject"));
-                 themessage= DBHandler.getString(rs,"themessage");
-//                 sentByLocation = DBHandler.getString(rs,"sentByLocation");
+//                 vector.add(oscar.Misc.getString(rs,"sentbyNo"));
+                 subject.append(oscar.Misc.getString(rs, "thesubject"));
+                 themessage= oscar.Misc.getString(rs, "themessage");
+//                 sentByLocation = oscar.Misc.getString(rs,"sentByLocation");
                  themessage = themessage.replace('\n','>');        //puts > at the beginning
                  theSendMessage = new StringBuffer(themessage);    //of each line
                  theSendMessage.insert(0,"\n\n\n>");

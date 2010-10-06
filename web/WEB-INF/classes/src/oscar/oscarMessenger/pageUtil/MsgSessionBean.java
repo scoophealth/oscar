@@ -66,7 +66,7 @@ public class MsgSessionBean
                 String sql = new String("select first_name, last_name from provider where provider_no = '"+providerNo+"'");
                 rs = DBHandler.GetSQL(sql);
                 if (rs.next()){
-                   userName =  DBHandler.getString(rs,"first_name")+" "+DBHandler.getString(rs,"last_name");
+                   userName =  oscar.Misc.getString(rs, "first_name")+" "+oscar.Misc.getString(rs, "last_name");
                 }
                 rs.close();
         }catch (java.sql.SQLException e){MiscUtils.getLogger().error("Error", e); }

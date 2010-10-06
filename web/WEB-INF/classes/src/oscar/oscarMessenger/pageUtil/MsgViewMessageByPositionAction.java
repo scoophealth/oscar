@@ -90,7 +90,7 @@ public class MsgViewMessageByPositionAction extends Action {
                 MiscUtils.getLogger().debug("this ="+sql);
                 rs = DBHandler.GetSQL(sql);
                 if (rs.next()) {                                                                   
-                    actionforward.addParameter("messageID", DBHandler.getString(rs,"messageid"));
+                    actionforward.addParameter("messageID", oscar.Misc.getString(rs, "messageid"));
                     actionforward.addParameter("from", "encounter");     
                     actionforward.addParameter("demographic_no", demographic_no);
                     actionforward.addParameter("messagePostion", messagePosition);

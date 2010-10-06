@@ -65,8 +65,8 @@ public class EctConConstructSpecialistsScriptsFile
                 
                 String sql = "select * from  consultationServices";
                 ResultSet rs;
-                for(rs = DBHandler.GetSQL(sql); rs.next(); serviceDesc.add(DBHandler.getString(rs,"serviceDesc")))
-                    serviceId.add(DBHandler.getString(rs,"serviceId"));
+                for(rs = DBHandler.GetSQL(sql); rs.next(); serviceDesc.add(oscar.Misc.getString(rs, "serviceDesc")))
+                    serviceId.add(oscar.Misc.getString(rs, "serviceId"));
 
                 MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer("there are ")).append(serviceId.size()).append(" services"))));
                 for(int i = 0; i < serviceId.size(); i++)
@@ -77,12 +77,12 @@ public class EctConConstructSpecialistsScriptsFile
                     sql = String.valueOf(String.valueOf((new StringBuffer("select ser.specId, pro.fName, pro.lName, pro.proLetters, pro.address , pro.phone, pro.fax  from serviceSpecialists ser, professionalSpecialists pro where pro.specId = ser.specId and ser.serviceId = '")).append(servId).append("' order by pro.lName")));
                     for(rs = DBHandler.GetSQL(sql); rs.next(); MiscUtils.getLogger().debug("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))
                     {
-                        String name = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(DBHandler.getString(rs,"lName"))))).append(", ").append(DBHandler.getString(rs,"fName")).append(" ").append(DBHandler.getString(rs,"proLetters"))));
+                        String name = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(oscar.Misc.getString(rs, "lName"))))).append(", ").append(oscar.Misc.getString(rs, "fName")).append(" ").append(oscar.Misc.getString(rs, "proLetters"))));
                         MiscUtils.getLogger().debug("name : ".concat(String.valueOf(String.valueOf(name))));
-                        String specId = DBHandler.getString(rs,"specId");
-                        String phone = DBHandler.getString(rs,"phone");
-                        String address = DBHandler.getString(rs,"address");
-                        String fax = DBHandler.getString(rs,"fax");
+                        String specId = oscar.Misc.getString(rs, "specId");
+                        String phone = oscar.Misc.getString(rs, "phone");
+                        String address = oscar.Misc.getString(rs, "address");
+                        String fax = oscar.Misc.getString(rs, "fax");
                         fileWriter.write(String.valueOf(String.valueOf((new StringBuffer("D(")).append(servId).append(",\"").append(specId).append("\",\"").append(phone).append("\",\"").append(name).append("\",\"").append(fax).append("\",\"").append(address).append("\");\n"))));
                     }
 
@@ -122,8 +122,8 @@ public class EctConConstructSpecialistsScriptsFile
             
             String sql = "select * from  consultationServices where active = '1' order by serviceDesc";
             ResultSet rs;
-            for(rs = DBHandler.GetSQL(sql); rs.next(); serviceDesc.add(DBHandler.getString(rs,"serviceDesc")))
-                serviceId.add(DBHandler.getString(rs,"serviceId"));
+            for(rs = DBHandler.GetSQL(sql); rs.next(); serviceDesc.add(oscar.Misc.getString(rs, "serviceDesc")))
+                serviceId.add(oscar.Misc.getString(rs, "serviceId"));
 
             MiscUtils.getLogger().debug(String.valueOf(String.valueOf((new StringBuffer("there are ")).append(serviceId.size()).append(" services"))));
             for(int i = 0; i < serviceId.size(); i++)
@@ -134,14 +134,14 @@ public class EctConConstructSpecialistsScriptsFile
                 sql = String.valueOf(String.valueOf((new StringBuffer("select ser.specId, pro.fName, pro.lName, pro.proLetters, pro.address , pro.phone, pro.fax  from serviceSpecialists ser, professionalSpecialists pro where pro.specId = ser.specId and ser.serviceId = '")).append(servId).append("' order by pro.lName")));
                 for(rs = DBHandler.GetSQL(sql); rs.next(); MiscUtils.getLogger().debug("this went this many times = ".concat(String.valueOf(String.valueOf(servId)))))
                 {
-                    String name = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(DBHandler.getString(rs,"lName"))))).append(", ").append(DBHandler.getString(rs,"fName")).append(" ").append(DBHandler.getString(rs,"proLetters"))));
+                    String name = String.valueOf(String.valueOf((new StringBuffer(String.valueOf(String.valueOf(oscar.Misc.getString(rs, "lName"))))).append(", ").append(oscar.Misc.getString(rs, "fName")).append(" ").append(oscar.Misc.getString(rs, "proLetters"))));
                     name = this.escapeString(name);
                     MiscUtils.getLogger().debug("name : ".concat(String.valueOf(String.valueOf(name))));
-                    String specId = DBHandler.getString(rs,"specId");
-                    String phone = DBHandler.getString(rs,"phone");
-                    String address = DBHandler.getString(rs,"address");                 
+                    String specId = oscar.Misc.getString(rs, "specId");
+                    String phone = oscar.Misc.getString(rs, "phone");
+                    String address = oscar.Misc.getString(rs, "address");                 
                     address = this.escapeString(address);
-                    String fax = DBHandler.getString(rs,"fax");
+                    String fax = oscar.Misc.getString(rs, "fax");
                     stringBuffer.append(String.valueOf(String.valueOf((new StringBuffer("D(")).append(servId).append(",\"").append(specId).append("\",\"").append(phone).append("\",\"").append(name).append("\",\"").append(fax).append("\",\"").append(address).append("\");\n"))));
                 }
 

@@ -108,12 +108,12 @@ public class DemographicRelationship {
          rs = DBHandler.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            h.put("id", DBHandler.getString(rs,"id"));
-            h.put("demographic_no", DBHandler.getString(rs,"relation_demographic_no"));
-            h.put("relation", DBHandler.getString(rs,"relation"));
-            h.put("sub_decision_maker", DBHandler.getString(rs,"sub_decision_maker"));
-	    h.put("emergency_contact", DBHandler.getString(rs,"emergency_contact"));
-            h.put("notes", DBHandler.getString(rs,"notes"));
+            h.put("id", oscar.Misc.getString(rs, "id"));
+            h.put("demographic_no", oscar.Misc.getString(rs, "relation_demographic_no"));
+            h.put("relation", oscar.Misc.getString(rs, "relation"));
+            h.put("sub_decision_maker", oscar.Misc.getString(rs, "sub_decision_maker"));
+	    h.put("emergency_contact", oscar.Misc.getString(rs, "emergency_contact"));
+            h.put("notes", oscar.Misc.getString(rs, "notes"));
             list.add(h);
          }            
       } catch (SQLException e) {
@@ -132,12 +132,12 @@ public class DemographicRelationship {
          rs = DBHandler.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            h.put("demographic_no", DBHandler.getString(rs,"demographic_no"));
-            h.put("relation_demographic_no", DBHandler.getString(rs,"relation_demographic_no"));
-            h.put("relation", DBHandler.getString(rs,"relation"));
-            h.put("sub_decision_maker", DBHandler.getString(rs,"sub_decision_maker"));
-	    h.put("emergency_contact", DBHandler.getString(rs,"emergency_contact"));
-            h.put("notes", DBHandler.getString(rs,"notes"));
+            h.put("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
+            h.put("relation_demographic_no", oscar.Misc.getString(rs, "relation_demographic_no"));
+            h.put("relation", oscar.Misc.getString(rs, "relation"));
+            h.put("sub_decision_maker", oscar.Misc.getString(rs, "sub_decision_maker"));
+	    h.put("emergency_contact", oscar.Misc.getString(rs, "emergency_contact"));
+            h.put("notes", oscar.Misc.getString(rs, "notes"));
             list.add(h);
          }            
       } catch (SQLException e) {
@@ -155,7 +155,7 @@ public class DemographicRelationship {
          String sql = "select * from relationships where demographic_no = '"+demographic+"' and deleted != '1' and sub_decision_maker = '1'";
          rs = DBHandler.GetSQL(sql);
          if(rs.next()){            
-            sdm = DBHandler.getString(rs,"relation_demographic_no");
+            sdm = oscar.Misc.getString(rs, "relation_demographic_no");
          }            
       } catch (SQLException e) {
          MiscUtils.getLogger().error("Error", e);
@@ -174,18 +174,18 @@ public class DemographicRelationship {
          rs = DBHandler.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
-            String demo = DBHandler.getString(rs,"relation_demographic_no");
+            String demo = oscar.Misc.getString(rs, "relation_demographic_no");
             DemographicData dd = new DemographicData();
             DemographicData.Demographic demographic = dd.getDemographic(demo);    
             h.put("lastName", demographic.getLastName());
             h.put("firstName", demographic.getFirstName());
             h.put("phone", demographic.getPhone());
             h.put("demographicNo", demo);
-            h.put("relation", DBHandler.getString(rs,"relation"));
+            h.put("relation", oscar.Misc.getString(rs, "relation"));
             
-            h.put("subDecisionMaker", booleanConverter(DBHandler.getString(rs,"sub_decision_maker")));
-            h.put("emergencyContact", booleanConverter(DBHandler.getString(rs,"emergency_contact")));
-            h.put("notes", DBHandler.getString(rs,"notes"));
+            h.put("subDecisionMaker", booleanConverter(oscar.Misc.getString(rs, "sub_decision_maker")));
+            h.put("emergencyContact", booleanConverter(oscar.Misc.getString(rs, "emergency_contact")));
+            h.put("notes", oscar.Misc.getString(rs, "notes"));
             h.put("age",demographic.getAge());
             list.add(h);
          }            
@@ -205,18 +205,18 @@ public class DemographicRelationship {
 	         rs = DBHandler.GetSQL(sql);
 	         while(rs.next()){
 	            Hashtable h = new Hashtable();
-	            String demo = DBHandler.getString(rs,"relation_demographic_no");
+	            String demo = oscar.Misc.getString(rs, "relation_demographic_no");
 	            DemographicData dd = new DemographicData();
 	            DemographicData.Demographic demographic = dd.getDemographic(demo);    
 	            h.put("lastName", demographic.getLastName());
 	            h.put("firstName", demographic.getFirstName());
 	            h.put("phone", demographic.getPhone());
 	            h.put("demographicNo", demo);
-	            h.put("relation", DBHandler.getString(rs,"relation"));
+	            h.put("relation", oscar.Misc.getString(rs, "relation"));
 	            
-	            h.put("subDecisionMaker", booleanConverter(DBHandler.getString(rs,"sub_decision_maker")));
-	            h.put("emergencyContact", booleanConverter(DBHandler.getString(rs,"emergency_contact")));
-	            h.put("notes", DBHandler.getString(rs,"notes"));
+	            h.put("subDecisionMaker", booleanConverter(oscar.Misc.getString(rs, "sub_decision_maker")));
+	            h.put("emergencyContact", booleanConverter(oscar.Misc.getString(rs, "emergency_contact")));
+	            h.put("notes", oscar.Misc.getString(rs, "notes"));
 	            h.put("age",demographic.getAge());
 	            list.add(h);
 	         }            

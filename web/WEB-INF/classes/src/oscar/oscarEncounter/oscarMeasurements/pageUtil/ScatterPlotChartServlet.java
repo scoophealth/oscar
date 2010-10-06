@@ -236,7 +236,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     
                     for(int i=0; i<nbData; i++){ 
                         sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                + "' AND dateObserved='"+DBHandler.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                                + "' AND dateObserved='"+oscar.Misc.getString(rs, "dateObserved") + "' ORDER BY dateEntered DESC limit 1";
                         ResultSet rsData;
                         rsData = DBHandler.GetSQL(sql);
                         if(rsData.next()){
@@ -268,7 +268,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                     for(int i=0; i<nbPatient; i++){
                         if(rs.next()){                            
                             sql =   "SELECT * FROM measurements WHERE demographicNo='" + demo + "' AND type='"+ type 
-                                    + "' AND dateObserved='"+DBHandler.getString(rs,"dateObserved") + "' ORDER BY dateEntered DESC limit 1";
+                                    + "' AND dateObserved='"+oscar.Misc.getString(rs, "dateObserved") + "' ORDER BY dateEntered DESC limit 1";
                             MiscUtils.getLogger().debug("sql dateObserved: " + sql);
                             ResultSet rsData;
                             rsData = DBHandler.GetSQL(sql);
@@ -318,7 +318,7 @@ public class ScatterPlotChartServlet extends HttpServlet
                 ResultSet rs;
                 rs = DBHandler.GetSQL(sql);                
                 rs.next();
-                String validation = DBHandler.getString(rs,"validation");
+                String validation = oscar.Misc.getString(rs, "validation");
                 rs.close();
                 
                 sql = "SELECT * FROM validations WHERE id='"+ validation + "'";

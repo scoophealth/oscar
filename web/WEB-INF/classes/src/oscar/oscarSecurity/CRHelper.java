@@ -60,7 +60,7 @@ public class CRHelper implements RolesProvider {
 			ResultSet rs = st.executeQuery();
 			HashSet list = new HashSet();
 			while(rs.next()){
-				list.add(DBHandler.getString(rs,1));
+				list.add(oscar.Misc.getString(rs, 1));
 			}
 			if(queryCaisiRoles(con)){
 				rs.close();
@@ -69,7 +69,7 @@ public class CRHelper implements RolesProvider {
 				st.setString(1,(String)userNameToProviderNO.get(user));
 				rs = st.executeQuery();
 				while(rs.next()){
-					list.add(DBHandler.getString(rs,1));
+					list.add(oscar.Misc.getString(rs, 1));
 				}
 			}
 			rs.close();

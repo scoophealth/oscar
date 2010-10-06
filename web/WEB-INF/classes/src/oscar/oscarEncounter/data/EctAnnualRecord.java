@@ -55,13 +55,13 @@ public class EctAnnualRecord
 
             if(rs.next())
             {
-                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 
-                props.setProperty("demographic_no", DBHandler.getString(rs,"demographic_no"));
+                props.setProperty("demographic_no", oscar.Misc.getString(rs, "demographic_no"));
                 props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
                 props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
                 props.setProperty("formDate", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
-                props.setProperty("pName", DBHandler.getString(rs,"pName"));
+                props.setProperty("pName", oscar.Misc.getString(rs, "pName"));
                 props.setProperty("age", String.valueOf(UtilDateUtilities.calcAge(dob)));
             }
 
@@ -108,7 +108,7 @@ public class EctAnnualRecord
                         }
                         else
                         {
-                            value = DBHandler.getString(rs,i);
+                            value = oscar.Misc.getString(rs, i);
                         }
                     }
 

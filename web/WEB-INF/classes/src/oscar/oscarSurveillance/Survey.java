@@ -198,7 +198,7 @@ public class Survey {
          
          ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            surveyStatus = DBHandler.getString(rs,"status");            
+            surveyStatus = oscar.Misc.getString(rs, "status");            
          }            
          rs.close();
          
@@ -217,7 +217,7 @@ public class Survey {
          
          ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            sStatus = DBHandler.getString(rs,"status");            
+            sStatus = oscar.Misc.getString(rs, "status");            
          }            
          rs.close();
          
@@ -250,7 +250,7 @@ public class Survey {
          DBHandler.RunSQL(sql);
          ResultSet rs = DBHandler.GetSQL("SELECT LAST_INSERT_ID()");
          if (rs.next()){
-            insertId = DBHandler.getString(rs,1);
+            insertId = oscar.Misc.getString(rs, 1);
          }         
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);
@@ -276,7 +276,7 @@ public class Survey {
          
          ResultSet rs = DBHandler.GetSQL(sql);
          if(rs.next()){
-            surveyDataId = DBHandler.getString(rs,"surveyDataId");            
+            surveyDataId = oscar.Misc.getString(rs, "surveyDataId");            
          }            
          rs.close();
          
@@ -532,7 +532,7 @@ public class Survey {
          ResultSet rs = DBHandler.GetSQL(sql);  
          
          while(rs.next()){
-            String[] s =  {DBHandler.getString(rs,"status"),DBHandler.getString(rs,"countstatus")};
+            String[] s =  {oscar.Misc.getString(rs, "status"),oscar.Misc.getString(rs, "countstatus")};
             list.add(s);
          }         
       }catch(Exception e){
@@ -550,7 +550,7 @@ public class Survey {
          ResultSet rs = DBHandler.GetSQL(sql);  
          
          while(rs.next()){
-            String[] s =  {DBHandler.getString(rs,"answer"),DBHandler.getString(rs,"countanswer")};
+            String[] s =  {oscar.Misc.getString(rs, "answer"),oscar.Misc.getString(rs, "countanswer")};
             list.add(s);
          }         
       }catch(Exception e){

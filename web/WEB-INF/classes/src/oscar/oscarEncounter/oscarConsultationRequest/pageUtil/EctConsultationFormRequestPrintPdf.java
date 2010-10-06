@@ -295,7 +295,7 @@ public class EctConsultationFormRequestPrintPdf {
             
             ResultSet rs = DBHandler.GetSQL(sql);
             while(rs.next()){
-                String segmentId = DBHandler.getString(rs,"lab_no");
+                String segmentId = oscar.Misc.getString(rs, "lab_no");
                 request.setAttribute("segmentID", segmentId);
                 MessageHandler handler = Factory.getHandler(segmentId);
                 String fileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";

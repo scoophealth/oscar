@@ -49,23 +49,23 @@ public class FrmSelfAdministeredRecord extends FrmRecord {
                               + demographicNo;
 			rs = DBHandler.GetSQL(sql);
 			if (rs.next()) {
-                                java.util.Date dob = UtilDateUtilities.calcDate(DBHandler.getString(rs,"year_of_birth"), DBHandler.getString(rs,"month_of_birth"), DBHandler.getString(rs,"date_of_birth"));
+                                java.util.Date dob = UtilDateUtilities.calcDate(oscar.Misc.getString(rs, "year_of_birth"), oscar.Misc.getString(rs, "month_of_birth"), oscar.Misc.getString(rs, "date_of_birth"));
 				props.setProperty(
 					"demographic_no",
-					DBHandler.getString(rs,"demographic_no"));
+					oscar.Misc.getString(rs, "demographic_no"));
 				props.setProperty(
 					"formCreated",
 					UtilDateUtilities.DateToString(
 						UtilDateUtilities.Today(),
 						_dateFormat));	
                                 props.setProperty("dob", UtilDateUtilities.DateToString(dob,"yyyy/MM/dd"));
-                                props.setProperty("sex", DBHandler.getString(rs,"sex"));
+                                props.setProperty("sex", oscar.Misc.getString(rs, "sex"));
 			}
 			rs.close();
                         sql = "SELECT studyID FROM rehabStudy2004 WHERE demographic_no='"+demographicNo + "'";
                         rs = DBHandler.GetSQL(sql);
                         if (rs.next()){
-                            props.setProperty("studyID", DBHandler.getString(rs,"studyID"));
+                            props.setProperty("studyID", oscar.Misc.getString(rs, "studyID"));
                         }
                         else{
                             props.setProperty("studyID", "N/A");
@@ -113,7 +113,7 @@ public class FrmSelfAdministeredRecord extends FrmRecord {
                                     }
                                     else
                                     {
-                                        value = DBHandler.getString(rs,i);
+                                        value = oscar.Misc.getString(rs, i);
                                     }
                                 }
 

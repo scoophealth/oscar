@@ -67,16 +67,16 @@ public class EctMeasurementsDataBeanHandler {
             String canPlot = null;
             for(rs = DBHandler.GetSQL(sql); rs.next(); )
             {
-                    if (rs.getInt("numericValidation")==1 || DBHandler.getString(rs,"validationName").compareTo("Blood Pressure")==0)
+                    if (rs.getInt("numericValidation")==1 || oscar.Misc.getString(rs,"validationName").compareTo("Blood Pressure")==0)
                         canPlot = "true";
                     else
                         canPlot = null;
                     //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), DBHandler.getString(rs,"type"), DBHandler.getString(rs,"typeDisplayName"), DBHandler.getString(rs,"demographicNo"),
-                                                                               DBHandler.getString(rs,"provider_first"), DBHandler.getString(rs,"provider_last"),
-                                                                               DBHandler.getString(rs,"dataField"), DBHandler.getString(rs,"measuringInstruction"),
-                                                                               DBHandler.getString(rs,"comments"), DBHandler.getString(rs,"dateObserved"),
-                                                                               DBHandler.getString(rs,"dateEntered"), canPlot);
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), oscar.Misc.getString(rs,"type"), oscar.Misc.getString(rs,"typeDisplayName"), oscar.Misc.getString(rs,"demographicNo"),
+                                                                               oscar.Misc.getString(rs,"provider_first"), oscar.Misc.getString(rs,"provider_last"),
+                                                                               oscar.Misc.getString(rs,"dataField"), oscar.Misc.getString(rs,"measuringInstruction"),
+                                                                               oscar.Misc.getString(rs,"comments"), oscar.Misc.getString(rs,"dateObserved"),
+                                                                               oscar.Misc.getString(rs,"dateEntered"), canPlot);
                     measurementsDataVector.add(data);
             }
      
@@ -102,11 +102,11 @@ public class EctMeasurementsDataBeanHandler {
             String canPlot = null;
             for(rs = DBHandler.GetSQL(sql); rs.next(); ) {
                 EctMeasurementsDataBean data = new EctMeasurementsDataBean();
-                data.setType(DBHandler.getString(rs,"type"));
-                data.setTypeDisplayName(DBHandler.getString(rs,"typeDisplayName"));
-                data.setTypeDescription(DBHandler.getString(rs,"typeDescription"));
-                data.setMeasuringInstrc(DBHandler.getString(rs,"measuringInstruction"));
-                //log.debug("Measurments: " + DBHandler.getString(rs,"type") + " " + DBHandler.getString(rs,"typeDisplayName") + " " + DBHandler.getString(rs,"typeDescription"));
+                data.setType(oscar.Misc.getString(rs, "type"));
+                data.setTypeDisplayName(oscar.Misc.getString(rs, "typeDisplayName"));
+                data.setTypeDescription(oscar.Misc.getString(rs, "typeDescription"));
+                data.setMeasuringInstrc(oscar.Misc.getString(rs, "measuringInstruction"));
+                //log.debug("Measurments: " + oscar.Misc.getString(rs,"type") + " " + oscar.Misc.getString(rs,"typeDisplayName") + " " + oscar.Misc.getString(rs,"typeDescription"));
                 measurementsDataVector.add(data);
             }
             
@@ -150,23 +150,23 @@ public class EctMeasurementsDataBeanHandler {
                 rs = DBHandler.GetSQL(sql);
                 
                 while( rs.next() ){
-                    if (rs.getInt("numericValidation")==1 || DBHandler.getString(rs,"validationName").compareTo("Blood Pressure")==0)
+                    if (rs.getInt("numericValidation")==1 || oscar.Misc.getString(rs, "validationName").compareTo("Blood Pressure")==0)
                         canPlot = "true";
                     else
                         canPlot = null;
                     
-                    firstName = DBHandler.getString(rs,"provider_first");
-                    lastName = DBHandler.getString(rs,"provider_last");
+                    firstName = oscar.Misc.getString(rs, "provider_first");
+                    lastName = oscar.Misc.getString(rs, "provider_last");
                     if (firstName == null && lastName == null){
                         firstName = "Automatic";
                         lastName = "";
                     }
                     //log.debug("canPlot value: " + canPlot);
-                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), DBHandler.getString(rs,"type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), DBHandler.getString(rs,"demographicNo"),
+                    EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), oscar.Misc.getString(rs, "type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), oscar.Misc.getString(rs, "demographicNo"),
                             firstName, lastName,
-                            DBHandler.getString(rs,"dataField"), DBHandler.getString(rs,"measuringInstruction"),
-                            DBHandler.getString(rs,"comments"), DBHandler.getString(rs,"dateObserved"),
-                            DBHandler.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                            oscar.Misc.getString(rs, "dataField"), oscar.Misc.getString(rs, "measuringInstruction"),
+                            oscar.Misc.getString(rs, "comments"), oscar.Misc.getString(rs, "dateObserved"),
+                            oscar.Misc.getString(rs, "dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
                     measurementsDataVector.add(data);
                     
                 }
@@ -199,16 +199,16 @@ public class EctMeasurementsDataBeanHandler {
             ResultSet rs;
             String canPlot = null;
             for(rs = DBHandler.GetSQL(sql); rs.next(); ) {
-                if (rs.getInt("numericValidation")==1 || DBHandler.getString(rs,"validationName").compareTo("Blood Pressure")==0)
+                if (rs.getInt("numericValidation")==1 || oscar.Misc.getString(rs, "validationName").compareTo("Blood Pressure")==0)
                     canPlot = "true";
                 else
                     canPlot = null;
                 //log.debug("canPlot value: " + canPlot);
-                EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), DBHandler.getString(rs,"type"), DBHandler.getString(rs,"typeDisplayName"), DBHandler.getString(rs,"typeDescription"), DBHandler.getString(rs,"demographicNo"),
-                        DBHandler.getString(rs,"provider_first"), DBHandler.getString(rs,"provider_last"),
-                        DBHandler.getString(rs,"dataField"), DBHandler.getString(rs,"measuringInstruction"),
-                        DBHandler.getString(rs,"comments"), DBHandler.getString(rs,"dateObserved"),
-                        DBHandler.getString(rs,"dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), oscar.Misc.getString(rs, "type"), oscar.Misc.getString(rs, "typeDisplayName"), oscar.Misc.getString(rs, "typeDescription"), oscar.Misc.getString(rs, "demographicNo"),
+                        oscar.Misc.getString(rs, "provider_first"), oscar.Misc.getString(rs, "provider_last"),
+                        oscar.Misc.getString(rs, "dataField"), oscar.Misc.getString(rs, "measuringInstruction"),
+                        oscar.Misc.getString(rs, "comments"), oscar.Misc.getString(rs, "dateObserved"),
+                        oscar.Misc.getString(rs, "dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
                 measurementsDataVector.add(data);
                 
             }

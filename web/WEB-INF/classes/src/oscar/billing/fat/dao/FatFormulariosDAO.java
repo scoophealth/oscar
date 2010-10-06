@@ -49,7 +49,7 @@ public class FatFormulariosDAO extends DAO {
 
 		if (rs.next()) {
 			form.setCoFormulario(rs.getInt(1));
-			form.setDsFormulario(DBHandler.getString(rs,2));
+			form.setDsFormulario(oscar.Misc.getString(rs, 2));
 		}
 		} finally {
 		}
@@ -71,7 +71,7 @@ public class FatFormulariosDAO extends DAO {
         while (rs.next()) {
             FatFormularios form = new FatFormularios();
             form.setCoFormulario(rs.getInt(1));
-            form.setDsFormulario(DBHandler.getString(rs,2));
+            form.setDsFormulario(oscar.Misc.getString(rs, 2));
             list.add(form);
 			MiscUtils.getLogger().debug("adicionou reg");
         }
@@ -95,7 +95,7 @@ public class FatFormulariosDAO extends DAO {
             while (rs.next()) {
                 FatFormularioProcedimento formProc = new FatFormularioProcedimento();
                 formProc.getCadProcedimentos().setCoProcedimento(rs.getInt(1));
-                formProc.getCadProcedimentos().setDsProcedimento(DBHandler.getString(rs,2));
+                formProc.getCadProcedimentos().setDsProcedimento(oscar.Misc.getString(rs, 2));
 				formProc.getFatFormularios().setCoFormulario(Integer.parseInt(
 						id));
                 list.add(formProc);
@@ -121,7 +121,7 @@ public class FatFormulariosDAO extends DAO {
             while (rs.next()) {
                 FatFormularioProcedimento formProc = new FatFormularioProcedimento();
                 formProc.getCadProcedimentos().setCoProcedimento(rs.getInt(1));
-                formProc.getCadProcedimentos().setDsProcedimento(DBHandler.getString(rs,2));
+                formProc.getCadProcedimentos().setDsProcedimento(oscar.Misc.getString(rs, 2));
                 formProc.getFatFormularios().setCoFormulario(rs.getInt(3));
                 list.add(formProc);
             }
