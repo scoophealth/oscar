@@ -39,8 +39,6 @@ import org.oscarehr.util.DbConnectionFilter;
  */
 public final class DBHandler {
 
-	public static String OSCAR_DATA = "oscar_sfhc";
-
 	private DBHandler() {
 		// not intented for instantiation
 	}
