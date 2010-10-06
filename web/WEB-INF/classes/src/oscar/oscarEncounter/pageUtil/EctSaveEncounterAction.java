@@ -40,6 +40,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -211,7 +212,7 @@ public class EctSaveEncounterAction
 
           try {             
             String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
                 pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime())); 
                 pstmt.setString(2,sessionbean.demographicNo);  
                 pstmt.setString(3,sessionbean.providerNo); 

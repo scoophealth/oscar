@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -89,7 +90,7 @@ public class DemographicExt {
             ResultSet rs;
             String sql = "select value from demographicExt where demographic_no = ? and key_val = ? order by id desc  limit 1";
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);            
             pstmt.setString(1,demo ); 
@@ -119,7 +120,7 @@ public class DemographicExt {
                                     
             String sql = "select key_val, value from demographicExt where demographic_no = ? ";
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);            
             pstmt.setString(1,demo ); 
@@ -176,7 +177,7 @@ public class DemographicExt {
                                       
             String sql = "insert into demographicExt (provider_no,demographic_no,key_val,value,date_time) values (?,?,?,?,now())";
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,providerNo);              
@@ -207,7 +208,7 @@ public class DemographicExt {
                        
             String sql = "insert into demographicExt (provider_no,demographic_no,key_val,value,date_time) values (?,?,?,?,now())";
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1,providerNo);              

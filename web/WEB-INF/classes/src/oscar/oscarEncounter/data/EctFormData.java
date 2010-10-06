@@ -38,9 +38,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.mapping.Array;
 import org.oscarehr.common.dao.EncounterFormDao;
-import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;

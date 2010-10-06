@@ -14,6 +14,7 @@ import net.sf.cookierevolver.CRFactory;
 import net.sf.cookierevolver.service.RolesProvider;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
@@ -48,7 +49,7 @@ public class CRHelper implements RolesProvider {
 	public String[] getRolesForUser(String user) {
 		
 		try {
-			Connection con = DBHandler.getConnection();
+			Connection con = DbConnectionFilter.getThreadLocalDbConnection();
 			String sql = establishStringToUse(con);
 			if(sql==null){
 				log.warn("No userSecRole table found!");

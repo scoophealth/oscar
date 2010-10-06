@@ -33,9 +33,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
 
 /**
  +------------------+---------+------+-----+---------+----------------+
@@ -60,7 +59,7 @@ public class TeleplanLogDAO {
     public void save(TeleplanLog tl){
          try {
            
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(nsql);
             executeUpdate(pstmt,tl);
             pstmt.close();
          }catch (SQLException e) {
@@ -79,7 +78,7 @@ public class TeleplanLogDAO {
     public void save(List list){
         try {
             
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(nsql);
             MiscUtils.getLogger().debug("LOG LIST SIZE"+list.size());
             for (int i = 0; i < list.size(); i++){
                 TeleplanLog tl = (TeleplanLog) list.get(i);

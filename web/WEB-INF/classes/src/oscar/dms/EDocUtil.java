@@ -31,7 +31,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -444,7 +444,8 @@ public final class EDocUtil extends SqlUtilBaseS {
             java.sql.Date eDate  = new java.sql.Date(endDate.getTime());
             MiscUtils.getLogger().debug("Creator "+creator+" start "+sDate + " end "+eDate);
 
-            PreparedStatement ps =  DBHandler.getConnection().prepareStatement(sql);
+            Connection c=DbConnectionFilter.getThreadLocalDbConnection();
+            PreparedStatement ps =  c.prepareStatement(sql);
             ps.setString(1,creator);
 	    ps.setString(2,responsible);
             ps.setDate(3,new java.sql.Date(startDate.getTime()));
@@ -675,7 +676,7 @@ public final class EDocUtil extends SqlUtilBaseS {
         String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
         int key = 0;
 
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         PreparedStatement add_record = conn.prepareStatement(add_record_string1);
 
         add_record.setString(1, docType);

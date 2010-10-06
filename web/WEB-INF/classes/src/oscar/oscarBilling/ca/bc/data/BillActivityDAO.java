@@ -37,10 +37,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.entities.Billactivity;
-import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
 /**
@@ -101,7 +101,7 @@ public class BillActivityDAO {
          /////
          try {             
             String s = "select * from billactivity where monthCode=? and groupno=? and updatedatetime > ? and status <> 'D' order by batchcount";
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
                 pstmt.setString(1,getMonthCode(d));
                 pstmt.setString(2,billinggroup_no);
                 pstmt.setDate(3,new java.sql.Date(beginningOfYear.getTime().getTime())); 
@@ -145,7 +145,7 @@ public class BillActivityDAO {
                                                          //1 2 3 4 5 6 7 8 9 0 1 2 3     
            String query = "insert into billactivity (monthCode,batchcount,htmlfilename,ohipfilename,providerohipno,groupno,creator,htmlcontext,ohipcontext,claimrecord,updatedatetime,status,total ) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
-           PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(query);
+           PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(query);
         
             pstmt.setString(1,monthCode);
             pstmt.setString(2,batchCount);
@@ -180,7 +180,7 @@ public class BillActivityDAO {
                                                          //1 2 3 4 5 6 7 8 9 0 1 2 3     
            String query = "update billactivity set status = ?, sentdate = ? where id = ? ";
         
-           PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(query);
+           PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(query);
         
             pstmt.setString(1,b.SENT);
             pstmt.setDate(2,new java.sql.Date(new Date().getTime()));

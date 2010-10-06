@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -32,7 +33,7 @@ public class RecommitDAO {
 	     RecommitSchedule reSchedule=null;
 	     SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	     try {
-	            Connection connect = DBHandler.getConnection();
+	            Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 	            st = connect.prepareStatement(sqlstatement);
 	            st.execute();
 	            rs = st.getResultSet();
@@ -79,7 +80,7 @@ public class RecommitDAO {
 	     
 	     try {
 	    	
-	         Connection connect = DBHandler.getConnection();
+	         Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 	         st = connect.prepareStatement(sqlstatement);
 	         st.setString(1,rd.getId().toString());
 	         st.setString(2,rd.getStatus());
@@ -114,7 +115,7 @@ public class RecommitDAO {
 	     
 	     try {
 	    	
-	         Connection connect = DBHandler.getConnection();
+	         Connection connect = DbConnectionFilter.getThreadLocalDbConnection();
 	         st = connect.prepareStatement(sqlstatement);
 	         
 	         st.setString(1,rd.getStatus());

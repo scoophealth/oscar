@@ -14,6 +14,7 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -178,7 +179,7 @@ public class Message {
                           //sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov+"', '"+parent+"', 'N','BCP')";
 
                           //DBHandler.RunSQL(sql);
-                          routing.route(parent, prov, DBHandler.getConnection(), "BCP");
+                          routing.route(parent, prov, DbConnectionFilter.getThreadLocalDbConnection(), "BCP");
                        }
                        addedToProviderLabRouting =true;
                     }   // provider not found                                                          
@@ -332,7 +333,7 @@ public class Message {
 
                    //DBHandler.RunSQL(sql);
                    ProviderLabRouting router = new ProviderLabRouting();
-                   router.route(lab_no, prov_no, DBHandler.getConnection(), "BCP");
+                   router.route(lab_no, prov_no, DbConnectionFilter.getThreadLocalDbConnection(), "BCP");
                 } else {
                    MiscUtils.getLogger().debug("prov was "+prov_no);
                 }

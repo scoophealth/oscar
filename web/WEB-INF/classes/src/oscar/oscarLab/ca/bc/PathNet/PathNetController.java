@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.HL7.Message;
 
 /**

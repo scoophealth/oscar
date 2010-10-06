@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.util.DbConnectionFilter;
+
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.model.MeasurementsExt;
 
@@ -94,7 +96,7 @@ public class ImportExportMeasurements {
 	String sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered)" +
 				      " VALUES (?, ?, ?, ?, ?, ?, ?)";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, demoNo);
 	pstmt.setString(2, type.toUpperCase());
@@ -124,7 +126,7 @@ public class ImportExportMeasurements {
 	if (meas.getDateObserved()==null) meas.setDateObserved(new Date());
 	if (meas.getDateEntered()==null) meas.setDateEntered(new Date());
 	if (meas.getType()==null) meas.setType("");
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setLong(1, meas.getDemographicNo());
 	pstmt.setString(2, meas.getType());
@@ -143,7 +145,7 @@ public class ImportExportMeasurements {
     public static void saveMeasurementsExt(MeasurementsExt mExt) throws SQLException {
         String sql = "INSERT INTO measurementsExt (measurement_id,keyval,val) VALUES (?,?,?)";
         
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setLong(1, mExt.getMeasurementId());
 	pstmt.setString(2, mExt.getKeyVal());

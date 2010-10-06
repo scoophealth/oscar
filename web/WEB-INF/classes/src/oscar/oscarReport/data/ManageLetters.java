@@ -39,10 +39,10 @@ import java.util.Hashtable;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperReport;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarDocumentCreator;
-import oscar.oscarDB.DBHandler;
 
 /**
   create table report_letters(
@@ -73,7 +73,7 @@ public class ManageLetters {
 
             
             String s = "insert into report_letters (provider_no,report_name, file_name,report_file,date_time,archive) values (?,?,?,?,now(),'0')" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
             pstmt.setString(2,reportName);
             pstmt.setString(3,fileName);
@@ -93,7 +93,7 @@ public class ManageLetters {
 
             
             String s = "update report_letters set archive = '1' where id =  ?" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
             pstmt.executeUpdate();
             pstmt.close();
@@ -111,7 +111,7 @@ public class ManageLetters {
 
             
             String s = "select report_file from report_letters where id  = ?" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
             
             ResultSet rs = pstmt.executeQuery();
@@ -155,7 +155,7 @@ public class ManageLetters {
 
             
             String s = "select report_file from report_letters where id  = ?" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
             
             ResultSet rs = pstmt.executeQuery();
@@ -194,7 +194,7 @@ public class ManageLetters {
 
             
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where archive = '0' order by date_time,report_name" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()){
                list.add(getHashFromResultSet(rs));
@@ -215,7 +215,7 @@ public class ManageLetters {
 
            
             String s = "select ID, provider_no , report_name, file_name, date_time from report_letters where ID = ?" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
@@ -258,7 +258,7 @@ public class ManageLetters {
 
             
             String s = "insert into log_letters (provider_no,report_id, log, date_time) values (?,?,?,now())" ;
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(s);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(s);
             pstmt.setString(1,providerNo);
             pstmt.setString(2,reportId);
             pstmt.setString(3,serializeDemographic(demos));

@@ -28,7 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.DbConnectionFilter;
 
 public class RxPrescriptionImport {
     
@@ -44,7 +44,7 @@ public class RxPrescriptionImport {
 		"takemin, takemax, `repeat`, GCN_SEQNO, durunit, nosubs, prn, archived, custom_instructions)" +
 		" VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,'D',false,false,0,1)";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, providerNo);
 	pstmt.setString(2, demographicNo);

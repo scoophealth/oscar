@@ -34,6 +34,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -102,7 +103,7 @@ public class ScratchData {
             //Get Provider from database
             // //unused variable db
              String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values (?,?,now())";
-             Connection conn = DBHandler.getConnection();
+             Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
              PreparedStatement pstat = conn.prepareStatement(sql);
               pstat.setString(1,providerNo);
               pstat.setString(2,text);

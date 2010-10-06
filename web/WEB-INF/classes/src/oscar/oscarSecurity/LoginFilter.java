@@ -32,10 +32,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.cookierevolver.CRFactory;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
-
-import net.sf.cookierevolver.CRFactory;
 
 /**
  * @author Dennis Langdeau

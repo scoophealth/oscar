@@ -46,6 +46,7 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarDB.DBHandler;
@@ -233,7 +234,7 @@ public class PreventionData {
             String key = "";
 		try {           
 
-                    PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(sql);
+                    PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(sql);
                     pstmt.setString(1, id);
                     pstmt.setString(2, keyval);
                     ResultSet rs = pstmt.executeQuery();
@@ -267,7 +268,7 @@ public class PreventionData {
 		try {
 			// log.debug("e-DATE: "+date);		
 
-			PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(sql);
+			PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(sql);
 			pstmt.setString(1, injectionType);
 			pstmt.setDate(2, new java.sql.Date(startDate.getTime()));
 			pstmt.setDate(3, new java.sql.Date(endDate.getTime()));

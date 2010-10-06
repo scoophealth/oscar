@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -54,7 +55,7 @@ public class Hl7textResultsData {
         
         try{
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             
             //Check for other versions of this lab
             String[] matchingLabs = getMatchingLabs(lab_no).split(",");

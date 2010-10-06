@@ -29,7 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.DbConnectionFilter;
 
 public class RxAllergyImport {
    
@@ -38,7 +38,7 @@ public class RxAllergyImport {
 	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, start_date, severity_of_reaction, regional_identifier)" +
 				   " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, demographicNo);
 	pstmt.setString(2, entryDate);

@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
@@ -34,7 +35,7 @@ public class DemographicMerged {
     
     public void Merge(String demographic_no, String head) throws SQLException{
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         
         String sql = "insert into demographic_merged (demographic_no, merged_to) values (?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -59,7 +60,7 @@ public class DemographicMerged {
     public void UnMerge(String demographic_no, String curUser_no) throws SQLException{
         
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         
         String sql = "update demographic_merged set deleted=1 where demographic_no=?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -107,7 +108,7 @@ public class DemographicMerged {
     
     public String getHead(String demographic_no) throws SQLException{
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         ResultSet rs;
         String head = null;
         
@@ -132,7 +133,7 @@ public class DemographicMerged {
     public ArrayList getTail(String demographic_no) throws SQLException{
         
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         ResultSet rs;
         ArrayList tailArray = new ArrayList();
         

@@ -66,7 +66,6 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.Range;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
@@ -77,6 +76,7 @@ import org.jfree.data.xy.DefaultOHLCDataset;
 import org.jfree.data.xy.OHLCDataItem;
 import org.jfree.data.xy.XYDataset;
 import org.oscarehr.PMmodule.utility.UtilDateUtilities;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -604,7 +604,7 @@ public class MeasurementGraphAction2 extends Action {
             if (labType.equals("loinc")){
               try{  
               
-              Connection conn = DBHandler.getConnection();
+              Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
               list = comVal.findValuesByLoinc2(demographicNo, identifier, conn );
               MiscUtils.getLogger().debug("List ->"+list.size());
               conn.close();

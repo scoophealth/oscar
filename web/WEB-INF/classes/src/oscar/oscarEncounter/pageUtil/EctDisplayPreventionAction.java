@@ -39,7 +39,6 @@ import oscar.oscarPrevention.Prevention;
 import oscar.oscarPrevention.PreventionDS;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
-import oscar.util.DateUtils;
 import oscar.util.OscarRoleObjectPrivilege;
 import oscar.util.StringUtils;
 

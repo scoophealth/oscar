@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -40,7 +41,7 @@ public class MeasurementMapConfig {
         String sql = "select distinct lab_type from measurementMap";
         try {
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -61,7 +62,7 @@ public class MeasurementMapConfig {
 
         try {
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, loincCode);
             logger.info(sql);
@@ -90,7 +91,7 @@ public class MeasurementMapConfig {
 
         try {
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, loincCode);
             logger.info(sql);
@@ -119,7 +120,7 @@ public class MeasurementMapConfig {
 
         try {
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -193,7 +194,7 @@ public class MeasurementMapConfig {
 
         try {
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
 
@@ -221,7 +222,7 @@ public class MeasurementMapConfig {
 
         try {
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
 
@@ -256,7 +257,7 @@ public class MeasurementMapConfig {
 
         try {
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             logger.info(sql);
 
@@ -282,7 +283,7 @@ public class MeasurementMapConfig {
         String sql = "INSERT INTO measurementMap (loinc_code, ident_code, name, lab_type) VALUES ('" + loinc + "', '" + identifier + "', '" + name + "', '" + type + "')";
 
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql);
         logger.info(sql);
 
@@ -299,7 +300,7 @@ public class MeasurementMapConfig {
         String lab_type = "";
 
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 
         String sql = "SELECT * FROM measurementMap WHERE id='" + id + "'";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -341,7 +342,7 @@ public class MeasurementMapConfig {
         String sql = "SELECT * from measurementMap WHERE loinc_code='" + loinc + "' AND lab_type='" + type + "'";
 
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql);
         logger.info(sql);
 

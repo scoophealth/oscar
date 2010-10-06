@@ -369,7 +369,7 @@ public class RxPrescriptionData {
                 lst.add(getPrescriptionFromRS(rs, demographicNo));
             }
             rs.close();
-            DBHandler.getConnection().close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
         } catch (SQLException e) {
@@ -398,7 +398,7 @@ public class RxPrescriptionData {
                 lst.add(getPrescriptionFromRS(rs, demographicNo));
             }
             rs.close();
-            DBHandler.getConnection().close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
         } catch (SQLException e) {
@@ -428,7 +428,7 @@ public class RxPrescriptionData {
                 lst.add(getPrescriptionFromRS(rs, demographicNo));
             }
             rs.close();
-            DBHandler.getConnection().close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
         } catch (SQLException e) {
@@ -509,7 +509,7 @@ public class RxPrescriptionData {
             }
 
             rs.close();
-            DBHandler.getConnection().close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
 
             arr = (Prescription[]) lst.toArray(arr);
 
@@ -582,7 +582,7 @@ public class RxPrescriptionData {
             }
 
             rs.close();
-            DBHandler.getConnection().close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
 
         } catch (SQLException e) {
             logger.error(sql, e);
@@ -849,7 +849,7 @@ public class RxPrescriptionData {
             String sql = "DELETE FROM favorites WHERE favoriteid = " + favoriteId;
 
             DBHandler.RunSQL(sql);
-            DBHandler.getConnection().close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
             ret = true;
         } catch (SQLException e) {
             logger.error("unexpected error", e);
@@ -935,7 +935,7 @@ public class RxPrescriptionData {
             if (rs.next()) {
                 retval = Integer.toString(rs.getInt(1));
             }
-            DBHandler.getConnection().close();
+            DbConnectionFilter.getThreadLocalDbConnection().close();
         } catch (SQLException e) {
             logger.error("unexpected error", e);
         }
@@ -1713,7 +1713,7 @@ public class RxPrescriptionData {
                     DBHandler.RunSQL(sql);
                 }
 
-                DBHandler.getConnection().close();
+                DbConnectionFilter.getThreadLocalDbConnection().close();
             } catch (Exception e) {
                 logger.error("unexpected error", e);
             }
@@ -1868,7 +1868,7 @@ public class RxPrescriptionData {
                 }
 
                 // close by conn
-                DBHandler.getConnection().close();
+                DbConnectionFilter.getThreadLocalDbConnection().close();
 
             } catch (SQLException e) {
                 logger.error("unexpected error", e);

@@ -30,7 +30,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import oscar.oscarDB.DBHandler;
+import org.oscarehr.util.DbConnectionFilter;
+
 import oscar.util.UtilDateUtilities;
 
 public class LabResultImport {
@@ -38,7 +39,7 @@ public class LabResultImport {
     public static void SaveLabDesc(String description, String ppId) throws SQLException {
 	String sql = "INSERT INTO labTestResults (description,  labPatientPhysicianInfo_id, line_type) VALUES (? , ? , 'D')";
         
-        Connection conn = DBHandler.getConnection();
+        Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1,description);
         ps.setString(2,ppId);
@@ -52,7 +53,7 @@ public class LabResultImport {
 	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, service_date, lab_status)" +
 						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'N')";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, labReportInfo_id);
 	pstmt.setString(2, accession_num);
@@ -79,7 +80,7 @@ public class LabResultImport {
 	String print_time = UtilDateUtilities.DateToString(new Date(),"HH:mm:ss");
 	String sql = "INSERT INTO labReportInformation (location_id, print_date, print_time) VALUES (?,?,?)";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, location_id);
 	pstmt.setString(2, print_date);
@@ -98,7 +99,7 @@ public class LabResultImport {
 	String sql = "INSERT INTO labTestResults (title, test_name, abn, minimum, maximum, result, units, description, location_id, labPatientPhysicianInfo_id, line_type, last)" +
 					" VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?)";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, title);
 	pstmt.setString(2, testName);
@@ -125,7 +126,7 @@ public class LabResultImport {
 	Long id = null;
 	String sql = "INSERT INTO patientLabRouting (demographic_no, lab_no, lab_type) values (?, ?, 'CML')";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, demo_no);
 	pstmt.setString(2, lab_no);
@@ -143,7 +144,7 @@ public class LabResultImport {
 	if (timestamp==null || ("").equals(timestamp)) timestamp=null;
 	String sql = "INSERT INTO providerLabRouting (provider_no, lab_no, status, comment, timestamp, lab_type) values (?,?,?,?,?,'CML')";
 	
-	Connection conn = DBHandler.getConnection();
+	Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, provider_no);
 	pstmt.setString(2, lab_no);

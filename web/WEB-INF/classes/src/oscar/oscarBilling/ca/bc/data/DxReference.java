@@ -42,11 +42,11 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.BillingDxCode;
-import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -77,7 +77,7 @@ public class DxReference {
        String nsql ="select dx_code1, dx_code2, dx_code3,service_date from billingmaster where demographic_no = ? and billingstatus != 'D' order by service_date desc";
        try {
             
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(nsql);
             pstmt.setString(1,demo);
             ResultSet rs = pstmt.executeQuery();
             Map m = new HashMap();

@@ -27,7 +27,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarDB;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,10 +45,6 @@ public final class DBHandler {
 		// not intented for instantiation
 	}
 
-	public static Connection getConnection() throws SQLException {
-		return DbConnectionFilter.getThreadLocalDbConnection();
-	}
-
 	public static java.sql.ResultSet GetSQL(String SQLStatement) throws SQLException {
 		return GetSQL(SQLStatement, false);
 	}
@@ -58,10 +53,10 @@ public final class DBHandler {
 		Statement stmt;
 		ResultSet rs = null;
 		if (updatable) {
-			stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		} else {
 			// stmt = getConnection().createStatement();
-			stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		}
 
 		rs = stmt.executeQuery(SQLStatement);
@@ -69,14 +64,14 @@ public final class DBHandler {
 	}
 
 	public static int RunSQL(String SQLStatement, String para1) throws SQLException {
-		PreparedStatement ps = getConnection().prepareStatement(SQLStatement);
+		PreparedStatement ps = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(SQLStatement);
 		ps.setString(1, para1);
 		int result = ps.executeUpdate();
 		return result;
 	}
 
 	public static java.sql.ResultSet GetPreSQL(String SQLStatement, String para1) throws SQLException {
-		PreparedStatement ps = getConnection().prepareStatement(SQLStatement);
+		PreparedStatement ps = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(SQLStatement);
 		ps.setString(1, para1);
 		ResultSet result = ps.executeQuery();
 		return result;
@@ -85,7 +80,7 @@ public final class DBHandler {
 	public static boolean RunSQL(String SQLStatement) throws SQLException {
 		boolean b = false;
 		Statement stmt;
-		stmt = getConnection().createStatement();
+		stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
 		b = stmt.execute(SQLStatement);
 		return b;
 	}

@@ -40,6 +40,7 @@ import java.util.List;
 
 import org.oscarehr.common.dao.ProviderPreferenceDao;
 import org.oscarehr.common.model.ProviderPreference;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -780,7 +781,7 @@ public class ProviderData {
                                       "and signed_confidentiality=?     where provider_no=?";
             }
             
-            Connection conn = DBHandler.getConnection();
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
             PreparedStatement write_rec = conn.prepareStatement(sql);
             
             Integer i = update ? 1 : 2;

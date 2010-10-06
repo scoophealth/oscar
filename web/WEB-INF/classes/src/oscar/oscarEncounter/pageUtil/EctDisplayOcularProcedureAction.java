@@ -32,7 +32,6 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.struts.util.MessageResources;
 import org.oscarehr.eyeform.dao.OcularProcDao;
 import org.oscarehr.eyeform.model.OcularProc;

@@ -33,9 +33,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
-
-import oscar.oscarDB.DBHandler;
 
 /**
   CREATE TABLE `teleplan_submission_link` (
@@ -58,7 +57,7 @@ public class TeleplanSubmissionLinkDAO {
     public void save(int billActId,List billingMasterList ){
          try {
             
-            PreparedStatement pstmt = DBHandler.getConnection().prepareStatement(nsql);
+            PreparedStatement pstmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(nsql);
             for (int i =0; i < billingMasterList.size(); i++){
                String bi = (String) billingMasterList.get(i);
                int b = Integer.parseInt(bi);

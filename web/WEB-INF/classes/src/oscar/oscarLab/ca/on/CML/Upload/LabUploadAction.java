@@ -48,10 +48,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.FileUploadCheck;
 import oscar.oscarLab.ca.on.CML.ABCDParser;
 
@@ -111,7 +111,7 @@ public class LabUploadAction extends Action {
                     ABCDParser abc = new ABCDParser();     
                     abc.parse(in);              
                                  
-                    abc.save(DBHandler.getConnection());
+                    abc.save(DbConnectionFilter.getThreadLocalDbConnection());
                     outcome = "uploaded";
                 }
              }else{

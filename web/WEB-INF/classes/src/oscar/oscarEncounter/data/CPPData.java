@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -115,7 +116,7 @@ public class CPPData {
                               
       try{
          
-         Connection conn = DBHandler.getConnection();
+         Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
          PreparedStatement ps=  conn.prepareStatement(sql);
          ps.setString(1, demoNo);
          ps.setString(2, provNo);

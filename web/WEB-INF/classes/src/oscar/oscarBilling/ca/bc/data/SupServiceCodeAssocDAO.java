@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -125,14 +126,14 @@ public class SupServiceCodeAssocDAO {
       PreparedStatement stmt = null;
       //Record exists so perform an update
       if (rs.next()) {
-        stmt = DBHandler.getConnection().prepareStatement(
+        stmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(
             "update billing_trayfees set billingServiceTrayNo = ? where billingServiceNo=?");
         stmt.setString(1, secondaryCodeId);
         stmt.setString(2, primaryCodeId);
       }
       else {
         //create a new record
-        stmt = DBHandler.getConnection().prepareStatement(
+        stmt = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(
             "insert into billing_trayfees(billingServiceNo,billingServiceTrayNo) " +
             "values(?,?)");
         stmt.setString(1, primaryCodeId);

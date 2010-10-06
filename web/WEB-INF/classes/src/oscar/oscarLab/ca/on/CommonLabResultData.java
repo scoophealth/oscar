@@ -35,6 +35,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DocumentResultsDao;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -302,7 +303,7 @@ public class CommonLabResultData {
                         }
                         insertString = insertString + "('" + providersArray[j] + "','" + labIds[k]+ "','N','"+labType+"')";
                          */
-                        plr.route(labIds[k], providersArray[j], DBHandler.getConnection(), labType);
+                        plr.route(labIds[k], providersArray[j], DbConnectionFilter.getThreadLocalDbConnection(), labType);
                     }
 
                     // delete old entries

@@ -36,6 +36,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -1103,7 +1104,7 @@ public class DemographicData {
 		if (!duplicateRecord) {
 			try {
 				
-				Connection conn = DBHandler.getConnection();
+				Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 
 				PreparedStatement add_record = conn.prepareStatement(add_record_string);
 				add_record.setString(1, title);

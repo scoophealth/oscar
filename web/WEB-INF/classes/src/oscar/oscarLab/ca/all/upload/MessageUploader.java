@@ -22,6 +22,7 @@ import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.DataTypeUtils;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -127,8 +128,8 @@ public final class MessageUploader {
 			hl7TextInfo.setAccessionNumber(accessionNum);
 			hl7TextInfoDao.persist(hl7TextInfo);
 
-			String demProviderNo = patientRouteReport(insertID, lastName, firstName, sex, dob, hin, DBHandler.getConnection());
-			providerRouteReport(String.valueOf(insertID), docNums, DBHandler.getConnection(), demProviderNo, type);
+			String demProviderNo = patientRouteReport(insertID, lastName, firstName, sex, dob, hin, DbConnectionFilter.getThreadLocalDbConnection());
+			providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);
 			retVal = h.audit();
 		} catch (Exception e) {
 			logger.error("Error uploading lab to database");
@@ -262,7 +263,7 @@ public final class MessageUploader {
 		try {
 
 			
-			Connection conn = DBHandler.getConnection();
+			Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
 			PreparedStatement pstmt;
 
 			ResultSet rs;
